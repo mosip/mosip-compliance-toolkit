@@ -1,0 +1,105 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema#",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/DiscoverResponseSchema.json",
+	"type": "array",
+	"title": "Discover Response Schema",
+	"description": "Discover Response Schema",
+	"additionalProperties": false,
+	"items": [
+		{
+			"type": "object",
+			"properties": {
+				"deviceId": {
+					"type": "string"
+				},
+				"deviceStatus": {
+					"type": "string",
+					"enum": [
+						"Ready",
+						"Busy",
+						"Not Ready",
+						"Not Registered"
+					]
+				},
+				"certification": {
+					"type": "string",
+					"enum": [
+						"L0",
+						"L1"
+					]
+				},
+				"deviceSubId": {
+					"type": "array",
+					"items": [
+						{
+							"type": "string",
+							"enum": [
+								"0",
+								"1",
+								"2",
+								"3",
+								"4"
+							]
+						}
+					]
+				},
+				"callbackId": {
+					"type": "string"
+				},
+				"digitalId": {
+					"type": "string"
+				},
+				"deviceCode": {
+					"type": "string"
+				},
+				"specVersion": {
+					"type": "array",
+					"items": [
+						{
+							"type": "string"
+						}
+					]
+				},
+				"purpose": {
+					"type": "string",
+					"enum": [
+						"Auth",
+						"Registration"
+					]
+				},
+				"error": {
+					"type": "object",
+					"properties": {
+						"errorCode": {
+							"type": "string",
+							"enum": [
+								"0"
+							]
+						},
+						"errorInfo": {
+							"type": "string",
+							"enum": [
+								"Success"
+							]
+						}
+					},
+					"required": [
+						"errorCode",
+						"errorInfo"
+					]
+				}
+			},
+			"required": [
+				"deviceId",
+				"deviceStatus",
+				"certification",
+				"callbackId",
+				"digitalId",
+				"deviceCode",
+				"specVersion",
+				"purpose",
+				"error"
+			]
+		}
+	]
+}

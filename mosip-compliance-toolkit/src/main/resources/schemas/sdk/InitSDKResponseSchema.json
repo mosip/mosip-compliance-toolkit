@@ -1,0 +1,122 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema#",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/InitSDKResponseSchema.json",
+	"type": "object",
+	"properties": {
+		"version": {
+			"type": "string"
+		},
+		"responsetime": {
+			"type": "string"
+		},
+		"response": {
+			"type": "object",
+			"properties": {
+				"apiVersion": {
+					"type": "string"
+				},
+				"sdkVersion": {
+					"type": "string"
+				},
+				"supportedModalities": {
+					"type": "array",
+					"items": [
+						{
+							"type": "string",
+							"enum": [
+								"FINGER",
+								"FACE",
+								"IRIS"
+							]
+						}
+					]
+				},
+				"supportedMethods": {
+					"type": "object",
+					"properties": {
+						"QUALITY_CHECK": {
+							"type": "array",
+							"items": [
+								{
+									"type": "string",
+									"enum": [
+										"FINGER",
+										"FACE",
+										"IRIS"
+									]
+								}
+							]
+						},
+						"EXTRACT": {
+							"type": "array",
+							"items": [
+								{
+									"type": "string",
+									"enum": [
+										"FINGER",
+										"FACE",
+										"IRIS"
+									]
+								}
+							]
+						},
+						"MATCH": {
+							"type": "array",
+							"items": [
+								{
+									"type": "string",
+									"enum": [
+										"FINGER",
+										"FACE",
+										"IRIS"
+									]
+								}
+							]
+						}
+					},
+					"required": [
+						"QUALITY_CHECK",
+						"EXTRACT",
+						"MATCH"
+					]
+				},
+				"otherInfo": {
+					"type": "object"
+				},
+				"productOwner": {
+					"type": "object",
+					"properties": {
+						"organization": {
+							"type": "string"
+						},
+						"type": {
+							"type": "string"
+						}
+					},
+					"required": [
+						"organization",
+						"type"
+					]
+				}
+			},
+			"required": [
+				"apiVersion",
+				"sdkVersion",
+				"supportedModalities",
+				"supportedMethods",
+				"otherInfo",
+				"productOwner"
+			]
+		},
+		"errors": {
+			"type": "array",
+			"items": {}
+		}
+	},
+	"required": [
+		"version",
+		"responsetime",
+		"response",
+		"errors"
+	]
+}
