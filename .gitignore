@@ -12,6 +12,7 @@ target/
 .settings
 .springBeans
 .sts4-cache
+.mvn
 
 ### IntelliJ IDEA ###
 .idea
@@ -31,3 +32,36 @@ build/
 
 ### VS Code ###
 .vscode/
+
+*.class
+.mtj.tmp/
+*.war
+*.ear
+hs_err_pid*
+target/
+.springBeans
+.metadata
+.factorypath
+.classpath
+.project
+.settings/
+.vertx/
+bin/
+tmp/
+logs/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+.DS_Store
+test.txt
+.idea/
+.settings/
+.sonarlint/
+.recommenders/
+/.recommenders/
+**/*.iml
+**/META-INF/
+.vscode
