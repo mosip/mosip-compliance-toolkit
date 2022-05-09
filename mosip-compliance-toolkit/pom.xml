@@ -10,15 +10,38 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>io.mosip.compliance</groupId>
-	<artifactId>toolkit</artifactId>
+	<artifactId>mosip-compliance-toolkit-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>mosip-compliance-toolkit</name>
+	<name>mosip-compliance-toolkit-service</name>
 	<description>mosip compliance toolkit</description>
 	<properties>
 		<java.version>11</java.version>
 		<kernel.version>1.2.0</kernel.version>
-		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
-		<spring.security.test.version>5.0.5.RELEASE</spring.security.test.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- maven -->
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.version>3.8.0</maven.compiler.version>
+        <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
+        <maven.war.plugin.version>3.1.0</maven.war.plugin.version>
+        <maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
+        <maven.jacoco.version>0.8.5</maven.jacoco.version>
+        <maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version>
+        <maven.javadoc.version>3.2.0</maven.javadoc.version>
+        <maven-shade-plugin.version>2.3</maven-shade-plugin.version>
+
+        <!-- spring -->
+        <spring.boot.version>2.0.2.RELEASE</spring.boot.version>
+        <spring.data.jpa.version>2.0.7.RELEASE</spring.data.jpa.version>
+        <spring.security.test.version>5.0.5.RELEASE</spring.security.test.version>
+        <spring-cloud-config.version>2.0.0.RELEASE</spring-cloud-config.version>
+
+        <swagger.core.version>2.0.7</swagger.core.version>
+        <swagger.annotations.version>1.5.20</swagger.annotations.version>
+        <springfox.version>2.9.2</springfox.version>
+		
+		<lombok.version>1.18.8</lombok.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -39,6 +62,12 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<version>${spring.security.test.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -98,7 +127,7 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         </dependency>
-        <!-- <dependency>
+        <dependency>
 			<groupId>io.mosip.kernel</groupId>
 			<artifactId>kernel-authcodeflowproxy-api</artifactId>
 			<version>${kernel.version}</version>
@@ -108,7 +137,7 @@
 					<artifactId>kernel-core</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>-->
+		</dependency>
 	</dependencies>
 
 	<build>
