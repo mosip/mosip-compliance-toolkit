@@ -1,0 +1,115 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema#",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/AuthCaptureRequestSchema.json",
+	"type": "object",
+	"title": "AuthCaptureRequestSchema",
+	"description": "Auth  Capture Request Schema",
+	"additionalProperties": false,
+	"properties": {
+		"env": {
+			"type": "string"
+		},
+		"purpose": {
+			"type": "string"
+		},
+		"specVersion": {
+			"type": "string"
+		},
+		"timeout": {
+			"type": "integer"
+		},
+		"captureTime": {
+			"type": "string",
+			"format": "date-time"
+		},
+		"transactionId": {
+			"type": "string"
+		},
+		"bio": {
+			"$ref": "#/$defs/bio"
+		},
+		"customOpts": {
+			"type": [
+				"null",
+				"string"
+			]
+		}
+	},
+	"required": [
+		"bio",
+		"captureTime",
+		"customOpts",
+		"env",
+		"purpose",
+		"specVersion",
+		"timeout",
+		"transactionId"
+	],
+	"$defs": {
+		"bio": {
+			"type": "any",
+			"additionalProperties": true,
+			"properties": {
+				"type": {
+					"type": "string"
+				},
+				"count": {
+					"type": "string",
+					"format": "integer"
+				},
+				"exception": {
+					"type": "array",
+					"items": {
+						"type": "string",
+						"enum": [
+							"LeftIndex",
+							"LeftMiddle",
+							"LeftRing",
+							"LeftLittle",
+							"LeftThumb",
+							"RightIndex",
+							"RightMiddle",
+							"RightRing",
+							"RightLittle",
+							"RightThumb",
+							"UNKNOWN",
+							"Left",
+							"Right"
+						]
+					}
+				},
+				"requestedScore": {
+					"type": "string",
+					"format": "integer"
+				},
+				"deviceId": {
+					"type": "string",
+					"format": "integer"
+				},
+				"deviceSubId": {
+					"type": "string",
+					"format": "integer"
+				},
+				"previousHash": {
+					"type": "string"
+				},
+				"bioSubType": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			},
+			"required": [
+				"bioSubType",
+				"count",
+				"deviceId",
+				"deviceSubId",
+				"exception",
+				"previousHash",
+				"requestedScore",
+				"type"
+			]
+		}
+	}
+}

@@ -1,0 +1,60 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema#",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/AuthCaptureResponseSchema.json",
+	"title": "Auth Capture Response Schema",
+	"description": "Auth Capture  Response Schema",
+	"type": "object",
+	"properties": {
+		"biometrics": {
+			"type": "array",
+			"items": [
+				{
+					"type": "object",
+					"properties": {
+						"specVersion": {
+							"type": "string"
+						},
+						"data": {
+							"type": "string"
+						},
+						"hash": {
+							"type": "string"
+						},
+						"sessionKey": {
+							"type": "string"
+						},
+						"thumbprint": {
+							"type": "string"
+						},
+						"error": {
+							"type": "object",
+							"properties": {
+								"errorCode": {
+									"type": "string"
+								},
+								"errorInfo": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"errorCode",
+								"errorInfo"
+							]
+						}
+					},
+					"required": [
+						"specVersion",
+						"data",
+						"hash",
+						"sessionKey",
+						"thumbprint",
+						"error"
+					]
+				}
+			]
+		}
+	},
+	"required": [
+		"biometrics"
+	]
+}
