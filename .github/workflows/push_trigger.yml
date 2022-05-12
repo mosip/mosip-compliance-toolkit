@@ -63,7 +63,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: release
-          path: ./release.zip
+          path: ./cd mosip-compliance-toolkit/release.zip
 
       - uses: 8398a7/action-slack@v3
         with:
