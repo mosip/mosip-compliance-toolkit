@@ -63,7 +63,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: release
-          path: ./release.zip
+          path: ./cd mosip-compliance-toolkit/release.zip
 
       - uses: 8398a7/action-slack@v3
         with:
@@ -237,7 +237,7 @@ jobs:
       - name: Analyze with SonarCloud
         run: |
           cd mosip-compliance-toolkit
-          mvn -B -Dgpg.skip verify sonar:sonar -Dsonar.projectKey=mosip_${{ github.event.repository.name }} -Dsonar.organization=${{ secrets.ORG_KEY }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+          mvn -B -Dgpg.skip verify sonar:sonar -Dsonar.projectKey=mosip_mosip-compliance-toolkit -Dsonar.organization=${{ secrets.ORG_KEY }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
