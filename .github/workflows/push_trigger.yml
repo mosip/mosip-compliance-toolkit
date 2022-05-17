@@ -143,7 +143,7 @@ jobs:
     env:
       NAMESPACE: ${{ secrets. dev_namespace_docker_hub }}
       SERVICE_NAME: compliance-toolkit-service
-      SERVICE_LOCATION: mosip-compliance-toolkit/
+      SERVICE_LOCATION: mosip-compliance-toolkit
 
     steps:
       - uses: actions/checkout@v2
@@ -166,7 +166,7 @@ jobs:
           xpath: /*[local-name()="project"]/*[local-name()="version"]
 
       - name: Unzip and extract the id-repository-vid-service
-        run: unzip -uj "release.zip" "${{ env.SERVICE_LOCATION }}/target/*" -d "./${{ env.SERVICE_LOCATION }}/target"
+        run: unzip -uj "release.zip" "./target/*" -d "./target"
 
       - name: Get current date
         id: date
