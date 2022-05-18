@@ -166,7 +166,7 @@ jobs:
           xpath: /*[local-name()="project"]/*[local-name()="version"]
 
       - name: Unzip and extract the mosip-compliance-toolkit
-        run: unzip -uj "release.zip" "${{ env.SERVICE_LOCATION }}/target/*" -d "./${{ env.SERVICE_LOCATION }}/target"
+        run: ls; unzip -uj "release.zip" "${{ env.SERVICE_LOCATION }}/target/*" -d "./${{ env.SERVICE_LOCATION }}/target"
 
       - name: Get current date
         id: date
