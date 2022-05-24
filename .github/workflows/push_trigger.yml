@@ -233,6 +233,7 @@ jobs:
 
       - name: Build with Maven
         run: |
+          cd mosip-compliance-toolkit
           mvn -B package -s $GITHUB_WORKSPACE/settings.xml --file pom.xml
       - name: Analyze with SonarCloud
         run: |
