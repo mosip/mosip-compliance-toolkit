@@ -233,9 +233,11 @@ jobs:
 
       - name: Build with Maven
         run: |
+          cd mosip-compliance-toolkit
           mvn -B package -s $GITHUB_WORKSPACE/settings.xml --file pom.xml
       - name: Analyze with SonarCloud
         run: |
+          cd mosip-compliance-toolkit
           mvn -B -Dgpg.skip verify sonar:sonar -Dsonar.projectKey=mosip_mosip-compliance-toolkit -Dsonar.organization=${{ secrets.ORG_KEY }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
