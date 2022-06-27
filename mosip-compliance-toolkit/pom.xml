@@ -16,7 +16,7 @@
 	<description>mosip compliance toolkit</description>
 	<properties>
 		<java.version>11</java.version>
-		<kernel.version>1.2.0</kernel.version>
+		<kernel.version>1.2.1-SNAPSHOT</kernel.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- maven -->
