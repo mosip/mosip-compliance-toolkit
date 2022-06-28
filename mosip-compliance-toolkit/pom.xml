@@ -285,7 +285,7 @@
 					</includeOnlyProperties>
 					<commitIdGenerationMode>full</commitIdGenerationMode>
 					<dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
-					
+
 				</configuration>
 			</plugin>
 		</plugins>
