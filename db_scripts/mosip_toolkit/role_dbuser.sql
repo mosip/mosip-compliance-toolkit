@@ -1,4 +1,4 @@
-CREATE ROLE prereguser WITH 
+CREATE ROLE toolkituser WITH 
 	INHERIT
 	LOGIN
 	PASSWORD :dbuserpwd;
