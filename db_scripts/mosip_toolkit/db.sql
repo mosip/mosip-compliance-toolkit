@@ -7,7 +7,7 @@ CREATE DATABASE mosip_toolkit
 	TEMPLATE  = template0;
 COMMENT ON DATABASE mosip_toolkit IS 'Toolkit database to store the data for compliance testing';
 
-\c mosip_prereg 
+\c mosip_toolkit 
 
 DROP SCHEMA IF EXISTS toolkit CASCADE;
 CREATE SCHEMA toolkit;
