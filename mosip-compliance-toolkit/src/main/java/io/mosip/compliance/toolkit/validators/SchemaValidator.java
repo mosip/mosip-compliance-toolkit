@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
 import io.mosip.compliance.toolkit.constants.AppConstants;
-import io.mosip.compliance.toolkit.dto.ResponseValidateDto;
-import io.mosip.compliance.toolkit.dto.ValidationResponseDto;
+import io.mosip.compliance.toolkit.dto.testcases.ResponseValidateDto;
+import io.mosip.compliance.toolkit.dto.testcases.ValidationResponseDto;
 import io.mosip.compliance.toolkit.service.TestCasesService;
 
 @Component
