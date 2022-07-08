@@ -11,9 +11,10 @@
 	</parent>
 	<groupId>io.mosip.compliance</groupId>
 	<artifactId>mosip-compliance-toolkit-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>mosip-compliance-toolkit-service</name>
 	<description>mosip compliance toolkit</description>
+
 	<properties>
 		<java.version>11</java.version>
 		<kernel.version>1.2.1-SNAPSHOT</kernel.version>
@@ -34,9 +35,16 @@
 		<!-- spring -->
 		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
 		<spring.data.jpa.version>2.0.7.RELEASE</spring.data.jpa.version>
+		<spring.data.version>2.0.9.RELEASE</spring.data.version>
 		<spring.security.test.version>5.0.5.RELEASE</spring.security.test.version>
 		<spring-cloud-config.version>2.0.0.RELEASE</spring-cloud-config.version>
 
+		<!-- Data Access -->
+		<eclipselink.version>2.5.0</eclipselink.version>
+		<mysql.connector.version>5.1.46</mysql.connector.version>
+		<h2.version>1.4.197</h2.version>
+		<postgresql.version>42.2.2</postgresql.version>
+		
 		<swagger.core.version>2.0.7</swagger.core.version>
 		<swagger.annotations.version>1.5.20</swagger.annotations.version>
 		<springfox.version>2.9.2</springfox.version>
@@ -73,6 +81,10 @@
 			<artifactId>lombok</artifactId>
 			<version>${lombok.version}</version>
 			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -147,6 +159,16 @@
 					<artifactId>kernel-core</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>io.mosip.kernel</groupId>
+			<artifactId>kernel-dataaccess-hibernate</artifactId>
+			<version>${kernel.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>${postgresql.version}</version>
 		</dependency>
 	</dependencies>
 	<distributionManagement>

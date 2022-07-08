@@ -1,4 +1,4 @@
-package io.mosip.compliance.toolkit.dto;
+package io.mosip.compliance.toolkit.dto.testcases;
 
 import java.io.Serializable;
 
@@ -10,7 +10,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RequestValidateDto implements Serializable {
-	
+
+	private static final long serialVersionUID = 4260065231982826451L;
+
 	public String testCaseType;
 	
 	public String testName;

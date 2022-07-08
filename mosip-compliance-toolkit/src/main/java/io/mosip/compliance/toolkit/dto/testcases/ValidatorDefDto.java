@@ -1,4 +1,4 @@
-package io.mosip.compliance.toolkit.dto;
+package io.mosip.compliance.toolkit.dto.testcases;
 
 import java.io.Serializable;
 import java.util.List;
