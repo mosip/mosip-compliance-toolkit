@@ -13,10 +13,8 @@ import org.springframework.stereotype.Component;
 
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
-import io.mosip.compliance.toolkit.dto.AbisProjectDto;
+import io.mosip.compliance.toolkit.dto.ProjectDto;
 import io.mosip.compliance.toolkit.dto.ProjectsResponseDto;
-import io.mosip.compliance.toolkit.dto.SbiProjectDto;
-import io.mosip.compliance.toolkit.dto.SdkProjectDto;
 import io.mosip.compliance.toolkit.entity.AbisProjectEntity;
 import io.mosip.compliance.toolkit.entity.SbiProjectEntity;
 import io.mosip.compliance.toolkit.entity.SdkProjectEntity;
@@ -60,16 +58,16 @@ public class ProjectsService {
 		log.info("sessionId", "idType", "id", "In getProjects method of Projects Service.");
 		ResponseWrapper<ProjectsResponseDto> responseWrapper = new ResponseWrapper<>();
 		ProjectsResponseDto projectsResponseDto = new ProjectsResponseDto();
-		List<SdkProjectDto> sdkProjectsDtoList = new ArrayList<SdkProjectDto>();
-		List<SbiProjectDto> sbiProjectsDtoList = new ArrayList<SbiProjectDto>();
-		List<AbisProjectDto> abisProjectsDtoList = new ArrayList<AbisProjectDto>();
+		List<ProjectDto> projectsList = new ArrayList<ProjectDto>();
 
-		boolean isProjectTypeValid = true;
+		boolean isProjectTypeValid = false;
 		if (Objects.nonNull(type)) {
-			if (!AppConstants.SBI.equalsIgnoreCase(type) && !AppConstants.ABIS.equalsIgnoreCase(type)
-					&& !AppConstants.SDK.equalsIgnoreCase(type)) {
-				isProjectTypeValid = false;
+			if (AppConstants.SBI.equalsIgnoreCase(type) || AppConstants.ABIS.equalsIgnoreCase(type)
+					|| AppConstants.SDK.equalsIgnoreCase(type)) {
+				isProjectTypeValid = true;
 			}
+		} else {
+			isProjectTypeValid = true;
 		}
 		try {
 			if (!isProjectTypeValid) {
@@ -92,64 +90,40 @@ public class ProjectsService {
 					List<SdkProjectEntity> sdkProjectEntityList = new ArrayList<SdkProjectEntity>();
 					sdkProjectEntityList = sdkProjectRepository.findAllByPartnerId(partnerId);
 					sdkProjectEntityList.forEach(entity -> {
-						SdkProjectDto sdkProjectDto = new SdkProjectDto();
-						sdkProjectDto.setId(entity.getId());
-						sdkProjectDto.setName(entity.getName());
-						sdkProjectDto.setProjectType(entity.getProjectType());
-						sdkProjectDto.setPurpose(entity.getPurpose());
-						sdkProjectDto.setUrl(entity.getUrl());
-						sdkProjectDto.setPartnerId(entity.getPartnerId());
-						sdkProjectDto.setCrBy(entity.getCrBy());
-						sdkProjectDto.setCrDate(entity.getCrDate());
-						sdkProjectDto.setUpBy(entity.getUpBy());
-						sdkProjectDto.setUpdDate(entity.getUpdDate());
-						sdkProjectsDtoList.add(sdkProjectDto);
+						ProjectDto projectDto = new ProjectDto();
+						projectDto.setId(entity.getId());
+						projectDto.setName(entity.getName());
+						projectDto.setProjectType(entity.getProjectType());
+						projectDto.setCrDate(entity.getCrDate());
+						projectsList.add(projectDto);
 					});
 				}
 				if (fetchAll || type.equalsIgnoreCase(AppConstants.SBI)) {
 					List<SbiProjectEntity> sbiProjectEntityList = new ArrayList<SbiProjectEntity>();
 					sbiProjectEntityList = sbiProjectRepository.findAllByPartnerId(partnerId);
 					sbiProjectEntityList.forEach(entity -> {
-						SbiProjectDto sbiProjectDto = new SbiProjectDto();
-						sbiProjectDto.setId(entity.getId());
-						sbiProjectDto.setName(entity.getName());
-						sbiProjectDto.setProjectType(entity.getProjectType());
-						sbiProjectDto.setPurpose(entity.getPurpose());
-						sbiProjectDto.setSbiVersion(entity.getSbiVersion());
-						sbiProjectDto.setDeviceType(entity.getDeviceType());
-						sbiProjectDto.setDeviceSubType(entity.getDeviceSubType());
-						sbiProjectDto.setPartnerId(entity.getPartnerId());
-						sbiProjectDto.setCrBy(entity.getCrBy());
-						sbiProjectDto.setCrDate(entity.getCrDate());
-						sbiProjectDto.setUpBy(entity.getUpBy());
-						sbiProjectDto.setUpdDate(entity.getUpdDate());
-						sbiProjectsDtoList.add(sbiProjectDto);
+						ProjectDto projectDto = new ProjectDto();
+						projectDto.setId(entity.getId());
+						projectDto.setName(entity.getName());
+						projectDto.setProjectType(entity.getProjectType());
+						projectDto.setCrDate(entity.getCrDate());
+						projectsList.add(projectDto);
 					});
 				}
 				if (fetchAll || type.equalsIgnoreCase(AppConstants.ABIS)) {
 					List<AbisProjectEntity> abisProjectEntityList = new ArrayList<AbisProjectEntity>();
 					abisProjectEntityList = abisProjectRepository.findAllByPartnerId(partnerId);
 					abisProjectEntityList.forEach(entity -> {
-						AbisProjectDto abisProjectDto = new AbisProjectDto();
-						abisProjectDto.setId(entity.getId());
-						abisProjectDto.setName(entity.getName());
-						abisProjectDto.setProjectType(entity.getProjectType());
-						abisProjectDto.setUrl(entity.getUrl());
-						abisProjectDto.setUsername(entity.getUsername());
-						abisProjectDto.setPassword(entity.getPassword());
-						abisProjectDto.setQueueName(entity.getQueueName());
-						abisProjectDto.setPartnerId(entity.getPartnerId());
-						abisProjectDto.setCrBy(entity.getCrBy());
-						abisProjectDto.setCrDate(entity.getCrDate());
-						abisProjectDto.setUpBy(entity.getUpBy());
-						abisProjectDto.setUpdDate(entity.getUpdDate());
-						abisProjectsDtoList.add(abisProjectDto);
+						ProjectDto projectDto = new ProjectDto();
+						projectDto.setId(entity.getId());
+						projectDto.setName(entity.getName());
+						projectDto.setProjectType(entity.getProjectType());
+						projectDto.setCrDate(entity.getCrDate());
+						projectsList.add(projectDto);
 					});
 				}
 			}
-			projectsResponseDto.setSdkProjects(sdkProjectsDtoList);
-			projectsResponseDto.setSbiProjects(sbiProjectsDtoList);
-			projectsResponseDto.setAbisProjects(abisProjectsDtoList);
+			projectsResponseDto.setProjects(projectsList);
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ExceptionUtils.getStackTrace(ex));
 			log.error("sessionId", "idType", "id", "In getProjects method of Projects Service - " + ex.getMessage());
