@@ -14,7 +14,8 @@ CREATE TABLE toolkit.sbi_projects(
 	upd_by character varying(256),
 	upd_dtimes timestamp,
 	is_deleted boolean,
-	del_dtimes timestamp 
+	del_dtimes timestamp,
+	CONSTRAINT sbiprojectsid_pk PRIMARY KEY (id)  
 );
 
 CREATE INDEX IF NOT EXISTS idx_sbi_projects_id ON toolkit.sbi_projects USING btree (id);
