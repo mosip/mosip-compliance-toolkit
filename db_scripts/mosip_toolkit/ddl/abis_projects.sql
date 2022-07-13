@@ -15,7 +15,7 @@ CREATE TABLE toolkit.abis_projects(
 	upd_dtimes timestamp,
 	is_deleted boolean,
 	del_dtimes timestamp,
-	CONSTRAINT abisprojectsid_pk PRIMARY KEY (id) 
+	CONSTRAINT abisprojectsid_pk PRIMARY KEY (id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_abis_projects_id ON toolkit.abis_projects USING btree (id);
@@ -23,7 +23,7 @@ CREATE INDEX IF NOT EXISTS idx_abis_projects_partner_id ON toolkit.abis_projects
 COMMENT ON TABLE toolkit.abis_projects IS 'This table all the abis projects for the user.';
 COMMENT ON COLUMN toolkit.abis_projects.id IS 'ID: Unique Id generated for an project.';
 COMMENT ON COLUMN toolkit.abis_projects.name IS 'Name: name of the project.';
-COMMENT ON COLUMN toolkit.abis_projects.project_type IS 'Type: typeof project abis, SBI or ABIS.';
+COMMENT ON COLUMN toolkit.abis_projects.project_type IS 'Type: typeof project SDK, SBI or ABIS.';
 COMMENT ON COLUMN toolkit.abis_projects.url IS 'URL: the url where abis is running on users machine.';
 COMMENT ON COLUMN toolkit.abis_projects.username IS 'username: the username for ABIS queue';
 COMMENT ON COLUMN toolkit.abis_projects.password IS 'password: the password for ABIS queue';

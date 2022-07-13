@@ -3,10 +3,17 @@
 
 -- FOREIGN KEY CONSTRAINTS : mosip_toolkit database/schema.
 
--- Example:
--- object: fk_appldoc_appldem | type: CONSTRAINT --
--- ALTER TABLE prereg.applicant_document DROP CONSTRAINT IF EXISTS fk_appldoc_appldem CASCADE;
--- ALTER TABLE prereg.applicant_document ADD CONSTRAINT fk_appldoc_appldem FOREIGN KEY (prereg_id)
--- REFERENCES prereg.applicant_demographic (prereg_id) MATCH SIMPLE
--- ON DELETE NO ACTION ON UPDATE NO ACTION;
--- ddl-end --
+ALTER TABLE toolkit.collections ADD CONSTRAINT fk_sbi_projects_collections FOREIGN KEY (sbi_project_id)
+REFERENCES toolkit.sbi_projects (id) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+--ddl-end --
+
+ALTER TABLE toolkit.collections ADD CONSTRAINT fk_abis_projects_collections FOREIGN KEY (abis_project_id)
+REFERENCES toolkit.abis_projects (id) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+--ddl-end --
+
+ALTER TABLE toolkit.collections ADD CONSTRAINT fk_sdk_projects_collections FOREIGN KEY (sdk_project_id)
+REFERENCES toolkit.sdk_projects (id) MATCH SIMPLE
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+--ddl-end --
