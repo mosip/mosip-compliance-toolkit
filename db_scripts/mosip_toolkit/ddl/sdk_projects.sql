@@ -13,7 +13,7 @@ CREATE TABLE toolkit.sdk_projects(
 	upd_dtimes timestamp,
 	is_deleted boolean,
 	del_dtimes timestamp,
-	CONSTRAINT sdkprojectsid_pk PRIMARY KEY (id) 
+	CONSTRAINT sdkprojectsid_pk PRIMARY KEY (id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_sdk_projects_id ON toolkit.sdk_projects USING btree (id);
