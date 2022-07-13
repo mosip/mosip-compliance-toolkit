@@ -1,30 +1,26 @@
 package io.mosip.compliance.toolkit.service;
 
-import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
-import io.mosip.kernel.core.authmanager.authadapter.model.MosipUserDto;
-import org.junit.Before;
+import io.mosip.compliance.toolkit.dto.ProjectDto;
+import io.mosip.compliance.toolkit.dto.ProjectsResponseDto;
+import io.mosip.kernel.core.http.ResponseWrapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.WebApplicationContext;
+
+import org.junit.Assert;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @ContextConfiguration(classes = { TestContext.class, WebApplicationContext.class })
 @RunWith(SpringRunner.class)
 @WebMvcTest
-@PrepareForTest( { ProjectsService.class })
 public class ProjectsServiceTest {
 
     @InjectMocks
@@ -36,7 +32,14 @@ public class ProjectsServiceTest {
      */
     @Test
     public void getProjectsTest(){
-        projectsService.getProjects("other");
+//        Expected
+        List<ProjectDto> projects = new ArrayList<>();
+        ProjectsResponseDto projectsResponseDtoExpected = new ProjectsResponseDto();
+        projectsResponseDtoExpected.setProjects(projects);
+
+        ResponseWrapper<ProjectsResponseDto> responseWrapper = projectsService.getProjects("other");
+        Assert.assertEquals(projectsResponseDtoExpected.getProjects(),
+                responseWrapper.getResponse().getProjects());
     }
 
     /*
@@ -44,6 +47,10 @@ public class ProjectsServiceTest {
      */
     @Test
     public void getProjectsTestException(){
+//        Expected
+        ProjectsResponseDto projectsResponseDtoExpected = new ProjectsResponseDto();
+        projectsResponseDtoExpected.setProjects(null);
+
 //        When type=SBI
         projectsService.getProjects("SBI");
 //        When type=ABIS
@@ -51,17 +58,10 @@ public class ProjectsServiceTest {
 //        When type=SDK
         projectsService.getProjects("SDK");
 //        When type=null
-        projectsService.getProjects(null);
+        ResponseWrapper<ProjectsResponseDto> responseWrapper = projectsService.getProjects(null);
+        Assert.assertEquals(projectsResponseDtoExpected.getProjects(),
+                responseWrapper.getResponse().getProjects());
     }
-
-//    @Test
-//    public void authUserDetailsTest() throws Exception {
-//
-//        SecurityContextHolder securityContextHolder = PowerMockito.mock(SecurityContextHolder.class);
-//        PowerMockito.whenNew(SecurityContextHolder.class).withNoArguments().thenReturn(securityContextHolder);
-//        ReflectionTestUtils.invokeMethod(projectsService, "authUserDetails");
-//    }
-
 }
 
 

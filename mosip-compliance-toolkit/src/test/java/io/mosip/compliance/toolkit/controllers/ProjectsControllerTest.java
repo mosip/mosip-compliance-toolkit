@@ -1,6 +1,9 @@
 package io.mosip.compliance.toolkit.controllers;
 
+import io.mosip.compliance.toolkit.dto.ProjectsResponseDto;
 import io.mosip.compliance.toolkit.service.ProjectsService;
+import io.mosip.kernel.core.http.ResponseWrapper;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -38,7 +41,11 @@ public class ProjectsControllerTest {
      */
     @Test
     public void getProjectsTest(){
+//        Expected
+        ResponseWrapper<ProjectsResponseDto> expected = null;
+
         String type = null;
-        projectsController.getProjects(type);
+        ResponseWrapper<ProjectsResponseDto> responseWrapper = projectsController.getProjects(type);
+        Assert.assertEquals(expected, responseWrapper);
     }
 }
