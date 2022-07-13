@@ -3,3 +3,5 @@
 \ir ddl/sdk_projects.sql
 \ir ddl/sbi_projects.sql
 \ir ddl/abis_projects.sql
+\ir ddl/collections.sql
+\ir ddl/testcase.sql
