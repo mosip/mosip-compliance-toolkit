@@ -126,6 +126,7 @@ jobs:
 
       - name: Publish the maven package
         run: |
+          cd mosip-compliance-toolkit
           mvn -B deploy  -DaltDeploymentRepository=ossrh::default::${{ secrets.RELEASE_URL }} -s $GITHUB_WORKSPACE/settings.xml -f pom.xml
         env:
           GITHUB_TOKEN: ${{secrets.RELEASE_TOKEN}}
