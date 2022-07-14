@@ -6,10 +6,15 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.WebApplicationContext;
 
 import org.junit.Assert;
@@ -61,6 +66,18 @@ public class ProjectsServiceTest {
         ResponseWrapper<ProjectsResponseDto> responseWrapper = projectsService.getProjects(null);
         Assert.assertEquals(projectsResponseDtoExpected.getProjects(),
                 responseWrapper.getResponse().getProjects());
+    }
+
+    /*
+     * This class tests the authUserDetails method
+     */
+    @Test
+    public void authUserDetailsTest(){
+        Authentication authentication = Mockito.mock(Authentication.class);
+        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        ReflectionTestUtils.invokeMethod(projectsService, "authUserDetails");
     }
 }
 
