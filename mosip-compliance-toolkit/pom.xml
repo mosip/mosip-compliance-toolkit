@@ -44,7 +44,6 @@
 		<mysql.connector.version>5.1.46</mysql.connector.version>
 		<h2.version>1.4.197</h2.version>
 		<postgresql.version>42.2.2</postgresql.version>
-		
 		<swagger.core.version>2.0.7</swagger.core.version>
 		<swagger.annotations.version>1.5.20</swagger.annotations.version>
 		<springfox.version>2.9.2</springfox.version>
@@ -91,6 +90,10 @@
 			<artifactId>spring-cloud-starter-config</artifactId>
 			<version>${spring-cloud-config.version}</version>
 		</dependency>
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
@@ -168,7 +171,6 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>${postgresql.version}</version>
 		</dependency>
 	</dependencies>
 	<distributionManagement>

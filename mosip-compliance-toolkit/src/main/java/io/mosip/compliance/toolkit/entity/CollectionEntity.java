@@ -1,6 +1,5 @@
 package io.mosip.compliance.toolkit.entity;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -16,7 +15,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * This entity class defines the database table sbi_projects.
+ * This entity class defines the database table collections.
  * 
  * @author Mayura Deshmukh
  * @since 1.0.0
@@ -24,36 +23,27 @@ import lombok.ToString;
  */
 @Component
 @Entity
-@Table(name = "sbi_projects", schema = "toolkit")
+@Table(name = "collections", schema = "toolkit")
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
-public class SbiProjectEntity implements Serializable {
-
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 1L;
+public class CollectionEntity {
 
 	@Id
 	private String id;
 
+	@Column(name = "sbi_project_id")
+	private String sbiProjectId;
+
+	@Column(name = "sdk_project_id")
+	private String sdkProjectId;
+
+	@Column(name = "abis_project_id")
+	private String abisProjectId;
+
 	@Column(name = "name")
 	private String name;
-
-	@Column(name = "project_type")
-	private String projectType;
-
-	@Column(name = "sbi_version")
-	private String sbiVersion;
-
-	@Column(name = "purpose")
-	private String purpose;
-
-	@Column(name = "device_type")
-	private String deviceType;
-
-	@Column(name = "device_sub_type")
-	private String deviceSubType;
 
 	@Column(name = "partner_id")
 	private String partnerId;

@@ -17,7 +17,7 @@ public class ProjectDto {
 	
 	private String projectType;
 	
-	private int collectionsCount;
+	private long collectionsCount;
 	
 	private LocalDateTime crDate;
 
