@@ -73,7 +73,6 @@ public class ProjectsServiceTest {
     @Test
     public void authUserDetailsTest(){
         Authentication authentication = Mockito.mock(Authentication.class);
-//        Mockito.whens() for your authorization object
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
