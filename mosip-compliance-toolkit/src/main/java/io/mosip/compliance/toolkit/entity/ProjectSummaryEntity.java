@@ -14,6 +14,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+
+/**
+ * This entity class defines the many named native queries and their mappings.
+ * 
+ * @author Mayura Deshmukh
+ * @since 1.0.0
+ *
+ */
 @Entity
 @Getter
 @Setter

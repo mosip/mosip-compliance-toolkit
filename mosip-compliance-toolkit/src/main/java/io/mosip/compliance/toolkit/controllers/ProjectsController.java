@@ -12,6 +12,14 @@ import io.mosip.compliance.toolkit.service.ProjectsService;
 import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.kernel.core.http.ResponseWrapper;
 
+
+/**
+ * This controller class defines the endpoints for all projects.
+ * 
+ * @author Mayura Deshmukh
+ * @since 1.0.0
+ *
+ */
 @RestController
 public class ProjectsController {
 
