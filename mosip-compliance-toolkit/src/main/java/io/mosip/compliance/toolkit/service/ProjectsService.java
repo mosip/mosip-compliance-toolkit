@@ -22,6 +22,14 @@ import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 
+
+/**
+ * This service class defines services for all the endpoints for all projects.
+ * 
+ * @author Mayura Deshmukh
+ * @since 1.0.0
+ *
+ */
 @Component
 public class ProjectsService {
 
@@ -38,7 +46,7 @@ public class ProjectsService {
 	}
 
 	private String getPartnerId() {
-		String partnerId = authUserDetails().getUserId();
+		String partnerId = authUserDetails().getUsername();
 		// TODO: hardcoded partnerId
 		partnerId = "1234567890";
 		return partnerId;
