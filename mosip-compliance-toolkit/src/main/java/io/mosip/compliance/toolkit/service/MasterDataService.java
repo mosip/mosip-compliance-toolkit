@@ -69,14 +69,13 @@ public class MasterDataService {
 		return responseWrapper;
 	}
 
-	private Map<String, String> prepareDataFromJson(MasterDataEntity masterDataEntity){
-		Map<String, String> map = new HashMap<>();
-		if(null != masterDataEntity && null != masterDataEntity.getValueJson()) {
-			JSONArray dataArray = new JSONArray(masterDataEntity.getValueJson());
-			for (int i = 0; i < dataArray.length(); i++) {
-				map.put(dataArray.getJSONObject(i).getString("code"), dataArray.getJSONObject(i).getString("value"));
-			}
-		}
-		return map;
-	}
+	/*
+	 * private Map<String, String> prepareDataFromJson(MasterDataEntity
+	 * masterDataEntity){ Map<String, String> map = new HashMap<>(); if(null !=
+	 * masterDataEntity && null != masterDataEntity.getValueJson()) { JSONArray
+	 * dataArray = new JSONArray(masterDataEntity.getValueJson()); for (int i = 0; i
+	 * < dataArray.length(); i++) {
+	 * map.put(dataArray.getJSONObject(i).getString("code"),
+	 * dataArray.getJSONObject(i).getString("value")); } } return map; }
+	 */
 }
