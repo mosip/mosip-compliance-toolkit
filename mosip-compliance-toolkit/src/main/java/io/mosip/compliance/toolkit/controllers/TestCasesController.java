@@ -4,6 +4,9 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -18,10 +21,14 @@ import io.mosip.compliance.toolkit.config.TestCasesConfig;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.testcases.RequestValidateDto;
 import io.mosip.compliance.toolkit.dto.testcases.ResponseValidateDto;
+import io.mosip.compliance.toolkit.dto.testcases.TestCaseRequestDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResponseDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidatorDefDto;
 import io.mosip.compliance.toolkit.service.TestCasesService;
 import io.mosip.compliance.toolkit.validators.BaseValidator;
+import io.mosip.kernel.core.http.RequestWrapper;
+import io.mosip.kernel.core.http.ResponseFilter;
+import io.mosip.kernel.core.http.ResponseWrapper;
 
 @RestController
 public class TestCasesController {
@@ -147,5 +154,27 @@ public class TestCasesController {
 		} catch (Exception e) {
 			return e.getLocalizedMessage();
 		}
+	}
+	
+	/**
+	* testcases json array.
+	*
+	* @param TestCaseRequestDto
+	* @return
+	*/
+	@ResponseFilter
+	@PostMapping(value = "/saveTestCases", produces = "application/json")
+	public ResponseWrapper<Map<String, String>> saveTestCases(
+		@RequestBody @Valid RequestWrapper<TestCaseRequestDto> testCaseRequestDto) throws Exception {
+		ResponseWrapper<Map<String, String>> responseDto = new ResponseWrapper<Map<String, String>>();
+		responseDto.setResponse (service.saveTestCases(testCaseRequestDto.getRequest().getTestCases(), getTestCaseSchemaJson()));
+		return responseDto;
+	}
+	
+	private String getTestCaseSchemaJson() throws Exception
+	{
+		File file = ResourceUtils.getFile("classpath:schemas/testcase_schema.json");
+		// Read File Content
+		return new String(Files.readAllBytes(file.toPath()));
 	}
 }
