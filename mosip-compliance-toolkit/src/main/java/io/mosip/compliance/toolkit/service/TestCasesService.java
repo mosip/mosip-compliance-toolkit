@@ -8,10 +8,12 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
@@ -26,23 +28,34 @@ import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
 
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.config.TestCasesConfig;
 import io.mosip.compliance.toolkit.constants.AppConstants;
+import io.mosip.compliance.toolkit.constants.ToolkitErrorCode;
 import io.mosip.compliance.toolkit.dto.sdk.CheckQualityRequestDto;
 import io.mosip.compliance.toolkit.dto.sdk.RequestDto;
+import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResponseDto;
+import io.mosip.compliance.toolkit.entity.TestCaseProjectEntity;
+import io.mosip.compliance.toolkit.exceptions.TestCaseException;
+import io.mosip.compliance.toolkit.repository.TestCasesProjectRepository;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.biometrics.spi.CbeffUtil;
 import io.mosip.kernel.cbeffutil.impl.CbeffImpl;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
+import io.mosip.kernel.core.logger.spi.Logger;
 
 @Component
 public class TestCasesService {
 
 	@Autowired
 	ObjectMapper objectMapper;
+
+	@Autowired
+	TestCasesProjectRepository testCasesProjectRepository;
 
 	private CbeffUtil cbeffReader = new CbeffImpl();
 	
@@ -53,6 +66,18 @@ public class TestCasesService {
 	private static Map<String, byte[]> inputFiles = new HashMap<>();
 
 	private static final String VERSION = "1.0";
+	private Logger log = LoggerConfiguration.logConfig(ProjectsService.class);
+
+	private AuthUserDetails authUserDetails() {
+		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
+
+	private String getPartnerId() {
+		String partnerId = authUserDetails().getUserId();
+		// TODO: hardcoded partnerId
+		partnerId = "1234567890";
+		return partnerId;
+	}
 
 	public List<String> generateTestCase(String testCaseType, String testCaseSchemaJson,
 			List<TestCasesConfig.TestCaseConfig> testCases) throws Exception {
@@ -269,6 +294,71 @@ public class TestCasesService {
 		}
 	}
 
+	public Map<String, String> saveTestCases(List<TestCaseDto> values, String testCaseSchemaJson) throws Exception {
+		log.info("saveTestCases started");
+		Map<String, String> savedValues = new HashMap<String, String> ();
+		for (TestCaseDto testCaseDto : values)
+		{
+			//Do JSON Schema Validation
+			String jsonValue = objectMapper.writeValueAsString (testCaseDto);
+			if (AppConstants.SUCCESS.equals(this.validateJsonWithSchema(jsonValue, testCaseSchemaJson).getStatus())) {
+				//Get JSON Object
+				//Do Validation on content of JSON
+				if (isValidTestCases(testCaseDto))
+				{
+					String testCaseId = testCaseDto.getTestId();
+					Optional<TestCaseProjectEntity> checkTestCaseProjectEntity = Optional.empty();
+					checkTestCaseProjectEntity = testCasesProjectRepository.findById(testCaseId);
+					
+					//else if test case not present .. save
+					if (checkTestCaseProjectEntity.isEmpty() || !checkTestCaseProjectEntity.isPresent()) {
+						TestCaseProjectEntity testCaseProjectEntity = new TestCaseProjectEntity ();
+						testCaseProjectEntity.setId(testCaseId);
+						testCaseProjectEntity.setTestcaseJson(jsonValue);
+						testCaseProjectEntity.setTestcaseType(testCaseDto.getTestCaseType());
+						testCaseProjectEntity.setSpecVersion(testCaseDto.getSpecVersion());
+						testCaseProjectEntity = testCasesProjectRepository.save(testCaseProjectEntity);
+					}
+					//Check if test case present .. update
+					else {
+						TestCaseProjectEntity testCaseProjectEntity = checkTestCaseProjectEntity.get();
+						testCaseProjectEntity.setTestcaseJson(jsonValue);
+						testCaseProjectEntity.setTestcaseType(testCaseDto.getTestCaseType());
+						testCaseProjectEntity.setSpecVersion(testCaseDto.getSpecVersion());
+						testCaseProjectEntity = testCasesProjectRepository.update(testCaseProjectEntity);
+					}
+					savedValues.put(testCaseId, jsonValue);
+				}
+			}
+			else
+			{
+				ToolkitErrorCode errorCode = null; 
+				errorCode = ToolkitErrorCode.INVALID_TEST_CASE_JSON;
+				throw new TestCaseException (errorCode.getErrorCode(), errorCode.getErrorMessage ());
+			}
+		}
+		return savedValues;
+	}
+	
+	/**
+	* Verifies test case is valid.
+	* validates testcaseid starts with typename
+	*
+	* @param TestCaseDto
+	* @return boolean
+	*/
+	private boolean isValidTestCases(TestCaseDto testCaseDto) throws TestCaseException {
+		ToolkitErrorCode errorCode = null; 
+		String type = testCaseDto.getTestCaseType();
+		String testId = testCaseDto.getTestId();
+		if (!testId.startsWith(type)){
+			errorCode = ToolkitErrorCode.INVALID_TEST_CASE_ID;
+			throw new TestCaseException (errorCode.getErrorCode(), errorCode.getErrorMessage ());
+		}		
+
+		return true;
+	}
+	
 	private byte[] getCbeffTestData(String orgName, String testcaseId) throws IOException {
 
 		if (orgName == null) {

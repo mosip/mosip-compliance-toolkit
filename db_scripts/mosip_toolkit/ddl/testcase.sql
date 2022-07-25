@@ -4,6 +4,7 @@ CREATE TABLE toolkit.testcase(
 	id character varying(36) NOT NULL,
 	testcase_json character varying NOT NULL,
 	testcase_type character varying(64) NOT NULL,
+	spec_version character varying(20) NOT NULL,
 	CONSTRAINT testcaseid_pk PRIMARY KEY (id) 
 );
 
