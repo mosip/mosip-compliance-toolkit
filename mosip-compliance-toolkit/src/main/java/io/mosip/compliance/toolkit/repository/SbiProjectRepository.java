@@ -1,13 +1,13 @@
 package io.mosip.compliance.toolkit.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import io.mosip.compliance.toolkit.entity.ProjectSummaryEntity;
 import io.mosip.compliance.toolkit.entity.SbiProjectEntity;
 import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
 
@@ -24,5 +24,8 @@ public interface SbiProjectRepository extends BaseRepository<SbiProjectEntity, S
 
 	@Query("SELECT e FROM SbiProjectEntity e  WHERE e.partnerId= ?1 and e.projectType='SBI' and e.isDeleted<>'true' order by e.crDate desc")
 	public List<SbiProjectEntity> findAllByPartnerId(String partnerId);
+
+	public Optional<SbiProjectEntity> findById(String id);
+	
 	
 }
