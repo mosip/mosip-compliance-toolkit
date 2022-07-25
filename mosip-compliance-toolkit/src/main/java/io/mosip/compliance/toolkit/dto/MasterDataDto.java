@@ -11,8 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MasterDataDto {
-
-	private String id;
 	
 	private String name;
 	

@@ -37,8 +37,6 @@ public class MasterDataEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	private String id;
-	
 	@Column(name = "name")
 	private String name;
 	
@@ -53,11 +51,5 @@ public class MasterDataEntity implements Serializable {
 
 	@Column(name = "cr_dtimes")
 	private LocalDateTime crDate;
-
-	@Column(name = "upd_by")
-	private String upBy;
-
-	@Column(name = "upd_dtimes")
-	private LocalDateTime updDate;
 	
 }
