@@ -16,11 +16,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
+import io.mosip.compliance.toolkit.constants.ToolkitErrorCode;
 import io.mosip.compliance.toolkit.dto.SbiProjectDto;
-import io.mosip.compliance.toolkit.dto.SbiProjectResponseDto;
 import io.mosip.compliance.toolkit.entity.SbiProjectEntity;
 import io.mosip.compliance.toolkit.repository.SbiProjectRepository;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 
@@ -32,18 +33,39 @@ public class SbiProjectService {
 	private SbiProjectRepository sbiProjectRepository;
 	private Logger log = LoggerConfiguration.logConfig(SbiProjectService.class);
 
+	
+	private AuthUserDetails authUserDetails() {
+		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
+	private String getPartnerId() {
+		String partnerId = authUserDetails().getUserId();
+		return partnerId;
+	}
+	
+	
 	public ResponseWrapper<SbiProjectDto> getSbiProject(String id) {
 		ResponseWrapper<SbiProjectDto> responseWrapper = new ResponseWrapper<>();
 		SbiProjectDto sbiProjectDto = new SbiProjectDto();
-		Optional<SbiProjectEntity> optionalSbiProjectEntity = sbiProjectRepository.findById(id);
-		if(optionalSbiProjectEntity.isPresent()) {
-			SbiProjectEntity sbiProjectEntity = optionalSbiProjectEntity.get();
-			
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.registerModule(new JavaTimeModule());
-			objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			sbiProjectDto = objectMapper.convertValue(sbiProjectEntity, SbiProjectDto.class); 
-			
+		try {
+			Optional<SbiProjectEntity> optionalSbiProjectEntity = sbiProjectRepository.findById(id, getPartnerId());
+			if(optionalSbiProjectEntity.isPresent()) {
+				SbiProjectEntity sbiProjectEntity = optionalSbiProjectEntity.get();
+
+				ObjectMapper objectMapper = new ObjectMapper();
+				objectMapper.registerModule(new JavaTimeModule());
+				objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+				sbiProjectDto = objectMapper.convertValue(sbiProjectEntity, SbiProjectDto.class); 
+
+			}
+		}catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id", "In getSbiProject method of SbiProjectService Service - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCode.PROJECTS_NOT_AVAILABLE.getErrorCode());
+			serviceError.setMessage(ToolkitErrorCode.PROJECTS_NOT_AVAILABLE.getErrorMessage()+ " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
 		}
 		responseWrapper.setId(getProjectsId);
 		responseWrapper.setResponse(sbiProjectDto);
