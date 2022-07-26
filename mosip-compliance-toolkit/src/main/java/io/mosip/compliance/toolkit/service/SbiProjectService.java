@@ -10,6 +10,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.SbiProjectDto;
@@ -27,60 +31,24 @@ public class SbiProjectService {
 	@Autowired
 	private SbiProjectRepository sbiProjectRepository;
 	private Logger log = LoggerConfiguration.logConfig(SbiProjectService.class);
-	private AuthUserDetails authUserDetails() {
-		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	}
-	private String getPartnerId() {
-		String partnerId = authUserDetails().getUserId();
-		return partnerId;
-	}
-	private String getUserBy() {
-		String crBy = authUserDetails().getMail();
-		return crBy;
-	}
-	public ResponseWrapper<SbiProjectResponseDto> getSbiProject(String id) {
-		ResponseWrapper<SbiProjectResponseDto> responseWrapper = new ResponseWrapper<>();
-		SbiProjectResponseDto sbiProjectResponseDto = new SbiProjectResponseDto();
+
+	public ResponseWrapper<SbiProjectDto> getSbiProject(String id) {
+		ResponseWrapper<SbiProjectDto> responseWrapper = new ResponseWrapper<>();
+		SbiProjectDto sbiProjectDto = new SbiProjectDto();
 		Optional<SbiProjectEntity> optionalSbiProjectEntity = sbiProjectRepository.findById(id);
 		if(optionalSbiProjectEntity.isPresent()) {
 			SbiProjectEntity sbiProjectEntity = optionalSbiProjectEntity.get();
 			
-			SbiProjectDto sbiProjectDto = new SbiProjectDto();
-			sbiProjectDto.setId(sbiProjectEntity.getId());
-			sbiProjectDto.setName(sbiProjectEntity.getName());
-			sbiProjectDto.setProjectType(sbiProjectEntity.getProjectType());
-			sbiProjectDto.setSbiVersion(sbiProjectEntity.getSbiVersion());
-			sbiProjectDto.setPurpose(sbiProjectEntity.getPurpose());
-			sbiProjectDto.setDeviceType(sbiProjectEntity.getDeviceType());
-			sbiProjectDto.setDeviceSubType(sbiProjectEntity.getDeviceSubType());
-			sbiProjectDto.setPartnerId(sbiProjectEntity.getPartnerId());
-			sbiProjectDto.setCrBy(sbiProjectEntity.getCrBy());
-			sbiProjectDto.setCrDate(sbiProjectEntity.getCrDate());
-			sbiProjectDto.setUpBy(sbiProjectEntity.getUpBy());
-			sbiProjectDto.setUpdDate(sbiProjectEntity.getUpdDate());
-			
-			List<SbiProjectDto> sbiProjectDtoList = new ArrayList<SbiProjectDto>();
-			sbiProjectDtoList.add(sbiProjectDto);
-			
-			sbiProjectResponseDto.setSbiProjects(sbiProjectDtoList);
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.registerModule(new JavaTimeModule());
+			objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			sbiProjectDto = objectMapper.convertValue(sbiProjectEntity, SbiProjectDto.class); 
 			
 		}
 		responseWrapper.setId(getProjectsId);
-		responseWrapper.setResponse(sbiProjectResponseDto);
+		responseWrapper.setResponse(sbiProjectDto);
 		responseWrapper.setVersion(AppConstants.VERSION);		
 		responseWrapper.setResponsetime(LocalDateTime.now());
-		return responseWrapper;
-	}
-	public ResponseWrapper<SbiProjectDto> addSbiProject(List<SbiProjectDto> values) {
-		ResponseWrapper<SbiProjectDto> responseWrapper = new ResponseWrapper<>();
-		return responseWrapper;
-	}
-	public ResponseWrapper<SbiProjectDto> saveSbiProject(List<SbiProjectDto> values) {
-		ResponseWrapper<SbiProjectDto> responseWrapper = new ResponseWrapper<>();
-		return responseWrapper;
-	}
-	public ResponseWrapper<SbiProjectDto> deleteSbiProject(String id) {
-		ResponseWrapper<SbiProjectDto> responseWrapper = new ResponseWrapper<>();
 		return responseWrapper;
 	}
 

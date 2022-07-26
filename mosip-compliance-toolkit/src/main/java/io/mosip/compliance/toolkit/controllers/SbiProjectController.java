@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.mosip.compliance.toolkit.dto.SbiProjectDto;
 import io.mosip.compliance.toolkit.dto.SbiProjectResponseDto;
 import io.mosip.compliance.toolkit.service.SbiProjectService;
 import io.mosip.compliance.toolkit.util.RequestValidator;
@@ -32,7 +33,7 @@ public class SbiProjectController {
 	}
 	
 	@GetMapping(value = "/getSbiProject")
-	private ResponseWrapper<SbiProjectResponseDto> getProjectById(@RequestParam(required = true) String id){
+	private ResponseWrapper<SbiProjectDto> getProjectById(@RequestParam(required = true) String id){
 		return sbiProjectService.getSbiProject(id);
 	}
 
