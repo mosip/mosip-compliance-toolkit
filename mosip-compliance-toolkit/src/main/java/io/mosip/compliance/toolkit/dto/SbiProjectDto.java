@@ -31,8 +31,4 @@ public class SbiProjectDto {
 
 	private LocalDateTime crDate;
 
-	private String upBy;
-
-	private LocalDateTime updDate;
-
 }

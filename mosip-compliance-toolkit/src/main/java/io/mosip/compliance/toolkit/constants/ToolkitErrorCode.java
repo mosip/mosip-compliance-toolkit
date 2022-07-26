@@ -8,6 +8,7 @@ package io.mosip.compliance.toolkit.constants;
  */
 public enum ToolkitErrorCode {
 	PROJECTS_NOT_AVAILABLE("TOOLKIT_PROJECTS_001", "No project found for the user"),
+	SBI_PROJECT_NOT_AVAILABLE("TOOLKIT_PROJECTS_002", "No SBI project available"),
 	INVALID_REQUEST_ID("TOOLKIT_REQ_ERR_001", "Request id is invalid"),
 	INVALID_REQUEST_VERSION("TOOLKIT_REQ_ERR_002", "Request version is invalid"),
 	INVALID_REQUEST_DATETIME("TOOLKIT_REQ_ERR_003", "Invalid request time"),
