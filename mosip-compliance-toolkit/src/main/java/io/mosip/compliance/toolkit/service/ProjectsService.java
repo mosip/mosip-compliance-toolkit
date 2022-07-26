@@ -47,8 +47,6 @@ public class ProjectsService {
 
 	private String getPartnerId() {
 		String partnerId = authUserDetails().getUsername();
-		// TODO: hardcoded partnerId
-		partnerId = "1234567890";
 		return partnerId;
 	}
 
