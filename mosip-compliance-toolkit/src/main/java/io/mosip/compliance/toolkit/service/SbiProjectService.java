@@ -17,6 +17,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
+import io.mosip.compliance.toolkit.constants.ToolkitErrorCode;
 import io.mosip.compliance.toolkit.dto.SbiProjectDto;
 import io.mosip.compliance.toolkit.entity.SbiProjectEntity;
 import io.mosip.compliance.toolkit.repository.SbiProjectRepository;
@@ -65,10 +66,8 @@ public class SbiProjectService {
 			log.error("sessionId", "idType", "id", "In getSbiProject method of SbiProjectService Service - " + ex.getMessage());
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
 			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(io.mosip.compliance.toolkit.exceptions.ErrorCodes.TOOLKIT_PROJECTS_001.getCode());
-			serviceError
-			.setMessage(io.mosip.compliance.toolkit.exceptions.ErrorMessages.PROJECTS_NOT_AVAILABLE.getMessage()
-					+ " " + ex.getMessage());
+			serviceError.setErrorCode(ToolkitErrorCode.PROJECTS_NOT_AVAILABLE.getErrorCode());
+			serviceError.setMessage(ToolkitErrorCode.PROJECTS_NOT_AVAILABLE.getErrorMessage()+ " " + ex.getMessage());
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		}
