@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
+import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.ProjectDto;
 import io.mosip.compliance.toolkit.dto.ProjectsResponseDto;
 import io.mosip.compliance.toolkit.entity.ProjectSummaryEntity;
@@ -57,6 +58,7 @@ public class ProjectsService {
 		ResponseWrapper<ProjectsResponseDto> responseWrapper = new ResponseWrapper<>();
 		ProjectsResponseDto projectsResponseDto = new ProjectsResponseDto();
 		List<ProjectDto> projectsList = new ArrayList<ProjectDto>();
+		ToolkitErrorCodes errorCode = null; 
 
 		boolean isProjectTypeValid = false;
 		if (Objects.nonNull(type)) {
@@ -70,11 +72,10 @@ public class ProjectsService {
 		try {
 			if (!isProjectTypeValid) {
 				List<ServiceError> serviceErrorsList = new ArrayList<>();
+				errorCode = ToolkitErrorCodes.INVALID_PROJECT_TYPE;
 				ServiceError serviceError = new ServiceError();
-				serviceError
-						.setErrorCode(io.mosip.compliance.toolkit.exceptions.ErrorCodes.TOOLKIT_REQ_ERR_006.getCode());
-				serviceError.setMessage(
-						io.mosip.compliance.toolkit.exceptions.ErrorMessages.INVALID_PROJECT_TYPE.getMessage());
+				serviceError.setErrorCode(errorCode.getErrorCode());
+				serviceError.setMessage(errorCode.getErrorMessage());
 				serviceErrorsList.add(serviceError);
 				responseWrapper.setErrors(serviceErrorsList);
 			} else {
@@ -117,11 +118,10 @@ public class ProjectsService {
 			log.debug("sessionId", "idType", "id", ExceptionUtils.getStackTrace(ex));
 			log.error("sessionId", "idType", "id", "In getProjects method of Projects Service - " + ex.getMessage());
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			errorCode = ToolkitErrorCodes.INVALID_PROJECT_TYPE;
 			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(io.mosip.compliance.toolkit.exceptions.ErrorCodes.TOOLKIT_PROJECTS_001.getCode());
-			serviceError
-					.setMessage(io.mosip.compliance.toolkit.exceptions.ErrorMessages.PROJECTS_NOT_AVAILABLE.getMessage()
-							+ " " + ex.getMessage());
+			serviceError.setErrorCode(errorCode.getErrorCode());
+			serviceError.setMessage(errorCode.getErrorMessage() + " " + ex.getMessage());
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		}

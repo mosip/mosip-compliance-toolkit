@@ -19,5 +19,4 @@ public class TestCaseRequestDto implements Serializable {
 	@NotNull(message = "Values code can not be null")
     @Size(min=1, message = "Minimum one entry required")
 	private List<TestCaseDto> testCases;
-
 }
