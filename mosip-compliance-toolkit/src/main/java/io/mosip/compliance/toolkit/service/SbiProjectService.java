@@ -38,7 +38,7 @@ public class SbiProjectService {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 	private String getPartnerId() {
-		String partnerId = authUserDetails().getUserId();
+		String partnerId = authUserDetails().getUsername();
 		return partnerId;
 	}
 	
@@ -62,8 +62,8 @@ public class SbiProjectService {
 			log.error("sessionId", "idType", "id", "In getSbiProject method of SbiProjectService Service - " + ex.getMessage());
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
 			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCode.PROJECTS_NOT_AVAILABLE.getErrorCode());
-			serviceError.setMessage(ToolkitErrorCode.PROJECTS_NOT_AVAILABLE.getErrorMessage()+ " " + ex.getMessage());
+			serviceError.setErrorCode(ToolkitErrorCode.SBI_PROJECT_NOT_AVAILABLE.getErrorCode());
+			serviceError.setMessage(ToolkitErrorCode.SBI_PROJECT_NOT_AVAILABLE.getErrorMessage()+ " " + ex.getMessage());
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		}
