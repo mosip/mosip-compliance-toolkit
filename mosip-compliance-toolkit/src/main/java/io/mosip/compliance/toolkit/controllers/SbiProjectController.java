@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.compliance.toolkit.dto.SbiProjectDto;
-import io.mosip.compliance.toolkit.dto.SbiProjectResponseDto;
 import io.mosip.compliance.toolkit.service.SbiProjectService;
 import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.kernel.core.http.ResponseWrapper;
