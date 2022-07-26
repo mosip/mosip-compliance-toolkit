@@ -5,9 +5,12 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.stereotype.Component;
 
 import lombok.Getter;
@@ -35,6 +38,7 @@ public class SbiProjectEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@NotNull
 	private String id;
 
 	@Column(name = "name")
