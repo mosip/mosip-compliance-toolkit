@@ -19,7 +19,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @SqlResultSetMapping(name = "Mapping.CollectionsSummaryEntity", classes = {
-		@ConstructorResult(targetClass = CollectionsSummaryEntity.class, columns = {
+		@ConstructorResult(targetClass = CollectionTestrunEntity.class, columns = {
 				@ColumnResult(name = "collectionid", type = String.class),
 				@ColumnResult(name = "projectid", type = String.class),
 				@ColumnResult(name = "name", type = String.class),
@@ -27,22 +27,22 @@ import lombok.ToString;
 				@ColumnResult(name = "rundtimes", type = LocalDateTime.class)}) })
 @NamedNativeQuery(
 		name = "CollectionsSummaryEntity.getCollectionsOfSbiProject", 
-		resultClass = CollectionsSummaryEntity.class, 
+		resultClass = CollectionTestrunEntity.class, 
 		query = "SELECT c.id AS collectionid, c.sbi_project_id AS projectid, c.name AS name, c.cr_dtimes AS crdtimes, tr.run_dtimes AS rundtimes FROM collections AS c LEFT JOIN test_run AS tr ON (c.id = tr.collection_id) WHERE c.sbi_project_id = :projectId AND c.partner_id = :partnerId AND c.is_deleted<>'true' AND (tr.run_dtimes = (SELECT MAX(run_dtimes) FROM test_run AS tr2 WHERE tr2.collection_id = c.id) OR tr.run_dtimes IS NULL)", 
 		resultSetMapping = "Mapping.CollectionsSummaryEntity")
 @NamedNativeQuery(
 		name = "CollectionsSummaryEntity.getCollectionsOfSdkProject", 
-		resultClass = CollectionsSummaryEntity.class, 
+		resultClass = CollectionTestrunEntity.class, 
 		query = "SELECT c.id AS collectionid, c.sdk_project_id AS projectid, c.name AS name, c.cr_dtimes AS crdtimes, tr.run_dtimes AS rundtimes FROM collections AS c LEFT JOIN test_run AS tr ON (c.id = tr.collection_id) WHERE c.sdk_project_id = :projectId AND c.partner_id = :partnerId AND c.is_deleted<>'true' AND (tr.run_dtimes = (SELECT MAX(run_dtimes) FROM test_run AS tr2 WHERE tr2.collection_id = c.id) OR tr.run_dtimes IS NULL)", 
 		resultSetMapping = "Mapping.CollectionsSummaryEntity")
 @NamedNativeQuery(
 		name = "CollectionsSummaryEntity.getCollectionsOfAbisProject", 
-		resultClass = CollectionsSummaryEntity.class, 
+		resultClass = CollectionTestrunEntity.class, 
 		query = "SELECT c.id AS collectionid, c.abis_project_id AS projectid, c.name AS name, c.cr_dtimes AS crdtimes, tr.run_dtimes AS rundtimes FROM collections AS c LEFT JOIN test_run AS tr ON (c.id = tr.collection_id) WHERE c.abis_project_id = :projectId AND c.partner_id = :partnerId AND c.is_deleted<>'true' AND (tr.run_dtimes = (SELECT MAX(run_dtimes) FROM test_run AS tr2 WHERE tr2.collection_id = c.id) OR tr.run_dtimes IS NULL)", 
 		resultSetMapping = "Mapping.CollectionsSummaryEntity")
-public class CollectionsSummaryEntity {
+public class CollectionTestrunEntity {
 	
-	public CollectionsSummaryEntity(String collectionId, String projectId, String name, LocalDateTime crDtimes, LocalDateTime runDtimes) {
+	public CollectionTestrunEntity(String collectionId, String projectId, String name, LocalDateTime crDtimes, LocalDateTime runDtimes) {
 		super();
 		this.collectionId = collectionId;
 		this.projectId = projectId;
