@@ -27,8 +27,8 @@ import io.mosip.kernel.core.logger.spi.Logger;
 
 @Service
 public class SbiProjectService {
-	@Value("${mosip.toolkit.api.id.projects.get}")
-	private String getProjectsId;
+	@Value("${mosip.toolkit.api.id.sbi.project.get}")
+	private String getSbiProjectId;
 	@Autowired
 	private SbiProjectRepository sbiProjectRepository;
 	private Logger log = LoggerConfiguration.logConfig(SbiProjectService.class);
@@ -74,7 +74,7 @@ public class SbiProjectService {
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		}
-		responseWrapper.setId(getProjectsId);
+		responseWrapper.setId(getSbiProjectId);
 		responseWrapper.setResponse(sbiProjectDto);
 		responseWrapper.setVersion(AppConstants.VERSION);		
 		responseWrapper.setResponsetime(LocalDateTime.now());
