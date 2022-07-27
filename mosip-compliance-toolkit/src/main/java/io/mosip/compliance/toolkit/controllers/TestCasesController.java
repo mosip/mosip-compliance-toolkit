@@ -11,7 +11,9 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.ResourceUtils;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,9 +24,11 @@ import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.testcases.RequestValidateDto;
 import io.mosip.compliance.toolkit.dto.testcases.ResponseValidateDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseRequestDto;
+import io.mosip.compliance.toolkit.dto.testcases.TestCaseResponseDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResponseDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidatorDefDto;
 import io.mosip.compliance.toolkit.service.TestCasesService;
+import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.compliance.toolkit.validators.BaseValidator;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
@@ -42,6 +46,19 @@ public class TestCasesController {
 	@Autowired
 	private ApplicationContext context;
 
+	@Autowired
+	private RequestValidator requestValidator;
+	
+	/**
+	 * Initiates the binder.
+	 *
+	 * @param binder the binder
+	 */
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		binder.addValidators(requestValidator);
+	}
+	
 //	@GetMapping(value = "/validateRequest")
 //	public String doValidate() {
 //		try {
@@ -164,11 +181,9 @@ public class TestCasesController {
 	*/
 	@ResponseFilter
 	@PostMapping(value = "/saveTestCases", produces = "application/json")
-	public ResponseWrapper<Map<String, String>> saveTestCases(
+	public ResponseWrapper<TestCaseResponseDto> saveTestCases(
 		@RequestBody @Valid RequestWrapper<TestCaseRequestDto> testCaseRequestDto) throws Exception {
-		ResponseWrapper<Map<String, String>> responseDto = new ResponseWrapper<Map<String, String>>();
-		responseDto.setResponse (service.saveTestCases(testCaseRequestDto.getRequest().getTestCases(), getTestCaseSchemaJson()));
-		return responseDto;
+		return service.saveTestCases(testCaseRequestDto.getRequest().getTestCases(), getTestCaseSchemaJson());
 	}
 	
 	private String getTestCaseSchemaJson() throws Exception
