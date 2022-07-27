@@ -18,6 +18,7 @@ public enum ToolkitErrorCodes {
 	INVALID_TEST_CASE_ID("TOOLKIT_REQ_ERR_007", "Test Case Id is invalid"),
 	INVALID_TEST_CASE_JSON("TOOLKIT_REQ_ERR_008", "Test Case Json is invalid"),
 	SAVE_TEST_CASE_JSON_ERROR("TOOLKIT_REQ_ERR_009", "Save Test Case Json error"),
+	SAVE_SBI_PROJECT_DETAILS_ERROR("TOOLKIT_REQ_ERR_010", "Save SBI Project details error"),
 	TECHNICAL_ERROR_EXCEPTION("TOOLKIT_REQ_ERR_500", "Technical Error");
 
 	private final String errorCode;
