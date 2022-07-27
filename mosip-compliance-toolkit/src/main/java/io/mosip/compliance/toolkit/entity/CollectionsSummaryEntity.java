@@ -33,12 +33,12 @@ import lombok.ToString;
 @NamedNativeQuery(
 		name = "CollectionsSummaryEntity.getCollectionsOfSdkProject", 
 		resultClass = CollectionsSummaryEntity.class, 
-		query = "SELECT c.id AS collectionid, c.sdk_project_id AS project_id, c.name AS name, c.cr_dtimes AS crdtimes, tr.run_dtimes AS rundtimes FROM collections AS c LEFT JOIN test_run AS tr ON (c.id = tr.collection_id) WHERE c.sdk_project_id = :projectId AND c.partner_id = :partnerId AND c.is_deleted<>'true' AND (tr.run_dtimes = (SELECT MAX(run_dtimes) FROM test_run AS tr2 WHERE tr2.collection_id = c.id) OR tr.run_dtimes IS NULL)", 
+		query = "SELECT c.id AS collectionid, c.sdk_project_id AS projectid, c.name AS name, c.cr_dtimes AS crdtimes, tr.run_dtimes AS rundtimes FROM collections AS c LEFT JOIN test_run AS tr ON (c.id = tr.collection_id) WHERE c.sdk_project_id = :projectId AND c.partner_id = :partnerId AND c.is_deleted<>'true' AND (tr.run_dtimes = (SELECT MAX(run_dtimes) FROM test_run AS tr2 WHERE tr2.collection_id = c.id) OR tr.run_dtimes IS NULL)", 
 		resultSetMapping = "Mapping.CollectionsSummaryEntity")
 @NamedNativeQuery(
 		name = "CollectionsSummaryEntity.getCollectionsOfAbisProject", 
 		resultClass = CollectionsSummaryEntity.class, 
-		query = "SELECT c.id AS collectionid, c.abis_project_id AS project_id, c.name AS name, c.cr_dtimes AS crdtimes, tr.run_dtimes AS rundtimes FROM collections AS c LEFT JOIN test_run AS tr ON (c.id = tr.collection_id) WHERE c.abis_project_id = :projectId AND c.partner_id = :partnerId AND c.is_deleted<>'true' AND (tr.run_dtimes = (SELECT MAX(run_dtimes) FROM test_run AS tr2 WHERE tr2.collection_id = c.id) OR tr.run_dtimes IS NULL)", 
+		query = "SELECT c.id AS collectionid, c.abis_project_id AS projectid, c.name AS name, c.cr_dtimes AS crdtimes, tr.run_dtimes AS rundtimes FROM collections AS c LEFT JOIN test_run AS tr ON (c.id = tr.collection_id) WHERE c.abis_project_id = :projectId AND c.partner_id = :partnerId AND c.is_deleted<>'true' AND (tr.run_dtimes = (SELECT MAX(run_dtimes) FROM test_run AS tr2 WHERE tr2.collection_id = c.id) OR tr.run_dtimes IS NULL)", 
 		resultSetMapping = "Mapping.CollectionsSummaryEntity")
 public class CollectionsSummaryEntity {
 	

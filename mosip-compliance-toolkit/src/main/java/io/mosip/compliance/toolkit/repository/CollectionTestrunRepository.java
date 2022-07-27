@@ -10,7 +10,7 @@ import io.mosip.compliance.toolkit.entity.CollectionsSummaryEntity;
 import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
 
 @Repository("CollectionsSummaryRepository")
-public interface CollectionsSummaryRepository extends BaseRepository<CollectionsSummaryEntity, String>{
+public interface CollectionTestrunRepository extends BaseRepository<CollectionsSummaryEntity, String>{
 
 	@Query(name = "CollectionsSummaryEntity.getCollectionsOfSbiProject", nativeQuery = true)
 	public List<CollectionsSummaryEntity> getCollectionsOfSbiProjects(
