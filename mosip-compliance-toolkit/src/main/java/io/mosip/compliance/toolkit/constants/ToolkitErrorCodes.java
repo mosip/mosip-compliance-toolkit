@@ -8,7 +8,8 @@ package io.mosip.compliance.toolkit.constants;
  */
 public enum ToolkitErrorCodes {
 	PROJECTS_NOT_AVAILABLE("TOOLKIT_PROJECTS_001", "No project found for the user"),
-	SBI_PROJECT_NOT_AVAILABLE("TOOLKIT_PROJECTS_002", "No SBI project available"),
+	SBI_PROJECT_NOT_AVAILABLE("TOOLKIT_PROJECTS_002", "No matching SBI project available for the given id"),
+	COLLECTION_NOT_AVAILABLE("TOOLKIT_COLLECTIONS_001", "No matching Collection available for the given project"),
 	INVALID_REQUEST_ID("TOOLKIT_REQ_ERR_001", "Request id is invalid"),
 	INVALID_REQUEST_VERSION("TOOLKIT_REQ_ERR_002", "Request version is invalid"),
 	INVALID_REQUEST_DATETIME("TOOLKIT_REQ_ERR_003", "Invalid request time"),
@@ -17,6 +18,7 @@ public enum ToolkitErrorCodes {
 	INVALID_PROJECT_TYPE("TOOLKIT_REQ_ERR_006", "Project Type is invalid"),	
 	INVALID_TEST_CASE_ID("TOOLKIT_REQ_ERR_007", "Test Case Id is invalid"),
 	INVALID_TEST_CASE_JSON("TOOLKIT_REQ_ERR_008", "Test Case Json is invalid"),
+	INVALID_REQUEST_PARAM("TOOLKIT_REQ_ERR_009", "Invalid Request params"),
 	SAVE_TEST_CASE_JSON_ERROR("TOOLKIT_REQ_ERR_009", "Save Test Case Json error"),
 	TECHNICAL_ERROR_EXCEPTION("TOOLKIT_REQ_ERR_500", "Technical Error");
 

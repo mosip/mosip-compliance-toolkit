@@ -27,8 +27,8 @@ import io.mosip.kernel.core.logger.spi.Logger;
 
 @Service
 public class SbiProjectService {
-	@Value("${mosip.toolkit.api.id.projects.get}")
-	private String getProjectsId;
+	@Value("${mosip.toolkit.api.id.sbi.project.get}")
+	private String getSbiProjectId;
 	@Autowired
 	private SbiProjectRepository sbiProjectRepository;
 	private Logger log = LoggerConfiguration.logConfig(SbiProjectService.class);
@@ -45,7 +45,7 @@ public class SbiProjectService {
 	
 	public ResponseWrapper<SbiProjectDto> getSbiProject(String id) {
 		ResponseWrapper<SbiProjectDto> responseWrapper = new ResponseWrapper<>();
-		SbiProjectDto sbiProjectDto = new SbiProjectDto();
+		SbiProjectDto sbiProjectDto = null;
 		try {
 			Optional<SbiProjectEntity> optionalSbiProjectEntity = sbiProjectRepository.findById(id, getPartnerId());
 			if(optionalSbiProjectEntity.isPresent()) {
@@ -56,6 +56,13 @@ public class SbiProjectService {
 				objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 				sbiProjectDto = objectMapper.convertValue(sbiProjectEntity, SbiProjectDto.class); 
 
+			}else {
+				List<ServiceError> serviceErrorsList = new ArrayList<>();
+				ServiceError serviceError = new ServiceError();
+				serviceError.setErrorCode(ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorCode());
+				serviceError.setMessage(ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorMessage());
+				serviceErrorsList.add(serviceError);
+				responseWrapper.setErrors(serviceErrorsList);
 			}
 		}catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -67,7 +74,7 @@ public class SbiProjectService {
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		}
-		responseWrapper.setId(getProjectsId);
+		responseWrapper.setId(getSbiProjectId);
 		responseWrapper.setResponse(sbiProjectDto);
 		responseWrapper.setVersion(AppConstants.VERSION);		
 		responseWrapper.setResponsetime(LocalDateTime.now());
