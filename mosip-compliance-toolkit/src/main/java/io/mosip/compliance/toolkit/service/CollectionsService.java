@@ -17,8 +17,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCode;
-import io.mosip.compliance.toolkit.dto.CollectionsSummaryDto;
-import io.mosip.compliance.toolkit.dto.CollectionsSummaryResponseDto;
+import io.mosip.compliance.toolkit.dto.CollectionTestRunDto;
+import io.mosip.compliance.toolkit.dto.CollectionTestRunResponseDto;
 import io.mosip.compliance.toolkit.entity.CollectionsSummaryEntity;
 import io.mosip.compliance.toolkit.repository.CollectionsSummaryRepository;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
@@ -46,9 +46,9 @@ public class CollectionsService {
 		return partnerId;
 	}
 	
-	public ResponseWrapper<CollectionsSummaryResponseDto> getProjectCollectionsSummary(String type, String projectId){
-		ResponseWrapper<CollectionsSummaryResponseDto> responseWrapper = new ResponseWrapper<>();
-		CollectionsSummaryResponseDto collectionsSummaryResponseDto = new CollectionsSummaryResponseDto();
+	public ResponseWrapper<CollectionTestRunResponseDto> getProjectCollectionsSummary(String type, String projectId){
+		ResponseWrapper<CollectionTestRunResponseDto> responseWrapper = new ResponseWrapper<>();
+		CollectionTestRunResponseDto collectionsSummaryResponseDto = new CollectionTestRunResponseDto();
 		List<CollectionsSummaryEntity> collectionsEntityList = new ArrayList<>();
 		
 		try {
@@ -70,13 +70,13 @@ public class CollectionsService {
 		}
 		
 		if(!collectionsEntityList.isEmpty()) {
-			List<CollectionsSummaryDto> collectionsSummaryDtoList = new ArrayList<>();
+			List<CollectionTestRunDto> collectionsSummaryDtoList = new ArrayList<>();
 			for(CollectionsSummaryEntity entity: collectionsEntityList) {
 				
 				ObjectMapper objectMapper = new ObjectMapper();
 				objectMapper.registerModule(new JavaTimeModule());
 				objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-				CollectionsSummaryDto collectionsSummaryDto = objectMapper.convertValue(entity, CollectionsSummaryDto.class);
+				CollectionTestRunDto collectionsSummaryDto = objectMapper.convertValue(entity, CollectionTestRunDto.class);
 				
 				collectionsSummaryDtoList.add(collectionsSummaryDto);
 			}

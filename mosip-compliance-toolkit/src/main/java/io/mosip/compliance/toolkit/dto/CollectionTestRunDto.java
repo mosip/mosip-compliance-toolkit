@@ -9,7 +9,7 @@ import lombok.Setter;
 @Data
 @Getter
 @Setter
-public class CollectionsSummaryDto {
+public class CollectionTestRunDto {
 
 	private String collectionId;
 	
