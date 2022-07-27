@@ -3,6 +3,7 @@ package io.mosip.compliance.toolkit.service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
@@ -31,10 +33,12 @@ import com.networknt.schema.ValidationMessage;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.config.TestCasesConfig;
 import io.mosip.compliance.toolkit.constants.AppConstants;
-import io.mosip.compliance.toolkit.constants.ToolkitErrorCode;
+import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
+import io.mosip.compliance.toolkit.dto.ProjectsResponseDto;
 import io.mosip.compliance.toolkit.dto.sdk.CheckQualityRequestDto;
 import io.mosip.compliance.toolkit.dto.sdk.RequestDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
+import io.mosip.compliance.toolkit.dto.testcases.TestCaseResponseDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResponseDto;
 import io.mosip.compliance.toolkit.entity.TestCaseProjectEntity;
 import io.mosip.compliance.toolkit.exceptions.TestCaseException;
@@ -46,10 +50,16 @@ import io.mosip.kernel.biometrics.spi.CbeffUtil;
 import io.mosip.kernel.cbeffutil.impl.CbeffImpl;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
+import io.mosip.kernel.core.exception.ExceptionUtils;
+import io.mosip.kernel.core.exception.ServiceError;
+import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 
 @Component
 public class TestCasesService {
+
+	@Value("${mosip.toolkit.api.id.projects.get}")
+	private String getProjectsId;
 
 	@Autowired
 	ObjectMapper objectMapper;
@@ -73,9 +83,7 @@ public class TestCasesService {
 	}
 
 	private String getPartnerId() {
-		String partnerId = authUserDetails().getUserId();
-		// TODO: hardcoded partnerId
-		partnerId = "1234567890";
+		String partnerId = authUserDetails().getUsername();
 		return partnerId;
 	}
 
@@ -294,50 +302,72 @@ public class TestCasesService {
 		}
 	}
 
-	public Map<String, String> saveTestCases(List<TestCaseDto> values, String testCaseSchemaJson) throws Exception {
-		log.info("saveTestCases started");
-		Map<String, String> savedValues = new HashMap<String, String> ();
-		for (TestCaseDto testCaseDto : values)
+	public ResponseWrapper<TestCaseResponseDto> saveTestCases(List<TestCaseDto> values, String testCaseSchemaJson) throws Exception {
+		ResponseWrapper<TestCaseResponseDto> responseWrapper = new ResponseWrapper<>();
+		TestCaseResponseDto testCaseResponseDto = new TestCaseResponseDto();
+		Map<String, String> savedValues = new HashMap<String, String> ();			
+		
+		try
 		{
-			//Do JSON Schema Validation
-			String jsonValue = objectMapper.writeValueAsString (testCaseDto);
-			if (AppConstants.SUCCESS.equals(this.validateJsonWithSchema(jsonValue, testCaseSchemaJson).getStatus())) {
-				//Get JSON Object
-				//Do Validation on content of JSON
-				if (isValidTestCases(testCaseDto))
+			for (TestCaseDto testCaseDto : values)
+			{
+				//Do JSON Schema Validation
+				String jsonValue = objectMapper.writeValueAsString (testCaseDto);
+				if (AppConstants.SUCCESS.equals(this.validateJsonWithSchema(jsonValue, testCaseSchemaJson).getStatus())) {
+					//Get JSON Object
+					//Do Validation on content of JSON
+					if (isValidTestCases(testCaseDto))
+					{
+						String testCaseId = testCaseDto.getTestId();
+						Optional<TestCaseProjectEntity> checkTestCaseProjectEntity = Optional.empty();
+						checkTestCaseProjectEntity = testCasesProjectRepository.findById(testCaseId);
+						
+						//else if test case not present .. save
+						if (checkTestCaseProjectEntity.isEmpty() || !checkTestCaseProjectEntity.isPresent()) {
+							TestCaseProjectEntity testCaseProjectEntity = new TestCaseProjectEntity ();
+							testCaseProjectEntity.setId(testCaseId);
+							testCaseProjectEntity.setTestcaseJson(jsonValue);
+							testCaseProjectEntity.setTestcaseType(testCaseDto.getTestCaseType());
+							testCaseProjectEntity.setSpecVersion(testCaseDto.getSpecVersion());
+							testCaseProjectEntity = testCasesProjectRepository.save(testCaseProjectEntity);
+						}
+						//Check if test case present .. update
+						else {
+							TestCaseProjectEntity testCaseProjectEntity = checkTestCaseProjectEntity.get();
+							testCaseProjectEntity.setTestcaseJson(jsonValue);
+							testCaseProjectEntity.setTestcaseType(testCaseDto.getTestCaseType());
+							testCaseProjectEntity.setSpecVersion(testCaseDto.getSpecVersion());
+							testCaseProjectEntity = testCasesProjectRepository.update(testCaseProjectEntity);
+						}
+						savedValues.put(testCaseId, jsonValue);
+					}
+				}
+				else
 				{
-					String testCaseId = testCaseDto.getTestId();
-					Optional<TestCaseProjectEntity> checkTestCaseProjectEntity = Optional.empty();
-					checkTestCaseProjectEntity = testCasesProjectRepository.findById(testCaseId);
-					
-					//else if test case not present .. save
-					if (checkTestCaseProjectEntity.isEmpty() || !checkTestCaseProjectEntity.isPresent()) {
-						TestCaseProjectEntity testCaseProjectEntity = new TestCaseProjectEntity ();
-						testCaseProjectEntity.setId(testCaseId);
-						testCaseProjectEntity.setTestcaseJson(jsonValue);
-						testCaseProjectEntity.setTestcaseType(testCaseDto.getTestCaseType());
-						testCaseProjectEntity.setSpecVersion(testCaseDto.getSpecVersion());
-						testCaseProjectEntity = testCasesProjectRepository.save(testCaseProjectEntity);
-					}
-					//Check if test case present .. update
-					else {
-						TestCaseProjectEntity testCaseProjectEntity = checkTestCaseProjectEntity.get();
-						testCaseProjectEntity.setTestcaseJson(jsonValue);
-						testCaseProjectEntity.setTestcaseType(testCaseDto.getTestCaseType());
-						testCaseProjectEntity.setSpecVersion(testCaseDto.getSpecVersion());
-						testCaseProjectEntity = testCasesProjectRepository.update(testCaseProjectEntity);
-					}
-					savedValues.put(testCaseId, jsonValue);
+					ToolkitErrorCodes errorCode = null; 
+					errorCode = ToolkitErrorCodes.INVALID_TEST_CASE_JSON;
+					throw new TestCaseException (errorCode.getErrorCode(), errorCode.getErrorMessage ());
 				}
 			}
-			else
-			{
-				ToolkitErrorCode errorCode = null; 
-				errorCode = ToolkitErrorCode.INVALID_TEST_CASE_JSON;
-				throw new TestCaseException (errorCode.getErrorCode(), errorCode.getErrorMessage ());
-			}
+			testCaseResponseDto.setTestCases(savedValues);
 		}
-		return savedValues;
+		catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ExceptionUtils.getStackTrace(ex));
+			log.error("sessionId", "idType", "id", "In saveTestCases method of Test Cases Service - " + ex.getMessage());
+
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ToolkitErrorCodes errorCode = ToolkitErrorCodes.SAVE_TEST_CASE_JSON_ERROR;
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(errorCode.getErrorCode());
+			serviceError.setMessage(errorCode.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		}
+		responseWrapper.setId(getProjectsId);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponse(testCaseResponseDto);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
 	}
 	
 	/**
@@ -348,11 +378,11 @@ public class TestCasesService {
 	* @return boolean
 	*/
 	private boolean isValidTestCases(TestCaseDto testCaseDto) throws TestCaseException {
-		ToolkitErrorCode errorCode = null; 
+		ToolkitErrorCodes errorCode = null; 
 		String type = testCaseDto.getTestCaseType();
 		String testId = testCaseDto.getTestId();
 		if (!testId.startsWith(type)){
-			errorCode = ToolkitErrorCode.INVALID_TEST_CASE_ID;
+			errorCode = ToolkitErrorCodes.INVALID_TEST_CASE_ID;
 			throw new TestCaseException (errorCode.getErrorCode(), errorCode.getErrorMessage ());
 		}		
 
