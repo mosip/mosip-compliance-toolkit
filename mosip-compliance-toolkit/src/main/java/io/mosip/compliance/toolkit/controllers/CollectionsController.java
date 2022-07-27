@@ -13,7 +13,7 @@ import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.kernel.core.http.ResponseWrapper;
 
 @RestController
-public class CollentionsController{
+public class CollectionsController{
 	
 	@Autowired
 	private CollectionsService collectionsService;
