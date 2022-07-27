@@ -41,7 +41,7 @@ import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseResponseDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResponseDto;
 import io.mosip.compliance.toolkit.entity.TestCaseProjectEntity;
-import io.mosip.compliance.toolkit.exceptions.TestCaseException;
+import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.TestCasesProjectRepository;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BIR;
@@ -346,7 +346,7 @@ public class TestCasesService {
 				{
 					ToolkitErrorCodes errorCode = null; 
 					errorCode = ToolkitErrorCodes.INVALID_TEST_CASE_JSON;
-					throw new TestCaseException (errorCode.getErrorCode(), errorCode.getErrorMessage ());
+					throw new ToolkitException (errorCode.getErrorCode(), errorCode.getErrorMessage ());
 				}
 			}
 			testCaseResponseDto.setTestCases(savedValues);
@@ -377,13 +377,13 @@ public class TestCasesService {
 	* @param TestCaseDto
 	* @return boolean
 	*/
-	private boolean isValidTestCases(TestCaseDto testCaseDto) throws TestCaseException {
+	private boolean isValidTestCases(TestCaseDto testCaseDto) throws ToolkitException {
 		ToolkitErrorCodes errorCode = null; 
 		String type = testCaseDto.getTestCaseType();
 		String testId = testCaseDto.getTestId();
 		if (!testId.startsWith(type)){
 			errorCode = ToolkitErrorCodes.INVALID_TEST_CASE_ID;
-			throw new TestCaseException (errorCode.getErrorCode(), errorCode.getErrorMessage ());
+			throw new ToolkitException (errorCode.getErrorCode(), errorCode.getErrorMessage ());
 		}		
 
 		return true;
