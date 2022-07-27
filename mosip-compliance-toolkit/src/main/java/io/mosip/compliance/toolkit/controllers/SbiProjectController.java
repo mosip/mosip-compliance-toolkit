@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,8 +32,8 @@ public class SbiProjectController {
 		binder.addValidators(requestValidator);
 	}
 	
-	@GetMapping(value = "/getSbiProject")
-	private ResponseWrapper<SbiProjectDto> getProjectById(@RequestParam(required = true) String id){
+	@GetMapping(value = "/getSbiProject/{id}")
+	private ResponseWrapper<SbiProjectDto> getProjectById(@PathVariable String id){
 		return sbiProjectService.getSbiProject(id);
 	}
 
