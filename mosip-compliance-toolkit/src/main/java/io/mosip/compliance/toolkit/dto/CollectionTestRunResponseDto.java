@@ -10,6 +10,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CollectionTestRunResponseDto {
-	
+
 	List<CollectionTestRunDto> collectionsSummaryList;
 }

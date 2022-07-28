@@ -18,43 +18,35 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@SqlResultSetMapping(name = "Mapping.CollectionsSummaryEntity", classes = {
+@SqlResultSetMapping(name = "Mapping.CollectionTestrunEntity", classes = {
 		@ConstructorResult(targetClass = CollectionTestrunEntity.class, columns = {
 				@ColumnResult(name = "collectionid", type = String.class),
 				@ColumnResult(name = "projectid", type = String.class),
 				@ColumnResult(name = "name", type = String.class),
+				@ColumnResult(name = "testcasecount", type = int.class),
 				@ColumnResult(name = "crdtimes", type = LocalDateTime.class),
-				@ColumnResult(name = "rundtimes", type = LocalDateTime.class)}) })
-@NamedNativeQuery(
-		name = "CollectionsSummaryEntity.getCollectionsOfSbiProject", 
-		resultClass = CollectionTestrunEntity.class, 
-		query = "SELECT c.id AS collectionid, c.sbi_project_id AS projectid, c.name AS name, c.cr_dtimes AS crdtimes, tr.run_dtimes AS rundtimes FROM collections AS c LEFT JOIN test_run AS tr ON (c.id = tr.collection_id) WHERE c.sbi_project_id = :projectId AND c.partner_id = :partnerId AND c.is_deleted<>'true' AND (tr.run_dtimes = (SELECT MAX(run_dtimes) FROM test_run AS tr2 WHERE tr2.collection_id = c.id) OR tr.run_dtimes IS NULL)", 
-		resultSetMapping = "Mapping.CollectionsSummaryEntity")
-@NamedNativeQuery(
-		name = "CollectionsSummaryEntity.getCollectionsOfSdkProject", 
-		resultClass = CollectionTestrunEntity.class, 
-		query = "SELECT c.id AS collectionid, c.sdk_project_id AS projectid, c.name AS name, c.cr_dtimes AS crdtimes, tr.run_dtimes AS rundtimes FROM collections AS c LEFT JOIN test_run AS tr ON (c.id = tr.collection_id) WHERE c.sdk_project_id = :projectId AND c.partner_id = :partnerId AND c.is_deleted<>'true' AND (tr.run_dtimes = (SELECT MAX(run_dtimes) FROM test_run AS tr2 WHERE tr2.collection_id = c.id) OR tr.run_dtimes IS NULL)", 
-		resultSetMapping = "Mapping.CollectionsSummaryEntity")
-@NamedNativeQuery(
-		name = "CollectionsSummaryEntity.getCollectionsOfAbisProject", 
-		resultClass = CollectionTestrunEntity.class, 
-		query = "SELECT c.id AS collectionid, c.abis_project_id AS projectid, c.name AS name, c.cr_dtimes AS crdtimes, tr.run_dtimes AS rundtimes FROM collections AS c LEFT JOIN test_run AS tr ON (c.id = tr.collection_id) WHERE c.abis_project_id = :projectId AND c.partner_id = :partnerId AND c.is_deleted<>'true' AND (tr.run_dtimes = (SELECT MAX(run_dtimes) FROM test_run AS tr2 WHERE tr2.collection_id = c.id) OR tr.run_dtimes IS NULL)", 
-		resultSetMapping = "Mapping.CollectionsSummaryEntity")
+				@ColumnResult(name = "rundtimes", type = LocalDateTime.class) }) })
+@NamedNativeQuery(name = "CollectionTestrunEntity.getCollectionsOfSbiProject", resultClass = CollectionTestrunEntity.class, query = "SELECT c.id AS collectionid, c.sbi_project_id AS projectid, c.name AS name, count(DISTINCT ctm.testcase_id) AS testcasecount, c.cr_dtimes AS crdtimes, MAX(tr.run_dtimes) AS rundtimes FROM toolkit.collections AS c LEFT JOIN toolkit.collection_testcase_mapping AS ctm ON(c.id = ctm.collection_id) LEFT JOIN toolkit.test_run AS tr ON (c.id = tr.collection_id) WHERE c.sbi_project_id =:projectId AND c.partner_id =:partnerId AND c.is_deleted<>'true' GROUP BY c.id", resultSetMapping = "Mapping.CollectionTestrunEntity")
+@NamedNativeQuery(name = "CollectionTestrunEntity.getCollectionsOfSdkProject", resultClass = CollectionTestrunEntity.class, query = "SELECT c.id AS collectionid, c.sdk_project_id AS projectid, c.name AS name, count(DISTINCT ctm.testcase_id) AS testcasecount, c.cr_dtimes AS crdtimes, MAX(tr.run_dtimes) AS rundtimes FROM toolkit.collections AS c LEFT JOIN toolkit.collection_testcase_mapping AS ctm ON(c.id = ctm.collection_id) LEFT JOIN toolkit.test_run AS tr ON (c.id = tr.collection_id) WHERE c.sdk_project_id =:projectId AND c.partner_id =:partnerId AND c.is_deleted<>'true' GROUP BY c.id", resultSetMapping = "Mapping.CollectionTestrunEntity")
+@NamedNativeQuery(name = "CollectionTestrunEntity.getCollectionsOfAbisProject", resultClass = CollectionTestrunEntity.class, query = "SELECT c.id AS collectionid, c.abis_project_id AS projectid, c.name AS name, count(DISTINCT ctm.testcase_id) AS testcasecount, c.cr_dtimes AS crdtimes, MAX(tr.run_dtimes) AS rundtimes FROM toolkit.collections AS c LEFT JOIN toolkit.collection_testcase_mapping AS ctm ON(c.id = ctm.collection_id) LEFT JOIN toolkit.test_run AS tr ON (c.id = tr.collection_id) WHERE c.abis_project_id =:projectId AND c.partner_id =:partnerId AND c.is_deleted<>'true' GROUP BY c.id", resultSetMapping = "Mapping.CollectionTestrunEntity")
 public class CollectionTestrunEntity {
-	
-	public CollectionTestrunEntity(String collectionId, String projectId, String name, LocalDateTime crDtimes, LocalDateTime runDtimes) {
+
+	public CollectionTestrunEntity(String collectionId, String projectId, String name, int testCaseCount,
+			LocalDateTime crDtimes, LocalDateTime runDtimes) {
 		super();
 		this.collectionId = collectionId;
 		this.projectId = projectId;
 		this.name = name;
+		this.testCaseCount = testCaseCount;
 		this.crDtimes = crDtimes;
 		this.runDtimes = runDtimes;
 	}
-	
+
 	@Id
 	private String collectionId;
 	private String projectId;
 	private String name;
+	private int testCaseCount;
 	private LocalDateTime crDtimes;
 	private LocalDateTime runDtimes;
 }

@@ -43,11 +43,10 @@ public class SbiProjectService {
 	@Autowired
 	private SbiProjectRepository sbiProjectRepository;
 	private Logger log = LoggerConfiguration.logConfig(SbiProjectService.class);
-	
 	private AuthUserDetails authUserDetails() {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
-	
+
 	private String getPartnerId() {
 		String partnerId = authUserDetails().getUsername();
 		return partnerId;
@@ -63,15 +62,15 @@ public class SbiProjectService {
 		SbiProjectDto sbiProjectDto = null;
 		try {
 			Optional<SbiProjectEntity> optionalSbiProjectEntity = sbiProjectRepository.findById(id, getPartnerId());
-			if(optionalSbiProjectEntity.isPresent()) {
+			if (optionalSbiProjectEntity.isPresent()) {
 				SbiProjectEntity sbiProjectEntity = optionalSbiProjectEntity.get();
 
 				ObjectMapper objectMapper = new ObjectMapper();
 				objectMapper.registerModule(new JavaTimeModule());
 				objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-				sbiProjectDto = objectMapper.convertValue(sbiProjectEntity, SbiProjectDto.class); 
+				sbiProjectDto = objectMapper.convertValue(sbiProjectEntity, SbiProjectDto.class);
 
-			}else {
+			} else {
 				List<ServiceError> serviceErrorsList = new ArrayList<>();
 				ServiceError serviceError = new ServiceError();
 				serviceError.setErrorCode(ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorCode());
@@ -79,19 +78,21 @@ public class SbiProjectService {
 				serviceErrorsList.add(serviceError);
 				responseWrapper.setErrors(serviceErrorsList);
 			}
-		}catch (Exception ex) {
+		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
-			log.error("sessionId", "idType", "id", "In getSbiProject method of SbiProjectService Service - " + ex.getMessage());
+			log.error("sessionId", "idType", "id",
+					"In getSbiProject method of SbiProjectService Service - " + ex.getMessage());
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
 			ServiceError serviceError = new ServiceError();
 			serviceError.setErrorCode(ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorCode());
-			serviceError.setMessage(ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorMessage()+ " " + ex.getMessage());
+			serviceError
+					.setMessage(ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage());
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		}
 		responseWrapper.setId(getSbiProjectId);
 		responseWrapper.setResponse(sbiProjectDto);
-		responseWrapper.setVersion(AppConstants.VERSION);		
+		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
