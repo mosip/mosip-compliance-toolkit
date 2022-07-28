@@ -109,21 +109,6 @@ public class CollectionsService {
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		}
-
-		try {
-
-		} catch (Exception ex) {
-			log.debug("sessionId", "idType", "id", ex.getStackTrace());
-			log.error("sessionId", "idType", "id",
-					"In getProjectCollectionTestrun method of CollectionsService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorCode());
-			serviceError
-					.setMessage(ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
-		}
 		responseWrapper.setId(getCollectionsId);
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponse(collectionTestRunResponseDto);
