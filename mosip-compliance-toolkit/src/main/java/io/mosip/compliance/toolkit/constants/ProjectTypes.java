@@ -11,7 +11,7 @@ import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 public enum ProjectTypes {
 	SBI("SBI"),
 	SDK("SDK"),
-	ABIS("SBI");
+	ABIS("ABIS");
 
 	private final String code;
 
