@@ -3,6 +3,7 @@ package io.mosip.compliance.toolkit.controllers;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +24,8 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 @RestController
 public class SbiProjectController {
 	
-	/** CREATE The Constant  SBI_PROJECT_POST in application as given below */
-	//mosip.toolkit.api.id.sbi.project.post=mosip.toolkit.sbi.project.add
-	private static final String SBI_PROJECT_POST = "sbi.project.post";
+	/** The Constant SBI_PROJECT_POST_ID application. */
+	private static final String SBI_PROJECT_POST_ID = "sbi.project.post";
 	
 	@Autowired
 	private SbiProjectService sbiProjectService;
@@ -61,8 +61,8 @@ public class SbiProjectController {
 			@RequestBody @Valid RequestWrapper<SbiProjectDto> value,
 			Errors errors) throws Exception{
 		requestValidator.validate(value, errors);
-		requestValidator.validateId(SBI_PROJECT_POST, value.getId(), errors);
-		DataValidationUtil.validate(errors, SBI_PROJECT_POST);
+		requestValidator.validateId(SBI_PROJECT_POST_ID, value.getId(), errors);
+		DataValidationUtil.validate(errors, SBI_PROJECT_POST_ID);
 		return sbiProjectService.addSbiProject(value.getRequest());
 	}
 }
