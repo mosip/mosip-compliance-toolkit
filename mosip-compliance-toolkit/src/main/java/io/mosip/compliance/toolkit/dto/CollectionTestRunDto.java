@@ -12,12 +12,14 @@ import lombok.Setter;
 public class CollectionTestRunDto {
 
 	private String collectionId;
-	
+
 	private String projectId;
-	
+
 	private String name;
-	
+
+	private int testCaseCount;
+
 	private LocalDateTime crDtimes;
-	
+
 	private LocalDateTime runDtimes;
 }

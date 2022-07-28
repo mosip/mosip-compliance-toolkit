@@ -33,7 +33,7 @@ public class CollectionsService {
 	private String getCollectionsId;
 
 	@Autowired
-	private CollectionTestrunRepository collectionSummaryRepository;
+	private CollectionTestrunRepository collectionTestrunRepository;
 
 	private Logger log = LoggerConfiguration.logConfig(ProjectsService.class);
 
@@ -46,41 +46,45 @@ public class CollectionsService {
 		return partnerId;
 	}
 
-	public ResponseWrapper<CollectionTestRunResponseDto> getProjectCollectionsSummary(String type, String projectId){
+	public ResponseWrapper<CollectionTestRunResponseDto> getProjectCollectionsSummary(String type, String projectId) {
 		ResponseWrapper<CollectionTestRunResponseDto> responseWrapper = new ResponseWrapper<>();
 		CollectionTestRunResponseDto collectionTestRunResponseDto = null;
 		boolean isProjectTypeValid = false;
-		
+
 		if (AppConstants.SBI.equalsIgnoreCase(type) || AppConstants.ABIS.equalsIgnoreCase(type)
 				|| AppConstants.SDK.equalsIgnoreCase(type)) {
 			isProjectTypeValid = true;
 		}
-		
-		if(isProjectTypeValid) {
+
+		if (isProjectTypeValid) {
 			if (Objects.nonNull(type) && Objects.nonNull(projectId)) {
 				List<CollectionTestrunEntity> collectionsEntityList = null;
 				if (AppConstants.SBI.equalsIgnoreCase(type)) {
-					collectionsEntityList = collectionSummaryRepository.getCollectionsOfSbiProjects(projectId, getPartnerId());
-				}else if(AppConstants.SDK.equalsIgnoreCase(type)) {
-					collectionsEntityList = collectionSummaryRepository.getCollectionsOfSdkProjects(projectId, getPartnerId());
-				}else if(AppConstants.ABIS.equalsIgnoreCase(type)) {
-					collectionsEntityList = collectionSummaryRepository.getCollectionsOfAbisProjects(projectId, getPartnerId());
+					collectionsEntityList = collectionTestrunRepository.getCollectionsOfSbiProjects(projectId,
+							getPartnerId());
+				} else if (AppConstants.SDK.equalsIgnoreCase(type)) {
+					collectionsEntityList = collectionTestrunRepository.getCollectionsOfSdkProjects(projectId,
+							getPartnerId());
+				} else if (AppConstants.ABIS.equalsIgnoreCase(type)) {
+					collectionsEntityList = collectionTestrunRepository.getCollectionsOfAbisProjects(projectId,
+							getPartnerId());
 				}
-				
-				if(Objects.nonNull(collectionsEntityList) && !collectionsEntityList.isEmpty()) {
+
+				if (Objects.nonNull(collectionsEntityList) && !collectionsEntityList.isEmpty()) {
 					List<CollectionTestRunDto> collectionTestRunDtoList = new ArrayList<>();
-					for(CollectionTestrunEntity entity: collectionsEntityList) {
+					for (CollectionTestrunEntity entity : collectionsEntityList) {
 
 						ObjectMapper objectMapper = new ObjectMapper();
 						objectMapper.registerModule(new JavaTimeModule());
 						objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-						CollectionTestRunDto collectionTestRunDto = objectMapper.convertValue(entity, CollectionTestRunDto.class);
+						CollectionTestRunDto collectionTestRunDto = objectMapper.convertValue(entity,
+								CollectionTestRunDto.class);
 
 						collectionTestRunDtoList.add(collectionTestRunDto);
 					}
 					collectionTestRunResponseDto = new CollectionTestRunResponseDto();
 					collectionTestRunResponseDto.setCollectionsSummaryList(collectionTestRunDtoList);
-				}else {
+				} else {
 					List<ServiceError> serviceErrorsList = new ArrayList<>();
 					ServiceError serviceError = new ServiceError();
 					serviceError.setErrorCode(ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorCode());
@@ -88,8 +92,8 @@ public class CollectionsService {
 					serviceErrorsList.add(serviceError);
 					responseWrapper.setErrors(serviceErrorsList);
 				}
-				
-			}else {
+
+			} else {
 				List<ServiceError> serviceErrorsList = new ArrayList<>();
 				ServiceError serviceError = new ServiceError();
 				serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode());
@@ -97,7 +101,7 @@ public class CollectionsService {
 				serviceErrorsList.add(serviceError);
 				responseWrapper.setErrors(serviceErrorsList);
 			}
-		}else {
+		} else {
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
 			ServiceError serviceError = new ServiceError();
 			serviceError.setErrorCode(ToolkitErrorCodes.INVALID_PROJECT_TYPE.getErrorCode());
@@ -107,15 +111,16 @@ public class CollectionsService {
 		}
 
 		try {
-			
 
-		}catch (Exception ex) {
+		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
-			log.error("sessionId", "idType", "id", "In getProjectCollectionsSummary method of CollectionsService Service - " + ex.getMessage());
+			log.error("sessionId", "idType", "id",
+					"In getProjectCollectionsSummary method of CollectionsService Service - " + ex.getMessage());
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
 			ServiceError serviceError = new ServiceError();
 			serviceError.setErrorCode(ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorCode());
-			serviceError.setMessage(ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorMessage()+ " " + ex.getMessage());
+			serviceError
+					.setMessage(ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage());
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		}
@@ -125,7 +130,5 @@ public class CollectionsService {
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
-
-
 
 }
