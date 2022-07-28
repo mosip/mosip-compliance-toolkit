@@ -2,7 +2,6 @@ package io.mosip.compliance.toolkit.util;
 
 import org.springframework.validation.Errors;
 
-import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 
 public final class DataValidationUtil {
@@ -22,10 +21,7 @@ public final class DataValidationUtil {
 		if (errors.hasErrors()) {
 			errors.getAllErrors().stream()
 					.forEach(error ->{
-						if (ToolkitErrorCodes.fromErrorCode(error.getCode()) == ToolkitErrorCodes.PROJECTS_NOT_AVAILABLE)
-							throw new ToolkitException(error.getCode(), error.getDefaultMessage() + " " + operation);
-						else
-							throw new ToolkitException(error.getCode(), error.getDefaultMessage());
+						throw new ToolkitException(error.getCode(), error.getDefaultMessage());
 				} );
 		}
 	}

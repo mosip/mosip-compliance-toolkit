@@ -36,6 +36,10 @@ import io.mosip.kernel.core.logger.spi.Logger;
 public class SbiProjectService {
 	@Value("${mosip.toolkit.api.id.sbi.project.get}")
 	private String getSbiProjectId;
+
+	@Value("${mosip.toolkit.api.id.sbi.project.post}")
+	private String getSbiProjectPostId;
+
 	@Autowired
 	private SbiProjectRepository sbiProjectRepository;
 	private Logger log = LoggerConfiguration.logConfig(SbiProjectService.class);
@@ -121,6 +125,7 @@ public class SbiProjectService {
 				sbiProjectDto.setCrDate(entity.getCrDate());
 			}
 		}catch (ToolkitException ex) {
+			sbiProjectDto = null;
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id", "In getSbiProject method of SbiProjectService Service - " + ex.getMessage());
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
@@ -131,6 +136,7 @@ public class SbiProjectService {
 			responseWrapper.setErrors(serviceErrorsList);
 		}
 		catch (Exception ex) {
+			sbiProjectDto = null;
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id", "In getSbiProject method of SbiProjectService Service - " + ex.getMessage());
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
@@ -140,7 +146,7 @@ public class SbiProjectService {
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		}
-		responseWrapper.setId(getSbiProjectId);
+		responseWrapper.setId(getSbiProjectPostId);
 		responseWrapper.setResponse(sbiProjectDto);
 		responseWrapper.setVersion(AppConstants.VERSION);		
 		responseWrapper.setResponsetime(LocalDateTime.now());
