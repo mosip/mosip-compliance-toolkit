@@ -11,5 +11,5 @@ import lombok.Setter;
 @Setter
 public class CollectionTestRunResponseDto {
 
-	List<CollectionTestRunDto> collectionsSummaryList;
+	List<CollectionTestRunDto> collectionTestrunDtoList;
 }

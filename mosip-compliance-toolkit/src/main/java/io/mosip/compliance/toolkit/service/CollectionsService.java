@@ -46,7 +46,7 @@ public class CollectionsService {
 		return partnerId;
 	}
 
-	public ResponseWrapper<CollectionTestRunResponseDto> getProjectCollectionsSummary(String type, String projectId) {
+	public ResponseWrapper<CollectionTestRunResponseDto> getProjectCollectionTestrun(String type, String projectId) {
 		ResponseWrapper<CollectionTestRunResponseDto> responseWrapper = new ResponseWrapper<>();
 		CollectionTestRunResponseDto collectionTestRunResponseDto = null;
 		boolean isProjectTypeValid = false;
@@ -83,7 +83,7 @@ public class CollectionsService {
 						collectionTestRunDtoList.add(collectionTestRunDto);
 					}
 					collectionTestRunResponseDto = new CollectionTestRunResponseDto();
-					collectionTestRunResponseDto.setCollectionsSummaryList(collectionTestRunDtoList);
+					collectionTestRunResponseDto.setCollectionTestrunDtoList(collectionTestRunDtoList);
 				} else {
 					List<ServiceError> serviceErrorsList = new ArrayList<>();
 					ServiceError serviceError = new ServiceError();
@@ -115,7 +115,7 @@ public class CollectionsService {
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
-					"In getProjectCollectionsSummary method of CollectionsService Service - " + ex.getMessage());
+					"In getProjectCollectionTestrun method of CollectionsService Service - " + ex.getMessage());
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
 			ServiceError serviceError = new ServiceError();
 			serviceError.setErrorCode(ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorCode());

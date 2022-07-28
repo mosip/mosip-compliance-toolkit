@@ -13,14 +13,14 @@ import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.kernel.core.http.ResponseWrapper;
 
 @RestController
-public class CollectionsController{
-	
+public class CollectionsController {
+
 	@Autowired
 	private CollectionsService collectionsService;
-	
+
 	@Autowired
 	private RequestValidator requestValidator;
-	
+
 	/**
 	 * Initiates the binder.
 	 *
@@ -30,10 +30,10 @@ public class CollectionsController{
 	public void initBinder(WebDataBinder binder) {
 		binder.addValidators(requestValidator);
 	}
-	
+
 	@GetMapping(value = "/getProjectCollections")
 	public ResponseWrapper<CollectionTestRunResponseDto> getSbiCollections(
-			@RequestParam(required = true) String projectId, @RequestParam(required = true) String type){
-		return collectionsService.getProjectCollectionsSummary(type, projectId);
+			@RequestParam(required = true) String projectId, @RequestParam(required = true) String type) {
+		return collectionsService.getProjectCollectionTestrun(type, projectId);
 	}
 }
