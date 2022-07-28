@@ -9,7 +9,7 @@ import io.mosip.kernel.core.exception.BaseUncheckedException;
  * @author Janardhan B S
  * @since 1.0.0
  */
-public class TestCaseException extends BaseUncheckedException {
+public class ToolkitException extends BaseUncheckedException {
 	/**
 	 * Generated serial version id
 	 */
@@ -21,7 +21,7 @@ public class TestCaseException extends BaseUncheckedException {
 	 * @param errorCode    The error code for this exception
 	 * @param errorMessage The error message for this exception
 	 */
-	public TestCaseException(String errorCode, String errorMessage) {
+	public ToolkitException(String errorCode, String errorMessage) {
 		super(errorCode, errorMessage);
 	}
 
@@ -32,7 +32,7 @@ public class TestCaseException extends BaseUncheckedException {
 	 * @param errorMessage The error message for this exception
 	 * @param rootCause    the specified cause
 	 */
-	public TestCaseException(String errorCode, String errorMessage, Throwable rootCause) {
+	public ToolkitException(String errorCode, String errorMessage, Throwable rootCause) {
 		super(errorCode, errorMessage, rootCause);
 	}
 }
