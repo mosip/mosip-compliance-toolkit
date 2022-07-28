@@ -10,7 +10,7 @@ import io.mosip.compliance.toolkit.exceptions.ToolkitException;
  */
 public enum Purposes {
 	AUTH("Auth"),
-	REGISTRATION("Registration0");
+	REGISTRATION("Registration");
 
 	private final String code;
 

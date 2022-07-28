@@ -69,11 +69,9 @@ public class CollectionsService {
 					collectionsEntityList = collectionTestrunRepository.getCollectionsOfAbisProjects(projectId,
 							getPartnerId());
 				}
-
+				List<CollectionTestRunDto> collectionTestRunDtoList = new ArrayList<>();
 				if (Objects.nonNull(collectionsEntityList) && !collectionsEntityList.isEmpty()) {
-					List<CollectionTestRunDto> collectionTestRunDtoList = new ArrayList<>();
 					for (CollectionTestrunEntity entity : collectionsEntityList) {
-
 						ObjectMapper objectMapper = new ObjectMapper();
 						objectMapper.registerModule(new JavaTimeModule());
 						objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -82,17 +80,10 @@ public class CollectionsService {
 
 						collectionTestRunDtoList.add(collectionTestRunDto);
 					}
-					collectionTestRunResponseDto = new CollectionTestRunResponseDto();
-					collectionTestRunResponseDto.setCollectionTestrunDtoList(collectionTestRunDtoList);
-				} else {
-					List<ServiceError> serviceErrorsList = new ArrayList<>();
-					ServiceError serviceError = new ServiceError();
-					serviceError.setErrorCode(ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorCode());
-					serviceError.setMessage(ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorMessage());
-					serviceErrorsList.add(serviceError);
-					responseWrapper.setErrors(serviceErrorsList);
 				}
-
+				//send empty collections list, in case none are yet added for a project
+				collectionTestRunResponseDto = new CollectionTestRunResponseDto();
+				collectionTestRunResponseDto.setCollectionTestrunDtoList(collectionTestRunDtoList);
 			} else {
 				List<ServiceError> serviceErrorsList = new ArrayList<>();
 				ServiceError serviceError = new ServiceError();
