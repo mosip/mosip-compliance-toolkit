@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import io.mosip.compliance.toolkit.config.TestCasesConfig;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
-import io.mosip.compliance.toolkit.dto.SbiProjectDto;
 import io.mosip.compliance.toolkit.dto.testcases.RequestValidateDto;
 import io.mosip.compliance.toolkit.dto.testcases.ResponseValidateDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
@@ -162,7 +161,7 @@ public class TestCasesController {
 				testcaseType = AppConstants.ABIS;
 			}
 			if (testCases.size() > 0) {
-				return service.generateTestCase(testcaseType, testCaseSchemaJson, testCases).toString();
+				return service.generateTestCaseFromConfig(testcaseType, testCaseSchemaJson, testCases).toString();
 			} else {
 				return "No test cases configured for this type!";
 			}
@@ -179,7 +178,7 @@ public class TestCasesController {
 			File file = ResourceUtils.getFile("classpath:schemas/testcase_schema.json");
 			// Read File Content
 			String testCaseSchemaJson = new String(Files.readAllBytes(file.toPath()));
-			return service.generateSbiTestCase(specVersion, purpose, deviceType, deviceSubType, testCaseSchemaJson);
+			return service.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType, testCaseSchemaJson);
 		} catch (Exception ex) {
 			ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
 			responseWrapper.setId(getTestCasesId);

@@ -17,10 +17,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
-import io.mosip.compliance.toolkit.dto.CollectionTestRunDto;
-import io.mosip.compliance.toolkit.dto.CollectionTestRunResponseDto;
-import io.mosip.compliance.toolkit.entity.CollectionTestrunEntity;
-import io.mosip.compliance.toolkit.repository.CollectionTestrunRepository;
+import io.mosip.compliance.toolkit.dto.CollectionDto;
+import io.mosip.compliance.toolkit.dto.CollectionsResponseDto;
+import io.mosip.compliance.toolkit.entity.CollectionSummaryEntity;
+import io.mosip.compliance.toolkit.repository.CollectionsRepository;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -33,7 +33,7 @@ public class CollectionsService {
 	private String getCollectionsId;
 
 	@Autowired
-	private CollectionTestrunRepository collectionTestrunRepository;
+	private CollectionsRepository collectionsRepository;
 
 	private Logger log = LoggerConfiguration.logConfig(ProjectsService.class);
 
@@ -46,9 +46,9 @@ public class CollectionsService {
 		return partnerId;
 	}
 
-	public ResponseWrapper<CollectionTestRunResponseDto> getProjectCollectionTestrun(String type, String projectId) {
-		ResponseWrapper<CollectionTestRunResponseDto> responseWrapper = new ResponseWrapper<>();
-		CollectionTestRunResponseDto collectionTestRunResponseDto = null;
+	public ResponseWrapper<CollectionsResponseDto> getCollections(String type, String projectId) {
+		ResponseWrapper<CollectionsResponseDto> responseWrapper = new ResponseWrapper<>();
+		CollectionsResponseDto collectionsResponseDto = null;
 		boolean isProjectTypeValid = false;
 
 		if (AppConstants.SBI.equalsIgnoreCase(type) || AppConstants.ABIS.equalsIgnoreCase(type)
@@ -58,32 +58,32 @@ public class CollectionsService {
 
 		if (isProjectTypeValid) {
 			if (Objects.nonNull(type) && Objects.nonNull(projectId)) {
-				List<CollectionTestrunEntity> collectionsEntityList = null;
+				List<CollectionSummaryEntity> collectionsEntityList = null;
 				if (AppConstants.SBI.equalsIgnoreCase(type)) {
-					collectionsEntityList = collectionTestrunRepository.getCollectionsOfSbiProjects(projectId,
+					collectionsEntityList = collectionsRepository.getCollectionsOfSbiProjects(projectId,
 							getPartnerId());
 				} else if (AppConstants.SDK.equalsIgnoreCase(type)) {
-					collectionsEntityList = collectionTestrunRepository.getCollectionsOfSdkProjects(projectId,
+					collectionsEntityList = collectionsRepository.getCollectionsOfSdkProjects(projectId,
 							getPartnerId());
 				} else if (AppConstants.ABIS.equalsIgnoreCase(type)) {
-					collectionsEntityList = collectionTestrunRepository.getCollectionsOfAbisProjects(projectId,
+					collectionsEntityList = collectionsRepository.getCollectionsOfAbisProjects(projectId,
 							getPartnerId());
 				}
-				List<CollectionTestRunDto> collectionTestRunDtoList = new ArrayList<>();
+				List<CollectionDto> collectionsList = new ArrayList<>();
 				if (Objects.nonNull(collectionsEntityList) && !collectionsEntityList.isEmpty()) {
-					for (CollectionTestrunEntity entity : collectionsEntityList) {
+					for (CollectionSummaryEntity entity : collectionsEntityList) {
 						ObjectMapper objectMapper = new ObjectMapper();
 						objectMapper.registerModule(new JavaTimeModule());
 						objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-						CollectionTestRunDto collectionTestRunDto = objectMapper.convertValue(entity,
-								CollectionTestRunDto.class);
+						CollectionDto collection = objectMapper.convertValue(entity,
+								CollectionDto.class);
 
-						collectionTestRunDtoList.add(collectionTestRunDto);
+						collectionsList.add(collection);
 					}
 				}
 				//send empty collections list, in case none are yet added for a project
-				collectionTestRunResponseDto = new CollectionTestRunResponseDto();
-				collectionTestRunResponseDto.setCollectionTestrunDtoList(collectionTestRunDtoList);
+				collectionsResponseDto = new CollectionsResponseDto();
+				collectionsResponseDto.setCollections(collectionsList);
 			} else {
 				List<ServiceError> serviceErrorsList = new ArrayList<>();
 				ServiceError serviceError = new ServiceError();
@@ -102,7 +102,7 @@ public class CollectionsService {
 		}
 		responseWrapper.setId(getCollectionsId);
 		responseWrapper.setVersion(AppConstants.VERSION);
-		responseWrapper.setResponse(collectionTestRunResponseDto);
+		responseWrapper.setResponse(collectionsResponseDto);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
