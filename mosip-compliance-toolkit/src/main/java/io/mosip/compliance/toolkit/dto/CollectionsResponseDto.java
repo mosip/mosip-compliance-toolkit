@@ -9,7 +9,7 @@ import lombok.Setter;
 @Data
 @Getter
 @Setter
-public class CollectionTestRunResponseDto {
+public class CollectionsResponseDto {
 
-	List<CollectionTestRunDto> collectionTestrunDtoList;
+	List<CollectionDto> collections;
 }

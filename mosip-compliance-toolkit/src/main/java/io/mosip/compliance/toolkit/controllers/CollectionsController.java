@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.mosip.compliance.toolkit.dto.CollectionTestRunResponseDto;
+import io.mosip.compliance.toolkit.dto.CollectionsResponseDto;
 import io.mosip.compliance.toolkit.service.CollectionsService;
 import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -31,9 +31,9 @@ public class CollectionsController {
 		binder.addValidators(requestValidator);
 	}
 
-	@GetMapping(value = "/getProjectCollections")
-	public ResponseWrapper<CollectionTestRunResponseDto> getSbiCollections(
+	@GetMapping(value = "/getCollections")
+	public ResponseWrapper<CollectionsResponseDto> getSbiCollections(
 			@RequestParam(required = true) String projectId, @RequestParam(required = true) String type) {
-		return collectionsService.getProjectCollectionTestrun(type, projectId);
+		return collectionsService.getCollections(type, projectId);
 	}
 }

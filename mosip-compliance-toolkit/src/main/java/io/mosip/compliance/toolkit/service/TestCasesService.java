@@ -38,16 +38,14 @@ import io.mosip.compliance.toolkit.constants.DeviceTypes;
 import io.mosip.compliance.toolkit.constants.Purposes;
 import io.mosip.compliance.toolkit.constants.SbiSpecVersions;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
-import io.mosip.compliance.toolkit.dto.ProjectsResponseDto;
-import io.mosip.compliance.toolkit.dto.SbiProjectDto;
 import io.mosip.compliance.toolkit.dto.sdk.CheckQualityRequestDto;
 import io.mosip.compliance.toolkit.dto.sdk.RequestDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseResponseDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResponseDto;
-import io.mosip.compliance.toolkit.entity.TestCaseProjectEntity;
+import io.mosip.compliance.toolkit.entity.TestCaseEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
-import io.mosip.compliance.toolkit.repository.TestCasesProjectRepository;
+import io.mosip.compliance.toolkit.repository.TestCasesRepository;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
@@ -73,7 +71,7 @@ public class TestCasesService {
 	ObjectMapper objectMapper;
 
 	@Autowired
-	TestCasesProjectRepository testCasesProjectRepository;
+	TestCasesRepository testCasesRepository;
 
 	private CbeffUtil cbeffReader = new CbeffImpl();
 
@@ -87,16 +85,7 @@ public class TestCasesService {
 	private static final String VERSION = "1.0";
 	private Logger log = LoggerConfiguration.logConfig(ProjectsService.class);
 
-	private AuthUserDetails authUserDetails() {
-		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	}
-
-	private String getPartnerId() {
-		String partnerId = authUserDetails().getUsername();
-		return partnerId;
-	}
-
-	public ResponseWrapper<List<TestCaseDto>> generateSbiTestCase(String specVersion, String purpose, String deviceType,
+	public ResponseWrapper<List<TestCaseDto>> getSbiTestCases(String specVersion, String purpose, String deviceType,
 			String deviceSubType, String testCaseSchemaJson) {
 		ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
 		List<TestCaseDto> testCases = new ArrayList<>();
@@ -104,12 +93,12 @@ public class TestCasesService {
 		ServiceError serviceError = null;
 
 		try {
-			if (isValidSbiTestCases(specVersion, purpose, deviceType,deviceSubType))
+			if (isValidSbiTestCase(specVersion, purpose, deviceType,deviceSubType))
 			{
-				List<TestCaseProjectEntity> testCaseProjectEntities = testCasesProjectRepository
+				List<TestCaseEntity> testCaseEntities = testCasesRepository
 						.findAllSbiTestCaseBySpecVersion(specVersion);
-				for (final TestCaseProjectEntity testCaseProjectEntity : testCaseProjectEntities) {
-					String testcaseJson = testCaseProjectEntity.getTestcaseJson();
+				for (final TestCaseEntity testCaseEntity : testCaseEntities) {
+					String testcaseJson = testCaseEntity.getTestcaseJson();
 					if (AppConstants.SUCCESS
 							.equals(this.validateJsonWithSchema(testcaseJson, testCaseSchemaJson).getStatus())) {
 						TestCaseDto testCaseDto = objectMapper.readValue(testcaseJson, TestCaseDto.class);
@@ -125,7 +114,7 @@ public class TestCasesService {
 		} catch (ToolkitException ex) {
 			testCases = null;
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
-			log.error("sessionId", "idType", "id", "In generateSbiTestCase method of TestCasesService - " + ex.getMessage());
+			log.error("sessionId", "idType", "id", "In getSbiTestCases method of TestCasesService - " + ex.getMessage());
 			serviceError = new ServiceError();
 			serviceError.setErrorCode(ex.getErrorCode());
 			serviceError.setMessage(ex.getMessage());
@@ -136,7 +125,7 @@ public class TestCasesService {
 			testCases = null;
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
-					"In generateSbiTestCase method of TestCasesService - " + ex.getMessage());
+					"In getSbiTestCases method of TestCasesService - " + ex.getMessage());
 			serviceError = new ServiceError();
 			serviceError.setErrorCode(ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorCode());
 			serviceError.setMessage(ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage() + " " + ex.getMessage());
@@ -156,7 +145,7 @@ public class TestCasesService {
 	 * @param specVersion, purpose, deviceType, deviceSubType
 	 * @return boolean
 	 */
-	private boolean isValidSbiTestCases(String specVersion, String purpose, String deviceType,
+	private boolean isValidSbiTestCase(String specVersion, String purpose, String deviceType,
 			String deviceSubType) throws ToolkitException {
 		SbiSpecVersions.fromCode(specVersion);
 		Purposes.fromCode(purpose);
@@ -166,7 +155,15 @@ public class TestCasesService {
 		return true;
 	}
 
-	public List<String> generateTestCase(String testCaseType, String testCaseSchemaJson,
+	/**
+	 * Method only for reference.
+	 * @param testCaseType
+	 * @param testCaseSchemaJson
+	 * @param testCases
+	 * @return
+	 * @throws Exception
+	 */
+	public List<String> generateTestCaseFromConfig(String testCaseType, String testCaseSchemaJson,
 			List<TestCasesConfig.TestCaseConfig> testCases) throws Exception {
 		List<String> testcases = new ArrayList<>();
 		System.out.println("Testcases configured: " + testCases);
@@ -356,27 +353,27 @@ public class TestCasesService {
 						.equals(this.validateJsonWithSchema(jsonValue, testCaseSchemaJson).getStatus())) {
 					// Get JSON Object
 					// Do Validation on content of JSON
-					if (isValidTestCases(testCaseDto)) {
+					if (isValidTestCaseId(testCaseDto)) {
 						String testCaseId = testCaseDto.getTestId();
-						Optional<TestCaseProjectEntity> checkTestCaseProjectEntity = Optional.empty();
-						checkTestCaseProjectEntity = testCasesProjectRepository.findById(testCaseId);
+						Optional<TestCaseEntity> checkTestCaseEntity = Optional.empty();
+						checkTestCaseEntity = testCasesRepository.findById(testCaseId);
 
 						// else if test case not present .. save
-						if (checkTestCaseProjectEntity.isEmpty() || !checkTestCaseProjectEntity.isPresent()) {
-							TestCaseProjectEntity testCaseProjectEntity = new TestCaseProjectEntity();
-							testCaseProjectEntity.setId(testCaseId);
-							testCaseProjectEntity.setTestcaseJson(jsonValue);
-							testCaseProjectEntity.setTestcaseType(testCaseDto.getTestCaseType());
-							testCaseProjectEntity.setSpecVersion(testCaseDto.getSpecVersion());
-							testCaseProjectEntity = testCasesProjectRepository.save(testCaseProjectEntity);
+						if (checkTestCaseEntity.isEmpty() || !checkTestCaseEntity.isPresent()) {
+							TestCaseEntity testCase = new TestCaseEntity();
+							testCase.setId(testCaseId);
+							testCase.setTestcaseJson(jsonValue);
+							testCase.setTestcaseType(testCaseDto.getTestCaseType());
+							testCase.setSpecVersion(testCaseDto.getSpecVersion());
+							testCase = testCasesRepository.save(testCase);
 						}
 						// Check if test case present .. update
 						else {
-							TestCaseProjectEntity testCaseProjectEntity = checkTestCaseProjectEntity.get();
-							testCaseProjectEntity.setTestcaseJson(jsonValue);
-							testCaseProjectEntity.setTestcaseType(testCaseDto.getTestCaseType());
-							testCaseProjectEntity.setSpecVersion(testCaseDto.getSpecVersion());
-							testCaseProjectEntity = testCasesProjectRepository.update(testCaseProjectEntity);
+							TestCaseEntity testCase = checkTestCaseEntity.get();
+							testCase.setTestcaseJson(jsonValue);
+							testCase.setTestcaseType(testCaseDto.getTestCaseType());
+							testCase.setSpecVersion(testCaseDto.getSpecVersion());
+							testCase = testCasesRepository.update(testCase);
 						}
 						savedValues.put(testCaseId, jsonValue);
 					}
@@ -413,7 +410,7 @@ public class TestCasesService {
 	 * @param TestCaseDto
 	 * @return boolean
 	 */
-	private boolean isValidTestCases(TestCaseDto testCaseDto) throws ToolkitException {
+	private boolean isValidTestCaseId(TestCaseDto testCaseDto) throws ToolkitException {
 		ToolkitErrorCodes errorCode = null;
 		String type = testCaseDto.getTestCaseType();
 		String testId = testCaseDto.getTestId();
