@@ -38,4 +38,5 @@ public class CollectionsController {
 			@RequestParam(required = true) String projectId, @RequestParam(required = true) String type) {
 		return collectionsService.getCollections(type, projectId);
 	}
+
 }
