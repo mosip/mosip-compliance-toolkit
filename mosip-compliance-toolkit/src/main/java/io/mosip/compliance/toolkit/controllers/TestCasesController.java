@@ -2,13 +2,14 @@ package io.mosip.compliance.toolkit.controllers;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.WebDataBinder;
@@ -21,8 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.compliance.toolkit.config.TestCasesConfig;
 import io.mosip.compliance.toolkit.constants.AppConstants;
+import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
+import io.mosip.compliance.toolkit.dto.SbiProjectDto;
 import io.mosip.compliance.toolkit.dto.testcases.RequestValidateDto;
 import io.mosip.compliance.toolkit.dto.testcases.ResponseValidateDto;
+import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseRequestDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseResponseDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResponseDto;
@@ -30,12 +34,16 @@ import io.mosip.compliance.toolkit.dto.testcases.ValidatorDefDto;
 import io.mosip.compliance.toolkit.service.TestCasesService;
 import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.compliance.toolkit.validators.BaseValidator;
+import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
 
 @RestController
 public class TestCasesController {
+
+	@Value("${mosip.toolkit.api.id.testcase.project.get}")
+	private String getTestCasesId;
 
 	@Autowired
 	private TestCasesConfig testCasesConfig;
@@ -160,6 +168,31 @@ public class TestCasesController {
 			}
 		} catch (Exception e) {
 			return e.getLocalizedMessage();
+		}
+	}
+
+	@GetMapping(value = "/getSbiTestCases")
+	public ResponseWrapper<List<TestCaseDto>> getSbiTestCases(@RequestParam(required = true) String specVersion, 
+			@RequestParam(required = true) String purpose,  @RequestParam(required = true) String deviceType,
+			@RequestParam(required = true) String deviceSubType) {
+		try {
+			File file = ResourceUtils.getFile("classpath:schemas/testcase_schema.json");
+			// Read File Content
+			String testCaseSchemaJson = new String(Files.readAllBytes(file.toPath()));
+			return service.generateSbiTestCase(specVersion, purpose, deviceType, deviceSubType, testCaseSchemaJson);
+		} catch (Exception ex) {
+			ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
+			responseWrapper.setId(getTestCasesId);
+			responseWrapper.setResponse(null);
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorCode());
+			serviceError.setMessage(ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage()+ " " + ex.getLocalizedMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);			
+			responseWrapper.setVersion(AppConstants.VERSION);		
+			responseWrapper.setResponsetime(LocalDateTime.now());
+			return responseWrapper;	
 		}
 	}
 
