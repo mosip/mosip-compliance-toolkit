@@ -32,6 +32,9 @@ public class CollectionsService {
 	@Value("${mosip.toolkit.api.id.collections.get}")
 	private String getCollectionsId;
 
+	@Value("${mosip.toolkit.api.id.collection.testcases.get}")
+	private String getTestCasesByCollectionId;
+
 	@Autowired
 	private CollectionsRepository collectionsRepository;
 
@@ -48,61 +51,74 @@ public class CollectionsService {
 
 	public ResponseWrapper<CollectionsResponseDto> getCollections(String type, String projectId) {
 		ResponseWrapper<CollectionsResponseDto> responseWrapper = new ResponseWrapper<>();
-		CollectionsResponseDto collectionsResponseDto = null;
+		CollectionsResponseDto collectionsResponse = null;
+
 		boolean isProjectTypeValid = false;
 
-		if (AppConstants.SBI.equalsIgnoreCase(type) || AppConstants.ABIS.equalsIgnoreCase(type)
-				|| AppConstants.SDK.equalsIgnoreCase(type)) {
-			isProjectTypeValid = true;
-		}
+		try {
+			if (Objects.nonNull(type) && (AppConstants.SBI.equalsIgnoreCase(type)
+					|| AppConstants.ABIS.equalsIgnoreCase(type) || AppConstants.SDK.equalsIgnoreCase(type))) {
+				isProjectTypeValid = true;
+			}
 
-		if (isProjectTypeValid) {
-			if (Objects.nonNull(type) && Objects.nonNull(projectId)) {
-				List<CollectionSummaryEntity> collectionsEntityList = null;
-				if (AppConstants.SBI.equalsIgnoreCase(type)) {
-					collectionsEntityList = collectionsRepository.getCollectionsOfSbiProjects(projectId,
-							getPartnerId());
-				} else if (AppConstants.SDK.equalsIgnoreCase(type)) {
-					collectionsEntityList = collectionsRepository.getCollectionsOfSdkProjects(projectId,
-							getPartnerId());
-				} else if (AppConstants.ABIS.equalsIgnoreCase(type)) {
-					collectionsEntityList = collectionsRepository.getCollectionsOfAbisProjects(projectId,
-							getPartnerId());
-				}
-				List<CollectionDto> collectionsList = new ArrayList<>();
-				if (Objects.nonNull(collectionsEntityList) && !collectionsEntityList.isEmpty()) {
-					for (CollectionSummaryEntity entity : collectionsEntityList) {
-						ObjectMapper objectMapper = new ObjectMapper();
-						objectMapper.registerModule(new JavaTimeModule());
-						objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-						CollectionDto collection = objectMapper.convertValue(entity,
-								CollectionDto.class);
+			if (isProjectTypeValid) {
+				if (Objects.nonNull(type) && Objects.nonNull(projectId)) {
+					List<CollectionSummaryEntity> collectionsEntityList = null;
+					if (AppConstants.SBI.equalsIgnoreCase(type)) {
+						collectionsEntityList = collectionsRepository.getCollectionsOfSbiProjects(projectId,
+								getPartnerId());
+					} else if (AppConstants.SDK.equalsIgnoreCase(type)) {
+						collectionsEntityList = collectionsRepository.getCollectionsOfSdkProjects(projectId,
+								getPartnerId());
+					} else if (AppConstants.ABIS.equalsIgnoreCase(type)) {
+						collectionsEntityList = collectionsRepository.getCollectionsOfAbisProjects(projectId,
+								getPartnerId());
+					}
+					List<CollectionDto> collectionsList = new ArrayList<>();
+					if (Objects.nonNull(collectionsEntityList) && !collectionsEntityList.isEmpty()) {
+						for (CollectionSummaryEntity entity : collectionsEntityList) {
+							ObjectMapper objectMapper = new ObjectMapper();
+							objectMapper.registerModule(new JavaTimeModule());
+							objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+							CollectionDto collection = objectMapper.convertValue(entity, CollectionDto.class);
 
-						collectionsList.add(collection);
+							collectionsList.add(collection);
+						}
+						// send empty collections list, in case none are yet added for a project
+						collectionsResponse = new CollectionsResponseDto();
+						collectionsResponse.setCollections(collectionsList);
+					} else {
+						List<ServiceError> serviceErrorsList = new ArrayList<>();
+						ServiceError serviceError = new ServiceError();
+						serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode());
+						serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
+						serviceErrorsList.add(serviceError);
+						responseWrapper.setErrors(serviceErrorsList);
 					}
 				}
-				//send empty collections list, in case none are yet added for a project
-				collectionsResponseDto = new CollectionsResponseDto();
-				collectionsResponseDto.setCollections(collectionsList);
 			} else {
 				List<ServiceError> serviceErrorsList = new ArrayList<>();
 				ServiceError serviceError = new ServiceError();
-				serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode());
-				serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
+				serviceError.setErrorCode(ToolkitErrorCodes.INVALID_PROJECT_TYPE.getErrorCode());
+				serviceError.setMessage(ToolkitErrorCodes.INVALID_PROJECT_TYPE.getErrorMessage());
 				serviceErrorsList.add(serviceError);
 				responseWrapper.setErrors(serviceErrorsList);
 			}
-		} else {
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In getProjectCollectionTestrun method of CollectionsService Service - " + ex.getMessage());
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
 			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.INVALID_PROJECT_TYPE.getErrorCode());
-			serviceError.setMessage(ToolkitErrorCodes.INVALID_PROJECT_TYPE.getErrorMessage());
+			serviceError.setErrorCode(ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorCode());
+			serviceError
+					.setMessage(ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage());
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		}
 		responseWrapper.setId(getCollectionsId);
 		responseWrapper.setVersion(AppConstants.VERSION);
-		responseWrapper.setResponse(collectionsResponseDto);
+		responseWrapper.setResponse(collectionsResponse);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
