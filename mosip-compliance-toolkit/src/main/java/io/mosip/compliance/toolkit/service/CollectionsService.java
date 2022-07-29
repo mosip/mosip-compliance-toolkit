@@ -52,7 +52,6 @@ public class CollectionsService {
 	public ResponseWrapper<CollectionsResponseDto> getCollections(String type, String projectId) {
 		ResponseWrapper<CollectionsResponseDto> responseWrapper = new ResponseWrapper<>();
 		CollectionsResponseDto collectionsResponse = null;
-
 		boolean isProjectTypeValid = false;
 
 		try {
@@ -95,6 +94,13 @@ public class CollectionsService {
 						serviceErrorsList.add(serviceError);
 						responseWrapper.setErrors(serviceErrorsList);
 					}
+				} else {
+					List<ServiceError> serviceErrorsList = new ArrayList<>();
+					ServiceError serviceError = new ServiceError();
+					serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode());
+					serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
+					serviceErrorsList.add(serviceError);
+					responseWrapper.setErrors(serviceErrorsList);
 				}
 			} else {
 				List<ServiceError> serviceErrorsList = new ArrayList<>();
