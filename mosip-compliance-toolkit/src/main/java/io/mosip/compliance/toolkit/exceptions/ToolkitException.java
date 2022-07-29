@@ -22,7 +22,8 @@ public class ToolkitException extends BaseUncheckedException {
 	 * @param errorMessage The error message for this exception
 	 */
 	public ToolkitException(String errorCode, String errorMessage) {
-		super(errorCode, errorMessage);
+		super(errorMessage);
+		addInfo(errorCode, errorMessage);
 	}
 
 	/**

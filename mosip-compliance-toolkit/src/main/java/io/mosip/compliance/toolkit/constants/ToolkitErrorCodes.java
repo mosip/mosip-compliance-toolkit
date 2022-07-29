@@ -22,13 +22,14 @@ public enum ToolkitErrorCodes {
 	SAVE_TEST_CASE_JSON_ERROR("TOOLKIT_REQ_ERR_010", "Save Test Case Json error"),
 	
 	SBI_PROJECT_UNABLE_TO_ADD("TOOLKIT_REQ_ERR_011", "SBI Project unable to add"),
-	INVALID_SPEC_VERSION_("TOOLKIT_REQ_ERR_012", "Invalid Spec Version"),
-	INVALID_SPEC_VERSION_FOR_PROJECT_TYPE_("TOOLKIT_REQ_ERR_013", "Invalid Spec Version for the Project Type"),
+	INVALID_SBI_SPEC_VERSION("TOOLKIT_REQ_ERR_012", "Invalid Sbi Spec Version"),
+	INVALID_SBI_SPEC_VERSION_FOR_PROJECT_TYPE("TOOLKIT_REQ_ERR_013", "Invalid Sbi Spec Version for the Project Type"),
 	INVALID_PURPOSE("TOOLKIT_REQ_ERR_014", "Invalid Purpose"),
 	INVALID_DEVICE_TYPE("TOOLKIT_REQ_ERR_015", "Invalid Device Type"),
 	INVALID_DEVICE_SUB_TYPE("TOOLKIT_REQ_ERR_016", "Invalid Device Sub Type"),
 	INVALID_DEVICE_SUB_TYPE_FOR_DEVICE_TYPE("TOOLKIT_REQ_ERR_017", "Invalid Device Sub Type for the Device Type"),
 	INVALID_SPEC_VERSION_FOR_PROJECT_TYPE("TOOLKIT_REQ_ERR_018", "Invalid Spec Version for the Project Type"),
+	GET_TEST_CASE_ERROR("TOOLKIT_REQ_ERR_019", "Get Test Case error"),
 	
 	TECHNICAL_ERROR_EXCEPTION("TOOLKIT_REQ_ERR_500", "Technical Error");
 

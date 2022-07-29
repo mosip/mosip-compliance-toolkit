@@ -20,7 +20,7 @@ import io.mosip.compliance.toolkit.constants.DeviceSubTypes;
 import io.mosip.compliance.toolkit.constants.DeviceTypes;
 import io.mosip.compliance.toolkit.constants.ProjectTypes;
 import io.mosip.compliance.toolkit.constants.Purposes;
-import io.mosip.compliance.toolkit.constants.SpecVersions;
+import io.mosip.compliance.toolkit.constants.SbiSpecVersions;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.SbiProjectDto;
 import io.mosip.compliance.toolkit.entity.SbiProjectEntity;
@@ -166,25 +166,27 @@ public class SbiProjectService {
 		ToolkitErrorCodes errorCode = null;
 
 		ProjectTypes projectTypesCode = ProjectTypes.fromCode(sbiProjectDto.getProjectType());
-		SpecVersions specVersionCode = SpecVersions.fromCode(sbiProjectDto.getSbiVersion());
+		SbiSpecVersions specVersionCode = SbiSpecVersions.fromCode(sbiProjectDto.getSbiVersion());
 		Purposes purposeCode = Purposes.fromCode(sbiProjectDto.getPurpose());
 		DeviceTypes deviceTypeCode = DeviceTypes.fromCode(sbiProjectDto.getDeviceType());
 		DeviceSubTypes deviceSubTypeCode = DeviceSubTypes.fromCode(sbiProjectDto.getDeviceSubType());
 
-		switch (projectTypesCode) {
-		case SBI:
-			switch (specVersionCode) {
-			case SPEC_VER_0_9_5:
-			case SPEC_VER_1_0_0:
+		switch(projectTypesCode)
+		{
+			case SBI:
+				switch(specVersionCode)
+				{
+					case SPEC_VER_0_9_5:
+					case SPEC_VER_1_0_0:
+						break;
+					default:
+						errorCode = ToolkitErrorCodes.INVALID_SBI_SPEC_VERSION_FOR_PROJECT_TYPE;
+						throw new ToolkitException (errorCode.getErrorCode(), errorCode.getErrorMessage ());
+				}
 				break;
 			default:
-				errorCode = ToolkitErrorCodes.INVALID_SPEC_VERSION_FOR_PROJECT_TYPE_;
+				errorCode = ToolkitErrorCodes.INVALID_PROJECT_TYPE;
 				throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
-			}
-			break;
-		default:
-			errorCode = ToolkitErrorCodes.INVALID_PROJECT_TYPE;
-			throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
 		}
 
 		switch (purposeCode) {
