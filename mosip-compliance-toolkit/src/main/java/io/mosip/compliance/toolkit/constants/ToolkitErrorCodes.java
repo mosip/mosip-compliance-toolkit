@@ -31,6 +31,9 @@ public enum ToolkitErrorCodes {
 	INVALID_SPEC_VERSION_FOR_PROJECT_TYPE("TOOLKIT_REQ_ERR_018", "Invalid Spec Version for the Project Type"),
 	GET_TEST_CASE_ERROR("TOOLKIT_REQ_ERR_019", "Get Test Case error"),
 	
+	INVALID_VALIDATOR_DEF("TOOLKIT_VALIDATION_ERR_001", "Invalid validator definition in testcase."),
+	TESTCASE_VALIDATION_ERR("TOOLKIT_VALIDATION_ERR_002", "Unable to perform validations."),
+	
 	TECHNICAL_ERROR_EXCEPTION("TOOLKIT_REQ_ERR_500", "Technical Error");
 
 	private final String errorCode;

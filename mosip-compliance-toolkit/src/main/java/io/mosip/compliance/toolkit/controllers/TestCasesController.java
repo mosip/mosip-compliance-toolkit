@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.ResourceUtils;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -24,20 +25,25 @@ import io.mosip.compliance.toolkit.config.TestCasesConfig;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.testcases.RequestValidateDto;
-import io.mosip.compliance.toolkit.dto.testcases.ResponseValidateDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseRequestDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseResponseDto;
+import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResponseDto;
-import io.mosip.compliance.toolkit.dto.testcases.ValidatorDefDto;
+import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.service.TestCasesService;
 import io.mosip.compliance.toolkit.util.RequestValidator;
-import io.mosip.compliance.toolkit.validators.BaseValidator;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
 
+/**
+ * Controller for all testcases related end points.
+ * 
+ * @author Mayura D
+ * @since 1.0.0
+ */
 @RestController
 public class TestCasesController {
 
@@ -55,7 +61,7 @@ public class TestCasesController {
 
 	@Autowired
 	private RequestValidator requestValidator;
-	
+
 	/**
 	 * Initiates the binder.
 	 *
@@ -65,7 +71,7 @@ public class TestCasesController {
 	public void initBinder(WebDataBinder binder) {
 		binder.addValidators(requestValidator);
 	}
-	
+
 //	@GetMapping(value = "/validateRequest")
 //	public String doValidate() {
 //		try {
@@ -87,9 +93,9 @@ public class TestCasesController {
 //	}
 
 	@PostMapping(value = "/validateRequest")
-	public ValidationResponseDto validateRequest(@RequestBody(required = true) RequestValidateDto requestDto) {
+	public ValidationResultDto validateRequest(@RequestBody(required = true) RequestValidateDto requestDto) {
 		try {
-			ValidationResponseDto response = null;
+			ValidationResultDto response = null;
 			if (requestDto.getTestCaseType().equalsIgnoreCase(AppConstants.SBI)) {
 				String sourceJson = requestDto.getMethodRequest();
 				File schemaJsonFile = ResourceUtils
@@ -101,7 +107,7 @@ public class TestCasesController {
 			}
 			return response;
 		} catch (Exception e) {
-			ValidationResponseDto validationResponseDto = new ValidationResponseDto();
+			ValidationResultDto validationResponseDto = new ValidationResultDto();
 			validationResponseDto.setStatus(AppConstants.FAILURE);
 			validationResponseDto.setDescription(e.getLocalizedMessage());
 			return validationResponseDto;
@@ -109,34 +115,9 @@ public class TestCasesController {
 	}
 
 	@PostMapping(value = "/validateResponse")
-	public List<ValidationResponseDto> validateResponse(@RequestBody(required = true) ResponseValidateDto responseDto) {
-		List<ValidationResponseDto> responsesList = new ArrayList<ValidationResponseDto>();
-		try {
-			List<ValidatorDefDto> validatorDefs = responseDto.getValidatorDefs();
-			validatorDefs.forEach(v -> {
-				try {
-					Class<?> className = Class.forName("io.mosip.compliance.toolkit.validators." + v.getName());
-					System.out.print("Class represented by: " + className);
-					BaseValidator validator = (BaseValidator) className.getDeclaredConstructor().newInstance();
-					context.getAutowireCapableBeanFactory().autowireBean(validator);
-					ValidationResponseDto resultDto = validator.validateResponse(responseDto);
-					resultDto.setValidatorName(v.getName());
-					resultDto.setValidatorDescription(v.getDescription());
-					responsesList.add(resultDto);
-				} catch (Exception ex) {
-					System.out.println("exception occured: " + ex.getLocalizedMessage());
-					throw new RuntimeException(ex);
-					// TODO: handle exception
-				}
-			});
-			return responsesList;
-		} catch (Exception e) {
-			ValidationResponseDto validationResponseDto = new ValidationResponseDto();
-			validationResponseDto.setStatus(AppConstants.FAILURE);
-			validationResponseDto.setDescription(e.getLocalizedMessage());
-			responsesList.add(validationResponseDto);
-			return responsesList;
-		}
+	public ResponseWrapper<ValidationResponseDto> validateResponse(
+			@RequestBody @Valid RequestWrapper<ValidationInputDto> input, Errors errors) throws Exception {
+		return service.performValidations(input.getRequest()); 
 	}
 
 	@GetMapping(value = "/getTestCases")
@@ -171,8 +152,8 @@ public class TestCasesController {
 	}
 
 	@GetMapping(value = "/getSbiTestCases")
-	public ResponseWrapper<List<TestCaseDto>> getSbiTestCases(@RequestParam(required = true) String specVersion, 
-			@RequestParam(required = true) String purpose,  @RequestParam(required = true) String deviceType,
+	public ResponseWrapper<List<TestCaseDto>> getSbiTestCases(@RequestParam(required = true) String specVersion,
+			@RequestParam(required = true) String purpose, @RequestParam(required = true) String deviceType,
 			@RequestParam(required = true) String deviceSubType) {
 		try {
 			File file = ResourceUtils.getFile("classpath:schemas/testcase_schema.json");
@@ -186,12 +167,13 @@ public class TestCasesController {
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
 			ServiceError serviceError = new ServiceError();
 			serviceError.setErrorCode(ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorCode());
-			serviceError.setMessage(ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage()+ " " + ex.getLocalizedMessage());
+			serviceError.setMessage(
+					ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage() + " " + ex.getLocalizedMessage());
 			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);			
-			responseWrapper.setVersion(AppConstants.VERSION);		
+			responseWrapper.setErrors(serviceErrorsList);
+			responseWrapper.setVersion(AppConstants.VERSION);
 			responseWrapper.setResponsetime(LocalDateTime.now());
-			return responseWrapper;	
+			return responseWrapper;
 		}
 	}
 
@@ -204,22 +186,21 @@ public class TestCasesController {
 			return e.getLocalizedMessage();
 		}
 	}
-	
+
 	/**
-	* testcases json array.
-	*
-	* @param TestCaseRequestDto
-	* @return
-	*/
+	 * testcases json array.
+	 *
+	 * @param TestCaseRequestDto
+	 * @return
+	 */
 	@ResponseFilter
 	@PostMapping(value = "/saveTestCases", produces = "application/json")
 	public ResponseWrapper<TestCaseResponseDto> saveTestCases(
-		@RequestBody @Valid RequestWrapper<TestCaseRequestDto> testCaseRequestDto) throws Exception {
+			@RequestBody @Valid RequestWrapper<TestCaseRequestDto> testCaseRequestDto) throws Exception {
 		return service.saveTestCases(testCaseRequestDto.getRequest().getTestCases(), getTestCaseSchemaJson());
 	}
-	
-	private String getTestCaseSchemaJson() throws Exception
-	{
+
+	private String getTestCaseSchemaJson() throws Exception {
 		File file = ResourceUtils.getFile("classpath:schemas/testcase_schema.json");
 		// Read File Content
 		return new String(Files.readAllBytes(file.toPath()));
