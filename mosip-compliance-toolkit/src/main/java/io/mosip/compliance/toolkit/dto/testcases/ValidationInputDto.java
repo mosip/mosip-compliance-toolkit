@@ -10,7 +10,9 @@ import lombok.Setter;
 @Data
 @Getter
 @Setter
-public class ResponseValidateDto  implements Serializable {
+public class ValidationInputDto  implements Serializable {
+
+	private static final long serialVersionUID = 4182125236181639716L;
 
 	public String testCaseType;
 	

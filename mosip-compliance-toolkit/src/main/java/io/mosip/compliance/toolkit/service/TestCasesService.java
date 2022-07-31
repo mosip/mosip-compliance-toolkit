@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
@@ -42,16 +42,19 @@ import io.mosip.compliance.toolkit.dto.sdk.CheckQualityRequestDto;
 import io.mosip.compliance.toolkit.dto.sdk.RequestDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseResponseDto;
+import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResponseDto;
+import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
+import io.mosip.compliance.toolkit.dto.testcases.ValidatorDefDto;
 import io.mosip.compliance.toolkit.entity.TestCaseEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.TestCasesRepository;
+import io.mosip.compliance.toolkit.validators.BaseValidator;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.biometrics.spi.CbeffUtil;
 import io.mosip.kernel.cbeffutil.impl.CbeffImpl;
-import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
@@ -64,8 +67,14 @@ public class TestCasesService {
 	@Value("${mosip.toolkit.api.id.projects.get}")
 	private String getProjectsId;
 
+	@Value("${mosip.toolkit.api.id.validations.post}")
+	private String validationsId;
+
 	@Value("${mosip.toolkit.api.id.testcase.project.get}")
 	private String getTestCasesId;
+
+	@Autowired
+	private ApplicationContext context;
 
 	@Autowired
 	ObjectMapper objectMapper;
@@ -93,8 +102,7 @@ public class TestCasesService {
 		ServiceError serviceError = null;
 
 		try {
-			if (isValidSbiTestCase(specVersion, purpose, deviceType,deviceSubType))
-			{
+			if (isValidSbiTestCase(specVersion, purpose, deviceType, deviceSubType)) {
 				List<TestCaseEntity> testCaseEntities = testCasesRepository
 						.findAllSbiTestCaseBySpecVersion(specVersion);
 				for (final TestCaseEntity testCaseEntity : testCaseEntities) {
@@ -114,14 +122,14 @@ public class TestCasesService {
 		} catch (ToolkitException ex) {
 			testCases = null;
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
-			log.error("sessionId", "idType", "id", "In getSbiTestCases method of TestCasesService - " + ex.getMessage());
+			log.error("sessionId", "idType", "id",
+					"In getSbiTestCases method of TestCasesService - " + ex.getMessage());
 			serviceError = new ServiceError();
 			serviceError.setErrorCode(ex.getErrorCode());
 			serviceError.setMessage(ex.getMessage());
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			testCases = null;
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
@@ -140,13 +148,14 @@ public class TestCasesService {
 	}
 
 	/**
-	 * Verifies test case is valid. validates specVersion, purpose, deviceType, deviceSubType values
+	 * Verifies test case is valid. validates specVersion, purpose, deviceType,
+	 * deviceSubType values
 	 *
 	 * @param specVersion, purpose, deviceType, deviceSubType
 	 * @return boolean
 	 */
-	private boolean isValidSbiTestCase(String specVersion, String purpose, String deviceType,
-			String deviceSubType) throws ToolkitException {
+	private boolean isValidSbiTestCase(String specVersion, String purpose, String deviceType, String deviceSubType)
+			throws ToolkitException {
 		SbiSpecVersions.fromCode(specVersion);
 		Purposes.fromCode(purpose);
 		DeviceTypes.fromCode(deviceType);
@@ -157,6 +166,7 @@ public class TestCasesService {
 
 	/**
 	 * Method only for reference.
+	 * 
 	 * @param testCaseType
 	 * @param testCaseSchemaJson
 	 * @param testCases
@@ -255,7 +265,7 @@ public class TestCasesService {
 		return testcases;
 	}
 
-	public ValidationResponseDto validateJsonWithSchema(String sourceJson, String schemaJson) throws Exception {
+	public ValidationResultDto validateJsonWithSchema(String sourceJson, String schemaJson) throws Exception {
 		// create instance of the ObjectMapper class
 		// ObjectMapper objectMapper = new ObjectMapper();
 		// create an instance of the JsonSchemaFactory using version flag
@@ -268,26 +278,25 @@ public class TestCasesService {
 			JsonSchema schema = schemaFactory.getSchema(schemaJson);
 			// create set of validation message and store result in it
 			Set<ValidationMessage> validationResult = schema.validate(json);
-			ValidationResponseDto validationResponseDto = new ValidationResponseDto();
+			ValidationResultDto validationResultDto = new ValidationResultDto();
 			// show the validation errors
 			if (validationResult.isEmpty()) {
 				// show custom message if there is no validation error
-				System.out.println("There are no validation errors. Json matches the schema.");
-				validationResponseDto.setDescription("There are no validation errors. Json matches the schema.");
-				validationResponseDto.setStatus(AppConstants.SUCCESS);
-				return validationResponseDto;
+				log.info("There are no validation errors. Json matches the schema.");
+				validationResultDto.setDescription("There are no validation errors. Json matches the schema.");
+				validationResultDto.setStatus(AppConstants.SUCCESS);
+				return validationResultDto;
 			} else {
 				List<String> errors = new ArrayList<>();
 				// show all the validation error
 				validationResult.forEach(vm -> errors.add(vm.getMessage()));
-				System.out.println(errors.toString());
-				validationResponseDto.setDescription(errors.toString());
-				validationResponseDto.setStatus(AppConstants.FAILURE);
-				return validationResponseDto;
+				log.debug("Schema validations failed.");
+				validationResultDto.setDescription(errors.toString());
+				validationResultDto.setStatus(AppConstants.FAILURE);
+				return validationResultDto;
 			}
 		} catch (Exception e) {
 			throw e;
-			// TODO: handle exception
 		}
 	}
 
@@ -402,6 +411,66 @@ public class TestCasesService {
 		responseWrapper.setResponse(testCaseResponseDto);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
+	}
+
+	public ResponseWrapper<ValidationResponseDto> performValidations(ValidationInputDto validationInputDto) {
+		ResponseWrapper<ValidationResponseDto> responseWrapper = new ResponseWrapper<>();
+		ValidationResponseDto validationResponseDto = new ValidationResponseDto();
+		List<ValidationResultDto> validationResults = new ArrayList<ValidationResultDto>();
+
+		try {
+			List<ValidatorDefDto> validatorDefs = validationInputDto.getValidatorDefs();
+			// first check all validator definitions
+			checkValidatorDefs(validatorDefs);
+			// now perform validation for all
+			validatorDefs.forEach(v -> {
+				BaseValidator validator = null;
+				try {
+					Class<?> className = Class.forName("io.mosip.compliance.toolkit.validators." + v.getName());
+					log.debug("invloking validator: {}", className);
+					validator = (BaseValidator) className.getDeclaredConstructor().newInstance();
+				} catch (Exception ex) {
+					// handled in checkValidatorDefs();
+				}
+				context.getAutowireCapableBeanFactory().autowireBean(validator);
+				ValidationResultDto resultDto = validator.validateResponse(validationInputDto);
+				resultDto.setValidatorName(v.getName());
+				resultDto.setValidatorDescription(v.getDescription());
+				validationResults.add(resultDto);
+			});
+			validationResponseDto.setValidationsList(validationResults);
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ExceptionUtils.getStackTrace(ex));
+			log.error("sessionId", "idType", "id",
+					"In performValidations method of Test Cases Service - " + ex.getLocalizedMessage());
+
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ToolkitErrorCodes errorCode = ToolkitErrorCodes.TESTCASE_VALIDATION_ERR;
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(errorCode.getErrorCode());
+			serviceError.setMessage(errorCode.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		}
+		responseWrapper.setId(validationsId);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponse(validationResponseDto);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+
+	private void checkValidatorDefs(List<ValidatorDefDto> validatorDefs) {
+		validatorDefs.forEach(v -> {
+			try {
+				Class<?> className = Class.forName("io.mosip.compliance.toolkit.validators." + v.getName());
+				BaseValidator validator = (BaseValidator) className.getDeclaredConstructor().newInstance();
+				log.debug("invloking validator: {}", validator);
+			} catch (Exception ex) {
+				log.debug("invalid validator: {}", ex.getMessage());
+				throw new ToolkitException(ToolkitErrorCodes.INVALID_VALIDATOR_DEF.getErrorCode(),
+						ToolkitErrorCodes.INVALID_VALIDATOR_DEF.getErrorMessage() + " - " + v.getName());
+			}
+		});
 	}
 
 	/**

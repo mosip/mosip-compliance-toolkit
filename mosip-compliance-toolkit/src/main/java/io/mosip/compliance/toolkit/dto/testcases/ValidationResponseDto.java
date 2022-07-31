@@ -1,6 +1,6 @@
 package io.mosip.compliance.toolkit.dto.testcases;
 
-import java.io.Serializable;
+import java.util.List;
 
 import lombok.Data;
 import lombok.Getter;
@@ -9,13 +9,7 @@ import lombok.Setter;
 @Data
 @Getter
 @Setter
-public class ValidationResponseDto  implements Serializable{
+public class ValidationResponseDto {
 
-	public String validatorName;
-
-	public String validatorDescription;
-
-	String status;
-	
-	String description;
+	List<ValidationResultDto> validationsList;
 }

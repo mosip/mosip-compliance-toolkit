@@ -1,9 +1,9 @@
 package io.mosip.compliance.toolkit.validators;
 
-import io.mosip.compliance.toolkit.dto.testcases.ResponseValidateDto;
-import io.mosip.compliance.toolkit.dto.testcases.ValidationResponseDto;
+import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
+import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 
 public interface BaseValidator {
 	
-	ValidationResponseDto validateResponse(ResponseValidateDto responseDto);
+	ValidationResultDto validateResponse(ValidationInputDto responseDto);
 }
