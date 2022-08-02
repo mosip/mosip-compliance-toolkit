@@ -18,8 +18,11 @@ import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.CollectionDto;
+import io.mosip.compliance.toolkit.dto.CollectionTestcaseDto;
+import io.mosip.compliance.toolkit.dto.CollectionTestcasesResponseDto;
 import io.mosip.compliance.toolkit.dto.CollectionsResponseDto;
 import io.mosip.compliance.toolkit.entity.CollectionSummaryEntity;
+import io.mosip.compliance.toolkit.repository.CollectionTestcaseRepository;
 import io.mosip.compliance.toolkit.repository.CollectionsRepository;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.exception.ServiceError;
@@ -38,6 +41,9 @@ public class CollectionsService {
 	@Autowired
 	private CollectionsRepository collectionsRepository;
 
+	@Autowired
+	private CollectionTestcaseRepository collectionTestcaseRepository;
+
 	private Logger log = LoggerConfiguration.logConfig(ProjectsService.class);
 
 	private AuthUserDetails authUserDetails() {
@@ -47,6 +53,27 @@ public class CollectionsService {
 	private String getPartnerId() {
 		String partnerId = authUserDetails().getUsername();
 		return partnerId;
+	}
+
+	public ResponseWrapper<CollectionTestcasesResponseDto> getCollectionTestcases(String collectionId) {
+		ResponseWrapper<CollectionTestcasesResponseDto> responseWrapper = new ResponseWrapper<>();
+		CollectionTestcasesResponseDto collectionTestcasesResponseDto = null;
+
+		try {
+			List<CollectionTestcaseDto> collectionTestcases = collectionTestcaseRepository
+					.getTestcasesByCollectionId(collectionId, getPartnerId());
+
+			if (Objects.nonNull(collectionTestcases) && !collectionTestcases.isEmpty()) {
+				collectionTestcasesResponseDto = new CollectionTestcasesResponseDto();
+				collectionTestcasesResponseDto.setCollectionTestCasesDto(collectionTestcases);
+			}
+		} catch (Exception ex) {
+		}
+		responseWrapper.setId(getCollectionsId);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponse(collectionTestcasesResponseDto);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
 	}
 
 	public ResponseWrapper<CollectionsResponseDto> getCollections(String type, String projectId) {
