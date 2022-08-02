@@ -156,10 +156,7 @@ public class TestCasesController {
 			@RequestParam(required = true) String purpose, @RequestParam(required = true) String deviceType,
 			@RequestParam(required = true) String deviceSubType) {
 		try {
-			File file = ResourceUtils.getFile("classpath:schemas/testcase_schema.json");
-			// Read File Content
-			String testCaseSchemaJson = new String(Files.readAllBytes(file.toPath()));
-			return service.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType, testCaseSchemaJson);
+			return service.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType, getTestCaseSchemaJson());
 		} catch (Exception ex) {
 			ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
 			responseWrapper.setId(getTestCasesId);
