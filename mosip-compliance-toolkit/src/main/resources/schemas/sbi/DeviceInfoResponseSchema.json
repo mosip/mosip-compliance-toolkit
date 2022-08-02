@@ -1,0 +1,127 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema#",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/DeviceInfoResponseSchema.json",
+	"type": "object",
+	"title": "DeviceInfo response Schema",
+	"description": "DeviceInfo response Schema",
+	"additionalProperties": false,
+	"type": "array",
+	"minItems": 1,
+	"items": [
+		{
+			"type": "object",
+			"properties": {
+				"deviceInfo": {
+					"type": "object",
+					"properties": {
+						"env": {
+							"$ref": "#/definitions/non-empty-string",
+							"enum": [
+								"Staging",
+								"Developer",
+								"Pre-Production",
+								"Production"
+							]
+						},
+						"digitalId": {
+							"$ref": "/schemas/DigitalIdResponseSchema"
+						},
+						"purpose": {
+							"$ref": "#/definitions/non-empty-string",
+							"enum": [
+								"Auth",
+								"Registration"
+							]
+						},
+						"serviceVersion": {
+							"$ref": "#/definitions/non-empty-string"
+						},
+						"deviceStatus": {
+							"$ref": "#/definitions/non-empty-string",
+							"enum": [
+								"Ready",
+								"Busy",
+								"Not Ready",
+								"Not Registered"
+							]
+						},
+						"firmware": {
+							"$ref": "#/definitions/non-empty-string"
+						},
+						"certification": {
+							"$ref": "#/definitions/non-empty-string",
+							"enum": [
+								"L0",
+								"L1"
+							]
+						},
+						"specVersion": {
+							"type": "array",
+							"minItems": 1,
+							"items": [
+								{
+									"$ref": "#/definitions/non-empty-string",
+									"enum": [
+										"0.9.5",
+										"1.0.0"
+									]
+								}
+							]
+						},
+						"deviceSubId": {
+							"type": "array",
+							"minItems": 1,
+							"items": [
+								{
+									"type": "integer",
+									"enum": [
+										0,
+										1,
+										2,
+										3
+									]
+								}
+							]
+						},
+						"callbackId": {
+							"$ref": "#/definitions/non-empty-string"
+						},
+						"deviceId": {
+							"$ref": "#/definitions/non-empty-string"
+						},
+						"deviceCode": {
+							"$ref": "#/definitions/non-empty-string"
+						}
+					},
+					"required": [
+						"env",
+						"digitalId",
+						"purpose",
+						"serviceVersion",
+						"deviceStatus",
+						"firmware",
+						"certification",
+						"specVersion",
+						"deviceSubId",
+						"callbackId",
+						"deviceId",
+						"deviceCode"
+					]
+				},
+				"error": {
+					"$ref": "/schemas/ErrorInfoSchema"
+				}
+			},
+			"required": [
+				"deviceInfo",
+				"error"
+			]
+		}
+	],
+	"definitions": {
+		"non-empty-string": {
+			"type": "string",
+			"minLength": 1
+		}
+	}
+}

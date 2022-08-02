@@ -15,56 +15,14 @@
 			]
 		},
 		"testName": {
-			"type": "string"
+			"$ref": "#/definitions/non-empty-string"
 		},
 		"testId": {
-			"type": "string"
+			"$ref": "#/definitions/non-empty-string"
 		},
-		"specVersion": [
-		{
-			"if": {
-				"properties": {
-					"testCaseType": {
-						"const": "SBI"
-					}
-				}
-			},
-			"then": {
-				"required": [
-					"0.9.5",
-					"1.0.0"
-				]
-			}
+		"specVersion": {
+			"$ref": "#/definitions/non-empty-string"
 		},
-		{
-			"if": {
-				"properties": {
-					"testCaseType": {
-						"const": "ABIS"
-					}
-				}
-			},
-			"then": {
-				"required": [
-					"0.9.0"
-				]
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"testCaseType": {
-						"const": "SDK"
-					}
-				}
-			},
-			"then": {
-				"required": [
-					"0.9.0"
-				]
-			}
-		}
-		],
 		"testDescription": {
 			"type": "string"
 		},
@@ -72,7 +30,7 @@
 			"type": "integer"
 		},
 		"methodName": {
-			"type": "string",
+			"$ref": "#/definitions/non-empty-string",
 			"enum": [
 				"device",
 				"info",
@@ -208,7 +166,6 @@
 						]
 					}
 				},
-				
 				"requestedScore": {
 					"type": [
 						"string",
@@ -246,6 +203,15 @@
 						}
 					},
 					"then": {
+						"properties": {
+							"specVersion": {
+								"type": "string",
+								"enum": [
+									"0.9.5",
+									"1.0.0"
+								]
+							}
+						},
 						"required": [
 							"runtimeInput",
 							"purpose",
@@ -273,19 +239,139 @@
 							"modalities"
 						]
 					}
+				},
+				{
+					"if": {
+						"properties": {
+							"testCaseType": {
+								"const": "ABIS"
+							}
+						}
+					},
+					"then": {
+						"required": [
+							"modalities"
+						]
+					}
 				}
 			]
 		}
 	},
+	"anyOf": [
+		{
+			"if": {
+				"properties": {
+					"testCaseType": {
+						"const": "SBI"
+					}
+				}
+			},
+			"then": {
+				"required": [
+					"runtimeInput",
+					"purpose",
+					"biometricTypes",
+					"deviceSubTypes",
+					"segments",
+					"exceptions",
+					"sbiSpecVersions",
+					"requestedScore",
+					"bioCount",
+					"deviceSubId"
+				]
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"testCaseType": {
+						"const": "SDK"
+					}
+				}
+			},
+			"then": {
+				"required": [
+					"modalities"
+				]
+			}
+		}
+	],
+	"allOf": [
+		{
+			"if": {
+				"properties": {
+					"testCaseType": {
+						"const": "SBI"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"specVersion": {
+						"$ref": "#/definitions/non-empty-string",
+						"enum": [
+							"0.9.5",
+							"1.0.0"
+						]
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"testCaseType": {
+						"const": "SDK"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"specVersion": {
+						"$ref": "#/definitions/non-empty-string",
+						"enum": [
+							"0.9.5"
+						]
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"testCaseType": {
+						"const": "ABIS"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"specVersion": {
+						"$ref": "#/definitions/non-empty-string",
+						"enum": [
+							"0.9.5"
+						]
+					}
+				}
+			}
+		}
+	],
 	"required": [
 		"testCaseType",
 		"testId",
 		"testName",
+		"specVersion",
 		"testDescription",
 		"testOrderSequence",
 		"methodName",
 		"requestSchema",
 		"responseSchema",
 		"validatorDefs"
-	]
+	],
+	"definitions": {
+		"non-empty-string": {
+			"type": "string",
+			"minLength": 1
+		}
+	}
 }

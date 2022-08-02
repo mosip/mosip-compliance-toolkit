@@ -1,0 +1,119 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema#",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/DigitalIdResponseSchema.json",
+	"type": "object",
+	"title": "DigitalId Response Schema",
+	"description": "DigitalId Response Schema",
+	"additionalProperties": false,
+	"properties": {
+		"serialNo": {
+			"$ref": "#/definitions/non-empty-string"
+		},
+		"make": {
+			"$ref": "#/definitions/non-empty-string"
+		},
+		"model": {
+			"$ref": "#/definitions/non-empty-string"
+		},
+		"type": {
+			"$ref": "#/definitions/non-empty-string",
+			"enum": [
+				"Finger",
+				"Iris",
+				"Face"
+			]
+		},
+		"deviceSubType": {
+			"$ref": "#/definitions/non-empty-string"
+		},
+		"deviceProvider": {
+			"$ref": "#/definitions/non-empty-string"
+		},
+		"deviceProviderId": {
+			"$ref": "#/definitions/non-empty-string"
+		},
+		"dateTime": {
+			"type": "string",
+			"format": "datetime",
+			"description": "We expect YYYY-MM-ddTHH:mm:SSZ"
+		}
+	},
+	"allOf": [
+		{
+			"if": {
+				"properties": {
+					"type": {
+						"const": "Finger"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"deviceSubType": {
+						"$ref": "#/definitions/non-empty-string",
+						"enum": [
+							"Single",
+							"Slap",
+							"Touchless"
+						]
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"type": {
+						"const": "Iris"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"deviceSubType": {
+						"$ref": "#/definitions/non-empty-string",
+						"enum": [
+							"Single",
+							"Double"
+						]
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"type": {
+						"const": "Face"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"deviceSubType": {
+						"$ref": "#/definitions/non-empty-string",
+						"enum": [
+							"Full face"
+						]
+					}
+				}
+			}
+		}
+	],
+	"required": [
+		"serialNo",
+		"make",
+		"type",
+		"model",
+		"deviceSubType",
+		"deviceProviderId",
+		"deviceProvider",
+		"dateTime"
+	],
+	"definitions": {
+		"non-empty-string": {
+			"type": "string",
+			"minLength": 1
+		}
+	}
+}

@@ -1,0 +1,36 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema#",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/DeviceStreamRequestSchema.json",
+	"type": "object",
+	"title": "DeviceStream Request Schema",
+	"description": "DeviceStream Request Schema",
+	"additionalProperties": false,
+	"properties": {
+		"deviceId": {
+			"$ref": "#/definitions/non-empty-string"
+		},
+		"deviceSubId": {
+			"$ref": "#/definitions/non-empty-string",
+			"enum": [
+				"0",
+				"1",
+				"2",
+				"3"
+			]
+		},
+		"timeout": {
+			"$ref": "#/definitions/non-empty-string",
+			"pattern": "[0-9]$"
+		}
+	},
+	"required": [
+		"deviceId",
+		"deviceSubId"
+	],
+	"definitions": {
+		"non-empty-string": {
+			"type": "string",
+			"minLength": 1
+		}
+	}
+}

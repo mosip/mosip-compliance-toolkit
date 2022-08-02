@@ -5,15 +5,16 @@
 	"title": "Discover Response Schema",
 	"description": "Discover Response Schema",
 	"additionalProperties": false,
+	"minItems": 1,
 	"items": [
 		{
 			"type": "object",
 			"properties": {
 				"deviceId": {
-					"type": "string"
+					"$ref": "#/definitions/non-empty-string"
 				},
 				"deviceStatus": {
-					"type": "string",
+					"$ref": "#/definitions/non-empty-string",
 					"enum": [
 						"Ready",
 						"Busy",
@@ -22,7 +23,7 @@
 					]
 				},
 				"certification": {
-					"type": "string",
+					"$ref": "#/definitions/non-empty-string",
 					"enum": [
 						"L0",
 						"L1"
@@ -30,63 +31,49 @@
 				},
 				"deviceSubId": {
 					"type": "array",
+					"minItems": 1,
 					"items": [
 						{
-							"type": "string",
+							"type": "integer",
 							"enum": [
-								"0",
-								"1",
-								"2",
-								"3",
-								"4"
+								0,
+								1,
+								2,
+								3
 							]
 						}
 					]
 				},
 				"callbackId": {
-					"type": "string"
+					"$ref": "#/definitions/non-empty-string"
 				},
 				"digitalId": {
-					"type": "string"
+					"$ref": "/schemas/DigitalIdResponseSchema"
 				},
 				"deviceCode": {
-					"type": "string"
+					"$ref": "#/definitions/non-empty-string"
 				},
 				"specVersion": {
 					"type": "array",
 					"items": [
 						{
-							"type": "string"
+							"$ref": "#/definitions/non-empty-string",
+							"enum": [
+								"0.9.5",
+								"1.0.0"
+							]
 						}
 					]
 				},
 				"purpose": {
-					"type": "string",
+					"$ref": "#/definitions/non-empty-string",
 					"enum": [
 						"Auth",
 						"Registration"
 					]
 				},
 				"error": {
-					"type": "object",
-					"properties": {
-						"errorCode": {
-							"type": "string",
-							"enum": [
-								"0"
-							]
-						},
-						"errorInfo": {
-							"type": "string",
-							"enum": [
-								"Success"
-							]
-						}
-					},
-					"required": [
-						"errorCode",
-						"errorInfo"
-					]
+					"$ref": "/schemas/ErrorInfoSchema"
 				}
 			},
 			"required": [
@@ -101,5 +88,11 @@
 				"error"
 			]
 		}
-	]
+	],
+	"definitions": {
+		"non-empty-string": {
+			"type": "string",
+			"minLength": 1
+		}
+	}
 }
