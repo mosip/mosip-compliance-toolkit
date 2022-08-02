@@ -19,6 +19,7 @@ import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.CollectionDto;
+import io.mosip.compliance.toolkit.dto.CollectionRequestDto;
 import io.mosip.compliance.toolkit.dto.CollectionTestcasesResponseDto;
 import io.mosip.compliance.toolkit.dto.CollectionsResponseDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
@@ -26,7 +27,9 @@ import io.mosip.compliance.toolkit.entity.CollectionEntity;
 import io.mosip.compliance.toolkit.entity.CollectionSummaryEntity;
 import io.mosip.compliance.toolkit.repository.CollectionTestcaseRepository;
 import io.mosip.compliance.toolkit.repository.CollectionsRepository;
+import io.mosip.compliance.toolkit.repository.CollectionsSummaryRepository;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
+import io.mosip.compliance.toolkit.util.RandomIdGenerator;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -44,11 +47,20 @@ public class CollectionsService {
 	@Value("${mosip.toolkit.api.id.collection.get}")
 	private String getCollectionId;
 
+	@Value("${mosip.toolkit.api.id.collection.post}")
+	private String postCollectionId;
+
+	@Autowired
+	private CollectionsSummaryRepository collectionsSummaryRepository;
+
+	@Autowired
+	private CollectionTestcaseRepository collectionTestcaseRepository;
+
 	@Autowired
 	private CollectionsRepository collectionsRepository;
 
 	@Autowired
-	private CollectionTestcaseRepository collectionTestcaseRepository;
+	private ObjectMapperConfig objectMapperConfig;
 
 	private Logger log = LoggerConfiguration.logConfig(ProjectsService.class);
 
@@ -59,6 +71,11 @@ public class CollectionsService {
 	private String getPartnerId() {
 		String partnerId = authUserDetails().getUsername();
 		return partnerId;
+	}
+
+	private String getUserBy() {
+		String crBy = authUserDetails().getMail();
+		return crBy;
 	}
 
 	public ResponseWrapper<CollectionDto> getCollectionById(String collectionId) {
@@ -83,11 +100,13 @@ public class CollectionsService {
 				collection = mapper.convertValue(collectionEntity, CollectionDto.class);
 				collection.setCollectionId(collectionEntity.getId());
 				collection.setProjectId(projectId);
+				collection.setCrDtimes(collectionEntity.getCrDate());
 			} else {
 				List<ServiceError> serviceErrorsList = new ArrayList<>();
 				ServiceError serviceError = new ServiceError();
 				serviceError.setErrorCode(ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorCode());
-				serviceError.setMessage(ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorMessage());				serviceErrorsList.add(serviceError);
+				serviceError.setMessage(ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorMessage());
+				serviceErrorsList.add(serviceError);
 				responseWrapper.setErrors(serviceErrorsList);
 			}
 		} catch (Exception ex) {
@@ -174,13 +193,13 @@ public class CollectionsService {
 				if (Objects.nonNull(projectType) && Objects.nonNull(projectId)) {
 					List<CollectionSummaryEntity> collectionsEntityList = null;
 					if (AppConstants.SBI.equalsIgnoreCase(projectType)) {
-						collectionsEntityList = collectionsRepository.getCollectionsOfSbiProjects(projectId,
+						collectionsEntityList = collectionsSummaryRepository.getCollectionsOfSbiProjects(projectId,
 								getPartnerId());
 					} else if (AppConstants.SDK.equalsIgnoreCase(projectType)) {
-						collectionsEntityList = collectionsRepository.getCollectionsOfSdkProjects(projectId,
+						collectionsEntityList = collectionsSummaryRepository.getCollectionsOfSdkProjects(projectId,
 								getPartnerId());
 					} else if (AppConstants.ABIS.equalsIgnoreCase(projectType)) {
-						collectionsEntityList = collectionsRepository.getCollectionsOfAbisProjects(projectId,
+						collectionsEntityList = collectionsSummaryRepository.getCollectionsOfAbisProjects(projectId,
 								getPartnerId());
 					}
 					List<CollectionDto> collectionsList = new ArrayList<>();
@@ -230,6 +249,77 @@ public class CollectionsService {
 		responseWrapper.setId(getCollectionsId);
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponse(collectionsResponse);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+
+	public ResponseWrapper<CollectionDto> saveCollection(CollectionRequestDto collectionRequest) {
+		ResponseWrapper<CollectionDto> responseWrapper = new ResponseWrapper<>();
+		CollectionDto collection = null;
+		try {
+			if (Objects.nonNull(collectionRequest) && Objects.nonNull(collectionRequest.getType())
+					&& (AppConstants.SBI.equalsIgnoreCase(collectionRequest.getType())
+							|| AppConstants.ABIS.equalsIgnoreCase(collectionRequest.getType())
+							|| AppConstants.SDK.equalsIgnoreCase(collectionRequest.getType()))) {
+
+				String sbiProjectId = null;
+				String sdkProjectId = null;
+				String abisProjectId = null;
+				CollectionDto inputCollection = collectionRequest.getCollection();
+				switch (collectionRequest.getType()) {
+				case AppConstants.SBI:
+					sbiProjectId = inputCollection.getProjectId();
+					break;
+				case AppConstants.SDK:
+					sdkProjectId = inputCollection.getProjectId();
+					break;
+				case AppConstants.ABIS:
+					abisProjectId = inputCollection.getProjectId();
+					break;
+				}
+
+				CollectionEntity inputEntity = new CollectionEntity();
+				inputEntity.setId(RandomIdGenerator.generateUUID(collectionRequest.getType().toLowerCase(), "", 36));
+				inputEntity.setName(inputCollection.getName());
+				inputEntity.setSbiProjectId(sbiProjectId);
+				inputEntity.setSdkProjectId(sdkProjectId);
+				inputEntity.setAbisProjectId(abisProjectId);
+				inputEntity.setPartnerId(getPartnerId());
+				inputEntity.setCrBy(getUserBy());
+				inputEntity.setCrDate(LocalDateTime.now());
+				inputEntity.setUpBy(null);
+				inputEntity.setUpdDate(null);
+				inputEntity.setDeleted(false);
+				inputEntity.setDelTime(null);
+				CollectionEntity outputEntity = collectionsRepository.save(inputEntity);
+
+				collection = objectMapperConfig.objectMapper().convertValue(outputEntity, CollectionDto.class);
+				collection.setCollectionId(outputEntity.getId());
+				collection.setProjectId(inputCollection.getProjectId());
+				collection.setCrDtimes(outputEntity.getCrDate());
+			} else {
+				List<ServiceError> serviceErrorsList = new ArrayList<>();
+				ServiceError serviceError = new ServiceError();
+				serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode());
+				serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+				serviceErrorsList.add(serviceError);
+				responseWrapper.setErrors(serviceErrorsList);
+			}
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In saveCollection method of CollectionsService Service - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.COLLECTION_UNABLE_TO_ADD.getErrorCode());
+			serviceError
+					.setMessage(ToolkitErrorCodes.COLLECTION_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		}
+		responseWrapper.setId(postCollectionId);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponse(collection);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
