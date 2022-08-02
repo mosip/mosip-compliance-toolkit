@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.mosip.compliance.toolkit.dto.CollectionDto;
 import io.mosip.compliance.toolkit.dto.CollectionTestcasesResponseDto;
 import io.mosip.compliance.toolkit.dto.CollectionsResponseDto;
 import io.mosip.compliance.toolkit.service.CollectionsService;
@@ -38,11 +39,15 @@ public class CollectionsController {
 			@RequestParam(required = true) String projectId, @RequestParam(required = true) String type) {
 		return collectionsService.getCollections(type, projectId);
 	}
-	
-	@GetMapping(value = "/getCollectionTestcases/{id}")
-	public ResponseWrapper<CollectionTestcasesResponseDto> getCollectionTestcases(
-			@PathVariable String id) {
-		return collectionsService.getCollectionTestcases(id);
+
+	@GetMapping(value = "/getTestcasesForCollection/{id}")
+	public ResponseWrapper<CollectionTestcasesResponseDto> getTestcasesForCollection(@PathVariable String id) {
+		return collectionsService.getTestcasesForCollection(id);
+	}
+
+	@GetMapping(value = "/getCollection/{id}")
+	public ResponseWrapper<CollectionDto> getCollection(@PathVariable String id) {
+		return collectionsService.getCollectionByCollectionId(id);
 	}
 
 }
