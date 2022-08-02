@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.compliance.toolkit.dto.CollectionTestcasesResponseDto;
 import io.mosip.compliance.toolkit.dto.CollectionsResponseDto;
-import io.mosip.compliance.toolkit.dto.TestcasesCollectionResponseDto;
 import io.mosip.compliance.toolkit.service.CollectionsService;
 import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.kernel.core.http.ResponseWrapper;
