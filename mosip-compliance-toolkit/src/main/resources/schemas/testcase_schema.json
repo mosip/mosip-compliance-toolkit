@@ -20,51 +20,14 @@
 		"testId": {
 			"type": "string"
 		},
-		"specVersion": [
-		{
-			"if": {
-				"properties": {
-					"testCaseType": {
-						"const": "SBI"
-					}
-				}
-			},
-			"then": {
-				"required": [
-					"0.9.5",
-					"1.0.0"
-				]
-			}
+		"specVersion": {
+			"type": "string",
+			"enum": [
+				"0.9.5",
+				"0.9.0",
+				"1.0.0"
+			]
 		},
-		{
-			"if": {
-				"properties": {
-					"testCaseType": {
-						"const": "ABIS"
-					}
-				}
-			},
-			"then": {
-				"required": [
-					"0.9.0"
-				]
-			}
-		},
-		{
-			"if": {
-				"properties": {
-					"testCaseType": {
-						"const": "SDK"
-					}
-				}
-			},
-			"then": {
-				"required": [
-					"0.9.0"
-				]
-			}
-		}
-		],
 		"testDescription": {
 			"type": "string"
 		},
@@ -208,7 +171,6 @@
 						]
 					}
 				},
-				
 				"requestedScore": {
 					"type": [
 						"string",
@@ -257,7 +219,15 @@
 							"requestedScore",
 							"bioCount",
 							"deviceSubId"
-						]
+						],
+						"properties": {
+							"specVersion": {
+								"enum": [
+									"0.9.5",
+									"1.0.0"
+								]
+							}
+						}
 					}
 				},
 				{
@@ -271,7 +241,35 @@
 					"then": {
 						"required": [
 							"modalities"
-						]
+						],
+						"properties": {
+							"specVersion": {
+								"enum": [
+									"0.9.0"
+								]
+							}
+						}
+					}
+				},
+				{
+					"if": {
+						"properties": {
+							"testCaseType": {
+								"const": "ABIS"
+							}
+						}
+					},
+					"then": {
+						"required": [
+							"modalities"
+						],
+						"properties": {
+							"specVersion": {
+								"enum": [
+									"0.9.0"
+								]
+							}
+						}
 					}
 				}
 			]
