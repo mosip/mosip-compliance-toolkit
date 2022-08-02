@@ -59,7 +59,7 @@ public class CollectionsService {
 		return partnerId;
 	}
 
-	public ResponseWrapper<CollectionDto> getCollectionByCollectionId(String collectionId) {
+	public ResponseWrapper<CollectionDto> getCollectionById(String collectionId) {
 		ResponseWrapper<CollectionDto> responseWrapper = new ResponseWrapper<>();
 		CollectionDto collection = null;
 		try {

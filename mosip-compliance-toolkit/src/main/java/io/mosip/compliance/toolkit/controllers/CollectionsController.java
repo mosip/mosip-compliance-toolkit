@@ -47,6 +47,6 @@ public class CollectionsController {
 
 	@GetMapping(value = "/getCollection/{id}")
 	public ResponseWrapper<CollectionDto> getCollection(@PathVariable String id) {
-		return collectionsService.getCollectionByCollectionId(id);
+		return collectionsService.getCollectionById(id);
 	}
 }
