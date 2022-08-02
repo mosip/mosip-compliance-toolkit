@@ -49,5 +49,4 @@ public class CollectionsController {
 	public ResponseWrapper<CollectionDto> getCollection(@PathVariable String id) {
 		return collectionsService.getCollectionByCollectionId(id);
 	}
-
 }
