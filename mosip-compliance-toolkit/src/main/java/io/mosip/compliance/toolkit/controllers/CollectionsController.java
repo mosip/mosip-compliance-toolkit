@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.mosip.compliance.toolkit.dto.CollectionDto;
+import io.mosip.compliance.toolkit.dto.CollectionTestcasesResponseDto;
 import io.mosip.compliance.toolkit.dto.CollectionsResponseDto;
 import io.mosip.compliance.toolkit.service.CollectionsService;
 import io.mosip.compliance.toolkit.util.RequestValidator;
@@ -32,8 +35,18 @@ public class CollectionsController {
 	}
 
 	@GetMapping(value = "/getCollections")
-	public ResponseWrapper<CollectionsResponseDto> getSbiCollections(
+	public ResponseWrapper<CollectionsResponseDto> getProjectCollections(
 			@RequestParam(required = true) String projectId, @RequestParam(required = true) String type) {
 		return collectionsService.getCollections(type, projectId);
+	}
+
+	@GetMapping(value = "/getTestcasesForCollection/{id}")
+	public ResponseWrapper<CollectionTestcasesResponseDto> getTestcasesForCollection(@PathVariable String id) {
+		return collectionsService.getTestcasesForCollection(id);
+	}
+
+	@GetMapping(value = "/getCollection/{id}")
+	public ResponseWrapper<CollectionDto> getCollection(@PathVariable String id) {
+		return collectionsService.getCollectionById(id);
 	}
 }
