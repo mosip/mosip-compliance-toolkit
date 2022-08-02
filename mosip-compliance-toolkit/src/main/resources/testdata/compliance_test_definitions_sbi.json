@@ -1,0 +1,1196 @@
+[
+  {
+    "testCaseType": "SBI",
+    "testName": "Discover device",
+    "testId": "SBI1000",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Discover Request",
+    "testOrderSequence": 1,
+    "methodName": "device",
+    "requestSchema": "DiscoverRequestSchema",
+    "responseSchema": "DiscoverResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Registration",
+        "Auth"
+      ],
+      "biometricTypes": [
+        "Finger",
+        "Iris",
+        "Face"
+      ],
+      "deviceSubTypes": [
+        "Slap",
+        "Single",
+        "Double",
+        "Full face"
+      ],
+      "segments": [],
+      "exceptions": [],
+      "requestedScore": "",
+      "bioCount": "",
+      "deviceSubId": "",
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Device Info",
+    "testId": "SBI1001",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid DeviceInfo Request",
+    "testOrderSequence": 2,
+    "methodName": "info",
+    "requestSchema": "DeviceInfoRequestSchema",
+    "responseSchema": "DeviceInfoResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Registration",
+        "Auth"
+      ],
+      "biometricTypes": [
+        "Finger",
+        "Iris",
+        "Face"
+      ],
+      "deviceSubTypes": [
+        "Slap",
+        "Single",
+        "Double",
+        "Full face"
+      ],
+      "segments": [],
+      "exceptions": [],
+      "requestedScore": "",
+      "bioCount": "",
+      "deviceSubId": "",
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Device Status",
+    "testId": "SBI1002",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Device Status",
+    "testOrderSequence": 3,
+    "methodName": "deviceStatus",
+    "requestSchema": "DeviceStatusRequestSchema",
+    "responseSchema": "DeviceStatusResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "DeviceStatusCheckValidator",
+        "description": "DeviceStatusCheckValidator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Registration",
+        "Auth"
+      ],
+      "biometricTypes": [
+        "Finger",
+        "Iris",
+        "Face"
+      ],
+      "deviceSubTypes": [
+        "Slap",
+        "Single",
+        "Double",
+        "Full face"
+      ],
+      "segments": [],
+      "exceptions": [],
+      "requestedScore": "",
+      "bioCount": "",
+      "deviceSubId": "",
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Registration capture - Left Slab",
+    "testId": "SBI1003",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Registration capture Request for Slap scanner type",
+    "testOrderSequence": 1000,
+    "methodName": "rcapture",
+    "requestSchema": "RegistrationCaptureRequestSchema",
+    "responseSchema": "RegistrationCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Registration"
+      ],
+      "biometricTypes": [
+        "Finger"
+      ],
+      "deviceSubTypes": [
+        "Slap"
+      ],
+      "segments": [
+        "LeftIndex",
+        "LeftMiddle",
+        "LeftRing",
+        "LeftLittle"
+      ],
+      "exceptions": [],
+      "requestedScore": "40",
+      "bioCount": 4,
+      "deviceSubId": 1,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Registration capture - Left Slab - One Exception",
+    "testId": "SBI1004",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Registration capture Request for Slap scanner type",
+    "testOrderSequence": 1001,
+    "methodName": "rcapture",
+    "requestSchema": "RegistrationCaptureRequestSchema",
+    "responseSchema": "RegistrationCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Registration"
+      ],
+      "biometricTypes": [
+        "Finger"
+      ],
+      "deviceSubTypes": [
+        "Slap"
+      ],
+      "segments": [
+        "LeftIndex",
+        "LeftMiddle",
+        "LeftLittle"
+      ],
+      "exceptions": [
+        "LeftRing"
+      ],
+      "requestedScore": "40",
+      "bioCount": 3,
+      "deviceSubId": 1,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Registration capture - Right Slab",
+    "testId": "SBI1005",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Registration capture Request for Slap scanner type",
+    "testOrderSequence": 1003,
+    "methodName": "rcapture",
+    "requestSchema": "RegistrationCaptureRequestSchema",
+    "responseSchema": "RegistrationCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Registration"
+      ],
+      "biometricTypes": [
+        "Finger"
+      ],
+      "deviceSubTypes": [
+        "Slap"
+      ],
+      "segments": [
+        "RightIndex",
+        "RightMiddle",
+        "RightRing",
+        "RightLittle"
+      ],
+      "exceptions": [],
+      "requestedScore": "40",
+      "bioCount": 4,
+      "deviceSubId": 2,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Registration capture - Right Slab - Two Exception",
+    "testId": "SBI1006",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Registration capture Request for Slap scanner type",
+    "testOrderSequence": 1004,
+    "methodName": "rcapture",
+    "requestSchema": "RegistrationCaptureRequestSchema",
+    "responseSchema": "RegistrationCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Registration"
+      ],
+      "biometricTypes": [
+        "Finger"
+      ],
+      "deviceSubTypes": [
+        "Slap"
+      ],
+      "segments": [
+        "RightRing",
+        "RightLittle"
+      ],
+      "exceptions": [
+        "RightIndex",
+        "RightMiddle"
+      ],
+      "requestedScore": "40",
+      "bioCount": 2,
+      "deviceSubId": 2,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Registration capture - Two Thumbs",
+    "testId": "SBI1007",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Registration capture Request for Slap scanner type",
+    "testOrderSequence": 1005,
+    "methodName": "rcapture",
+    "requestSchema": "RegistrationCaptureRequestSchema",
+    "responseSchema": "RegistrationCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Registration"
+      ],
+      "biometricTypes": [
+        "Finger"
+      ],
+      "deviceSubTypes": [
+        "Slap"
+      ],
+      "segments": [
+        "RightThumb",
+        "LeftThumb"
+      ],
+      "exceptions": [],
+      "requestedScore": "40",
+      "bioCount": 2,
+      "deviceSubId": 3,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Registration capture - Two Thumbs - One Exception",
+    "testId": "SBI1008",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Registration capture Request for Slap scanner type",
+    "testOrderSequence": 1006,
+    "methodName": "rcapture",
+    "requestSchema": "RegistrationCaptureRequestSchema",
+    "responseSchema": "RegistrationCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Registration"
+      ],
+      "biometricTypes": [
+        "Finger"
+      ],
+      "deviceSubTypes": [
+        "Slap"
+      ],
+      "segments": [
+        "RightThumb"
+      ],
+      "exceptions": [
+        "LeftThumb"
+      ],
+      "requestedScore": "40",
+      "bioCount": 1,
+      "deviceSubId": 3,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Registration capture - Two Thumbs - Both Exception",
+    "testId": "SBI1009",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Registration capture Request for Slap scanner type",
+    "testOrderSequence": 1007,
+    "methodName": "rcapture",
+    "requestSchema": "RegistrationCaptureRequestSchema",
+    "responseSchema": "RegistrationCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "ValidErrorResponseValidator",
+        "description": "Error Response Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Registration"
+      ],
+      "biometricTypes": [
+        "Finger"
+      ],
+      "deviceSubTypes": [
+        "Slap"
+      ],
+      "segments": [],
+      "exceptions": [
+        "RightThumb",
+        "LeftThumb"
+      ],
+      "requestedScore": "40",
+      "bioCount": 0,
+      "deviceSubId": 3,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Registration capture - Double Iris",
+    "testId": "SBI1010",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Registration capture Request",
+    "testOrderSequence": 1008,
+    "methodName": "rcapture",
+    "requestSchema": "RegistrationCaptureRequestSchema",
+    "responseSchema": "RegistrationCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Registration"
+      ],
+      "biometricTypes": [
+        "Iris"
+      ],
+      "deviceSubTypes": [
+        "Double"
+      ],
+      "segments": [
+        "Left",
+        "Right"
+      ],
+      "exceptions": [],
+      "requestedScore": "40",
+      "bioCount": 2,
+      "deviceSubId": 3,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Registration capture - Double Iris - One Exception",
+    "testId": "SBI1011",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Registration capture Request",
+    "testOrderSequence": 1009,
+    "methodName": "rcapture",
+    "requestSchema": "RegistrationCaptureRequestSchema",
+    "responseSchema": "RegistrationCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Registration"
+      ],
+      "biometricTypes": [
+        "Iris"
+      ],
+      "deviceSubTypes": [
+        "Double"
+      ],
+      "segments": [
+        "Right"
+      ],
+      "exceptions": [
+        "Left"
+      ],
+      "requestedScore": "40",
+      "bioCount": 1,
+      "deviceSubId": 3,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Registration capture - Double Iris - Both Exception",
+    "testId": "SBI1012",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Registration capture Request",
+    "testOrderSequence": 1010,
+    "methodName": "rcapture",
+    "requestSchema": "RegistrationCaptureRequestSchema",
+    "responseSchema": "RegistrationCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "ValidErrorResponseValidator",
+        "description": "Error Response Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Registration"
+      ],
+      "biometricTypes": [
+        "Iris"
+      ],
+      "deviceSubTypes": [
+        "Double"
+      ],
+      "segments": [],
+      "exceptions": [
+        "Left",
+        "Right"
+      ],
+      "requestedScore": "40",
+      "bioCount": 0,
+      "deviceSubId": 3,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Registration capture - Single Iris - Left Iris",
+    "testId": "SBI1013",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Registration capture Request for left iris",
+    "testOrderSequence": 1011,
+    "methodName": "rcapture",
+    "requestSchema": "RegistrationCaptureRequestSchema",
+    "responseSchema": "RegistrationCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Registration"
+      ],
+      "biometricTypes": [
+        "Iris"
+      ],
+      "deviceSubTypes": [
+        "Single"
+      ],
+      "segments": [
+        "Left"
+      ],
+      "exceptions": [],
+      "requestedScore": "40",
+      "bioCount": 1,
+      "deviceSubId": 0,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Registration capture - Single Iris - Right Iris",
+    "testId": "SBI1014",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Registration capture Request for right iris",
+    "testOrderSequence": 1012,
+    "methodName": "rcapture",
+    "requestSchema": "RegistrationCaptureRequestSchema",
+    "responseSchema": "RegistrationCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Registration"
+      ],
+      "biometricTypes": [
+        "Iris"
+      ],
+      "deviceSubTypes": [
+        "Single"
+      ],
+      "segments": [
+        "Right"
+      ],
+      "exceptions": [],
+      "requestedScore": "40",
+      "bioCount": 1,
+      "deviceSubId": 0,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Registration capture - Face",
+    "testId": "SBI1015",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Registration capture Request only for Face",
+    "testOrderSequence": 1013,
+    "methodName": "rcapture",
+    "requestSchema": "RegistrationCaptureRequestSchema",
+    "responseSchema": "RegistrationCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Registration"
+      ],
+      "biometricTypes": [
+        "Face"
+      ],
+      "deviceSubTypes": [
+        "Full face"
+      ],
+      "segments": [],
+      "exceptions": [],
+      "requestedScore": "40",
+      "bioCount": 1,
+      "deviceSubId": 0,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Registration capture - Exception Photo",
+    "testId": "SBI1016",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Registration capture Request only for Exception photo",
+    "testOrderSequence": 1014,
+    "methodName": "rcapture",
+    "requestSchema": "RegistrationCaptureRequestSchema",
+    "responseSchema": "RegistrationCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Registration"
+      ],
+      "biometricTypes": [
+        "Face"
+      ],
+      "deviceSubTypes": [
+        "Full face"
+      ],
+      "segments": [],
+      "exceptions": [
+        "LeftLittle"
+      ],
+      "requestedScore": "10",
+      "bioCount": 1,
+      "deviceSubId": 0,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Auth capture - Face",
+    "testId": "SBI1017",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Auth capture Request only for Face",
+    "testOrderSequence": 2000,
+    "methodName": "capture",
+    "requestSchema": "AuthCaptureRequestSchema",
+    "responseSchema": "AuthCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Auth"
+      ],
+      "biometricTypes": [
+        "Face"
+      ],
+      "deviceSubTypes": [
+        "Full face"
+      ],
+      "segments": [],
+      "exceptions": [],
+      "requestedScore": "40",
+      "bioCount": 1,
+      "deviceSubId": 0,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Auth capture - Single Iris - Unknown Iris",
+    "testId": "SBI1018",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Auth capture Request for Unknown iris",
+    "testOrderSequence": 2001,
+    "methodName": "capture",
+    "requestSchema": "AuthCaptureRequestSchema",
+    "responseSchema": "AuthCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Auth"
+      ],
+      "biometricTypes": [
+        "Iris"
+      ],
+      "deviceSubTypes": [
+        "Single"
+      ],
+      "segments": [
+        "UNKNOWN"
+      ],
+      "exceptions": [],
+      "requestedScore": "40",
+      "bioCount": 1,
+      "deviceSubId": 0,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Auth capture - Single Iris - Left Iris",
+    "testId": "SBI1019",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Auth capture Request for Left iris",
+    "testOrderSequence": 2002,
+    "methodName": "capture",
+    "requestSchema": "AuthCaptureRequestSchema",
+    "responseSchema": "AuthCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Auth"
+      ],
+      "biometricTypes": [
+        "Iris"
+      ],
+      "deviceSubTypes": [
+        "Single"
+      ],
+      "segments": [
+        "Left"
+      ],
+      "exceptions": [],
+      "requestedScore": "40",
+      "bioCount": 1,
+      "deviceSubId": 0,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Auth capture - Single Iris - Right Iris",
+    "testId": "SBI1020",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Auth capture Request for Right iris",
+    "testOrderSequence": 2003,
+    "methodName": "capture",
+    "requestSchema": "AuthCaptureRequestSchema",
+    "responseSchema": "AuthCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Auth"
+      ],
+      "biometricTypes": [
+        "Iris"
+      ],
+      "deviceSubTypes": [
+        "Single"
+      ],
+      "segments": [
+        "Right"
+      ],
+      "exceptions": [],
+      "requestedScore": "40",
+      "bioCount": 1,
+      "deviceSubId": 0,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Auth capture - Unknown Finger",
+    "testId": "SBI1021",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Auth capture Request for Unknown Finger",
+    "testOrderSequence": 2004,
+    "methodName": "capture",
+    "requestSchema": "AuthCaptureRequestSchema",
+    "responseSchema": "AuthCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Auth"
+      ],
+      "biometricTypes": [
+        "Finger"
+      ],
+      "deviceSubTypes": [
+        "Single"
+      ],
+      "segments": [
+        "UNKNOWN"
+      ],
+      "exceptions": [],
+      "requestedScore": "40",
+      "bioCount": 1,
+      "deviceSubId": 0,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Auth capture -Two Unknown Finger",
+    "testId": "SBI1022",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Auth capture Request for Two Unknown Finger",
+    "testOrderSequence": 2005,
+    "methodName": "capture",
+    "requestSchema": "AuthCaptureRequestSchema",
+    "responseSchema": "AuthCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Auth"
+      ],
+      "biometricTypes": [
+        "Finger"
+      ],
+      "deviceSubTypes": [
+        "Single"
+      ],
+      "segments": [
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "exceptions": [],
+      "requestedScore": "40",
+      "bioCount": 2,
+      "deviceSubId": 0,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Auth capture - LeftIndex Finger",
+    "testId": "SBI1023",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Auth capture Request for LeftIndex Finger",
+    "testOrderSequence": 2006,
+    "methodName": "capture",
+    "requestSchema": "AuthCaptureRequestSchema",
+    "responseSchema": "AuthCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Auth"
+      ],
+      "biometricTypes": [
+        "Finger"
+      ],
+      "deviceSubTypes": [
+        "Single"
+      ],
+      "segments": [
+        "LeftIndex"
+      ],
+      "exceptions": [],
+      "requestedScore": "40",
+      "bioCount": 1,
+      "deviceSubId": 0,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Auth capture - Two Finger",
+    "testId": "SBI1024",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Auth capture Request for Two Finger",
+    "testOrderSequence": 2007,
+    "methodName": "capture",
+    "requestSchema": "AuthCaptureRequestSchema",
+    "responseSchema": "AuthCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "SchemaValidator",
+        "description": "Validates if response matches the schema"
+      },
+      {
+        "name": "SignatureValidator",
+        "description": "jwt signature Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Auth"
+      ],
+      "biometricTypes": [
+        "Finger"
+      ],
+      "deviceSubTypes": [
+        "Single"
+      ],
+      "segments": [
+        "LeftIndex",
+        "LeftMiddle"
+      ],
+      "exceptions": [],
+      "requestedScore": "40",
+      "bioCount": 2,
+      "deviceSubId": 0,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Registration capture -Key Rotation - Left Slab",
+    "testId": "SBI1025",
+    "specVersion": "0.9.5",
+    "testDescription": "Key Rotation Registration capture Request for Slap scanner",
+    "testOrderSequence": 14,
+    "methodName": "rcapture",
+    "requestSchema": "RegistrationCaptureRequestSchema",
+    "responseSchema": "RegistrationCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "RCaptureKeyRotationValidator",
+        "description": "RCapture Key Rotation Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Registration"
+      ],
+      "biometricTypes": [
+        "Finger"
+      ],
+      "deviceSubTypes": [
+        "Slap"
+      ],
+      "segments": [
+        "LeftIndex",
+        "LeftMiddle",
+        "LeftRing",
+        "LeftLittle"
+      ],
+      "exceptions": [],
+      "requestedScore": "40",
+      "bioCount": 4,
+      "deviceSubId": 1,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Auth capture -Key Rotation - Single Iris - Left Iris",
+    "testId": "SBI1026",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Auth capture Key Rotation Request for Left iris",
+    "testOrderSequence": 12,
+    "methodName": "capture",
+    "requestSchema": "AuthCaptureRequestSchema",
+    "responseSchema": "AuthCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "KeyRotationValidator",
+        "description": "Key Rotation Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Auth"
+      ],
+      "biometricTypes": [
+        "Iris"
+      ],
+      "deviceSubTypes": [
+        "Single"
+      ],
+      "segments": [
+        "Left"
+      ],
+      "exceptions": [],
+      "requestedScore": "40",
+      "bioCount": 1,
+      "deviceSubId": 0,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Auth capture -Key Rotation - LeftIndex Finger",
+    "testId": "SBI1027",
+    "specVersion": "0.9.5",
+    "testDescription": "Key Rotation Auth capture Request for LeftIndex Finger",
+    "testOrderSequence": 11,
+    "methodName": "capture",
+    "requestSchema": "AuthCaptureRequestSchema",
+    "responseSchema": "AuthCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "KeyRotationValidator",
+        "description": "Key Rotation Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Auth"
+      ],
+      "biometricTypes": [
+        "Finger"
+      ],
+      "deviceSubTypes": [
+        "Single"
+      ],
+      "segments": [
+        "LeftIndex"
+      ],
+      "exceptions": [],
+      "requestedScore": "40",
+      "bioCount": 1,
+      "deviceSubId": 0,
+      "modalities" : []
+    }
+  },
+  {
+    "testCaseType": "SBI",
+    "testName": "Auth capture - Face",
+    "testId": "SBI1028",
+    "specVersion": "0.9.5",
+    "testDescription": "Valid Auth capture Request only for Face",
+    "testOrderSequence": 13,
+    "methodName": "capture",
+    "requestSchema": "AuthCaptureRequestSchema",
+    "responseSchema": "AuthCaptureResponseSchema",
+    "validatorDefs": [
+      {
+        "name": "KeyRotationValidator",
+        "description": "Key Rotation Validator"
+      }
+    ],
+    "otherAttributes": {
+      "runtimeInput": "",
+      "purpose": [
+        "Auth"
+      ],
+      "biometricTypes": [
+        "Face"
+      ],
+      "deviceSubTypes": [
+        "Full face"
+      ],
+      "segments": [],
+      "exceptions": [],
+      "requestedScore": "40",
+      "bioCount": 1,
+      "deviceSubId": 0,
+      "modalities" : []
+    }
+  }
+]

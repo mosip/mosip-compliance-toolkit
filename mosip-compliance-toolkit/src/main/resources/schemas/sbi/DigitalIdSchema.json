@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "http://mosip-compliance-toolkit.com/schemas/DigitalIdResponseSchema.json",
+  "type": "object",
+  "title": "DigitalId Response Schema",
+  "description": "DigitalId Response Schema",
+  "additionalProperties": false,
+  "properties": {
+    "serialNo": {
+      "type": "string"
+    },
+    "make": {
+      "type": "string"
+    },
+    "model": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "Finger",
+        "Iris",
+        "Face"
+      ]
+    },
+    "deviceSubType":  {
+      "type": "string"
+    },
+    "deviceProvider": {
+      "type": "string"
+    },
+    "deviceProviderId": {
+      "type": "string"
+    },
+    "dateTime": {
+      "type": "string",
+      "format": "datetime",
+      "description": "We expect YYYY-MM-ddTHH:mm:SSZ"
+    }
+  }
+,
+  "allOf": [
+    {
+      "if": {
+        "properties": { "type": { "const": "Finger" } }
+      },
+      "then": {
+        "properties": { "deviceSubType": { "type": "string", "enum":["Single", "Slap", "Touchless"]} }
+      }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "Iris" } }
+      },
+      "then": {
+        "properties": { "deviceSubType": { "type": "string", "enum":["Single", "Double"]} }
+      }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "Face" } }
+      },
+      "then": {
+        "properties": { "deviceSubType": { "type": "string", "enum":["Full face"]} }
+      }
+    }
+  ]
+}
