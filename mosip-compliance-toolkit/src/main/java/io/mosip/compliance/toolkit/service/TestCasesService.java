@@ -1,7 +1,10 @@
 package io.mosip.compliance.toolkit.service;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,6 +19,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
@@ -74,6 +80,9 @@ public class TestCasesService {
 	private String getTestCasesId;
 
 	@Autowired
+	ResourceLoader resourceLoader;
+	
+	@Autowired
 	private ApplicationContext context;
 
 	@Autowired
@@ -95,13 +104,14 @@ public class TestCasesService {
 	private Logger log = LoggerConfiguration.logConfig(ProjectsService.class);
 
 	public ResponseWrapper<List<TestCaseDto>> getSbiTestCases(String specVersion, String purpose, String deviceType,
-			String deviceSubType, String testCaseSchemaJson) {
+			String deviceSubType) {
 		ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
 		List<TestCaseDto> testCases = new ArrayList<>();
 		List<ServiceError> serviceErrorsList = new ArrayList<>();
 		ServiceError serviceError = null;
 
 		try {
+			String testCaseSchemaJson = this.getSchemaJson("schemas/testcase_schema.json");
 			if (isValidSbiTestCase(specVersion, purpose, deviceType, deviceSubType)) {
 				List<TestCaseEntity> testCaseEntities = testCasesRepository
 						.findAllSbiTestCaseBySpecVersion(specVersion);
@@ -348,13 +358,14 @@ public class TestCasesService {
 		}
 	}
 
-	public ResponseWrapper<TestCaseResponseDto> saveTestCases(List<TestCaseDto> values, String testCaseSchemaJson)
+	public ResponseWrapper<TestCaseResponseDto> saveTestCases(List<TestCaseDto> values)
 			throws Exception {
 		ResponseWrapper<TestCaseResponseDto> responseWrapper = new ResponseWrapper<>();
 		TestCaseResponseDto testCaseResponseDto = new TestCaseResponseDto();
 		Map<String, String> savedValues = new HashMap<String, String>();
 
 		try {
+			String testCaseSchemaJson = this.getSchemaJson("schemas/testcase_schema.json");
 			for (TestCaseDto testCaseDto : values) {
 				// Do JSON Schema Validation
 				String jsonValue = objectMapper.writeValueAsString(testCaseDto);
@@ -522,5 +533,13 @@ public class TestCasesService {
 
 	private String base64Encode(String data) {
 		return Base64.getEncoder().encodeToString(data.getBytes());
+	}
+	
+	public String getSchemaJson(String fileName) throws Exception {
+		//File file = ResourceUtils.getFile("classpath:schemas/testcase_schema.json");
+		// Read File Content
+		Resource res = resourceLoader.getResource("classpath:" + fileName);
+		File file = res.getFile();
+		return new String(Files.readAllBytes(file.toPath()));
 	}
 }

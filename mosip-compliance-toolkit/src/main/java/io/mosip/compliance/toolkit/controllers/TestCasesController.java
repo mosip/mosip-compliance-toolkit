@@ -1,16 +1,22 @@
 package io.mosip.compliance.toolkit.controllers;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.ResourceUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
@@ -98,10 +104,7 @@ public class TestCasesController {
 			ValidationResultDto response = null;
 			if (requestDto.getTestCaseType().equalsIgnoreCase(AppConstants.SBI)) {
 				String sourceJson = requestDto.getMethodRequest();
-				File schemaJsonFile = ResourceUtils
-						.getFile("classpath:schemas/sbi/" + requestDto.getRequestSchema() + ".json");
-				// Read File Content
-				String testCaseSchemaJson = new String(Files.readAllBytes(schemaJsonFile.toPath()));
+				String testCaseSchemaJson = service.getSchemaJson("schemas/sbi/" + requestDto.getRequestSchema() + ".json");
 				// System.out.println(schemaJson);
 				response = service.validateJsonWithSchema(sourceJson, testCaseSchemaJson);
 			}
@@ -117,15 +120,13 @@ public class TestCasesController {
 	@PostMapping(value = "/validateResponse")
 	public ResponseWrapper<ValidationResponseDto> validateResponse(
 			@RequestBody @Valid RequestWrapper<ValidationInputDto> input, Errors errors) throws Exception {
-		return service.performValidations(input.getRequest()); 
+		return service.performValidations(input.getRequest());
 	}
 
 	@GetMapping(value = "/getTestCases")
 	public String getTestCases(@RequestParam(required = true) String type) {
 		try {
-			File file = ResourceUtils.getFile("classpath:schemas/testcase_schema.json");
-			// Read File Content
-			String testCaseSchemaJson = new String(Files.readAllBytes(file.toPath()));
+			String testCaseSchemaJson = service.getSchemaJson("schemas/testcase_schema.json");
 			// System.out.println(testCaseSchemaJson);
 			List<TestCasesConfig.TestCaseConfig> testCases = new ArrayList<>();
 			String testcaseType = null;
@@ -156,7 +157,7 @@ public class TestCasesController {
 			@RequestParam(required = true) String purpose, @RequestParam(required = true) String deviceType,
 			@RequestParam(required = true) String deviceSubType) {
 		try {
-			return service.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType, getTestCaseSchemaJson());
+			return service.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType);
 		} catch (Exception ex) {
 			ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
 			responseWrapper.setId(getTestCasesId);
@@ -194,12 +195,6 @@ public class TestCasesController {
 	@PostMapping(value = "/saveTestCases", produces = "application/json")
 	public ResponseWrapper<TestCaseResponseDto> saveTestCases(
 			@RequestBody @Valid RequestWrapper<TestCaseRequestDto> testCaseRequestDto) throws Exception {
-		return service.saveTestCases(testCaseRequestDto.getRequest().getTestCases(), getTestCaseSchemaJson());
-	}
-
-	private String getTestCaseSchemaJson() throws Exception {
-		File file = ResourceUtils.getFile("classpath:schemas/testcase_schema.json");
-		// Read File Content
-		return new String(Files.readAllBytes(file.toPath()));
+		return service.saveTestCases(testCaseRequestDto.getRequest().getTestCases());
 	}
 }
