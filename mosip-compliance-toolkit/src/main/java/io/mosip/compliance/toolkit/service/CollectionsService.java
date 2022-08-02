@@ -10,6 +10,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
@@ -45,9 +50,6 @@ public class CollectionsService {
 	@Autowired
 	private CollectionTestcaseRepository collectionTestcaseRepository;
 
-	@Autowired
-	private ObjectMapperConfig objectMapperConfig;
-
 	private Logger log = LoggerConfiguration.logConfig(ProjectsService.class);
 
 	private AuthUserDetails authUserDetails() {
@@ -74,7 +76,11 @@ public class CollectionsService {
 				} else if (Objects.nonNull(collectionEntity.getAbisProjectId())) {
 					projectId = collectionEntity.getAbisProjectId();
 				}
-				collection = objectMapperConfig.objectMapper().convertValue(collectionEntity, CollectionDto.class);
+				ObjectMapper mapper = new ObjectMapper();
+		        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		        mapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true);
+		        mapper.registerModule(new JavaTimeModule());
+				collection = mapper.convertValue(collectionEntity, CollectionDto.class);
 				collection.setCollectionId(collectionEntity.getId());
 				collection.setProjectId(projectId);
 			} else {
@@ -114,9 +120,13 @@ public class CollectionsService {
 
 				if (Objects.nonNull(testcases) && !testcases.isEmpty()) {
 					List<TestCaseDto> collectionTestcases = new ArrayList<>(testcases.size());
+					ObjectMapper mapper = new ObjectMapper();
+			        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			        mapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true);
+			        mapper.registerModule(new JavaTimeModule());
 					for (String testcase : testcases) {
 						collectionTestcases
-								.add(objectMapperConfig.objectMapper().readValue(testcase, TestCaseDto.class));
+								.add(mapper.readValue(testcase, TestCaseDto.class));
 					}
 					collectionTestcasesResponseDto = new CollectionTestcasesResponseDto();
 					collectionTestcasesResponseDto.setCollectionId(collectionId);
@@ -175,8 +185,12 @@ public class CollectionsService {
 					}
 					List<CollectionDto> collectionsList = new ArrayList<>();
 					if (Objects.nonNull(collectionsEntityList) && !collectionsEntityList.isEmpty()) {
+						ObjectMapper mapper = new ObjectMapper();
+				        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+				        mapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true);
+				        mapper.registerModule(new JavaTimeModule());
 						for (CollectionSummaryEntity entity : collectionsEntityList) {
-							CollectionDto collection = objectMapperConfig.objectMapper().convertValue(entity,
+							CollectionDto collection = mapper.convertValue(entity,
 									CollectionDto.class);
 
 							collectionsList.add(collection);
