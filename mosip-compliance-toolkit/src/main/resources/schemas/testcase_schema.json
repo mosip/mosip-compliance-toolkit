@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2019-09/schema#",
-	"$id": "http://mosip-compliance-toolkit.com/schemas/testcase-schema.json",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/testcase_schema.json",
 	"type": "object",
 	"title": "Test Case Schema",
 	"description": "Test Case Schema",

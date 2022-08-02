@@ -159,27 +159,27 @@ public class CollectionsService {
 		return responseWrapper;
 	}
 
-	public ResponseWrapper<CollectionsResponseDto> getCollections(String type, String projectId) {
+	public ResponseWrapper<CollectionsResponseDto> getCollections(String projectType, String projectId) {
 		ResponseWrapper<CollectionsResponseDto> responseWrapper = new ResponseWrapper<>();
 		CollectionsResponseDto collectionsResponse = null;
 		boolean isProjectTypeValid = false;
 
 		try {
-			if (Objects.nonNull(type) && (AppConstants.SBI.equalsIgnoreCase(type)
-					|| AppConstants.ABIS.equalsIgnoreCase(type) || AppConstants.SDK.equalsIgnoreCase(type))) {
+			if (Objects.nonNull(projectType) && (AppConstants.SBI.equalsIgnoreCase(projectType)
+					|| AppConstants.ABIS.equalsIgnoreCase(projectType) || AppConstants.SDK.equalsIgnoreCase(projectType))) {
 				isProjectTypeValid = true;
 			}
 
 			if (isProjectTypeValid) {
-				if (Objects.nonNull(type) && Objects.nonNull(projectId)) {
+				if (Objects.nonNull(projectType) && Objects.nonNull(projectId)) {
 					List<CollectionSummaryEntity> collectionsEntityList = null;
-					if (AppConstants.SBI.equalsIgnoreCase(type)) {
+					if (AppConstants.SBI.equalsIgnoreCase(projectType)) {
 						collectionsEntityList = collectionsRepository.getCollectionsOfSbiProjects(projectId,
 								getPartnerId());
-					} else if (AppConstants.SDK.equalsIgnoreCase(type)) {
+					} else if (AppConstants.SDK.equalsIgnoreCase(projectType)) {
 						collectionsEntityList = collectionsRepository.getCollectionsOfSdkProjects(projectId,
 								getPartnerId());
-					} else if (AppConstants.ABIS.equalsIgnoreCase(type)) {
+					} else if (AppConstants.ABIS.equalsIgnoreCase(projectType)) {
 						collectionsEntityList = collectionsRepository.getCollectionsOfAbisProjects(projectId,
 								getPartnerId());
 					}
@@ -195,17 +195,10 @@ public class CollectionsService {
 
 							collectionsList.add(collection);
 						}
-						// send empty collections list, in case none are yet added for a project
-						collectionsResponse = new CollectionsResponseDto();
-						collectionsResponse.setCollections(collectionsList);
-					} else {
-						List<ServiceError> serviceErrorsList = new ArrayList<>();
-						ServiceError serviceError = new ServiceError();
-						serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode());
-						serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
-						serviceErrorsList.add(serviceError);
-						responseWrapper.setErrors(serviceErrorsList);
-					}
+					} 
+					// send empty collections list, in case none are yet added for a project
+					collectionsResponse = new CollectionsResponseDto();
+					collectionsResponse.setCollections(collectionsList);
 				} else {
 					List<ServiceError> serviceErrorsList = new ArrayList<>();
 					ServiceError serviceError = new ServiceError();
