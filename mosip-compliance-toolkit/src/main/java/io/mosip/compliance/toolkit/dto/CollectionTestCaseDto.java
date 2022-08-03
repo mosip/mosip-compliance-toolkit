@@ -11,5 +11,5 @@ public class CollectionTestCaseDto {
 
 	private String collectionId;
 	
-	private String testcaseId;
+	private String testCaseId;
 }
