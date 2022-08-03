@@ -20,11 +20,13 @@ import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.CollectionDto;
 import io.mosip.compliance.toolkit.dto.CollectionRequestDto;
+import io.mosip.compliance.toolkit.dto.CollectionTestCaseDto;
 import io.mosip.compliance.toolkit.dto.CollectionTestCasesResponseDto;
 import io.mosip.compliance.toolkit.dto.CollectionsResponseDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.entity.CollectionEntity;
 import io.mosip.compliance.toolkit.entity.CollectionSummaryEntity;
+import io.mosip.compliance.toolkit.entity.CollectionTestCaseEntity;
 import io.mosip.compliance.toolkit.repository.CollectionTestCaseRepository;
 import io.mosip.compliance.toolkit.repository.CollectionsRepository;
 import io.mosip.compliance.toolkit.repository.CollectionsSummaryRepository;
@@ -37,6 +39,9 @@ import io.mosip.kernel.core.logger.spi.Logger;
 
 @Component
 public class CollectionsService {
+
+	@Value("${mosip.toolkit.api.id.collection.testcase.post}")
+	private String postCollectionTestCaseId;
 
 	@Value("${mosip.toolkit.api.id.collections.get}")
 	private String getCollectionsId;
@@ -253,7 +258,7 @@ public class CollectionsService {
 		return responseWrapper;
 	}
 
-	public ResponseWrapper<CollectionDto> saveCollection(CollectionRequestDto collectionRequest) {
+	public ResponseWrapper<CollectionDto> addCollection(CollectionRequestDto collectionRequest) {
 		ResponseWrapper<CollectionDto> responseWrapper = new ResponseWrapper<>();
 		CollectionDto collection = null;
 		try {
@@ -323,5 +328,50 @@ public class CollectionsService {
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
+	
+	public ResponseWrapper<List<CollectionTestCaseDto>> saveCollectionTestCaseMapping(
+			List<CollectionTestCaseDto> inputCollectionTestCaseList) {
+		
+		ResponseWrapper<List<CollectionTestCaseDto>> responseWrapper = new ResponseWrapper<>();
+		List<CollectionTestCaseDto> responseList = new ArrayList<CollectionTestCaseDto>();
+		try {
+			if (Objects.nonNull(inputCollectionTestCaseList) && inputCollectionTestCaseList.size() > 0) {
+				for (CollectionTestCaseDto collectionTestCaseDto : inputCollectionTestCaseList) {
+					ObjectMapper mapper = objectMapperConfig.objectMapper();
+					CollectionTestCaseEntity entity = mapper.convertValue(collectionTestCaseDto,
+							CollectionTestCaseEntity.class);
+
+					CollectionTestCaseEntity outputEntity = collectionTestCaseRepository.save(entity);
+					responseList.add(mapper.convertValue(outputEntity, CollectionTestCaseDto.class));
+				}
+			} else {
+				List<ServiceError> serviceErrorsList = new ArrayList<>();
+				ServiceError serviceError = new ServiceError();
+				serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode());
+				serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+				serviceErrorsList.add(serviceError);
+				responseWrapper.setErrors(serviceErrorsList);
+			}
+
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In saveCollectionTestCaseMapping method of CollectionTestCaseService Service - "
+							+ ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.COLLECTION_TESTCASE_UNABLE_TO_ADD.getErrorCode());
+			serviceError.setMessage(
+					ToolkitErrorCodes.COLLECTION_TESTCASE_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		}
+		responseWrapper.setId(postCollectionTestCaseId);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponse(responseList);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+
 
 }

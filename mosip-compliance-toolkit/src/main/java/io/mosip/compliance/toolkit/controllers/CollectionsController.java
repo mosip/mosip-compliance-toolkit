@@ -1,5 +1,7 @@
 package io.mosip.compliance.toolkit.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.compliance.toolkit.dto.CollectionDto;
 import io.mosip.compliance.toolkit.dto.CollectionRequestDto;
+import io.mosip.compliance.toolkit.dto.CollectionTestCaseDto;
 import io.mosip.compliance.toolkit.dto.CollectionTestCasesResponseDto;
 import io.mosip.compliance.toolkit.dto.CollectionsResponseDto;
 import io.mosip.compliance.toolkit.service.CollectionsService;
@@ -26,6 +29,9 @@ public class CollectionsController {
 
 	/** The Constant SBI_PROJECT_POST_ID application. */
 	private static final String COLLECTION_PROJECT_POST_ID = "collection.post";
+
+	/** The Constant COLLECTION_TESTCASE_POST_ID application. */
+	private static final String COLLECTION_TESTCASE_POST_ID = "collection.testcase.post";
 
 	@Autowired
 	private CollectionsService collectionsService;
@@ -49,8 +55,8 @@ public class CollectionsController {
 		return collectionsService.getCollections(type, projectId);
 	}
 
-	@GetMapping(value = "/getTestcasesForCollection/{id}")
-	public ResponseWrapper<CollectionTestCasesResponseDto> getTestcasesForCollection(@PathVariable String id) {
+	@GetMapping(value = "/getTestCasesForCollection/{id}")
+	public ResponseWrapper<CollectionTestCasesResponseDto> getTestCasesForCollection(@PathVariable String id) {
 		return collectionsService.getTestCasesForCollection(id);
 	}
 
@@ -59,12 +65,21 @@ public class CollectionsController {
 		return collectionsService.getCollectionById(id);
 	}
 
-	@PostMapping(value = "/saveCollection")
-	public ResponseWrapper<CollectionDto> saveCollection(
+	@PostMapping(value = "/addCollection")
+	public ResponseWrapper<CollectionDto> addCollection(
 			@RequestBody RequestWrapper<CollectionRequestDto> requestWrapper, Errors errors) throws Exception {
 		requestValidator.validate(requestWrapper, errors);
 		requestValidator.validateId(COLLECTION_PROJECT_POST_ID, requestWrapper.getId(), errors);
 		DataValidationUtil.validate(errors, COLLECTION_PROJECT_POST_ID);
-		return collectionsService.saveCollection(requestWrapper.getRequest());
+		return collectionsService.addCollection(requestWrapper.getRequest());
+	}
+
+	@PostMapping(value = "/addTestCasesForCollection")
+	public ResponseWrapper<List<CollectionTestCaseDto>> addTestCasesForCollection(
+			@RequestBody RequestWrapper<List<CollectionTestCaseDto>> requestWrapper, Errors errors) throws Exception {
+		requestValidator.validate(requestWrapper, errors);
+		requestValidator.validateId(COLLECTION_TESTCASE_POST_ID, requestWrapper.getId(), errors);
+		DataValidationUtil.validate(errors, COLLECTION_TESTCASE_POST_ID);
+		return collectionsService.saveCollectionTestCaseMapping(requestWrapper.getRequest());
 	}
 }
