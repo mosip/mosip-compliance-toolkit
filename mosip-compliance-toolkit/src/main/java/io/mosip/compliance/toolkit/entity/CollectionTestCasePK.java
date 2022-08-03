@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Embeddable
-public class CollectionTestcasePK implements Serializable {
+public class CollectionTestCasePK implements Serializable {
 	/**
 	 * 
 	 */

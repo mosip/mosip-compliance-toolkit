@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import io.mosip.compliance.toolkit.dto.CollectionDto;
-import io.mosip.compliance.toolkit.entity.CollectionEntity;
 import io.mosip.compliance.toolkit.entity.CollectionSummaryEntity;
 import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
 
@@ -25,5 +23,4 @@ public interface CollectionsSummaryRepository extends BaseRepository<CollectionS
 	@Query(name = "CollectionSummaryEntity.getCollectionsOfAbisProject", nativeQuery = true)
 	public List<CollectionSummaryEntity> getCollectionsOfAbisProjects(@Param("projectId") String projectId,
 			@Param("partnerId") String partnerId);
-
 }

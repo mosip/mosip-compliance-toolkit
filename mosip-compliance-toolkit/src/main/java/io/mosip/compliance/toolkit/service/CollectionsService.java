@@ -20,12 +20,12 @@ import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.CollectionDto;
 import io.mosip.compliance.toolkit.dto.CollectionRequestDto;
-import io.mosip.compliance.toolkit.dto.CollectionTestcasesResponseDto;
+import io.mosip.compliance.toolkit.dto.CollectionTestCasesResponseDto;
 import io.mosip.compliance.toolkit.dto.CollectionsResponseDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.entity.CollectionEntity;
 import io.mosip.compliance.toolkit.entity.CollectionSummaryEntity;
-import io.mosip.compliance.toolkit.repository.CollectionTestcaseRepository;
+import io.mosip.compliance.toolkit.repository.CollectionTestCaseRepository;
 import io.mosip.compliance.toolkit.repository.CollectionsRepository;
 import io.mosip.compliance.toolkit.repository.CollectionsSummaryRepository;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
@@ -54,7 +54,7 @@ public class CollectionsService {
 	private CollectionsSummaryRepository collectionsSummaryRepository;
 
 	@Autowired
-	private CollectionTestcaseRepository collectionTestcaseRepository;
+	private CollectionTestCaseRepository collectionTestCaseRepository;
 
 	@Autowired
 	private CollectionsRepository collectionsRepository;
@@ -128,28 +128,28 @@ public class CollectionsService {
 		return responseWrapper;
 	}
 
-	public ResponseWrapper<CollectionTestcasesResponseDto> getTestcasesForCollection(String collectionId) {
-		ResponseWrapper<CollectionTestcasesResponseDto> responseWrapper = new ResponseWrapper<>();
-		CollectionTestcasesResponseDto collectionTestcasesResponseDto = null;
+	public ResponseWrapper<CollectionTestCasesResponseDto> getTestCasesForCollection(String collectionId) {
+		ResponseWrapper<CollectionTestCasesResponseDto> responseWrapper = new ResponseWrapper<>();
+		CollectionTestCasesResponseDto collectionTestCasesResponseDto = null;
 
 		try {
 			if (Objects.nonNull(collectionId)) {
-				List<String> testcases = collectionTestcaseRepository.getTestcasesByCollectionId(collectionId,
+				List<String> testCases = collectionTestCaseRepository.getTestCasesByCollectionId(collectionId,
 						getPartnerId());
 
-				if (Objects.nonNull(testcases) && !testcases.isEmpty()) {
-					List<TestCaseDto> collectionTestcases = new ArrayList<>(testcases.size());
+				if (Objects.nonNull(testCases) && !testCases.isEmpty()) {
+					List<TestCaseDto> collectionTestCases = new ArrayList<>(testCases.size());
 					ObjectMapper mapper = new ObjectMapper();
 			        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			        mapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true);
 			        mapper.registerModule(new JavaTimeModule());
-					for (String testcase : testcases) {
-						collectionTestcases
-								.add(mapper.readValue(testcase, TestCaseDto.class));
+					for (String testCase : testCases) {
+						collectionTestCases
+								.add(mapper.readValue(testCase, TestCaseDto.class));
 					}
-					collectionTestcasesResponseDto = new CollectionTestcasesResponseDto();
-					collectionTestcasesResponseDto.setCollectionId(collectionId);
-					collectionTestcasesResponseDto.setTestcases(collectionTestcases);
+					collectionTestCasesResponseDto = new CollectionTestCasesResponseDto();
+					collectionTestCasesResponseDto.setCollectionId(collectionId);
+					collectionTestCasesResponseDto.setTestCases(collectionTestCases);
 				} else {
 					List<ServiceError> serviceErrorsList = new ArrayList<>();
 					ServiceError serviceError = new ServiceError();
@@ -162,7 +162,7 @@ public class CollectionsService {
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
-					"In getCollectionTestcases method of CollectionsService Service - " + ex.getMessage());
+					"In getCollectionTestCases method of CollectionsService Service - " + ex.getMessage());
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
 			ServiceError serviceError = new ServiceError();
 			serviceError.setErrorCode(ToolkitErrorCodes.COLLECTION_TESTCASES_NOT_AVAILABLE.getErrorCode());
@@ -173,7 +173,7 @@ public class CollectionsService {
 		}
 		responseWrapper.setId(getTestCasesForCollectionId);
 		responseWrapper.setVersion(AppConstants.VERSION);
-		responseWrapper.setResponse(collectionTestcasesResponseDto);
+		responseWrapper.setResponse(collectionTestCasesResponseDto);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}

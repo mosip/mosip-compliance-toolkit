@@ -52,4 +52,5 @@ public class CollectionSummaryEntity {
 	private LocalDateTime crDtimes;
 	private LocalDateTime runDtimes;
 	private String runId;
+
 }

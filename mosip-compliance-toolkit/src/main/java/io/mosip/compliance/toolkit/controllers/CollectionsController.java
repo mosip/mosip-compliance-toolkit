@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.compliance.toolkit.dto.CollectionDto;
 import io.mosip.compliance.toolkit.dto.CollectionRequestDto;
-import io.mosip.compliance.toolkit.dto.CollectionTestcasesResponseDto;
+import io.mosip.compliance.toolkit.dto.CollectionTestCasesResponseDto;
 import io.mosip.compliance.toolkit.dto.CollectionsResponseDto;
 import io.mosip.compliance.toolkit.service.CollectionsService;
 import io.mosip.compliance.toolkit.util.DataValidationUtil;
@@ -50,8 +50,8 @@ public class CollectionsController {
 	}
 
 	@GetMapping(value = "/getTestcasesForCollection/{id}")
-	public ResponseWrapper<CollectionTestcasesResponseDto> getTestcasesForCollection(@PathVariable String id) {
-		return collectionsService.getTestcasesForCollection(id);
+	public ResponseWrapper<CollectionTestCasesResponseDto> getTestcasesForCollection(@PathVariable String id) {
+		return collectionsService.getTestCasesForCollection(id);
 	}
 
 	@GetMapping(value = "/getCollection/{id}")
