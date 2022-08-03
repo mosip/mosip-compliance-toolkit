@@ -2,7 +2,7 @@
 	"$schema": "https://json-schema.org/draft/2019-09/schema#",
 	"$id": "http://mosip-compliance-toolkit.com/schemas/AuthCaptureResponseSchema.json",
 	"title": "Auth Capture Response Schema",
-	"description": "Auth Capture  Response Schema",
+	"description": "Auth Capture Response Schema",
 	"type": "object",
 	"properties": {
 		"biometrics": {
@@ -27,19 +27,36 @@
 							"type": "string"
 						},
 						"error": {
+							"$schema": "https://json-schema.org/draft/2019-09/schema#",
+							"$id": "http://mosip-compliance-toolkit.com/schemas/ErrorInfoSchema.json",
 							"type": "object",
+							"title": "ErrorInfoSchema",
+							"description": "ErrorInfoSchema",
+							"additionalProperties": false,
 							"properties": {
 								"errorCode": {
-									"type": "string"
+									"$ref": "#/definitions/non-empty-string",
+									"enum": [
+										"0"
+									]
 								},
 								"errorInfo": {
-									"type": "string"
+									"$ref": "#/definitions/non-empty-string",
+									"enum": [
+										"Success"
+									]
 								}
 							},
 							"required": [
 								"errorCode",
 								"errorInfo"
-							]
+							],
+							"definitions": {
+								"non-empty-string": {
+									"type": "string",
+									"minLength": 1
+								}
+							}
 						}
 					},
 					"required": [
@@ -56,5 +73,11 @@
 	},
 	"required": [
 		"biometrics"
-	]
+	],
+	"definitions": {
+		"non-empty-string": {
+			"type": "string",
+			"minLength": 1
+		}
+	}
 }
