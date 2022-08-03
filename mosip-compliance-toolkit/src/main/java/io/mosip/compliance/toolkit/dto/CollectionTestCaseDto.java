@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Data
-public class CollectionTestcaseDto {
+public class CollectionTestCaseDto {
 
 	private String collectionId;
 	

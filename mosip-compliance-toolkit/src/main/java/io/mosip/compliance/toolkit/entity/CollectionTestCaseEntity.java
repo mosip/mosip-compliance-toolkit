@@ -24,8 +24,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @Table(name = "collection_testcase_mapping", schema = "toolkit")
-@IdClass(CollectionTestcasePK.class)
-public class CollectionTestcaseEntity implements Serializable {
+@IdClass(CollectionTestCasePK.class)
+public class CollectionTestCaseEntity implements Serializable {
 	/**
 	 * 
 	 */

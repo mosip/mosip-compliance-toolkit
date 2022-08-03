@@ -11,7 +11,7 @@ import lombok.Setter;
 @Data
 @Getter
 @Setter
-public class CollectionTestcasesResponseDto implements Serializable {
+public class CollectionTestCasesResponseDto implements Serializable {
 
 	/**
 	 * 
