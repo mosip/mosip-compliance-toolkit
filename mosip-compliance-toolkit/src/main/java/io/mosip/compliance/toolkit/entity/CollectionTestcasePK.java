@@ -2,6 +2,7 @@ package io.mosip.compliance.toolkit.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import lombok.AllArgsConstructor;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Embeddable
-public class CollectionTestcaseKey implements Serializable {
+public class CollectionTestcasePK implements Serializable {
 	/**
 	 * 
 	 */
