@@ -329,20 +329,25 @@ public class CollectionsService {
 		return responseWrapper;
 	}
 	
-	public ResponseWrapper<List<CollectionTestCaseDto>> saveCollectionTestCaseMapping(
-			List<CollectionTestCaseDto> inputCollectionTestCaseList) {
+	public ResponseWrapper<List<CollectionTestCaseDto>> addTestCasesForCollection(
+			List<CollectionTestCaseDto> inputList) {
 		
 		ResponseWrapper<List<CollectionTestCaseDto>> responseWrapper = new ResponseWrapper<>();
 		List<CollectionTestCaseDto> responseList = new ArrayList<CollectionTestCaseDto>();
 		try {
-			if (Objects.nonNull(inputCollectionTestCaseList) && inputCollectionTestCaseList.size() > 0) {
-				for (CollectionTestCaseDto collectionTestCaseDto : inputCollectionTestCaseList) {
-					ObjectMapper mapper = objectMapperConfig.objectMapper();
-					CollectionTestCaseEntity entity = mapper.convertValue(collectionTestCaseDto,
-							CollectionTestCaseEntity.class);
-
+			if (Objects.nonNull(inputList) && inputList.size() > 0) {
+				for (CollectionTestCaseDto dto : inputList) {
+					//create entity to save in db
+					CollectionTestCaseEntity entity = new CollectionTestCaseEntity();
+					entity.setCollectionId(dto.getCollectionId());
+					entity.setTestcaseId(dto.getTestCaseId());
+					//save in db
 					CollectionTestCaseEntity outputEntity = collectionTestCaseRepository.save(entity);
-					responseList.add(mapper.convertValue(outputEntity, CollectionTestCaseDto.class));
+					//create dto to send in response
+					CollectionTestCaseDto respDto = new CollectionTestCaseDto();
+					respDto.setCollectionId(outputEntity.getCollectionId());
+					respDto.setTestCaseId(outputEntity.getTestcaseId());
+					responseList.add(respDto);
 				}
 			} else {
 				List<ServiceError> serviceErrorsList = new ArrayList<>();
