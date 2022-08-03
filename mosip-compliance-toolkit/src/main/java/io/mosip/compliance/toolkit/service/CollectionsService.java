@@ -329,19 +329,19 @@ public class CollectionsService {
 		return responseWrapper;
 	}
 	
-	public ResponseWrapper<List<CollectionTestCaseDto>> saveCollectionTestCaseMapping(
-			List<CollectionTestCaseDto> inputCollectionTestCaseList) {
+	public ResponseWrapper<List<CollectionTestCaseDto>> addTestCasesForCollection(
+			List<CollectionTestCaseDto> inputList) {
 		
 		ResponseWrapper<List<CollectionTestCaseDto>> responseWrapper = new ResponseWrapper<>();
 		List<CollectionTestCaseDto> responseList = new ArrayList<CollectionTestCaseDto>();
 		try {
-			if (Objects.nonNull(inputCollectionTestCaseList) && inputCollectionTestCaseList.size() > 0) {
-				for (CollectionTestCaseDto collectionTestCaseDto : inputCollectionTestCaseList) {
-					ObjectMapper mapper = objectMapperConfig.objectMapper();
-					CollectionTestCaseEntity entity = mapper.convertValue(collectionTestCaseDto,
-							CollectionTestCaseEntity.class);
-
+			if (Objects.nonNull(inputList) && inputList.size() > 0) {
+				for (CollectionTestCaseDto dto : inputList) {
+					CollectionTestCaseEntity entity = new CollectionTestCaseEntity();
+					entity.setCollectionId(dto.getCollectionId());
+					entity.setTestcaseId(dto.getTestCaseId());
 					CollectionTestCaseEntity outputEntity = collectionTestCaseRepository.save(entity);
+					ObjectMapper mapper = objectMapperConfig.objectMapper();
 					responseList.add(mapper.convertValue(outputEntity, CollectionTestCaseDto.class));
 				}
 			} else {

@@ -80,6 +80,6 @@ public class CollectionsController {
 		requestValidator.validate(requestWrapper, errors);
 		requestValidator.validateId(COLLECTION_TESTCASE_POST_ID, requestWrapper.getId(), errors);
 		DataValidationUtil.validate(errors, COLLECTION_TESTCASE_POST_ID);
-		return collectionsService.saveCollectionTestCaseMapping(requestWrapper.getRequest());
+		return collectionsService.addTestCasesForCollection(requestWrapper.getRequest());
 	}
 }
