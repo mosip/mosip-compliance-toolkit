@@ -24,7 +24,7 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 @RestController
 public class CollectionsController {
 
-	/** The Constant SBI_PROJECT_POST_ID application. */
+	/** The Constant COLLECTION_POST_ID application. */
 	private static final String COLLECTION_PROJECT_POST_ID = "collection.post";
 
 	@Autowired
