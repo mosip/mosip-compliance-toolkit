@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @Data
 public class CollectionRequestDto {
-	private String type;
-	private CollectionDto collection;
+	private String projectId;
+	private String projectType;
+	private String collectionName;
 }

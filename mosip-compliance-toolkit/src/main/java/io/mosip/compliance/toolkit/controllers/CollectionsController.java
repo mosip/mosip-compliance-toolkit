@@ -28,7 +28,7 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 public class CollectionsController {
 
 	/** The Constant SBI_PROJECT_POST_ID application. */
-	private static final String COLLECTION_PROJECT_POST_ID = "collection.post";
+	private static final String COLLECTION_POST_ID = "collection.post";
 
 	/** The Constant COLLECTION_TESTCASE_POST_ID application. */
 	private static final String COLLECTION_TESTCASE_POST_ID = "collection.testcase.post";
@@ -69,8 +69,8 @@ public class CollectionsController {
 	public ResponseWrapper<CollectionDto> addCollection(
 			@RequestBody RequestWrapper<CollectionRequestDto> requestWrapper, Errors errors) throws Exception {
 		requestValidator.validate(requestWrapper, errors);
-		requestValidator.validateId(COLLECTION_PROJECT_POST_ID, requestWrapper.getId(), errors);
-		DataValidationUtil.validate(errors, COLLECTION_PROJECT_POST_ID);
+		requestValidator.validateId(COLLECTION_POST_ID, requestWrapper.getId(), errors);
+		DataValidationUtil.validate(errors, COLLECTION_POST_ID);
 		return collectionsService.addCollection(requestWrapper.getRequest());
 	}
 

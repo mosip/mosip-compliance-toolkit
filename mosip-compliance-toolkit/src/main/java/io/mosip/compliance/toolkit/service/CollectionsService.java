@@ -262,30 +262,30 @@ public class CollectionsService {
 		ResponseWrapper<CollectionDto> responseWrapper = new ResponseWrapper<>();
 		CollectionDto collection = null;
 		try {
-			if (Objects.nonNull(collectionRequest) && Objects.nonNull(collectionRequest.getType())
-					&& (AppConstants.SBI.equalsIgnoreCase(collectionRequest.getType())
-							|| AppConstants.ABIS.equalsIgnoreCase(collectionRequest.getType())
-							|| AppConstants.SDK.equalsIgnoreCase(collectionRequest.getType()))) {
+			if (Objects.nonNull(collectionRequest) && Objects.nonNull(collectionRequest.getProjectType())
+					&& (AppConstants.SBI.equalsIgnoreCase(collectionRequest.getProjectType())
+							|| AppConstants.ABIS.equalsIgnoreCase(collectionRequest.getProjectType())
+							|| AppConstants.SDK.equalsIgnoreCase(collectionRequest.getProjectType()))) {
 
 				String sbiProjectId = null;
 				String sdkProjectId = null;
 				String abisProjectId = null;
-				CollectionDto inputCollection = collectionRequest.getCollection();
-				switch (collectionRequest.getType()) {
+				
+				switch (collectionRequest.getProjectType()) {
 				case AppConstants.SBI:
-					sbiProjectId = inputCollection.getProjectId();
+					sbiProjectId = collectionRequest.getProjectId();
 					break;
 				case AppConstants.SDK:
-					sdkProjectId = inputCollection.getProjectId();
+					sdkProjectId = collectionRequest.getProjectId();
 					break;
 				case AppConstants.ABIS:
-					abisProjectId = inputCollection.getProjectId();
+					abisProjectId = collectionRequest.getProjectId();
 					break;
 				}
 
 				CollectionEntity inputEntity = new CollectionEntity();
-				inputEntity.setId(RandomIdGenerator.generateUUID(collectionRequest.getType().toLowerCase(), "", 36));
-				inputEntity.setName(inputCollection.getName());
+				inputEntity.setId(RandomIdGenerator.generateUUID(collectionRequest.getProjectType().toLowerCase(), "", 36));
+				inputEntity.setName(collectionRequest.getCollectionName());
 				inputEntity.setSbiProjectId(sbiProjectId);
 				inputEntity.setSdkProjectId(sdkProjectId);
 				inputEntity.setAbisProjectId(abisProjectId);
@@ -300,7 +300,7 @@ public class CollectionsService {
 
 				collection = objectMapperConfig.objectMapper().convertValue(outputEntity, CollectionDto.class);
 				collection.setCollectionId(outputEntity.getId());
-				collection.setProjectId(inputCollection.getProjectId());
+				collection.setProjectId(collectionRequest.getProjectId());
 				collection.setCrDtimes(outputEntity.getCrDate());
 			} else {
 				List<ServiceError> serviceErrorsList = new ArrayList<>();
