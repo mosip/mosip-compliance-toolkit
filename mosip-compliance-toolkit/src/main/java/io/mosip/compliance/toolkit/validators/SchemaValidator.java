@@ -1,12 +1,20 @@
 package io.mosip.compliance.toolkit.validators;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
+import org.springframework.util.FileCopyUtils;
 
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
@@ -38,10 +46,13 @@ public class SchemaValidator implements BaseValidator {
 	}
 
 	private String getSchemaJson(String fileName) throws Exception {
-		// File file = ResourceUtils.getFile("classpath:schemas/testcase_schema.json");
 		// Read File Content
-		Resource res = resourceLoader.getResource("classpath:" + fileName);
-		File file = res.getFile();
-		return new String(Files.readAllBytes(file.toPath()));
+		Resource resource = resourceLoader.getResource("classpath:" + fileName);
+		InputStream inputStream = resource.getInputStream();
+		try (Reader reader = new InputStreamReader(inputStream, UTF_8)) {
+            return FileCopyUtils.copyToString(reader);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
 	}
 }
