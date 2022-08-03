@@ -149,7 +149,7 @@ public class CollectionsService {
 					}
 					collectionTestCasesResponseDto = new CollectionTestCasesResponseDto();
 					collectionTestCasesResponseDto.setCollectionId(collectionId);
-					collectionTestCasesResponseDto.setTestCases(collectionTestCases);
+					collectionTestCasesResponseDto.setTestcases(collectionTestCases);
 				} else {
 					List<ServiceError> serviceErrorsList = new ArrayList<>();
 					ServiceError serviceError = new ServiceError();
