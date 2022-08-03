@@ -49,4 +49,6 @@ public class CollectionSummaryEntity {
 	private int testCaseCount;
 	private LocalDateTime crDtimes;
 	private LocalDateTime runDtimes;
+	private String runId;
+
 }
