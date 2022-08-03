@@ -7,7 +7,16 @@
 	"additionalProperties": false,
 	"properties": {
 		"type": {
-			"type": "string"
+			"type": "string",
+			"enum": [
+				"Biometric Device",
+				"Finger",
+				"Iris",
+				"Face"
+			]
 		}
-	}	
+	},
+	"required": [
+		"type"
+	]
 }
