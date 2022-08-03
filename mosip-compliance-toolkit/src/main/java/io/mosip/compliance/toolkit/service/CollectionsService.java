@@ -337,12 +337,17 @@ public class CollectionsService {
 		try {
 			if (Objects.nonNull(inputList) && inputList.size() > 0) {
 				for (CollectionTestCaseDto dto : inputList) {
+					//create entity to save in db
 					CollectionTestCaseEntity entity = new CollectionTestCaseEntity();
 					entity.setCollectionId(dto.getCollectionId());
 					entity.setTestcaseId(dto.getTestCaseId());
+					//save in db
 					CollectionTestCaseEntity outputEntity = collectionTestCaseRepository.save(entity);
-					ObjectMapper mapper = objectMapperConfig.objectMapper();
-					responseList.add(mapper.convertValue(outputEntity, CollectionTestCaseDto.class));
+					//create dto to send in response
+					CollectionTestCaseDto respDto = new CollectionTestCaseDto();
+					respDto.setCollectionId(outputEntity.getCollectionId());
+					respDto.setTestCaseId(outputEntity.getTestcaseId());
+					responseList.add(respDto);
 				}
 			} else {
 				List<ServiceError> serviceErrorsList = new ArrayList<>();
