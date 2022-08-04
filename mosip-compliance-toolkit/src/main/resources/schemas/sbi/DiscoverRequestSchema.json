@@ -8,11 +8,11 @@
 	"properties": {
 		"type": {
 			"type": "string",
-			"enum": [
+			"enum":[
 				"Biometric Device",
 				"Finger",
-				"Iris",
-				"Face"
+				"Face",
+				"Iris"
 			]
 		}
 	},

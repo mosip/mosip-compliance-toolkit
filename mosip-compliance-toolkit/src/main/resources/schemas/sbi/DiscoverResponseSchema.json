@@ -34,12 +34,12 @@
 					"minItems": 1,
 					"items": [
 						{
-							"type": "integer",
+							"type": "string",
 							"enum": [
-								0,
-								1,
-								2,
-								3
+								"0",
+								"1",
+								"2",
+								"3"
 							]
 						}
 					]
@@ -48,6 +48,9 @@
 					"$ref": "#/definitions/non-empty-string"
 				},
 				"digitalId": {
+					"$ref": "#/definitions/non-empty-string"
+				},
+				"digitalIdDecoded": {
 					"$schema": "https://json-schema.org/draft/2019-09/schema#",
 					"$id": "http://mosip-compliance-toolkit.com/schemas/DigitalIdResponseSchema.json",
 					"type": "object",

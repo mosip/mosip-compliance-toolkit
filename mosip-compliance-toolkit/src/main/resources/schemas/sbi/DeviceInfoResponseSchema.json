@@ -23,6 +23,9 @@
 							]
 						},
 						"digitalId": {
+							"$ref": "#/definitions/non-empty-string"
+						},
+						"digitalIdDecoded": {
 							"$schema": "https://json-schema.org/draft/2019-09/schema#",
 							"$id": "http://mosip-compliance-toolkit.com/schemas/DigitalIdResponseSchema.json",
 							"type": "object",
