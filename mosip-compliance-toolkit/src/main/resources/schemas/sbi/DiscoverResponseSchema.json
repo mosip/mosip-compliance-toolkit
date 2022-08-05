@@ -34,12 +34,12 @@
 					"minItems": 1,
 					"items": [
 						{
-							"type": "integer",
+							"type": "string",
 							"enum": [
-								0,
-								1,
-								2,
-								3
+								"0",
+								"1",
+								"2",
+								"3"
 							]
 						}
 					]
@@ -48,7 +48,128 @@
 					"$ref": "#/definitions/non-empty-string"
 				},
 				"digitalId": {
-					"$ref": "/schemas/DigitalIdResponseSchema"
+					"$ref": "#/definitions/non-empty-string"
+				},
+				"digitalIdDecoded": {
+					"type": "object",
+					"properties": {
+						"serialNo": {
+							"$ref": "#/definitions/non-empty-string"
+						},
+						"make": {
+							"$ref": "#/definitions/non-empty-string"
+						},
+						"model": {
+							"$ref": "#/definitions/non-empty-string"
+						},
+						"type": {
+							"type": "string",
+							"enum": [
+								"Finger",
+								"Iris",
+								"Face"
+							]
+						},
+						"deviceSubType": {
+							"type": "string",
+							"enum": [
+								"Slap",
+								"Single",
+								"Touchless",
+								"Double",
+								"Full face"
+							]
+						},
+						"deviceProvider": {
+							"$ref": "#/definitions/non-empty-string"
+						},
+						"deviceProviderId": {
+							"$ref": "#/definitions/non-empty-string"
+						},
+						"dateTime": {
+							"type": "string",
+							"format": "date-time",
+							"description": "We expect YYYY-MM-ddTHH:mm:SSZ"
+						}
+					},
+					"allOf": [
+						{
+							"if": {
+								"properties": {
+									"type": {
+										"const": "Finger"
+									}
+								}
+							},
+							"then": {
+								"properties": {
+									"deviceSubType": {
+										"type": "string",
+										"enum": [
+											"Single",
+											"Slap",
+											"Touchless"
+										]
+									}
+								}
+							}
+						},
+						{
+							"if": {
+								"properties": {
+									"type": {
+										"const": "Iris"
+									}
+								}
+							},
+							"then": {
+								"properties": {
+									"deviceSubType": {
+										"type": "string",
+										"enum": [
+											"Single",
+											"Double"
+										]
+									}
+								}
+							}
+						},
+						{
+							"if": {
+								"properties": {
+									"type": {
+										"const": "Face"
+									}
+								}
+							},
+							"then": {
+								"properties": {
+									"deviceSubType": {
+										"type": "string",
+										"enum": [
+											"Full face"
+										]
+									}
+								}
+							}
+						}
+					],
+					"required": [
+						"serialNo",
+						"make",
+						"type",
+						"model",
+						"deviceSubType",
+						"deviceProviderId",
+						"deviceProvider",
+						"dateTime"
+					],
+					"definitions": {
+						"non-empty-string": {
+							"type": "string",
+							"minLength": 1
+						}
+					}
 				},
 				"deviceCode": {
 					"$ref": "#/definitions/non-empty-string"
@@ -73,7 +194,31 @@
 					]
 				},
 				"error": {
-					"$ref": "/schemas/ErrorInfoSchema"
+					"type": "object",
+					"properties": {
+						"errorCode": {
+							"$ref": "#/definitions/non-empty-string",
+							"enum": [
+								"0"
+							]
+						},
+						"errorInfo": {
+							"$ref": "#/definitions/non-empty-string",
+							"enum": [
+								"Success"
+							]
+						}
+					},
+					"required": [
+						"errorCode",
+						"errorInfo"
+					],
+					"definitions": {
+						"non-empty-string": {
+							"type": "string",
+							"minLength": 1
+						}
+					}
 				}
 			},
 			"required": [

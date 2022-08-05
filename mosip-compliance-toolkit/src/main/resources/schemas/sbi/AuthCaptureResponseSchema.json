@@ -2,8 +2,9 @@
 	"$schema": "https://json-schema.org/draft/2019-09/schema#",
 	"$id": "http://mosip-compliance-toolkit.com/schemas/AuthCaptureResponseSchema.json",
 	"title": "Auth Capture Response Schema",
-	"description": "Auth Capture Response Schema",
+	"description": "Auth Capture  Response Schema",
 	"type": "object",
+	"additionalProperties": false,
 	"properties": {
 		"biometrics": {
 			"type": "array",
@@ -12,10 +13,14 @@
 					"type": "object",
 					"properties": {
 						"specVersion": {
-							"type": "string"
+							"type": "string",
+							"enum": [
+								"0.9.5",
+								"1.0.0"
+							]
 						},
 						"data": {
-							"type": "string"
+							"$ref": "#/definitions/non-empty-string"
 						},
 						"hash": {
 							"type": "string"
@@ -27,12 +32,7 @@
 							"type": "string"
 						},
 						"error": {
-							"$schema": "https://json-schema.org/draft/2019-09/schema#",
-							"$id": "http://mosip-compliance-toolkit.com/schemas/ErrorInfoSchema.json",
 							"type": "object",
-							"title": "ErrorInfoSchema",
-							"description": "ErrorInfoSchema",
-							"additionalProperties": false,
 							"properties": {
 								"errorCode": {
 									"$ref": "#/definitions/non-empty-string",
