@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsRequestDto;
+import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDto;
 import io.mosip.compliance.toolkit.service.TestRunService;
 import io.mosip.compliance.toolkit.util.DataValidationUtil;
@@ -52,8 +52,8 @@ public class TestRunController {
 	}
 
 	@PostMapping(value = "/addTestRunDetails")
-	public ResponseWrapper<TestRunDetailsRequestDto> addTestrunDetails(
-			@RequestBody RequestWrapper<TestRunDetailsRequestDto> requestWrapper, Errors errors) throws Exception {
+	public ResponseWrapper<TestRunDetailsDto> addTestrunDetails(
+			@RequestBody RequestWrapper<TestRunDetailsDto> requestWrapper, Errors errors) throws Exception {
 		requestValidator.validate(requestWrapper, errors);
 		requestValidator.validateId(TEST_RUN_DETAILS_POST_ID, requestWrapper.getId(), errors);
 		DataValidationUtil.validate(errors, TEST_RUN_DETAILS_POST_ID);

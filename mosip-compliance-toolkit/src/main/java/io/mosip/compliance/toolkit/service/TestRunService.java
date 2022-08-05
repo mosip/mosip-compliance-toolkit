@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.validation.constraints.Min;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,7 +16,6 @@ import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
-import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsRequestDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDto;
 import io.mosip.compliance.toolkit.entity.TestRunDetailsEntity;
 import io.mosip.compliance.toolkit.entity.TestRunEntity;
@@ -185,37 +182,27 @@ public class TestRunService {
 		return responseWrapper;
 	}
 
-	public ResponseWrapper<TestRunDetailsRequestDto> addTestRunDetails(TestRunDetailsRequestDto inputDetails) {
-		ResponseWrapper<TestRunDetailsRequestDto> responseWrapper = new ResponseWrapper<>();
-		TestRunDetailsRequestDto testRunDetailsRequestDto = null;
+	public ResponseWrapper<TestRunDetailsDto> addTestRunDetails(TestRunDetailsDto inputTestRunDetails) {
+		ResponseWrapper<TestRunDetailsDto> responseWrapper = new ResponseWrapper<>();
+		TestRunDetailsDto testRunDetails = null;
 		try {
-			if (Objects.nonNull(inputDetails)) {
-				ToolkitErrorCodes toolkitError = validatePartnerIdByRunId(inputDetails.getRunId(), getPartnerId());
+			if (Objects.nonNull(inputTestRunDetails)) {
+				ToolkitErrorCodes toolkitError = validatePartnerIdByRunId(inputTestRunDetails.getRunId(),
+						getPartnerId());
 				if (ToolkitErrorCodes.SUCCESS.equals(toolkitError)) {
-					List<TestRunDetailsDto> inputTestRunDetailsList = inputDetails.getTestRunDetailsList();
-
-					List<TestRunDetailsDto> responseTestRunDetails = new ArrayList<>();
 					ObjectMapper mapper = objectMapperConfig.objectMapper();
-					for (TestRunDetailsDto testRunDetails : inputTestRunDetailsList) {
-						if (testRunDetails.getRunId().equals(inputDetails.getRunId())) {
-							TestRunDetailsEntity entity = mapper.convertValue(testRunDetails,
-									TestRunDetailsEntity.class);
-							entity.setCrBy(getUserBy());
-							entity.setCrDtimes(LocalDateTime.now());
-							entity.setUpdBy(null);
-							entity.setUpdDtimes(null);
-							entity.setDeleted(false);
-							entity.setDelTime(null);
 
-							TestRunDetailsEntity outputEntity = testRunDetailsRepository.save(entity);
+					TestRunDetailsEntity entity = mapper.convertValue(inputTestRunDetails, TestRunDetailsEntity.class);
+					entity.setCrBy(getUserBy());
+					entity.setCrDtimes(LocalDateTime.now());
+					entity.setUpdBy(null);
+					entity.setUpdDtimes(null);
+					entity.setDeleted(false);
+					entity.setDelTime(null);
 
-							responseTestRunDetails.add(mapper.convertValue(outputEntity, TestRunDetailsDto.class));
-						}
-					}
+					TestRunDetailsEntity outputEntity = testRunDetailsRepository.save(entity);
 
-					testRunDetailsRequestDto = new TestRunDetailsRequestDto();
-					testRunDetailsRequestDto.setRunId(inputDetails.getRunId());
-					testRunDetailsRequestDto.setTestRunDetailsList(responseTestRunDetails);
+					testRunDetails = mapper.convertValue(outputEntity, TestRunDetailsDto.class);
 				} else {
 					List<ServiceError> serviceErrorsList = new ArrayList<>();
 					ServiceError serviceError = new ServiceError();
@@ -246,7 +233,7 @@ public class TestRunService {
 		}
 		responseWrapper.setId(postTestRunDetailsId);
 		responseWrapper.setVersion(AppConstants.VERSION);
-		responseWrapper.setResponse(testRunDetailsRequestDto);
+		responseWrapper.setResponse(testRunDetails);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
