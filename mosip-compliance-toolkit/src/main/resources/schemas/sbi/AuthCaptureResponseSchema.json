@@ -4,7 +4,7 @@
 	"title": "Auth Capture Response Schema",
 	"description": "Auth Capture  Response Schema",
 	"type": "object",
-	"additionalProperties": false,	
+	"additionalProperties": false,
 	"properties": {
 		"biometrics": {
 			"type": "array",
@@ -198,9 +198,9 @@
 										"Production"
 									]
 								},
-								"domainUri":{
+								"domainUri": {
 									"type": "string"
-								},								
+								},
 								"bioValue": {
 									"$ref": "#/definitions/non-empty-string"
 								},
@@ -254,16 +254,28 @@
 							"type": "object",
 							"properties": {
 								"errorCode": {
-									"type": "string"
+									"$ref": "#/definitions/non-empty-string",
+									"enum": [
+										"0"
+									]
 								},
 								"errorInfo": {
-									"type": "string"
+									"$ref": "#/definitions/non-empty-string",
+									"enum": [
+										"Success"
+									]
 								}
 							},
 							"required": [
 								"errorCode",
 								"errorInfo"
-							]
+							],
+							"definitions": {
+								"non-empty-string": {
+									"type": "string",
+									"minLength": 1
+								}
+							}
 						}
 					},
 					"required": [
