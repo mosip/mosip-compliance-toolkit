@@ -1,197 +1,281 @@
 {
 	"$schema": "https://json-schema.org/draft/2019-09/schema#",
-	"$id": "http://mosip-compliance-toolkit.com/schemas/RegistrationCapureRequestSchema.json",
-	"title": "Registration Capture Request Schema",
-	"description": "Registration Capture Request Schema",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/RegistrationCaptureResponseSchema.json",
+	"title": "Registration Capture Response Schema",
+	"description": "Registration Capture Response Schema",
 	"type": "object",
+	"additionalProperties": false,	
 	"properties": {
-		"env": {
-			"type": "string",
-			"enum": [
-				"Staging",
-				"Developer",
-				"Pre-Production",
-				"Production"
-			]
-		},
-		"purpose": {
-			"type": "string",
-			"enum": [
-				"Auth",
-				"Registration"
-			]
-		},
-		"specVersion": {
-			"type": "string",
-			"enum": [
-				"0.9.5",
-				"1.0.0"
-			]
-		},
-		"timeout": {
-			"$ref": "#/definitions/non-empty-string",
-			"pattern": "[0-9]$"
-		},
-		"captureTime": {
-			"type": "string",
-			"format": "date-time",
-			"description": "We expect YYYY-MM-ddTHH:mm:SSZ"
-		},
-		"transactionId": {
-			"$ref": "#/definitions/non-empty-string"
-		},
-		"bio": {
+		"biometrics": {
 			"type": "array",
 			"items": [
 				{
 					"type": "object",
 					"properties": {
-						"type": {
-							"type": "string",
-							"enum": [
-								"Finger",
-								"Iris",
-								"Face"
-							]
+						"specVersion": {
+							"type": "string"
 						},
-						"count": {
-							"type": "number",
-							"maximum": 4
-						},
-						"bioSubType": {
-							"type": "array"
-						},
-						"exception": {
-							"type": "array"
-						},
-						"requestedScore": {
-							"type": "string",
-							"pattern": "^[0-9]+$",
-                            "minLength": 1, 
-                            "maxLength": 3
-                        },
-						"deviceId": {
+						"data": {
 							"$ref": "#/definitions/non-empty-string"
 						},
-						"deviceSubId": {
-							"type": "string",
-							"enum": [
-								"0",
-								"1",
-								"2",
-								"3"
+						"dataDecoded": {
+							"type": "object",
+							"properties": {
+								"digitalId": {
+									"$ref": "#/definitions/non-empty-string"
+								},
+								"digitalIdDecoded": {
+									"type": "object",
+									"properties": {
+										"serialNo": {
+											"$ref": "#/definitions/non-empty-string"
+										},
+										"make": {
+											"$ref": "#/definitions/non-empty-string"
+										},
+										"model": {
+											"$ref": "#/definitions/non-empty-string"
+										},
+										"type": {
+											"type": "string",
+											"enum": [
+												"Finger",
+												"Iris",
+												"Face"
+											]
+										},
+										"deviceSubType": {
+											"type": "string",
+											"enum": [
+												"Slap",
+												"Single",
+												"Touchless",
+												"Double",
+												"Full face"
+											]
+										},
+										"deviceProvider": {
+											"$ref": "#/definitions/non-empty-string"
+										},
+										"deviceProviderId": {
+											"$ref": "#/definitions/non-empty-string"
+										},
+										"dateTime": {
+											"type": "string",
+											"format": "date-time",
+											"description": "We expect YYYY-MM-ddTHH:mm:SSZ"
+										}
+									},
+									"allOf": [
+										{
+											"if": {
+												"properties": {
+													"type": {
+														"const": "Finger"
+													}
+												}
+											},
+											"then": {
+												"properties": {
+													"deviceSubType": {
+														"type": "string",
+														"enum": [
+															"Single",
+															"Slap",
+															"Touchless"
+														]
+													}
+												}
+											}
+										},
+										{
+											"if": {
+												"properties": {
+													"type": {
+														"const": "Iris"
+													}
+												}
+											},
+											"then": {
+												"properties": {
+													"deviceSubType": {
+														"type": "string",
+														"enum": [
+															"Single",
+															"Double"
+														]
+													}
+												}
+											}
+										},
+										{
+											"if": {
+												"properties": {
+													"type": {
+														"const": "Face"
+													}
+												}
+											},
+											"then": {
+												"properties": {
+													"deviceSubType": {
+														"type": "string",
+														"enum": [
+															"Full face"
+														]
+													}
+												}
+											}
+										}
+									],
+									"required": [
+										"serialNo",
+										"make",
+										"type",
+										"model",
+										"deviceSubType",
+										"deviceProviderId",
+										"deviceProvider",
+										"dateTime"
+									],
+									"definitions": {
+										"non-empty-string": {
+											"type": "string",
+											"minLength": 1
+										}
+									}
+								},
+								"deviceCode": {
+									"$ref": "#/definitions/non-empty-string"
+								},
+								"deviceServiceVersion": {
+									"$ref": "#/definitions/non-empty-string"
+								},
+								"bioType": {
+									"type": "string",
+									"enum": [
+										"Finger",
+										"Iris",
+										"Face"
+									]
+								},
+								"bioSubType": {
+									"type": "string",
+									"enum": [
+										"Left IndexFinger",
+										"Left MiddleFinger",
+										"Left RingFinger",
+										"Left LittleFinger",
+										"Left Thumb",
+										"Right IndexFinger",
+										"Right MiddleFinger",
+										"Right RingFinger",
+										"Right LittleFinger",
+										"Right Thumb",
+										"UNKNOWN",
+										"Left",
+										"Right",
+										null
+									]
+								},
+								"purpose": {
+									"type": "string",
+									"enum": [
+										"Auth",
+										"Registration"
+									]
+								},
+								"env": {
+									"type": "string",
+									"enum": [
+										"Staging",
+										"Developer",
+										"Pre-Production",
+										"Production"
+									]
+								},
+								"bioValue": {
+									"$ref": "#/definitions/non-empty-string"
+								},
+								"transactionId": {
+									"$ref": "#/definitions/non-empty-string"
+								},
+								"timestamp": {
+									"string": "string",
+									"format": "date-time",
+									"description": "We expect YYYY-MM-ddTHH:mm:SSZ"
+								},
+								"requestedScore": {
+									"type": "string",
+                                    "pattern": "^[0-9]+$",
+                                    "minLength": 1, 
+                                    "maxLength": 3
+								},
+								"qualityScore": {
+									"type": "string",
+                                    "pattern": "^[0-9]+$",
+                                    "minLength": 1, 
+                                    "maxLength": 3
+								}
+							},
+							"required": [
+								"digitalId",
+								"deviceCode",
+								"deviceServiceVersion",
+								"bioType",
+								"bioSubType",
+								"purpose",
+								"env",
+								"bioValue",
+								"transactionId",
+								"timestamp",
+								"requestedScore",
+								"qualityScore"
 							]
 						},
-						"previousHash": {
-							"type": "string"
+						"hash": {
+							"$ref": "#/definitions/non-empty-string"
+						},
+						"error": {
+							"type": "object",
+							"properties": {
+								"errorCode": {
+									"$ref": "#/definitions/non-empty-string",
+									"enum": [
+										"0"
+									]
+								},
+								"errorInfo": {
+									"$ref": "#/definitions/non-empty-string",
+									"enum": [
+										"Success"
+									]
+								}
+							},
+							"required": [
+								"errorCode",
+								"errorInfo"
+							],
+							"definitions": {
+								"non-empty-string": {
+									"type": "string",
+									"minLength": 1
+								}
+							}
 						}
 					},
-					"definitions": {
-						"non-empty-string": {
-							"type": "string",
-							"minLength": 1
-						}
-					}
+					"required": [
+						"specVersion",
+						"data",
+						"hash",
+						"error"
+					]
 				}
-			],
-			"allOf": [
-				{
-					"if": {
-						"properties": {
-							"type": {
-								"const": "Finger"
-							}
-						}
-					},
-					"then": {
-						"properties": {
-							"bioSubType": {
-								"type": "array",
-								"enum": [
-									"Left IndexFinger",
-									"Left MiddleFinger",
-									"Left RingFinger",
-									"Left LittleFinger",
-									"Left Thumb",
-									"Right IndexFinger",
-									"Right MiddleFinger",
-									"Right RingFinger",
-									"Right LittleFinger",
-									"Right Thumb",
-									"UNKNOWN"
-								]
-							}
-						}
-					}
-				},
-				{
-					"if": {
-						"properties": {
-							"type": {
-								"const": "Iris"
-							}
-						}
-					},
-					"then": {
-						"properties": {
-							"bioSubType": {
-								"type": "array",
-								"enum": [
-									"Left",
-									"Right",
-									"UNKNOWN"
-								]
-							}
-						}
-					}
-				},
-				{
-					"if": {
-						"properties": {
-							"type": {
-								"const": "Face"
-							}
-						}
-					},
-					"then": {
-						"properties": {
-							"bioSubType": {
-								"type": "array",
-								"enum": [
-									null
-								]
-							}
-						}
-					}
-				}
-			],
-			"required": [
-				"type",
-				"count",
-				"bioSubType",
-				"exception",
-				"requestedScore",
-				"deviceId",
-				"deviceSubId",
-				"previousHash"
-			]
-		},
-		"customOpts": {
-			"type": [
-                "object",
-				"null",
-				"string"
 			]
 		}
 	},
 	"required": [
-		"env",
-		"purpose",
-		"specVersion",
-		"timeout",
-		"captureTime",
-		"transactionId",
-		"bio"
+		"biometrics"
 	],
 	"definitions": {
 		"non-empty-string": {

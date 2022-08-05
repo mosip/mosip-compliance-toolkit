@@ -18,21 +18,16 @@
 							"type": "string"
 						},
 						"hash": {
-							"type": "string"
+							"$ref": "#/definitions/non-empty-string"
 						},
 						"sessionKey": {
-							"type": "string"
+							"$ref": "#/definitions/non-empty-string"
 						},
 						"thumbprint": {
-							"type": "string"
+							"$ref": "#/definitions/non-empty-string"
 						},
 						"error": {
-							"$schema": "https://json-schema.org/draft/2019-09/schema#",
-							"$id": "http://mosip-compliance-toolkit.com/schemas/ErrorInfoSchema.json",
 							"type": "object",
-							"title": "ErrorInfoSchema",
-							"description": "ErrorInfoSchema",
-							"additionalProperties": false,
 							"properties": {
 								"errorCode": {
 									"$ref": "#/definitions/non-empty-string",

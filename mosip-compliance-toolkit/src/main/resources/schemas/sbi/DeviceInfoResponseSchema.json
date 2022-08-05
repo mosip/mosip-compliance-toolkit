@@ -11,6 +11,9 @@
 			"type": "object",
 			"properties": {
 				"deviceInfo": {
+					"$ref": "#/definitions/non-empty-string"
+				},
+				"deviceInfoDecoded": {
 					"type": "object",
 					"properties": {
 						"env": {
@@ -23,12 +26,7 @@
 							]
 						},
 						"digitalId": {
-							"$schema": "https://json-schema.org/draft/2019-09/schema#",
-							"$id": "http://mosip-compliance-toolkit.com/schemas/DigitalIdResponseSchema.json",
 							"type": "object",
-							"title": "DigitalId Response Schema",
-							"description": "DigitalId Response Schema",
-							"additionalProperties": false,
 							"properties": {
 								"serialNo": {
 									"$ref": "#/definitions/non-empty-string"
@@ -231,12 +229,7 @@
 					]
 				},
 				"error": {
-					"$schema": "https://json-schema.org/draft/2019-09/schema#",
-					"$id": "http://mosip-compliance-toolkit.com/schemas/ErrorInfoSchema.json",
 					"type": "object",
-					"title": "ErrorInfoSchema",
-					"description": "ErrorInfoSchema",
-					"additionalProperties": false,
 					"properties": {
 						"errorCode": {
 							"$ref": "#/definitions/non-empty-string",
