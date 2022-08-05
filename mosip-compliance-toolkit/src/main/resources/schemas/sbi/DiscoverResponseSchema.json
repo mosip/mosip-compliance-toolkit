@@ -34,12 +34,12 @@
 					"minItems": 1,
 					"items": [
 						{
-							"type": "integer",
+							"type": "string",
 							"enum": [
-								0,
-								1,
-								2,
-								3
+								"0",
+								"1",
+								"2",
+								"3"
 							]
 						}
 					]
