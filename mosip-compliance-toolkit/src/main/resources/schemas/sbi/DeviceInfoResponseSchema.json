@@ -26,6 +26,9 @@
 							]
 						},
 						"digitalId": {
+							"$ref": "#/definitions/non-empty-string"
+						},
+						"digitalIdDecoded": {
 							"type": "object",
 							"properties": {
 								"serialNo": {
