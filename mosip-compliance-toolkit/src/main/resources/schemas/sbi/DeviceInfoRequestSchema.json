@@ -1,0 +1,8 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema#",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/DeviceInfoRequestSchema.json",
+	"type": "object",
+	"title": "DeviceInfo Request Schema",
+	"description": "DeviceInfo Request Schema",
+	"additionalProperties": false
+}
