@@ -70,26 +70,6 @@ public class TestCasesController {
 		binder.addValidators(requestValidator);
 	}
 
-//	@GetMapping(value = "/validateRequest")
-//	public String doValidate() {
-//		try {
-//
-//			File sourceJsonFile = ResourceUtils.getFile("classpath:testdata/testcase_sbi_sample.json");
-//			// Read File Content
-//			String sourceJson = new String(Files.readAllBytes(sourceJsonFile.toPath()));
-//			// System.out.println(sourceJson);
-//
-//			File schemaJsonFile = ResourceUtils.getFile("classpath:schemas/testcase_schema.json");
-//			// Read File Content
-//			String testCaseSchemaJson = new String(Files.readAllBytes(schemaJsonFile.toPath()));
-//			// System.out.println(schemaJson);
-//
-//			return service.validateSourceJson(sourceJson, testCaseSchemaJson);
-//		} catch (Exception e) {
-//			return e.getLocalizedMessage();
-//		}
-//	}
-
 	@PostMapping(value = "/validateRequest")
 	public ValidationResultDto validateRequest(@RequestBody(required = true) RequestValidateDto requestDto) {
 		try {
@@ -115,8 +95,8 @@ public class TestCasesController {
 		return service.performValidations(input.getRequest());
 	}
 
-	@GetMapping(value = "/getTestCases")
-	public String getTestCases(@RequestParam(required = true) String type) {
+	@GetMapping(value = "/generateTestCaseFromConfig")
+	public String generateTestCaseFromConfig(@RequestParam(required = true) String type) {
 		try {
 			String testCaseSchemaJson = service.getSchemaJson("schemas/testcase_schema.json");
 			// System.out.println(testCaseSchemaJson);
@@ -177,21 +157,14 @@ public class TestCasesController {
 		}
 	}
 
-	/**
-	 * testcases json array.
-	 *
-	 * @param TestCaseRequestDto
-	 * @return
-	 */
-	@ResponseFilter
 	@PostMapping(value = "/saveTestCases", produces = "application/json")
 	public ResponseWrapper<TestCaseResponseDto> saveTestCases(
 			@RequestBody @Valid RequestWrapper<TestCaseRequestDto> testCaseRequestDto) throws Exception {
 		return service.saveTestCases(testCaseRequestDto.getRequest().getTestCases());
 	}
 	
-	@GetMapping(value = "/getTestcase/{testcaseId}")
-	public ResponseWrapper<TestCaseDto> getTestCaseById(@PathVariable String testcaseId){
-		return service.getTestCaseById(testcaseId);
+	@GetMapping(value = "/getTestCase/{testId}")
+	public ResponseWrapper<TestCaseDto> getTestCaseById(@PathVariable String testId){
+		return service.getTestCaseById(testId);
 	}
 }
