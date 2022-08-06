@@ -14,11 +14,14 @@ import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
 @Repository("TestRunRepository")
 public interface TestRunRepository extends BaseRepository<TestRunEntity, String> {
 
+	@Query("SELECT tr FROM TestRunEntity AS tr INNER JOIN CollectionEntity c ON (c.id = tr.collectionId) WHERE tr.id = ?1 AND c.partnerId = ?2 AND c.isDeleted<>'true' AND tr.isDeleted<>'true'")
+	public TestRunEntity getTestRunById(String runId, String partnerId);
+
 	@Modifying
 	@Transactional
 	@Query("UPDATE TestRunEntity e SET e.executionDtimes= ?1, e.updBy= ?2, e.updDtimes= ?3 WHERE e.id = ?4")
 	public int updateExecutionDateById(LocalDateTime excutionDtimes, String upBy, LocalDateTime updDtimes, String id);
-	
+
 	@Query("SELECT c.partnerId FROM TestRunEntity t INNER JOIN CollectionEntity c ON (c.id = t.collectionId) WHERE t.id = ?1  AND c.isDeleted<>'true'")
 	public String getPartnerIdByRunId(String id);
 }

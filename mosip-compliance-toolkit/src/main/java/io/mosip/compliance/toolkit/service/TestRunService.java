@@ -16,7 +16,9 @@ import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
+import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDto;
+import io.mosip.compliance.toolkit.dto.testrun.TestCaseSummaryDto;
 import io.mosip.compliance.toolkit.entity.TestRunDetailsEntity;
 import io.mosip.compliance.toolkit.entity.TestRunEntity;
 import io.mosip.compliance.toolkit.repository.CollectionsRepository;
@@ -40,6 +42,9 @@ public class TestRunService {
 
 	@Value("${mosip.toolkit.api.id.testrun.details.post}")
 	private String postTestRunDetailsId;
+
+	@Value("${mosip.toolkit.api.id.testrun.details.get}")
+	private String getTestRunDetailsId;
 
 	@Autowired
 	TestRunRepository testRunRepository;
@@ -234,6 +239,57 @@ public class TestRunService {
 		responseWrapper.setId(postTestRunDetailsId);
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponse(testRunDetails);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+
+	public ResponseWrapper<TestRunDetailsResponseDto> getTestRunDetails(String runId) {
+		ResponseWrapper<TestRunDetailsResponseDto> responseWrapper = new ResponseWrapper<>();
+		TestRunDetailsResponseDto testRunDetailsResponseDto = null;
+		try {
+			if (Objects.nonNull(runId)) {
+				TestRunEntity entity = testRunRepository.getTestRunById(runId, getPartnerId());
+				if (Objects.nonNull(entity)) {
+					List<TestCaseSummaryDto> testCaseSummaryList = testRunDetailsRepository.getTestRunSummary(runId);
+
+					testRunDetailsResponseDto = new TestRunDetailsResponseDto();
+					testRunDetailsResponseDto.setCollectionId(entity.getCollectionId());
+					testRunDetailsResponseDto.setRunId(entity.getId());
+					testRunDetailsResponseDto.setRunDtimes(entity.getRunDtimes());
+					testRunDetailsResponseDto.setExecutionDtimes(entity.getExecutionDtimes());
+					testRunDetailsResponseDto.setTestcases(testCaseSummaryList);
+
+				} else {
+					List<ServiceError> serviceErrorsList = new ArrayList<>();
+					ServiceError serviceError = new ServiceError();
+					serviceError.setErrorCode(ToolkitErrorCodes.TESTRUN_NOT_AVAILABLE.getErrorCode());
+					serviceError.setMessage(ToolkitErrorCodes.TESTRUN_NOT_AVAILABLE.getErrorMessage());
+					serviceErrorsList.add(serviceError);
+					responseWrapper.setErrors(serviceErrorsList);
+				}
+			} else {
+				List<ServiceError> serviceErrorsList = new ArrayList<>();
+				ServiceError serviceError = new ServiceError();
+				serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode());
+				serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
+				serviceErrorsList.add(serviceError);
+				responseWrapper.setErrors(serviceErrorsList);
+			}
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In getTestRunDetails method of TestRunService Service - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.TESTRUN_DETAILS_NOT_AVAILABLE.getErrorCode());
+			serviceError.setMessage(
+					ToolkitErrorCodes.TESTRUN_DETAILS_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		}
+		responseWrapper.setId(getTestRunDetailsId);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponse(testRunDetailsResponseDto);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
