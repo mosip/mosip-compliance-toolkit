@@ -13,6 +13,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -187,5 +188,10 @@ public class TestCasesController {
 	public ResponseWrapper<TestCaseResponseDto> saveTestCases(
 			@RequestBody @Valid RequestWrapper<TestCaseRequestDto> testCaseRequestDto) throws Exception {
 		return service.saveTestCases(testCaseRequestDto.getRequest().getTestCases());
+	}
+	
+	@GetMapping(value = "/getTestcase/{testcaseId}")
+	public ResponseWrapper<TestCaseDto> getTestCaseById(@PathVariable String testcaseId){
+		return service.getTestCaseById(testcaseId);
 	}
 }
