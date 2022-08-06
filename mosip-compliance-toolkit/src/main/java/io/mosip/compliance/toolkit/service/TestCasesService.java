@@ -15,6 +15,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -82,9 +83,12 @@ public class TestCasesService {
 	@Value("${mosip.toolkit.api.id.testcase.project.get}")
 	private String getTestCasesId;
 
+	@Value("$(mosip.toolkit.api.id.testcase.get)")
+	private String getTestCaseId;
+
 	@Autowired
 	ResourceLoader resourceLoader;
-	
+
 	@Autowired
 	private ApplicationContext context;
 
@@ -361,8 +365,7 @@ public class TestCasesService {
 		}
 	}
 
-	public ResponseWrapper<TestCaseResponseDto> saveTestCases(List<TestCaseDto> values)
-			throws Exception {
+	public ResponseWrapper<TestCaseResponseDto> saveTestCases(List<TestCaseDto> values) throws Exception {
 		ResponseWrapper<TestCaseResponseDto> responseWrapper = new ResponseWrapper<>();
 		TestCaseResponseDto testCaseResponseDto = new TestCaseResponseDto();
 		Map<String, String> savedValues = new HashMap<String, String>();
@@ -537,15 +540,51 @@ public class TestCasesService {
 	private String base64Encode(String data) {
 		return Base64.getEncoder().encodeToString(data.getBytes());
 	}
-	
+
 	public String getSchemaJson(String fileName) throws Exception {
 		// Read File Content
 		Resource resource = resourceLoader.getResource("classpath:" + fileName);
 		InputStream inputStream = resource.getInputStream();
 		try (Reader reader = new InputStreamReader(inputStream, UTF_8)) {
-            return FileCopyUtils.copyToString(reader);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+			return FileCopyUtils.copyToString(reader);
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
+	}
+
+	public ResponseWrapper<TestCaseDto> getTestCaseById(String testCaseId) {
+		ResponseWrapper<TestCaseDto> responseWrapper = new ResponseWrapper<>();
+		TestCaseDto testcase = null;
+		try {
+			String testCaseJson = testCasesRepository.getTestCasesById(testCaseId);
+
+			if (Objects.nonNull(testCaseJson)) {
+				testcase = objectMapper.readValue(testCaseJson, TestCaseDto.class);
+			}else {
+				List<ServiceError> serviceErrorsList = new ArrayList<>();
+				ServiceError serviceError = new ServiceError();
+				serviceError.setErrorCode(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode());
+				serviceError.setMessage(
+						ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
+				serviceErrorsList.add(serviceError);
+				responseWrapper.setErrors(serviceErrorsList);
+			}
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In getTestCaseById method of TestCasesService Service - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode());
+			serviceError.setMessage(
+					ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		}
+		responseWrapper.setId(getTestCaseId);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponse(testcase);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
 	}
 }

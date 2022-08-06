@@ -3,6 +3,7 @@ package io.mosip.compliance.toolkit.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import io.mosip.compliance.toolkit.entity.TestCaseEntity;
@@ -26,4 +27,7 @@ public interface TestCasesRepository extends BaseRepository<TestCaseEntity, Stri
 
 	@Query("SELECT e FROM TestCaseEntity e WHERE e.testcaseType='ABIS' and e.specVersion= ?1 order by e.id asc")
 	public List<TestCaseEntity> findAllAbisTestCaseBySpecVersion(String specVersion);
+	
+	@Query("SELECT e.testcaseJson FROM TestCaseEntity e WHERE e.id =:testCaseId")
+	public String getTestCasesById(String testCaseId);
 }
