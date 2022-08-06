@@ -13,7 +13,7 @@ CREATE TABLE toolkit.test_run_details(
 	upd_dtimes timestamp,
 	is_deleted boolean,
 	del_dtimes timestamp,
-	CONSTRAINT test_run_details_id_pk PRIMARY KEY (run_id) 
+	CONSTRAINT test_run_details_id_pk PRIMARY KEY (run_id, testcase_id) 
 );
 
 CREATE INDEX IF NOT EXISTS idx_test_run_details_id ON toolkit.test_run_details USING btree (run_id);

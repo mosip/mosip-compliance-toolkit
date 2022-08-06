@@ -18,7 +18,6 @@ import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDto;
-import io.mosip.compliance.toolkit.dto.testrun.TestCaseSummaryDto;
 import io.mosip.compliance.toolkit.entity.TestRunDetailsEntity;
 import io.mosip.compliance.toolkit.entity.TestRunEntity;
 import io.mosip.compliance.toolkit.repository.CollectionsRepository;
@@ -245,20 +244,26 @@ public class TestRunService {
 
 	public ResponseWrapper<TestRunDetailsResponseDto> getTestRunDetails(String runId) {
 		ResponseWrapper<TestRunDetailsResponseDto> responseWrapper = new ResponseWrapper<>();
-		TestRunDetailsResponseDto testRunDetailsResponseDto = null;
+		TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
 		try {
+			List<TestRunDetailsDto> testRunDetailsList = new ArrayList<TestRunDetailsDto>();
 			if (Objects.nonNull(runId)) {
-				TestRunEntity entity = testRunRepository.getTestRunById(runId, getPartnerId());
-				if (Objects.nonNull(entity)) {
-					List<TestCaseSummaryDto> testCaseSummaryList = testRunDetailsRepository.getTestRunSummary(runId);
-
-					testRunDetailsResponseDto = new TestRunDetailsResponseDto();
-					testRunDetailsResponseDto.setCollectionId(entity.getCollectionId());
-					testRunDetailsResponseDto.setRunId(entity.getId());
-					testRunDetailsResponseDto.setRunDtimes(entity.getRunDtimes());
-					testRunDetailsResponseDto.setExecutionDtimes(entity.getExecutionDtimes());
-					testRunDetailsResponseDto.setTestcases(testCaseSummaryList);
-
+				TestRunEntity testRunEntity = testRunRepository.getTestRunById(runId, getPartnerId());
+				if (Objects.nonNull(testRunEntity)) {
+					List<TestRunDetailsEntity> testRunDetailsEntityList = testRunDetailsRepository
+							.getTestRunDetails(runId);
+					if (Objects.nonNull(testRunDetailsEntityList) && !testRunDetailsEntityList.isEmpty()) {
+						ObjectMapper mapper = objectMapperConfig.objectMapper();
+						for (TestRunDetailsEntity testRunDetailsEntity : testRunDetailsEntityList) {
+							TestRunDetailsDto dto = mapper.convertValue(testRunDetailsEntity, TestRunDetailsDto.class);
+							testRunDetailsList.add(dto);
+						}
+					}
+					testRunDetailsResponseDto.setCollectionId(testRunEntity.getCollectionId());
+					testRunDetailsResponseDto.setRunId(testRunEntity.getId());
+					testRunDetailsResponseDto.setRunDtimes(testRunEntity.getRunDtimes());
+					testRunDetailsResponseDto.setExecutionDtimes(testRunEntity.getExecutionDtimes());
+					testRunDetailsResponseDto.setTestRunDetailsList(testRunDetailsList);
 				} else {
 					List<ServiceError> serviceErrorsList = new ArrayList<>();
 					ServiceError serviceError = new ServiceError();

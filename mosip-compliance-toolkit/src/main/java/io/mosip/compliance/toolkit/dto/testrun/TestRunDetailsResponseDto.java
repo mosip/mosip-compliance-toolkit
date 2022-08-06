@@ -20,6 +20,6 @@ public class TestRunDetailsResponseDto {
 
 	private LocalDateTime executionDtimes;
 
-	private List<TestCaseSummaryDto> testcases;
+	private List<TestRunDetailsDto> testRunDetailsList;
 
 }
