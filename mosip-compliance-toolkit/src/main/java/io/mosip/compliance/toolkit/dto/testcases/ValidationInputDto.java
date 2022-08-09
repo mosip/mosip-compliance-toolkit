@@ -26,5 +26,7 @@ public class ValidationInputDto  implements Serializable {
 
 	public String methodRequest;
 
+	public String methodName;
+	
 	public List<ValidatorDefDto> validatorDefs;
 }

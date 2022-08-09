@@ -41,10 +41,14 @@ public enum ToolkitErrorCodes {
 	INVALID_DEVICE_SUB_TYPE_FOR_DEVICE_TYPE("TOOLKIT_REQ_ERR_017", "Invalid Device Sub Type for the Device Type"),
 	INVALID_SPEC_VERSION_FOR_PROJECT_TYPE("TOOLKIT_REQ_ERR_018", "Invalid Spec Version for the Project Type"),
 	GET_TEST_CASE_ERROR("TOOLKIT_REQ_ERR_019", "Get Test Case error"),
+	INVALID_CERTIFICATION_TYPE("TOOLKIT_REQ_ERR_020", "Invalid Certification Type"),
+	INVALID_DEVICE_STATUS("TOOLKIT_REQ_ERR_021", "Invalid Device Status"),
 
 	INVALID_VALIDATOR_DEF("TOOLKIT_VALIDATION_ERR_001", "Invalid validator definition in testcase."),
 	TESTCASE_VALIDATION_ERR("TOOLKIT_VALIDATION_ERR_002", "Unable to perform validations."),
 	PARTNERID_VALIDATION_ERR("TOOLKIT_VALIDATION_ERR_003", "Partner Id validation failed"),
+
+	INVALID_METHOD_NAME("TOOLKIT_VALIDATION_ERR_003", "Invalid MethodName"),
 
 	TECHNICAL_ERROR_EXCEPTION("TOOLKIT_REQ_ERR_500", "Technical Error");
 

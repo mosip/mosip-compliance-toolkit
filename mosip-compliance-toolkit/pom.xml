@@ -50,12 +50,24 @@
 
 		<lombok.version>1.18.8</lombok.version>
 
+		<squareup.okhttp.version>2.7.5</squareup.okhttp.version>
+		<io.rest-assured.version>4.3.1</io.rest-assured.version>
 
 		<sonar.coverage.exclusions>
 		</sonar.coverage.exclusions>
 		<sonar.cpd.exclusions></sonar.cpd.exclusions>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>com.squareup.okhttp</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>${squareup.okhttp.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>${io.rest-assured.version}</version>
+		</dependency>
 		<dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
@@ -123,6 +135,12 @@
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20180130</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.bitbucket.b_c/jose4j -->	
+		<dependency>
+			<groupId>org.bitbucket.b_c</groupId>
+			<artifactId>jose4j</artifactId>
+			<version>0.7.1</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
