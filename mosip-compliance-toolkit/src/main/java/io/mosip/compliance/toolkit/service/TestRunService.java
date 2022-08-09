@@ -18,8 +18,10 @@ import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDto;
+import io.mosip.compliance.toolkit.dto.testrun.TestRunHistoryDto;
 import io.mosip.compliance.toolkit.entity.TestRunDetailsEntity;
 import io.mosip.compliance.toolkit.entity.TestRunEntity;
+import io.mosip.compliance.toolkit.entity.TestRunHistoryEntity;
 import io.mosip.compliance.toolkit.repository.CollectionsRepository;
 import io.mosip.compliance.toolkit.repository.TestRunDetailsRepository;
 import io.mosip.compliance.toolkit.repository.TestRunRepository;
@@ -44,6 +46,9 @@ public class TestRunService {
 
 	@Value("${mosip.toolkit.api.id.testrun.details.get}")
 	private String getTestRunDetailsId;
+
+	@Value("${mosip.toolkit.api.id.testrun.history.get}")
+	private String getTestRunHistoryId;
 
 	@Autowired
 	TestRunRepository testRunRepository;
@@ -295,6 +300,54 @@ public class TestRunService {
 		responseWrapper.setId(getTestRunDetailsId);
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponse(testRunDetailsResponseDto);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+
+	public ResponseWrapper<List<TestRunHistoryDto>> getTestRunHistory(String collectionId) {
+		ResponseWrapper<List<TestRunHistoryDto>> responseWrapper = new ResponseWrapper<>();
+		List<TestRunHistoryDto> testRunHistoryList = new ArrayList<>();
+		try {
+			if (Objects.nonNull(collectionId)) {
+				List<TestRunHistoryEntity> entities = testRunRepository.getTestRunHistoryByCollectionId(collectionId,
+						getPartnerId());
+				if (Objects.nonNull(entities) && !entities.isEmpty()) {
+					ObjectMapper mapper = objectMapperConfig.objectMapper();
+					for (TestRunHistoryEntity entity : entities) {
+						TestRunHistoryDto testRunHistory = mapper.convertValue(entity, TestRunHistoryDto.class);
+						testRunHistoryList.add(testRunHistory);
+					}
+				} else {
+					List<ServiceError> serviceErrorsList = new ArrayList<>();
+					ServiceError serviceError = new ServiceError();
+					serviceError.setErrorCode(ToolkitErrorCodes.TESTRUN_DETAILS_NOT_AVAILABLE.getErrorCode());
+					serviceError.setMessage(ToolkitErrorCodes.TESTRUN_DETAILS_NOT_AVAILABLE.getErrorMessage());
+					serviceErrorsList.add(serviceError);
+					responseWrapper.setErrors(serviceErrorsList);
+				}
+			} else {
+				List<ServiceError> serviceErrorsList = new ArrayList<>();
+				ServiceError serviceError = new ServiceError();
+				serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode());
+				serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
+				serviceErrorsList.add(serviceError);
+				responseWrapper.setErrors(serviceErrorsList);
+			}
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In getTestRunHistory method of TestRunService Service - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.TESTRUN_DETAILS_NOT_AVAILABLE.getErrorCode());
+			serviceError.setMessage(
+					ToolkitErrorCodes.TESTRUN_DETAILS_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		}
+		responseWrapper.setId(getTestRunHistoryId);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponse(testRunHistoryList);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
