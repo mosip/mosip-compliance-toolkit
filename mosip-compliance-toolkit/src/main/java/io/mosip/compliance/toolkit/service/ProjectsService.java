@@ -106,6 +106,7 @@ public class ProjectsService {
 						projectDto.setCollectionsCount(entity.getCollectionsCount());
 						projectDto.setCrDate(entity.getProjectCrDate());
 						projectDto.setLastRunDt(entity.getRunDate());
+						projectDto.setLastRunId(entity.getRunId());
 						projectsList.add(projectDto);
 					});
 				}

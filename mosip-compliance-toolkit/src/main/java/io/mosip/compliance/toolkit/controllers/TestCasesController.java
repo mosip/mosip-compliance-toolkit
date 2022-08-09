@@ -30,6 +30,7 @@ import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResponseDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.service.TestCasesService;
+import io.mosip.compliance.toolkit.util.DataValidationUtil;
 import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
@@ -44,6 +45,9 @@ import io.mosip.kernel.core.http.ResponseWrapper;
  */
 @RestController
 public class TestCasesController {
+
+	/** The Constant VALIDATIONS_POST_ID application. */
+	private static final String VALIDATIONS_POST_ID = "validations.post";
 
 	@Value("${mosip.toolkit.api.id.testcase.project.get}")
 	private String getTestCasesId;
@@ -92,6 +96,8 @@ public class TestCasesController {
 	@PostMapping(value = "/validateResponse")
 	public ResponseWrapper<ValidationResponseDto> validateResponse(
 			@RequestBody @Valid RequestWrapper<ValidationInputDto> input, Errors errors) throws Exception {
+		requestValidator.validateId(VALIDATIONS_POST_ID, input.getId(), errors);
+		DataValidationUtil.validate(errors, VALIDATIONS_POST_ID);
 		return service.performValidations(input.getRequest());
 	}
 

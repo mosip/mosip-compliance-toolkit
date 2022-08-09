@@ -375,8 +375,8 @@ public class TestCasesService {
 			for (TestCaseDto testCaseDto : values) {
 				// Do JSON Schema Validation
 				String jsonValue = objectMapper.writeValueAsString(testCaseDto);
-				if (AppConstants.SUCCESS
-						.equals(this.validateJsonWithSchema(jsonValue, testCaseSchemaJson).getStatus())) {
+				ValidationResultDto validationResultDto = this.validateJsonWithSchema(jsonValue, testCaseSchemaJson);
+				if (AppConstants.SUCCESS.equals(validationResultDto.getStatus())) {
 					// Get JSON Object
 					// Do Validation on content of JSON
 					if (isValidTestCaseId(testCaseDto)) {
@@ -406,7 +406,8 @@ public class TestCasesService {
 				} else {
 					ToolkitErrorCodes errorCode = null;
 					errorCode = ToolkitErrorCodes.INVALID_TEST_CASE_JSON;
-					throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
+					throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage() + '-'
+							+ testCaseDto.testId + " - " + validationResultDto.getDescription());
 				}
 			}
 			testCaseResponseDto.setTestCases(savedValues);
@@ -434,25 +435,28 @@ public class TestCasesService {
 		ResponseWrapper<ValidationResponseDto> responseWrapper = new ResponseWrapper<>();
 		ValidationResponseDto validationResponseDto = new ValidationResponseDto();
 		List<ValidationResultDto> validationResults = new ArrayList<ValidationResultDto>();
-
 		try {
 			List<ValidatorDefDto> validatorDefs = validationInputDto.getValidatorDefs();
 			// first check all validator definitions
-			checkValidatorDefs(validatorDefs);
 			// now perform validation for all
 			validatorDefs.forEach(v -> {
 				BaseValidator validator = null;
+				ValidationResultDto resultDto = new ValidationResultDto();
 				try {
 					Class<?> className = Class.forName("io.mosip.compliance.toolkit.validators." + v.getName());
 					log.debug("invloking validator: {}", className);
 					validator = (BaseValidator) className.getDeclaredConstructor().newInstance();
+					context.getAutowireCapableBeanFactory().autowireBean(validator);
+					resultDto = validator.validateResponse(validationInputDto);
+					resultDto.setValidatorName(v.getName());
+					resultDto.setValidatorDescription(v.getDescription());
 				} catch (Exception ex) {
-					// handled in checkValidatorDefs();
+					resultDto.setValidatorName(v.getName());
+					resultDto.setValidatorDescription(v.getDescription());
+					resultDto.setStatus(AppConstants.FAILURE);
+					resultDto.setDescription(ToolkitErrorCodes.INVALID_VALIDATOR_DEF.getErrorCode() + " - "
+							+ ToolkitErrorCodes.INVALID_VALIDATOR_DEF.getErrorMessage());
 				}
-				context.getAutowireCapableBeanFactory().autowireBean(validator);
-				ValidationResultDto resultDto = validator.validateResponse(validationInputDto);
-				resultDto.setValidatorName(v.getName());
-				resultDto.setValidatorDescription(v.getDescription());
 				validationResults.add(resultDto);
 			});
 			validationResponseDto.setValidationsList(validationResults);
@@ -560,12 +564,11 @@ public class TestCasesService {
 
 			if (Objects.nonNull(testCaseJson)) {
 				testcase = objectMapper.readValue(testCaseJson, TestCaseDto.class);
-			}else {
+			} else {
 				List<ServiceError> serviceErrorsList = new ArrayList<>();
 				ServiceError serviceError = new ServiceError();
 				serviceError.setErrorCode(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode());
-				serviceError.setMessage(
-						ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
+				serviceError.setMessage(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
 				serviceErrorsList.add(serviceError);
 				responseWrapper.setErrors(serviceErrorsList);
 			}
@@ -576,8 +579,7 @@ public class TestCasesService {
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
 			ServiceError serviceError = new ServiceError();
 			serviceError.setErrorCode(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode());
-			serviceError.setMessage(
-					ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage());
+			serviceError.setMessage(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage());
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		}
