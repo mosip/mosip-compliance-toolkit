@@ -19,8 +19,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.sql.Ref;
 import java.util.ArrayList;
 
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
@@ -37,9 +40,20 @@ public class SbiProjectControllerTest {
     @Mock
     private RequestValidator requestValidator;
 
+    /*
+     * This class tests the initBinder method
+     */
+    @Test
+    public void initBinderTest(){
+        WebDataBinder binder = new WebDataBinder(null);
+        sbiProjectController.initBinder(binder);
+    }
 
+    /*
+     * This class tests the addSbiProject method
+     */
     @Test(expected = Exception.class)
-    public void addSbiProject() throws Exception {
+    public void addSbiProjectTest() throws Exception {
         RequestWrapper<SbiProjectDto> value = new RequestWrapper<>();
         SbiProjectDto sbiProjectDto = new SbiProjectDto();
         value.setRequest(sbiProjectDto);
@@ -48,9 +62,13 @@ public class SbiProjectControllerTest {
         sbiProjectController.addSbiProject(value, null);
     }
 
+    /*
+     * This class tests the getProjectById method
+     */
     @Test
     public void getProjectByIdTest(){
         ResponseWrapper<SbiProjectDto> sbiProjectDtoResponseWrapper = new ResponseWrapper<>();
         Mockito.when(sbiProjectService.getSbiProject(Mockito.anyString())).thenReturn(sbiProjectDtoResponseWrapper);
+        ReflectionTestUtils.invokeMethod(sbiProjectController, "getProjectById", "123");
     }
 }

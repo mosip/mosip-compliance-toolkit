@@ -102,6 +102,9 @@ public class CollectionsServiceTest {
         Assert.assertEquals(mosipUserDto.getMail(), result);
     }
 
+    /*
+     * This method is used to test the getCollectionById method
+     */
     @Test
     public void getCollectionByIdTest(){
         CollectionEntity collectionEntity = new CollectionEntity();
@@ -134,6 +137,9 @@ public class CollectionsServiceTest {
 
     }
 
+    /*
+     * This method is used to test the getCollectionById method when collectionEntity is null
+     */
     @Test
     public void getCollectionByIdNullEntityTest(){
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -146,13 +152,19 @@ public class CollectionsServiceTest {
         Assert.assertNull(result.getResponse());
     }
 
+    /*
+     * This method is used to test the getCollectionById method in case of Exception
+     */
     @Test
     public void getCollectionByIdTestException(){
         collectionsService.getCollectionById(id);
     }
 
+    /*
+     * This method is used to test the getTestcasesForCollection method
+     */
     @Test
-    public void getTestcasesForCollectionTestcaseNullTest(){
+    public void getTestcasesForCollectionNullTest(){
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
@@ -163,6 +175,9 @@ public class CollectionsServiceTest {
         Assert.assertNull(result.getResponse());
     }
 
+    /*
+     * This method is used to test the getTestcasesForCollection method
+     */
     @Test
     public void getTestcasesForCollectionTest(){
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -177,11 +192,17 @@ public class CollectionsServiceTest {
         Assert.assertNull(result.getResponse());
     }
 
+    /*
+     * This method is used to test the getTestcasesForCollection method in case of Exception
+     */
     @Test
     public void getTestcasesForCollectionTestException(){
         collectionsService.getTestcasesForCollection(id);
     }
 
+    /*
+     * This method is used to test the getCollections method
+     */
     @Test
     public void getCollectionsTest(){
         String projectType ="others";
@@ -210,12 +231,18 @@ public class CollectionsServiceTest {
         Assert.assertEquals( expected,result.getResponse());
     }
 
+    /*
+     * This method is used to test the getCollectionsTest method in case of Exception
+     */
     @Test
     public void getCollectionsTestException(){
         String projectType ="Sbi";
         collectionsService.getCollections(projectType, id);
     }
 
+    /*
+     * This method is used to test the saveCollection method
+     */
     @Test
     public void saveCollectionTest(){
         CollectionRequestDto requestDto = new CollectionRequestDto();
@@ -244,6 +271,19 @@ public class CollectionsServiceTest {
 //        type = SDK
         collectionDto.setCollectionId("SDK");
         requestDto.setType("SDK");
+        requestDto.setCollection(collectionDto);
+        collectionsService.saveCollection(requestDto);
+    }
+
+    /*
+     * This method is used to test the saveCollection method in case of Exception
+     */
+    @Test
+    public void saveCollectionTestException(){
+        CollectionRequestDto requestDto = new CollectionRequestDto();
+        CollectionDto collectionDto = new CollectionDto();
+        collectionDto.setProjectId("SBI");
+        requestDto.setType("SBI");
         requestDto.setCollection(collectionDto);
         collectionsService.saveCollection(requestDto);
     }
