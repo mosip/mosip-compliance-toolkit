@@ -19,6 +19,7 @@ import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunHistoryDto;
+import io.mosip.compliance.toolkit.dto.testrun.TestRunStatusDto;
 import io.mosip.compliance.toolkit.entity.TestRunDetailsEntity;
 import io.mosip.compliance.toolkit.entity.TestRunEntity;
 import io.mosip.compliance.toolkit.entity.TestRunHistoryEntity;
@@ -49,6 +50,9 @@ public class TestRunService {
 
 	@Value("${mosip.toolkit.api.id.testrun.history.get}")
 	private String getTestRunHistoryId;
+
+	@Value("${mosip.toolkit.api.id.testrun.status.get}")
+	private String getTestRunStatusId;
 
 	@Autowired
 	TestRunRepository testRunRepository;
@@ -348,6 +352,53 @@ public class TestRunService {
 		responseWrapper.setId(getTestRunHistoryId);
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponse(testRunHistoryList);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+
+	public ResponseWrapper<TestRunStatusDto> getTestRunStatus(String runId) {
+		ResponseWrapper<TestRunStatusDto> responseWrapper = new ResponseWrapper<>();
+		TestRunStatusDto testRunStatus = null;
+		try {
+			if (Objects.nonNull(runId) && !runId.isEmpty()) {
+				ToolkitErrorCodes toolkitError = validatePartnerIdByRunId(runId, getPartnerId());
+				if (ToolkitErrorCodes.SUCCESS.equals(toolkitError)) {
+					boolean resultStatus = testRunRepository.getTestRunStatus(runId);
+
+					testRunStatus = new TestRunStatusDto();
+					testRunStatus.setResultStatus(resultStatus);
+				} else {
+					List<ServiceError> serviceErrorsList = new ArrayList<>();
+					ServiceError serviceError = new ServiceError();
+					serviceError.setErrorCode(toolkitError.getErrorCode());
+					serviceError.setMessage(toolkitError.getErrorMessage());
+					serviceErrorsList.add(serviceError);
+					responseWrapper.setErrors(serviceErrorsList);
+				}
+			} else {
+				List<ServiceError> serviceErrorsList = new ArrayList<>();
+				ServiceError serviceError = new ServiceError();
+				serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode());
+				serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
+				serviceErrorsList.add(serviceError);
+				responseWrapper.setErrors(serviceErrorsList);
+			}
+
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In getTestRunStatus method of TestRunService Service - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.TESTRUN_STATUS_NOT_AVAILABLE.getErrorCode());
+			serviceError.setMessage(
+					ToolkitErrorCodes.TESTRUN_STATUS_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		}
+		responseWrapper.setId(getTestRunStatusId);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponse(testRunStatus);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
