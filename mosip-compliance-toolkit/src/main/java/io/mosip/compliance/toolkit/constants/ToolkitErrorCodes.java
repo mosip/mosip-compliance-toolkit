@@ -19,6 +19,7 @@ public enum ToolkitErrorCodes {
 	TESTRUN_UNABLE_TO_UPDATE("TOOLKIT_TESTRUN_003", "Unable to update testrun"),
 	TESTRUN_DETAILS_UNABLE_TO_ADD("TOOLKIT_TESTRUN_004", "Unable to add testrun details"),
 	TESTRUN_DETAILS_NOT_AVAILABLE("TOOLKIT_TESTRUN_005", "No matching TestRunDetails available for the given id"),
+	TESTRUN_STATUS_NOT_AVAILABLE("TOOLKIT_TESTRUN_006", "TestRunStatus not available for the given id"),
 	COLLECTION_UNABLE_TO_ADD("TOOLKIT_COLLECTIONS_002", "Unable to add a Collection"),
 	INVALID_REQUEST_ID("TOOLKIT_REQ_ERR_001", "Request id is invalid"),
 	INVALID_REQUEST_VERSION("TOOLKIT_REQ_ERR_002", "Request version is invalid"),

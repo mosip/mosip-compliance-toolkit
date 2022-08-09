@@ -16,6 +16,7 @@ import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunHistoryDto;
+import io.mosip.compliance.toolkit.dto.testrun.TestRunStatus;
 import io.mosip.compliance.toolkit.service.TestRunService;
 import io.mosip.compliance.toolkit.util.DataValidationUtil;
 import io.mosip.compliance.toolkit.util.RequestValidator;
@@ -71,9 +72,15 @@ public class TestRunController {
 	public ResponseWrapper<TestRunDetailsResponseDto> getTestRunDetails(@PathVariable String runId) {
 		return testRunService.getTestRunDetails(runId);
 	}
-	
+
 	@GetMapping(value = "/getTestRunHistory")
-	public ResponseWrapper<List<TestRunHistoryDto>> getTestRunHistory(@RequestParam(required = true) String collectionId){
+	public ResponseWrapper<List<TestRunHistoryDto>> getTestRunHistory(
+			@RequestParam(required = true) String collectionId) {
 		return testRunService.getTestRunHistory(collectionId);
+	}
+
+	@GetMapping(value = "/getTestRunStatus/{runId}")
+	public ResponseWrapper<TestRunStatus> getTestRunStatus(@PathVariable String runId) {
+		return testRunService.getTestRunStatus(runId);
 	}
 }
