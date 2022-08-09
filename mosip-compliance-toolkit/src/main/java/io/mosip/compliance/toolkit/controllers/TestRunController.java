@@ -1,5 +1,7 @@
 package io.mosip.compliance.toolkit.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,11 +9,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDto;
+import io.mosip.compliance.toolkit.dto.testrun.TestRunHistoryDto;
 import io.mosip.compliance.toolkit.service.TestRunService;
 import io.mosip.compliance.toolkit.util.DataValidationUtil;
 import io.mosip.compliance.toolkit.util.RequestValidator;
@@ -66,5 +70,10 @@ public class TestRunController {
 	@GetMapping(value = "/getTestRunDetails/{runId}")
 	public ResponseWrapper<TestRunDetailsResponseDto> getTestRunDetails(@PathVariable String runId) {
 		return testRunService.getTestRunDetails(runId);
+	}
+	
+	@GetMapping(value = "/getTestRunHistory")
+	public ResponseWrapper<List<TestRunHistoryDto>> getTestRunHistory(@RequestParam(required = true) String collectionId){
+		return testRunService.getTestRunHistory(collectionId);
 	}
 }
