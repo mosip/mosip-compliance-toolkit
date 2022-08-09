@@ -22,6 +22,4 @@ public class ProjectDto {
 	private LocalDateTime crDate;
 
 	private LocalDateTime lastRunDt;
-
-	private String lastRunStatus;
 }
