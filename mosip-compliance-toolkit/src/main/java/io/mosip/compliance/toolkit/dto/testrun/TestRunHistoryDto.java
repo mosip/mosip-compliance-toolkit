@@ -17,7 +17,7 @@ public class TestRunHistoryDto {
 	
 	private int testCaseCount;
 	
-	private int passCasesCount;
+	private int passCaseCount;
 	
-	private int failCasesCount;
+	private int failCaseCount;
 }
