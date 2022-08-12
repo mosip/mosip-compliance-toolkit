@@ -8,27 +8,22 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.mosip.compliance.toolkit.constants.AppConstants;
-import io.mosip.compliance.toolkit.constants.CertificationTypes;
-import io.mosip.compliance.toolkit.constants.DeviceStatus;
 import io.mosip.compliance.toolkit.constants.MethodName;
-import io.mosip.compliance.toolkit.constants.PartnerTypes;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.util.StringUtil;
 
 @Component
-public class SignatureValidator extends SBIValidator {
+public class ValidDeviceCheckValidator extends SBIValidator {
 
-	@Value("${mosip.service.keymanager.verifyCertificateTrust.url}")
-	private String getKeyManagerVerifyCertificateTrustUrl;
+	@Value("${mosip.service.validation.url}")
+	private String getValidDeviceCheckUrl;
 
 	@Override
 	public ValidationResultDto validateResponse(ValidationInputDto responseDto) {
@@ -38,16 +33,16 @@ public class SignatureValidator extends SBIValidator {
 				if (Objects.nonNull(responseDto.getMethodResponse())) {
 					switch (MethodName.fromCode(responseDto.getMethodName())) {
 					case DEVICE:
-						validationResultDto = validateDiscoverySignature(responseDto);
+						validationResultDto = validateDiscoveryDeviceCheck(responseDto);
 						break;
 					case INFO:
-						validationResultDto = validateDeviceSignature(responseDto);
+						validationResultDto = validateDeviceInfoDeviceCheck(responseDto);
 						break;
 					case CAPTURE:
-						validationResultDto = validateCaptureSignature(responseDto);
+						validationResultDto = validateCaptureDeviceCheck(responseDto);
 						break;
 					case RCAPTURE:
-						validationResultDto = validateRCaptureSignature(responseDto);
+						validationResultDto = validateRCaptureDeviceCheck(responseDto);
 						break;
 					default:
 						validationResultDto.setStatus(AppConstants.FAILURE);
@@ -69,7 +64,7 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateDiscoverySignature(ValidationInputDto responseDto) {
+	private ValidationResultDto validateDiscoveryDeviceCheck(ValidationInputDto responseDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			ArrayNode arrDiscoverResponse = (ArrayNode) objectMapper.readValue(responseDto.getMethodResponse(),
@@ -78,30 +73,20 @@ public class SignatureValidator extends SBIValidator {
 
 			String digitalId = StringUtil
 					.toUtf8String(StringUtil.base64UrlDecode(discoveryInfoNode.get("digitalId").asText()));
-			validationResultDto = validateUnsignedDigitalID(digitalId);
+
+			validationResultDto = validateDeviceCheck(objectMapper.readValue(digitalId, ObjectNode.class),
+					discoveryInfoNode.get("deviceCode").asText(),
+					discoveryInfoNode.get("serviceVersion").asText(),
+					discoveryInfoNode.get("purpose").asText());
 		} catch (Exception e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto
-					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
+			validationResultDto.setDescription(
+					"ValidDeviceCheckValidator failure - " + "with Message - " + e.getLocalizedMessage());
 		}
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateUnsignedDigitalID(String digitalId) throws Exception {
-		ValidationResultDto validationResultDto = new ValidationResultDto();
-		ObjectNode digitalIdDto = objectMapper.readValue(digitalId, ObjectNode.class);
-		if (Objects.isNull(digitalIdDto) || digitalIdDto.get("type").isNull()
-				|| digitalIdDto.get("deviceSubType").isNull()) {
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription("UnsignedDigitalID value is null");
-		} else {
-			validationResultDto.setStatus(AppConstants.SUCCESS);
-			validationResultDto.setDescription("UnsignedDigitalID validation success");
-		}
-		return validationResultDto;
-	}
-
-	private ValidationResultDto validateDeviceSignature(ValidationInputDto responseDto) {
+	private ValidationResultDto validateDeviceInfoDeviceCheck(ValidationInputDto responseDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			ArrayNode arrDeviceInfoResponse = (ArrayNode) objectMapper.readValue(responseDto.getMethodResponse(),
@@ -110,10 +95,10 @@ public class SignatureValidator extends SBIValidator {
 			for (int deviceIndex = 0; deviceIndex < arrDeviceInfoResponse.size(); deviceIndex++) {
 				ObjectNode deviceInfoNode = (ObjectNode) arrDeviceInfoResponse.get(deviceIndex);
 				if (isUnSignedDeviceInfo(deviceInfoNode)) {
-					validationResultDto = validateUnSignedDeviceInfo(deviceInfoNode);
+					validationResultDto.setStatus(AppConstants.FAILURE);
+					validationResultDto.setDescription("Registered Device Failed");
 				} else {
-					validationResultDto = validateSignedDeviceInfoSignature(deviceInfoNode,
-							responseDto.getCertificationType());
+					validationResultDto = validateSignedDeviceInfo(deviceInfoNode);
 				}
 				if (validationResultDto.getStatus().equals(AppConstants.FAILURE))
 					break;
@@ -126,62 +111,34 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateUnSignedDeviceInfo(ObjectNode objectNode) {
-		ValidationResultDto validationResultDto = new ValidationResultDto();
-		try {
-			ObjectNode deviceInfoDto = getUnsignedDeviceInfo(objectNode.get("deviceInfo").asText());
-			DeviceStatus deviceStatus = DeviceStatus.fromCode(deviceInfoDto.get("deviceStatus").asText());
-
-			if (deviceStatus == DeviceStatus.NOT_REGISTERED) {
-				validationResultDto.setStatus(AppConstants.SUCCESS);
-				validationResultDto.setDescription("Device is not registered");
-			} else {
-				validationResultDto.setStatus(AppConstants.FAILURE);
-				validationResultDto.setDescription("Device is registered, so can not be unsigned");
-			}
-		} catch (ToolkitException e) {
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto
-					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
-		} catch (Exception e) {
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto
-					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
-		}
-		return validationResultDto;
-	}
-
-	private ValidationResultDto validateSignedDeviceInfoSignature(ObjectNode objectNode, String certificationType) {
+	private ValidationResultDto validateSignedDeviceInfo(ObjectNode objectNode) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			String deviceInfo = objectNode.get("deviceInfo").asText();
 			List<String> arrJwtInfo = new ArrayList<String>();
 			validationResultDto = validateSignatureValidity(deviceInfo, arrJwtInfo);
 			if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
-				validationResultDto = validateTrustRoot(arrJwtInfo.get(INFO_INDEX_CERTIFICATE),
-						PartnerTypes.DEVICE.toString());
-				if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
-					ObjectNode deviceInfoDto = objectMapper.readValue(arrJwtInfo.get(INFO_INDEX_PAYLOAD),
-							ObjectNode.class);
+				ObjectNode deviceInfoDto = objectMapper.readValue(arrJwtInfo.get(INFO_INDEX_PAYLOAD), ObjectNode.class);
 
-					if (Objects.isNull(deviceInfoDto)) {
-						validationResultDto.setStatus(AppConstants.FAILURE);
-						validationResultDto.setDescription("Device info Decoded value is null");
-					} else {
-						validationResultDto = validateSignedDigitalIdSignature(deviceInfoDto.get("digitalId").asText(),
-								certificationType);
-					}
+				if (Objects.isNull(deviceInfoDto)) {
+					validationResultDto.setStatus(AppConstants.FAILURE);
+					validationResultDto.setDescription("Device info Decoded value is null");
+				} else {
+					validationResultDto = validateSignedDigitalId(deviceInfoDto.get("digitalId").asText(),
+							deviceInfoDto.get("deviceCode").asText(),
+							deviceInfoDto.get("serviceVersion").asText(),
+							deviceInfoDto.get("purpose").asText());
 				}
 			}
 		} catch (Exception e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto
-					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
+			validationResultDto.setDescription(
+					"ValidDeviceCheckValidator failure - " + "with Message - " + e.getLocalizedMessage());
 		}
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateCaptureSignature(ValidationInputDto responseDto) {
+	private ValidationResultDto validateCaptureDeviceCheck(ValidationInputDto responseDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			ObjectNode captureInfoResponse = (ObjectNode) objectMapper.readValue(responseDto.getMethodResponse(),
@@ -199,8 +156,10 @@ public class SignatureValidator extends SBIValidator {
 						ObjectNode biometricDataNode = (ObjectNode) objectMapper.readValue(biometricData,
 								ObjectNode.class);
 
-						validationResultDto = validateSignedDigitalIdSignature(
-								biometricDataNode.get("digitalId").asText(), responseDto.getCertificationType());
+						validationResultDto = validateSignedDigitalId(biometricDataNode.get("digitalId").asText(),
+								biometricDataNode.get("deviceCode").asText(),
+								biometricDataNode.get("deviceServiceVersion").asText(),
+								biometricDataNode.get("purpose").asText());
 					}
 					if (validationResultDto.getStatus().equals(AppConstants.FAILURE))
 						break;
@@ -208,13 +167,13 @@ public class SignatureValidator extends SBIValidator {
 			}
 		} catch (Exception e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto
-					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
+			validationResultDto.setDescription(
+					"ValidDeviceCheckValidator failure - " + "with Message - " + e.getLocalizedMessage());
 		}
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateRCaptureSignature(ValidationInputDto responseDto) {
+	private ValidationResultDto validateRCaptureDeviceCheck(ValidationInputDto responseDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			ObjectNode captureInfoResponse = (ObjectNode) objectMapper.readValue(responseDto.getMethodResponse(),
@@ -232,8 +191,10 @@ public class SignatureValidator extends SBIValidator {
 						ObjectNode biometricDataNode = (ObjectNode) objectMapper.readValue(biometricData,
 								ObjectNode.class);
 
-						validationResultDto = validateSignedDigitalIdSignature(
-								biometricDataNode.get("digitalId").asText(), responseDto.getCertificationType());
+						validationResultDto = validateSignedDigitalId(biometricDataNode.get("digitalId").asText(),
+								biometricDataNode.get("deviceCode").asText(),
+								biometricDataNode.get("deviceServiceVersion").asText(),
+								biometricDataNode.get("purpose").asText());
 					}
 					if (validationResultDto.getStatus().equals(AppConstants.FAILURE))
 						break;
@@ -241,32 +202,23 @@ public class SignatureValidator extends SBIValidator {
 			}
 		} catch (Exception e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto
-					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
+			validationResultDto.setDescription(
+					"ValidDeviceCheckValidator failure - " + "with Message - " + e.getLocalizedMessage());
 		}
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateSignedDigitalIdSignature(String digitalId, String certificationType) {
+	private ValidationResultDto validateSignedDigitalId(String digitalId, String deviceCode,
+			String deviceServiceVersion, String purpose) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
-			CertificationTypes certification = CertificationTypes.fromCode(certificationType);
 			List<String> arrJwtInfo = new ArrayList<String>();
 
-			if (certification == CertificationTypes.L0) {
-				validationResultDto = validateSignatureValidity(digitalId, arrJwtInfo);
-				if (validationResultDto.getStatus().equals(AppConstants.SUCCESS))
-					validationResultDto = validateTrustRoot(arrJwtInfo.get(INFO_INDEX_CERTIFICATE),
-							PartnerTypes.DEVICE.toString());
-			} else if (certification == CertificationTypes.L1) {
-				validationResultDto = validateSignatureValidity(digitalId, arrJwtInfo);
-				if (validationResultDto.getStatus().equals(AppConstants.SUCCESS))
-					validationResultDto = validateTrustRoot(arrJwtInfo.get(INFO_INDEX_CERTIFICATE),
-							PartnerTypes.FTM.toString());
-			}
-		} catch (ToolkitException e) {
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription(e.getLocalizedMessage());
+			validationResultDto = validateSignatureValidity(digitalId, arrJwtInfo);
+			if (validationResultDto.getStatus().equals(AppConstants.SUCCESS))
+				validationResultDto = validateDeviceCheck(
+						objectMapper.readValue(arrJwtInfo.get(INFO_INDEX_PAYLOAD), ObjectNode.class), deviceCode,
+						deviceServiceVersion, purpose);
 		} catch (Exception e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
@@ -274,30 +226,46 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	public ValidationResultDto validateTrustRoot(String certificateData, String partnerType) throws IOException {
+	public ValidationResultDto validateDeviceCheck(ObjectNode digitalIdNode, String deviceCode,
+			String deviceServiceVersion, String purpose) throws IOException {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
+
 		DeviceValidatorDto deviceValidatorDto = new DeviceValidatorDto();
+		DeviceValidatorRequestDto deviceValidatorRequestDto = new DeviceValidatorRequestDto();
+		DeviceValidatorDigitalIdDto digitalId = new DeviceValidatorDigitalIdDto();
+		digitalId.setSerialNo(digitalIdNode.get("serialNo").asText());
+		digitalId.setMake(digitalIdNode.get("make").asText());
+		digitalId.setModel(digitalIdNode.get("model").asText());
+		digitalId.setType(digitalIdNode.get("type").asText());
+		digitalId.setDeviceSubType(digitalIdNode.get("deviceSubType").asText());
+		digitalId.setDp(digitalIdNode.get("deviceProvider").asText());
+		digitalId.setDpId(digitalIdNode.get("deviceProviderId").asText());
+		digitalId.setDateTime(digitalIdNode.get("dateTime").asText());
+
+		// TODO CHECK
+		// need to check how to get deviceCode for Discovery, DeviceInfo, Capture,
+		// RCapture in version 1.0.0 not present
+		deviceValidatorRequestDto.setDeviceCode(deviceCode);
+		deviceValidatorRequestDto.setDeviceServiceVersion(deviceServiceVersion);
+		deviceValidatorRequestDto.setPurpose(purpose);
+		deviceValidatorRequestDto.setDigitalId(digitalId);
+		
+		deviceValidatorDto.setRequest(deviceValidatorRequestDto);
 		deviceValidatorDto.setRequesttime(getCurrentDateAndTimeForAPI());
-		DeviceTrustRequestDto trustRequest = new DeviceTrustRequestDto();
 
-		trustRequest.setCertificateData(getCertificateData(certificateData));
-		trustRequest.setPartnerDomain(partnerType);
-		deviceValidatorDto.setRequest(trustRequest);
-
-		io.restassured.response.Response postResponse = getPostResponse(getKeyManagerVerifyCertificateTrustUrl,
+		io.restassured.response.Response postResponse = getPostResponse(getValidDeviceCheckUrl,
 				deviceValidatorDto);
 
 		try {
 			DeviceValidatorResponseDto deviceValidatorResponseDto = objectMapper
 					.readValue(postResponse.getBody().asString(), DeviceValidatorResponseDto.class);
 
-			if ((deviceValidatorResponseDto.getErrors() != null && deviceValidatorResponseDto.getErrors().size() > 0)
-					|| (deviceValidatorResponseDto.getResponse().getStatus().equals("false"))) {
+			if ((deviceValidatorResponseDto.getErrors() != null && deviceValidatorResponseDto.getErrors().size() > 0)) {
 				validationResultDto.setStatus(AppConstants.FAILURE);
-				validationResultDto.setDescription("Trust Validation Failed");
+				validationResultDto.setDescription("Registered Device Failed");
 			} else {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
-				validationResultDto.setDescription("Trust Validation Success");
+				validationResultDto.setDescription("Registered Device Success");
 			}
 		} catch (Exception e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);

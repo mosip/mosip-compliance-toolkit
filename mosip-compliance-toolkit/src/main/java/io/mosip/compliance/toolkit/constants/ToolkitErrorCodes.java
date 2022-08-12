@@ -44,6 +44,7 @@ public enum ToolkitErrorCodes {
 	GET_TEST_CASE_ERROR("TOOLKIT_REQ_ERR_019", "Get Test Case error"),
 	INVALID_CERTIFICATION_TYPE("TOOLKIT_REQ_ERR_020", "Invalid Certification Type"),
 	INVALID_DEVICE_STATUS("TOOLKIT_REQ_ERR_021", "Invalid Device Status"),
+	INVALID_PARTNER_TYPE("TOOLKIT_REQ_ERR_022", "Invalid Partner Type"),
 
 	INVALID_VALIDATOR_DEF("TOOLKIT_VALIDATION_ERR_001", "Invalid validator definition in testcase."),
 	TESTCASE_VALIDATION_ERR("TOOLKIT_VALIDATION_ERR_002", "Unable to perform validations."),
