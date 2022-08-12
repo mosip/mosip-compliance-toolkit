@@ -1,20 +1,16 @@
 package io.mosip.compliance.toolkit.validators;
 
 import java.io.IOException;
-import java.security.PublicKey;
-import java.security.cert.CertificateExpiredException;
-import java.security.cert.CertificateNotYetValidException;
-import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import org.jose4j.jws.JsonWebSignature;
-import org.jose4j.lang.JoseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -22,25 +18,14 @@ import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.CertificationTypes;
 import io.mosip.compliance.toolkit.constants.DeviceStatus;
 import io.mosip.compliance.toolkit.constants.MethodName;
+import io.mosip.compliance.toolkit.constants.PartnerTypes;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.util.StringUtil;
 
 @Component
-public class SignatureValidator extends ToolkitValidator {
-
-	@Value("${mosip.service.auth.appid}")
-	private String getAuthAppId;
-
-	@Value("${mosip.service.auth.clientid}")
-	private String getAuthClientId;
-
-	@Value("${mosip.service.auth.secretkey}")
-	private String getAuthSecretKey;
-
-	@Value("${mosip.service.authmanager.url}")
-	private String getAuthManagerUrl;
+public class SignatureValidator extends SBIValidator {
 
 	@Value("${mosip.service.keymanager.verifyCertificateTrust.url}")
 	private String getKeyManagerVerifyCertificateTrustUrl;
@@ -53,16 +38,16 @@ public class SignatureValidator extends ToolkitValidator {
 				if (Objects.nonNull(responseDto.getMethodResponse())) {
 					switch (MethodName.fromCode(responseDto.getMethodName())) {
 					case DEVICE:
-						validationResultDto = validateDiscoveryInfo(responseDto);
+						validationResultDto = validateDiscoverySignature(responseDto);
 						break;
 					case INFO:
-						validationResultDto = validateDeviceInfo(responseDto);
+						validationResultDto = validateDeviceSignature(responseDto);
 						break;
 					case CAPTURE:
-						validationResultDto = validateCaptureInfo(responseDto);
+						validationResultDto = validateCaptureSignature(responseDto);
 						break;
 					case RCAPTURE:
-						validationResultDto = validateRCaptureInfo(responseDto);
+						validationResultDto = validateRCaptureSignature(responseDto);
 						break;
 					default:
 						validationResultDto.setStatus(AppConstants.FAILURE);
@@ -84,13 +69,13 @@ public class SignatureValidator extends ToolkitValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateDiscoveryInfo(ValidationInputDto responseDto) {
+	private ValidationResultDto validateDiscoverySignature(ValidationInputDto responseDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			ArrayNode arrDiscoverResponse = (ArrayNode) objectMapper.readValue(responseDto.getMethodResponse(),
 					ArrayNode.class);
 			ObjectNode discoveryInfoNode = (ObjectNode) arrDiscoverResponse.get(0);
-			
+
 			String digitalId = StringUtil
 					.toUtf8String(StringUtil.base64UrlDecode(discoveryInfoNode.get("digitalId").asText()));
 			validationResultDto = validateUnsignedDigitalID(digitalId);
@@ -116,7 +101,7 @@ public class SignatureValidator extends ToolkitValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateDeviceInfo(ValidationInputDto responseDto) {
+	private ValidationResultDto validateDeviceSignature(ValidationInputDto responseDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			ArrayNode arrDeviceInfoResponse = (ArrayNode) objectMapper.readValue(responseDto.getMethodResponse(),
@@ -127,7 +112,8 @@ public class SignatureValidator extends ToolkitValidator {
 				if (isUnSignedDeviceInfo(deviceInfoNode)) {
 					validationResultDto = validateUnSignedDeviceInfo(deviceInfoNode);
 				} else {
-					validationResultDto = validateSignedDeviceInfo(deviceInfoNode);
+					validationResultDto = validateSignedDeviceInfoSignature(deviceInfoNode,
+							responseDto.getCertificationType());
 				}
 				if (validationResultDto.getStatus().equals(AppConstants.FAILURE))
 					break;
@@ -140,28 +126,10 @@ public class SignatureValidator extends ToolkitValidator {
 		return validationResultDto;
 	}
 
-	private boolean isUnSignedDeviceInfo(ObjectNode objectNode) {
-		try {
-			ObjectNode deviceInfoDto = getUnsignedDeviceInfoDto(objectNode.get("deviceInfo").asText());
-			if (!Objects.isNull(deviceInfoDto)) {
-				return true;
-			}
-		} catch (Exception ex) {
-			// ex.printStackTrace();
-		}
-		return false;
-	}
-
-	private ObjectNode getUnsignedDeviceInfoDto(String deviceInfoResponse)
-			throws JsonParseException, JsonMappingException, IOException {
-		String deviceInfo = StringUtil.toUtf8String(StringUtil.base64UrlDecode(deviceInfoResponse));
-		return objectMapper.readValue(deviceInfo, ObjectNode.class);
-	}
-
 	private ValidationResultDto validateUnSignedDeviceInfo(ObjectNode objectNode) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
-			ObjectNode deviceInfoDto = getUnsignedDeviceInfoDto(objectNode.get("deviceInfo").asText());
+			ObjectNode deviceInfoDto = getUnsignedDeviceInfo(objectNode.get("deviceInfo").asText());
 			DeviceStatus deviceStatus = DeviceStatus.fromCode(deviceInfoDto.get("deviceStatus").asText());
 
 			if (deviceStatus == DeviceStatus.NOT_REGISTERED) {
@@ -183,19 +151,26 @@ public class SignatureValidator extends ToolkitValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateSignedDeviceInfo(ObjectNode objectNode) {
+	private ValidationResultDto validateSignedDeviceInfoSignature(ObjectNode objectNode, String certificationType) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
-			validationResultDto = validateSignatureValidity(objectNode.get("deviceInfo").asText());
+			String deviceInfo = objectNode.get("deviceInfo").asText();
+			List<String> arrJwtInfo = new ArrayList<String>();
+			validationResultDto = validateSignatureValidity(deviceInfo, arrJwtInfo);
 			if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
-				ObjectNode deviceInfoDto = objectMapper.readValue(getJWTPayload(objectNode.get("deviceInfo").asText()),
-						ObjectNode.class);
-				if (Objects.isNull(deviceInfoDto)) {
-					validationResultDto.setStatus(AppConstants.FAILURE);
-					validationResultDto.setDescription("Device info Decoded value is null");
-				} else {
-					validationResultDto = validateSignedDigitalID(deviceInfoDto.get("digitalId").asText(),
-							deviceInfoDto.get("certification").asText());
+				validationResultDto = validateTrustRoot(arrJwtInfo.get(INFO_INDEX_CERTIFICATE),
+						PartnerTypes.DEVICE.toString());
+				if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
+					ObjectNode deviceInfoDto = objectMapper.readValue(arrJwtInfo.get(INFO_INDEX_PAYLOAD),
+							ObjectNode.class);
+
+					if (Objects.isNull(deviceInfoDto)) {
+						validationResultDto.setStatus(AppConstants.FAILURE);
+						validationResultDto.setDescription("Device info Decoded value is null");
+					} else {
+						validationResultDto = validateSignedDigitalIdSignature(deviceInfoDto.get("digitalId").asText(),
+								certificationType);
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -206,14 +181,89 @@ public class SignatureValidator extends ToolkitValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateSignedDigitalID(String digitalId, String certification) {
+	private ValidationResultDto validateCaptureSignature(ValidationInputDto responseDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
-			CertificationTypes certificationType = CertificationTypes.fromCode(certification);
-			if (certificationType == CertificationTypes.L0)
-				validationResultDto = validateSignatureValidity(digitalId);
-			else if (certificationType == CertificationTypes.L1)
-				validationResultDto = validateSignatureValidityL1(digitalId);
+			ObjectNode captureInfoResponse = (ObjectNode) objectMapper.readValue(responseDto.getMethodResponse(),
+					ObjectNode.class);
+
+			final JsonNode arrBiometricNodes = captureInfoResponse.get("biometrics");
+			if (arrBiometricNodes.isArray()) {
+				for (final JsonNode biometricNode : arrBiometricNodes) {
+					String dataInfo = biometricNode.get("data").asText();
+					List<String> arrJwtInfo = new ArrayList<String>();
+
+					validationResultDto = validateSignatureValidity(dataInfo, arrJwtInfo);
+					if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
+						String biometricData = arrJwtInfo.get(INFO_INDEX_PAYLOAD);
+						ObjectNode biometricDataNode = (ObjectNode) objectMapper.readValue(biometricData,
+								ObjectNode.class);
+
+						validationResultDto = validateSignedDigitalIdSignature(
+								biometricDataNode.get("digitalId").asText(), responseDto.getCertificationType());
+					}
+					if (validationResultDto.getStatus().equals(AppConstants.FAILURE))
+						break;
+				}
+			}
+		} catch (Exception e) {
+			validationResultDto.setStatus(AppConstants.FAILURE);
+			validationResultDto
+					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
+		}
+		return validationResultDto;
+	}
+
+	private ValidationResultDto validateRCaptureSignature(ValidationInputDto responseDto) {
+		ValidationResultDto validationResultDto = new ValidationResultDto();
+		try {
+			ObjectNode captureInfoResponse = (ObjectNode) objectMapper.readValue(responseDto.getMethodResponse(),
+					ObjectNode.class);
+
+			final JsonNode arrBiometricNodes = captureInfoResponse.get("biometrics");
+			if (arrBiometricNodes.isArray()) {
+				for (final JsonNode biometricNode : arrBiometricNodes) {
+					String dataInfo = biometricNode.get("data").asText();
+					List<String> arrJwtInfo = new ArrayList<String>();
+
+					validationResultDto = validateSignatureValidity(dataInfo, arrJwtInfo);
+					if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
+						String biometricData = arrJwtInfo.get(INFO_INDEX_PAYLOAD);
+						ObjectNode biometricDataNode = (ObjectNode) objectMapper.readValue(biometricData,
+								ObjectNode.class);
+
+						validationResultDto = validateSignedDigitalIdSignature(
+								biometricDataNode.get("digitalId").asText(), responseDto.getCertificationType());
+					}
+					if (validationResultDto.getStatus().equals(AppConstants.FAILURE))
+						break;
+				}
+			}
+		} catch (Exception e) {
+			validationResultDto.setStatus(AppConstants.FAILURE);
+			validationResultDto
+					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
+		}
+		return validationResultDto;
+	}
+
+	private ValidationResultDto validateSignedDigitalIdSignature(String digitalId, String certificationType) {
+		ValidationResultDto validationResultDto = new ValidationResultDto();
+		try {
+			CertificationTypes certification = CertificationTypes.fromCode(certificationType);
+			List<String> arrJwtInfo = new ArrayList<String>();
+
+			if (certification == CertificationTypes.L0) {
+				validationResultDto = validateSignatureValidity(digitalId, arrJwtInfo);
+				if (validationResultDto.getStatus().equals(AppConstants.SUCCESS))
+					validationResultDto = validateTrustRoot(arrJwtInfo.get(INFO_INDEX_CERTIFICATE),
+							PartnerTypes.DEVICE.toString());
+			} else if (certification == CertificationTypes.L1) {
+				validationResultDto = validateSignatureValidity(digitalId, arrJwtInfo);
+				if (validationResultDto.getStatus().equals(AppConstants.SUCCESS))
+					validationResultDto = validateTrustRoot(arrJwtInfo.get(INFO_INDEX_CERTIFICATE),
+							PartnerTypes.FTM.toString());
+			}
 		} catch (ToolkitException e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
@@ -224,92 +274,17 @@ public class SignatureValidator extends ToolkitValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateCaptureInfo(ValidationInputDto responseDto) {
-		ValidationResultDto validationResultDto = new ValidationResultDto();
-		try {
-
-		} catch (Exception e) {
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription(e.getLocalizedMessage());
-		}
-		return validationResultDto;
-	}
-
-	private ValidationResultDto validateRCaptureInfo(ValidationInputDto responseDto) {
-		ValidationResultDto validationResultDto = new ValidationResultDto();
-		try {
-
-		} catch (Exception e) {
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription(e.getLocalizedMessage());
-		}
-		return validationResultDto;
-	}
-
-	private boolean validateMethodName(String methodName) throws Exception {
-		MethodName.fromCode(methodName);
-		return true;
-	}
-
-	private ValidationResultDto validateSignatureValidity(String info) {
-		ValidationResultDto validationResultDto = new ValidationResultDto();
-		try {
-			JsonWebSignature jws = new JsonWebSignature();
-			jws.setCompactSerialization(info);
-			List<X509Certificate> certificateChainHeaderValue = jws.getCertificateChainHeaderValue();
-			X509Certificate certificate = certificateChainHeaderValue.get(0);
-			certificate.checkValidity();
-			PublicKey publicKey = certificate.getPublicKey();
-			jws.setKey(publicKey);
-			jws.getLeafCertificateHeaderValue().checkValidity();
-			validationResultDto.setStatus(AppConstants.SUCCESS);
-			validationResultDto.setDescription("Signature Validation Success");
-		} catch (CertificateExpiredException e) {
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto
-					.setDescription(" CertificateExpiredException - " + "with Message - " + e.getLocalizedMessage());
-		} catch (CertificateNotYetValidException e) {
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription(
-					" CertificateNotYetValidException - " + "with Message - " + e.getLocalizedMessage());
-		} catch (JoseException e) {
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription(" JoseException - " + "with Message - " + e.getLocalizedMessage());
-		}
-		return validationResultDto;
-	}
-
-	private String getJWTPayload(String info) throws JoseException {
-		JsonWebSignature jws = new JsonWebSignature();
-		jws.setCompactSerialization(info);
-		List<X509Certificate> certificateChainHeaderValue = jws.getCertificateChainHeaderValue();
-		X509Certificate certificate = certificateChainHeaderValue.get(0);
-		PublicKey publicKey = certificate.getPublicKey();
-		jws.setKey(publicKey);
-		boolean verified = jws.verifySignature();
-		if (verified) {
-			String payload = jws.getEncodedPayload();
-			return StringUtil.toUtf8String(StringUtil.base64UrlDecode((payload)));
-		}
-		return null;
-	}
-
-	private ValidationResultDto validateSignatureValidityL1(String info) {
-		return validateSignatureValidity(info);
-	}
-
-	public ValidationResultDto trustRootValidation(String certificateData, String certification) throws IOException {
+	public ValidationResultDto validateTrustRoot(String certificateData, String partnerType) throws IOException {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		DeviceValidatorDto deviceValidatorDto = new DeviceValidatorDto();
 		deviceValidatorDto.setRequesttime(getCurrentDateAndTimeForAPI());
 		DeviceTrustRequestDto trustRequest = new DeviceTrustRequestDto();
 
 		trustRequest.setCertificateData(getCertificateData(certificateData));
-		trustRequest.setPartnerDomain(certification);
+		trustRequest.setPartnerDomain(partnerType);
 		deviceValidatorDto.setRequest(trustRequest);
 
-		io.restassured.response.Response postResponse = getPostResponse(getAuthManagerUrl,
-				getKeyManagerVerifyCertificateTrustUrl, getAuthAppId, getAuthClientId, getAuthSecretKey,
+		io.restassured.response.Response postResponse = getPostResponse(getKeyManagerVerifyCertificateTrustUrl,
 				deviceValidatorDto);
 
 		try {
@@ -326,7 +301,8 @@ public class SignatureValidator extends ToolkitValidator {
 			}
 		} catch (Exception e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription("Exception in Trust Validation " + e.getLocalizedMessage());
+			validationResultDto.setDescription(
+					"Exception in Trust root Validation - " + "with Message - " + e.getLocalizedMessage());
 		}
 		return validationResultDto;
 	}

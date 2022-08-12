@@ -51,7 +51,7 @@
 		<lombok.version>1.18.8</lombok.version>
 
 		<squareup.okhttp.version>2.7.5</squareup.okhttp.version>
-		<io.rest-assured.version>4.3.1</io.rest-assured.version>
+		<io.rest-assured.version>4.0.0</io.rest-assured.version>
 		<jose4j.version>0.7.1</jose4j.version>
 
 		<sonar.coverage.exclusions>
@@ -69,6 +69,26 @@
 			<artifactId>rest-assured</artifactId>
 			<version>${io.rest-assured.version}</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.rest-assured/rest-assured-all -->
+		<dependency>
+		    <groupId>io.rest-assured</groupId>
+		    <artifactId>rest-assured-all</artifactId>
+		    <version>${io.rest-assured.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.rest-assured/rest-assured-common -->
+		<dependency>
+		    <groupId>io.rest-assured</groupId>
+		    <artifactId>rest-assured-common</artifactId>
+		    <version>${io.rest-assured.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.rest-assured/json-path -->
+		<dependency>
+		    <groupId>io.rest-assured</groupId>
+		    <artifactId>json-path</artifactId>
+		    <version>${io.rest-assured.version}</version>
+		    <scope>test</scope>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/org.bitbucket.b_c/jose4j -->	
 		<dependency>
 			<groupId>org.bitbucket.b_c</groupId>
