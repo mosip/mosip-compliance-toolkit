@@ -1,10 +1,9 @@
 package io.mosip.compliance.toolkit.controllers;
 
-import io.mosip.compliance.toolkit.dto.CollectionDto;
-import io.mosip.compliance.toolkit.dto.CollectionTestCasesResponseDto;
-import io.mosip.compliance.toolkit.dto.CollectionsResponseDto;
+import io.mosip.compliance.toolkit.dto.*;
 import io.mosip.compliance.toolkit.service.CollectionsService;
 import io.mosip.compliance.toolkit.util.RequestValidator;
+import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +16,8 @@ import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.List;
 
 
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
@@ -61,7 +62,6 @@ public class CollectionsControllerTest {
      */
     @Test
     public void getTestcasesForCollectionTest(){
-        projectType="SBI";
         ResponseWrapper<CollectionTestCasesResponseDto> response = new ResponseWrapper<>();
         Mockito.when(collectionsService.getTestCasesForCollection(id)).thenReturn(response);
         collectionsController.getTestCasesForCollection(id);
@@ -72,7 +72,6 @@ public class CollectionsControllerTest {
      */
     @Test
     public void getCollectionTest(){
-        projectType="SBI";
         ResponseWrapper<CollectionDto> response = new ResponseWrapper<>();
         Mockito.when(collectionsService.getCollectionById(id)).thenReturn(response);
         collectionsController.getCollection(id);
@@ -80,15 +79,25 @@ public class CollectionsControllerTest {
 
 
     /*
-     * This class tests the saveCollection method
+     * This class tests the addCollection method
      */
-//    @Test(expected = Exception.class)
-//    public void saveCollectionTest() throws Exception {
-//        projectType="SBI";
-//        ResponseWrapper<CollectionDto> response = new ResponseWrapper<>();
-//        RequestWrapper<CollectionRequestDto> request = new RequestWrapper<>();
-//        Mockito.when(collectionsService.saveCollection(request.getRequest())).thenReturn(response);
-//        collectionsController.saveCollection(request, null);
-//    }
+    @Test(expected = Exception.class)
+    public void addCollectionTest() throws Exception {
+        ResponseWrapper<CollectionDto> response = new ResponseWrapper<>();
+        RequestWrapper<CollectionRequestDto> request = new RequestWrapper<>();
+        Mockito.when(collectionsService.addCollection(request.getRequest())).thenReturn(response);
+        collectionsController.addCollection(request, null);
+    }
+
+    /*
+     * This class tests the addTestCasesForCollection method
+     */
+    @Test(expected=Exception.class)
+    public void addTestCasesForCollectionTest() throws Exception {
+        RequestWrapper<List<CollectionTestCaseDto>> requestWrapper = new RequestWrapper<>();
+        ResponseWrapper<List<CollectionTestCaseDto>> response= new ResponseWrapper<>();
+        Mockito.when(collectionsService.addTestCasesForCollection(requestWrapper.getRequest())).thenReturn(response);
+        collectionsController.addTestCasesForCollection(requestWrapper, null);
+    }
 
 }

@@ -1,13 +1,10 @@
 package io.mosip.compliance.toolkit.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.mosip.compliance.toolkit.dto.CollectionDto;
-import io.mosip.compliance.toolkit.dto.CollectionRequestDto;
-import io.mosip.compliance.toolkit.dto.CollectionTestCasesResponseDto;
-import io.mosip.compliance.toolkit.dto.CollectionsResponseDto;
+import io.mosip.compliance.toolkit.dto.*;
 import io.mosip.compliance.toolkit.entity.CollectionEntity;
 import io.mosip.compliance.toolkit.entity.CollectionSummaryEntity;
-import io.mosip.compliance.toolkit.repository.CollectionTestCaseRepository;
+import io.mosip.compliance.toolkit.entity.CollectionTestCaseEntity;
 import io.mosip.compliance.toolkit.repository.CollectionTestCaseRepository;
 import io.mosip.compliance.toolkit.repository.CollectionsRepository;
 import io.mosip.compliance.toolkit.repository.CollectionsSummaryRepository;
@@ -103,6 +100,10 @@ public class CollectionsServiceTest {
         Assert.assertEquals(mosipUserDto.getMail(), result);
     }
 
+
+    /*
+     * This class tests the getCollectionById method
+     */
     @Test
     public void getCollectionByIdTest(){
         CollectionEntity collectionEntity = new CollectionEntity();
@@ -135,6 +136,10 @@ public class CollectionsServiceTest {
 
     }
 
+
+    /*
+     * This class tests the getCollectionById method with null entity
+     */
     @Test
     public void getCollectionByIdNullEntityTest(){
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -147,11 +152,19 @@ public class CollectionsServiceTest {
         Assert.assertNull(result.getResponse());
     }
 
+
+    /*
+     * This class tests the getCollectionById method in case of Exception
+     */
     @Test
     public void getCollectionByIdTestException(){
         collectionsService.getCollectionById(id);
     }
 
+
+    /*
+     * This class tests the getTestcasesForCollection method
+     */
     @Test
     public void getTestcasesForCollectionTestcaseNullTest(){
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -164,6 +177,10 @@ public class CollectionsServiceTest {
         Assert.assertNull(result.getResponse());
     }
 
+
+    /*
+     * This class tests the getTestcasesForCollection method
+     */
     @Test
     public void getTestcasesForCollectionTest(){
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -178,11 +195,19 @@ public class CollectionsServiceTest {
         Assert.assertNull(result.getResponse());
     }
 
+
+    /*
+     * This class tests the getTestcasesForCollection method in case of Exception
+     */
     @Test
     public void getTestcasesForCollectionTestException(){
         collectionsService.getTestCasesForCollection(id);
     }
 
+
+    /*
+     * This class tests the getCollections method
+     */
     @Test
     public void getCollectionsTest(){
         String projectType ="others";
@@ -211,43 +236,93 @@ public class CollectionsServiceTest {
         Assert.assertEquals( expected,result.getResponse());
     }
 
+
+    /*
+     * This class tests the getCollections method in case of Exception
+     */
     @Test
     public void getCollectionsTestException(){
         String projectType ="Sbi";
         collectionsService.getCollections(projectType, id);
     }
 
-//    @Test
-//    public void saveCollectionTest(){
-//        CollectionRequestDto requestDto = new CollectionRequestDto();
-//        collectionsService.saveCollection(requestDto);
-//        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-//        MosipUserDto mosipUserDto = getMosipUserDto();
-//        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
-//        Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
-//        SecurityContextHolder.setContext(securityContext);
-////        type = SBI
-//        CollectionDto collectionDto = new CollectionDto();
-//        collectionDto.setProjectId("SBI");
-//        requestDto.setType("SBI");
-//        requestDto.setCollection(collectionDto);
-//
-//        CollectionEntity outputEntity = new CollectionEntity();
-//        Mockito.when(collectionsRepository.save(Mockito.any())).thenReturn(outputEntity);
-//        Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
-//        Mockito.when(mapper.convertValue(outputEntity, CollectionDto.class)).thenReturn(collectionDto);
-//        collectionsService.saveCollection(requestDto);
-////        type = ABIS
-//        collectionDto.setCollectionId("ABIS");
-//        requestDto.setType("ABIS");
-//        requestDto.setCollection(collectionDto);
-//        collectionsService.saveCollection(requestDto);
-////        type = SDK
-//        collectionDto.setCollectionId("SDK");
-//        requestDto.setType("SDK");
-//        requestDto.setCollection(collectionDto);
-//        collectionsService.saveCollection(requestDto);
-//    }
+    /*
+     * This class tests the addCollection method
+     */
+    @Test
+    public void addCollectionTest(){
+        CollectionRequestDto requestDto = new CollectionRequestDto();
+        collectionsService.addCollection(requestDto);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
+        Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        SecurityContextHolder.setContext(securityContext);
+//        type = SBI
+        CollectionDto collectionDto = new CollectionDto();
+        collectionDto.setProjectId("SBI");
+        requestDto.setProjectType("SBI");
+        requestDto.setCollectionName(String.valueOf(collectionDto));
+
+        CollectionEntity outputEntity = new CollectionEntity();
+        Mockito.when(collectionsRepository.save(Mockito.any())).thenReturn(outputEntity);
+        Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
+        Mockito.when(mapper.convertValue(outputEntity, CollectionDto.class)).thenReturn(collectionDto);
+        collectionsService.addCollection(requestDto);
+//        type = ABIS
+        collectionDto.setCollectionId("ABIS");
+        requestDto.setProjectType("ABIS");
+        requestDto.setCollectionName(String.valueOf(collectionDto));
+        collectionsService.addCollection(requestDto);
+//        type = SDK
+        collectionDto.setCollectionId("SDK");
+        requestDto.setProjectType("SDK");
+        requestDto.setCollectionName(String.valueOf(collectionDto));
+        ResponseWrapper<CollectionDto> response = collectionsService.addCollection(requestDto);
+        CollectionDto result = new CollectionDto();
+        Assert.assertEquals(result, response.getResponse());
+    }
+
+    /*
+     * This class tests the addCollection method in case of Exception
+     */
+    @Test
+    public void addCollectionTestException(){
+        CollectionRequestDto requestDto = new CollectionRequestDto();
+        CollectionDto collectionDto = new CollectionDto();
+        collectionDto.setProjectId("SBI");
+        requestDto.setProjectType("SBI");
+        requestDto.setCollectionName(String.valueOf(collectionDto));
+        collectionsService.addCollection(requestDto);
+    }
+
+
+    /*
+     * This class tests the addTestCasesForCollection method
+     */
+    @Test
+    public void addTestCasesForCollectionTest(){
+        List<CollectionTestCaseDto> inputList = new ArrayList<>();
+        ResponseWrapper<List<CollectionTestCaseDto>> response = new ResponseWrapper<>();
+        collectionsService.addTestCasesForCollection(inputList);
+        CollectionTestCaseDto dto = new CollectionTestCaseDto();
+        inputList.add(dto);
+        CollectionTestCaseEntity outputEntity = new CollectionTestCaseEntity();
+        Mockito.when(collectionTestcaseRepository.save(Mockito.any())).thenReturn(outputEntity);
+        response = collectionsService.addTestCasesForCollection(inputList);
+        Assert.assertEquals(inputList, response.getResponse());
+    }
+
+    /*
+     * This class tests the addTestCasesForCollection method in case of Exception
+     */
+    @Test
+    public void addTestCasesForCollectionTestException(){
+        List<CollectionTestCaseDto> inputList = new ArrayList<>();
+        CollectionTestCaseDto dto = new CollectionTestCaseDto();
+        inputList.add(dto);
+        collectionsService.addTestCasesForCollection(inputList);
+    }
 
     /*
      * This method is used to get MosipUserDto in class
