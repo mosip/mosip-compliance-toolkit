@@ -168,15 +168,13 @@ public abstract class SBIValidator extends ToolkitValidator {
 	}
 
 	@Data
-	public class DeviceTrustRequestDto implements Serializable {
-
+	public static class DeviceTrustRequestDto implements Serializable {
 		String certificateData;
 		String partnerDomain;
 	}
 
 	@Data
-	public class DeviceValidatorDto implements Serializable {
-
+	public static class DeviceValidatorDto implements Serializable {
 		String id;
 		Object metadata;
 		Object request;
@@ -185,34 +183,33 @@ public abstract class SBIValidator extends ToolkitValidator {
 	}
 
 	@Data
-	public class DeviceValidatorResponseDto implements Serializable {
+	public static class DeviceValidatorResponseDto implements Serializable {
 		String id;
 		Object metadata;
 		DeviceValidatorResponse response;
 		String responsetime;
 		String version;
 		List<ErrorDto> errors;
-
-		@Data
-		public class ErrorDto {
-			String errorCode;
-			String message;
-		}
 	}
 
 	@Data
-	public class DeviceValidatorResponse implements Serializable {
+	public static class ErrorDto {
+		String errorCode;
+		String message;
+	}
+
+	@Data
+	public static class DeviceValidatorResponse implements Serializable {
 		String status;
 	}
 
 	@Data
-	public class DeviceValidatorRequestDto implements Serializable {
+	public static class DeviceValidatorRequestDto implements Serializable {
 		String deviceCode;
 		String deviceServiceVersion;
 		DeviceValidatorDigitalIdDto digitalId;
 		String purpose;
 		String timeStamp;
-
 	}
 
 	@Data
