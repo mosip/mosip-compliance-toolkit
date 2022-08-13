@@ -50,6 +50,7 @@ import io.mosip.compliance.toolkit.constants.SbiSpecVersions;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.sdk.CheckQualityRequestDto;
 import io.mosip.compliance.toolkit.dto.sdk.RequestDto;
+import io.mosip.compliance.toolkit.dto.testcases.ValidateRequestSchemaDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseResponseDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
@@ -429,6 +430,29 @@ public class TestCasesService {
 		responseWrapper.setResponse(testCaseResponseDto);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
+	}
+
+	public ResponseWrapper<ValidationResultDto> performRequestValidations(ValidateRequestSchemaDto requestDto) {
+		ResponseWrapper<ValidationResultDto> responseWrapper = new ResponseWrapper<>();
+		try {
+			ValidationResultDto resultDto = null;
+			if (requestDto.getTestCaseType().equalsIgnoreCase(AppConstants.SBI)) {
+				String sourceJson = requestDto.getMethodRequest();
+				String testCaseSchemaJson = this.getSchemaJson("schemas/sbi/" + requestDto.getRequestSchema() + ".json");
+				// System.out.println(schemaJson);
+				resultDto = this.validateJsonWithSchema(sourceJson, testCaseSchemaJson);
+				resultDto.setValidatorName("SchemaValidator");
+				resultDto.setValidatorDescription("Validates the method request against the schema.");
+			}
+			responseWrapper.setResponse(resultDto);
+			return responseWrapper;
+		} catch (Exception e) {
+			ValidationResultDto validationResponseDto = new ValidationResultDto();
+			validationResponseDto.setStatus(AppConstants.FAILURE);
+			validationResponseDto.setDescription(e.getLocalizedMessage());
+			responseWrapper.setResponse(validationResponseDto);
+			return responseWrapper;
+		}
 	}
 
 	public ResponseWrapper<ValidationResponseDto> performValidations(ValidationInputDto validationInputDto) {
