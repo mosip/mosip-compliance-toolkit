@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.mosip.compliance.toolkit.config.TestCasesConfig;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
-import io.mosip.compliance.toolkit.dto.testcases.RequestValidateDto;
+import io.mosip.compliance.toolkit.dto.testcases.ValidateRequestSchemaDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseRequestDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseResponseDto;
@@ -75,22 +75,10 @@ public class TestCasesController {
 	}
 
 	@PostMapping(value = "/validateRequest")
-	public ValidationResultDto validateRequest(@RequestBody(required = true) RequestValidateDto requestDto) {
-		try {
-			ValidationResultDto response = null;
-			if (requestDto.getTestCaseType().equalsIgnoreCase(AppConstants.SBI)) {
-				String sourceJson = requestDto.getMethodRequest();
-				String testCaseSchemaJson = service.getSchemaJson("schemas/sbi/" + requestDto.getRequestSchema() + ".json");
-				// System.out.println(schemaJson);
-				response = service.validateJsonWithSchema(sourceJson, testCaseSchemaJson);
-			}
-			return response;
-		} catch (Exception e) {
-			ValidationResultDto validationResponseDto = new ValidationResultDto();
-			validationResponseDto.setStatus(AppConstants.FAILURE);
-			validationResponseDto.setDescription(e.getLocalizedMessage());
-			return validationResponseDto;
-		}
+	public ResponseWrapper<ValidationResultDto> validateRequest(@RequestBody @Valid RequestWrapper<ValidateRequestSchemaDto> input, Errors errors) throws Exception {
+		requestValidator.validateId(VALIDATIONS_POST_ID, input.getId(), errors);
+		DataValidationUtil.validate(errors, VALIDATIONS_POST_ID);
+		return service.performRequestValidations(input.getRequest());
 	}
 
 	@PostMapping(value = "/validateResponse")
