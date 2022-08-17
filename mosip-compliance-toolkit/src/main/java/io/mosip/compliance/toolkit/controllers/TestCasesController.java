@@ -8,7 +8,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,10 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 import io.mosip.compliance.toolkit.config.TestCasesConfig;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
-import io.mosip.compliance.toolkit.dto.testcases.ValidateRequestSchemaDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseRequestDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseResponseDto;
+import io.mosip.compliance.toolkit.dto.testcases.ValidateRequestSchemaDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResponseDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
@@ -34,7 +33,6 @@ import io.mosip.compliance.toolkit.util.DataValidationUtil;
 import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
-import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
 
 /**
@@ -57,9 +55,6 @@ public class TestCasesController {
 
 	@Autowired
 	TestCasesService service;
-
-	@Autowired
-	private ApplicationContext context;
 
 	@Autowired
 	private RequestValidator requestValidator;

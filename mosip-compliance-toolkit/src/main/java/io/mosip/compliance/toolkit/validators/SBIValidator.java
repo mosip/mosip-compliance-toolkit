@@ -38,12 +38,20 @@ import lombok.Data;
 
 public abstract class SBIValidator extends ToolkitValidator {
 
-	public static final int INFO_INDEX_PAYLOAD = 0;
-	public static final int INFO_INDEX_CERTIFICATE = 1;
+	public static final String TRUST_FOR_DIGITAL_ID = "Digital Id";
+	public static final String TRUST_FOR_DEVICE_INFO = "Device Info";
+	public static final String TRUST_FOR_BIOMETRIC_INFO = "Biometric Data";
 
-	public static final String TRUST_FOR_DIGITAL_ID = "DigitalId";
-	public static final String TRUST_FOR_DEVICE_INFO = "DeviceInfo";
-	public static final String TRUST_FOR_BIOMETRIC_INFO = "BiometricInfo";
+	public static final String DIGITAL_ID = "digitalId";
+	public static final String DEVICE_SUB_TYPE = "deviceSubType";
+	public static final String DEVICE_TYPE = "type";
+	public static final String CERTIFICATION_TYPE = "certificationType";
+	public static final String BIOMETRICS = "biometrics";
+	public static final String DATA = "data";
+	public static final String DEVICE_INFO = "deviceInfo";
+	public static final String DEVICE_STATUS = "deviceStatus";
+	private static final String ALG = "alg";
+	private static final String X5C = "x5c";
 
 	@Value("${mosip.service.auth.appid}")
 	protected String getAuthAppId;
@@ -67,7 +75,7 @@ public abstract class SBIValidator extends ToolkitValidator {
 		return true;
 	}
 
-	protected ValidationResultDto validateSignatureValidity(String jwtInfo, List<String> arrJwtInfo) {
+	protected ValidationResultDto checkIfJWTSignatureIsValid(String jwtInfo) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			JsonWebSignature jws = new JsonWebSignature();
@@ -80,22 +88,11 @@ public abstract class SBIValidator extends ToolkitValidator {
 			jws.getLeafCertificateHeaderValue().checkValidity();
 			boolean verified = jws.verifySignature();
 			if (verified) {
-				String payload = jws.getEncodedPayload();
-				arrJwtInfo.add(INFO_INDEX_PAYLOAD, StringUtil.toUtf8String(StringUtil.base64UrlDecode(payload)));
-
-				String encodedHeader = jws.getHeaders().getEncodedHeader();
-				String jsonHeader = StringUtil.toUtf8String(StringUtil.base64UrlDecode(encodedHeader));
-
-				ObjectNode headerNode = (ObjectNode) objectMapper.readValue(jsonHeader, ObjectNode.class);
-
-				String algType = headerNode.get("alg").asText();
-				if (algType.equals(AppConstants.ALGORITHM_TYPE)) {
-					ArrayNode arrCertificates = (ArrayNode) headerNode.get("x5c");
-					arrJwtInfo.add(INFO_INDEX_CERTIFICATE, arrCertificates.get(0).asText());
-				}
-
 				validationResultDto.setStatus(AppConstants.SUCCESS);
-				validationResultDto.setDescription("Signature Validation Success");
+				validationResultDto.setDescription("JWT Signature validation is successful");
+			} else {
+				validationResultDto.setStatus(AppConstants.SUCCESS);
+				validationResultDto.setDescription("JWT Signature validation failed");
 			}
 		} catch (CertificateExpiredException e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
@@ -108,16 +105,35 @@ public abstract class SBIValidator extends ToolkitValidator {
 		} catch (JoseException e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(" JoseException - " + "with Message - " + e.getLocalizedMessage());
-		} catch (IOException e) {
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription(" IOException - " + "with Message - " + e.getLocalizedMessage());
 		}
 		return validationResultDto;
 	}
 
-	protected boolean isUnSignedDeviceInfo(ObjectNode objectNode) {
+	protected String getCertificate(String jwtInfo) throws JoseException, IOException {
+		String certificate = null;
+		JsonWebSignature jws = new JsonWebSignature();
+		jws.setCompactSerialization(jwtInfo);
+		String encodedHeader = jws.getHeaders().getEncodedHeader();
+		String jsonHeader = StringUtil.toUtf8String(StringUtil.base64UrlDecode(encodedHeader));
+		ObjectNode headerNode = (ObjectNode) objectMapper.readValue(jsonHeader, ObjectNode.class);
+		String algType = headerNode.get(ALG).asText();
+		if (algType.equals(AppConstants.RS256_ALGORITHM_TYPE)) {
+			ArrayNode arrCertificates = (ArrayNode) headerNode.get(X5C);
+			certificate = arrCertificates.get(0).asText();
+		}
+		return certificate;
+	}
+
+	protected String getPayload(String jwtInfo) throws JoseException, IOException {
+		JsonWebSignature jws = new JsonWebSignature();
+		jws.setCompactSerialization(jwtInfo);
+		String payload = jws.getEncodedPayload();
+		return StringUtil.toUtf8String(StringUtil.base64UrlDecode(payload));
+	}
+
+	protected boolean isDeviceInfoUnSigned(ObjectNode objectNode) {
 		try {
-			ObjectNode deviceInfo = getUnsignedDeviceInfo(objectNode.get("deviceInfo").asText());
+			ObjectNode deviceInfo = getUnsignedDeviceInfo(objectNode.get(DEVICE_INFO).asText());
 			if (!Objects.isNull(deviceInfo)) {
 				return true;
 			}
@@ -173,12 +189,20 @@ public abstract class SBIValidator extends ToolkitValidator {
 
 	@Data
 	public static class DeviceTrustRequestDto implements Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -4874932813550831900L;
 		String certificateData;
 		String partnerDomain;
 	}
 
 	@Data
 	public static class DeviceValidatorDto implements Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 6604417847897263692L;
 		String id;
 		Object metadata;
 		Object request;
@@ -188,6 +212,10 @@ public abstract class SBIValidator extends ToolkitValidator {
 
 	@Data
 	public static class DeviceValidatorResponseDto implements Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -3533369757932860828L;
 		String id;
 		Object metadata;
 		DeviceValidatorResponse response;
@@ -204,11 +232,19 @@ public abstract class SBIValidator extends ToolkitValidator {
 
 	@Data
 	public static class DeviceValidatorResponse implements Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -2714540550294089151L;
 		String status;
 	}
 
 	@Data
 	public static class DeviceValidatorRequestDto implements Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 6066767653045843567L;
 		String deviceCode;
 		String deviceServiceVersion;
 		DeviceValidatorDigitalIdDto digitalId;
@@ -217,7 +253,11 @@ public abstract class SBIValidator extends ToolkitValidator {
 	}
 
 	@Data
-	public static class DeviceValidatorDigitalIdDto {
+	public static class DeviceValidatorDigitalIdDto implements Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 5438972186954170612L;
 		String dateTime;
 		String deviceSubType;
 		String dp;
