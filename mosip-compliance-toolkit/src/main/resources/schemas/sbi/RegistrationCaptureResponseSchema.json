@@ -181,7 +181,6 @@
 								"purpose": {
 									"type": "string",
 									"enum": [
-										"Auth",
 										"Registration"
 									]
 								},

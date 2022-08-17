@@ -8,8 +8,6 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -112,8 +110,7 @@ public class SignatureValidator extends SBIValidator {
 				if (isUnSignedDeviceInfo(deviceInfoNode)) {
 					validationResultDto = validateUnSignedDeviceInfo(deviceInfoNode);
 				} else {
-					validationResultDto = validateSignedDeviceInfoSignature(deviceInfoNode,
-							responseDto.getCertificationType());
+					validationResultDto = validateSignedDeviceInfoSignature(deviceInfoNode);
 				}
 				if (validationResultDto.getStatus().equals(AppConstants.FAILURE))
 					break;
@@ -151,7 +148,7 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateSignedDeviceInfoSignature(ObjectNode objectNode, String certificationType) {
+	private ValidationResultDto validateSignedDeviceInfoSignature(ObjectNode objectNode) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			String deviceInfo = objectNode.get("deviceInfo").asText();
@@ -159,7 +156,7 @@ public class SignatureValidator extends SBIValidator {
 			validationResultDto = validateSignatureValidity(deviceInfo, arrJwtInfo);
 			if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
 				validationResultDto = validateTrustRoot(arrJwtInfo.get(INFO_INDEX_CERTIFICATE),
-						PartnerTypes.DEVICE.toString());
+						PartnerTypes.DEVICE.toString(), TRUST_FOR_DEVICE_INFO);
 				if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
 					ObjectNode deviceInfoDto = objectMapper.readValue(arrJwtInfo.get(INFO_INDEX_PAYLOAD),
 							ObjectNode.class);
@@ -169,7 +166,7 @@ public class SignatureValidator extends SBIValidator {
 						validationResultDto.setDescription("Device info Decoded value is null");
 					} else {
 						validationResultDto = validateSignedDigitalIdSignature(deviceInfoDto.get("digitalId").asText(),
-								certificationType);
+								deviceInfoDto.get("certification").asText(), TRUST_FOR_DIGITAL_ID);
 					}
 				}
 			}
@@ -195,12 +192,17 @@ public class SignatureValidator extends SBIValidator {
 
 					validationResultDto = validateSignatureValidity(dataInfo, arrJwtInfo);
 					if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
-						String biometricData = arrJwtInfo.get(INFO_INDEX_PAYLOAD);
-						ObjectNode biometricDataNode = (ObjectNode) objectMapper.readValue(biometricData,
-								ObjectNode.class);
+						validationResultDto = validateTrustRoot(arrJwtInfo.get(INFO_INDEX_CERTIFICATE),
+								PartnerTypes.DEVICE.toString(), TRUST_FOR_BIOMETRIC_INFO);
 
-						validationResultDto = validateSignedDigitalIdSignature(
-								biometricDataNode.get("digitalId").asText(), responseDto.getCertificationType());
+						if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
+							String biometricData = arrJwtInfo.get(INFO_INDEX_PAYLOAD);
+							ObjectNode biometricDataNode = (ObjectNode) objectMapper.readValue(biometricData,
+									ObjectNode.class);
+
+							validationResultDto = validateSignedDigitalIdSignature(
+									biometricDataNode.get("digitalId").asText(), responseDto.getCertificationType(), TRUST_FOR_DIGITAL_ID);
+						}
 					}
 					if (validationResultDto.getStatus().equals(AppConstants.FAILURE))
 						break;
@@ -228,12 +230,17 @@ public class SignatureValidator extends SBIValidator {
 
 					validationResultDto = validateSignatureValidity(dataInfo, arrJwtInfo);
 					if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
-						String biometricData = arrJwtInfo.get(INFO_INDEX_PAYLOAD);
-						ObjectNode biometricDataNode = (ObjectNode) objectMapper.readValue(biometricData,
-								ObjectNode.class);
+						validationResultDto = validateTrustRoot(arrJwtInfo.get(INFO_INDEX_CERTIFICATE),
+								PartnerTypes.DEVICE.toString(), TRUST_FOR_BIOMETRIC_INFO);
 
-						validationResultDto = validateSignedDigitalIdSignature(
-								biometricDataNode.get("digitalId").asText(), responseDto.getCertificationType());
+						if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
+							String biometricData = arrJwtInfo.get(INFO_INDEX_PAYLOAD);
+							ObjectNode biometricDataNode = (ObjectNode) objectMapper.readValue(biometricData,
+									ObjectNode.class);
+
+							validationResultDto = validateSignedDigitalIdSignature(
+									biometricDataNode.get("digitalId").asText(), responseDto.getCertificationType(), TRUST_FOR_DIGITAL_ID);
+						}
 					}
 					if (validationResultDto.getStatus().equals(AppConstants.FAILURE))
 						break;
@@ -247,22 +254,21 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateSignedDigitalIdSignature(String digitalId, String certificationType) {
+	private ValidationResultDto validateSignedDigitalIdSignature(String digitalId, String certificationType,
+			String trustFor) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			CertificationTypes certification = CertificationTypes.fromCode(certificationType);
 			List<String> arrJwtInfo = new ArrayList<String>();
-
-			if (certification == CertificationTypes.L0) {
-				validationResultDto = validateSignatureValidity(digitalId, arrJwtInfo);
-				if (validationResultDto.getStatus().equals(AppConstants.SUCCESS))
+			validationResultDto = validateSignatureValidity(digitalId, arrJwtInfo);
+			if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
+				if (certification == CertificationTypes.L0) {
 					validationResultDto = validateTrustRoot(arrJwtInfo.get(INFO_INDEX_CERTIFICATE),
-							PartnerTypes.DEVICE.toString());
-			} else if (certification == CertificationTypes.L1) {
-				validationResultDto = validateSignatureValidity(digitalId, arrJwtInfo);
-				if (validationResultDto.getStatus().equals(AppConstants.SUCCESS))
+							PartnerTypes.DEVICE.toString(), trustFor);
+				} else if (certification == CertificationTypes.L1) {
 					validationResultDto = validateTrustRoot(arrJwtInfo.get(INFO_INDEX_CERTIFICATE),
-							PartnerTypes.FTM.toString());
+							PartnerTypes.FTM.toString(), trustFor);
+				}
 			}
 		} catch (ToolkitException e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
@@ -274,7 +280,8 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	public ValidationResultDto validateTrustRoot(String certificateData, String partnerType) throws IOException {
+	public ValidationResultDto validateTrustRoot(String certificateData, String partnerType, String trustFor)
+			throws IOException {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		DeviceValidatorDto deviceValidatorDto = new DeviceValidatorDto();
 		deviceValidatorDto.setRequesttime(getCurrentDateAndTimeForAPI());
@@ -294,7 +301,8 @@ public class SignatureValidator extends SBIValidator {
 			if ((deviceValidatorResponseDto.getErrors() != null && deviceValidatorResponseDto.getErrors().size() > 0)
 					|| (deviceValidatorResponseDto.getResponse().getStatus().equals("false"))) {
 				validationResultDto.setStatus(AppConstants.FAILURE);
-				validationResultDto.setDescription("Trust Validation Failed");
+				validationResultDto.setDescription("Trust Validation Failed for trustFor [" + trustFor
+						+ "] >> PartnerType[" + partnerType + "] and CertificateData[" + certificateData + "]");
 			} else {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription("Trust Validation Success");
