@@ -41,6 +41,10 @@ public abstract class SBIValidator extends ToolkitValidator {
 	public static final int INFO_INDEX_PAYLOAD = 0;
 	public static final int INFO_INDEX_CERTIFICATE = 1;
 
+	public static final String TRUST_FOR_DIGITAL_ID = "DigitalId";
+	public static final String TRUST_FOR_DEVICE_INFO = "DeviceInfo";
+	public static final String TRUST_FOR_BIOMETRIC_INFO = "BiometricInfo";
+
 	@Value("${mosip.service.auth.appid}")
 	protected String getAuthAppId;
 
