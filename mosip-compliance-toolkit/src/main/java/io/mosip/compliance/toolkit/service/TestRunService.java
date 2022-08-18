@@ -7,6 +7,10 @@ import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -308,13 +312,16 @@ public class TestRunService {
 		return responseWrapper;
 	}
 
-	public ResponseWrapper<List<TestRunHistoryDto>> getTestRunHistory(String collectionId) {
+	public ResponseWrapper<List<TestRunHistoryDto>> getTestRunHistory(String collectionId, int pageNo, int pageSize,
+			String sortField) {
 		ResponseWrapper<List<TestRunHistoryDto>> responseWrapper = new ResponseWrapper<>();
 		List<TestRunHistoryDto> testRunHistoryList = new ArrayList<>();
 		try {
 			if (Objects.nonNull(collectionId)) {
-				List<TestRunHistoryEntity> entities = testRunRepository.getTestRunHistoryByCollectionId(collectionId,
-						getPartnerId());
+				Pageable pageable = Objects.isNull(sortField) ? PageRequest.of(pageNo, pageSize)
+						: PageRequest.of(pageNo, pageSize, Sort.by(sortField));
+				List<TestRunHistoryEntity> entities = testRunRepository.getTestRunHistoryByCollectionId(pageable,
+						collectionId, getPartnerId());
 				if (Objects.nonNull(entities) && !entities.isEmpty()) {
 					ObjectMapper mapper = objectMapperConfig.objectMapper();
 					for (TestRunHistoryEntity entity : entities) {
