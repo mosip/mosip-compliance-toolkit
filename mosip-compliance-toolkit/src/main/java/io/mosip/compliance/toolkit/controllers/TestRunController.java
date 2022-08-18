@@ -75,11 +75,8 @@ public class TestRunController {
 
 	@GetMapping(value = "/getTestRunHistory")
 	public ResponseWrapper<List<TestRunHistoryDto>> getTestRunHistory(
-			@RequestParam(required = true) String collectionId, @RequestParam(defaultValue = "0") int pageNo,
-			@RequestParam(defaultValue = "10") int pageSize) {
-		pageSize = Math.min(pageSize, 100);
-		String sortBy = null;
-		return testRunService.getTestRunHistory(collectionId, pageNo, pageSize, sortBy);
+			@RequestParam(required = true) String collectionId) {
+		return testRunService.getTestRunHistory(collectionId);
 	}
 
 	@GetMapping(value = "/getTestRunStatus/{runId}")
