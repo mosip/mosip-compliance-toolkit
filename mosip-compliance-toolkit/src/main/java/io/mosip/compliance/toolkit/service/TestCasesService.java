@@ -31,7 +31,6 @@ import org.springframework.util.ResourceUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -41,7 +40,6 @@ import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
 
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
-import io.mosip.compliance.toolkit.config.TestCasesConfig;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.DeviceSubTypes;
 import io.mosip.compliance.toolkit.constants.DeviceTypes;
@@ -50,9 +48,9 @@ import io.mosip.compliance.toolkit.constants.SbiSpecVersions;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.sdk.CheckQualityRequestDto;
 import io.mosip.compliance.toolkit.dto.sdk.RequestDto;
-import io.mosip.compliance.toolkit.dto.testcases.ValidateRequestSchemaDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseResponseDto;
+import io.mosip.compliance.toolkit.dto.testcases.ValidateRequestSchemaDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResponseDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
@@ -101,14 +99,12 @@ public class TestCasesService {
 
 	private CbeffUtil cbeffReader = new CbeffImpl();
 
-	// Gson gson = new
-	// GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSz").create();
-
 	Gson gson = new GsonBuilder().create();
 
 	private static Map<String, byte[]> inputFiles = new HashMap<>();
 
 	private static final String VERSION = "1.0";
+
 	private Logger log = LoggerConfiguration.logConfig(ProjectsService.class);
 
 	public ResponseWrapper<List<TestCaseDto>> getSbiTestCases(String specVersion, String purpose, String deviceType,
@@ -117,7 +113,6 @@ public class TestCasesService {
 		List<TestCaseDto> testCases = new ArrayList<>();
 		List<ServiceError> serviceErrorsList = new ArrayList<>();
 		ServiceError serviceError = null;
-
 		try {
 			String testCaseSchemaJson = this.getSchemaJson("schemas/testcase_schema.json");
 			if (isValidSbiTestCase(specVersion, purpose, deviceType, deviceSubType)) {
@@ -178,111 +173,17 @@ public class TestCasesService {
 		Purposes.fromCode(purpose);
 		DeviceTypes.fromCode(deviceType);
 		DeviceSubTypes.fromCode(deviceSubType);
-
 		return true;
 	}
 
 	/**
-	 * Method only for reference.
+	 * Validates JSON against the schema.
 	 * 
-	 * @param testCaseType
-	 * @param testCaseSchemaJson
-	 * @param testCases
+	 * @param sourceJson
+	 * @param schemaJson
 	 * @return
 	 * @throws Exception
 	 */
-	public List<String> generateTestCaseFromConfig(String testCaseType, String testCaseSchemaJson,
-			List<TestCasesConfig.TestCaseConfig> testCases) throws Exception {
-		List<String> testcases = new ArrayList<>();
-		System.out.println("Testcases configured: " + testCases);
-		testCases.forEach(s -> {
-			try {
-				ObjectNode rootNode = objectMapper.createObjectNode();
-				rootNode.put("testCaseType", testCaseType);
-				rootNode.put("testName", s.getName());
-				rootNode.put("testId", s.getId());
-				rootNode.put("testDescription", s.getDescription());
-				rootNode.put("testOrderSequence", s.getTestOrderSequence());
-				rootNode.put("methodName", s.getMethodName());
-				rootNode.put("requestSchema", s.getRequestSchema());
-				rootNode.put("responseSchema", s.getResponseSchema());
-				ArrayNode validatorNode = objectMapper.createArrayNode();
-				List<TestCasesConfig.TestCaseConfig.Validators> validators = s.getValidators();
-				if (validators != null) {
-					validators.forEach(v -> {
-						ObjectNode childNode = objectMapper.createObjectNode();
-						childNode.put("name", v.getName());
-						childNode.put("description", v.getDescription());
-						validatorNode.add(childNode);
-					});
-				}
-				rootNode.set("validatorDefs", validatorNode);
-				if (s.getOtherAttributes() != null && AppConstants.SBI.equalsIgnoreCase(testCaseType)) {
-					TestCasesConfig.TestCaseConfig.OtherAttributes otherAttributesConfig = s.getOtherAttributes();
-					ObjectNode otherAttributesNode = objectMapper.createObjectNode();
-					otherAttributesNode.put("runtimeInput", otherAttributesConfig.getRuntimeInput());
-					ArrayNode purposeNode = objectMapper.createArrayNode();
-					if (otherAttributesConfig.getPurpose() != null) {
-						otherAttributesConfig.getPurpose().forEach(p -> purposeNode.add(p));
-					}
-					otherAttributesNode.set("purpose", purposeNode);
-					ArrayNode biometricTypesNode = objectMapper.createArrayNode();
-					if (otherAttributesConfig.getBiometricTypes() != null) {
-						otherAttributesConfig.getBiometricTypes().forEach(b -> biometricTypesNode.add(b));
-					}
-					otherAttributesNode.set("biometricTypes", biometricTypesNode);
-					ArrayNode deviceSubTypesNode = objectMapper.createArrayNode();
-					if (otherAttributesConfig.getDeviceSubTypes() != null) {
-						otherAttributesConfig.getDeviceSubTypes().forEach(b -> deviceSubTypesNode.add(b));
-					}
-					otherAttributesNode.set("deviceSubTypes", deviceSubTypesNode);
-					ArrayNode segmentsNode = objectMapper.createArrayNode();
-					if (otherAttributesConfig.getSegments() != null) {
-						otherAttributesConfig.getSegments().forEach(b -> segmentsNode.add(b));
-					}
-					otherAttributesNode.set("segments", segmentsNode);
-					ArrayNode exceptionsNode = objectMapper.createArrayNode();
-					if (otherAttributesConfig.getExceptions() != null) {
-						otherAttributesConfig.getExceptions().forEach(b -> exceptionsNode.add(b));
-					}
-					otherAttributesNode.set("exceptions", exceptionsNode);
-					ArrayNode sbiSpecVersionsNode = objectMapper.createArrayNode();
-					if (otherAttributesConfig.getSbiSpecVersions() != null) {
-						otherAttributesConfig.getSbiSpecVersions().forEach(b -> sbiSpecVersionsNode.add(b));
-					}
-					otherAttributesNode.set("sbiSpecVersions", sbiSpecVersionsNode);
-					otherAttributesNode.put("requestedScore", otherAttributesConfig.getRequestedScore());
-					otherAttributesNode.put("bioCount", otherAttributesConfig.getBioCount());
-					otherAttributesNode.put("deviceSubId", otherAttributesConfig.getDeviceSubId());
-					rootNode.set("otherAttributes", otherAttributesNode);
-				}
-				if (s.getOtherAttributes() != null && AppConstants.SDK.equalsIgnoreCase(testCaseType)) {
-					TestCasesConfig.TestCaseConfig.OtherAttributes otherAttributesConfig = s.getOtherAttributes();
-					ObjectNode otherAttributesNode = objectMapper.createObjectNode();
-					ArrayNode modalitiesNode = objectMapper.createArrayNode();
-					if (otherAttributesConfig.getModalities() != null) {
-						otherAttributesConfig.getModalities().forEach(m -> modalitiesNode.add(m));
-					}
-					otherAttributesNode.set("modalities", modalitiesNode);
-					rootNode.set("otherAttributes", otherAttributesNode);
-				}
-				String jsonString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(rootNode);
-				// System.out.println(jsonString);
-				// now validate it against the schema
-				if (AppConstants.SUCCESS
-						.equals(this.validateJsonWithSchema(jsonString, testCaseSchemaJson).getStatus())) {
-					testcases.add(jsonString);
-				}
-			} catch (Exception ex) {
-				System.out.println("exception occured: " + ex.getLocalizedMessage());
-				throw new RuntimeException(ex);
-				// TODO: handle exception
-			}
-		});
-		System.out.println("generated number of testcases: " + testcases.size());
-		return testcases;
-	}
-
 	public ValidationResultDto validateJsonWithSchema(String sourceJson, String schemaJson) throws Exception {
 		// create instance of the ObjectMapper class
 		// ObjectMapper objectMapper = new ObjectMapper();
@@ -318,8 +219,9 @@ public class TestCasesService {
 		}
 	}
 
-	public String generateRequestForSDKTestcase(String methodName, String testcaseId, List<String> modalities)
-			throws Exception {
+	public ResponseWrapper<String> generateRequestForSDKTestcase(String methodName, String testcaseId,
+			List<String> modalities) throws Exception {
+		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
 		try {
 			String requestJson = null;
 
@@ -355,15 +257,21 @@ public class TestCasesService {
 				RequestDto requestDto = new RequestDto();
 				requestDto.setVersion(VERSION);
 				requestDto.setRequest(this.base64Encode(requestJson));
-				return gson.toJson(requestDto);
+				responseWrapper.setResponse(gson.toJson(requestDto));
 			}
-			// TODO
-			// thorw exception;
-			return null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In generateRequestForSDKTestcase method of TestCasesService - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.GENERATE_SDK_REQUEST_ERROR.getErrorCode());
+			serviceError
+					.setMessage(ToolkitErrorCodes.GENERATE_SDK_REQUEST_ERROR.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
 		}
+		return responseWrapper;
 	}
 
 	public ResponseWrapper<TestCaseResponseDto> saveTestCases(List<TestCaseDto> values) throws Exception {
@@ -438,7 +346,8 @@ public class TestCasesService {
 			ValidationResultDto resultDto = null;
 			if (requestDto.getTestCaseType().equalsIgnoreCase(AppConstants.SBI)) {
 				String sourceJson = requestDto.getMethodRequest();
-				String testCaseSchemaJson = this.getSchemaJson("schemas/sbi/" + requestDto.getRequestSchema() + ".json");
+				String testCaseSchemaJson = this
+						.getSchemaJson("schemas/sbi/" + requestDto.getRequestSchema() + ".json");
 				// System.out.println(schemaJson);
 				resultDto = this.validateJsonWithSchema(sourceJson, testCaseSchemaJson);
 				resultDto.setValidatorName("SchemaValidator");
