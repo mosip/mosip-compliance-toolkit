@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.mosip.compliance.toolkit.config.TestCasesConfig;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
@@ -51,9 +50,6 @@ public class TestCasesController {
 	private String getTestCasesId;
 
 	@Autowired
-	private TestCasesConfig testCasesConfig;
-
-	@Autowired
 	TestCasesService service;
 
 	@Autowired
@@ -70,7 +66,8 @@ public class TestCasesController {
 	}
 
 	@PostMapping(value = "/validateRequest")
-	public ResponseWrapper<ValidationResultDto> validateRequest(@RequestBody @Valid RequestWrapper<ValidateRequestSchemaDto> input, Errors errors) throws Exception {
+	public ResponseWrapper<ValidationResultDto> validateRequest(
+			@RequestBody @Valid RequestWrapper<ValidateRequestSchemaDto> input, Errors errors) throws Exception {
 		requestValidator.validateId(VALIDATIONS_POST_ID, input.getId(), errors);
 		DataValidationUtil.validate(errors, VALIDATIONS_POST_ID);
 		return service.performRequestValidations(input.getRequest());
@@ -82,35 +79,6 @@ public class TestCasesController {
 		requestValidator.validateId(VALIDATIONS_POST_ID, input.getId(), errors);
 		DataValidationUtil.validate(errors, VALIDATIONS_POST_ID);
 		return service.performValidations(input.getRequest());
-	}
-
-	@GetMapping(value = "/generateTestCaseFromConfig")
-	public String generateTestCaseFromConfig(@RequestParam(required = true) String type) {
-		try {
-			String testCaseSchemaJson = service.getSchemaJson("schemas/testcase_schema.json");
-			// System.out.println(testCaseSchemaJson);
-			List<TestCasesConfig.TestCaseConfig> testCases = new ArrayList<>();
-			String testcaseType = null;
-			if (AppConstants.SBI.equalsIgnoreCase(type)) {
-				testCases = testCasesConfig.getSbiTestCases();
-				testcaseType = AppConstants.SBI;
-			}
-			if (AppConstants.SDK.equalsIgnoreCase(type)) {
-				testCases = testCasesConfig.getSdkTestCases();
-				testcaseType = AppConstants.SDK;
-			}
-			if (AppConstants.ABIS.equalsIgnoreCase(type)) {
-				testCases = testCasesConfig.getAbisTestCases();
-				testcaseType = AppConstants.ABIS;
-			}
-			if (testCases.size() > 0) {
-				return service.generateTestCaseFromConfig(testcaseType, testCaseSchemaJson, testCases).toString();
-			} else {
-				return "No test cases configured for this type!";
-			}
-		} catch (Exception e) {
-			return e.getLocalizedMessage();
-		}
 	}
 
 	@GetMapping(value = "/getSbiTestCases")
@@ -137,13 +105,10 @@ public class TestCasesController {
 	}
 
 	@GetMapping(value = "/generateRequestForSDK")
-	public String generateRequestForSDK(@RequestParam(required = true) String methodName,
-			@RequestParam(required = true) String testcaseId, @RequestParam(required = true) List<String> modalities) {
-		try {
-			return service.generateRequestForSDKTestcase(methodName, testcaseId, modalities);
-		} catch (Exception e) {
-			return e.getLocalizedMessage();
-		}
+	public ResponseWrapper<String> generateRequestForSDK(@RequestParam(required = true) String methodName,
+			@RequestParam(required = true) String testcaseId, @RequestParam(required = true) List<String> modalities)
+			throws Exception {
+		return service.generateRequestForSDKTestcase(methodName, testcaseId, modalities);
 	}
 
 	@PostMapping(value = "/saveTestCases", produces = "application/json")
@@ -151,9 +116,9 @@ public class TestCasesController {
 			@RequestBody @Valid RequestWrapper<TestCaseRequestDto> testCaseRequestDto) throws Exception {
 		return service.saveTestCases(testCaseRequestDto.getRequest().getTestCases());
 	}
-	
+
 	@GetMapping(value = "/getTestCase/{testId}")
-	public ResponseWrapper<TestCaseDto> getTestCaseById(@PathVariable String testId){
+	public ResponseWrapper<TestCaseDto> getTestCaseById(@PathVariable String testId) {
 		return service.getTestCaseById(testId);
 	}
 }

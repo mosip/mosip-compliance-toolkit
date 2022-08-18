@@ -51,6 +51,7 @@ public enum ToolkitErrorCodes {
 	PARTNERID_VALIDATION_ERR("TOOLKIT_VALIDATION_ERR_003", "Partner Id validation failed"),
 	INVALID_METHOD_NAME("TOOLKIT_VALIDATION_ERR_004", "Invalid MethodName"),
 
+	GENERATE_SDK_REQUEST_ERROR("TOOLKIT_REQ_ERR_023", "Unable to generate request for SDK"),
 	TECHNICAL_ERROR_EXCEPTION("TOOLKIT_REQ_ERR_500", "Technical Error");
 
 	private final String errorCode;

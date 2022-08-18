@@ -95,7 +95,10 @@
 					]
 				},
 				"purpose": {
-					"type": "array",
+					"type": [
+						"array",
+						"null"
+					],
 					"items": {
 						"type": "string",
 						"enum": [
@@ -105,7 +108,10 @@
 					}
 				},
 				"biometricTypes": {
-					"type": "array",
+					"type": [
+						"array",
+						"null"
+					],
 					"items": {
 						"type": "string",
 						"enum": [
@@ -116,7 +122,10 @@
 					}
 				},
 				"deviceSubTypes": {
-					"type": "array",
+					"type": [
+						"array",
+						"null"
+					],
 					"items": {
 						"type": "string",
 						"enum": [
@@ -130,7 +139,10 @@
 					}
 				},
 				"segments": {
-					"type": "array",
+					"type": [
+						"array",
+						"null"
+					],
 					"items": {
 						"type": "string",
 						"enum": [
@@ -151,7 +163,10 @@
 					}
 				},
 				"exceptions": {
-					"type": "array",
+					"type": [
+						"array",
+						"null"
+					],
 					"items": {
 						"type": "string",
 						"enum": [
@@ -190,7 +205,10 @@
 					]
 				},
 				"modalities": {
-					"type": "array",
+					"type": [
+						"array",
+						"null"
+					],
 					"items": [
 						{
 							"type": "string"
@@ -198,7 +216,7 @@
 					]
 				}
 			},
-			"anyOf": [
+			"allOf": [
 				{
 					"if": {
 						"properties": {
@@ -215,7 +233,6 @@
 							"deviceSubTypes",
 							"segments",
 							"exceptions",
-							"sbiSpecVersions",
 							"requestedScore",
 							"bioCount",
 							"deviceSubId"
