@@ -95,10 +95,7 @@
 					]
 				},
 				"purpose": {
-					"type": [
-						"array",
-						"null"
-					],
+					"type": "array",
 					"items": {
 						"type": "string",
 						"enum": [
@@ -108,10 +105,7 @@
 					}
 				},
 				"biometricTypes": {
-					"type": [
-						"array",
-						"null"
-					],
+					"type": "array",
 					"items": {
 						"type": "string",
 						"enum": [
@@ -122,10 +116,7 @@
 					}
 				},
 				"deviceSubTypes": {
-					"type": [
-						"array",
-						"null"
-					],
+					"type": "array",
 					"items": {
 						"type": "string",
 						"enum": [
@@ -139,10 +130,7 @@
 					}
 				},
 				"segments": {
-					"type": [
-						"array",
-						"null"
-					],
+					"type": "array",
 					"items": {
 						"type": "string",
 						"enum": [
@@ -163,10 +151,7 @@
 					}
 				},
 				"exceptions": {
-					"type": [
-						"array",
-						"null"
-					],
+					"type": "array",
 					"items": {
 						"type": "string",
 						"enum": [
@@ -205,91 +190,14 @@
 					]
 				},
 				"modalities": {
-					"type": [
-						"array",
-						"null"
-					],
+					"type": "array",
 					"items": [
 						{
 							"type": "string"
 						}
 					]
 				}
-			},
-			"allOf": [
-				{
-					"if": {
-						"properties": {
-							"testCaseType": {
-								"const": "SBI"
-							}
-						}
-					},
-					"then": {
-						"required": [
-							"runtimeInput",
-							"purpose",
-							"biometricTypes",
-							"deviceSubTypes",
-							"segments",
-							"exceptions",
-							"requestedScore",
-							"bioCount",
-							"deviceSubId"
-						],
-						"properties": {
-							"specVersion": {
-								"enum": [
-									"0.9.5",
-									"1.0.0"
-								]
-							}
-						}
-					}
-				},
-				{
-					"if": {
-						"properties": {
-							"testCaseType": {
-								"const": "SDK"
-							}
-						}
-					},
-					"then": {
-						"required": [
-							"modalities"
-						],
-						"properties": {
-							"specVersion": {
-								"enum": [
-									"0.9.0"
-								]
-							}
-						}
-					}
-				},
-				{
-					"if": {
-						"properties": {
-							"testCaseType": {
-								"const": "ABIS"
-							}
-						}
-					},
-					"then": {
-						"required": [
-							"modalities"
-						],
-						"properties": {
-							"specVersion": {
-								"enum": [
-									"0.9.0"
-								]
-							}
-						}
-					}
-				}
-			]
+			}
 		}
 	},
 	"required": [
@@ -302,5 +210,85 @@
 		"requestSchema",
 		"responseSchema",
 		"validatorDefs"
+	],
+	"allOf": [
+		{
+			"if": {
+				"properties": {
+					"testCaseType": {
+						"const": "SBI"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"otherAttributes": {
+						"required": [
+							"runtimeInput",
+							"purpose",
+							"biometricTypes",
+							"deviceSubTypes",
+							"segments",
+							"exceptions",
+							"requestedScore",
+							"bioCount",
+							"deviceSubId"
+						]
+					},
+					"specVersion": {
+						"enum": [
+							"0.9.5",
+							"1.0.0"
+						]
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"testCaseType": {
+						"const": "SDK"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"otherAttributes": {
+						"required": [
+							"modalities"
+						]
+					},
+					"specVersion": {
+						"enum": [
+							"0.9.0"
+						]
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"testCaseType": {
+						"const": "ABIS"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"otherAttributes": {
+						"required": [
+							"modalities"
+						]
+					},
+					"specVersion": {
+						"enum": [
+							"0.9.0"
+						]
+					}
+				}
+			}
+		}
 	]
 }
