@@ -1,10 +1,5 @@
 package io.mosip.compliance.toolkit.controllers;
 
-import io.mosip.compliance.toolkit.dto.testrun.*;
-import io.mosip.compliance.toolkit.service.TestRunService;
-import io.mosip.compliance.toolkit.util.RequestValidator;
-import io.mosip.kernel.core.http.RequestWrapper;
-import io.mosip.kernel.core.http.ResponseWrapper;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +12,14 @@ import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.List;
+import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
+import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
+import io.mosip.compliance.toolkit.dto.testrun.TestRunDto;
+import io.mosip.compliance.toolkit.dto.testrun.TestRunStatusDto;
+import io.mosip.compliance.toolkit.service.TestRunService;
+import io.mosip.compliance.toolkit.util.RequestValidator;
+import io.mosip.kernel.core.http.RequestWrapper;
+import io.mosip.kernel.core.http.ResponseWrapper;
 
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
 @RunWith(SpringRunner.class)

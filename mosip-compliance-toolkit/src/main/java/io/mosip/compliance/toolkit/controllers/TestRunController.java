@@ -1,7 +1,5 @@
 package io.mosip.compliance.toolkit.controllers;
 
-import java.util.Objects;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,10 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.mosip.compliance.toolkit.dto.TestRunHistoryResponseDto;
+import io.mosip.compliance.toolkit.dto.PageDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDto;
+import io.mosip.compliance.toolkit.dto.testrun.TestRunHistoryDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunStatusDto;
 import io.mosip.compliance.toolkit.service.TestRunService;
 import io.mosip.compliance.toolkit.util.DataValidationUtil;
@@ -74,33 +73,10 @@ public class TestRunController {
 	}
 
 	@GetMapping(value = "/getTestRunHistory")
-	public ResponseWrapper<TestRunHistoryResponseDto> getTestRunHistory(
+	public ResponseWrapper<PageDto<TestRunHistoryDto>> getTestRunHistory(
 			@RequestParam(required = true) String collectionId, @RequestParam(defaultValue = "0") int pageNo,
-			@RequestParam(defaultValue = "10") int pageSize, @RequestParam(required = false) String sort) {
-		if (Objects.nonNull(sort)) {
-			String[] arr = sort.split(",");
-			if (arr.length > 0) {
-				switch (arr[0].toLowerCase()) {
-				case "runid":
-					arr[0] = "id";
-					break;
-				case "lastruntime":
-					arr[0] = "last_run_time";
-					break;
-				case "testcasecount":
-					arr[0] = "testcase_count";
-					break;
-				default:
-					sort = null;
-				}
-				if (Objects.nonNull(sort)) {
-					sort = arr[0] + "," + ((arr.length > 1) ? arr[1] : "");
-				}
-			} else {
-				sort = null;
-			}
-		}
-		return testRunService.getTestRunHistory(collectionId, pageNo, pageSize, sort);
+			@RequestParam(defaultValue = "10") int pageSize) {
+		return testRunService.getTestRunHistory(collectionId, pageNo, pageSize);
 	}
 
 	@GetMapping(value = "/getTestRunStatus/{runId}")

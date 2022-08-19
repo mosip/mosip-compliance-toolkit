@@ -7,10 +7,9 @@ import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
-import io.mosip.compliance.toolkit.dto.PageableData;
-import io.mosip.compliance.toolkit.dto.TestRunHistoryResponseDto;
+import io.mosip.compliance.toolkit.dto.PageDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDto;
@@ -314,36 +312,41 @@ public class TestRunService {
 		return responseWrapper;
 	}
 
-	public ResponseWrapper<TestRunHistoryResponseDto> getTestRunHistory(String collectionId, int pageNo, int pageSize,
-			String sortStr) {
-		ResponseWrapper<TestRunHistoryResponseDto> responseWrapper = new ResponseWrapper<>();
-		TestRunHistoryResponseDto testRunHistoryResponseDto = null;
+	public ResponseWrapper<PageDto<TestRunHistoryDto>> getTestRunHistory(String collectionId, int pageNo,
+			int pageSize) {
+		ResponseWrapper<PageDto<TestRunHistoryDto>> responseWrapper = new ResponseWrapper<>();
+		PageDto<TestRunHistoryDto> pageData = null;
 		try {
 			if (Objects.nonNull(collectionId)) {
-				Sort sort = prepareSortFromString(sortStr);
-				Pageable pageable = Objects.nonNull(sort) ? PageRequest.of(pageNo, pageSize, sort)
-						: PageRequest.of(pageNo, pageSize);
-				Slice<TestRunHistoryEntity> slice = testRunRepository.getTestRunHistoryByCollectionId(pageable,
+				Pageable pageable = PageRequest.of(pageNo, pageSize);
+				Page<TestRunHistoryEntity> page = testRunRepository.getTestRunHistoryByCollectionId(pageable,
 						collectionId, getPartnerId());
-				if (Objects.nonNull(slice) && slice.hasContent()) {
-					testRunHistoryResponseDto = new TestRunHistoryResponseDto();
+				if (Objects.nonNull(page) && page.getTotalPages() > 0) {
 					List<TestRunHistoryDto> testRunHistoryList = new ArrayList<>();
-					ObjectMapper mapper = objectMapperConfig.objectMapper();
-					for (TestRunHistoryEntity entity : slice.getContent()) {
-						TestRunHistoryDto testRunHistory = mapper.convertValue(entity, TestRunHistoryDto.class);
-						testRunHistoryList.add(testRunHistory);
+					if (page.hasContent()) {
+						ObjectMapper mapper = objectMapperConfig.objectMapper();
+						for (TestRunHistoryEntity entity : page.getContent()) {
+							TestRunHistoryDto testRunHistory = mapper.convertValue(entity, TestRunHistoryDto.class);
+							testRunHistoryList.add(testRunHistory);
+						}
+					} else {
+						List<ServiceError> serviceErrorsList = new ArrayList<>();
+						ServiceError serviceError = new ServiceError();
+						serviceError.setErrorCode(ToolkitErrorCodes.PAGE_NOT_FOUND.getErrorCode());
+						serviceError.setMessage(ToolkitErrorCodes.PAGE_NOT_FOUND.getErrorMessage());
+						serviceErrorsList.add(serviceError);
+						responseWrapper.setErrors(serviceErrorsList);
 					}
-					testRunHistoryResponseDto.setTestRunHistory(testRunHistoryList);
-					PageableData pageData = new PageableData();
-					pageData.setPageSize(slice.getSize());
-					pageData.setPageNo(slice.getNumber());
-					pageData.setNumberOfElements(slice.getNumberOfElements());
-					pageData.setHasPrev(slice.hasPrevious());
-					pageData.setHasNext(slice.hasNext());
-					pageData.setFirst(slice.isFirst());
-					pageData.setLast(slice.isLast());
-					pageData.setSort(slice.getSort().toString());
-					testRunHistoryResponseDto.setPageData(pageData);
+					pageData = new PageDto<>();
+					pageData.setPageSize(page.getSize());
+					pageData.setPageNo(page.getNumber());
+					pageData.setCurrentPageElements(page.getNumberOfElements());
+					pageData.setTotalElements(page.getTotalElements());
+					pageData.setTotalPages(page.getTotalPages());
+					pageData.setHasPrev(page.hasPrevious());
+					pageData.setHasNext(page.hasNext());
+					pageData.setSort(page.getSort().toString());
+					pageData.setContent(testRunHistoryList);
 				} else {
 					List<ServiceError> serviceErrorsList = new ArrayList<>();
 					ServiceError serviceError = new ServiceError();
@@ -374,24 +377,9 @@ public class TestRunService {
 		}
 		responseWrapper.setId(getTestRunHistoryId);
 		responseWrapper.setVersion(AppConstants.VERSION);
-		responseWrapper.setResponse(testRunHistoryResponseDto);
+		responseWrapper.setResponse(pageData);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
-	}
-
-	private Sort prepareSortFromString(String input) {
-		Sort sort = null;
-		if (Objects.nonNull(input)) {
-			String[] arr = input.split(",");
-			if (arr.length > 0) {
-				if (arr.length > 1 && arr[1].toLowerCase().equals("asc")) {
-					sort = Sort.by(arr[0]).ascending();
-				} else {
-					sort = Sort.by(arr[0]).descending();
-				}
-			}
-		}
-		return sort;
 	}
 
 	public ResponseWrapper<TestRunStatusDto> getTestRunStatus(String runId) {

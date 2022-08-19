@@ -1,5 +1,7 @@
 package io.mosip.compliance.toolkit.dto;
 
+import java.util.List;
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,22 +9,24 @@ import lombok.Setter;
 @Getter
 @Setter
 @Data
-public class PageableData {
+public class PageDto<T> {
 
 	private int pageNo;
 
 	private int pageSize;
 
-	private int numberOfElements;
+	private int currentPageElements;
 
-	private boolean isFirst;
+	private int totalPages;
 
-	private boolean isLast;
+	private long totalElements;
 
 	private boolean hasNext;
 
 	private boolean hasPrev;
 
 	private String sort;
+
+	private List<T> content;
 
 }

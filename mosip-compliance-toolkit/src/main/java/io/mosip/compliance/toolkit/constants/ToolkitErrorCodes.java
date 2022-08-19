@@ -32,6 +32,7 @@ public enum ToolkitErrorCodes {
 	INVALID_REQUEST_PARAM("TOOLKIT_REQ_ERR_009", "Invalid Request params"),
 	SAVE_TEST_CASE_JSON_ERROR("TOOLKIT_REQ_ERR_010", "Save Test Case Json error"),
 	TESTCASE_NOT_AVAILABLE("TOOLKIT_TESTRUN_005", "No matching Testcase available for the given id"),
+	PAGE_NOT_FOUND("TOOLKIT_PAGE_ERR_001", "Page content not available"),
 
 	SBI_PROJECT_UNABLE_TO_ADD("TOOLKIT_REQ_ERR_011", "SBI Project unable to add"),
 	INVALID_SBI_SPEC_VERSION("TOOLKIT_REQ_ERR_012", "Invalid Sbi Spec Version"),

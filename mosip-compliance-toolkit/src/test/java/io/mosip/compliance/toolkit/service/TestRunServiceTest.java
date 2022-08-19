@@ -1,7 +1,35 @@
 package io.mosip.compliance.toolkit.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestContext;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.context.WebApplicationContext;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.mosip.compliance.toolkit.dto.testrun.*;
+
+import io.mosip.compliance.toolkit.dto.PageDto;
+import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
+import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
+import io.mosip.compliance.toolkit.dto.testrun.TestRunDto;
+import io.mosip.compliance.toolkit.dto.testrun.TestRunHistoryDto;
+import io.mosip.compliance.toolkit.dto.testrun.TestRunStatusDto;
 import io.mosip.compliance.toolkit.entity.TestRunDetailsEntity;
 import io.mosip.compliance.toolkit.entity.TestRunEntity;
 import io.mosip.compliance.toolkit.entity.TestRunHistoryEntity;
@@ -12,25 +40,6 @@ import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.authmanager.authadapter.model.MosipUserDto;
 import io.mosip.kernel.core.http.ResponseWrapper;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestContext;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.context.WebApplicationContext;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
 @RunWith(SpringRunner.class)
@@ -59,7 +68,7 @@ public class TestRunServiceTest {
     private ObjectMapper mapper;
 
     @Mock
-    private TestRunRepository testRunRepository;
+    private TestRunRepository testRunRepository;  
 
     /*
      * This class tests the authUserDetails method
@@ -270,40 +279,45 @@ public class TestRunServiceTest {
     /*
      * This class tests the getTestRunHistory method
      */
-//    @Test
-//    public void getTestRunHistoryTest(){
-//        testRunService.getTestRunHistory(null, 0, 10);
-//        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-//        MosipUserDto mosipUserDto = getMosipUserDto();
-//        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
-//        Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
-//        SecurityContextHolder.setContext(securityContext);
-//        List<TestRunHistoryEntity> testRunHistoryEntityList = new ArrayList<>();
-//        Mockito.when(testRunRepository.getTestRunHistoryByCollectionId(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(testRunHistoryEntityList);
-//        String collectionId = "123";
-//        int pageNo = 0;
-//        int pageSize = 10;
-//        testRunService.getTestRunHistory(collectionId, pageNo, pageSize);
-//
-//        LocalDateTime lastRunTime = LocalDateTime.now();
-//        TestRunHistoryEntity entity = new TestRunHistoryEntity(collectionId, lastRunTime, 1 ,1,1);
-//        testRunHistoryEntityList.add(entity);
-//
-//        Mockito.when(testRunRepository.getTestRunHistoryByCollectionId(Mockito.any(),Mockito.any(), Mockito.any())).thenReturn(testRunHistoryEntityList);
-//        Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
-//        TestRunHistoryDto dto = new TestRunHistoryDto();
-//        Mockito.when(mapper.convertValue(entity, TestRunHistoryDto.class)).thenReturn(dto);
-//        ResponseWrapper<List<TestRunHistoryDto>>  testRunHistoryListResponse= testRunService.getTestRunHistory(collectionId, pageNo, pageSize);
-//        Assert.assertEquals(dto, testRunHistoryListResponse.getResponse().get(0));
-//    }
+    @Test
+    public void getTestRunHistoryTest(){
+        testRunService.getTestRunHistory(null, 0, 10);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
+        Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        SecurityContextHolder.setContext(securityContext);
+   
+        Page<TestRunHistoryEntity> testRunHistoryEntityPage = Page.empty();
+        Mockito.when(testRunRepository.getTestRunHistoryByCollectionId(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(testRunHistoryEntityPage);
+        String collectionId = "123";
+        int pageNo = 0;
+        int pageSize = 10;
+        testRunService.getTestRunHistory(collectionId, pageNo, pageSize);
+
+        LocalDateTime lastRunTime = LocalDateTime.now();
+        
+        List<TestRunHistoryEntity> entityList = new ArrayList<>();
+        TestRunHistoryEntity entity = new TestRunHistoryEntity(collectionId, lastRunTime, 2 , 1, 1);
+        entityList.add(entity);
+
+        Page<TestRunHistoryEntity> pages = new PageImpl<TestRunHistoryEntity>(entityList);
+
+        Mockito.when(testRunRepository.getTestRunHistoryByCollectionId(Mockito.any(),Mockito.any(), Mockito.any())).thenReturn(pages);
+        Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
+        TestRunHistoryDto dto = new TestRunHistoryDto();
+        Mockito.when(mapper.convertValue(entity, TestRunHistoryDto.class)).thenReturn(dto);
+        ResponseWrapper<PageDto<TestRunHistoryDto>>  testRunHistoryResponse= testRunService.getTestRunHistory(collectionId, pageNo, pageSize);
+        Assert.assertEquals(dto, testRunHistoryResponse.getResponse().getContent().get(0));
+    }
 
     /*
      * This class tests the getTestRunHistory method in case of exception
      */
-//    @Test
-//    public void getTestRunHistoryTestException(){
-//        testRunService.getTestRunHistory("123", 0, 10);
-//    }
+    @Test
+    public void getTestRunHistoryTestException(){
+        testRunService.getTestRunHistory("123", 0, 10);
+    }
 
     /*
      * This class tests the getTestRunStatus method
