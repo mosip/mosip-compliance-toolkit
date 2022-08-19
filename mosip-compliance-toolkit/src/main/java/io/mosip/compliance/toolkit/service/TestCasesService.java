@@ -76,6 +76,9 @@ public class TestCasesService {
 	@Value("${mosip.toolkit.api.id.projects.get}")
 	private String getProjectsId;
 
+	@Value("${mosip.toolkit.api.id.sdk.generate.request}")
+	private String generateSdkRequest;
+
 	@Value("${mosip.toolkit.api.id.validations.post}")
 	private String validationsId;
 
@@ -271,6 +274,9 @@ public class TestCasesService {
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		}
+		responseWrapper.setId(generateSdkRequest);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
 
@@ -344,15 +350,18 @@ public class TestCasesService {
 		ResponseWrapper<ValidationResultDto> responseWrapper = new ResponseWrapper<>();
 		try {
 			ValidationResultDto resultDto = null;
+			String sourceJson = requestDto.getMethodRequest();
+			String testCaseSchemaJson = null;
 			if (requestDto.getTestCaseType().equalsIgnoreCase(AppConstants.SBI)) {
-				String sourceJson = requestDto.getMethodRequest();
-				String testCaseSchemaJson = this
-						.getSchemaJson("schemas/sbi/" + requestDto.getRequestSchema() + ".json");
-				// System.out.println(schemaJson);
-				resultDto = this.validateJsonWithSchema(sourceJson, testCaseSchemaJson);
-				resultDto.setValidatorName("SchemaValidator");
-				resultDto.setValidatorDescription("Validates the method request against the schema.");
+				testCaseSchemaJson = this.getSchemaJson("schemas/sbi/" + requestDto.getRequestSchema() + ".json");
 			}
+			if (requestDto.getTestCaseType().equalsIgnoreCase(AppConstants.SDK)) {
+				testCaseSchemaJson = this.getSchemaJson("schemas/sdk/" + requestDto.getRequestSchema() + ".json");
+			}
+			// System.out.println(schemaJson);
+			resultDto = this.validateJsonWithSchema(sourceJson, testCaseSchemaJson);
+			resultDto.setValidatorName("SchemaValidator");
+			resultDto.setValidatorDescription("Validates the method request against the schema.");
 			responseWrapper.setResponse(resultDto);
 			return responseWrapper;
 		} catch (Exception e) {
