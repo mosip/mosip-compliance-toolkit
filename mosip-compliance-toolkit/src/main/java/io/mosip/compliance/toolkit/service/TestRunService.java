@@ -7,6 +7,9 @@ import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
+import io.mosip.compliance.toolkit.dto.PageDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDto;
@@ -308,19 +312,41 @@ public class TestRunService {
 		return responseWrapper;
 	}
 
-	public ResponseWrapper<List<TestRunHistoryDto>> getTestRunHistory(String collectionId) {
-		ResponseWrapper<List<TestRunHistoryDto>> responseWrapper = new ResponseWrapper<>();
-		List<TestRunHistoryDto> testRunHistoryList = new ArrayList<>();
+	public ResponseWrapper<PageDto<TestRunHistoryDto>> getTestRunHistory(String collectionId, int pageNo,
+			int pageSize) {
+		ResponseWrapper<PageDto<TestRunHistoryDto>> responseWrapper = new ResponseWrapper<>();
+		PageDto<TestRunHistoryDto> pageData = null;
 		try {
 			if (Objects.nonNull(collectionId)) {
-				List<TestRunHistoryEntity> entities = testRunRepository.getTestRunHistoryByCollectionId(collectionId,
-						getPartnerId());
-				if (Objects.nonNull(entities) && !entities.isEmpty()) {
-					ObjectMapper mapper = objectMapperConfig.objectMapper();
-					for (TestRunHistoryEntity entity : entities) {
-						TestRunHistoryDto testRunHistory = mapper.convertValue(entity, TestRunHistoryDto.class);
-						testRunHistoryList.add(testRunHistory);
+				Pageable pageable = PageRequest.of(pageNo, pageSize);
+				Page<TestRunHistoryEntity> page = testRunRepository.getTestRunHistoryByCollectionId(pageable,
+						collectionId, getPartnerId());
+				if (Objects.nonNull(page) && page.getTotalPages() > 0) {
+					List<TestRunHistoryDto> testRunHistoryList = new ArrayList<>();
+					if (page.hasContent()) {
+						ObjectMapper mapper = objectMapperConfig.objectMapper();
+						for (TestRunHistoryEntity entity : page.getContent()) {
+							TestRunHistoryDto testRunHistory = mapper.convertValue(entity, TestRunHistoryDto.class);
+							testRunHistoryList.add(testRunHistory);
+						}
+					} else {
+						List<ServiceError> serviceErrorsList = new ArrayList<>();
+						ServiceError serviceError = new ServiceError();
+						serviceError.setErrorCode(ToolkitErrorCodes.PAGE_NOT_FOUND.getErrorCode());
+						serviceError.setMessage(ToolkitErrorCodes.PAGE_NOT_FOUND.getErrorMessage());
+						serviceErrorsList.add(serviceError);
+						responseWrapper.setErrors(serviceErrorsList);
 					}
+					pageData = new PageDto<>();
+					pageData.setPageSize(page.getSize());
+					pageData.setPageNo(page.getNumber());
+					pageData.setCurrentPageElements(page.getNumberOfElements());
+					pageData.setTotalElements(page.getTotalElements());
+					pageData.setTotalPages(page.getTotalPages());
+					pageData.setHasPrev(page.hasPrevious());
+					pageData.setHasNext(page.hasNext());
+					pageData.setSort(page.getSort().toString());
+					pageData.setContent(testRunHistoryList);
 				} else {
 					List<ServiceError> serviceErrorsList = new ArrayList<>();
 					ServiceError serviceError = new ServiceError();
@@ -351,7 +377,7 @@ public class TestRunService {
 		}
 		responseWrapper.setId(getTestRunHistoryId);
 		responseWrapper.setVersion(AppConstants.VERSION);
-		responseWrapper.setResponse(testRunHistoryList);
+		responseWrapper.setResponse(pageData);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
