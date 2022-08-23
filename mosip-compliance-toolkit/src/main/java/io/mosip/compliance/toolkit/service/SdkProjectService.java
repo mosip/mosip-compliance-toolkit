@@ -9,6 +9,7 @@ import io.mosip.compliance.toolkit.dto.SdkProjectDto;
 import io.mosip.compliance.toolkit.entity.SdkProjectEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.SdkProjectRepository;
+import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.exception.ServiceError;
@@ -35,6 +36,9 @@ public class SdkProjectService {
 
     @Autowired
     private SdkProjectRepository sdkProjectRepository;
+
+    @Autowired
+    private ObjectMapperConfig objectMapperConfig;
 
     private Logger log = LoggerConfiguration.logConfig(SdkProjectService.class);
 
@@ -109,8 +113,9 @@ public class SdkProjectService {
                 entity.setCrDate(crDate);
                 entity.setDeleted(false);
 
-                sdkProjectRepository.save(entity);
+                SdkProjectEntity outputEntity = sdkProjectRepository.save(entity);
 
+                sdkProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, SdkProjectDto.class);
                 sdkProjectDto.setId(entity.getId());
                 sdkProjectDto.setPartnerId(entity.getPartnerId());
                 sdkProjectDto.setCrBy(entity.getCrBy());
