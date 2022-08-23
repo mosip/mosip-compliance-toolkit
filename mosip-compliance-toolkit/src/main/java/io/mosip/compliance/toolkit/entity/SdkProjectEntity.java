@@ -42,6 +42,9 @@ public class SdkProjectEntity implements Serializable {
 	
 	@Column(name = "project_type")
 	private String projectType;
+
+	@Column(name = "sdk_version")
+	private String sdkVersion;
 	
 	@Column(name = "url")
 	private String url;

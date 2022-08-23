@@ -2,7 +2,7 @@ package io.mosip.compliance.toolkit.constants;
 
 /**
  * ToolkitErrorCodes Enum for the services errors.
- * 
+ *
  * @author Janardhan B S
  * @since 1.0.0
  */
@@ -46,6 +46,13 @@ public enum ToolkitErrorCodes {
 	INVALID_CERTIFICATION_TYPE("TOOLKIT_REQ_ERR_020", "Invalid Certification Type"),
 	INVALID_DEVICE_STATUS("TOOLKIT_REQ_ERR_021", "Invalid Device Status"),
 	INVALID_PARTNER_TYPE("TOOLKIT_REQ_ERR_022", "Invalid Partner Type"),
+
+	//	SDK
+	INVALID_SDK_SPEC_VERSION_FOR_PROJECT_TYPE("TOOLKIT_REQ_ERR_023", "Invalid Sdk Spec Version for the Project Type"),
+	INVALID_SDK_URL("TOOLKIT_REQ_ERR_024", "Invalid Sdk url"),
+	SDK_PROJECT_NOT_AVAILABLE("TOOLKIT_PROJECTS_025", "No matching SDK project available for the given id"),
+	SDK_PROJECT_UNABLE_TO_ADD("TOOLKIT_REQ_ERR_026", "SDK Project unable to add"),
+	INVALID_SDK_SPEC_VERSION("TOOLKIT_REQ_ERR_027", "Invalid Sdk Spec Version"),
 
 	INVALID_VALIDATOR_DEF("TOOLKIT_VALIDATION_ERR_001", "Invalid validator definition in testcase."),
 	TESTCASE_VALIDATION_ERR("TOOLKIT_VALIDATION_ERR_002", "Unable to perform validations."),
