@@ -16,6 +16,8 @@ public class SdkProjectDto {
 	private String name;
 	
 	private String projectType;
+
+	private String sdkVersion;
 	
 	private String url;
 	
