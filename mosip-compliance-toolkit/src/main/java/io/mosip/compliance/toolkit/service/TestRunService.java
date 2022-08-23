@@ -47,6 +47,7 @@ public class TestRunService {
 	private String putTestRunId;
 
 	@Value("${mosip.toolkit.api.id.testrun.details.post}")
+	
 	private String postTestRunDetailsId;
 
 	@Value("${mosip.toolkit.api.id.testrun.details.get}")

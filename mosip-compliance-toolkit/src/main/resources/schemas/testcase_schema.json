@@ -1,294 +1,294 @@
 {
-    "$schema": "https://json-schema.org/draft/2019-09/schema#",
-    "$id": "http://mosip-compliance-toolkit.com/schemas/testcase_schema.json",
-    "type": "object",
-    "title": "Test Case Schema",
-    "description": "Test Case Schema",
-    "additionalProperties": false,
-    "properties": {
-        "testCaseType": {
-            "type": "string",
-            "enum": [
-                "SBI",
-                "ABIS",
-                "SDK"
-            ]
-        },
-        "testName": {
-            "type": "string"
-        },
-        "testId": {
-            "type": "string"
-        },
-        "specVersion": {
-            "type": "string",
-            "enum": [
-                "0.9.5",
-                "0.9.0",
-                "1.0.0"
-            ]
-        },
-        "testDescription": {
-            "type": "string"
-        },
-        "isNegativeTestcase" : {
-            "type": "boolean"
-        },
-        "methodName": {
-            "type": "string",
-            "enum": [
-                "device",
-                "info",
-                "capture",
-                "rcapture",
-                "stream",
-                "insert",
-                "identify",
-                "delete",
-                "init",
-                "check-quality",
-                "match",
-                "extract-template",
-                "convert-format",
-                "segment"
-            ]
-        },
-        "requestSchema": {
-            "type": [
-                "string",
-                "null"
-            ]
-        },
-        "responseSchema": {
-            "type": [
-                "string",
-                "null"
-            ]
-        },
-        "validatorDefs": {
-            "type": "array",
-            "items": [
-                {
-                    "type": "object",
-                    "properties": {
-                        "name": {
-                            "type": "string"
-                        },
-                        "description": {
-                            "type": "string"
-                        }
-                    },
-                    "required": [
-                        "name",
-                        "description"
-                    ]
-                }
-            ]
-        },
-        "otherAttributes": {
-            "type": "object",
-            "properties": {
-                "runtimeInput": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "purpose": {
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        "enum": [
-                            "Auth",
-                            "Registration"
-                        ]
-                    }
-                },
-                "biometricTypes": {
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        "enum": [
-                            "Finger",
-                            "Iris",
-                            "Face"
-                        ]
-                    }
-                },
-                "deviceSubTypes": {
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        "enum": [
-                            "Slap",
-                            "Single",
-                            "Touchless",
-                            "Single",
-                            "Double",
-                            "Full face"
-                        ]
-                    }
-                },
-                "segments": {
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        "enum": [
-                            "LeftIndex",
-                            "LeftMiddle",
-                            "LeftRing",
-                            "LeftLittle",
-                            "LeftThumb",
-                            "RightIndex",
-                            "RightMiddle",
-                            "RightRing",
-                            "RightLittle",
-                            "RightThumb",
-                            "UNKNOWN",
-                            "Left",
-                            "Right"
-                        ]
-                    }
-                },
-                "exceptions": {
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        "enum": [
-                            "LeftIndex",
-                            "LeftMiddle",
-                            "LeftRing",
-                            "LeftLittle",
-                            "LeftThumb",
-                            "RightIndex",
-                            "RightMiddle",
-                            "RightRing",
-                            "RightLittle",
-                            "RightThumb",
-                            "UNKNOWN",
-                            "Left",
-                            "Right"
-                        ]
-                    }
-                },
-                "requestedScore": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "bioCount": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "deviceSubId": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
-                },
-                "modalities": {
-                    "type": "array",
-                    "items": [
-                        {
-                            "type": "string"
-                        }
-                    ]
-                }
-            }
-        }
-    },
-    "required": [
-        "testCaseType",
-        "testId",
-        "testName",
-        "testDescription",
-        "isNegativeTestcase",
-        "methodName",
-        "requestSchema",
-        "responseSchema",
-        "validatorDefs"
-    ],
-    "allOf": [
-        {
-            "if": {
-                "properties": {
-                    "testCaseType": {
-                        "const": "SBI"
-                    }
-                }
-            },
-            "then": {
-                "properties": {
-                    "otherAttributes": {
-                        "required": [
-                            "runtimeInput",
-                            "purpose",
-                            "biometricTypes",
-                            "deviceSubTypes",
-                            "segments",
-                            "exceptions",
-                            "requestedScore",
-                            "bioCount",
-                            "deviceSubId"
-                        ]
-                    },
-                    "specVersion": {
-                        "enum": [
-                            "0.9.5",
-                            "1.0.0"
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "if": {
-                "properties": {
-                    "testCaseType": {
-                        "const": "SDK"
-                    }
-                }
-            },
-            "then": {
-                "properties": {
-                    "otherAttributes": {
-                        "required": [
-                            "modalities"
-                        ]
-                    },
-                    "specVersion": {
-                        "enum": [
-                            "0.9.0"
-                        ]
-                    }
-                }
-            }
-        },
-        {
-            "if": {
-                "properties": {
-                    "testCaseType": {
-                        "const": "ABIS"
-                    }
-                }
-            },
-            "then": {
-                "properties": {
-                    "otherAttributes": {
-                        "required": [
-                            "modalities"
-                        ]
-                    },
-                    "specVersion": {
-                        "enum": [
-                            "0.9.0"
-                        ]
-                    }
-                }
-            }
-        }
-    ]
+	"$schema": "https://json-schema.org/draft/2019-09/schema#",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/testcase_schema.json",
+	"type": "object",
+	"title": "Test Case Schema",
+	"description": "Test Case Schema",
+	"additionalProperties": false,
+	"properties": {
+		"testCaseType": {
+			"type": "string",
+			"enum": [
+				"SBI",
+				"ABIS",
+				"SDK"
+			]
+		},
+		"testName": {
+			"type": "string"
+		},
+		"testId": {
+			"type": "string"
+		},
+		"specVersion": {
+			"type": "string",
+			"enum": [
+				"0.9.5",
+				"0.9.0",
+				"1.0.0"
+			]
+		},
+		"testDescription": {
+			"type": "string"
+		},
+		"isNegativeTestcase" : {
+			"type": "boolean"
+		},
+		"methodName": {
+			"type": "string",
+			"enum": [
+				"device",
+				"info",
+				"capture",
+				"rcapture",
+				"stream",
+				"insert",
+				"identify",
+				"delete",
+				"init",
+				"check-quality",
+				"match",
+				"extract-template",
+				"convert-format",
+				"segment"
+			]
+		},
+		"requestSchema": {
+			"type": [
+				"string",
+				"null"
+			]
+		},
+		"responseSchema": {
+			"type": [
+				"string",
+				"null"
+			]
+		},
+		"validatorDefs": {
+			"type": "array",
+			"items": [
+				{
+					"type": "object",
+					"properties": {
+						"name": {
+							"type": "string"
+						},
+						"description": {
+							"type": "string"
+						}
+					},
+					"required": [
+						"name",
+						"description"
+					]
+				}
+			]
+		},
+		"otherAttributes": {
+			"type": "object",
+			"properties": {
+				"runtimeInput": {
+					"type": [
+						"string",
+						"null"
+					]
+				},
+				"purpose": {
+					"type": "array",
+					"items": {
+						"type": "string",
+						"enum": [
+							"Auth",
+							"Registration"
+						]
+					}
+				},
+				"biometricTypes": {
+					"type": "array",
+					"items": {
+						"type": "string",
+						"enum": [
+							"Finger",
+							"Iris",
+							"Face"
+						]
+					}
+				},
+				"deviceSubTypes": {
+					"type": "array",
+					"items": {
+						"type": "string",
+						"enum": [
+							"Slap",
+							"Single",
+							"Touchless",
+							"Single",
+							"Double",
+							"Full face"
+						]
+					}
+				},
+				"segments": {
+					"type": "array",
+					"items": {
+						"type": "string",
+						"enum": [
+							"LeftIndex",
+							"LeftMiddle",
+							"LeftRing",
+							"LeftLittle",
+							"LeftThumb",
+							"RightIndex",
+							"RightMiddle",
+							"RightRing",
+							"RightLittle",
+							"RightThumb",
+							"UNKNOWN",
+							"Left",
+							"Right"
+						]
+					}
+				},
+				"exceptions": {
+					"type": "array",
+					"items": {
+						"type": "string",
+						"enum": [
+							"LeftIndex",
+							"LeftMiddle",
+							"LeftRing",
+							"LeftLittle",
+							"LeftThumb",
+							"RightIndex",
+							"RightMiddle",
+							"RightRing",
+							"RightLittle",
+							"RightThumb",
+							"UNKNOWN",
+							"Left",
+							"Right"
+						]
+					}
+				},
+				"requestedScore": {
+					"type": [
+						"string",
+						"null"
+					]
+				},
+				"bioCount": {
+					"type": [
+						"string",
+						"null"
+					]
+				},
+				"deviceSubId": {
+					"type": [
+						"string",
+						"null"
+					]
+				},
+				"modalities": {
+					"type": "array",
+					"items": [
+						{
+							"type": "string"
+						}
+					]
+				}
+			}
+		}
+	},
+	"required": [
+		"testCaseType",
+		"testId",
+		"testName",
+		"testDescription",
+		"isNegativeTestcase",
+		"methodName",
+		"requestSchema",
+		"responseSchema",
+		"validatorDefs"
+	],
+	"allOf": [
+		{
+			"if": {
+				"properties": {
+					"testCaseType": {
+						"const": "SBI"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"otherAttributes": {
+						"required": [
+							"runtimeInput",
+							"purpose",
+							"biometricTypes",
+							"deviceSubTypes",
+							"segments",
+							"exceptions",
+							"requestedScore",
+							"bioCount",
+							"deviceSubId"
+						]
+					},
+					"specVersion": {
+						"enum": [
+							"0.9.5",
+							"1.0.0"
+						]
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"testCaseType": {
+						"const": "SDK"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"otherAttributes": {
+						"required": [
+							"modalities"
+						]
+					},
+					"specVersion": {
+						"enum": [
+							"0.9.0"
+						]
+					}
+				}
+			}
+		},
+		{
+			"if": {
+				"properties": {
+					"testCaseType": {
+						"const": "ABIS"
+					}
+				}
+			},
+			"then": {
+				"properties": {
+					"otherAttributes": {
+						"required": [
+							"modalities"
+						]
+					},
+					"specVersion": {
+						"enum": [
+							"0.9.0"
+						]
+					}
+				}
+			}
+		}
+	]
 }
