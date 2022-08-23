@@ -8,4 +8,5 @@
 \ir ddl/collection_testcase_mapping.sql
 \ir ddl/test_run.sql
 \ir ddl/test_run_details.sql
+\ir ddl/biometric_data
 \ir ddl/fk.sql
