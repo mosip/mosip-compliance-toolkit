@@ -1,0 +1,52 @@
+[
+	{
+		"testCaseType": "SDK",
+		"testName": "Init Test",
+		"testId": "SDK2000",
+		"specVersion": "0.9.0",
+		"testDescription": "Initialise Bio SDK Services",
+		"isNegativeTestcase": false,
+		"methodName": "init",
+		"requestSchema": "InitSDKRequestSchema",
+		"responseSchema": "InitSDKResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response matches the schema"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger",
+				"face",
+				"iris"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Good face quality",
+		"testId": "SDK2001",
+		"testDescription": "Good face quality",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "check-quality",
+		"requestSchema": "CheckQualityRequestSchema",
+		"responseSchema": "CheckQualityResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response matches the schema"
+			},
+			{
+				"name": "QualityCheckValidator",
+				"description": "Validates the quality check"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			]
+		}
+	}
+]
