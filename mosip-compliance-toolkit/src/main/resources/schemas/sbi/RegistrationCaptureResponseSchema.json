@@ -4,7 +4,7 @@
 	"title": "Registration Capture Response Schema",
 	"description": "Registration Capture Response Schema",
 	"type": "object",
-	"additionalProperties": false,	
+	"additionalProperties": false,
 	"properties": {
 		"biometrics": {
 			"type": "array",
@@ -13,7 +13,11 @@
 					"type": "object",
 					"properties": {
 						"specVersion": {
-							"type": "string"
+							"type": "string",
+							"enum": [
+								"0.9.5",
+								"1.0.0"
+							]
 						},
 						"data": {
 							"$ref": "#/definitions/non-empty-string"
@@ -160,22 +164,9 @@
 									]
 								},
 								"bioSubType": {
-									"type": "string",
-									"enum": [
-										"Left IndexFinger",
-										"Left MiddleFinger",
-										"Left RingFinger",
-										"Left LittleFinger",
-										"Left Thumb",
-										"Right IndexFinger",
-										"Right MiddleFinger",
-										"Right RingFinger",
-										"Right LittleFinger",
-										"Right Thumb",
-										"UNKNOWN",
-										"Left",
-										"Right",
-										null
+									"type": [
+										"string",
+										"null"
 									]
 								},
 								"purpose": {
@@ -206,34 +197,154 @@
 								},
 								"requestedScore": {
 									"type": "string",
-                                    "pattern": "^[0-9]+$",
-                                    "minLength": 1, 
-                                    "maxLength": 3
+									"pattern": "^[0-9]+$",
+									"minLength": 1,
+									"maxLength": 3
 								},
 								"qualityScore": {
 									"type": "string",
-                                    "pattern": "^[0-9]+$",
-                                    "minLength": 1, 
-                                    "maxLength": 3
+									"pattern": "^[0-9]+$",
+									"minLength": 1,
+									"maxLength": 3
 								}
 							},
-							"required": [
-								"digitalId",
-								"deviceCode",
-								"deviceServiceVersion",
-								"bioType",
-								"bioSubType",
-								"purpose",
-								"env",
-								"bioValue",
-								"transactionId",
-								"timestamp",
-								"requestedScore",
-								"qualityScore"
+							"allOf": [
+								{
+									"if": {
+										"properties": {
+											"bioType": {
+												"const": "Finger"
+											}
+										}
+									},
+									"then": {
+										"properties": {
+											"bioSubType": {
+												"enum": [
+													"Left IndexFinger",
+													"Left MiddleFinger",
+													"Left RingFinger",
+													"Left LittleFinger",
+													"Left Thumb",
+													"Right IndexFinger",
+													"Right MiddleFinger",
+													"Right RingFinger",
+													"Right LittleFinger",
+													"Right Thumb",
+													"UNKNOWN"
+												]
+											},
+											"digitalIdDecoded": {
+												"properties": {
+													"type": {
+														"const": "Finger"
+													}
+												}
+											}
+										},
+										"required": [
+											"digitalId",
+											"digitalIdDecoded",
+											"deviceCode",
+											"deviceServiceVersion",
+											"bioType",
+											"bioSubType",
+											"purpose",
+											"env",
+											"bioValue",
+											"transactionId",
+											"timestamp",
+											"requestedScore",
+											"qualityScore"
+										]
+									}
+								},
+								{
+									"if": {
+										"properties": {
+											"bioType": {
+												"const": "Iris"
+											}
+										}
+									},
+									"then": {
+										"properties": {
+											"bioSubType": {
+												"enum": [
+													"Left",
+													"Right",
+													"UNKNOWN"
+												]
+											},
+											"digitalIdDecoded": {
+												"properties": {
+													"type": {
+														"const": "Iris"
+													}
+												}
+											}
+										},
+										"required": [
+											"digitalId",
+											"digitalIdDecoded",
+											"deviceCode",
+											"deviceServiceVersion",
+											"bioType",
+											"bioSubType",
+											"purpose",
+											"env",
+											"bioValue",
+											"transactionId",
+											"timestamp",
+											"requestedScore",
+											"qualityScore"
+										]
+									}
+								},
+								{
+									"if": {
+										"properties": {
+											"bioType": {
+												"const": "Face"
+											}
+										}
+									},
+									"then": {
+										"properties": {
+											"bioSubType": {
+												"enum": [
+													"null"
+												]
+											},
+											"digitalIdDecoded": {
+												"properties": {
+													"type": {
+														"const": "Face"
+													}
+												}
+											}
+										},
+										"required": [
+											"digitalId",
+											"digitalIdDecoded",
+											"deviceCode",
+											"deviceServiceVersion",
+											"bioType",
+											"purpose",
+											"env",
+											"bioValue",
+											"transactionId",
+											"timestamp",
+											"requestedScore",
+											"qualityScore"
+										]
+									}
+								}
 							]
 						},
 						"hash": {
-							"$ref": "#/definitions/non-empty-string"
+							"$ref": "#/definitions/non-empty-string",
+							"pattern": "^[A-Z0-9]{64}$"
 						},
 						"error": {
 							"type": "object",
@@ -266,6 +377,7 @@
 					"required": [
 						"specVersion",
 						"data",
+						"dataDecoded",
 						"hash",
 						"error"
 					]

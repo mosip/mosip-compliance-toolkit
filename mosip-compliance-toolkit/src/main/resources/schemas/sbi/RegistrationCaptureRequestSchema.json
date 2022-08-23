@@ -17,7 +17,6 @@
 		"purpose": {
 			"type": "string",
 			"enum": [
-				"Auth",
 				"Registration"
 			]
 		},
@@ -42,134 +41,384 @@
 		},
 		"bio": {
 			"type": "array",
-			"items": [
-				{
-					"type": "object",
-					"properties": {
-						"type": {
-							"type": "string",
-							"enum": [
-								"Finger",
-								"Iris",
-								"Face"
-							]
-						},
-						"count": {
-							"type": "number",
-							"maximum": 4
-						},
-						"bioSubType": {
-							"type": "array"
-						},
-						"exception": {
-							"type": "array"
-						},
-						"requestedScore": {
-							"type": "string",
-							"pattern": "^[0-9]+$",
-                            "minLength": 1, 
-                            "maxLength": 3
-                        },
-						"deviceId": {
-							"$ref": "#/definitions/non-empty-string"
-						},
-						"deviceSubId": {
-							"type": "string",
-							"enum": [
-								"0",
-								"1",
-								"2",
-								"3"
-							]
-						},
-						"previousHash": {
-							"type": "string"
-						}
+			"items": {
+				"type": "object",
+				"properties": {
+					"type": {
+						"type": "string",
+						"enum": [
+							"Finger",
+							"Iris",
+							"Face"
+						]
 					},
-					"definitions": {
-						"non-empty-string": {
-							"type": "string",
-							"minLength": 1
-						}
-					}
-				}
-			],
-			"allOf": [
-				{
-					"if": {
-						"properties": {
-							"type": {
-								"const": "Finger"
-							}
-						}
+					"count": {
+						"type": "number"
 					},
-					"then": {
-						"properties": {
-							"bioSubType": {
-								"type": "array",
-								"enum": [
-									"Left IndexFinger",
-									"Left MiddleFinger",
-									"Left RingFinger",
-									"Left LittleFinger",
-									"Left Thumb",
-									"Right IndexFinger",
-									"Right MiddleFinger",
-									"Right RingFinger",
-									"Right LittleFinger",
-									"Right Thumb",
-									"UNKNOWN"
-								]
-							}
-						}
+					"bioSubType": {
+						"type": "array",
+						"uniqueItems": true
+					},
+					"exception": {
+						"type": "array",
+						"uniqueItems": true
+					},
+					"requestedScore": {
+						"type": "string",
+						"pattern": "^[0-9]+$",
+						"minLength": 1,
+						"maxLength": 3
+					},
+					"deviceId": {
+						"$ref": "#/definitions/non-empty-string"
+					},
+					"deviceSubId": {
+						"type": "string",
+						"enum": [
+							"0",
+							"1",
+							"2",
+							"3"
+						]
+					},
+					"previousHash": {
+						"type": "string"
 					}
 				},
-				{
-					"if": {
-						"properties": {
-							"type": {
-								"const": "Iris"
-							}
-						}
-					},
-					"then": {
-						"properties": {
-							"bioSubType": {
-								"type": "array",
-								"enum": [
-									"Left",
-									"Right",
-									"UNKNOWN"
-								]
-							}
-						}
+				"definitions": {
+					"non-empty-string": {
+						"type": "string",
+						"minLength": 1
 					}
 				},
-				{
-					"if": {
-						"properties": {
-							"type": {
-								"const": "Face"
+				"allOf": [
+					{
+						"if": {
+							"properties": {
+								"type": {
+									"const": "Finger"
+								}
 							}
+						},
+						"then": {
+							"allOf": [
+								{
+									"if": {
+										"properties": {
+											"deviceSubId": {
+												"const": "1"
+											}
+										}
+									},
+									"then": {
+										"properties": {
+											"bioSubType": {
+												"items": {
+													"type": [
+														"string",
+														"null"
+													],
+													"enum": [
+														"Left IndexFinger",
+														"Left MiddleFinger",
+														"Left RingFinger",
+														"Left LittleFinger"
+													]
+												}
+											},
+											"exception": {
+												"items": {
+													"type": [
+														"string",
+														"null"
+													],
+													"enum": [
+														"Left IndexFinger",
+														"Left MiddleFinger",
+														"Left RingFinger",
+														"Left LittleFinger"
+													]
+												}
+											},
+											"count": {
+												"minimum": 1,
+												"maximum": 4
+											}
+										}
+									}
+								},
+								{
+									"if": {
+										"properties": {
+											"deviceSubId": {
+												"const": "2"
+											}
+										}
+									},
+									"then": {
+										"properties": {
+											"bioSubType": {
+												"items": {
+													"type": [
+														"string",
+														"null"
+													],
+													"enum": [
+														"Right IndexFinger",
+														"Right MiddleFinger",
+														"Right RingFinger",
+														"Right LittleFinger"
+													]
+												}
+											},
+											"exception": {
+												"items": {
+													"type": [
+														"string",
+														"null"
+													],
+													"enum": [
+														"Right IndexFinger",
+														"Right MiddleFinger",
+														"Right RingFinger",
+														"Right LittleFinger"
+													]
+												}
+											},
+											"count": {
+												"minimum": 1,
+												"maximum": 4
+											}
+										}
+									}
+								},
+								{
+									"if": {
+										"properties": {
+											"deviceSubId": {
+												"const": "3"
+											}
+										}
+									},
+									"then": {
+										"properties": {
+											"bioSubType": {
+												"items": {
+													"type": [
+														"string",
+														"null"
+													],
+													"enum": [
+														"Right Thumb",
+														"Left Thumb"
+													]
+												}
+											},
+											"exception": {
+												"items": {
+													"type": [
+														"string",
+														"null"
+													],
+													"enum": [
+														"Right Thumb",
+														"Left Thumb"
+													]
+												}
+											},
+											"count": {
+												"minimum": 1,
+												"maximum": 2
+											}
+										}
+									}
+								}
+							]
 						}
 					},
-					"then": {
-						"properties": {
-							"bioSubType": {
-								"type": "array",
-								"enum": [
-									null
-								]
+					{
+						"if": {
+							"properties": {
+								"type": {
+									"const": "Iris"
+								}
+							}
+						},
+						"then": {
+							"allOf": [
+								{
+									"if": {
+										"properties": {
+											"deviceSubId": {
+												"const": "1"
+											}
+										}
+									},
+									"then": {
+										"properties": {
+											"bioSubType": {
+												"items": {
+													"type": [
+														"string",
+														"null"
+													],
+													"enum": [
+														"Left"
+													]
+												}
+											},
+											"exception": {
+												"items": {
+													"type": [
+														"null"
+													]
+												}
+											},
+											"count": {
+												"minimum": 1,
+												"maximum": 1
+											}
+										}
+									}
+								},
+								{
+									"if": {
+										"properties": {
+											"deviceSubId": {
+												"const": "2"
+											}
+										}
+									},
+									"then": {
+										"properties": {
+											"bioSubType": {
+												"items": {
+													"type": [
+														"string",
+														"null"
+													],
+													"enum": [
+														"Right"
+													]
+												}
+											},
+											"exception": {
+												"items": {
+													"type": [
+														"null"
+													]
+												}
+											},
+											"count": {
+												"minimum": 1,
+												"maximum": 1
+											}
+										}
+									}
+								},
+								{
+									"if": {
+										"properties": {
+											"deviceSubId": {
+												"const": "3"
+											}
+										}
+									},
+									"then": {
+										"properties": {
+											"bioSubType": {
+												"items": {
+													"type": [
+														"string",
+														"null"
+													],
+													"enum": [
+														"Left",
+														"Right"
+													]
+												}
+											},
+											"exception": {
+												"items": {
+													"type": [
+														"string",
+														"null"
+													],
+													"enum": [
+														"Left",
+														"Right"
+													]
+												}
+											},
+											"count": {
+												"minimum": 1,
+												"maximum": 2
+											}
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"if": {
+							"properties": {
+								"type": {
+									"const": "Face"
+								}
+							}
+						},
+						"then": {
+							"properties": {
+								"bioSubType": {
+									"type": "array",
+									"items": {
+										"type": [
+											"null"
+										]
+									}
+								},
+								"exception": {
+									"items": {
+										"type": [
+											"string",
+											"null"
+										],
+										"enum": [
+											"Left IndexFinger",
+											"Left MiddleFinger",
+											"Left RingFinger",
+											"Left LittleFinger",
+											"Left Thumb",
+											"Right IndexFinger",
+											"Right MiddleFinger",
+											"Right RingFinger",
+											"Right LittleFinger",
+											"Right Thumb",
+											"Left",
+											"Right",
+											"UNKNOWN"
+										]
+									}
+								},
+								"count": {
+									"minimum": 1,
+									"maximum": 1
+								},
+								"deviceSubId": {
+									"enum": [
+										"0"
+									]
+								}
 							}
 						}
 					}
-				}
-			],
+				]
+			},
 			"required": [
 				"type",
 				"count",
 				"bioSubType",
-				"exception",
 				"requestedScore",
 				"deviceId",
 				"deviceSubId",
@@ -179,7 +428,7 @@
 		"customOpts": {
 			"type": [
 				"null",
-				"string"
+				"object"
 			]
 		}
 	},

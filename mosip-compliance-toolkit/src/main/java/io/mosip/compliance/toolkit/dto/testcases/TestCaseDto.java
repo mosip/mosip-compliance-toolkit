@@ -3,6 +3,8 @@ package io.mosip.compliance.toolkit.dto.testcases;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +20,8 @@ public class TestCaseDto implements Serializable {
     public String specVersion;
     public String testName;
     public String testDescription;
-    public int testOrderSequence;
+    @JsonProperty("isNegativeTestcase") 
+    public boolean isNegativeTestcase;
     public String methodName;
     public Object requestSchema;
     public String responseSchema;
