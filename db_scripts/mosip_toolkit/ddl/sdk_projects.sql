@@ -4,6 +4,7 @@ CREATE TABLE toolkit.sdk_projects(
 	id character varying(36) NOT NULL,
 	name character varying(64) NOT NULL,
 	project_type character varying(64) NOT NULL,
+	sdk_version character varying(36) NOT NULL,
 	url character varying(256) NOT NULL,
 	purpose character varying(256) NOT NULL,
 	partner_id character varying(36) NOT NULL,
@@ -22,6 +23,7 @@ COMMENT ON TABLE toolkit.sdk_projects IS 'This table all the SDK projects for th
 COMMENT ON COLUMN toolkit.sdk_projects.id IS 'ID: Unique Id generated for an project.';
 COMMENT ON COLUMN toolkit.sdk_projects.name IS 'Name: name of the project.';
 COMMENT ON COLUMN toolkit.sdk_projects.project_type IS 'Type: typeof project SDK, SBI or ABIS.';
+COMMENT ON COLUMN toolkit.sdk_projects.sdk_version IS 'sdk_version: the sdk_version is the version of sdk.';
 COMMENT ON COLUMN toolkit.sdk_projects.url IS 'URL: the url where SDK is running on users machine.';
 COMMENT ON COLUMN toolkit.sdk_projects.purpose IS 'Purpose: the purpose for testing';
 COMMENT ON COLUMN toolkit.sdk_projects.partner_id IS 'Partner Id: partner id who has created this project.';
