@@ -18,7 +18,7 @@ public class TestCaseDto implements Serializable {
     public String specVersion;
     public String testName;
     public String testDescription;
-    public int testOrderSequence;
+    public boolean isNegativeTestcase;
     public String methodName;
     public Object requestSchema;
     public String responseSchema;

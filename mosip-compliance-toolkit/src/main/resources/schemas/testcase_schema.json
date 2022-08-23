@@ -31,8 +31,8 @@
 		"testDescription": {
 			"type": "string"
 		},
-		"testOrderSequence": {
-			"type": "integer"
+		"isNegativeTestcase" : {
+			"type": "boolean"
 		},
 		"methodName": {
 			"type": "string",
@@ -205,7 +205,7 @@
 		"testId",
 		"testName",
 		"testDescription",
-		"testOrderSequence",
+		"isNegativeTestcase",
 		"methodName",
 		"requestSchema",
 		"responseSchema",
