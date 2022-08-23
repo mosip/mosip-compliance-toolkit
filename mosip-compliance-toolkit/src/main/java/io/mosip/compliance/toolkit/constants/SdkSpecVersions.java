@@ -27,6 +27,6 @@ public enum SdkSpecVersions {
                 return paramCode;
             }
         }
-        throw new ToolkitException(ToolkitErrorCodes.INVALID_SBI_SPEC_VERSION.getErrorCode(), ToolkitErrorCodes.INVALID_SBI_SPEC_VERSION.getErrorMessage());
+        throw new ToolkitException(ToolkitErrorCodes.INVALID_SDK_SPEC_VERSION.getErrorCode(), ToolkitErrorCodes.INVALID_SDK_SPEC_VERSION.getErrorMessage());
     }
 }
