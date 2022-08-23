@@ -20,6 +20,8 @@ public class ValidationInputDto  implements Serializable {
 
 	public String testDescription;
 	
+	public boolean isNegativeTestCase;
+	
 	public String responseSchema;
 
 	public String methodResponse;
