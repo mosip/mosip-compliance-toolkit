@@ -25,9 +25,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
+import org.springframework.util.StreamUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -64,6 +66,7 @@ import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
 import io.mosip.kernel.biometrics.spi.CbeffUtil;
 import io.mosip.kernel.cbeffutil.impl.CbeffImpl;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
@@ -110,6 +113,15 @@ public class TestCasesService {
 
 	private Logger log = LoggerConfiguration.logConfig(ProjectsService.class);
 
+	private AuthUserDetails authUserDetails() {
+		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
+
+	private String getPartnerId() {
+		String partnerId = authUserDetails().getUsername();
+		return partnerId;
+	}
+	
 	public ResponseWrapper<List<TestCaseDto>> getSbiTestCases(String specVersion, String purpose, String deviceType,
 			String deviceSubType) {
 		ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
@@ -188,8 +200,6 @@ public class TestCasesService {
 	 * @throws Exception
 	 */
 	public ValidationResultDto validateJsonWithSchema(String sourceJson, String schemaJson) throws Exception {
-		// create instance of the ObjectMapper class
-		// ObjectMapper objectMapper = new ObjectMapper();
 		// create an instance of the JsonSchemaFactory using version flag
 		JsonSchemaFactory schemaFactory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V201909);
 		// store the JSON data in InputStream
@@ -235,6 +245,7 @@ public class TestCasesService {
 				requestJson = gson.toJson(rootNode);
 			} else {
 				// read the testdata given as probe xml
+				//TODO pass the orgname / partnerId
 				byte[] inputFileBytes = this.getCbeffTestData(null, testcaseId);
 				// get the birs from the xml
 				List<BIR> birs = cbeffReader.getBIRDataFromXML(inputFileBytes);
@@ -463,10 +474,12 @@ public class TestCasesService {
 		if (inputFiles.containsKey(key)) {
 			return inputFiles.get(key);
 		} else {
-			File probeFile = ResourceUtils.getFile("classpath:testdata/SDK/" + key + "/probe.xml");
-			String fileContents = new String(Files.readAllBytes(probeFile.toPath()));
-			inputFiles.put(key, fileContents.getBytes());
-			return inputFiles.get(key);
+			// Read File Content
+			Resource resource = resourceLoader.getResource("classpath:testdata/SDK/" + key + "/probe.xml");
+			InputStream inputStream = resource.getInputStream();
+			byte[] bytes = StreamUtils.copyToByteArray(inputStream);
+			inputFiles.put(key, bytes);
+			return bytes;
 		}
 	}
 
