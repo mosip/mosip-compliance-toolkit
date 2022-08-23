@@ -46,21 +46,24 @@ public class QualityCheckValidator extends SDKValidator {
 				Set<Entry<BiometricType, QualityScore>> entrySet = qualityCheck.getScores().entrySet();
 				for (Entry<BiometricType, QualityScore> entry : entrySet) {
 					BiometricType biometricType = entry.getKey();
-					String biometricTypeStr = biometricType.value();
+					String biometricTypeStr = biometricType.value().toLowerCase();
 					float score = entry.getValue().getScore();
 					if (Modalities.FINGER.getCode().equals(biometricTypeStr)) {
 						checkScore(biometricTypeStr, inputDto, Float.parseFloat(fingerThresholdValue),
 								validationResultDto, score);
 					}
-					if (Modalities.FACE.getCode().equals(biometricTypeStr)) {
+					else if (Modalities.FACE.getCode().equals(biometricTypeStr)) {
 						checkScore(biometricTypeStr, inputDto, Float.parseFloat(faceThresholdValue),
 								validationResultDto, score);
 					}
-					if (Modalities.IRIS.getCode().equals(biometricTypeStr)) {
+					else if (Modalities.IRIS.getCode().equals(biometricTypeStr)) {
 						checkScore(biometricTypeStr, inputDto, Float.parseFloat(irisThresholdValue),
 								validationResultDto, score);
 					}
-
+					else {
+						validationResultDto.setStatus(AppConstants.FAILURE);
+						validationResultDto.setDescription("Quality Check failed, invalid modality: " + biometricTypeStr);
+					}
 				}
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
@@ -94,7 +97,7 @@ public class QualityCheckValidator extends SDKValidator {
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("Negative Quality Check for " + biometricTypeStr
-						+ " failed. Score is below the threshold value. Score received: " + score);
+						+ " failed. Score is above the threshold value. Score received: " + score);
 			}
 		}
 	}
