@@ -1,6 +1,6 @@
 package io.mosip.compliance.toolkit.controllers;
 
-import io.mosip.compliance.toolkit.dto.SdkProjectDto;
+import io.mosip.compliance.toolkit.dto.projects.SdkProjectDto;
 import io.mosip.compliance.toolkit.service.SdkProjectService;
 import io.mosip.compliance.toolkit.util.DataValidationUtil;
 import io.mosip.compliance.toolkit.util.RequestValidator;

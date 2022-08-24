@@ -1,4 +1,4 @@
-package io.mosip.compliance.toolkit.dto;
+package io.mosip.compliance.toolkit.dto.projects;
 
 import java.time.LocalDateTime;
 
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Data
 @Getter
 @Setter
-public class SbiProjectDto {
+public class AbisProjectDto {
 
 	private String id;
 	
@@ -17,18 +17,22 @@ public class SbiProjectDto {
 	
 	private String projectType;
 	
-	private String sbiVersion;
+	private String url;
 	
-	private String purpose;
+	private String username;
 	
-	private String deviceType;
+	private String password;
 	
-	private String deviceSubType;
+	private String queueName;
 	
 	private String partnerId;
 	
 	private String crBy;
 
 	private LocalDateTime crDate;
+
+	private String upBy;
+
+	private LocalDateTime updDate;
 
 }

@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.mosip.compliance.toolkit.dto.CollectionDto;
-import io.mosip.compliance.toolkit.dto.CollectionRequestDto;
-import io.mosip.compliance.toolkit.dto.CollectionTestCaseDto;
-import io.mosip.compliance.toolkit.dto.CollectionTestCasesResponseDto;
-import io.mosip.compliance.toolkit.dto.CollectionsResponseDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionRequestDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionTestCaseDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionTestCasesResponseDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionsResponseDto;
 import io.mosip.compliance.toolkit.service.CollectionsService;
 import io.mosip.compliance.toolkit.util.DataValidationUtil;
 import io.mosip.compliance.toolkit.util.RequestValidator;

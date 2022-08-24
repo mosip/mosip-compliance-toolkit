@@ -1,6 +1,11 @@
 package io.mosip.compliance.toolkit.controllers;
 
 import io.mosip.compliance.toolkit.dto.*;
+import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionRequestDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionTestCaseDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionTestCasesResponseDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionsResponseDto;
 import io.mosip.compliance.toolkit.service.CollectionsService;
 import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.kernel.core.http.RequestWrapper;

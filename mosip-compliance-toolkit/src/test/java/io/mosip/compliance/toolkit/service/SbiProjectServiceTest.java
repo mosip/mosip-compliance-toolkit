@@ -1,6 +1,6 @@
 package io.mosip.compliance.toolkit.service;
 
-import io.mosip.compliance.toolkit.dto.SbiProjectDto;
+import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
 import io.mosip.compliance.toolkit.entity.SbiProjectEntity;
 import io.mosip.compliance.toolkit.repository.SbiProjectRepository;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;

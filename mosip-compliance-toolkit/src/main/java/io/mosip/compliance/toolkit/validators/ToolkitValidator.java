@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public abstract class ToolkitValidator implements BaseValidator {
 
 	@Autowired
-	ObjectMapper objectMapper;
+	public ObjectMapper objectMapper;
 
 	@Autowired
 	ResourceLoader resourceLoader;

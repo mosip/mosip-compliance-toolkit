@@ -1,6 +1,6 @@
 package io.mosip.compliance.toolkit.controllers;
 
-import io.mosip.compliance.toolkit.dto.ProjectsResponseDto;
+import io.mosip.compliance.toolkit.dto.projects.ProjectsResponseDto;
 import io.mosip.compliance.toolkit.service.ProjectsService;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import org.junit.Assert;

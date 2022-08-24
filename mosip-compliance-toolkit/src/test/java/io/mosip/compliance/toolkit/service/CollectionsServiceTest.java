@@ -2,6 +2,11 @@ package io.mosip.compliance.toolkit.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.compliance.toolkit.dto.*;
+import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionRequestDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionTestCaseDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionTestCasesResponseDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionsResponseDto;
 import io.mosip.compliance.toolkit.entity.CollectionEntity;
 import io.mosip.compliance.toolkit.entity.CollectionSummaryEntity;
 import io.mosip.compliance.toolkit.entity.CollectionTestCaseEntity;

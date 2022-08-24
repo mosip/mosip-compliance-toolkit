@@ -1,7 +1,7 @@
 package io.mosip.compliance.toolkit.controllers;
 
 import io.mosip.compliance.toolkit.dto.ErrorDto;
-import io.mosip.compliance.toolkit.dto.SbiProjectDto;
+import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
 import io.mosip.compliance.toolkit.service.SbiProjectService;
 import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.mosip.compliance.toolkit.dto.ProjectsResponseDto;
+import io.mosip.compliance.toolkit.dto.projects.ProjectsResponseDto;
 import io.mosip.compliance.toolkit.service.ProjectsService;
 import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.kernel.core.http.ResponseWrapper;
