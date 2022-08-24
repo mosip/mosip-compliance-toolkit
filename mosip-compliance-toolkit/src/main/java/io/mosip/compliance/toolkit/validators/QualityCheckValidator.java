@@ -1,4 +1,4 @@
-package io.mosip.compliance.toolkit.validators.sdk;
+package io.mosip.compliance.toolkit.validators;
 
 import java.util.Map.Entry;
 import java.util.Set;

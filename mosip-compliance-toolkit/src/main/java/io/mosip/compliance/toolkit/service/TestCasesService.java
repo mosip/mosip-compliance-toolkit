@@ -214,8 +214,8 @@ public class TestCasesService {
 			// show the validation errors
 			if (validationResult.isEmpty()) {
 				// show custom message if there is no validation error
-				log.info("There are no validation errors. Json matches the schema.");
-				validationResultDto.setDescription("There are no validation errors. Json matches the schema.");
+				log.info("JSON is as expected. All mandatory values are available and they all have valid expected values.");
+				validationResultDto.setDescription("JSON is as expected. All mandatory values are available and they all have valid expected values.");
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				return validationResultDto;
 			} else {

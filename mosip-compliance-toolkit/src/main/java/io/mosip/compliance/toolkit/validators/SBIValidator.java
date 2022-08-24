@@ -1,4 +1,4 @@
-package io.mosip.compliance.toolkit.validators.sbi;
+package io.mosip.compliance.toolkit.validators;
 
 import static io.restassured.RestAssured.given;
 
@@ -32,7 +32,6 @@ import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.MethodName;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.util.StringUtil;
-import io.mosip.compliance.toolkit.validators.ToolkitValidator;
 import io.mosip.kernel.core.util.DateUtils;
 import io.restassured.http.Cookie;
 import lombok.Data;

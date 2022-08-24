@@ -104,8 +104,8 @@
 				"description": "Validates if response matches the schema"
 			},
 			{
-				"name": "QualityCheckValidator",
-				"description": "Validates the quality check"
+				"name": "InvalidDataValidator",
+				"description": "Validates the status code for invalid data"
 			}
 		],
 		"otherAttributes": {
@@ -133,7 +133,7 @@
 				"description": "Validates if response matches the schema"
 			},
 			{
-				"name": "QualityCheckValidator",
+				"name": "NoFaceDataValidator",
 				"description": "Validates the quality check"
 			}
 		],

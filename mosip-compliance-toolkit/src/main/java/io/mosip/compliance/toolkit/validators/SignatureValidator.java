@@ -1,4 +1,4 @@
-package io.mosip.compliance.toolkit.validators.sbi;
+package io.mosip.compliance.toolkit.validators;
 
 import java.io.IOException;
 import java.util.Objects;
