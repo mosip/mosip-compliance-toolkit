@@ -1335,5 +1335,365 @@
 			"bioCount": "",
 			"deviceSubId": ""
 		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Auth capture - Bio count - Mismatch",
+		"testId": "SBI1033",
+		"specVersion": "0.9.5",
+		"testDescription": "Bio Count mismatch auth capture request for Finger",
+		"isNegativeTestcase": true,
+		"methodName": "capture",
+		"requestSchema": "ErrorCaptureRequestSchema",
+		"responseSchema": "ErrorCaptureResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			}
+		],
+		"otherAttributes": {
+			"runtimeInput": "",
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Single"
+			],
+			"segments": [
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": 11,
+			"deviceSubId": 0,
+			"modalities": []
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Auth capture - Bio count - Mismatch",
+		"testId": "SBI1034",
+		"specVersion": "0.9.5",
+		"testDescription": "Bio Count mismatch auth capture request for Iris",
+		"isNegativeTestcase": true,
+		"methodName": "capture",
+		"requestSchema": "ErrorCaptureRequestSchema",
+		"responseSchema": "ErrorCaptureResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			}
+		],
+		"otherAttributes": {
+			"runtimeInput": "",
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Single"
+			],
+			"segments": [
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": 3,
+			"deviceSubId": 0,
+			"modalities": []
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Auth capture - Bio count - Mismatch",
+		"testId": "SBI1035",
+		"specVersion": "0.9.5",
+		"testDescription": "Bio Count mismatch auth capture request for face",
+		"isNegativeTestcase": true,
+		"methodName": "capture",
+		"requestSchema": "ErrorCaptureRequestSchema",
+		"responseSchema": "ErrorCaptureResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			}
+		],
+		"otherAttributes": {
+			"runtimeInput": "",
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Face"
+			],
+			"deviceSubTypes": [
+				"Full face"
+			],
+			"segments": [
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": 2,
+			"deviceSubId": 0,
+			"modalities": []
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Left Slap - Bio count - Mismatch",
+		"testId": "SBI1036",
+		"specVersion": "0.9.5",
+		"testDescription": "Bio Count mismatch registration capture request for Finger Left Slap",
+		"isNegativeTestcase": true,
+		"methodName": "rcapture",
+		"requestSchema": "ErrorCaptureRequestSchema",
+		"responseSchema": "ErrorCaptureResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			}
+		],
+		"otherAttributes": {
+			"runtimeInput": "",
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": 5,
+			"deviceSubId": 1,
+			"modalities": []
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Right Slap - Bio count - Mismatch",
+		"testId": "SBI1037",
+		"specVersion": "0.9.5",
+		"testDescription": "Bio Count mismatch registration capture request for Finger Right Slap",
+		"isNegativeTestcase": true,
+		"methodName": "rcapture",
+		"requestSchema": "ErrorCaptureRequestSchema",
+		"responseSchema": "ErrorCaptureResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			}
+		],
+		"otherAttributes": {
+			"runtimeInput": "",
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": 5,
+			"deviceSubId": 2,
+			"modalities": []
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Two Thumbs - Bio count - Mismatch",
+		"testId": "SBI1038",
+		"specVersion": "0.9.5",
+		"testDescription": "Bio Count mismatch registration capture request for Finger Two Thumbs",
+		"isNegativeTestcase": true,
+		"methodName": "rcapture",
+		"requestSchema": "ErrorCaptureRequestSchema",
+		"responseSchema": "ErrorCaptureResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			}
+		],
+		"otherAttributes": {
+			"runtimeInput": "",
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": 3,
+			"deviceSubId": 3,
+			"modalities": []
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Left - Bio count - Mismatch",
+		"testId": "SBI1039",
+		"specVersion": "0.9.5",
+		"testDescription": "Bio Count mismatch registration capture request for Left Iris",
+		"isNegativeTestcase": true,
+		"methodName": "rcapture",
+		"requestSchema": "ErrorCaptureRequestSchema",
+		"responseSchema": "ErrorCaptureResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			}
+		],
+		"otherAttributes": {
+			"runtimeInput": "",
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Double"
+			],
+			"segments": [
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": 2,
+			"deviceSubId": 1,
+			"modalities": []
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Right - Bio count - Mismatch",
+		"testId": "SBI1040",
+		"specVersion": "0.9.5",
+		"testDescription": "Bio Count mismatch registration capture request for Right Iris",
+		"isNegativeTestcase": true,
+		"methodName": "rcapture",
+		"requestSchema": "ErrorCaptureRequestSchema",
+		"responseSchema": "ErrorCaptureResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			}
+		],
+		"otherAttributes": {
+			"runtimeInput": "",
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Double"
+			],
+			"segments": [
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": 2,
+			"deviceSubId": 2,
+			"modalities": []
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Both Iris - Bio count - Mismatch",
+		"testId": "SBI1041",
+		"specVersion": "0.9.5",
+		"testDescription": "Bio Count mismatch registration capture request for Both iris",
+		"isNegativeTestcase": true,
+		"methodName": "rcapture",
+		"requestSchema": "ErrorCaptureRequestSchema",
+		"responseSchema": "ErrorCaptureResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			}
+		],
+		"otherAttributes": {
+			"runtimeInput": "",
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Double"
+			],
+			"segments": [
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": 3,
+			"deviceSubId": 3,
+			"modalities": []
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Bio count - Mismatch",
+		"testId": "SBI1035",
+		"specVersion": "0.9.5",
+		"testDescription": "Bio Count mismatch registration capture request for face",
+		"isNegativeTestcase": true,
+		"methodName": "rcapture",
+		"requestSchema": "ErrorCaptureRequestSchema",
+		"responseSchema": "ErrorCaptureResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			}
+		],
+		"otherAttributes": {
+			"runtimeInput": "",
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Face"
+			],
+			"deviceSubTypes": [
+				"Full face"
+			],
+			"segments": [
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": 2,
+			"deviceSubId": 0,
+			"modalities": []
+		}
 	}
 ]
