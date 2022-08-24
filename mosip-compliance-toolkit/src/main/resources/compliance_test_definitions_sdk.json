@@ -12,7 +12,7 @@
 		"validatorDefs": [
 			{
 				"name": "SchemaValidator",
-				"description": "Validates if response matches the schema"
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
 			}
 		],
 		"otherAttributes": {
@@ -43,7 +43,7 @@
 		"validatorDefs": [
 			{
 				"name": "SchemaValidator",
-				"description": "Validates if response matches the schema"
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
 			},
 			{
 				"name": "QualityCheckValidator",
@@ -72,7 +72,7 @@
 		"validatorDefs": [
 			{
 				"name": "SchemaValidator",
-				"description": "Validates if response matches the schema"
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
 			},
 			{
 				"name": "QualityCheckValidator",
@@ -101,11 +101,11 @@
 		"validatorDefs": [
 			{
 				"name": "SchemaValidator",
-				"description": "Validates if response matches the schema"
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
 			},
 			{
-				"name": "QualityCheckValidator",
-				"description": "Validates the quality check"
+				"name": "InvalidDataValidator",
+				"description": "Validates the status code for invalid data"
 			}
 		],
 		"otherAttributes": {
@@ -130,10 +130,10 @@
 		"validatorDefs": [
 			{
 				"name": "SchemaValidator",
-				"description": "Validates if response matches the schema"
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
 			},
 			{
-				"name": "QualityCheckValidator",
+				"name": "NoFaceDataValidator",
 				"description": "Validates the quality check"
 			}
 		],
