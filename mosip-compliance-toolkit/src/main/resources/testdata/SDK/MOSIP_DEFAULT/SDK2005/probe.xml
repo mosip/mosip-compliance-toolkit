@@ -29,7 +29,7 @@
                     <Organization>HMAC</Organization>
                     <Type>SHA-256</Type>
                 </Algorithm>
-                <Score>50</Score>
+                <Score>100</Score>
             </Quality>
       <Level>Raw</Level>
     </BDBInfo>
