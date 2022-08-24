@@ -40,8 +40,7 @@
 			"exceptions": [],
 			"requestedScore": "",
 			"bioCount": "",
-			"deviceSubId": "",
-			"modalities": []
+			"deviceSubId": ""
 		}
 	},
 	{
@@ -85,8 +84,7 @@
 			"exceptions": [],
 			"requestedScore": "",
 			"bioCount": "",
-			"deviceSubId": "",
-			"modalities": []
+			"deviceSubId": ""
 		}
 	},
 	{
@@ -126,8 +124,7 @@
 			"exceptions": [],
 			"requestedScore": "",
 			"bioCount": "",
-			"deviceSubId": "",
-			"modalities": []
+			"deviceSubId": ""
 		}
 	},
 	{
@@ -170,8 +167,7 @@
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 4,
-			"deviceSubId": 1,
-			"modalities": []
+			"deviceSubId": 1
 		}
 	},
 	{
@@ -215,8 +211,7 @@
 			],
 			"requestedScore": "40",
 			"bioCount": 3,
-			"deviceSubId": 1,
-			"modalities": []
+			"deviceSubId": 1
 		}
 	},
 	{
@@ -259,8 +254,7 @@
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 4,
-			"deviceSubId": 2,
-			"modalities": []
+			"deviceSubId": 2
 		}
 	},
 	{
@@ -304,8 +298,7 @@
 			],
 			"requestedScore": "40",
 			"bioCount": 2,
-			"deviceSubId": 2,
-			"modalities": []
+			"deviceSubId": 2
 		}
 	},
 	{
@@ -346,8 +339,7 @@
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 2,
-			"deviceSubId": 3,
-			"modalities": []
+			"deviceSubId": 3
 		}
 	},
 	{
@@ -389,8 +381,7 @@
 			],
 			"requestedScore": "40",
 			"bioCount": 1,
-			"deviceSubId": 3,
-			"modalities": []
+			"deviceSubId": 3
 		}
 	},
 	{
@@ -427,8 +418,7 @@
 			],
 			"requestedScore": "40",
 			"bioCount": 0,
-			"deviceSubId": 3,
-			"modalities": []
+			"deviceSubId": 3
 		}
 	},
 	{
@@ -469,8 +459,7 @@
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 2,
-			"deviceSubId": 3,
-			"modalities": []
+			"deviceSubId": 3
 		}
 	},
 	{
@@ -512,8 +501,7 @@
 			],
 			"requestedScore": "40",
 			"bioCount": 1,
-			"deviceSubId": 3,
-			"modalities": []
+			"deviceSubId": 3
 		}
 	},
 	{
@@ -550,8 +538,7 @@
 			],
 			"requestedScore": "40",
 			"bioCount": 0,
-			"deviceSubId": 3,
-			"modalities": []
+			"deviceSubId": 3
 		}
 	},
 	{
@@ -591,8 +578,7 @@
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 1,
-			"deviceSubId": 0,
-			"modalities": []
+			"deviceSubId": 0
 		}
 	},
 	{
@@ -632,8 +618,7 @@
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 1,
-			"deviceSubId": 0,
-			"modalities": []
+			"deviceSubId": 0
 		}
 	},
 	{
@@ -671,8 +656,7 @@
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 1,
-			"deviceSubId": 0,
-			"modalities": []
+			"deviceSubId": 0
 		}
 	},
 	{
@@ -712,8 +696,7 @@
 			],
 			"requestedScore": "10",
 			"bioCount": 1,
-			"deviceSubId": 0,
-			"modalities": []
+			"deviceSubId": 0
 		}
 	},
 	{
@@ -751,8 +734,7 @@
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 1,
-			"deviceSubId": 0,
-			"modalities": []
+			"deviceSubId": 0
 		}
 	},
 	{
@@ -792,8 +774,7 @@
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 1,
-			"deviceSubId": 0,
-			"modalities": []
+			"deviceSubId": 0
 		}
 	},
 	{
@@ -833,8 +814,7 @@
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 1,
-			"deviceSubId": 0,
-			"modalities": []
+			"deviceSubId": 0
 		}
 	},
 	{
@@ -874,8 +854,7 @@
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 1,
-			"deviceSubId": 0,
-			"modalities": []
+			"deviceSubId": 0
 		}
 	},
 	{
@@ -915,8 +894,7 @@
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 1,
-			"deviceSubId": 0,
-			"modalities": []
+			"deviceSubId": 0
 		}
 	},
 	{
@@ -957,8 +935,7 @@
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 2,
-			"deviceSubId": 0,
-			"modalities": []
+			"deviceSubId": 0
 		}
 	},
 	{
@@ -998,8 +975,7 @@
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 1,
-			"deviceSubId": 0,
-			"modalities": []
+			"deviceSubId": 0
 		}
 	},
 	{
@@ -1040,8 +1016,7 @@
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 2,
-			"deviceSubId": 0,
-			"modalities": []
+			"deviceSubId": 0
 		}
 	},
 	{
@@ -1080,8 +1055,7 @@
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 4,
-			"deviceSubId": 1,
-			"modalities": []
+			"deviceSubId": 1
 		}
 	},
 	{
@@ -1117,8 +1091,7 @@
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 1,
-			"deviceSubId": 0,
-			"modalities": []
+			"deviceSubId": 0
 		}
 	},
 	{
@@ -1154,8 +1127,7 @@
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 1,
-			"deviceSubId": 0,
-			"modalities": []
+			"deviceSubId": 0
 		}
 	},
 	{
@@ -1189,8 +1161,7 @@
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 1,
-			"deviceSubId": 0,
-			"modalities": []
+			"deviceSubId": 0
 		}
 	},
 	{
@@ -1234,8 +1205,7 @@
 			"exceptions": [],
 			"requestedScore": "",
 			"bioCount": "",
-			"deviceSubId": "",
-			"modalities": []
+			"deviceSubId": ""
 		}
 	},
 	{
@@ -1279,8 +1249,7 @@
 			"exceptions": [],
 			"requestedScore": "",
 			"bioCount": "",
-			"deviceSubId": "",
-			"modalities": []
+			"deviceSubId": ""
 		}
 	},
 	{
@@ -1320,8 +1289,7 @@
 			"exceptions": [],
 			"requestedScore": "",
 			"bioCount": "",
-			"deviceSubId": "",
-			"modalities": []
+			"deviceSubId": ""
 		}
 	},
 	{
@@ -1365,8 +1333,7 @@
 			"exceptions": [],
 			"requestedScore": "",
 			"bioCount": "",
-			"deviceSubId": "",
-			"modalities": []
+			"deviceSubId": ""
 		}
 	}
 ]
