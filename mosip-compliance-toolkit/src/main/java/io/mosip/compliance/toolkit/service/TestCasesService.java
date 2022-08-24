@@ -2,13 +2,11 @@ package io.mosip.compliance.toolkit.service;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UncheckedIOException;
-import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -28,7 +26,6 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.util.ResourceUtils;
 import org.springframework.util.StreamUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -45,10 +42,12 @@ import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.DeviceSubTypes;
 import io.mosip.compliance.toolkit.constants.DeviceTypes;
+import io.mosip.compliance.toolkit.constants.MethodName;
 import io.mosip.compliance.toolkit.constants.Purposes;
 import io.mosip.compliance.toolkit.constants.SbiSpecVersions;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.sdk.CheckQualityRequestDto;
+import io.mosip.compliance.toolkit.dto.sdk.MatchRequestDto;
 import io.mosip.compliance.toolkit.dto.sdk.RequestDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseResponseDto;
@@ -121,7 +120,7 @@ public class TestCasesService {
 		String partnerId = authUserDetails().getUsername();
 		return partnerId;
 	}
-	
+
 	public ResponseWrapper<List<TestCaseDto>> getSbiTestCases(String specVersion, String purpose, String deviceType,
 			String deviceSubType) {
 		ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
@@ -214,8 +213,10 @@ public class TestCasesService {
 			// show the validation errors
 			if (validationResult.isEmpty()) {
 				// show custom message if there is no validation error
-				log.info("JSON is as expected. All mandatory values are available and they all have valid expected values.");
-				validationResultDto.setDescription("JSON is as expected. All mandatory values are available and they all have valid expected values.");
+				log.info(
+						"JSON is as expected. All mandatory values are available and they all have valid expected values.");
+				validationResultDto.setDescription(
+						"JSON is as expected. All mandatory values are available and they all have valid expected values.");
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				return validationResultDto;
 			} else {
@@ -238,31 +239,63 @@ public class TestCasesService {
 		try {
 			String requestJson = null;
 
-			if (methodName.equalsIgnoreCase(AppConstants.SDK_METHOD_INIT)) {
+			if (methodName.equalsIgnoreCase(MethodName.INIT.getCode())) {
 				ObjectNode rootNode = objectMapper.createObjectNode();
 				ObjectNode childNode = objectMapper.createObjectNode();
 				rootNode.set("initParams", childNode);
 				requestJson = gson.toJson(rootNode);
 			} else {
 				// read the testdata given as probe xml
-				//TODO pass the orgname / partnerId
-				byte[] inputFileBytes = this.getCbeffTestData(null, testcaseId);
-				// get the birs from the xml
-				List<BIR> birs = cbeffReader.getBIRDataFromXML(inputFileBytes);
-				// convert birs to Biometric Record
+				// TODO pass the orgname / partnerId
+				byte[] probeFileBytes = this.getXmlData(null, testcaseId, "probe");
+
+				// get the BIRs from the XML
+				List<io.mosip.kernel.biometrics.entities.BIR> birsForProbe = cbeffReader
+						.getBIRDataFromXML(probeFileBytes);
+				// convert BIRS to Biometric Record
 				BiometricRecord biometricRecord = new BiometricRecord();
-				biometricRecord.setSegments(birs);
-				// get the biometric types
+				biometricRecord.setSegments(birsForProbe);
+
+				List<BiometricRecord> biometricRecordsArr = new ArrayList<BiometricRecord>();
+				if (methodName.equalsIgnoreCase(MethodName.MATCH.getCode())) {
+					for (int i = 1; i <= 25; i++) {
+						// TODO pass the orgname / partnerId
+						byte[] galleryFileBytes = this.getXmlData(null, testcaseId, "gallery" + i);
+						if (galleryFileBytes != null) {
+							// get the BIRs from the XML
+							List<io.mosip.kernel.biometrics.entities.BIR> birsForGallery = cbeffReader
+									.getBIRDataFromXML(galleryFileBytes);
+							BiometricRecord biometricRecordGallery = new BiometricRecord();
+							biometricRecordGallery.setSegments(birsForGallery);
+							biometricRecordsArr.add(biometricRecordGallery);
+						} else {
+							i = 26;
+						}
+					}
+				}
+
+				// get the Biometric types
 				List<BiometricType> bioTypeList = modalities.stream().map(bioType -> this.getBiometricType(bioType))
 						.collect(Collectors.toList());
+
 				// populate the request object based on the method name
-				if (methodName.equalsIgnoreCase(AppConstants.SDK_METHOD_CHECK_QUALITY)) {
+				if (methodName.equalsIgnoreCase(MethodName.CHECK_QUALITY.getCode())) {
 					CheckQualityRequestDto checkQualityRequestDto = new CheckQualityRequestDto();
 					checkQualityRequestDto.setSample(biometricRecord);
 					checkQualityRequestDto.setModalitiesToCheck(bioTypeList);
 					// TODO: set flags
 					checkQualityRequestDto.setFlags(null);
+					System.out.println(checkQualityRequestDto);
 					requestJson = gson.toJson(checkQualityRequestDto);
+				}
+				if (methodName.equalsIgnoreCase(MethodName.MATCH.getCode())) {
+					MatchRequestDto matchRequestDto = new MatchRequestDto();
+					matchRequestDto.setSample(biometricRecord);
+					matchRequestDto.setGallery((BiometricRecord[]) biometricRecordsArr.toArray());
+					matchRequestDto.setModalitiesToMatch(bioTypeList);
+					// TODO: set flags
+					matchRequestDto.setFlags(null);
+					requestJson = gson.toJson(matchRequestDto);
 				}
 			}
 			System.out.println(requestJson);
@@ -465,22 +498,28 @@ public class TestCasesService {
 		return true;
 	}
 
-	private byte[] getCbeffTestData(String orgName, String testcaseId) throws IOException {
+	private byte[] getXmlData(String orgName, String testcaseId, String name) {
+		try {
+			if (orgName == null) {
+				orgName = AppConstants.MOSIP_DEFAULT;
+			}
+			String key = orgName + "/" + testcaseId + "/" + name;
+			if (inputFiles.containsKey(key)) {
+				return inputFiles.get(key);
+			} else {
+				// Read File Content
+				String filePathName = "classpath:testdata/SDK/" + key + ".xml";
+				log.info(filePathName);
+				Resource resource = resourceLoader.getResource(filePathName);
+				InputStream inputStream = resource.getInputStream();
+				byte[] bytes = StreamUtils.copyToByteArray(inputStream);
+				inputFiles.put(key, bytes);
+				return bytes;
+			}
+		} catch (IOException ioe) {
+			return null;
+		}
 
-		if (orgName == null) {
-			orgName = AppConstants.MOSIP_DEFAULT;
-		}
-		String key = orgName + "/" + testcaseId;
-		if (inputFiles.containsKey(key)) {
-			return inputFiles.get(key);
-		} else {
-			// Read File Content
-			Resource resource = resourceLoader.getResource("classpath:testdata/SDK/" + key + "/probe.xml");
-			InputStream inputStream = resource.getInputStream();
-			byte[] bytes = StreamUtils.copyToByteArray(inputStream);
-			inputFiles.put(key, bytes);
-			return bytes;
-		}
 	}
 
 	private BiometricType getBiometricType(String type) {

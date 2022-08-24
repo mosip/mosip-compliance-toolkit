@@ -15,11 +15,7 @@ public class AppConstants {
 	public static final String SDK = "SDK";
 
 	public static final String SBI = "SBI";
-	
-	public static final String SDK_METHOD_CHECK_QUALITY = "check-quality";
-
-	public static final String SDK_METHOD_INIT = "init";
-	
+		
 	public static final String SUCCESS = "success";
 	
 	public static final String FAILURE = "failure";
