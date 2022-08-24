@@ -87,5 +87,63 @@
 				"Check Quality"
 			]
 		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Invalid face data for quality check",
+		"testId": "SDK2003",
+		"testDescription": "Invalid face data for quality check",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": true,
+		"methodName": "check-quality",
+		"requestSchema": "CheckQualityRequestSchema",
+		"responseSchema": "CheckQualityResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response matches the schema"
+			},
+			{
+				"name": "QualityCheckValidator",
+				"description": "Validates the quality check"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Check Quality"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "No face data for quality check",
+		"testId": "SDK2004",
+		"testDescription": "No face data for quality check",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": true,
+		"methodName": "check-quality",
+		"requestSchema": "CheckQualityRequestSchema",
+		"responseSchema": "CheckQualityResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response matches the schema"
+			},
+			{
+				"name": "QualityCheckValidator",
+				"description": "Validates the quality check"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Check Quality"
+			]
+		}
 	}
 ]

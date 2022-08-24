@@ -1,4 +1,4 @@
-package io.mosip.compliance.toolkit.dto;
+package io.mosip.compliance.toolkit.dto.collections;
 
 import lombok.Data;
 import lombok.Getter;

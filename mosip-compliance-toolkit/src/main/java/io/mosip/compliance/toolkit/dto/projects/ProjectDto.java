@@ -1,4 +1,4 @@
-package io.mosip.compliance.toolkit.dto;
+package io.mosip.compliance.toolkit.dto.projects;
 
 import java.time.LocalDateTime;
 

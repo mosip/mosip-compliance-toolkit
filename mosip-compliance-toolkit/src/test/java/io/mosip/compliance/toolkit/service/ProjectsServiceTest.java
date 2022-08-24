@@ -1,7 +1,7 @@
 package io.mosip.compliance.toolkit.service;
 
-import io.mosip.compliance.toolkit.dto.ProjectDto;
-import io.mosip.compliance.toolkit.dto.ProjectsResponseDto;
+import io.mosip.compliance.toolkit.dto.projects.ProjectDto;
+import io.mosip.compliance.toolkit.dto.projects.ProjectsResponseDto;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
