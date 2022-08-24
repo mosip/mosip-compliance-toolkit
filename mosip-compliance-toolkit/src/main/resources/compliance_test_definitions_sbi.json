@@ -1349,7 +1349,7 @@
 		"validatorDefs": [
 			{
 				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
+				"description": "Response received is as expected. All mandatory values are available and they all have valid expected values."
 			}
 		],
 		"otherAttributes": {
@@ -1385,7 +1385,7 @@
 		"validatorDefs": [
 			{
 				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
+				"description": "Response received is as expected. All mandatory values are available and they all have valid expected values."
 			}
 		],
 		"otherAttributes": {
@@ -1421,7 +1421,7 @@
 		"validatorDefs": [
 			{
 				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
+				"description": "Response received is as expected. All mandatory values are available and they all have valid expected values."
 			}
 		],
 		"otherAttributes": {
@@ -1457,7 +1457,7 @@
 		"validatorDefs": [
 			{
 				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
+				"description": "Response received is as expected. All mandatory values are available and they all have valid expected values."
 			}
 		],
 		"otherAttributes": {
@@ -1493,7 +1493,7 @@
 		"validatorDefs": [
 			{
 				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
+				"description": "Response received is as expected. All mandatory values are available and they all have valid expected values."
 			}
 		],
 		"otherAttributes": {
@@ -1529,7 +1529,7 @@
 		"validatorDefs": [
 			{
 				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
+				"description": "Response received is as expected. All mandatory values are available and they all have valid expected values."
 			}
 		],
 		"otherAttributes": {
@@ -1565,7 +1565,7 @@
 		"validatorDefs": [
 			{
 				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
+				"description": "Response received is as expected. All mandatory values are available and they all have valid expected values."
 			}
 		],
 		"otherAttributes": {
@@ -1601,7 +1601,7 @@
 		"validatorDefs": [
 			{
 				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
+				"description": "Response received is as expected. All mandatory values are available and they all have valid expected values."
 			}
 		],
 		"otherAttributes": {
@@ -1637,7 +1637,7 @@
 		"validatorDefs": [
 			{
 				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
+				"description": "Response received is as expected. All mandatory values are available and they all have valid expected values."
 			}
 		],
 		"otherAttributes": {
@@ -1673,7 +1673,7 @@
 		"validatorDefs": [
 			{
 				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
+				"description": "Response received is as expected. All mandatory values are available and they all have valid expected values."
 			}
 		],
 		"otherAttributes": {
