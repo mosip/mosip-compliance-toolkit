@@ -9,11 +9,11 @@ import io.mosip.compliance.toolkit.exceptions.ToolkitException;
  * @since 1.0.0
  */
 public enum SdkPurposes {
-    QUALITY_CHECK("QualityCheck"),
+    QUALITY_CHECK("Check Quality"),
     SEGMENT("Segment"),
-    EXTRACT("Extract"),
-    CONVERT_FORMAT("ConvertFormat"),
-    MATCH("Match");
+    EXTRACT("Extract Template"),
+    CONVERT_FORMAT("Convert Format"),
+    MATCH("Matcher");
 
     private final String code;
 
