@@ -1363,8 +1363,7 @@
 			"deviceSubTypes": [
 				"Single"
 			],
-			"segments": [
-			],
+			"segments": [],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 11,
@@ -1399,8 +1398,7 @@
 			"deviceSubTypes": [
 				"Single"
 			],
-			"segments": [
-			],
+			"segments": [],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 3,
@@ -1435,8 +1433,7 @@
 			"deviceSubTypes": [
 				"Full face"
 			],
-			"segments": [
-			],
+			"segments": [],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 2,
@@ -1471,8 +1468,7 @@
 			"deviceSubTypes": [
 				"Slap"
 			],
-			"segments": [
-			],
+			"segments": [],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 5,
@@ -1507,8 +1503,7 @@
 			"deviceSubTypes": [
 				"Slap"
 			],
-			"segments": [
-			],
+			"segments": [],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 5,
@@ -1543,8 +1538,7 @@
 			"deviceSubTypes": [
 				"Slap"
 			],
-			"segments": [
-			],
+			"segments": [],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 3,
@@ -1579,8 +1573,7 @@
 			"deviceSubTypes": [
 				"Double"
 			],
-			"segments": [
-			],
+			"segments": [],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 2,
@@ -1615,8 +1608,7 @@
 			"deviceSubTypes": [
 				"Double"
 			],
-			"segments": [
-			],
+			"segments": [],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 2,
@@ -1651,8 +1643,7 @@
 			"deviceSubTypes": [
 				"Double"
 			],
-			"segments": [
-			],
+			"segments": [],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 3,
@@ -1687,8 +1678,7 @@
 			"deviceSubTypes": [
 				"Full face"
 			],
-			"segments": [
-			],
+			"segments": [],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": 2,
