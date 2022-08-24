@@ -49,5 +49,6 @@ public class TestCaseDto implements Serializable {
 		public String bioCount;
 		public String deviceSubId;
 		public ArrayList<String> modalities;
+		public ArrayList<String> sdkPurpose;
 	}
 }
