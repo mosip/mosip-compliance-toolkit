@@ -115,7 +115,7 @@ public abstract class SBIValidator extends ToolkitValidator {
 		jws.setCompactSerialization(jwtInfo);
 		String encodedHeader = jws.getHeaders().getEncodedHeader();
 		String jsonHeader = StringUtil.toUtf8String(StringUtil.base64UrlDecode(encodedHeader));
-		ObjectNode headerNode = (ObjectNode) objectMapper.readValue(jsonHeader, ObjectNode.class);
+		ObjectNode headerNode = (ObjectNode) objectMapperConfig.objectMapper().readValue(jsonHeader, ObjectNode.class);
 		String algType = headerNode.get(ALG).asText();
 		if (algType.equals(AppConstants.RS256_ALGORITHM_TYPE)) {
 			ArrayNode arrCertificates = (ArrayNode) headerNode.get(X5C);
@@ -146,7 +146,7 @@ public abstract class SBIValidator extends ToolkitValidator {
 	protected ObjectNode getUnsignedDeviceInfo(String deviceInfoResponse)
 			throws JsonParseException, JsonMappingException, IOException {
 		String deviceInfo = StringUtil.toUtf8String(StringUtil.base64UrlDecode(deviceInfoResponse));
-		return objectMapper.readValue(deviceInfo, ObjectNode.class);
+		return objectMapperConfig.objectMapper().readValue(deviceInfo, ObjectNode.class);
 	}
 
 	protected io.restassured.response.Response getPostResponse(String postUrl, DeviceValidatorDto deviceValidatorDto)

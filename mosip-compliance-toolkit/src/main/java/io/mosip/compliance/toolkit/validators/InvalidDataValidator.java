@@ -13,7 +13,7 @@ public class InvalidDataValidator extends SDKValidator {
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
-			ObjectNode methodResponse = (ObjectNode) objectMapper.readValue(inputDto.getMethodResponse(),
+			ObjectNode methodResponse = (ObjectNode) objectMapperConfig.objectMapper().readValue(inputDto.getMethodResponse(),
 					ObjectNode.class);
 			JsonNode mainResponse = (JsonNode) methodResponse.get("response");
 			int statusCode = Integer.parseInt(mainResponse.get("statusCode").asText());

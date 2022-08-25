@@ -31,14 +31,15 @@ public class QualityCheckValidator extends SDKValidator {
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
-			ObjectNode methodResponse = (ObjectNode) objectMapper.readValue(inputDto.getMethodResponse(),
+			ObjectNode methodResponse = (ObjectNode) objectMapperConfig.objectMapper().readValue(inputDto.getMethodResponse(),
 					ObjectNode.class);
 
 			JsonNode mainResponse = (JsonNode) methodResponse.get("response");
 
 			JsonNode qualityCheckResp = (JsonNode) mainResponse.get("response");
 
-			QualityCheck qualityCheck = (QualityCheck) objectMapper.convertValue(qualityCheckResp, QualityCheck.class);
+			QualityCheck qualityCheck = (QualityCheck) objectMapperConfig.objectMapper()
+					.convertValue(qualityCheckResp, QualityCheck.class);
 
 			int statusCode = Integer.parseInt(mainResponse.get("statusCode").asText());
 
@@ -51,18 +52,16 @@ public class QualityCheckValidator extends SDKValidator {
 					if (Modalities.FINGER.getCode().equals(biometricTypeStr)) {
 						checkScore(biometricTypeStr, inputDto, Float.parseFloat(fingerThresholdValue),
 								validationResultDto, score);
-					}
-					else if (Modalities.FACE.getCode().equals(biometricTypeStr)) {
+					} else if (Modalities.FACE.getCode().equals(biometricTypeStr)) {
 						checkScore(biometricTypeStr, inputDto, Float.parseFloat(faceThresholdValue),
 								validationResultDto, score);
-					}
-					else if (Modalities.IRIS.getCode().equals(biometricTypeStr)) {
+					} else if (Modalities.IRIS.getCode().equals(biometricTypeStr)) {
 						checkScore(biometricTypeStr, inputDto, Float.parseFloat(irisThresholdValue),
 								validationResultDto, score);
-					}
-					else {
+					} else {
 						validationResultDto.setStatus(AppConstants.FAILURE);
-						validationResultDto.setDescription("Quality Check failed, invalid modality: " + biometricTypeStr);
+						validationResultDto
+								.setDescription("Quality Check failed, invalid modality: " + biometricTypeStr);
 					}
 				}
 			} else {
