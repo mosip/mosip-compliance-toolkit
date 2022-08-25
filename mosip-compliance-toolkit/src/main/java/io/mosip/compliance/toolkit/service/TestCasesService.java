@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import io.mosip.compliance.toolkit.constants.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -39,13 +40,6 @@ import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
 
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
-import io.mosip.compliance.toolkit.constants.AppConstants;
-import io.mosip.compliance.toolkit.constants.DeviceSubTypes;
-import io.mosip.compliance.toolkit.constants.DeviceTypes;
-import io.mosip.compliance.toolkit.constants.MethodName;
-import io.mosip.compliance.toolkit.constants.Purposes;
-import io.mosip.compliance.toolkit.constants.SbiSpecVersions;
-import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.sdk.CheckQualityRequestDto;
 import io.mosip.compliance.toolkit.dto.sdk.MatchRequestDto;
 import io.mosip.compliance.toolkit.dto.sdk.RequestDto;
@@ -187,6 +181,70 @@ public class TestCasesService {
 		Purposes.fromCode(purpose);
 		DeviceTypes.fromCode(deviceType);
 		DeviceSubTypes.fromCode(deviceSubType);
+		return true;
+	}
+
+	public ResponseWrapper<List<TestCaseDto>> getSdkTestCases(String specVersion, String sdkPurpose) {
+		ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
+		List<TestCaseDto> testCases = new ArrayList<>();
+		List<ServiceError> serviceErrorsList = new ArrayList<>();
+		ServiceError serviceError = null;
+		try {
+			String testCaseSchemaJson = this.getSchemaJson("schemas/testcase_schema.json");
+			if (isValidSdkTestCase(specVersion, sdkPurpose)) {
+				List<TestCaseEntity> testCaseEntities = testCasesRepository
+						.findAllSdkTestCaseBySpecVersion(specVersion);
+				for (final TestCaseEntity testCaseEntity : testCaseEntities) {
+					String testcaseJson = testCaseEntity.getTestcaseJson();
+					if (AppConstants.SUCCESS
+							.equals(this.validateJsonWithSchema(testcaseJson, testCaseSchemaJson).getStatus())) {
+						TestCaseDto testCaseDto = objectMapper.readValue(testcaseJson, TestCaseDto.class);
+						if (testCaseDto.getSpecVersion() != null && testCaseDto.getSpecVersion().equals(specVersion)
+								&& testCaseDto.getOtherAttributes().getSdkPurpose().contains(sdkPurpose)) {
+							testCases.add(testCaseDto);
+						}
+					}
+				}
+			}
+		} catch (ToolkitException ex) {
+			testCases = null;
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In getSdkTestCases method of TestCasesService - " + ex.getMessage());
+			serviceError = new ServiceError();
+			serviceError.setErrorCode(ex.getErrorCode());
+			serviceError.setMessage(ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		} catch (Exception ex) {
+			testCases = null;
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In getSdkTestCases method of TestCasesService - " + ex.getMessage());
+			serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorCode());
+			serviceError.setMessage(ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		}
+		responseWrapper.setId(getTestCasesId);
+		responseWrapper.setResponse(testCases);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+
+	/**
+	 * Verifies test case is valid. validates specVersion, purpose, deviceType,
+	 * deviceSubType values
+	 *
+	 * @param specVersion, purpose, deviceType, deviceSubType
+	 * @return boolean
+	 */
+	private boolean isValidSdkTestCase(String specVersion, String sdkPurpose)
+			throws ToolkitException {
+		SdkSpecVersions.fromCode(specVersion);
+		SdkPurpose.fromCode(sdkPurpose);
 		return true;
 	}
 

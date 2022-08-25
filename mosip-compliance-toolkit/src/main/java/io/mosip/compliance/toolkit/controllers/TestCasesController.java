@@ -104,6 +104,28 @@ public class TestCasesController {
 		}
 	}
 
+	@GetMapping(value = "/getSdkTestCases")
+	public ResponseWrapper<List<TestCaseDto>> getSdkTestCases(@RequestParam(required = true) String specVersion,
+															  @RequestParam(required = true) String sdkPurpose) {
+		try {
+			return service.getSdkTestCases(specVersion, sdkPurpose);
+		} catch (Exception ex) {
+			ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
+			responseWrapper.setId(getTestCasesId);
+			responseWrapper.setResponse(null);
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorCode());
+			serviceError.setMessage(
+					ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage() + " " + ex.getLocalizedMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+			responseWrapper.setVersion(AppConstants.VERSION);
+			responseWrapper.setResponsetime(LocalDateTime.now());
+			return responseWrapper;
+		}
+	}
+
 	@GetMapping(value = "/generateRequestForSDK")
 	public ResponseWrapper<String> generateRequestForSDK(@RequestParam(required = true) String methodName,
 			@RequestParam(required = true) String testcaseId, @RequestParam(required = true) List<String> modalities)
