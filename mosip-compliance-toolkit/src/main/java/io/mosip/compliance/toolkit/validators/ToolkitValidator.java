@@ -13,12 +13,12 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.FileCopyUtils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 
 public abstract class ToolkitValidator implements BaseValidator {
 
 	@Autowired
-	public ObjectMapper objectMapper;
+	public ObjectMapperConfig objectMapperConfig;
 
 	@Autowired
 	ResourceLoader resourceLoader;

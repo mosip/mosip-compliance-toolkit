@@ -94,7 +94,7 @@
 		"testId": "SDK2003",
 		"testDescription": "Invalid face data for quality check",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": true,
+		"isNegativeTestcase": false,
 		"methodName": "check-quality",
 		"requestSchema": "CheckQualityRequestSchema",
 		"responseSchema": "CheckQualityResponseSchema",
@@ -123,7 +123,7 @@
 		"testId": "SDK2004",
 		"testDescription": "No face data for quality check",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": true,
+		"isNegativeTestcase": false,
 		"methodName": "check-quality",
 		"requestSchema": "CheckQualityRequestSchema",
 		"responseSchema": "CheckQualityResponseSchema",
@@ -143,6 +143,62 @@
 			],
 			"sdkPurpose": [
 				"Check Quality"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Face match success",
+		"testId": "SDK2005",
+		"testDescription": "Face match success",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},{
+				"name": "MatchValidator",
+				"description": "Validates if biomterics match for the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Face match failure",
+		"testId": "SDK2006",
+		"testDescription": "Face match failure",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": true,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},{
+				"name": "MatchValidator",
+				"description": "Validates if biomterics match for the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Matcher"
 			]
 		}
 	}

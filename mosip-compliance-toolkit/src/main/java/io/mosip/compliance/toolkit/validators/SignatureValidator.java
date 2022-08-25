@@ -69,8 +69,8 @@ public class SignatureValidator extends SBIValidator {
 	private ValidationResultDto validateDiscoverySignature(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
-			ArrayNode arrDiscoverResponse = (ArrayNode) objectMapper.readValue(inputDto.getMethodResponse(),
-					ArrayNode.class);
+			ArrayNode arrDiscoverResponse = (ArrayNode) objectMapperConfig.objectMapper()
+					.readValue(inputDto.getMethodResponse(), ArrayNode.class);
 			ObjectNode discoveryInfoNode = (ObjectNode) arrDiscoverResponse.get(0);
 
 			String digitalId = StringUtil
@@ -86,7 +86,7 @@ public class SignatureValidator extends SBIValidator {
 
 	private ValidationResultDto validateUnsignedDigitalID(String digitalId) throws Exception {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
-		ObjectNode digitalIdDto = objectMapper.readValue(digitalId, ObjectNode.class);
+		ObjectNode digitalIdDto = objectMapperConfig.objectMapper().readValue(digitalId, ObjectNode.class);
 		if (Objects.isNull(digitalIdDto) || digitalIdDto.get(DEVICE_TYPE).isNull()
 				|| digitalIdDto.get(DEVICE_SUB_TYPE).isNull()) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
@@ -101,8 +101,8 @@ public class SignatureValidator extends SBIValidator {
 	private ValidationResultDto validateDeviceSignature(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
-			ArrayNode arrDeviceInfoResponse = (ArrayNode) objectMapper.readValue(inputDto.getMethodResponse(),
-					ArrayNode.class);
+			ArrayNode arrDeviceInfoResponse = (ArrayNode) objectMapperConfig.objectMapper()
+					.readValue(inputDto.getMethodResponse(), ArrayNode.class);
 
 			for (int deviceIndex = 0; deviceIndex < arrDeviceInfoResponse.size(); deviceIndex++) {
 				ObjectNode deviceInfoNode = (ObjectNode) arrDeviceInfoResponse.get(deviceIndex);
@@ -156,7 +156,8 @@ public class SignatureValidator extends SBIValidator {
 				validationResultDto = trustRootValidation(getCertificate(deviceInfo), PartnerTypes.DEVICE.toString(),
 						TRUST_FOR_DEVICE_INFO);
 				if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
-					ObjectNode deviceInfoDecoded = objectMapper.readValue(getPayload(deviceInfo), ObjectNode.class);
+					ObjectNode deviceInfoDecoded = objectMapperConfig.objectMapper().readValue(getPayload(deviceInfo),
+							ObjectNode.class);
 
 					if (Objects.isNull(deviceInfoDecoded)) {
 						validationResultDto.setStatus(AppConstants.FAILURE);
@@ -178,8 +179,8 @@ public class SignatureValidator extends SBIValidator {
 	private ValidationResultDto validateCaptureSignature(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
-			ObjectNode captureInfoResponse = (ObjectNode) objectMapper.readValue(inputDto.getMethodResponse(),
-					ObjectNode.class);
+			ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper()
+					.readValue(inputDto.getMethodResponse(), ObjectNode.class);
 
 			final JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
 			if (arrBiometricNodes.isArray()) {
@@ -192,11 +193,11 @@ public class SignatureValidator extends SBIValidator {
 
 						if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
 							String biometricData = getPayload(dataInfo);
-							ObjectNode biometricDataNode = (ObjectNode) objectMapper.readValue(biometricData,
-									ObjectNode.class);
+							ObjectNode biometricDataNode = (ObjectNode) objectMapperConfig.objectMapper()
+									.readValue(biometricData, ObjectNode.class);
 
-							ObjectNode extraInfo = (ObjectNode) objectMapper.readValue(inputDto.getExtraInfoJson(),
-									ObjectNode.class);
+							ObjectNode extraInfo = (ObjectNode) objectMapperConfig.objectMapper()
+									.readValue(inputDto.getExtraInfoJson(), ObjectNode.class);
 							String certificationType = extraInfo.get(CERTIFICATION_TYPE).asText();
 							validationResultDto = validateSignedDigitalId(biometricDataNode.get(DIGITAL_ID).asText(),
 									certificationType, TRUST_FOR_DIGITAL_ID);
@@ -217,8 +218,8 @@ public class SignatureValidator extends SBIValidator {
 	private ValidationResultDto validateRCaptureSignature(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
-			ObjectNode captureInfoResponse = (ObjectNode) objectMapper.readValue(inputDto.getMethodResponse(),
-					ObjectNode.class);
+			ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper()
+					.readValue(inputDto.getMethodResponse(), ObjectNode.class);
 
 			final JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
 			if (arrBiometricNodes.isArray()) {
@@ -231,11 +232,11 @@ public class SignatureValidator extends SBIValidator {
 
 						if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
 							String biometricData = getPayload(dataInfo);
-							ObjectNode biometricDataNode = (ObjectNode) objectMapper.readValue(biometricData,
-									ObjectNode.class);
+							ObjectNode biometricDataNode = (ObjectNode) objectMapperConfig.objectMapper()
+									.readValue(biometricData, ObjectNode.class);
 
-							ObjectNode extraInfo = (ObjectNode) objectMapper.readValue(inputDto.getExtraInfoJson(),
-									ObjectNode.class);
+							ObjectNode extraInfo = (ObjectNode) objectMapperConfig.objectMapper()
+									.readValue(inputDto.getExtraInfoJson(), ObjectNode.class);
 							String certificationType = extraInfo.get(CERTIFICATION_TYPE).asText();
 							validationResultDto = validateSignedDigitalId(biometricDataNode.get(DIGITAL_ID).asText(),
 									certificationType, TRUST_FOR_DIGITAL_ID);
@@ -291,8 +292,8 @@ public class SignatureValidator extends SBIValidator {
 		try {
 			io.restassured.response.Response postResponse = getPostResponse(keyManagerTrustUrl, deviceValidatorDto);
 
-			DeviceValidatorResponseDto deviceValidatorResponseDto = objectMapper
-					.readValue(postResponse.getBody().asString(), DeviceValidatorResponseDto.class);
+			DeviceValidatorResponseDto deviceValidatorResponseDto = objectMapperConfig.objectMapper().
+					readValue(postResponse.getBody().asString(), DeviceValidatorResponseDto.class);
 
 			if ((deviceValidatorResponseDto.getErrors() != null && deviceValidatorResponseDto.getErrors().size() > 0)
 					|| (deviceValidatorResponseDto.getResponse().getStatus().equals("false"))) {
