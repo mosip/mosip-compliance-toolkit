@@ -19,9 +19,8 @@ public enum ToolkitErrorCodes {
 	TESTRUN_DETAILS_NOT_AVAILABLE("TOOLKIT_TESTRUN_005", "No matching TestRunDetails available for the given id"),
 	TESTRUN_STATUS_NOT_AVAILABLE("TOOLKIT_TESTRUN_006", "TestRunStatus not available for the given id"),
 	TESTCASE_NOT_AVAILABLE("TOOLKIT_TESTRUN_007", "No matching Testcase available for the given id"),
-	
+	BIOMETRIC_TESTDATA_NOT_AVAILABLE("TOOLKIT_BIOMETRIC_TESTDATA_001", "No matching biometric testdata available"),
 	PAGE_NOT_FOUND("TOOLKIT_PAGE_ERR_001", "Page content not available"),
-
 	INVALID_REQUEST_ID("TOOLKIT_REQ_ERR_001", "Request id is invalid"),
 	INVALID_REQUEST_VERSION("TOOLKIT_REQ_ERR_002", "Request version is invalid"),
 	INVALID_REQUEST_DATETIME("TOOLKIT_REQ_ERR_003", "Invalid request time"),
