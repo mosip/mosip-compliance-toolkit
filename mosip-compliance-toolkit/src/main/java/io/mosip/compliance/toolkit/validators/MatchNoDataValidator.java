@@ -7,7 +7,7 @@ import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 
-public class InvalidDataValidator extends SDKValidator {
+public class MatchNoDataValidator extends SDKValidator {
 
 	@Override
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
@@ -17,12 +17,12 @@ public class InvalidDataValidator extends SDKValidator {
 					ObjectNode.class);
 			JsonNode mainResponse = (JsonNode) methodResponse.get("response");
 			int statusCode = Integer.parseInt(mainResponse.get("statusCode").asText());
-			if (statusCode == 401 || statusCode == 403) {
+			if (statusCode == 402 || statusCode == 405) {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
-				validationResultDto.setDescription("For invalid data, expected status code received:" + statusCode);
+				validationResultDto.setDescription("No data for Match, expected status code received:" + statusCode);
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
-				validationResultDto.setDescription("For invalid data, unexpected status code received:" + statusCode);
+				validationResultDto.setDescription("No data for Match, unexpected status code received:" + statusCode);
 			}
 		} catch (Exception e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
@@ -31,5 +31,4 @@ public class InvalidDataValidator extends SDKValidator {
 		}
 		return validationResultDto;
 	}
-
 }

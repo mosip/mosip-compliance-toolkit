@@ -104,7 +104,7 @@
 				"description": "Validates if response has all mandatory attributes and they have allowed values"
 			},
 			{
-				"name": "InvalidDataValidator",
+				"name": "QualityCheckInvalidDataValidator",
 				"description": "Validates the status code for invalid data"
 			}
 		],
@@ -133,7 +133,7 @@
 				"description": "Validates if response has all mandatory attributes and they have allowed values"
 			},
 			{
-				"name": "NoFaceDataValidator",
+				"name": "QualityCheckNoDataValidator",
 				"description": "Validates the quality check"
 			}
 		],
@@ -190,7 +190,63 @@
 				"description": "Validates if response has all mandatory attributes and they have allowed values"
 			},{
 				"name": "MatchValidator",
+				"description": "Validates the status code for invalid data"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Invalid face data for match",
+		"testId": "SDK2007",
+		"testDescription": "Invalid face data for match",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": true,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},{
+				"name": "MatchInvalidDataValidator",
 				"description": "Validates if biomterics match for the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "No face data for match",
+		"testId": "SDK2008",
+		"testDescription": "No face data for match",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": true,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},{
+				"name": "MatchNoDataValidator",
+				"description": "Validates the quality check"
 			}
 		],
 		"otherAttributes": {
