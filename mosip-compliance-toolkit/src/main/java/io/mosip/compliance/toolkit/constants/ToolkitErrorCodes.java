@@ -44,6 +44,8 @@ public enum ToolkitErrorCodes {
 	INVALID_CERTIFICATION_TYPE("TOOLKIT_REQ_ERR_021", "Invalid Certification Type"),
 	INVALID_DEVICE_STATUS("TOOLKIT_REQ_ERR_022", "Invalid Device Status"),
 	
+	OBJECT_STORE_ERROR("TOOLKIT_OBJECT_STORE_ERR_001", "Object store error"),
+	
 	//	SDK
 	INVALID_SDK_PURPOSE("TOOLKIT_REQ_ERR_023", "Invalid SDK Purpose"),
 	INVALID_SDK_URL("TOOLKIT_REQ_ERR_024", "Invalid SDK url"),

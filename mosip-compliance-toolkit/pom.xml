@@ -53,12 +53,20 @@
 		<squareup.okhttp.version>2.7.5</squareup.okhttp.version>
 		<io.rest-assured.version>4.0.0</io.rest-assured.version>
 		<jose4j.version>0.7.1</jose4j.version>
+		
+		<!-- Object Store -->
+		<kernel.khazana.version>1.2.0</kernel.khazana.version>
 
 		<sonar.coverage.exclusions>
 		</sonar.coverage.exclusions>
 		<sonar.cpd.exclusions></sonar.cpd.exclusions>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>io.mosip.commons</groupId>
+			<artifactId>khazana</artifactId>
+			<version>${kernel.khazana.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>com.squareup.okhttp</groupId>
 			<artifactId>okhttp</artifactId>
@@ -71,34 +79,34 @@
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.rest-assured/rest-assured-all -->
 		<dependency>
-		    <groupId>io.rest-assured</groupId>
-		    <artifactId>rest-assured-all</artifactId>
-		    <version>${io.rest-assured.version}</version>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured-all</artifactId>
+			<version>${io.rest-assured.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.rest-assured/rest-assured-common -->
 		<dependency>
-		    <groupId>io.rest-assured</groupId>
-		    <artifactId>rest-assured-common</artifactId>
-		    <version>${io.rest-assured.version}</version>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured-common</artifactId>
+			<version>${io.rest-assured.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.rest-assured/json-path -->
 		<dependency>
-		    <groupId>io.rest-assured</groupId>
-		    <artifactId>json-path</artifactId>
-		    <version>${io.rest-assured.version}</version>
-		    <scope>test</scope>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>json-path</artifactId>
+			<version>${io.rest-assured.version}</version>
+			<scope>test</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.bitbucket.b_c/jose4j -->	
+		<!-- https://mvnrepository.com/artifact/org.bitbucket.b_c/jose4j -->
 		<dependency>
 			<groupId>org.bitbucket.b_c</groupId>
 			<artifactId>jose4j</artifactId>
 			<version>${jose4j.version}</version>
 		</dependency>
 		<dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-        </dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -146,9 +154,9 @@
 			<version>${spring-cloud-config.version}</version>
 		</dependency>
 		<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>

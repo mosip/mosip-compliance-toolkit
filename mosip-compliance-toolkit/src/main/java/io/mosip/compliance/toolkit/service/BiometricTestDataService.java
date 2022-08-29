@@ -1,17 +1,20 @@
 package io.mosip.compliance.toolkit.service;
 
+import java.io.ByteArrayInputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
@@ -19,6 +22,7 @@ import io.mosip.compliance.toolkit.dto.BiometricTestDataDto;
 import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
+import io.mosip.compliance.toolkit.util.RandomIdGenerator;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -29,11 +33,21 @@ public class BiometricTestDataService {
 
 	@Value("$(mosip.toolkit.api.id.biometric.testdata.get)")
 	private String getBiometricTestDataId;
+	
+	@Value("$(mosip.toolkit.api.id.biometric.testdata.post)")
+	private String postBiometricTestDataId;
 
 	private Logger log = LoggerConfiguration.logConfig(BiometricTestDataService.class);
 
 	@Autowired
 	private ObjectMapperConfig objectMapperConfig;
+
+	@Value("${mosip.kernel.objectstore.account-name}")
+	private String objectStoreAccountName;
+
+	@Qualifier("S3Adapter")
+	@Autowired
+	private ObjectStoreAdapter objectStore;
 
 	private AuthUserDetails authUserDetails() {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -42,6 +56,11 @@ public class BiometricTestDataService {
 	private String getPartnerId() {
 		String partnerId = authUserDetails().getUsername();
 		return partnerId;
+	}
+
+	private String getUserBy() {
+		String crBy = authUserDetails().getMail();
+		return crBy;
 	}
 
 	@Autowired
@@ -80,6 +99,65 @@ public class BiometricTestDataService {
 		}
 		responseWrapper.setId(getBiometricTestDataId);
 		responseWrapper.setResponse(biometricTestDataList);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+
+	public ResponseWrapper<BiometricTestDataDto> addBiometricTestdata(BiometricTestDataDto inputBiometricTestDataDto) {
+		ResponseWrapper<BiometricTestDataDto> responseWrapper = new ResponseWrapper<>();
+		BiometricTestDataDto biometricTestData = null;
+		try {
+			if (Objects.nonNull(inputBiometricTestDataDto)) {
+
+				ObjectMapper mapper = objectMapperConfig.objectMapper();
+				BiometricTestDataEntity inputEntity = mapper.convertValue(inputBiometricTestDataDto,
+						BiometricTestDataEntity.class);
+				inputEntity.setId(RandomIdGenerator.generateUUID("btd", "", 36));
+				inputEntity.setPartnerId(getPartnerId());
+				inputEntity.setCrBy(getUserBy());
+				inputEntity.setCrDate(LocalDateTime.now());
+				inputEntity.setUpBy(null);
+				inputEntity.setUpdDate(null);
+				inputEntity.setDeleted(false);
+				inputEntity.setDelTime(null);
+
+				boolean status = objectStore.putObject(objectStoreAccountName, inputEntity.getPartnerId(), null, null,
+						inputEntity.getFileId(), new ByteArrayInputStream("Test input".getBytes()));
+				if (status) {
+					BiometricTestDataEntity entity = biometricTestDataRepository.save(inputEntity);
+					biometricTestData = mapper.convertValue(entity, BiometricTestDataDto.class);
+				} else {
+					List<ServiceError> serviceErrorsList = new ArrayList<>();
+					ServiceError serviceError = new ServiceError();
+					serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_ERROR.getErrorCode());
+					serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_ERROR.getErrorMessage());
+					serviceErrorsList.add(serviceError);
+					responseWrapper.setErrors(serviceErrorsList);
+				}
+
+			} else {
+				List<ServiceError> serviceErrorsList = new ArrayList<>();
+				ServiceError serviceError = new ServiceError();
+				serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode());
+				serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+				serviceErrorsList.add(serviceError);
+				responseWrapper.setErrors(serviceErrorsList);
+			}
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In saveBiometricTestdata method of BiometricTestDataService Service - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorCode());
+			serviceError.setMessage(
+					ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		}
+		responseWrapper.setId(postBiometricTestDataId);
+		responseWrapper.setResponse(biometricTestData);
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
