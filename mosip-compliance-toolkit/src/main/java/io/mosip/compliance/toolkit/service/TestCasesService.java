@@ -353,6 +353,7 @@ public class TestCasesService {
 					matchRequestDto.setFlags(null);
 					requestJson = gson.toJson(matchRequestDto);
 				}
+				
 			}
 			System.out.println(requestJson);
 			// convert the request json to base64encoded string

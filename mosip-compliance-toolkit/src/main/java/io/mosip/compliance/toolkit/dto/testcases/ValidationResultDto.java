@@ -17,7 +17,9 @@ public class ValidationResultDto  implements Serializable{
 
 	public String validatorDescription;
 
-	String status;
+	public String status;
 	
-	String description;
+	public String description;
+	
+	String resultsMap;
 }
