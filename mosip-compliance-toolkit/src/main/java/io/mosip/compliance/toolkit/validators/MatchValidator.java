@@ -80,8 +80,6 @@ public class MatchValidator extends SDKValidator {
 					}
 				}
 
-				boolean positiveSuccess = false;
-				boolean negativeSuccess = false;
 				String results = "";
 				for (Map.Entry<Integer, Map<BiometricType, Boolean>> rsEntry : resultsMap.entrySet()) {
 					Integer galleryIndex = rsEntry.getKey();
@@ -89,30 +87,35 @@ public class MatchValidator extends SDKValidator {
 					for (Map.Entry<BiometricType, Boolean> entry2 : bioMap.entrySet()) {
 						if (entry2.getValue()) {
 							if (!inputDto.isNegativeTestCase()) {
-								positiveSuccess = true;
+								//if status is previously failed, then do not reset
+								if (validationResultDto.getStatus() != null
+										&& !validationResultDto.getStatus().equals(AppConstants.FAILURE)) {
+									validationResultDto.setStatus(AppConstants.SUCCESS);
+								}
 								results += "Positive Match for " + entry2.getKey().toString()
 										+ " is successful for galleryIndex: " + galleryIndex;
 							} else {
-								negativeSuccess = true;
+								//if status is previously failed, then do not reset
+								if (validationResultDto.getStatus() != null
+										&& !validationResultDto.getStatus().equals(AppConstants.FAILURE)) {
+									validationResultDto.setStatus(AppConstants.SUCCESS);
+								}
 								results += "Negative Match for " + entry2.getKey().toString()
 										+ " is successful for galleryIndex: " + galleryIndex;
 							}
 						} else {
 							if (!inputDto.isNegativeTestCase()) {
+								validationResultDto.setStatus(AppConstants.FAILURE);
 								results += "Positive Match for " + entry2.getKey().toString()
 										+ " failed for galleryIndex: " + galleryIndex;
 							} else {
+								validationResultDto.setStatus(AppConstants.FAILURE);
 								results += "Negative Match for " + entry2.getKey().toString()
 										+ " failed for galleryIndex: " + galleryIndex;
 							}
 						}
-						results += "\r\n";
+						results += ", ";
 					}
-				}
-				if (positiveSuccess || negativeSuccess) {
-					validationResultDto.setStatus(AppConstants.SUCCESS);
-				} else {
-					validationResultDto.setStatus(AppConstants.FAILURE);
 				}
 				validationResultDto.setDescription(results);
 			} else {
