@@ -6,6 +6,7 @@ CREATE TABLE toolkit.sdk_projects(
 	project_type character varying(64) NOT NULL,
 	sdk_version character varying(36) NOT NULL,
 	url character varying(256) NOT NULL,
+	bio_test_data_file_name character varying(64) NOT NULL,
 	purpose character varying(256) NOT NULL,
 	partner_id character varying(36) NOT NULL,
 	cr_by character varying(256) NOT NULL,
