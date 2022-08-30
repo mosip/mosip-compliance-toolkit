@@ -77,7 +77,6 @@ public class SdkProjectController {
             Errors errors) throws Exception {
 
         requestValidator.validate(value, errors);
-        System.out.println("value=" + value.getId());
         requestValidator.validateId(SDK_PROJECT_UPDATE_ID, value.getId(), errors);
         DataValidationUtil.validate(errors, SDK_PROJECT_UPDATE_ID);
         return sdkProjectService.updateSdkProject(value.getRequest());
