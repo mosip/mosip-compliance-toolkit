@@ -1,6 +1,6 @@
 package io.mosip.compliance.toolkit.service;
 
-import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -33,7 +34,7 @@ public class BiometricTestDataService {
 
 	@Value("$(mosip.toolkit.api.id.biometric.testdata.get)")
 	private String getBiometricTestDataId;
-	
+
 	@Value("$(mosip.toolkit.api.id.biometric.testdata.post)")
 	private String postBiometricTestDataId;
 
@@ -104,17 +105,19 @@ public class BiometricTestDataService {
 		return responseWrapper;
 	}
 
-	public ResponseWrapper<BiometricTestDataDto> addBiometricTestdata(BiometricTestDataDto inputBiometricTestDataDto) {
+	public ResponseWrapper<BiometricTestDataDto> addBiometricTestdata(BiometricTestDataDto inputBiometricTestDataDto,
+			MultipartFile file) {
 		ResponseWrapper<BiometricTestDataDto> responseWrapper = new ResponseWrapper<>();
 		BiometricTestDataDto biometricTestData = null;
 		try {
-			if (Objects.nonNull(inputBiometricTestDataDto)) {
+			if (Objects.nonNull(inputBiometricTestDataDto) && Objects.nonNull(file)) {
 
 				ObjectMapper mapper = objectMapperConfig.objectMapper();
 				BiometricTestDataEntity inputEntity = mapper.convertValue(inputBiometricTestDataDto,
 						BiometricTestDataEntity.class);
 				inputEntity.setId(RandomIdGenerator.generateUUID("btd", "", 36));
 				inputEntity.setPartnerId(getPartnerId());
+				inputEntity.setFileId(file.getOriginalFilename());
 				inputEntity.setCrBy(getUserBy());
 				inputEntity.setCrDate(LocalDateTime.now());
 				inputEntity.setUpBy(null);
@@ -122,16 +125,28 @@ public class BiometricTestDataService {
 				inputEntity.setDeleted(false);
 				inputEntity.setDelTime(null);
 
-				boolean status = objectStore.putObject(objectStoreAccountName, inputEntity.getPartnerId(), null, null,
-						inputEntity.getFileId(), new ByteArrayInputStream("Test input".getBytes()));
-				if (status) {
-					BiometricTestDataEntity entity = biometricTestDataRepository.save(inputEntity);
-					biometricTestData = mapper.convertValue(entity, BiometricTestDataDto.class);
+				if (!objectStore.exists(objectStoreAccountName, inputEntity.getPartnerId(), null, null,
+						inputEntity.getFileId())) {
+					InputStream is = file.getInputStream();
+					boolean status = objectStore.putObject(objectStoreAccountName, inputEntity.getPartnerId(), null,
+							null, inputEntity.getFileId(), is);
+					is.close();
+					if (status) {
+						BiometricTestDataEntity entity = biometricTestDataRepository.save(inputEntity);
+						biometricTestData = mapper.convertValue(entity, BiometricTestDataDto.class);
+					} else {
+						List<ServiceError> serviceErrorsList = new ArrayList<>();
+						ServiceError serviceError = new ServiceError();
+						serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorCode());
+						serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorMessage());
+						serviceErrorsList.add(serviceError);
+						responseWrapper.setErrors(serviceErrorsList);
+					}
 				} else {
 					List<ServiceError> serviceErrorsList = new ArrayList<>();
 					ServiceError serviceError = new ServiceError();
-					serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_ERROR.getErrorCode());
-					serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_ERROR.getErrorMessage());
+					serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorCode());
+					serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorMessage());
 					serviceErrorsList.add(serviceError);
 					responseWrapper.setErrors(serviceErrorsList);
 				}

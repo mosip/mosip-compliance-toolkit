@@ -45,6 +45,8 @@ public enum ToolkitErrorCodes {
 	INVALID_DEVICE_STATUS("TOOLKIT_REQ_ERR_022", "Invalid Device Status"),
 	
 	OBJECT_STORE_ERROR("TOOLKIT_OBJECT_STORE_ERR_001", "Object store error"),
+	OBJECT_STORE_FILE_EXISTS("TOOLKIT_OBJECT_STORE_ERR_002", "File name already exists"),
+	OBJECT_STORE_UNABLE_TO_ADD_FILE("TOOLKIT_OBJECT_STORE_ERR_003", "Unable to add file"),
 	
 	//	SDK
 	INVALID_SDK_PURPOSE("TOOLKIT_REQ_ERR_023", "Invalid SDK Purpose"),
