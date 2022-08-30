@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -35,7 +36,7 @@ public class SdkProjectService {
 	private String getSdkProjectPostId;
 
 	@Value("${mosip.toolkit.api.id.sdk.project.put}")
-	private String getSdkProjectUpdateId;
+	private String putSdkProjectId;
 
 	@Autowired
 	private SdkProjectRepository sdkProjectRepository;
@@ -158,31 +159,33 @@ public class SdkProjectService {
 	public ResponseWrapper<SdkProjectDto> updateSdkProject(SdkProjectDto sdkProjectDto) {
 		ResponseWrapper<SdkProjectDto> responseWrapper = new ResponseWrapper<>();
 		try {
-			String projectId = sdkProjectDto.getId();
-			Optional<SdkProjectEntity> optionalSdkProjectEntity = sdkProjectRepository.findById(projectId, getPartnerId());
-			if (optionalSdkProjectEntity.isPresent()) {
-				SdkProjectEntity entity = optionalSdkProjectEntity.get();
-				LocalDateTime updDate = LocalDateTime.now();
-				Optional<String> url = Optional.ofNullable(sdkProjectDto.getUrl());
-				Optional<String> bioTestDataFileName = Optional.ofNullable(sdkProjectDto.getBioTestDataFileName());
+			if(Objects.nonNull(sdkProjectDto)){
+				String projectId = sdkProjectDto.getId();
+				Optional<SdkProjectEntity> optionalSdkProjectEntity = sdkProjectRepository.findById(projectId, getPartnerId());
+				if (optionalSdkProjectEntity.isPresent()) {
+					SdkProjectEntity entity = optionalSdkProjectEntity.get();
+					LocalDateTime updDate = LocalDateTime.now();
+					String url = sdkProjectDto.getUrl();
+					String bioTestDataFileName = sdkProjectDto.getBioTestDataFileName();
 //					Updating SDK project values
-				if (url.isPresent() && !url.get().isEmpty()) {
-					entity.setUrl(url.get());
+					if (Objects.nonNull(url) && !url.isEmpty()) {
+						entity.setUrl(url);
+					}
+					if (Objects.nonNull(bioTestDataFileName) && !bioTestDataFileName.isEmpty()) {
+						entity.setBioTestDataFileName(bioTestDataFileName);
+					}
+					entity.setUpBy(this.getUserBy());
+					entity.setUpdDate(updDate);
+					SdkProjectEntity outputEntity = sdkProjectRepository.save(entity);
+					sdkProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, SdkProjectDto.class);
+				} else {
+					List<ServiceError> serviceErrorsList = new ArrayList<>();
+					ServiceError serviceError = new ServiceError();
+					serviceError.setErrorCode(ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorCode());
+					serviceError.setMessage(ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorMessage());
+					serviceErrorsList.add(serviceError);
+					responseWrapper.setErrors(serviceErrorsList);
 				}
-				if (bioTestDataFileName.isPresent() && !bioTestDataFileName.get().isEmpty()) {
-					entity.setBioTestDataFileName(bioTestDataFileName.get());
-				}
-				entity.setUpBy(this.getUserBy());
-				entity.setUpdDate(updDate);
-				SdkProjectEntity outputEntity = sdkProjectRepository.save(entity);
-				sdkProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, SdkProjectDto.class);
-			} else {
-				List<ServiceError> serviceErrorsList = new ArrayList<>();
-				ServiceError serviceError = new ServiceError();
-				serviceError.setErrorCode(ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorCode());
-				serviceError.setMessage(ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorMessage());
-				serviceErrorsList.add(serviceError);
-				responseWrapper.setErrors(serviceErrorsList);
 			}
 		} catch (ToolkitException ex) {
 			sdkProjectDto = null;
@@ -208,7 +211,7 @@ public class SdkProjectService {
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		}
-		responseWrapper.setId(getSdkProjectUpdateId);
+		responseWrapper.setId(putSdkProjectId);
 		responseWrapper.setResponse(sdkProjectDto);
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
