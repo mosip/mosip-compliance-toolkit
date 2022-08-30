@@ -47,7 +47,7 @@
 			},
 			{
 				"name": "QualityCheckValidator",
-				"description": "Validates the quality check"
+				"description": "Checks the quality score of the modality"
 			}
 		],
 		"otherAttributes": {
@@ -76,7 +76,7 @@
 			},
 			{
 				"name": "QualityCheckValidator",
-				"description": "Validates the quality check"
+				"description": "Checks the quality score of the modality"
 			}
 		],
 		"otherAttributes": {
@@ -134,7 +134,7 @@
 			},
 			{
 				"name": "QualityCheckNoDataValidator",
-				"description": "Validates the quality check"
+				"description": "Validates the status code for no data"
 			}
 		],
 		"otherAttributes": {
@@ -160,7 +160,8 @@
 			{
 				"name": "SchemaValidator",
 				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},{
+			},
+			{
 				"name": "MatchValidator",
 				"description": "Validates if biomterics match for the modality"
 			}
@@ -188,9 +189,10 @@
 			{
 				"name": "SchemaValidator",
 				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},{
+			},
+			{
 				"name": "MatchValidator",
-				"description": "Validates the status code for invalid data"
+				"description": "Validates if biomterics match for the modality"
 			}
 		],
 		"otherAttributes": {
@@ -208,7 +210,7 @@
 		"testId": "SDK2007",
 		"testDescription": "Invalid face data for match",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": true,
+		"isNegativeTestcase": false,
 		"methodName": "match",
 		"requestSchema": "MatchRequestSchema",
 		"responseSchema": "MatchResponseSchema",
@@ -216,9 +218,10 @@
 			{
 				"name": "SchemaValidator",
 				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},{
+			},
+			{
 				"name": "MatchInvalidDataValidator",
-				"description": "Validates if biomterics match for the modality"
+				"description": "Validates the status code for invalid data"
 			}
 		],
 		"otherAttributes": {
@@ -236,7 +239,7 @@
 		"testId": "SDK2008",
 		"testDescription": "No face data for match",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": true,
+		"isNegativeTestcase": false,
 		"methodName": "match",
 		"requestSchema": "MatchRequestSchema",
 		"responseSchema": "MatchResponseSchema",
@@ -244,9 +247,39 @@
 			{
 				"name": "SchemaValidator",
 				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},{
+			},
+			{
 				"name": "MatchNoDataValidator",
-				"description": "Validates the quality check"
+				"description": "Validates the status code for no data"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Face match against more than one face",
+		"testId": "SDK2009",
+		"testDescription": "Face match against more than one face",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchValidator",
+				"description": "Validates if biomterics match for the modality"
 			}
 		],
 		"otherAttributes": {
