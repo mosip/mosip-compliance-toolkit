@@ -20,9 +20,6 @@ public class SdkProjectController {
     /** The Constant SDK_PROJECT_POST_ID application. */
     private static final String SDK_PROJECT_POST_ID = "sdk.project.post";
 
-    /** The Constant SDK_PROJECT_UPDATE_ID application. */
-    private static final String SDK_PROJECT_UPDATE_ID = "sdk.project.put";
-
     @Autowired
     private SdkProjectService sdkProjectService;
 
@@ -63,22 +60,4 @@ public class SdkProjectController {
         return sdkProjectService.addSdkProject(value.getRequest());
     }
 
-    /**
-     * Update Sdk Project details.
-     *
-     * @param SdkProjectDto
-     * @return SdkProjectDto added
-     * @throws Exception
-     */
-    @ResponseFilter
-    @PutMapping(value = "/updateSdkProject", produces = "application/json")
-    public ResponseWrapper<SdkProjectDto> updateSdkProject(
-            @RequestBody @Valid RequestWrapper<SdkProjectDto> value,
-            Errors errors) throws Exception {
-
-        requestValidator.validate(value, errors);
-        requestValidator.validateId(SDK_PROJECT_UPDATE_ID, value.getId(), errors);
-        DataValidationUtil.validate(errors, SDK_PROJECT_UPDATE_ID);
-        return sdkProjectService.updateSdkProject(value.getRequest());
-    }
 }

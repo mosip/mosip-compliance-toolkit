@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -34,9 +33,6 @@ public class SdkProjectService {
 	private String getSdkProjectId;
 	@Value("${mosip.toolkit.api.id.sdk.project.post}")
 	private String getSdkProjectPostId;
-
-	@Value("${mosip.toolkit.api.id.sdk.project.put}")
-	private String putSdkProjectId;
 
 	@Autowired
 	private SdkProjectRepository sdkProjectRepository;
@@ -150,68 +146,6 @@ public class SdkProjectService {
 			responseWrapper.setErrors(serviceErrorsList);
 		}
 		responseWrapper.setId(getSdkProjectPostId);
-		responseWrapper.setResponse(sdkProjectDto);
-		responseWrapper.setVersion(AppConstants.VERSION);
-		responseWrapper.setResponsetime(LocalDateTime.now());
-		return responseWrapper;
-	}
-
-	public ResponseWrapper<SdkProjectDto> updateSdkProject(SdkProjectDto sdkProjectDto) {
-		ResponseWrapper<SdkProjectDto> responseWrapper = new ResponseWrapper<>();
-		try {
-			if(Objects.nonNull(sdkProjectDto)){
-				String projectId = sdkProjectDto.getId();
-				Optional<SdkProjectEntity> optionalSdkProjectEntity = sdkProjectRepository.findById(projectId, getPartnerId());
-				if (optionalSdkProjectEntity.isPresent()) {
-					SdkProjectEntity entity = optionalSdkProjectEntity.get();
-					LocalDateTime updDate = LocalDateTime.now();
-					String url = sdkProjectDto.getUrl();
-					String bioTestDataFileName = sdkProjectDto.getBioTestDataFileName();
-//					Updating SDK project values
-					if (Objects.nonNull(url) && !url.isEmpty()) {
-						entity.setUrl(url);
-					}
-					if (Objects.nonNull(bioTestDataFileName) && !bioTestDataFileName.isEmpty()) {
-						entity.setBioTestDataFileName(bioTestDataFileName);
-					}
-					entity.setUpBy(this.getUserBy());
-					entity.setUpdDate(updDate);
-					SdkProjectEntity outputEntity = sdkProjectRepository.save(entity);
-					sdkProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, SdkProjectDto.class);
-				} else {
-					List<ServiceError> serviceErrorsList = new ArrayList<>();
-					ServiceError serviceError = new ServiceError();
-					serviceError.setErrorCode(ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorCode());
-					serviceError.setMessage(ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorMessage());
-					serviceErrorsList.add(serviceError);
-					responseWrapper.setErrors(serviceErrorsList);
-				}
-			}
-		} catch (ToolkitException ex) {
-			sdkProjectDto = null;
-			log.debug("sessionId", "idType", "id", ex.getStackTrace());
-			log.error("sessionId", "idType", "id",
-					"In updateSdkProject method of SdkProjectService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ex.getErrorCode());
-			serviceError.setMessage(ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
-		} catch (Exception ex) {
-			sdkProjectDto = null;
-			log.debug("sessionId", "idType", "id", ex.getStackTrace());
-			log.error("sessionId", "idType", "id",
-					"In updateSdkProject method of SdkProjectService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.SDK_PROJECT_UNABLE_TO_ADD.getErrorCode());
-			serviceError
-					.setMessage(ToolkitErrorCodes.SDK_PROJECT_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
-		}
-		responseWrapper.setId(putSdkProjectId);
 		responseWrapper.setResponse(sdkProjectDto);
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
