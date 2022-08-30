@@ -47,7 +47,7 @@ public class TestRunService {
 	private String putTestRunId;
 
 	@Value("${mosip.toolkit.api.id.testrun.details.post}")
-	
+
 	private String postTestRunDetailsId;
 
 	@Value("${mosip.toolkit.api.id.testrun.details.get}")
@@ -390,8 +390,14 @@ public class TestRunService {
 			if (Objects.nonNull(runId) && !runId.isEmpty()) {
 				ToolkitErrorCodes toolkitError = validatePartnerIdByRunId(runId, getPartnerId());
 				if (ToolkitErrorCodes.SUCCESS.equals(toolkitError)) {
-					boolean resultStatus = testRunRepository.getTestRunStatus(runId);
-
+					boolean resultStatus = false;
+					int successCount = testRunDetailsRepository.getTestRunSuccessCount(runId);
+					if (successCount > 0) {
+						int testcaseCount = testRunRepository.getTestCaseCount(runId);
+						if (testcaseCount == successCount) {
+							resultStatus = true;
+						}
+					}
 					testRunStatus = new TestRunStatusDto();
 					testRunStatus.setResultStatus(resultStatus);
 				} else {

@@ -32,6 +32,7 @@ public interface TestRunRepository extends BaseRepository<TestRunEntity, String>
 	public Page<TestRunHistoryEntity> getTestRunHistoryByCollectionId(Pageable pageable, String collectionId,
 			String partnerId);
 
-	@Query("SELECT (CASE WHEN (COUNT(trd.testcaseId) < 1) THEN false WHEN (COUNT(trd.testcaseId))=(COUNT(CASE WHEN trd.resultStatus='success' THEN 1 ELSE NULL END)) THEN true ELSE false END) AS resultStatus FROM TestRunDetailsEntity AS trd WHERE trd.runId = ?1")
-	public boolean getTestRunStatus(String runId);
+	@Query("SELECT COUNT(ct.testcaseId) FROM TestRunEntity AS tr LEFT JOIN CollectionTestCaseEntity AS ct ON (tr.collectionId = ct.collectionId) WHERE tr.id = ?1 AND tr.isDeleted<>'true' GROUP BY (ct.collectionId)")
+	public int getTestCaseCount(String runId);
+
 }
