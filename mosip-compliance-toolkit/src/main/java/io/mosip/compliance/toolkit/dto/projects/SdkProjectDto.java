@@ -20,6 +20,8 @@ public class SdkProjectDto {
 	private String sdkVersion;
 	
 	private String url;
+
+	private String bioTestDataFileName;
 	
 	private String purpose;
 	
