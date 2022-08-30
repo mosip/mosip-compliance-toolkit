@@ -1,0 +1,1 @@
+extract template probe face no input data
