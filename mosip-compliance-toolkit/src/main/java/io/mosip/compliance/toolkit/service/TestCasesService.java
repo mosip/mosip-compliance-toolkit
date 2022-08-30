@@ -41,7 +41,10 @@ import com.networknt.schema.ValidationMessage;
 
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.dto.sdk.CheckQualityRequestDto;
+import io.mosip.compliance.toolkit.dto.sdk.ExtractTemplateRequestDto;
 import io.mosip.compliance.toolkit.dto.sdk.MatchRequestDto;
+import io.mosip.compliance.toolkit.dto.sdk.ConvertFormatRequestDto;
+import io.mosip.compliance.toolkit.dto.sdk.SegmentRequestDto;
 import io.mosip.compliance.toolkit.dto.sdk.RequestDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseResponseDto;
@@ -353,7 +356,33 @@ public class TestCasesService {
 					matchRequestDto.setFlags(null);
 					requestJson = gson.toJson(matchRequestDto);
 				}
-				
+				if (methodName.equalsIgnoreCase(MethodName.EXTRACT_TEMPLATE.getCode())) {
+					ExtractTemplateRequestDto extractTemplateRequestDto = new ExtractTemplateRequestDto();
+					extractTemplateRequestDto.setSample(biometricRecord);
+					extractTemplateRequestDto.setModalitiesToExtract(bioTypeList);
+					// TODO: set flags
+					extractTemplateRequestDto.setFlags(null);
+					requestJson = gson.toJson(extractTemplateRequestDto);
+				}
+				if (methodName.equalsIgnoreCase(MethodName.SEGMENT.getCode())) {
+					SegmentRequestDto segmentRequestDto = new SegmentRequestDto();
+					segmentRequestDto.setSample(biometricRecord);
+					segmentRequestDto.setModalitiesToSegment(bioTypeList);
+					// TODO: set flags
+					segmentRequestDto.setFlags(null);
+					requestJson = gson.toJson(segmentRequestDto);
+				}
+				if (methodName.equalsIgnoreCase(MethodName.CONVERT_FORMAT.getCode())) {
+					ConvertFormatRequestDto convertFormatRequestDto = new ConvertFormatRequestDto();
+					convertFormatRequestDto.setSample(biometricRecord);
+					convertFormatRequestDto.setSourceFormat(getSourceFormat(biometricRecord));
+					convertFormatRequestDto.setTargetFormat(getTargetFormat());
+					convertFormatRequestDto.setSourceParams(null);
+					convertFormatRequestDto.setTargetParams(null);
+					convertFormatRequestDto.setModalitiesToConvert(bioTypeList);
+					requestJson = gson.toJson(convertFormatRequestDto);
+				}
+
 			}
 			System.out.println(requestJson);
 			// convert the request json to base64encoded string
@@ -363,6 +392,16 @@ public class TestCasesService {
 				requestDto.setRequest(this.base64Encode(requestJson));
 				responseWrapper.setResponse(gson.toJson(requestDto));
 			}
+		} catch (ToolkitException ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In generateRequestForSDKTestcase method of TestCasesService - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ex.getErrorCode());
+			serviceError.setMessage(ex.getErrorText());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
@@ -379,6 +418,33 @@ public class TestCasesService {
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
+	}
+
+	// io.mosip.kernel.bio.converter.constant.SourceFormatCode
+	// for Finger(ISO19794_4_2011), Face (ISO19794_5_2011), Iris(ISO19794_6_2011)
+	private String getSourceFormat(BiometricRecord biometricRecord) {
+		List<BiometricType> biometricTypeList = biometricRecord.getSegments().get(0).getBdbInfo().getType();
+		if (biometricTypeList != null && !biometricTypeList.isEmpty()) {
+			BiometricType biometricType = biometricTypeList.get(0);
+			switch (biometricType) {
+			case FINGER:
+				return "ISO19794_4_2011";
+			case IRIS:
+				return "ISO19794_6_2011";
+			case FACE:
+				return "ISO19794_5_2011";
+			default:
+				throw new ToolkitException(ToolkitErrorCodes.INVALID_MODALITY.getErrorCode(),
+						ToolkitErrorCodes.INVALID_MODALITY.getErrorMessage());
+			}
+		}
+		return null;
+	}
+
+	// io.mosip.kernel.bio.converter.constant.TargetFormatCode
+	// to JPEG (IMAGE/JPEG)
+	private String getTargetFormat() {
+		return "IMAGE/JPEG";
 	}
 
 	public ResponseWrapper<TestCaseResponseDto> saveTestCases(List<TestCaseDto> values) throws Exception {

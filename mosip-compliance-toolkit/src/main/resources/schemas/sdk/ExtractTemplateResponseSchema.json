@@ -1,0 +1,417 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema#",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/ExtractTemplateResponseSchema.json",
+	"type": "object",
+	"properties": {
+		"version": {
+			"type": "string"
+		},
+		"responsetime": {
+			"type": "string"
+		},
+		"response": {
+			"type": "object",
+			"properties": {
+				"statusCode": {
+					"type": "integer"
+				},
+				"statusMessage": {
+					"type": "null"
+				},
+				"response": {
+					"type": "object",
+					"properties": {
+						"version": {
+							"type": [
+								"object",
+								"null"
+							],
+							"properties": {
+								"major": {
+									"type": "integer"
+								},
+								"minor": {
+									"type": "integer"
+								}
+							}
+						},
+						"cbeffversion": {
+							"type": [
+								"object",
+								"null"
+							],
+							"properties": {
+								"major": {
+									"type": "integer"
+								},
+								"minor": {
+									"type": "integer"
+								}
+							}
+						},
+						"birInfo": {
+							"type": [
+								"object",
+								"null"
+							],
+							"properties": {
+								"integrity": {
+									"type": "boolean"
+								}
+							}
+						},
+						"segments": {
+							"type": "array",
+							"minItems": 1,
+							"items": [
+								{
+									"type": "object",
+									"properties": {
+										"version": {
+											"type": "object",
+											"properties": {
+												"major": {
+													"type": "integer"
+												},
+												"minor": {
+													"type": "integer"
+												}
+											},
+											"required": [
+												"major",
+												"minor"
+											]
+										},
+										"cbeffversion": {
+											"type": "object",
+											"properties": {
+												"major": {
+													"type": "integer"
+												},
+												"minor": {
+													"type": "integer"
+												}
+											},
+											"required": [
+												"major",
+												"minor"
+											]
+										},
+										"birInfo": {
+											"type": "object",
+											"properties": {
+												"integrity": {
+													"type": "boolean"
+												}
+											},
+											"required": [
+												"integrity"
+											]
+										},
+										"bdbInfo": {
+											"type": "object",
+											"properties": {
+												"format": {
+													"type": "object",
+													"properties": {
+														"organization": {
+															"type": "string"
+														},
+														"type": {
+															"type": "string"
+														}
+													},
+													"required": [
+														"organization",
+														"type"
+													]
+												},
+												"creationDate": {
+													"type": "object",
+													"properties": {
+														"date": {
+															"type": "object",
+															"properties": {
+																"year": {
+																	"type": "integer"
+																},
+																"month": {
+																	"type": "integer"
+																},
+																"day": {
+																	"type": "integer"
+																}
+															},
+															"required": [
+																"year",
+																"month",
+																"day"
+															]
+														},
+														"time": {
+															"type": "object",
+															"properties": {
+																"hour": {
+																	"type": "integer"
+																},
+																"minute": {
+																	"type": "integer"
+																},
+																"second": {
+																	"type": "integer"
+																},
+																"nano": {
+																	"type": "integer"
+																}
+															},
+															"required": [
+																"hour",
+																"minute",
+																"second",
+																"nano"
+															]
+														}
+													},
+													"required": [
+														"date",
+														"time"
+													]
+												},
+												"type": {
+													"type": "array",
+													"items": [
+														{
+															"type": "string",
+															"enum": [
+																"FACE",
+																"FINGER",
+																"IRIS"
+															]
+														}
+													],
+													"minItems": 1,
+													"maxItems": 1,
+													"uniqueItems": true
+												},
+												"subtype": {
+													"type": ["array","null"],
+													"items": [
+														{
+															"type": "string"
+														}
+													],
+													"minItems": 1,
+													"maxItems": 1,
+													"uniqueItems": true
+												},
+												"level": {
+													"type": "string",
+													"enum": [
+														"RAW"
+													]
+												},
+												"purpose": {
+													"type": "string",
+													"enum": [
+														"ENROLL", "IDENTIFY", "VERIFY", "ENROLLVERIFY", "ENROLLIDENTIFY", "AUDIT"
+													]
+												},
+												"quality": {
+													"type": "object",
+													"properties": {
+														"algorithm": {
+															"type": "object",
+															"properties": {
+																"organization": {
+																	"type": "string"
+																},
+																"type": {
+																	"type": "string"
+																}
+															},
+															"required": [
+																"organization",
+																"type"
+															]
+														},
+														"score": {
+															"type": "integer"
+														}
+													},
+													"required": [
+														"algorithm",
+														"score"
+													]
+												}
+											},
+											"allOf": [
+												{
+													"if": {
+														"properties": {
+															"type": {
+																"contains": {
+																	"type": "string",
+																	"const": "Finger"
+																}
+															}
+														}
+													},
+													"then": {
+														"properties": {
+															"subtype": {
+																"type": "array",
+																"items": [
+																	{
+																		"type": "string",
+																		"enum": [
+																			"Right RingFinger",
+																			"Right MiddleFinger",
+																			"Right LittleFinger",
+																			"Right IndexFinger",
+																			"Right Thumb",
+																			"Left RingFinger",
+																			"Left MiddleFinger",
+																			"Left LittleFinger",
+																			"Left IndexFinger",
+																			"Left Thumb",
+																			"Unknown"
+																		]
+																	}
+																]
+															}
+														},
+														"required": [
+															"format",
+															"creationDate",
+															"type",
+															"subtype",
+															"level",
+															"purpose",
+															"quality"
+														]
+													}
+												},
+												{
+													"if": {
+														"properties": {
+															"type": {
+																"contains": {
+																	"type": "string",
+																	"const": "Iris"
+																}
+															}
+														}
+													},
+													"then": {
+														"properties": {
+															"subtype": {
+																"type": "array",
+																"items": [
+																	{
+																		"type": "string",
+																		"enum": [
+																			"Left",
+																			"Right",
+																			"Unknown"
+																		]
+																	}
+																]
+															}
+														},
+														"required": [
+															"format",
+															"creationDate",
+															"type",
+															"subtype",
+															"level",
+															"purpose",
+															"quality"
+														]
+													}
+												},
+												{
+													"if": {
+														"properties": {
+															"type": {
+																"contains": {
+																	"type": "string",
+																	"const": "Face"
+																}
+															}
+														}
+													},
+													"then": {
+														"properties": {
+															"subtype": {
+																"type": ["array","null"],
+																"items": [
+																	{
+																		"type": [
+																			"string",
+																			"null"
+																		],
+																		"enum": [
+																			"Unknown"
+																		]
+																	}
+																]
+															}
+														},
+														"required": [
+															"format",
+															"creationDate",
+															"type",
+															"level",
+															"purpose",
+															"quality"
+														]
+													}
+												}
+											]
+										},
+										"bdb": {
+											"type": ["array", "null"],
+											"items": { "type": "integer" }
+										}
+									},
+									"required": [
+										"version",
+										"cbeffversion",
+										"birInfo",
+										"bdbInfo",
+										"bdb"
+									]
+								}
+							]
+						},
+						"others": {
+							"type": "object"
+						}
+					},
+					"required": [
+						"version",
+						"cbeffversion",
+						"birInfo",
+						"segments",
+						"others"
+					]
+				}
+			},
+			"required": [
+				"statusCode",
+				"statusMessage",
+				"response"
+			]
+		},
+		"errors": {
+			"type": "array",
+			"items": {}
+		}
+	},
+	"required": [
+		"version",
+		"responsetime",
+		"response",
+		"errors"
+	]
+}
