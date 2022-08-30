@@ -332,7 +332,8 @@ public class TestRunServiceTest {
         Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
         SecurityContextHolder.setContext(securityContext);
         List<TestRunHistoryEntity> testRunHistoryEntityList = new ArrayList<>();
-        Mockito.when(testRunRepository.getTestRunStatus(Mockito.any())).thenReturn(true);
+        Mockito.when(testRunRepository.getTestCaseCount(Mockito.any())).thenReturn(1);
+        Mockito.when(testRunDetailsRepository.getTestRunSuccessCount(Mockito.any())).thenReturn(1);
         Mockito.when(testRunRepository.getPartnerIdByRunId(runId)).thenReturn("456");
         testRunService.getTestRunStatus(runId);
 
