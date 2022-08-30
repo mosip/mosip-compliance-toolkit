@@ -290,5 +290,61 @@
 				"Matcher"
 			]
 		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Face extract invalid data failure",
+		"testId": "SDK2045",
+		"testDescription": "Face extract invalid data failure",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": true,
+		"methodName": "extract-template",
+		"requestSchema": "ExtractTemplateRequestSchema",
+		"responseSchema": "ExtractTemplateResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},{
+				"name": "ExtractTemplateInvalidDataValidator",
+				"description": "Validates if input BDB data present in the Probe for the modality is valid"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Extract Template"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Face extract no input failure",
+		"testId": "SDK2048",
+		"testDescription": "Face extract no input failure",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": true,
+		"methodName": "extract-template",
+		"requestSchema": "ExtractTemplateRequestSchema",
+		"responseSchema": "ExtractTemplateResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},{
+				"name": "ExtractTemplateNoInputDataValidator",
+				"description": "Validates if no input BDB data present in the Probe"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Extract Template"
+			]
+		}
 	}
 ]
