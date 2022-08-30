@@ -1,6 +1,5 @@
 package io.mosip.compliance.toolkit.service;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

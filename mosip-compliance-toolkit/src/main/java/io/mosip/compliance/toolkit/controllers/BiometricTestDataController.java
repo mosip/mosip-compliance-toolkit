@@ -8,7 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +36,7 @@ public class BiometricTestDataController {
 
 	@Autowired
 	private RequestValidator requestValidator;
-	
+
 	@Autowired
 	private ObjectMapperConfig objectMapperConfig;
 
@@ -52,7 +51,8 @@ public class BiometricTestDataController {
 			@RequestPart("biometricMetaData") String strRequestWrapper, Errors errors) {
 		try {
 			RequestWrapper<BiometricTestDataDto> requestWrapper = objectMapperConfig.objectMapper()
-					.readValue(strRequestWrapper, new TypeReference<RequestWrapper<BiometricTestDataDto>>() {});
+					.readValue(strRequestWrapper, new TypeReference<RequestWrapper<BiometricTestDataDto>>() {
+					});
 			requestValidator.validate(requestWrapper, errors);
 			requestValidator.validateId(BIOMETRIC_TESTDATA_POST_ID, requestWrapper.getId(), errors);
 			DataValidationUtil.validate(errors, BIOMETRIC_TESTDATA_POST_ID);
