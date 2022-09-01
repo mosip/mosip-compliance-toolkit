@@ -1,0 +1,1 @@
+Finger match against more than 10 fingers
