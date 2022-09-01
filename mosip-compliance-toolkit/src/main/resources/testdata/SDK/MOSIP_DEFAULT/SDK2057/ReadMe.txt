@@ -1,1 +1,1 @@
-segment probe face invalid data
+segment probe face good data
