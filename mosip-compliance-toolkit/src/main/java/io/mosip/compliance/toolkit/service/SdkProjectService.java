@@ -111,6 +111,7 @@ public class SdkProjectService {
 				entity.setPurpose(sdkProjectDto.getPurpose());
 				entity.setUrl(sdkProjectDto.getUrl());
 				entity.setSdkVersion(sdkProjectDto.getSdkVersion());
+				entity.setBioTestDataFileName(sdkProjectDto.getBioTestDataFileName());
 				entity.setPartnerId(this.getPartnerId());
 				entity.setCrBy(this.getUserBy());
 				entity.setCrDate(crDate);
