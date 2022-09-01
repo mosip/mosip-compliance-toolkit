@@ -69,4 +69,9 @@ public class BiometricTestDataController {
 		}
 	}
 
+	@GetMapping(value = "/getBioTestDataFileNames")
+	public ResponseWrapper<List<String>> getBioTestDataFileNames() {
+		return biometricTestDataService.getBioTestDataFileNames();
+	}
+
 }

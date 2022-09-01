@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.mosip.commons.khazana.dto.ObjectDto;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
@@ -37,6 +38,9 @@ public class BiometricTestDataService {
 
 	@Value("$(mosip.toolkit.api.id.biometric.testdata.post)")
 	private String postBiometricTestDataId;
+
+	@Value("$(mosip.toolkit.api.id.biometric.testdata.filenames.get)")
+	private String getBioTestDataFileNames;
 
 	private Logger log = LoggerConfiguration.logConfig(BiometricTestDataService.class);
 
@@ -173,6 +177,43 @@ public class BiometricTestDataService {
 		}
 		responseWrapper.setId(postBiometricTestDataId);
 		responseWrapper.setResponse(biometricTestData);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+
+	public ResponseWrapper<List<String>> getBioTestDataFileNames() {
+		ResponseWrapper<List<String>> responseWrapper = new ResponseWrapper<>();
+		List<String> fileNames = new ArrayList<>();
+		try {
+			String partnerId = getPartnerId();
+			List<ObjectDto> objects = objectStore.getAllObjects(objectStoreAccountName, partnerId);
+			if (Objects.nonNull(objects) && !objects.isEmpty()) {
+				for (ObjectDto objectDto : objects) {
+					fileNames.add(objectDto.getObjectName());
+				}
+			} else {
+				List<ServiceError> serviceErrorsList = new ArrayList<>();
+				ServiceError serviceError = new ServiceError();
+				serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode());
+				serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage());
+				serviceErrorsList.add(serviceError);
+				responseWrapper.setErrors(serviceErrorsList);
+			}
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In getBioTestDataFileNames method of BiometricTestDataService Service - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode());
+			serviceError.setMessage(
+					ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		}
+		responseWrapper.setId(getBioTestDataFileNames);
+		responseWrapper.setResponse(fileNames);
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
