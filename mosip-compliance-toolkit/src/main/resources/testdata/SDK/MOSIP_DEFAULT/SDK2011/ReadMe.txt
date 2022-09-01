@@ -1,0 +1,1 @@
+Bad finger quality

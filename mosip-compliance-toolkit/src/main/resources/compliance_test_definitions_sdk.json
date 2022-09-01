@@ -293,6 +293,238 @@
 	},
 	{
 		"testCaseType": "SDK",
+		"testName": "Bad finger quality",
+		"testId": "SDK2011",
+		"testDescription": "Bad finger quality",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": true,
+		"methodName": "check-quality",
+		"requestSchema": "CheckQualityRequestSchema",
+		"responseSchema": "CheckQualityResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "QualityCheckValidator",
+				"description": "Checks the quality score of the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Check Quality"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Good finger quality",
+		"testId": "SDK2012",
+		"testDescription": "Good finger quality",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "check-quality",
+		"requestSchema": "CheckQualityRequestSchema",
+		"responseSchema": "CheckQualityResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "QualityCheckValidator",
+				"description": "Checks the quality score of the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Check Quality"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Invalid finger data for quality check",
+		"testId": "SDK2013",
+		"testDescription": "Invalid finger data for quality check",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "check-quality",
+		"requestSchema": "CheckQualityRequestSchema",
+		"responseSchema": "CheckQualityResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "QualityCheckInvalidDataValidator",
+				"description": "Validates the status code for invalid data"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Check Quality"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "No finger data for quality check",
+		"testId": "SDK2014",
+		"testDescription": "No finger data for quality check",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "check-quality",
+		"requestSchema": "CheckQualityRequestSchema",
+		"responseSchema": "CheckQualityResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "QualityCheckNoDataValidator",
+				"description": "Validates the status code for no data"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Check Quality"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Bad iris quality",
+		"testId": "SDK2022",
+		"testDescription": "Bad iris quality",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": true,
+		"methodName": "check-quality",
+		"requestSchema": "CheckQualityRequestSchema",
+		"responseSchema": "CheckQualityResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "QualityCheckValidator",
+				"description": "Checks the quality score of the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Check Quality"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Good iris quality",
+		"testId": "SDK2023",
+		"testDescription": "Good iris quality",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "check-quality",
+		"requestSchema": "CheckQualityRequestSchema",
+		"responseSchema": "CheckQualityResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "QualityCheckValidator",
+				"description": "Checks the quality score of the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Check Quality"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Invalid iris data for quality check",
+		"testId": "SDK2024",
+		"testDescription": "Invalid iris data for quality check",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "check-quality",
+		"requestSchema": "CheckQualityRequestSchema",
+		"responseSchema": "CheckQualityResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "QualityCheckInvalidDataValidator",
+				"description": "Validates the status code for invalid data"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Check Quality"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "No iris data for quality check",
+		"testId": "SDK2025",
+		"testDescription": "No iris data for quality check",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "check-quality",
+		"requestSchema": "CheckQualityRequestSchema",
+		"responseSchema": "CheckQualityResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "QualityCheckNoDataValidator",
+				"description": "Validates the status code for no data"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Check Quality"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
 		"testName": "Face extract invalid data failure",
 		"testId": "SDK2045",
 		"testDescription": "Face extract invalid data failure",
