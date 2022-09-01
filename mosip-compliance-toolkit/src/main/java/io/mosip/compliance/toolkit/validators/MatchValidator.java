@@ -91,6 +91,8 @@ public class MatchValidator extends SDKValidator {
 								if (validationResultDto.getStatus() != null
 										&& !validationResultDto.getStatus().equals(AppConstants.FAILURE)) {
 									validationResultDto.setStatus(AppConstants.SUCCESS);
+								} else if (validationResultDto.getStatus() == null) {
+									validationResultDto.setStatus(AppConstants.SUCCESS);
 								}
 								results += "Positive Match for " + entry2.getKey().toString()
 										+ " is successful for galleryIndex: " + galleryIndex;
@@ -98,6 +100,8 @@ public class MatchValidator extends SDKValidator {
 								//if status is previously failed, then do not reset
 								if (validationResultDto.getStatus() != null
 										&& !validationResultDto.getStatus().equals(AppConstants.FAILURE)) {
+									validationResultDto.setStatus(AppConstants.SUCCESS);
+								} else if (validationResultDto.getStatus() == null) {
 									validationResultDto.setStatus(AppConstants.SUCCESS);
 								}
 								results += "Negative Match for " + entry2.getKey().toString()
