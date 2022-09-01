@@ -351,6 +351,35 @@
 	},
 	{
 		"testCaseType": "SDK",
+		"testId": "SDK2057",
+		"specVersion": "0.9.0",
+		"testName": "Face segment good quaility",
+		"testDescription": "Face segment good quaility",
+		"isNegativeTestcase": false,
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentValidator",
+				"description": "Validates if input BDB data present in the Probe for the modality is valid"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
 		"testId": "SDK2060",
 		"specVersion": "0.9.0",
 		"testName": "Face segment invalid data failure",
