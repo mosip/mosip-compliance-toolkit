@@ -1171,10 +1171,39 @@
 	},
 	{
 		"testCaseType": "SDK",
+		"testId": "SDK2056",
+		"specVersion": "0.9.0",
+		"testName": "Finger segment good quality",
+		"testDescription": "Finger segment good quality",
+		"isNegativeTestcase": false,
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentValidator",
+				"description": "Validates if input BDB data present in the Probe for the modality is valid"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
 		"testId": "SDK2057",
 		"specVersion": "0.9.0",
-		"testName": "Face segment good quaility",
-		"testDescription": "Face segment good quaility",
+		"testName": "Face segment good quality",
+		"testDescription": "Face segment good quality",
 		"isNegativeTestcase": false,
 		"methodName": "segment",
 		"requestSchema": "SegmentRequestSchema",
@@ -1200,6 +1229,64 @@
 	},
 	{
 		"testCaseType": "SDK",
+		"testId": "SDK2058",
+		"specVersion": "0.9.0",
+		"testName": "Iris segment good quality",
+		"testDescription": "Iris segment good quality",
+		"isNegativeTestcase": false,
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentValidator",
+				"description": "Validates if input BDB data present in the Probe for the modality is valid"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2059",
+		"specVersion": "0.9.0",
+		"testName": "Finger segment invalid data failure",
+		"testDescription": "Finger segment invalid data failure",
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentInvalidDataValidator",
+				"description": "Validates if input BDB data present in the Probe for the modality is valid"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		},
+		"isNegativeTestcase": true
+	},
+	{
+		"testCaseType": "SDK",
 		"testId": "SDK2060",
 		"specVersion": "0.9.0",
 		"testName": "Face segment invalid data failure",
@@ -1220,6 +1307,35 @@
 		"otherAttributes": {
 			"modalities": [
 				"face"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		},
+		"isNegativeTestcase": true
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2061",
+		"specVersion": "0.9.0",
+		"testName": "Iris segment invalid data failure",
+		"testDescription": "Iris segment invalid data failure",
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentInvalidDataValidator",
+				"description": "Validates if input BDB data present in the Probe for the modality is valid"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
 			],
 			"sdkPurpose": [
 				"Segment"

@@ -1,1 +1,1 @@
-segment probe face invalid data
+Face segment invalid data failure
