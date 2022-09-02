@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -122,7 +123,8 @@ public class BiometricTestDataService {
 		ResponseWrapper<BiometricTestDataDto> responseWrapper = new ResponseWrapper<>();
 		BiometricTestDataDto biometricTestData = null;
 		try {
-			if (Objects.nonNull(inputBiometricTestDataDto) && Objects.nonNull(file)) {
+			if (Objects.nonNull(inputBiometricTestDataDto) && Objects.nonNull(file) && !file.isEmpty()
+					&& file.getSize() > 0) {
 
 				ObjectMapper mapper = objectMapperConfig.objectMapper();
 				BiometricTestDataEntity inputEntity = mapper.convertValue(inputBiometricTestDataDto,
@@ -139,12 +141,13 @@ public class BiometricTestDataService {
 
 				if (!objectStore.exists(objectStoreAccountName, inputEntity.getPartnerId(), null, null,
 						inputEntity.getFileId())) {
+					BiometricTestDataEntity entity = biometricTestDataRepository.save(inputEntity);
+					
 					InputStream is = file.getInputStream();
 					boolean status = objectStore.putObject(objectStoreAccountName, inputEntity.getPartnerId(), null,
 							null, inputEntity.getFileId(), is);
 					is.close();
 					if (status) {
-						BiometricTestDataEntity entity = biometricTestDataRepository.save(inputEntity);
 						biometricTestData = mapper.convertValue(entity, BiometricTestDataDto.class);
 					} else {
 						List<ServiceError> serviceErrorsList = new ArrayList<>();
@@ -171,10 +174,20 @@ public class BiometricTestDataService {
 				serviceErrorsList.add(serviceError);
 				responseWrapper.setErrors(serviceErrorsList);
 			}
+		} catch (DataIntegrityViolationException ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In addBiometricTestdata method of BiometricTestDataService Service - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.DUPLICATE_VALUE_ERROR.getErrorCode());
+			serviceError.setMessage(ToolkitErrorCodes.DUPLICATE_VALUE_ERROR.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
-					"In saveBiometricTestdata method of BiometricTestDataService Service - " + ex.getMessage());
+					"In addBiometricTestdata method of BiometricTestDataService Service - " + ex.getMessage());
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
 			ServiceError serviceError = new ServiceError();
 			serviceError.setErrorCode(ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorCode());
@@ -239,7 +252,7 @@ public class BiometricTestDataService {
 				InputStream is = file.getInputStream();
 				status = putObjectToObjectStore(null, defaultFileName, is);
 				is.close();
-			}else {
+			} else {
 				List<ServiceError> serviceErrorsList = new ArrayList<>();
 				ServiceError serviceError = new ServiceError();
 				serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode());
