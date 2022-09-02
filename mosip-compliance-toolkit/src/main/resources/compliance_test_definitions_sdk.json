@@ -960,6 +960,159 @@
 	},
 	{
 		"testCaseType": "SDK",
+		"testName": "modality quality check success",
+		"testId": "SDK2033",
+		"testDescription": "modality quality check success",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "check-quality",
+		"requestSchema": "CheckQualityRequestSchema",
+		"responseSchema": "CheckQualityResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "QualityCheckValidator",
+				"description": "Checks the quality score of the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face",
+				"finger"
+			],
+			"sdkPurpose": [
+				"Check Quality"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "modality quality check success",
+		"testId": "SDK2034",
+		"testDescription": "modality quality check success",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "check-quality",
+		"requestSchema": "CheckQualityRequestSchema",
+		"responseSchema": "CheckQualityResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "QualityCheckValidator",
+				"description": "Checks the quality score of the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face",
+				"finger",
+				"iris"
+			],
+			"sdkPurpose": [
+				"Check Quality"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "modality match success",
+		"testId": "SDK2035",
+		"testDescription": "modality match success",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchValidator",
+				"description": "Validates if biomterics match for the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face",
+				"finger"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "modality match success",
+		"testId": "SDK2036",
+		"testDescription": "modality match success",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchValidator",
+				"description": "Validates if biomterics match for the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face",
+				"finger",
+				"iris"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "modality match success - multi gallery",
+		"testId": "SDK2037",
+		"testDescription": "modality match success - multi gallery",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchValidator",
+				"description": "Validates if biomterics match for the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face",
+				"finger",
+				"iris"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
 		"testName": "Face extract invalid data failure",
 		"testId": "SDK2045",
 		"testDescription": "Face extract invalid data failure",
