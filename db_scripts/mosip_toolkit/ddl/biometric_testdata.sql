@@ -2,7 +2,7 @@
 
 CREATE TABLE toolkit.biometric_testdata
 (
-    id character varying(36) NOT NULL,
+	id character varying(36) NOT NULL,
 	name character varying(64) NOT NULL,
 	type character varying(36) NOT NULL,
 	purpose character varying(36) NOT NULL,
