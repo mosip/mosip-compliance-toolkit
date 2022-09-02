@@ -9,6 +9,11 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,6 +46,9 @@ public class BiometricTestDataService {
 
 	@Value("$(mosip.toolkit.api.id.biometric.testdata.filenames.get)")
 	private String getBioTestDataFileNames;
+
+	@Value("$(mosip.toolkit.api.id.biometric.default.testdata.post)")
+	private String postBioDefaultTestDataId;
 
 	private Logger log = LoggerConfiguration.logConfig(BiometricTestDataService.class);
 
@@ -217,6 +225,87 @@ public class BiometricTestDataService {
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
+	}
+
+	public ResponseWrapper<Boolean> addDefaultBioTestData(MultipartFile file) {
+		ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
+		boolean status = false;
+		try {
+			if (Objects.nonNull(file) && !file.isEmpty() && file.getSize() > 0) {
+				String defaultFileName = AppConstants.MOSIP_DEFAULT + ".zip";
+				if (isObjectExistInObjectStore(null, defaultFileName)) {
+					deleteObjectInObjectStore(null, defaultFileName);
+				}
+				InputStream is = file.getInputStream();
+				status = putObjectToObjectStore(null, defaultFileName, is);
+				is.close();
+			}else {
+				List<ServiceError> serviceErrorsList = new ArrayList<>();
+				ServiceError serviceError = new ServiceError();
+				serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode());
+				serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
+				serviceErrorsList.add(serviceError);
+				responseWrapper.setErrors(serviceErrorsList);
+			}
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In addDefaultBioTestData method of BiometricTestDataService Service - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_ERROR.getErrorCode());
+			serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_ERROR.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		}
+		responseWrapper.setId(postBioDefaultTestDataId);
+		responseWrapper.setResponse(status);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+
+	public ResponseEntity<Resource> getDefaultBioTestData() {
+		ByteArrayResource resource = null;
+		try {
+			String defaultFileName = AppConstants.MOSIP_DEFAULT + ".zip";
+			if (isObjectExistInObjectStore(null, defaultFileName)) {
+				InputStream inputStream = getObjectFromObjectStore(null, defaultFileName);
+				resource = new ByteArrayResource(inputStream.readAllBytes());
+				inputStream.close();
+
+				HttpHeaders header = new HttpHeaders();
+				header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; " + defaultFileName);
+				header.add("Cache-Control", "no-cache, no-store, must-revalidate");
+				header.add("Pragma", "no-cache");
+				header.add("Expires", "0");
+
+				return ResponseEntity.ok().headers(header).contentLength(resource.contentLength())
+						.contentType(MediaType.APPLICATION_OCTET_STREAM).body(resource);
+			}
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In getDefaultBioTestData method of BiometricTestDataService Service - " + ex.getMessage());
+		}
+
+		return ResponseEntity.noContent().build();
+	}
+
+	private boolean isObjectExistInObjectStore(String container, String objectName) {
+		return objectStore.exists(objectStoreAccountName, container, null, null, objectName);
+	}
+
+	private InputStream getObjectFromObjectStore(String container, String objectName) {
+		return objectStore.getObject(objectStoreAccountName, container, null, null, objectName);
+	}
+
+	private boolean putObjectToObjectStore(String container, String objectName, InputStream data) {
+		return objectStore.putObject(objectStoreAccountName, container, null, null, objectName, data);
+	}
+
+	private boolean deleteObjectInObjectStore(String container, String objectName) {
+		return objectStore.deleteObject(objectStoreAccountName, container, null, null, objectName);
 	}
 
 }
