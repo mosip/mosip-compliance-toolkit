@@ -3,6 +3,8 @@ package io.mosip.compliance.toolkit.service;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.*;
 import io.mosip.compliance.toolkit.entity.SdkProjectEntity;
@@ -12,12 +14,13 @@ import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.exception.ServiceError;
-import io.mosip.compliance.toolkit.constants.SdkSpecVersions;
 import io.mosip.compliance.toolkit.dto.projects.SdkProjectDto;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +45,13 @@ public class SdkProjectService {
 
 	@Autowired
 	private ObjectMapperConfig objectMapperConfig;
+	
+	@Value("${mosip.kernel.objectstore.account-name}")
+	private String objectStoreAccountName;
+
+	@Qualifier("S3Adapter")
+	@Autowired
+	private ObjectStoreAdapter objectStore;
 
 	private Logger log = LoggerConfiguration.logConfig(SdkProjectService.class);
 
@@ -103,27 +113,39 @@ public class SdkProjectService {
 		ResponseWrapper<SdkProjectDto> responseWrapper = new ResponseWrapper<>();
 		try {
 			if (isValidSdkProject(sdkProjectDto)) {
-				LocalDateTime crDate = LocalDateTime.now();
-				SdkProjectEntity entity = new SdkProjectEntity();
-				entity.setId(RandomIdGenerator.generateUUID(sdkProjectDto.getProjectType().toLowerCase(), "", 36));
-				entity.setName(sdkProjectDto.getName());
-				entity.setProjectType(sdkProjectDto.getProjectType());
-				entity.setPurpose(sdkProjectDto.getPurpose());
-				entity.setUrl(sdkProjectDto.getUrl());
-				entity.setSdkVersion(sdkProjectDto.getSdkVersion());
-				entity.setBioTestDataFileName(sdkProjectDto.getBioTestDataFileName());
-				entity.setPartnerId(this.getPartnerId());
-				entity.setCrBy(this.getUserBy());
-				entity.setCrDate(crDate);
-				entity.setDeleted(false);
+				String partnerId = this.getPartnerId();
+				if (sdkProjectDto.getBioTestDataFileName().equals(AppConstants.MOSIP_DEFAULT)
+						|| objectStore.exists(objectStoreAccountName, partnerId, null, null,
+								sdkProjectDto.getBioTestDataFileName())) {
+					LocalDateTime crDate = LocalDateTime.now();
+					SdkProjectEntity entity = new SdkProjectEntity();
+					entity.setId(RandomIdGenerator.generateUUID(sdkProjectDto.getProjectType().toLowerCase(), "", 36));
+					entity.setName(sdkProjectDto.getName());
+					entity.setProjectType(sdkProjectDto.getProjectType());
+					entity.setPurpose(sdkProjectDto.getPurpose());
+					entity.setUrl(sdkProjectDto.getUrl());
+					entity.setSdkVersion(sdkProjectDto.getSdkVersion());
+					entity.setBioTestDataFileName(sdkProjectDto.getBioTestDataFileName());
+					entity.setPartnerId(partnerId);
+					entity.setCrBy(this.getUserBy());
+					entity.setCrDate(crDate);
+					entity.setDeleted(false);
 
-				SdkProjectEntity outputEntity = sdkProjectRepository.save(entity);
+					SdkProjectEntity outputEntity = sdkProjectRepository.save(entity);
 
-				sdkProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, SdkProjectDto.class);
-				sdkProjectDto.setId(entity.getId());
-				sdkProjectDto.setPartnerId(entity.getPartnerId());
-				sdkProjectDto.setCrBy(entity.getCrBy());
-				sdkProjectDto.setCrDate(entity.getCrDate());
+					sdkProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, SdkProjectDto.class);
+					sdkProjectDto.setId(entity.getId());
+					sdkProjectDto.setPartnerId(entity.getPartnerId());
+					sdkProjectDto.setCrBy(entity.getCrBy());
+					sdkProjectDto.setCrDate(entity.getCrDate());
+				} else {
+					List<ServiceError> serviceErrorsList = new ArrayList<>();
+					ServiceError serviceError = new ServiceError();
+					serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode());
+					serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage());
+					serviceErrorsList.add(serviceError);
+					responseWrapper.setErrors(serviceErrorsList);
+				}
 			}
 		} catch (ToolkitException ex) {
 			sdkProjectDto = null;
@@ -134,6 +156,16 @@ public class SdkProjectService {
 			ServiceError serviceError = new ServiceError();
 			serviceError.setErrorCode(ex.getErrorCode());
 			serviceError.setMessage(ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		} catch (DataIntegrityViolationException ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In addSdkProject method of SdkProjectService Service - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.DUPLICATE_VALUE_ERROR.getErrorCode());
+			serviceError.setMessage(ToolkitErrorCodes.DUPLICATE_VALUE_ERROR.getErrorMessage() + " " + ex.getMessage());
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		} catch (Exception ex) {
@@ -159,25 +191,42 @@ public class SdkProjectService {
 	public ResponseWrapper<SdkProjectDto> updateSdkProject(SdkProjectDto sdkProjectDto) {
 		ResponseWrapper<SdkProjectDto> responseWrapper = new ResponseWrapper<>();
 		try {
-			if(Objects.nonNull(sdkProjectDto)){
+			if (Objects.nonNull(sdkProjectDto)) {
 				String projectId = sdkProjectDto.getId();
-				Optional<SdkProjectEntity> optionalSdkProjectEntity = sdkProjectRepository.findById(projectId, getPartnerId());
+				String partnerId = this.getPartnerId();
+				Optional<SdkProjectEntity> optionalSdkProjectEntity = sdkProjectRepository.findById(projectId,
+						getPartnerId());
 				if (optionalSdkProjectEntity.isPresent()) {
-					SdkProjectEntity entity = optionalSdkProjectEntity.get();
-					LocalDateTime updDate = LocalDateTime.now();
-					String url = sdkProjectDto.getUrl();
-					String bioTestDataFileName = sdkProjectDto.getBioTestDataFileName();
+					
+						SdkProjectEntity entity = optionalSdkProjectEntity.get();
+						LocalDateTime updDate = LocalDateTime.now();
+						String url = sdkProjectDto.getUrl();
+						String bioTestDataFileName = sdkProjectDto.getBioTestDataFileName();
 //					Updating SDK project values
-					if (Objects.nonNull(url) && !url.isEmpty()) {
-						entity.setUrl(url);
-					}
-					if (Objects.nonNull(bioTestDataFileName) && !bioTestDataFileName.isEmpty()) {
-						entity.setBioTestDataFileName(bioTestDataFileName);
-					}
-					entity.setUpBy(this.getUserBy());
-					entity.setUpdDate(updDate);
-					SdkProjectEntity outputEntity = sdkProjectRepository.save(entity);
-					sdkProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, SdkProjectDto.class);
+						if (Objects.nonNull(url) && !url.isEmpty()) {
+							entity.setUrl(url);
+						}
+						if (Objects.nonNull(bioTestDataFileName) && !bioTestDataFileName.isEmpty()) {
+							if (bioTestDataFileName.equals(AppConstants.MOSIP_DEFAULT) || objectStore
+									.exists(objectStoreAccountName, partnerId, null, null, bioTestDataFileName)) {
+								entity.setBioTestDataFileName(bioTestDataFileName);
+							} else {
+								List<ServiceError> serviceErrorsList = new ArrayList<>();
+								ServiceError serviceError = new ServiceError();
+								serviceError
+										.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode());
+								serviceError.setMessage(
+										ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage());
+								serviceErrorsList.add(serviceError);
+								responseWrapper.setErrors(serviceErrorsList);
+							}
+						}
+						entity.setUpBy(this.getUserBy());
+						entity.setUpdDate(updDate);
+						SdkProjectEntity outputEntity = sdkProjectRepository.save(entity);
+						sdkProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity,
+								SdkProjectDto.class);
+					
 				} else {
 					List<ServiceError> serviceErrorsList = new ArrayList<>();
 					ServiceError serviceError = new ServiceError();
