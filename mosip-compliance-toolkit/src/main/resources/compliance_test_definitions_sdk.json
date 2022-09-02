@@ -148,11 +148,11 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "Face match success",
+		"testName": "Face match failure",
 		"testId": "SDK2005",
-		"testDescription": "Face match success",
+		"testDescription": "Face match failure",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
+		"isNegativeTestcase": true,
 		"methodName": "match",
 		"requestSchema": "MatchRequestSchema",
 		"responseSchema": "MatchResponseSchema",
@@ -177,11 +177,11 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "Face match failure",
+		"testName": "Face match success",
 		"testId": "SDK2006",
-		"testDescription": "Face match failure",
+		"testDescription": "Face match success",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": true,
+		"isNegativeTestcase": false,
 		"methodName": "match",
 		"requestSchema": "MatchRequestSchema",
 		"responseSchema": "MatchResponseSchema",
@@ -280,6 +280,35 @@
 			{
 				"name": "MatchValidator",
 				"description": "Validates if biomterics match for the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Sending finger data instead of face",
+		"testId": "SDK2010",
+		"testDescription": "Sending finger data instead of face",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchInvalidDataValidator",
+				"description": "Validates the status code for invalid data"
 			}
 		],
 		"otherAttributes": {
@@ -554,6 +583,64 @@
 	},
 	{
 		"testCaseType": "SDK",
+		"testName": "Finger match when wrong subtype",
+		"testId": "SDK2020",
+		"testDescription": "Finger match when wrong subtype",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": true,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchValidator",
+				"description": "Validates if biomterics match for the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Sending face data instead of finger",
+		"testId": "SDK2021",
+		"testDescription": "Sending face data instead of finger",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchInvalidDataValidator",
+				"description": "Validates the status code for invalid data"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
 		"testName": "Bad iris quality",
 		"testId": "SDK2022",
 		"testDescription": "Bad iris quality",
@@ -802,6 +889,64 @@
 			{
 				"name": "MatchValidator",
 				"description": "Validates if biomterics match for the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Iris match when wrong subtype",
+		"testId": "SDK2031",
+		"testDescription": "Iris match when wrong subtype",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": true,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchValidator",
+				"description": "Validates if biomterics match for the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Sending face data instead of iris",
+		"testId": "SDK2032",
+		"testDescription": "Sending face data instead of iris",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchInvalidDataValidator",
+				"description": "Validates the status code for invalid data"
 			}
 		],
 		"otherAttributes": {
