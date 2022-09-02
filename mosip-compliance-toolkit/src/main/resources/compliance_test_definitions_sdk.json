@@ -1345,6 +1345,35 @@
 	},
 	{
 		"testCaseType": "SDK",
+		"testId": "SDK2062",
+		"specVersion": "0.9.0",
+		"testName": "Finger segment no input failure",
+		"testDescription": "Finger segment no input failure",
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentNoInputDataValidator",
+				"description": "Validates if no input BDB data present in the Probe"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		},
+		"isNegativeTestcase": true
+	},
+	{
+		"testCaseType": "SDK",
 		"testId": "SDK2063",
 		"specVersion": "0.9.0",
 		"testName": "Face segment no input failure",
@@ -1371,7 +1400,35 @@
 			]
 		},
 		"isNegativeTestcase": true
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2064",
+		"specVersion": "0.9.0",
+		"testName": "Iris segment no input failure",
+		"testDescription": "Iris segment no input failure",
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentNoInputDataValidator",
+				"description": "Validates if no input BDB data present in the Probe"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		},
+		"isNegativeTestcase": true
 	}
-	
-	
+
 ]
