@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.BiometricTestDataDto;
@@ -72,6 +75,16 @@ public class BiometricTestDataController {
 	@GetMapping(value = "/getBioTestDataFileNames")
 	public ResponseWrapper<List<String>> getBioTestDataFileNames() {
 		return biometricTestDataService.getBioTestDataFileNames();
+	}
+
+	@GetMapping(value = "/getDefaultBioTestData")
+	public ResponseEntity<Resource> getDefaultBioTestData() {
+		return biometricTestDataService.getDefaultBioTestData();
+	}
+
+	@PostMapping(value = "/addDefaultBioTestData")
+	public ResponseWrapper<Boolean> addDefaultBioTestData(@RequestParam("file") MultipartFile file) {
+		return biometricTestDataService.addDefaultBioTestData(file);
 	}
 
 }
