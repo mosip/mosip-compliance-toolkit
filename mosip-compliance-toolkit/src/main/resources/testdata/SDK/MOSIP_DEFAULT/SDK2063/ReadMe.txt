@@ -1,1 +1,1 @@
-segment probe face no input data
+Face segment no input failure

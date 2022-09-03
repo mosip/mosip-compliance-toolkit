@@ -1,1 +1,1 @@
-segment probe face good data
+Face segment good quality
