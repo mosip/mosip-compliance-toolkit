@@ -142,14 +142,21 @@ public class BiometricTestDataService {
 				if (!objectStore.exists(objectStoreAccountName, inputEntity.getPartnerId(), null, null,
 						inputEntity.getFileId())) {
 					BiometricTestDataEntity entity = biometricTestDataRepository.save(inputEntity);
-					
+
+					boolean status = false;
 					InputStream is = file.getInputStream();
-					boolean status = objectStore.putObject(objectStoreAccountName, inputEntity.getPartnerId(), null,
-							null, inputEntity.getFileId(), is);
+					try {
+						status = putObjectToObjectStore(inputEntity.getPartnerId(), inputEntity.getFileId(), is);
+					} catch (Exception ex) {
+						log.debug("sessionId", "idType", "id", ex.getStackTrace());
+						log.error("sessionId", "idType", "id",
+								"In addBiometricTestdata method of BiometricTestDataService Service - " + ex.getMessage());
+					}
 					is.close();
 					if (status) {
 						biometricTestData = mapper.convertValue(entity, BiometricTestDataDto.class);
 					} else {
+						biometricTestDataRepository.delete(entity);
 						List<ServiceError> serviceErrorsList = new ArrayList<>();
 						ServiceError serviceError = new ServiceError();
 						serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorCode());
@@ -157,6 +164,7 @@ public class BiometricTestDataService {
 						serviceErrorsList.add(serviceError);
 						responseWrapper.setErrors(serviceErrorsList);
 					}
+
 				} else {
 					List<ServiceError> serviceErrorsList = new ArrayList<>();
 					ServiceError serviceError = new ServiceError();

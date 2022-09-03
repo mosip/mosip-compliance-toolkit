@@ -15,8 +15,7 @@ CREATE TABLE toolkit.biometric_testdata
 	is_deleted boolean,
 	del_dtimes timestamp without time zone,
 	CONSTRAINT biometrictestdataid_pk PRIMARY KEY (id),
-	CONSTRAINT biometrictestdata_name_partnerid UNIQUE (name, partner_id),
-	CONSTRAINT biometrictestdata_fileid UNIQUE (file_id)
+	CONSTRAINT biometrictestdata_name_partnerid UNIQUE (name, partner_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_biometric_testdata_id ON toolkit.biometric_testdata USING btree (id);
