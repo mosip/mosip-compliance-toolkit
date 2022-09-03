@@ -142,6 +142,7 @@ public class BiometricTestDataService {
 				if (!objectStore.exists(objectStoreAccountName, inputEntity.getPartnerId(), null, null,
 						inputEntity.getFileId())) {
 					BiometricTestDataEntity entity = biometricTestDataRepository.save(inputEntity);
+
 					boolean status = false;
 					InputStream is = file.getInputStream();
 					try {
