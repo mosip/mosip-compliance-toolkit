@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -135,7 +136,17 @@ public class SbiProjectService {
 			serviceError.setMessage(ex.getMessage());
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
-		} catch (Exception ex) {
+		} catch (DataIntegrityViolationException ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In getSbiProject method of SbiProjectService Service - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.DUPLICATE_VALUE_ERROR.getErrorCode());
+			serviceError.setMessage(ToolkitErrorCodes.DUPLICATE_VALUE_ERROR.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		}catch (Exception ex) {
 			sbiProjectDto = null;
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",

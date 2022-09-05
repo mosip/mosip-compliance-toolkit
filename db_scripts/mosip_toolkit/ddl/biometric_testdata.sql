@@ -2,19 +2,20 @@
 
 CREATE TABLE toolkit.biometric_testdata
 (
-    id character varying(36) NOT NULL,
-    name character varying(64) NOT NULL,
-    type character varying(36) NOT NULL,
-    purpose character varying(36) NOT NULL,
-    partner_id character varying(36) NOT NULL,
-    file_id character varying(256) NOT NULL,
-    cr_by character varying(256) NOT NULL,
-    cr_dtimes timestamp without time zone NOT NULL,
-    upd_by character varying(256),
-    upd_dtimes timestamp without time zone,
-    is_deleted boolean,
-    del_dtimes timestamp without time zone,
-    CONSTRAINT biometric_testdataid_pk PRIMARY KEY (id)
+	id character varying(36) NOT NULL,
+	name character varying(64) NOT NULL,
+	type character varying(36) NOT NULL,
+	purpose character varying(36) NOT NULL,
+	partner_id character varying(36) NOT NULL,
+	file_id character varying(256) NOT NULL,
+	cr_by character varying(256) NOT NULL,
+	cr_dtimes timestamp without time zone NOT NULL,
+	upd_by character varying(256),
+	upd_dtimes timestamp without time zone,
+	is_deleted boolean,
+	del_dtimes timestamp without time zone,
+	CONSTRAINT biometrictestdataid_pk PRIMARY KEY (id),
+	CONSTRAINT biometrictestdata_name_partnerid UNIQUE (name, partner_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_biometric_testdata_id ON toolkit.biometric_testdata USING btree (id);
