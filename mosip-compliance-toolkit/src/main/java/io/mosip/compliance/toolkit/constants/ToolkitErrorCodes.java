@@ -47,7 +47,7 @@ public enum ToolkitErrorCodes {
 	DUPLICATE_VALUE_ERROR("TOOLKIT_DUPLICATE_VALUE_ERR_001", "Duplicate value not allowed"),
 	
 	OBJECT_STORE_ERROR("TOOLKIT_OBJECT_STORE_ERR_001", "Object store error"),
-	OBJECT_STORE_FILE_EXISTS("TOOLKIT_OBJECT_STORE_ERR_002", "File name already exists"),
+	OBJECT_STORE_FILE_EXISTS("TOOLKIT_OBJECT_STORE_ERR_002", "You have previously uploaded a file with same name: "),
 	OBJECT_STORE_UNABLE_TO_ADD_FILE("TOOLKIT_OBJECT_STORE_ERR_003", "Unable to add file"),
 	OBJECT_STORE_FILE_NOT_AVAILABLE("TOOLKIT_OBJECT_STORE_ERR_003", "Testdata file not available"),
 	
