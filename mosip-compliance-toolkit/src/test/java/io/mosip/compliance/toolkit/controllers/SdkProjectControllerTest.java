@@ -16,6 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -32,6 +33,9 @@ public class SdkProjectControllerTest {
 
     @Mock
     private RequestValidator requestValidator;
+
+    @Mock
+    private Errors errors;
 
     /*
      * This class tests the initBinder method
@@ -55,28 +59,28 @@ public class SdkProjectControllerTest {
 
 
     /*
-     * This class tests the addSdkProject method in case of Exception
+     * This class tests the addSdkProject method
      */
-    @Test(expected = Exception.class)
+    @Test
     public void addSdkProjectTest() throws Exception {
         RequestWrapper<SdkProjectDto> value = new RequestWrapper<>();
         SdkProjectDto sdkProjectDto = new SdkProjectDto();
         value.setRequest(sdkProjectDto);
         ResponseWrapper<SdkProjectDto> response = new ResponseWrapper<>();
         Mockito.when(sdkProjectService.addSdkProject(sdkProjectDto)).thenReturn(response);
-        sdkProjectController.addSdkProject(value, null);
+        sdkProjectController.addSdkProject(value, errors);
     }
 
     /*
-     * This class tests the updateSdkProject method in case of Exception
+     * This class tests the updateSdkProject method
      */
-    @Test(expected = Exception.class)
+    @Test
     public void updateSdkProjectTest() throws Exception {
         RequestWrapper<SdkProjectDto> value = new RequestWrapper<>();
         SdkProjectDto sdkProjectDto = new SdkProjectDto();
         value.setRequest(sdkProjectDto);
         ResponseWrapper<SdkProjectDto> response = new ResponseWrapper<>();
         Mockito.when(sdkProjectService.updateSdkProject(sdkProjectDto)).thenReturn(response);
-        sdkProjectController.updateSdkProject(value, null);
+        sdkProjectController.updateSdkProject(value, errors);
     }
 }

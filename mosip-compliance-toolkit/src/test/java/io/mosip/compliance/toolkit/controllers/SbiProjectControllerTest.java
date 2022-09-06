@@ -4,7 +4,6 @@ import io.mosip.compliance.toolkit.dto.ErrorDto;
 import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
 import io.mosip.compliance.toolkit.service.SbiProjectService;
 import io.mosip.compliance.toolkit.util.RequestValidator;
-import io.mosip.kernel.authcodeflowproxy.api.constants.Errors;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -20,6 +19,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -39,6 +39,9 @@ public class SbiProjectControllerTest {
     @Mock
     private RequestValidator requestValidator;
 
+    @Mock
+    private Errors errors;
+
     /*
      * This class tests the initBinder method
      */
@@ -49,16 +52,16 @@ public class SbiProjectControllerTest {
     }
 
     /*
-     * This class tests the addSbiProject method in case of Exception
+     * This class tests the addSbiProject method
      */
-    @Test(expected = Exception.class)
+    @Test
     public void addSbiProject() throws Exception {
         RequestWrapper<SbiProjectDto> value = new RequestWrapper<>();
         SbiProjectDto sbiProjectDto = new SbiProjectDto();
         value.setRequest(sbiProjectDto);
         ResponseWrapper<SbiProjectDto> sbiProjectDtoResponseWrapper = new ResponseWrapper<>();
         Mockito.when(sbiProjectService.addSbiProject(sbiProjectDto)).thenReturn(sbiProjectDtoResponseWrapper);
-        sbiProjectController.addSbiProject(value, null);
+        sbiProjectController.addSbiProject(value, errors);
     }
 
     /*
