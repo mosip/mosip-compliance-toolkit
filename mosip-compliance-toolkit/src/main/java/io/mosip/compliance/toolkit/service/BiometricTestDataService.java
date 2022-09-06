@@ -170,7 +170,8 @@ public class BiometricTestDataService {
 					List<ServiceError> serviceErrorsList = new ArrayList<>();
 					ServiceError serviceError = new ServiceError();
 					serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorCode());
-					serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorMessage() + inputEntity.getFileId());
+					serviceError.setMessage(
+							ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorMessage() + inputEntity.getFileId());
 					serviceErrorsList.add(serviceError);
 					responseWrapper.setErrors(serviceErrorsList);
 				}
@@ -249,7 +250,7 @@ public class BiometricTestDataService {
 		return responseWrapper;
 	}
 
-	public ResponseWrapper<Boolean> addDefaultBioTestData(MultipartFile file) {
+	public ResponseWrapper<Boolean> uploadSampleBioTestDataFile(MultipartFile file) {
 		ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
 		boolean status = false;
 		try {
@@ -287,7 +288,7 @@ public class BiometricTestDataService {
 		return responseWrapper;
 	}
 
-	public ResponseEntity<Resource> getDefaultBioTestData() {
+	public ResponseEntity<Resource> getSampleBioTestDataFile() {
 		ByteArrayResource resource = null;
 		try {
 			String defaultFileName = AppConstants.MOSIP_DEFAULT + ".zip";
@@ -314,7 +315,7 @@ public class BiometricTestDataService {
 		return ResponseEntity.noContent().build();
 	}
 	
-	public ResponseEntity<Resource> getBiometricTestData(String bioTestDataId) {
+	public ResponseEntity<Resource> getBiometricTestDataFile(String bioTestDataId) {
 		ByteArrayResource resource = null;
 		try {
 			String partnerId = getPartnerId();
@@ -326,10 +327,7 @@ public class BiometricTestDataService {
 
 				HttpHeaders header = new HttpHeaders();
 				header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
-				header.add("Cache-Control", "no-cache, no-store, must-revalidate");
-				header.add("Pragma", "no-cache");
-				header.add("Expires", "0");
-
+				header.add(HttpHeaders.CONTENT_TYPE, "application/octet-stream");
 				return ResponseEntity.ok().headers(header).contentLength(resource.contentLength())
 						.contentType(MediaType.APPLICATION_OCTET_STREAM).body(resource);
 			}
@@ -341,6 +339,7 @@ public class BiometricTestDataService {
 
 		return ResponseEntity.noContent().build();
 	}
+
 
 	private boolean isObjectExistInObjectStore(String container, String objectName) {
 		return objectStore.exists(objectStoreAccountName, container, null, null, objectName);

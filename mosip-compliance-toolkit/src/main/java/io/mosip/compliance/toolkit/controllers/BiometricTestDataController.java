@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.BiometricTestDataDto;
@@ -73,9 +72,9 @@ public class BiometricTestDataController {
 		}
 	}
 
-	@GetMapping(value = "/getBiometricTestData/{id}")
-	public ResponseEntity<Resource> getBiometricTestData(@PathVariable String id) {
-		return biometricTestDataService.getBiometricTestData(id);
+	@GetMapping(value = "/getBiometricTestDataFile/{id}")
+	public ResponseEntity<Resource>  getBiometricTestDataFile(@PathVariable String id) {
+		return biometricTestDataService.getBiometricTestDataFile(id);
 	}
 
 	@GetMapping(value = "/getBioTestDataFileNames")
@@ -83,14 +82,14 @@ public class BiometricTestDataController {
 		return biometricTestDataService.getBioTestDataFileNames();
 	}
 
-	@GetMapping(value = "/getDefaultBioTestData")
-	public ResponseEntity<Resource> getDefaultBioTestData() {
-		return biometricTestDataService.getDefaultBioTestData();
+	@GetMapping(value = "/getSampleBioTestDataFile")
+	public ResponseEntity<Resource> getSampleBioTestDataFile() {
+		return biometricTestDataService.getSampleBioTestDataFile();
 	}
 
-	@PostMapping(value = "/addDefaultBioTestData")
-	public ResponseWrapper<Boolean> addDefaultBioTestData(@RequestParam("file") MultipartFile file) {
-		return biometricTestDataService.addDefaultBioTestData(file);
+	@PostMapping(value = "/uploadSampleBioTestDataFile")
+	public ResponseWrapper<Boolean> uploadSampleBioTestDataFile(@RequestParam("file") MultipartFile file) {
+		return biometricTestDataService.uploadSampleBioTestDataFile(file);
 	}
 
 }
