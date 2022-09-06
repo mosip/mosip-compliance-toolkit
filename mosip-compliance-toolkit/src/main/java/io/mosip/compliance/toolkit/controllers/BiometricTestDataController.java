@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -43,9 +44,9 @@ public class BiometricTestDataController {
 	@Autowired
 	private ObjectMapperConfig objectMapperConfig;
 
-	@GetMapping(value = "/getBiometricTestData")
-	public ResponseWrapper<List<BiometricTestDataDto>> getBiometricTestdata() {
-		return biometricTestDataService.getBiometricTestdata();
+	@GetMapping(value = "/getListOfBiometricTestData")
+	public ResponseWrapper<List<BiometricTestDataDto>> getListOfBiometricTestData() {
+		return biometricTestDataService.getListOfBiometricTestData();
 	}
 
 	@PostMapping(value = "/addBiometricTestData", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE,
@@ -70,6 +71,11 @@ public class BiometricTestDataController {
 			responseWrapper.setErrors(serviceErrorsList);
 			return responseWrapper;
 		}
+	}
+
+	@GetMapping(value = "/getBiometricTestData/{id}")
+	public ResponseEntity<Resource> getBiometricTestData(@PathVariable String id) {
+		return biometricTestDataService.getBiometricTestData(id);
 	}
 
 	@GetMapping(value = "/getBioTestDataFileNames")

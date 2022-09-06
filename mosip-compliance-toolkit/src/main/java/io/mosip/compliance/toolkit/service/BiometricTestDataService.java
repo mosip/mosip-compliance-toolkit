@@ -80,7 +80,7 @@ public class BiometricTestDataService {
 	@Autowired
 	private BiometricTestDataRepository biometricTestDataRepository;
 
-	public ResponseWrapper<List<BiometricTestDataDto>> getBiometricTestdata() {
+	public ResponseWrapper<List<BiometricTestDataDto>> getListOfBiometricTestData() {
 		ResponseWrapper<List<BiometricTestDataDto>> responseWrapper = new ResponseWrapper<>();
 		List<BiometricTestDataDto> biometricTestDataList = new ArrayList<>();
 		try {
@@ -150,7 +150,8 @@ public class BiometricTestDataService {
 					} catch (Exception ex) {
 						log.debug("sessionId", "idType", "id", ex.getStackTrace());
 						log.error("sessionId", "idType", "id",
-								"In addBiometricTestdata method of BiometricTestDataService Service - " + ex.getMessage());
+								"In addBiometricTestdata method of BiometricTestDataService Service - "
+										+ ex.getMessage());
 					}
 					is.close();
 					if (status) {
@@ -169,7 +170,7 @@ public class BiometricTestDataService {
 					List<ServiceError> serviceErrorsList = new ArrayList<>();
 					ServiceError serviceError = new ServiceError();
 					serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorCode());
-					serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorMessage());
+					serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorMessage() + inputEntity.getFileId());
 					serviceErrorsList.add(serviceError);
 					responseWrapper.setErrors(serviceErrorsList);
 				}
@@ -296,7 +297,7 @@ public class BiometricTestDataService {
 				inputStream.close();
 
 				HttpHeaders header = new HttpHeaders();
-				header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; " + defaultFileName);
+				header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + defaultFileName);
 				header.add("Cache-Control", "no-cache, no-store, must-revalidate");
 				header.add("Pragma", "no-cache");
 				header.add("Expires", "0");
@@ -308,6 +309,34 @@ public class BiometricTestDataService {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In getDefaultBioTestData method of BiometricTestDataService Service - " + ex.getMessage());
+		}
+
+		return ResponseEntity.noContent().build();
+	}
+	
+	public ResponseEntity<Resource> getBiometricTestData(String bioTestDataId) {
+		ByteArrayResource resource = null;
+		try {
+			String partnerId = getPartnerId();
+			String fileName = biometricTestDataRepository.findFileNameById(bioTestDataId, partnerId);
+			if (Objects.nonNull(fileName) && isObjectExistInObjectStore(partnerId, fileName)) {
+				InputStream inputStream = getObjectFromObjectStore(partnerId, fileName);
+				resource = new ByteArrayResource(inputStream.readAllBytes());
+				inputStream.close();
+
+				HttpHeaders header = new HttpHeaders();
+				header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
+				header.add("Cache-Control", "no-cache, no-store, must-revalidate");
+				header.add("Pragma", "no-cache");
+				header.add("Expires", "0");
+
+				return ResponseEntity.ok().headers(header).contentLength(resource.contentLength())
+						.contentType(MediaType.APPLICATION_OCTET_STREAM).body(resource);
+			}
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In getBiometricTestData method of BiometricTestDataService Service - " + ex.getMessage());
 		}
 
 		return ResponseEntity.noContent().build();
