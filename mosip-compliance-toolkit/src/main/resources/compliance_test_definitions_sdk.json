@@ -148,182 +148,8 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "Face match failure",
-		"testId": "SDK2005",
-		"testDescription": "Face match failure",
-		"specVersion": "0.9.0",
-		"isNegativeTestcase": true,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"face"
-			],
-			"sdkPurpose": [
-				"Matcher"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testName": "Face match success",
-		"testId": "SDK2006",
-		"testDescription": "Face match success",
-		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"face"
-			],
-			"sdkPurpose": [
-				"Matcher"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testName": "Invalid face data for match",
-		"testId": "SDK2007",
-		"testDescription": "Invalid face data for match",
-		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchInvalidDataValidator",
-				"description": "Validates the status code for invalid data"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"face"
-			],
-			"sdkPurpose": [
-				"Matcher"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testName": "No face data for match",
-		"testId": "SDK2008",
-		"testDescription": "No face data for match",
-		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchNoDataValidator",
-				"description": "Validates the status code for no data"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"face"
-			],
-			"sdkPurpose": [
-				"Matcher"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testName": "Face match against more than one face",
-		"testId": "SDK2009",
-		"testDescription": "Face match against more than one face",
-		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"face"
-			],
-			"sdkPurpose": [
-				"Matcher"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testName": "Sending finger data instead of face",
-		"testId": "SDK2010",
-		"testDescription": "Sending finger data instead of face",
-		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchInvalidDataValidator",
-				"description": "Validates the status code for invalid data"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"face"
-			],
-			"sdkPurpose": [
-				"Matcher"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
 		"testName": "Bad finger quality",
-		"testId": "SDK2011",
+		"testId": "SDK2005",
 		"testDescription": "Bad finger quality",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": true,
@@ -352,7 +178,7 @@
 	{
 		"testCaseType": "SDK",
 		"testName": "Good finger quality",
-		"testId": "SDK2012",
+		"testId": "SDK2006",
 		"testDescription": "Good finger quality",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
@@ -381,7 +207,7 @@
 	{
 		"testCaseType": "SDK",
 		"testName": "Invalid finger data for quality check",
-		"testId": "SDK2013",
+		"testId": "SDK2007",
 		"testDescription": "Invalid finger data for quality check",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
@@ -410,7 +236,7 @@
 	{
 		"testCaseType": "SDK",
 		"testName": "No finger data for quality check",
-		"testId": "SDK2014",
+		"testId": "SDK2008",
 		"testDescription": "No finger data for quality check",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
@@ -438,211 +264,8 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "Finger match failure",
-		"testId": "SDK2015",
-		"testDescription": "Finger match failure",
-		"specVersion": "0.9.0",
-		"isNegativeTestcase": true,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"finger"
-			],
-			"sdkPurpose": [
-				"Matcher"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testName": "Finger match success",
-		"testId": "SDK2016",
-		"testDescription": "Finger match success",
-		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"finger"
-			],
-			"sdkPurpose": [
-				"Matcher"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testName": "Invalid finger data for match",
-		"testId": "SDK2017",
-		"testDescription": "Invalid finger data for match",
-		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchInvalidDataValidator",
-				"description": "Validates the status code for invalid data"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"finger"
-			],
-			"sdkPurpose": [
-				"Matcher"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testName": "No finger data for match",
-		"testId": "SDK2018",
-		"testDescription": "No finger data for match",
-		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchNoDataValidator",
-				"description": "Validates the status code for no data"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"finger"
-			],
-			"sdkPurpose": [
-				"Matcher"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testName": "Finger match against more than 10 fingers",
-		"testId": "SDK2019",
-		"testDescription": "Finger match against more than 10 fingers",
-		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"finger"
-			],
-			"sdkPurpose": [
-				"Matcher"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testName": "Finger match when wrong subtype",
-		"testId": "SDK2020",
-		"testDescription": "Finger match when wrong subtype",
-		"specVersion": "0.9.0",
-		"isNegativeTestcase": true,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"finger"
-			],
-			"sdkPurpose": [
-				"Matcher"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testName": "Sending face data instead of finger",
-		"testId": "SDK2021",
-		"testDescription": "Sending face data instead of finger",
-		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchInvalidDataValidator",
-				"description": "Validates the status code for invalid data"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"finger"
-			],
-			"sdkPurpose": [
-				"Matcher"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
 		"testName": "Bad iris quality",
-		"testId": "SDK2022",
+		"testId": "SDK2009",
 		"testDescription": "Bad iris quality",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": true,
@@ -671,7 +294,7 @@
 	{
 		"testCaseType": "SDK",
 		"testName": "Good iris quality",
-		"testId": "SDK2023",
+		"testId": "SDK2010",
 		"testDescription": "Good iris quality",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
@@ -700,7 +323,7 @@
 	{
 		"testCaseType": "SDK",
 		"testName": "Invalid iris data for quality check",
-		"testId": "SDK2024",
+		"testId": "SDK2011",
 		"testDescription": "Invalid iris data for quality check",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
@@ -729,7 +352,7 @@
 	{
 		"testCaseType": "SDK",
 		"testName": "No iris data for quality check",
-		"testId": "SDK2025",
+		"testId": "SDK2012",
 		"testDescription": "No iris data for quality check",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
@@ -757,211 +380,8 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "Iris match failure",
-		"testId": "SDK2026",
-		"testDescription": "Iris match failure",
-		"specVersion": "0.9.0",
-		"isNegativeTestcase": true,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"iris"
-			],
-			"sdkPurpose": [
-				"Matcher"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testName": "Iris match success",
-		"testId": "SDK2027",
-		"testDescription": "Iris match success",
-		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"iris"
-			],
-			"sdkPurpose": [
-				"Matcher"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testName": "Invalid iris data for match",
-		"testId": "SDK2028",
-		"testDescription": "Invalid iris data for match",
-		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchInvalidDataValidator",
-				"description": "Validates the status code for invalid data"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"iris"
-			],
-			"sdkPurpose": [
-				"Matcher"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testName": "No iris data for match",
-		"testId": "SDK2029",
-		"testDescription": "No iris data for match",
-		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchNoDataValidator",
-				"description": "Validates the status code for no data"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"iris"
-			],
-			"sdkPurpose": [
-				"Matcher"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testName": "Iris match against more than 2 iris",
-		"testId": "SDK2030",
-		"testDescription": "Iris match against more than 2 iris",
-		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"iris"
-			],
-			"sdkPurpose": [
-				"Matcher"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testName": "Iris match when wrong subtype",
-		"testId": "SDK2031",
-		"testDescription": "Iris match when wrong subtype",
-		"specVersion": "0.9.0",
-		"isNegativeTestcase": true,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"iris"
-			],
-			"sdkPurpose": [
-				"Matcher"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testName": "Sending face data instead of iris",
-		"testId": "SDK2032",
-		"testDescription": "Sending face data instead of iris",
-		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchInvalidDataValidator",
-				"description": "Validates the status code for invalid data"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"iris"
-			],
-			"sdkPurpose": [
-				"Matcher"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
 		"testName": "modality quality check success",
-		"testId": "SDK2033",
+		"testId": "SDK2013",
 		"testDescription": "modality quality check success",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
@@ -991,7 +411,7 @@
 	{
 		"testCaseType": "SDK",
 		"testName": "modality quality check success",
-		"testId": "SDK2034",
+		"testId": "SDK2014",
 		"testDescription": "modality quality check success",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
@@ -1016,6 +436,595 @@
 			],
 			"sdkPurpose": [
 				"Check Quality"
+			]
+		}
+	},
+
+
+
+
+
+
+
+
+
+	{
+		"testCaseType": "SDK",
+		"testName": "Face match failure",
+		"testId": "SDK2015",
+		"testDescription": "Face match failure",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": true,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchValidator",
+				"description": "Validates if biomterics match for the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Face match success",
+		"testId": "SDK2016",
+		"testDescription": "Face match success",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchValidator",
+				"description": "Validates if biomterics match for the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Invalid face data for match",
+		"testId": "SDK2017",
+		"testDescription": "Invalid face data for match",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchInvalidDataValidator",
+				"description": "Validates the status code for invalid data"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "No face data for match",
+		"testId": "SDK2018",
+		"testDescription": "No face data for match",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchNoDataValidator",
+				"description": "Validates the status code for no data"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Face match against more than one face",
+		"testId": "SDK2019",
+		"testDescription": "Face match against more than one face",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchValidator",
+				"description": "Validates if biomterics match for the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Sending finger data instead of face",
+		"testId": "SDK2020",
+		"testDescription": "Sending finger data instead of face",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchInvalidDataValidator",
+				"description": "Validates the status code for invalid data"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Finger match failure",
+		"testId": "SDK2021",
+		"testDescription": "Finger match failure",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": true,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchValidator",
+				"description": "Validates if biomterics match for the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Finger match success",
+		"testId": "SDK2022",
+		"testDescription": "Finger match success",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchValidator",
+				"description": "Validates if biomterics match for the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Invalid finger data for match",
+		"testId": "SDK2023",
+		"testDescription": "Invalid finger data for match",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchInvalidDataValidator",
+				"description": "Validates the status code for invalid data"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "No finger data for match",
+		"testId": "SDK2024",
+		"testDescription": "No finger data for match",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchNoDataValidator",
+				"description": "Validates the status code for no data"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Finger match against more than 10 fingers",
+		"testId": "SDK2025",
+		"testDescription": "Finger match against more than 10 fingers",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchValidator",
+				"description": "Validates if biomterics match for the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Finger match when wrong subtype",
+		"testId": "SDK2026",
+		"testDescription": "Finger match when wrong subtype",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": true,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchValidator",
+				"description": "Validates if biomterics match for the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Sending face data instead of finger",
+		"testId": "SDK2027",
+		"testDescription": "Sending face data instead of finger",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchInvalidDataValidator",
+				"description": "Validates the status code for invalid data"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Iris match failure",
+		"testId": "SDK2028",
+		"testDescription": "Iris match failure",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": true,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchValidator",
+				"description": "Validates if biomterics match for the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Iris match success",
+		"testId": "SDK2029",
+		"testDescription": "Iris match success",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchValidator",
+				"description": "Validates if biomterics match for the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Invalid iris data for match",
+		"testId": "SDK2030",
+		"testDescription": "Invalid iris data for match",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchInvalidDataValidator",
+				"description": "Validates the status code for invalid data"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "No iris data for match",
+		"testId": "SDK2031",
+		"testDescription": "No iris data for match",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchNoDataValidator",
+				"description": "Validates the status code for no data"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Iris match against more than 2 iris",
+		"testId": "SDK2032",
+		"testDescription": "Iris match against more than 2 iris",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchValidator",
+				"description": "Validates if biomterics match for the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Iris match when wrong subtype",
+		"testId": "SDK2033",
+		"testDescription": "Iris match when wrong subtype",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": true,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchValidator",
+				"description": "Validates if biomterics match for the modality"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Matcher"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Sending face data instead of iris",
+		"testId": "SDK2034",
+		"testDescription": "Sending face data instead of iris",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": "match",
+		"requestSchema": "MatchRequestSchema",
+		"responseSchema": "MatchResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "MatchInvalidDataValidator",
+				"description": "Validates the status code for invalid data"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Matcher"
 			]
 		}
 	},
@@ -1113,8 +1122,269 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "Face extract invalid data failure",
+		"testId": "SDK2038",
+		"specVersion": "0.9.0",
+		"testName": "Finger segment good quality",
+		"testDescription": "Finger segment good quality",
+		"isNegativeTestcase": false,
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentValidator",
+				"description": "Validates if input BDB data present in the Probe for the modality is valid"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2039",
+		"specVersion": "0.9.0",
+		"testName": "Face segment good quality",
+		"testDescription": "Face segment good quality",
+		"isNegativeTestcase": false,
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentValidator",
+				"description": "Validates if input BDB data present in the Probe for the modality is valid"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2040",
+		"specVersion": "0.9.0",
+		"testName": "Iris segment good quality",
+		"testDescription": "Iris segment good quality",
+		"isNegativeTestcase": false,
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentValidator",
+				"description": "Validates if input BDB data present in the Probe for the modality is valid"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2041",
+		"specVersion": "0.9.0",
+		"testName": "Finger segment invalid data failure",
+		"testDescription": "Finger segment invalid data failure",
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentInvalidDataValidator",
+				"description": "Validates if input BDB data present in the Probe for the modality is valid"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		},
+		"isNegativeTestcase": true
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2042",
+		"specVersion": "0.9.0",
+		"testName": "Face segment invalid data failure",
+		"testDescription": "Face segment invalid data failure",
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentInvalidDataValidator",
+				"description": "Validates if input BDB data present in the Probe for the modality is valid"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		},
+		"isNegativeTestcase": true
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2043",
+		"specVersion": "0.9.0",
+		"testName": "Iris segment invalid data failure",
+		"testDescription": "Iris segment invalid data failure",
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentInvalidDataValidator",
+				"description": "Validates if input BDB data present in the Probe for the modality is valid"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		},
+		"isNegativeTestcase": true
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2044",
+		"specVersion": "0.9.0",
+		"testName": "Finger segment no input failure",
+		"testDescription": "Finger segment no input failure",
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentNoInputDataValidator",
+				"description": "Validates if no input BDB data present in the Probe"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		},
+		"isNegativeTestcase": true
+	},
+	{
+		"testCaseType": "SDK",
 		"testId": "SDK2045",
+		"specVersion": "0.9.0",
+		"testName": "Face segment no input failure",
+		"testDescription": "Face segment no input failure",
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentNoInputDataValidator",
+				"description": "Validates if no input BDB data present in the Probe"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		},
+		"isNegativeTestcase": true
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2046",
+		"specVersion": "0.9.0",
+		"testName": "Iris segment no input failure",
+		"testDescription": "Iris segment no input failure",
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentNoInputDataValidator",
+				"description": "Validates if no input BDB data present in the Probe"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		},
+		"isNegativeTestcase": true
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Face extract invalid data failure",
+		"testId": "SDK2047",
 		"testDescription": "Face extract invalid data failure",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": true,
@@ -1168,267 +1438,5 @@
 				"Extract Template"
 			]
 		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testId": "SDK2056",
-		"specVersion": "0.9.0",
-		"testName": "Finger segment good quality",
-		"testDescription": "Finger segment good quality",
-		"isNegativeTestcase": false,
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentValidator",
-				"description": "Validates if input BDB data present in the Probe for the modality is valid"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"finger"
-			],
-			"sdkPurpose": [
-				"Segment"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testId": "SDK2057",
-		"specVersion": "0.9.0",
-		"testName": "Face segment good quality",
-		"testDescription": "Face segment good quality",
-		"isNegativeTestcase": false,
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentValidator",
-				"description": "Validates if input BDB data present in the Probe for the modality is valid"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"face"
-			],
-			"sdkPurpose": [
-				"Segment"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testId": "SDK2058",
-		"specVersion": "0.9.0",
-		"testName": "Iris segment good quality",
-		"testDescription": "Iris segment good quality",
-		"isNegativeTestcase": false,
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentValidator",
-				"description": "Validates if input BDB data present in the Probe for the modality is valid"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"iris"
-			],
-			"sdkPurpose": [
-				"Segment"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testId": "SDK2059",
-		"specVersion": "0.9.0",
-		"testName": "Finger segment invalid data failure",
-		"testDescription": "Finger segment invalid data failure",
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentInvalidDataValidator",
-				"description": "Validates if input BDB data present in the Probe for the modality is valid"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"finger"
-			],
-			"sdkPurpose": [
-				"Segment"
-			]
-		},
-		"isNegativeTestcase": true
-	},
-	{
-		"testCaseType": "SDK",
-		"testId": "SDK2060",
-		"specVersion": "0.9.0",
-		"testName": "Face segment invalid data failure",
-		"testDescription": "Face segment invalid data failure",
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentInvalidDataValidator",
-				"description": "Validates if input BDB data present in the Probe for the modality is valid"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"face"
-			],
-			"sdkPurpose": [
-				"Segment"
-			]
-		},
-		"isNegativeTestcase": true
-	},
-	{
-		"testCaseType": "SDK",
-		"testId": "SDK2061",
-		"specVersion": "0.9.0",
-		"testName": "Iris segment invalid data failure",
-		"testDescription": "Iris segment invalid data failure",
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentInvalidDataValidator",
-				"description": "Validates if input BDB data present in the Probe for the modality is valid"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"iris"
-			],
-			"sdkPurpose": [
-				"Segment"
-			]
-		},
-		"isNegativeTestcase": true
-	},
-	{
-		"testCaseType": "SDK",
-		"testId": "SDK2062",
-		"specVersion": "0.9.0",
-		"testName": "Finger segment no input failure",
-		"testDescription": "Finger segment no input failure",
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentNoInputDataValidator",
-				"description": "Validates if no input BDB data present in the Probe"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"finger"
-			],
-			"sdkPurpose": [
-				"Segment"
-			]
-		},
-		"isNegativeTestcase": true
-	},
-	{
-		"testCaseType": "SDK",
-		"testId": "SDK2063",
-		"specVersion": "0.9.0",
-		"testName": "Face segment no input failure",
-		"testDescription": "Face segment no input failure",
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentNoInputDataValidator",
-				"description": "Validates if no input BDB data present in the Probe"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"face"
-			],
-			"sdkPurpose": [
-				"Segment"
-			]
-		},
-		"isNegativeTestcase": true
-	},
-	{
-		"testCaseType": "SDK",
-		"testId": "SDK2064",
-		"specVersion": "0.9.0",
-		"testName": "Iris segment no input failure",
-		"testDescription": "Iris segment no input failure",
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
-		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentNoInputDataValidator",
-				"description": "Validates if no input BDB data present in the Probe"
-			}
-		],
-		"otherAttributes": {
-			"modalities": [
-				"iris"
-			],
-			"sdkPurpose": [
-				"Segment"
-			]
-		},
-		"isNegativeTestcase": true
 	}
-
 ]
