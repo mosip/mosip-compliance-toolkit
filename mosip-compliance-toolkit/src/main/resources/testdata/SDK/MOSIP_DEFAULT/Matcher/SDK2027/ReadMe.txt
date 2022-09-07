@@ -1,0 +1,1 @@
+Sending face data instead of finger
