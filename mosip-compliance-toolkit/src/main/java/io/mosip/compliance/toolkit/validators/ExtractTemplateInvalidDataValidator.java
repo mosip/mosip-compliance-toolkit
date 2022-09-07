@@ -17,7 +17,7 @@ public class ExtractTemplateInvalidDataValidator extends SDKValidator {
 					ObjectNode.class);
 			JsonNode mainResponse = (JsonNode) methodResponse.get("response");
 			int statusCode = Integer.parseInt(mainResponse.get("statusCode").asText());
-			if (statusCode == 401) {
+			if (statusCode == 401 || statusCode == 403) {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription("For invalid data, expected status code received:" + statusCode);
 			} else {

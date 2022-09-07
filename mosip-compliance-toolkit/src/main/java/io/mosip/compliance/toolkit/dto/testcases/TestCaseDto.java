@@ -50,5 +50,7 @@ public class TestCaseDto implements Serializable {
 		public String deviceSubId;
 		public ArrayList<String> modalities;
 		public ArrayList<String> sdkPurpose;
+		public String convertSourceFormat;
+		public String convertTargetFormat;
 	}
 }

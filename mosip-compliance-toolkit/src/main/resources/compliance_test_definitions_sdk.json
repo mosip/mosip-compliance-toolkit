@@ -1438,5 +1438,390 @@
 				"Extract Template"
 			]
 		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2056",
+		"specVersion": "0.9.0",
+		"testName": "Finger segment good quality",
+		"testDescription": "Finger segment good quality",
+		"isNegativeTestcase": false,
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentValidator",
+				"description": "Validates if input BDB data present in the Probe for the modality is valid"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2057",
+		"specVersion": "0.9.0",
+		"testName": "Face segment good quality",
+		"testDescription": "Face segment good quality",
+		"isNegativeTestcase": false,
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentValidator",
+				"description": "Validates if input BDB data present in the Probe for the modality is valid"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2058",
+		"specVersion": "0.9.0",
+		"testName": "Iris segment good quality",
+		"testDescription": "Iris segment good quality",
+		"isNegativeTestcase": false,
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentValidator",
+				"description": "Validates if input BDB data present in the Probe for the modality is valid"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2059",
+		"specVersion": "0.9.0",
+		"testName": "Finger segment invalid data failure",
+		"testDescription": "Finger segment invalid data failure",
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentInvalidDataValidator",
+				"description": "Validates if input BDB data present in the Probe for the modality is valid"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		},
+		"isNegativeTestcase": true
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2060",
+		"specVersion": "0.9.0",
+		"testName": "Face segment invalid data failure",
+		"testDescription": "Face segment invalid data failure",
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentInvalidDataValidator",
+				"description": "Validates if input BDB data present in the Probe for the modality is valid"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		},
+		"isNegativeTestcase": true
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2061",
+		"specVersion": "0.9.0",
+		"testName": "Iris segment invalid data failure",
+		"testDescription": "Iris segment invalid data failure",
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentInvalidDataValidator",
+				"description": "Validates if input BDB data present in the Probe for the modality is valid"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		},
+		"isNegativeTestcase": true
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2062",
+		"specVersion": "0.9.0",
+		"testName": "Finger segment no input failure",
+		"testDescription": "Finger segment no input failure",
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentNoInputDataValidator",
+				"description": "Validates if no input BDB data present in the Probe"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		},
+		"isNegativeTestcase": true
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2063",
+		"specVersion": "0.9.0",
+		"testName": "Face segment no input failure",
+		"testDescription": "Face segment no input failure",
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentNoInputDataValidator",
+				"description": "Validates if no input BDB data present in the Probe"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		},
+		"isNegativeTestcase": true
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2064",
+		"specVersion": "0.9.0",
+		"testName": "Iris segment no input failure",
+		"testDescription": "Iris segment no input failure",
+		"methodName": "segment",
+		"requestSchema": "SegmentRequestSchema",
+		"responseSchema": "SegmentResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "SegmentNoInputDataValidator",
+				"description": "Validates if no input BDB data present in the Probe"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Segment"
+			]
+		},
+		"isNegativeTestcase": true
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2065",
+		"specVersion": "0.9.0",
+		"testName": "Face convert from ISO19794_5_2011 to IMAGE/JPEG",
+		"testDescription": "Face convert from ISO19794_5_2011 to IMAGE/JPEG",
+		"methodName": "convert-format",
+		"requestSchema": "ConvertRequestSchema",
+		"responseSchema": "ConvertResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "ConvertDataValidator",
+				"description": "Validates the input BDB data present in the Probe"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Convert Format"
+			],
+			"convertSourceFormat": "ISO19794_5_2011",
+			"convertTargetFormat": "IMAGE/JPEG"
+		},
+		"isNegativeTestcase": false
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2066",
+		"specVersion": "0.9.0",
+		"testName": "Face convert from ISO19794_5_2011 to IMAGE/PNG",
+		"testDescription": "Face convert from ISO19794_5_2011 to IMAGE/PNG",
+		"methodName": "convert-format",
+		"requestSchema": "ConvertRequestSchema",
+		"responseSchema": "ConvertResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "ConvertDataValidator",
+				"description": "Validates the input BDB data present in the Probe"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Convert Format"
+			],
+			"convertSourceFormat": "ISO19794_5_2011",
+			"convertTargetFormat": "IMAGE/PNG"
+		},
+		"isNegativeTestcase": false
+	},	
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2074",
+		"specVersion": "0.9.0",
+		"testName": "Face convert invalid data failure",
+		"testDescription": "Face convert invalid data failure",
+		"methodName": "convert-format",
+		"requestSchema": "ConvertRequestSchema",
+		"responseSchema": "ConvertResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "ConvertInvalidDataValidator",
+				"description": "Validates if input BDB data present in the Probe for the modality is valid"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Convert Format"
+			],
+			"convertSourceFormat": "ISO19794_5_2011",
+			"convertTargetFormat": "IMAGE/JPEG"
+		},
+		"isNegativeTestcase": true
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2075",
+		"specVersion": "0.9.0",
+		"testName": "Face convert no input failure",
+		"testDescription": "Face convert no input failure",
+		"methodName": "convert-format",
+		"requestSchema": "ConvertRequestSchema",
+		"responseSchema": "ConvertResponseSchema",
+		"validatorDefs": [
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "ConvertNoInputDataValidator",
+				"description": "Validates if no input BDB data present in the Probe"
+			}
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Convert Format"
+			],
+			"convertSourceFormat": "ISO19794_5_2011",
+			"convertTargetFormat": "IMAGE/JPEG"
+		},
+		"isNegativeTestcase": true
 	}
 ]
