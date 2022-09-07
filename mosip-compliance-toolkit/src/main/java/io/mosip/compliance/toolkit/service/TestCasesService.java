@@ -306,7 +306,12 @@ public class TestCasesService {
 			} else {
 				// read the testdata given as probe xml
 				// TODO pass the orgname / partnerId
-				byte[] probeFileBytes = this.getXmlData(null, testcaseId, "probe");
+				String purpose = getSdkPurpose(methodName);
+				if (purpose == null) {
+					throw new ToolkitException(ToolkitErrorCodes.INVALID_METHOD_NAME.getErrorCode(),
+							ToolkitErrorCodes.INVALID_METHOD_NAME.getErrorMessage());
+				}
+				byte[] probeFileBytes = this.getXmlData(null, purpose, testcaseId, "probe");
 
 				// get the BIRs from the XML
 				List<io.mosip.kernel.biometrics.entities.BIR> birsForProbe = cbeffReader
@@ -319,7 +324,7 @@ public class TestCasesService {
 				if (methodName.equalsIgnoreCase(MethodName.MATCH.getCode())) {
 					for (int i = 1; i <= 5; i++) {
 						// TODO pass the orgname / partnerId
-						byte[] galleryFileBytes = this.getXmlData(null, testcaseId, "gallery" + i);
+						byte[] galleryFileBytes = this.getXmlData(null, purpose, testcaseId, "gallery" + i);
 						if (galleryFileBytes != null) {
 							// get the BIRs from the XML
 							List<io.mosip.kernel.biometrics.entities.BIR> birsForGallery = cbeffReader
@@ -418,6 +423,26 @@ public class TestCasesService {
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
+	}
+
+	private String getSdkPurpose(String methodName) {
+		String purpose = null;
+		if (methodName.equalsIgnoreCase(MethodName.CHECK_QUALITY.getCode())) {
+			purpose = SdkPurpose.CHECK_QUALITY.getCode();
+		}
+		if (methodName.equalsIgnoreCase(MethodName.MATCH.getCode())) {
+			purpose = SdkPurpose.MATCHER.getCode();
+		}
+		if (methodName.equalsIgnoreCase(MethodName.EXTRACT_TEMPLATE.getCode())) {
+			purpose = SdkPurpose.EXTRACT_TEMPLATE.getCode();
+		}
+		if (methodName.equalsIgnoreCase(MethodName.SEGMENT.getCode())) {
+			purpose = SdkPurpose.SEGMENT.getCode();
+		}
+		if (methodName.equalsIgnoreCase(MethodName.CONVERT_FORMAT.getCode())) {
+			purpose = SdkPurpose.CONVERT_FORMAT.getCode();
+		}
+		return purpose;
 	}
 
 	public ResponseWrapper<TestCaseResponseDto> saveTestCases(List<TestCaseDto> values) throws Exception {
@@ -594,12 +619,12 @@ public class TestCasesService {
 		return true;
 	}
 
-	private byte[] getXmlData(String orgName, String testcaseId, String name) {
+	private byte[] getXmlData(String orgName, String purpose, String testcaseId, String name) {
 		try {
 			if (orgName == null) {
 				orgName = AppConstants.MOSIP_DEFAULT;
 			}
-			String key = orgName + "/" + testcaseId + "/" + name;
+			String key = orgName + "/" + purpose + "/" + testcaseId + "/" + name;
 			if (inputFiles.containsKey(key)) {
 				return inputFiles.get(key);
 			} else {
