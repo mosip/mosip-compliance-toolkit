@@ -1,1 +1,0 @@
-Sending face data instead of iris
