@@ -1,1 +1,4 @@
-No finger data for quality check
+modality quality check success
+-face
+-finger
+-iris

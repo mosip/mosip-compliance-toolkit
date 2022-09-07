@@ -1,1 +1,0 @@
-Finger segment good quality

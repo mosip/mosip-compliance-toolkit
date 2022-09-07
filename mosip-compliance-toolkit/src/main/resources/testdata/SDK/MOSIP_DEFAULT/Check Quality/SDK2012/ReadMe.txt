@@ -1,1 +1,1 @@
-Good finger quality
+No iris data for quality check

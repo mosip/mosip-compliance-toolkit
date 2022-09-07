@@ -1,1 +1,1 @@
-Bad finger quality
+Invalid iris data for quality check

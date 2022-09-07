@@ -1,1 +1,0 @@
-Face match against more than one face
