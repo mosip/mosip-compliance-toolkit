@@ -114,8 +114,9 @@ public class SdkProjectService {
 		try {
 			if (isValidSdkProject(sdkProjectDto)) {
 				String partnerId = this.getPartnerId();
+				String container = partnerId + "/" + sdkProjectDto.getPurpose();
 				if (sdkProjectDto.getBioTestDataFileName().equals(AppConstants.MOSIP_DEFAULT)
-						|| objectStore.exists(objectStoreAccountName, partnerId, null, null,
+						|| objectStore.exists(objectStoreAccountName, container, null, null,
 								sdkProjectDto.getBioTestDataFileName())) {
 					LocalDateTime crDate = LocalDateTime.now();
 					SdkProjectEntity entity = new SdkProjectEntity();
@@ -207,8 +208,9 @@ public class SdkProjectService {
 							entity.setUrl(url);
 						}
 						if (Objects.nonNull(bioTestDataFileName) && !bioTestDataFileName.isEmpty()) {
+							String container = partnerId + "/" + entity.getPurpose();
 							if (bioTestDataFileName.equals(AppConstants.MOSIP_DEFAULT) || objectStore
-									.exists(objectStoreAccountName, partnerId, null, null, bioTestDataFileName)) {
+									.exists(objectStoreAccountName, container, null, null, bioTestDataFileName)) {
 								entity.setBioTestDataFileName(bioTestDataFileName);
 							} else {
 								List<ServiceError> serviceErrorsList = new ArrayList<>();

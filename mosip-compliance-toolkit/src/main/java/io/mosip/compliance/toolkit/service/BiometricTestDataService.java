@@ -139,14 +139,15 @@ public class BiometricTestDataService {
 				inputEntity.setDeleted(false);
 				inputEntity.setDelTime(null);
 
-				if (!objectStore.exists(objectStoreAccountName, inputEntity.getPartnerId(), null, null,
+				String container = inputEntity.getPartnerId() + "/" + inputEntity.getPurpose();
+				if (!objectStore.exists(objectStoreAccountName, container, null, null,
 						inputEntity.getFileId())) {
 					BiometricTestDataEntity entity = biometricTestDataRepository.save(inputEntity);
 
 					boolean status = false;
 					InputStream is = file.getInputStream();
 					try {
-						status = putObjectToObjectStore(inputEntity.getPartnerId(), inputEntity.getFileId(), is);
+						status = putObjectToObjectStore(container, inputEntity.getFileId(), is);
 					} catch (Exception ex) {
 						log.debug("sessionId", "idType", "id", ex.getStackTrace());
 						log.error("sessionId", "idType", "id",
@@ -213,16 +214,19 @@ public class BiometricTestDataService {
 		return responseWrapper;
 	}
 
-	public ResponseWrapper<List<String>> getBioTestDataFileNames() {
+	public ResponseWrapper<List<String>> getBioTestDataFileNames(String purpose) {
 		ResponseWrapper<List<String>> responseWrapper = new ResponseWrapper<>();
-		List<String> fileNames = new ArrayList<>();
+		List<String> testDataNames = new ArrayList<>();
 		try {
 			String partnerId = getPartnerId();
-			List<ObjectDto> objects = objectStore.getAllObjects(objectStoreAccountName, partnerId);
+			List<ObjectDto> objects = objectStore.getAllObjects(objectStoreAccountName, partnerId + "/" + purpose);
 			if (Objects.nonNull(objects) && !objects.isEmpty()) {
+				List<String> fileNames = new ArrayList<>();
 				for (ObjectDto objectDto : objects) {
 					fileNames.add(objectDto.getObjectName());
 				}
+				String[] inputFileNames = fileNames.toArray(new String[0]);
+				testDataNames = biometricTestDataRepository.findNamesByFileIds(inputFileNames, partnerId);
 			} else {
 				List<ServiceError> serviceErrorsList = new ArrayList<>();
 				ServiceError serviceError = new ServiceError();
@@ -244,7 +248,7 @@ public class BiometricTestDataService {
 			responseWrapper.setErrors(serviceErrorsList);
 		}
 		responseWrapper.setId(getBioTestDataFileNames);
-		responseWrapper.setResponse(fileNames);
+		responseWrapper.setResponse(testDataNames);
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
@@ -319,17 +323,25 @@ public class BiometricTestDataService {
 		ByteArrayResource resource = null;
 		try {
 			String partnerId = getPartnerId();
-			String fileName = biometricTestDataRepository.findFileNameById(bioTestDataId, partnerId);
-			if (Objects.nonNull(fileName) && isObjectExistInObjectStore(partnerId, fileName)) {
-				InputStream inputStream = getObjectFromObjectStore(partnerId, fileName);
-				resource = new ByteArrayResource(inputStream.readAllBytes());
-				inputStream.close();
+			BiometricTestDataEntity biometricTestDataEntity = biometricTestDataRepository.findById(bioTestDataId, partnerId);
+			if (Objects.nonNull(biometricTestDataEntity)) {
+				String fileName = biometricTestDataEntity.getFileId();
+				String purpose = biometricTestDataEntity.getPurpose();
+				if (Objects.nonNull(fileName) && Objects.nonNull(purpose)) {
+					String container = partnerId + "/" + purpose;
+					InputStream inputStream = getObjectFromObjectStore(container, fileName);
+					resource = new ByteArrayResource(inputStream.readAllBytes());
+					inputStream.close();
 
-				HttpHeaders header = new HttpHeaders();
-				header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
-				header.add(HttpHeaders.CONTENT_TYPE, "application/octet-stream");
-				return ResponseEntity.ok().headers(header).contentLength(resource.contentLength())
-						.contentType(MediaType.APPLICATION_OCTET_STREAM).body(resource);
+					HttpHeaders header = new HttpHeaders();
+					header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
+					header.add("Cache-Control", "no-cache, no-store, must-revalidate");
+					header.add("Pragma", "no-cache");
+					header.add("Expires", "0");
+
+					return ResponseEntity.ok().headers(header).contentLength(resource.contentLength())
+							.contentType(MediaType.APPLICATION_OCTET_STREAM).body(resource);
+				}
 			}
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
