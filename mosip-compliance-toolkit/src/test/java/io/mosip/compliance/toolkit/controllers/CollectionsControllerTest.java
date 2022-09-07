@@ -19,7 +19,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -39,9 +38,6 @@ public class CollectionsControllerTest {
 
     @Mock
     private RequestValidator requestValidator;
-
-    @Mock
-    private Errors errors;
 
     final static String id = "123";
     static String projectType;
@@ -90,23 +86,23 @@ public class CollectionsControllerTest {
     /*
      * This class tests the addCollection method
      */
-    @Test
+    @Test(expected = Exception.class)
     public void addCollectionTest() throws Exception {
         ResponseWrapper<CollectionDto> response = new ResponseWrapper<>();
         RequestWrapper<CollectionRequestDto> request = new RequestWrapper<>();
         Mockito.when(collectionsService.addCollection(request.getRequest())).thenReturn(response);
-        collectionsController.addCollection(request, errors);
+        collectionsController.addCollection(request, null);
     }
 
     /*
      * This class tests the addTestCasesForCollection method
      */
-    @Test
+    @Test(expected=Exception.class)
     public void addTestCasesForCollectionTest() throws Exception {
         RequestWrapper<List<CollectionTestCaseDto>> requestWrapper = new RequestWrapper<>();
         ResponseWrapper<List<CollectionTestCaseDto>> response= new ResponseWrapper<>();
         Mockito.when(collectionsService.addTestCasesForCollection(requestWrapper.getRequest())).thenReturn(response);
-        collectionsController.addTestCasesForCollection(requestWrapper, errors);
+        collectionsController.addTestCasesForCollection(requestWrapper, null);
     }
 
 }
