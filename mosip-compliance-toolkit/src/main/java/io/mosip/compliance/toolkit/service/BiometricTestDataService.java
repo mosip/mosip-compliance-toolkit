@@ -25,9 +25,11 @@ import io.mosip.commons.khazana.dto.ObjectDto;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
+import io.mosip.compliance.toolkit.constants.SdkPurpose;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.BiometricTestDataDto;
 import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
+import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
@@ -254,12 +256,13 @@ public class BiometricTestDataService {
 		return responseWrapper;
 	}
 
-	public ResponseWrapper<Boolean> uploadSampleBioTestDataFile(MultipartFile file) {
+	public ResponseWrapper<Boolean> uploadSampleBioTestDataFile(String purpose, MultipartFile file) {
 		ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
 		boolean status = false;
 		try {
-			if (Objects.nonNull(file) && !file.isEmpty() && file.getSize() > 0) {
-				String defaultFileName = AppConstants.MOSIP_DEFAULT + ".zip";
+			if (Objects.nonNull(file) && Objects.nonNull(purpose) && !file.isEmpty() && file.getSize() > 0) {
+				SdkPurpose sdkPurpose = SdkPurpose.fromCode(purpose);
+				String defaultFileName = AppConstants.MOSIP_DEFAULT + "_" + sdkPurpose.toString() + ".zip";
 				if (isObjectExistInObjectStore(null, defaultFileName)) {
 					deleteObjectInObjectStore(null, defaultFileName);
 				}
@@ -274,10 +277,20 @@ public class BiometricTestDataService {
 				serviceErrorsList.add(serviceError);
 				responseWrapper.setErrors(serviceErrorsList);
 			}
+		} catch (ToolkitException ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In uploadSampleBioTestDataFile method of BiometricTestDataService Service - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ex.getErrorCode());
+			serviceError.setMessage(ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
-					"In addDefaultBioTestData method of BiometricTestDataService Service - " + ex.getMessage());
+					"In uploadSampleBioTestDataFile method of BiometricTestDataService Service - " + ex.getMessage());
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
 			ServiceError serviceError = new ServiceError();
 			serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_ERROR.getErrorCode());
@@ -292,10 +305,11 @@ public class BiometricTestDataService {
 		return responseWrapper;
 	}
 
-	public ResponseEntity<Resource> getSampleBioTestDataFile() {
+	public ResponseEntity<Resource> getSampleBioTestDataFile(String purpose) {
 		ByteArrayResource resource = null;
 		try {
-			String defaultFileName = AppConstants.MOSIP_DEFAULT + ".zip";
+			SdkPurpose sdkPurpose = SdkPurpose.fromCode(purpose);
+			String defaultFileName = AppConstants.MOSIP_DEFAULT + "_" + sdkPurpose.toString() + ".zip";
 			if (isObjectExistInObjectStore(null, defaultFileName)) {
 				InputStream inputStream = getObjectFromObjectStore(null, defaultFileName);
 				resource = new ByteArrayResource(inputStream.readAllBytes());

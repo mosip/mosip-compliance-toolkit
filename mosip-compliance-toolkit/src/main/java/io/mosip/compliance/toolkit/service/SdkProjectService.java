@@ -9,6 +9,7 @@ import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.*;
 import io.mosip.compliance.toolkit.entity.SdkProjectEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
+import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
 import io.mosip.compliance.toolkit.repository.SdkProjectRepository;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
@@ -42,6 +43,9 @@ public class SdkProjectService {
 
 	@Autowired
 	private SdkProjectRepository sdkProjectRepository;
+	
+	@Autowired
+	private BiometricTestDataRepository biometricTestDataRepository;
 
 	@Autowired
 	private ObjectMapperConfig objectMapperConfig;
@@ -113,11 +117,22 @@ public class SdkProjectService {
 		ResponseWrapper<SdkProjectDto> responseWrapper = new ResponseWrapper<>();
 		try {
 			if (isValidSdkProject(sdkProjectDto)) {
+				boolean isValidTestFile = false;
 				String partnerId = this.getPartnerId();
-				String container = partnerId + "/" + sdkProjectDto.getPurpose();
-				if (sdkProjectDto.getBioTestDataFileName().equals(AppConstants.MOSIP_DEFAULT)
-						|| objectStore.exists(objectStoreAccountName, container, null, null,
-								sdkProjectDto.getBioTestDataFileName())) {
+				if(Objects.isNull(sdkProjectDto.getBioTestDataFileName())) {
+					isValidTestFile = false;
+				} else if(sdkProjectDto.getBioTestDataFileName().equals(AppConstants.MOSIP_DEFAULT)) {
+					isValidTestFile = true;
+				}else {
+					String fileName = biometricTestDataRepository.findFileNameByName(sdkProjectDto.getBioTestDataFileName(),
+							sdkProjectDto.getPurpose(), partnerId);
+					String container = partnerId + "/" + sdkProjectDto.getPurpose();
+					if(objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
+						isValidTestFile = true;
+					}
+				}
+
+				if (isValidTestFile) {
 					LocalDateTime crDate = LocalDateTime.now();
 					SdkProjectEntity entity = new SdkProjectEntity();
 					entity.setId(RandomIdGenerator.generateUUID(sdkProjectDto.getProjectType().toLowerCase(), "", 36));
@@ -202,25 +217,30 @@ public class SdkProjectService {
 						SdkProjectEntity entity = optionalSdkProjectEntity.get();
 						LocalDateTime updDate = LocalDateTime.now();
 						String url = sdkProjectDto.getUrl();
-						String bioTestDataFileName = sdkProjectDto.getBioTestDataFileName();
+						String bioTestDataName = sdkProjectDto.getBioTestDataFileName();
 //					Updating SDK project values
 						if (Objects.nonNull(url) && !url.isEmpty()) {
 							entity.setUrl(url);
 						}
-						if (Objects.nonNull(bioTestDataFileName) && !bioTestDataFileName.isEmpty()) {
-							String container = partnerId + "/" + entity.getPurpose();
-							if (bioTestDataFileName.equals(AppConstants.MOSIP_DEFAULT) || objectStore
-									.exists(objectStoreAccountName, container, null, null, bioTestDataFileName)) {
-								entity.setBioTestDataFileName(bioTestDataFileName);
+						if (Objects.nonNull(bioTestDataName) && !bioTestDataName.isEmpty()) {
+							if (bioTestDataName.equals(AppConstants.MOSIP_DEFAULT)) {
+								entity.setBioTestDataFileName(AppConstants.MOSIP_DEFAULT);
 							} else {
-								List<ServiceError> serviceErrorsList = new ArrayList<>();
-								ServiceError serviceError = new ServiceError();
-								serviceError
-										.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode());
-								serviceError.setMessage(
-										ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage());
-								serviceErrorsList.add(serviceError);
-								responseWrapper.setErrors(serviceErrorsList);
+								String fileName = biometricTestDataRepository.findFileNameByName(bioTestDataName,
+										entity.getPurpose(), partnerId);
+								String container = partnerId + "/" + entity.getPurpose();
+								if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
+									entity.setBioTestDataFileName(bioTestDataName);
+								} else {
+									List<ServiceError> serviceErrorsList = new ArrayList<>();
+									ServiceError serviceError = new ServiceError();
+									serviceError.setErrorCode(
+											ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode());
+									serviceError.setMessage(
+											ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage());
+									serviceErrorsList.add(serviceError);
+									responseWrapper.setErrors(serviceErrorsList);
+								}
 							}
 						}
 						entity.setUpBy(this.getUserBy());
