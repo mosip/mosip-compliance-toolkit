@@ -31,7 +31,7 @@
 		"testDescription": {
 			"type": "string"
 		},
-		"isNegativeTestcase" : {
+		"isNegativeTestcase": {
 			"type": "boolean"
 		},
 		"methodName": {
@@ -209,6 +209,26 @@
 							"Segment"
 						]
 					}
+				},
+				"convertSourceFormat": {
+					"type": "string",
+					"enum": [
+						"ISO19794_4_2011",
+						"ISO19794_5_2011",
+						"ISO19794_6_2011"
+					]
+				},
+				"convertTargetFormat": {
+					"type": "string",
+					"enum": [
+						"IMAGE/JPEG",
+						"IMAGE/PNG",
+						"ISO19794_4_2011/JPEG",
+						"ISO19794_5_2011/JPEG",
+						"ISO19794_4_2011/PNG",
+						"ISO19794_5_2011/PNG",
+						"ISO19794_6_2011/PNG"
+					]
 				}
 			}
 		}
@@ -266,16 +286,41 @@
 				}
 			},
 			"then": {
-				"properties": {
-					"otherAttributes": {
-						"required": [
-							"modalities"
-						]
-					},
-					"specVersion": {
-						"enum": [
-							"0.9.0"
-						]
+				"if": {
+					"properties": {
+						"methodName": {
+							"const": "convert-format"
+						}
+					}
+				},
+				"then": {
+					"properties": {
+						"otherAttributes": {
+							"required": [
+								"modalities",
+								"convertSourceFormat",
+								"convertTargetFormat"
+							]
+						},
+						"specVersion": {
+							"enum": [
+								"0.9.0"
+							]
+						}
+					}
+				},
+				"else": {
+					"properties": {
+						"otherAttributes": {
+							"required": [
+								"modalities"
+							]
+						},
+						"specVersion": {
+							"enum": [
+								"0.9.0"
+							]
+						}
 					}
 				}
 			}

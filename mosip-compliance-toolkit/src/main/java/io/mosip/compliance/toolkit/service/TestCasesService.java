@@ -293,7 +293,7 @@ public class TestCasesService {
 	}
 
 	public ResponseWrapper<String> generateRequestForSDKTestcase(String methodName, String testcaseId,
-			List<String> modalities) throws Exception {
+			List<String> modalities, String convertSourceFormat, String convertTargetFormat) throws Exception {
 		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
 		try {
 			String requestJson = null;
@@ -375,8 +375,8 @@ public class TestCasesService {
 				if (methodName.equalsIgnoreCase(MethodName.CONVERT_FORMAT.getCode())) {
 					ConvertFormatRequestDto convertFormatRequestDto = new ConvertFormatRequestDto();
 					convertFormatRequestDto.setSample(biometricRecord);
-					convertFormatRequestDto.setSourceFormat(getSourceFormat(biometricRecord));
-					convertFormatRequestDto.setTargetFormat(getTargetFormat());
+					convertFormatRequestDto.setSourceFormat(convertSourceFormat);
+					convertFormatRequestDto.setTargetFormat(convertTargetFormat);
 					convertFormatRequestDto.setSourceParams(null);
 					convertFormatRequestDto.setTargetParams(null);
 					convertFormatRequestDto.setModalitiesToConvert(bioTypeList);
@@ -418,33 +418,6 @@ public class TestCasesService {
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
-	}
-
-	// io.mosip.kernel.bio.converter.constant.SourceFormatCode
-	// for Finger(ISO19794_4_2011), Face (ISO19794_5_2011), Iris(ISO19794_6_2011)
-	private String getSourceFormat(BiometricRecord biometricRecord) {
-		List<BiometricType> biometricTypeList = biometricRecord.getSegments().get(0).getBdbInfo().getType();
-		if (biometricTypeList != null && !biometricTypeList.isEmpty()) {
-			BiometricType biometricType = biometricTypeList.get(0);
-			switch (biometricType) {
-			case FINGER:
-				return "ISO19794_4_2011";
-			case IRIS:
-				return "ISO19794_6_2011";
-			case FACE:
-				return "ISO19794_5_2011";
-			default:
-				throw new ToolkitException(ToolkitErrorCodes.INVALID_MODALITY.getErrorCode(),
-						ToolkitErrorCodes.INVALID_MODALITY.getErrorMessage());
-			}
-		}
-		return null;
-	}
-
-	// io.mosip.kernel.bio.converter.constant.TargetFormatCode
-	// to JPEG (IMAGE/JPEG)
-	private String getTargetFormat() {
-		return "IMAGE/JPEG";
 	}
 
 	public ResponseWrapper<TestCaseResponseDto> saveTestCases(List<TestCaseDto> values) throws Exception {
