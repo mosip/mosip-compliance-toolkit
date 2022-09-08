@@ -132,9 +132,10 @@ public class TestCasesController {
 	public ResponseWrapper<String> generateRequestForSDK(@RequestParam(required = true) String methodName,
 			@RequestParam(required = true) String testcaseId, @RequestParam(required = true) List<String> modalities,
 			@RequestParam(required = true) String convertSourceFormat,
-			@RequestParam(required = true) String convertTargetFormat) throws Exception {
+			@RequestParam(required = true) String convertTargetFormat,
+			@RequestParam(required = false) String bioTestDataName) throws Exception {
 		return service.generateRequestForSDKTestcase(methodName, testcaseId, modalities, convertSourceFormat,
-				convertTargetFormat);
+				convertTargetFormat, bioTestDataName);
 	}
 
 	@PostMapping(value = "/saveTestCases", produces = "application/json")
