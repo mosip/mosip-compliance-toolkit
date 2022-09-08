@@ -41,6 +41,12 @@ import io.mosip.kernel.core.logger.spi.Logger;
 @Component
 public class BiometricTestDataService {
 
+	private static final String BLANK_SPACE = " ";
+
+	private static final String ZIP_EXT = ".zip";
+
+	private static final String UNDERSCORE = "_";
+
 	@Value("$(mosip.toolkit.api.id.biometric.testdata.get)")
 	private String getBiometricTestDataId;
 
@@ -109,7 +115,7 @@ public class BiometricTestDataService {
 			ServiceError serviceError = new ServiceError();
 			serviceError.setErrorCode(ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorCode());
 			serviceError.setMessage(
-					ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage());
+					ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorMessage() + BLANK_SPACE + ex.getMessage());
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		}
@@ -142,14 +148,13 @@ public class BiometricTestDataService {
 				inputEntity.setDelTime(null);
 
 				String container = inputEntity.getPartnerId() + "/" + inputEntity.getPurpose();
-				if (!objectStore.exists(objectStoreAccountName, container, null, null,
-						inputEntity.getFileId())) {
+				if (!objectStore.exists(objectStoreAccountName, container, null, null, inputEntity.getFileId())) {
 					BiometricTestDataEntity entity = biometricTestDataRepository.save(inputEntity);
 
 					boolean status = false;
 					InputStream is = file.getInputStream();
 					try {
-						status = putObjectToObjectStore(container, inputEntity.getFileId(), is);
+						status = putInObjectStore(container, inputEntity.getFileId(), is);
 					} catch (Exception ex) {
 						log.debug("sessionId", "idType", "id", ex.getStackTrace());
 						log.error("sessionId", "idType", "id",
@@ -194,7 +199,7 @@ public class BiometricTestDataService {
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
 			ServiceError serviceError = new ServiceError();
 			serviceError.setErrorCode(ToolkitErrorCodes.DUPLICATE_VALUE_ERROR.getErrorCode());
-			serviceError.setMessage(ToolkitErrorCodes.DUPLICATE_VALUE_ERROR.getErrorMessage() + " " + ex.getMessage());
+			serviceError.setMessage(ToolkitErrorCodes.DUPLICATE_VALUE_ERROR.getErrorMessage() + BLANK_SPACE + ex.getMessage());
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		} catch (Exception ex) {
@@ -205,7 +210,7 @@ public class BiometricTestDataService {
 			ServiceError serviceError = new ServiceError();
 			serviceError.setErrorCode(ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorCode());
 			serviceError.setMessage(
-					ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage());
+					ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorMessage() + BLANK_SPACE + ex.getMessage());
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		}
@@ -245,7 +250,7 @@ public class BiometricTestDataService {
 			ServiceError serviceError = new ServiceError();
 			serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode());
 			serviceError.setMessage(
-					ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage());
+					ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage() + BLANK_SPACE + ex.getMessage());
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		}
@@ -256,18 +261,22 @@ public class BiometricTestDataService {
 		return responseWrapper;
 	}
 
-	public ResponseWrapper<Boolean> uploadSampleBioTestDataFile(String purpose, MultipartFile file) {
+	public ResponseWrapper<Boolean> uploadSampleBioTestDataFile(String type, MultipartFile file) {
 		ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
 		boolean status = false;
 		try {
-			if (Objects.nonNull(file) && Objects.nonNull(purpose) && !file.isEmpty() && file.getSize() > 0) {
-				SdkPurpose sdkPurpose = SdkPurpose.fromCode(purpose);
-				String defaultFileName = AppConstants.MOSIP_DEFAULT + "_" + sdkPurpose.toString() + ".zip";
-				if (isObjectExistInObjectStore(null, defaultFileName)) {
-					deleteObjectInObjectStore(null, defaultFileName);
+			if (Objects.nonNull(file) && Objects.nonNull(type) && !file.isEmpty() && file.getSize() > 0
+					&& (type.equalsIgnoreCase(AppConstants.MOSIP_DEFAULT)
+							|| type.equalsIgnoreCase(AppConstants.SAMPLE))) {
+				String purpose = getPurposeFrmFileName(file, type);
+				SdkPurpose sdkPurpose = SdkPurpose.valueOf(purpose);
+				String defaultFileName = type.toUpperCase() + UNDERSCORE + sdkPurpose.toString().toUpperCase()
+						+ ZIP_EXT;
+				if (existsInObjectStore(null, defaultFileName)) {
+					deleteFrmObjectStore(null, defaultFileName);
 				}
 				InputStream is = file.getInputStream();
-				status = putObjectToObjectStore(null, defaultFileName, is);
+				status = putInObjectStore(null, defaultFileName, is);
 				is.close();
 			} else {
 				List<ServiceError> serviceErrorsList = new ArrayList<>();
@@ -294,7 +303,7 @@ public class BiometricTestDataService {
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
 			ServiceError serviceError = new ServiceError();
 			serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_ERROR.getErrorCode());
-			serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_ERROR.getErrorMessage() + " " + ex.getMessage());
+			serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_ERROR.getErrorMessage() + BLANK_SPACE + ex.getMessage());
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		}
@@ -305,13 +314,38 @@ public class BiometricTestDataService {
 		return responseWrapper;
 	}
 
+	private String getPurposeFrmFileName(MultipartFile file, String type) {
+		String fileName = file.getOriginalFilename();
+		String[] nameArr = fileName.split(ZIP_EXT);
+		String firstPart = nameArr[0];
+		String[] nameArr1 = firstPart.split(UNDERSCORE);
+		String purpose = BLANK_SPACE;
+		int index = 0;
+		for (String item : nameArr1) {
+			if (index > 0 && type.equalsIgnoreCase(AppConstants.SAMPLE)) {
+				purpose = purpose.concat(item);
+				purpose = purpose.concat(UNDERSCORE);
+			}
+			if (index > 1 && type.equalsIgnoreCase(AppConstants.MOSIP_DEFAULT)) {
+				purpose = purpose.concat(item);
+				purpose = purpose.concat(UNDERSCORE);
+			}
+			index++;
+		}
+		purpose = purpose.trim();
+		if ((purpose.lastIndexOf(UNDERSCORE) + 1) ==  purpose.length()) {
+			purpose = purpose.substring(0, purpose.lastIndexOf(UNDERSCORE));
+		}
+		return purpose;
+	}
+
 	public ResponseEntity<Resource> getSampleBioTestDataFile(String purpose) {
 		ByteArrayResource resource = null;
 		try {
 			SdkPurpose sdkPurpose = SdkPurpose.fromCode(purpose);
-			String defaultFileName = AppConstants.MOSIP_DEFAULT + "_" + sdkPurpose.toString() + ".zip";
-			if (isObjectExistInObjectStore(null, defaultFileName)) {
-				InputStream inputStream = getObjectFromObjectStore(null, defaultFileName);
+			String defaultFileName = AppConstants.SAMPLE + UNDERSCORE + sdkPurpose.toString().toUpperCase() + ZIP_EXT;
+			if (existsInObjectStore(null, defaultFileName)) {
+				InputStream inputStream = getFromObjectStore(null, defaultFileName);
 				resource = new ByteArrayResource(inputStream.readAllBytes());
 				inputStream.close();
 
@@ -332,18 +366,19 @@ public class BiometricTestDataService {
 
 		return ResponseEntity.noContent().build();
 	}
-	
+
 	public ResponseEntity<Resource> getBiometricTestDataFile(String bioTestDataId) {
 		ByteArrayResource resource = null;
 		try {
 			String partnerId = getPartnerId();
-			BiometricTestDataEntity biometricTestDataEntity = biometricTestDataRepository.findById(bioTestDataId, partnerId);
+			BiometricTestDataEntity biometricTestDataEntity = biometricTestDataRepository.findById(bioTestDataId,
+					partnerId);
 			if (Objects.nonNull(biometricTestDataEntity)) {
 				String fileName = biometricTestDataEntity.getFileId();
 				String purpose = biometricTestDataEntity.getPurpose();
 				if (Objects.nonNull(fileName) && Objects.nonNull(purpose)) {
 					String container = partnerId + "/" + purpose;
-					InputStream inputStream = getObjectFromObjectStore(container, fileName);
+					InputStream inputStream = getFromObjectStore(container, fileName);
 					resource = new ByteArrayResource(inputStream.readAllBytes());
 					inputStream.close();
 
@@ -366,20 +401,19 @@ public class BiometricTestDataService {
 		return ResponseEntity.noContent().build();
 	}
 
-
-	private boolean isObjectExistInObjectStore(String container, String objectName) {
+	private boolean existsInObjectStore(String container, String objectName) {
 		return objectStore.exists(objectStoreAccountName, container, null, null, objectName);
 	}
 
-	private InputStream getObjectFromObjectStore(String container, String objectName) {
+	private InputStream getFromObjectStore(String container, String objectName) {
 		return objectStore.getObject(objectStoreAccountName, container, null, null, objectName);
 	}
 
-	private boolean putObjectToObjectStore(String container, String objectName, InputStream data) {
+	private boolean putInObjectStore(String container, String objectName, InputStream data) {
 		return objectStore.putObject(objectStoreAccountName, container, null, null, objectName, data);
 	}
 
-	private boolean deleteObjectInObjectStore(String container, String objectName) {
+	private boolean deleteFrmObjectStore(String container, String objectName) {
 		return objectStore.deleteObject(objectStoreAccountName, container, null, null, objectName);
 	}
 
