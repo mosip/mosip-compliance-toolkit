@@ -73,7 +73,7 @@ public class BiometricTestDataController {
 	}
 
 	@GetMapping(value = "/getBiometricTestDataFile/{id}")
-	public ResponseEntity<Resource>  getBiometricTestDataFile(@PathVariable String id) {
+	public ResponseEntity<Resource> getBiometricTestDataFile(@PathVariable String id) {
 		return biometricTestDataService.getBiometricTestDataFile(id);
 	}
 
@@ -83,13 +83,14 @@ public class BiometricTestDataController {
 	}
 
 	@GetMapping(value = "/getSampleBioTestDataFile")
-	public ResponseEntity<Resource> getSampleBioTestDataFile() {
-		return biometricTestDataService.getSampleBioTestDataFile();
+	public ResponseEntity<Resource> getSampleBioTestDataFile(@RequestParam(required = true) String purpose) {
+		return biometricTestDataService.getSampleBioTestDataFile(purpose);
 	}
 
 	@PostMapping(value = "/uploadSampleBioTestDataFile")
-	public ResponseWrapper<Boolean> uploadSampleBioTestDataFile(@RequestParam("file") MultipartFile file) {
-		return biometricTestDataService.uploadSampleBioTestDataFile(file);
+	public ResponseWrapper<Boolean> uploadSampleBioTestDataFile(@RequestParam String purpose,
+			@RequestParam("file") MultipartFile file) {
+		return biometricTestDataService.uploadSampleBioTestDataFile(purpose, file);
 	}
 
 }
