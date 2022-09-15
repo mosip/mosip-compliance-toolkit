@@ -13,13 +13,13 @@ public class SchemaValidator extends ToolkitValidator {
 
 	@Autowired
 	TestCasesService service;
-
+	
 	@Override
 	public ValidationResultDto validateResponse(ValidationInputDto responseDto) {
 		try {
 			String methodResponseJson = responseDto.getMethodResponse();
-			String responseSchemaJson = getSchemaJson("schemas/" + responseDto.getTestCaseType().toLowerCase() + "/"
-					+ responseDto.getResponseSchema() + ".json");
+			String container = "schemas/" + responseDto.getTestCaseType().toLowerCase();
+			String responseSchemaJson = getSchemaJson(container, responseDto.getResponseSchema() + ".json");
 			return service.validateJsonWithSchema(methodResponseJson, responseSchemaJson);
 		} catch (Exception e) {
 			ValidationResultDto validationResultDto = new ValidationResultDto();

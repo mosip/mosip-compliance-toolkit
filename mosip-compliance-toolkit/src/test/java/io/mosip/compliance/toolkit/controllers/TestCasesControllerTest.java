@@ -129,9 +129,10 @@ public class TestCasesControllerTest {
         List<String> modalities = new ArrayList<>();
         String convertSourceFormat =null;
         String convertTargetFormat = null;
+        String bioTestDataName = null;
         ResponseWrapper<String> response = new ResponseWrapper<>();
-        Mockito.when(testCasesService.generateRequestForSDKTestcase(methodName, testcaseId, null,  modalities,convertTargetFormat, convertTargetFormat)).thenReturn(response);
-        Assert.assertEquals(response, testCasesController.generateRequestForSDK(methodName, testcaseId, null, modalities, convertSourceFormat, convertTargetFormat));
+        Mockito.when(testCasesService.generateRequestForSDKTestcase(methodName, testcaseId, bioTestDataName,  modalities,convertTargetFormat, convertTargetFormat)).thenReturn(response);
+        Assert.assertEquals(response, testCasesController.generateRequestForSDK(methodName, testcaseId, bioTestDataName, modalities, convertSourceFormat, convertTargetFormat));
     }
 
     /*
