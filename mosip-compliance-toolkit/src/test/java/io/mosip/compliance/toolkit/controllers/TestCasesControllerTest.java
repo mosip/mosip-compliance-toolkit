@@ -130,8 +130,8 @@ public class TestCasesControllerTest {
         String convertSourceFormat =null;
         String convertTargetFormat = null;
         ResponseWrapper<String> response = new ResponseWrapper<>();
-        Mockito.when(testCasesService.generateRequestForSDKTestcase(methodName, testcaseId, modalities,convertTargetFormat, convertTargetFormat)).thenReturn(response);
-        Assert.assertEquals(response, testCasesController.generateRequestForSDK(methodName, testcaseId, modalities, convertSourceFormat, convertTargetFormat));
+        Mockito.when(testCasesService.generateRequestForSDKTestcase(methodName, testcaseId, null,  modalities,convertTargetFormat, convertTargetFormat)).thenReturn(response);
+        Assert.assertEquals(response, testCasesController.generateRequestForSDK(methodName, testcaseId, null, modalities, convertSourceFormat, convertTargetFormat));
     }
 
     /*
