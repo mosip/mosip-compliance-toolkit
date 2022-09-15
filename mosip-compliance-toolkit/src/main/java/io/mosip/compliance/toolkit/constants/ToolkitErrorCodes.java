@@ -46,12 +46,15 @@ public enum ToolkitErrorCodes {
 	
 	DUPLICATE_VALUE_ERROR("TOOLKIT_DUPLICATE_VALUE_ERR_001", "Duplicate value not allowed"),
 	
+	SCHEMA_UNABLE_TO_ADD("TOOLKIT_SCHEMA_ERR_001", "Unable to add schema"),
+	
 	OBJECT_STORE_ERROR("TOOLKIT_OBJECT_STORE_ERR_001", "Object store error"),
 	OBJECT_STORE_FILE_EXISTS("TOOLKIT_OBJECT_STORE_ERR_002", "You have previously uploaded a file with same name: "),
 	OBJECT_STORE_UNABLE_TO_ADD_FILE("TOOLKIT_OBJECT_STORE_ERR_003", "Unable to add file"),
 	OBJECT_STORE_UNABLE_TO_GET_FILE("TOOLKIT_OBJECT_STORE_ERR_003", "Unable to get file"),
 	OBJECT_STORE_FILE_NOT_AVAILABLE("TOOLKIT_OBJECT_STORE_ERR_004", "Testdata file not available"),
 	OBJECT_STORE_INVALID_FILE_ID("TOOLKIT_OBJECT_STORE_ERR_005", "This file id is invalid for the logged in partner id."),
+	OBJECT_STORE_SCHEMA_NOT_AVAILABLE("TOOLKIT_OBJECT_STORE_ERR_006", "Schema file not available"),
 	
 	//	SDK
 	INVALID_SDK_PURPOSE("TOOLKIT_REQ_ERR_023", "Invalid SDK Purpose"),
