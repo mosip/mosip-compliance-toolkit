@@ -30,8 +30,7 @@ public class ProjectsControllerTest {
      */
     @Test
     public void initBinderTest(){
-        Object target = new Object();
-        WebDataBinder binder = new WebDataBinder(target);
+        WebDataBinder binder = new WebDataBinder(null);
         projectsController.initBinder(binder);
     }
 

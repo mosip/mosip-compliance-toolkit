@@ -137,7 +137,6 @@ public class TestCasesController {
 			@RequestParam(required = true) String convertSourceFormat,
 			@RequestParam(required = true) String convertTargetFormat) throws Exception {
 		return service.generateRequestForSDKTestcase(methodName, testcaseId, bioTestDataName, modalities, convertSourceFormat,
-				convertTargetFormat);
 	}
 
 	@PostMapping(value = "/saveTestCases", produces = "application/json")
