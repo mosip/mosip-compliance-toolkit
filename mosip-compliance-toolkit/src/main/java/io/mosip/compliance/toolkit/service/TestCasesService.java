@@ -27,7 +27,6 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StreamUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -97,12 +96,20 @@ public class TestCasesService {
 
 	@Autowired
 	TestCasesRepository testCasesRepository;
+	
+	@Autowired
+	BiometricTestDataRepository biometricTestDataRepository;
+	
+	@Value("${mosip.kernel.objectstore.account-name}")
+	private String objectStoreAccountName;
+
+	@Qualifier("S3Adapter")
+	@Autowired
+	private ObjectStoreAdapter objectStore;
 
 	private CbeffUtil cbeffReader = new CbeffImpl();
 
 	Gson gson = new GsonBuilder().create();
-
-	private static Map<String, byte[]> inputFiles = new HashMap<>();
 
 	private static final String VERSION = "1.0";
 
@@ -292,139 +299,6 @@ public class TestCasesService {
 		}
 	}
 
-	public ResponseWrapper<String> generateRequestForSDKTestcase(String methodName, String testcaseId,
-			List<String> modalities, String convertSourceFormat, String convertTargetFormat) throws Exception {
-		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
-		try {
-			String requestJson = null;
-
-			if (methodName.equalsIgnoreCase(MethodName.INIT.getCode())) {
-				ObjectNode rootNode = objectMapper.createObjectNode();
-				ObjectNode childNode = objectMapper.createObjectNode();
-				rootNode.set("initParams", childNode);
-				requestJson = gson.toJson(rootNode);
-			} else {
-				// read the testdata given as probe xml
-				// TODO pass the orgname / partnerId
-				String purpose = getSdkPurpose(methodName);
-				if (purpose == null) {
-					throw new ToolkitException(ToolkitErrorCodes.INVALID_METHOD_NAME.getErrorCode(),
-							ToolkitErrorCodes.INVALID_METHOD_NAME.getErrorMessage());
-				}
-				byte[] probeFileBytes = this.getXmlData(null, purpose, testcaseId, "probe");
-
-				// get the BIRs from the XML
-				List<io.mosip.kernel.biometrics.entities.BIR> birsForProbe = cbeffReader
-						.getBIRDataFromXML(probeFileBytes);
-				// convert BIRS to Biometric Record
-				BiometricRecord biometricRecord = new BiometricRecord();
-				biometricRecord.setSegments(birsForProbe);
-
-				List<BiometricRecord> biometricRecordsArr = new ArrayList<BiometricRecord>();
-				if (methodName.equalsIgnoreCase(MethodName.MATCH.getCode())) {
-					for (int i = 1; i <= 5; i++) {
-						// TODO pass the orgname / partnerId
-						byte[] galleryFileBytes = this.getXmlData(null, purpose, testcaseId, "gallery" + i);
-						if (galleryFileBytes != null) {
-							// get the BIRs from the XML
-							List<io.mosip.kernel.biometrics.entities.BIR> birsForGallery = cbeffReader
-									.getBIRDataFromXML(galleryFileBytes);
-							BiometricRecord biometricRecordGallery = new BiometricRecord();
-							biometricRecordGallery.setSegments(birsForGallery);
-							biometricRecordsArr.add(biometricRecordGallery);
-						} else {
-							i = 5;
-						}
-					}
-				}
-
-				// get the Biometric types
-				List<BiometricType> bioTypeList = modalities.stream().map(bioType -> this.getBiometricType(bioType))
-						.collect(Collectors.toList());
-
-				// populate the request object based on the method name
-				if (methodName.equalsIgnoreCase(MethodName.CHECK_QUALITY.getCode())) {
-					CheckQualityRequestDto checkQualityRequestDto = new CheckQualityRequestDto();
-					checkQualityRequestDto.setSample(biometricRecord);
-					checkQualityRequestDto.setModalitiesToCheck(bioTypeList);
-					// TODO: set flags
-					checkQualityRequestDto.setFlags(null);
-					System.out.println(checkQualityRequestDto);
-					requestJson = gson.toJson(checkQualityRequestDto);
-				}
-				if (methodName.equalsIgnoreCase(MethodName.MATCH.getCode())) {
-					MatchRequestDto matchRequestDto = new MatchRequestDto();
-					matchRequestDto.setSample(biometricRecord);
-					matchRequestDto.setGallery((BiometricRecord[]) biometricRecordsArr.toArray(new BiometricRecord[0]));
-					matchRequestDto.setModalitiesToMatch(bioTypeList);
-					// TODO: set flags
-					matchRequestDto.setFlags(null);
-					requestJson = gson.toJson(matchRequestDto);
-				}
-				if (methodName.equalsIgnoreCase(MethodName.EXTRACT_TEMPLATE.getCode())) {
-					ExtractTemplateRequestDto extractTemplateRequestDto = new ExtractTemplateRequestDto();
-					extractTemplateRequestDto.setSample(biometricRecord);
-					extractTemplateRequestDto.setModalitiesToExtract(bioTypeList);
-					// TODO: set flags
-					extractTemplateRequestDto.setFlags(null);
-					requestJson = gson.toJson(extractTemplateRequestDto);
-				}
-				if (methodName.equalsIgnoreCase(MethodName.SEGMENT.getCode())) {
-					SegmentRequestDto segmentRequestDto = new SegmentRequestDto();
-					segmentRequestDto.setSample(biometricRecord);
-					segmentRequestDto.setModalitiesToSegment(bioTypeList);
-					// TODO: set flags
-					segmentRequestDto.setFlags(null);
-					requestJson = gson.toJson(segmentRequestDto);
-				}
-				if (methodName.equalsIgnoreCase(MethodName.CONVERT_FORMAT.getCode())) {
-					ConvertFormatRequestDto convertFormatRequestDto = new ConvertFormatRequestDto();
-					convertFormatRequestDto.setSample(biometricRecord);
-					convertFormatRequestDto.setSourceFormat(convertSourceFormat);
-					convertFormatRequestDto.setTargetFormat(convertTargetFormat);
-					convertFormatRequestDto.setSourceParams(null);
-					convertFormatRequestDto.setTargetParams(null);
-					convertFormatRequestDto.setModalitiesToConvert(bioTypeList);
-					requestJson = gson.toJson(convertFormatRequestDto);
-				}
-
-			}
-			System.out.println(requestJson);
-			// convert the request json to base64encoded string
-			if (requestJson != null) {
-				RequestDto requestDto = new RequestDto();
-				requestDto.setVersion(VERSION);
-				requestDto.setRequest(this.base64Encode(requestJson));
-				responseWrapper.setResponse(gson.toJson(requestDto));
-			}
-		} catch (ToolkitException ex) {
-			log.debug("sessionId", "idType", "id", ex.getStackTrace());
-			log.error("sessionId", "idType", "id",
-					"In generateRequestForSDKTestcase method of TestCasesService - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ex.getErrorCode());
-			serviceError.setMessage(ex.getErrorText());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
-		} catch (Exception ex) {
-			log.debug("sessionId", "idType", "id", ex.getStackTrace());
-			log.error("sessionId", "idType", "id",
-					"In generateRequestForSDKTestcase method of TestCasesService - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.GENERATE_SDK_REQUEST_ERROR.getErrorCode());
-			serviceError
-					.setMessage(ToolkitErrorCodes.GENERATE_SDK_REQUEST_ERROR.getErrorMessage() + " " + ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
-		}
-		responseWrapper.setId(generateSdkRequest);
-		responseWrapper.setVersion(AppConstants.VERSION);
-		responseWrapper.setResponsetime(LocalDateTime.now());
-		return responseWrapper;
-	}
-
 	private String getSdkPurpose(String methodName) {
 		String purpose = null;
 		if (methodName.equalsIgnoreCase(MethodName.CHECK_QUALITY.getCode())) {
@@ -523,7 +397,6 @@ public class TestCasesService {
 			if (requestDto.getTestCaseType().equalsIgnoreCase(AppConstants.SDK)) {
 				testCaseSchemaJson = this.getSchemaJson("schemas/sdk/" + requestDto.getRequestSchema() + ".json");
 			}
-			// System.out.println(schemaJson);
 			resultDto = this.validateJsonWithSchema(sourceJson, testCaseSchemaJson);
 			resultDto.setValidatorName("SchemaValidator");
 			resultDto.setValidatorDescription("Validates the method request against the schema.");
@@ -587,19 +460,6 @@ public class TestCasesService {
 		return responseWrapper;
 	}
 
-	private void checkValidatorDefs(List<ValidatorDefDto> validatorDefs) {
-		validatorDefs.forEach(v -> {
-			try {
-				Class<?> className = Class.forName("io.mosip.compliance.toolkit.validators." + v.getName());
-				BaseValidator validator = (BaseValidator) className.getDeclaredConstructor().newInstance();
-				log.debug("invloking validator: {}", validator);
-			} catch (Exception ex) {
-				log.debug("invalid validator: {}", ex.getMessage());
-				throw new ToolkitException(ToolkitErrorCodes.INVALID_VALIDATOR_DEF.getErrorCode(),
-						ToolkitErrorCodes.INVALID_VALIDATOR_DEF.getErrorMessage() + " - " + v.getName());
-			}
-		});
-	}
 
 	/**
 	 * Verifies test case is valid. validates testcaseid starts with typename
@@ -617,30 +477,6 @@ public class TestCasesService {
 		}
 
 		return true;
-	}
-
-	private byte[] getXmlData(String orgName, String purpose, String testcaseId, String name) {
-		try {
-			if (orgName == null) {
-				orgName = AppConstants.MOSIP_DEFAULT;
-			}
-			String key = orgName + "/" + purpose + "/" + testcaseId + "/" + name;
-			if (inputFiles.containsKey(key)) {
-				return inputFiles.get(key);
-			} else {
-				// Read File Content
-				String filePathName = "classpath:testdata/SDK/" + key + ".xml";
-				log.info(filePathName);
-				Resource resource = resourceLoader.getResource(filePathName);
-				InputStream inputStream = resource.getInputStream();
-				byte[] bytes = StreamUtils.copyToByteArray(inputStream);
-				inputFiles.put(key, bytes);
-				return bytes;
-			}
-		} catch (IOException ioe) {
-			return null;
-		}
-
 	}
 
 	private BiometricType getBiometricType(String type) {
@@ -670,6 +506,248 @@ public class TestCasesService {
 			throw new UncheckedIOException(e);
 		}
 	}
+
+	public ResponseWrapper<String> generateRequestForSDKTestcase(String methodName, String testcaseId,
+			String bioTestDataName, List<String> modalities, String convertSourceFormat, String convertTargetFormat) throws Exception {
+		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
+		try {
+			String requestJson = null;
+			InputStream objectStoreIs = null;
+
+			if (methodName.equalsIgnoreCase(MethodName.INIT.getCode())) {
+				ObjectNode rootNode = objectMapper.createObjectNode();
+				ObjectNode childNode = objectMapper.createObjectNode();
+				rootNode.set("initParams", childNode);
+				requestJson = gson.toJson(rootNode);
+			} else {
+				String partnerId = getPartnerId();
+				SdkPurpose sdkPurpose = getSdkPurpose(methodName);
+				if (Objects.isNull(bioTestDataName) || bioTestDataName.equals(AppConstants.MOSIP_DEFAULT)) {
+					objectStoreIs = getDefaultTestData(methodName, sdkPurpose);
+				} else {
+					String fileName = biometricTestDataRepository.findFileNameByName(bioTestDataName, partnerId);
+					if (Objects.nonNull(fileName)) {
+						String container = partnerId + "/" + sdkPurpose.getCode();
+						objectStoreIs = getObjectFromObjectStore(container, fileName);
+					}
+				}
+				if (Objects.nonNull(objectStoreIs)) {
+					objectStoreIs.reset();
+					String purpose = sdkPurpose.getCode();
+					byte[] probeFileBytes = this.getXmlDataFromZipFile(objectStoreIs, purpose, testcaseId, "probe.xml");
+
+					if (Objects.nonNull(probeFileBytes)) {
+						// get the BIRs from the XML
+						List<io.mosip.kernel.biometrics.entities.BIR> birsForProbe = cbeffReader
+								.getBIRDataFromXML(probeFileBytes);
+						// convert BIRS to Biometric Record
+						BiometricRecord biometricRecord = new BiometricRecord();
+						biometricRecord.setSegments(birsForProbe);
+
+						List<BiometricRecord> biometricRecordsArr = new ArrayList<BiometricRecord>();
+						if (methodName.equalsIgnoreCase(MethodName.MATCH.getCode())) {
+							for (int i = 1; i <= 5; i++) {
+								// TODO pass the orgname / partnerId
+								byte[] galleryFileBytes = null;
+								if (Objects.nonNull(objectStoreIs)) {
+									objectStoreIs.reset();
+									galleryFileBytes = this.getXmlDataFromZipFile(objectStoreIs, purpose, testcaseId,
+											"gallery" + i + ".xml");
+								}
+								if (galleryFileBytes != null) {
+									// get the BIRs from the XML
+									List<io.mosip.kernel.biometrics.entities.BIR> birsForGallery = cbeffReader
+											.getBIRDataFromXML(galleryFileBytes);
+									BiometricRecord biometricRecordGallery = new BiometricRecord();
+									biometricRecordGallery.setSegments(birsForGallery);
+									biometricRecordsArr.add(biometricRecordGallery);
+								} else {
+									break;
+								}
+							}
+						}
+
+						if (Objects.nonNull(objectStoreIs)) {
+							objectStoreIs.close();
+						}
+
+						// get the Biometric types
+						List<BiometricType> bioTypeList = modalities.stream()
+								.map(bioType -> this.getBiometricType(bioType)).collect(Collectors.toList());
+
+						// populate the request object based on the method name
+						if (methodName.equalsIgnoreCase(MethodName.CHECK_QUALITY.getCode())) {
+							CheckQualityRequestDto checkQualityRequestDto = new CheckQualityRequestDto();
+							checkQualityRequestDto.setSample(biometricRecord);
+							checkQualityRequestDto.setModalitiesToCheck(bioTypeList);
+							// TODO: set flags
+							checkQualityRequestDto.setFlags(null);
+							requestJson = gson.toJson(checkQualityRequestDto);
+						}
+						if (methodName.equalsIgnoreCase(MethodName.MATCH.getCode())) {
+							MatchRequestDto matchRequestDto = new MatchRequestDto();
+							matchRequestDto.setSample(biometricRecord);
+							matchRequestDto.setGallery(
+									(BiometricRecord[]) biometricRecordsArr.toArray(new BiometricRecord[0]));
+							matchRequestDto.setModalitiesToMatch(bioTypeList);
+							// TODO: set flags
+							matchRequestDto.setFlags(null);
+							requestJson = gson.toJson(matchRequestDto);
+						}
+						if (methodName.equalsIgnoreCase(MethodName.EXTRACT_TEMPLATE.getCode())) {
+							ExtractTemplateRequestDto extractTemplateRequestDto = new ExtractTemplateRequestDto();
+							extractTemplateRequestDto.setSample(biometricRecord);
+							extractTemplateRequestDto.setModalitiesToExtract(bioTypeList);
+							// TODO: set flags
+							extractTemplateRequestDto.setFlags(null);
+							requestJson = gson.toJson(extractTemplateRequestDto);
+						}
+						if (methodName.equalsIgnoreCase(MethodName.SEGMENT.getCode())) {
+							SegmentRequestDto segmentRequestDto = new SegmentRequestDto();
+							segmentRequestDto.setSample(biometricRecord);
+							segmentRequestDto.setModalitiesToSegment(bioTypeList);
+							// TODO: set flags
+							segmentRequestDto.setFlags(null);
+							requestJson = gson.toJson(segmentRequestDto);
+						}
+						if (methodName.equalsIgnoreCase(MethodName.CONVERT_FORMAT.getCode())) {
+							ConvertFormatRequestDto convertFormatRequestDto = new ConvertFormatRequestDto();
+							convertFormatRequestDto.setSample(biometricRecord);
+							convertFormatRequestDto.setSourceFormat(convertSourceFormat);
+							convertFormatRequestDto.setTargetFormat(convertTargetFormat);
+							convertFormatRequestDto.setSourceParams(null);
+							convertFormatRequestDto.setTargetParams(null);
+							convertFormatRequestDto.setModalitiesToConvert(bioTypeList);
+							requestJson = gson.toJson(convertFormatRequestDto);
+						}
+					} else {
+						List<ServiceError> serviceErrorsList = new ArrayList<>();
+						ServiceError serviceError = new ServiceError();
+						serviceError.setErrorCode(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode());
+						serviceError.setMessage(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
+						serviceErrorsList.add(serviceError);
+						responseWrapper.setErrors(serviceErrorsList);
+					}
+				} else {
+					List<ServiceError> serviceErrorsList = new ArrayList<>();
+					ServiceError serviceError = new ServiceError();
+					serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode());
+					serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage());
+					serviceErrorsList.add(serviceError);
+					responseWrapper.setErrors(serviceErrorsList);
+				}
+
+			}
+			// convert the request json to base64encoded string
+			if (requestJson != null) {
+				RequestDto requestDto = new RequestDto();
+				requestDto.setVersion(VERSION);
+				requestDto.setRequest(this.base64Encode(requestJson));
+				responseWrapper.setResponse(gson.toJson(requestDto));
+			}
+		} catch (ToolkitException ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In generateRequestForSDKTestcase method of TestCasesService - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ex.getErrorCode());
+			serviceError.setMessage(ex.getErrorText());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In generateRequestForSDKTestcase method of TestCasesService - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.GENERATE_SDK_REQUEST_ERROR.getErrorCode());
+			serviceError
+					.setMessage(ToolkitErrorCodes.GENERATE_SDK_REQUEST_ERROR.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		}
+		responseWrapper.setId(generateSdkRequest);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+
+	private byte[] getXmlDataFromZipFile(InputStream zipFileIs, String purpose, String testcaseId, String name)
+			throws Exception {
+		byte[] bytes = null;
+		try {
+			ZipInputStream zis = new ZipInputStream(zipFileIs);
+			ZipEntry zipEntry;
+			String xmlFileName = purpose + "/";
+			if (Objects.nonNull(testcaseId)) {
+				xmlFileName += testcaseId + "/";
+			}
+			xmlFileName += name;
+			while ((zipEntry = zis.getNextEntry()) != null) {
+				if (xmlFileName.equals(zipEntry.getName())) {
+					bytes = getZipEntryBytes(zis);
+					break;
+				}
+			}
+			zis.closeEntry();
+			zis.close();
+		} catch (Exception ex) {
+			throw ex;
+		}
+		return bytes;
+	}
+
+	private byte[] getZipEntryBytes(ZipInputStream zis) throws IOException {
+		byte[] b = new byte[1024];
+		int len = 0;
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		while ((len = zis.read(b)) > 0) {
+			out.write(b, 0, len);
+		}
+		return out.toByteArray();
+	}
+	
+	private InputStream getDefaultTestData(String method, SdkPurpose sdkPurpose) {
+		InputStream defaultTestDataStrem = null;
+		String objectName = AppConstants.MOSIP_DEFAULT + "_" + sdkPurpose.toString() + ".zip";
+		if (isObjectExistInObjectStore(null, objectName)) {
+			defaultTestDataStrem = getObjectFromObjectStore(null, objectName);
+		}
+		return defaultTestDataStrem;
+	}
+	
+	private SdkPurpose getSdkPurpose(String methodName) {
+		SdkPurpose purpose = null;
+		switch (MethodName.fromCode(methodName)) {
+		case MATCH:
+			purpose = SdkPurpose.MATCHER;
+			break;
+		case EXTRACT_TEMPLATE:
+			purpose = SdkPurpose.EXTRACT_TEMPLATE;
+			break;
+		case CHECK_QUALITY:
+			purpose = SdkPurpose.CHECK_QUALITY;
+			break;
+		case SEGMENT:
+			purpose = SdkPurpose.SEGMENT;
+			break;
+		case CONVERT_FORMAT:
+			purpose = SdkPurpose.CONVERT_FORMAT;
+			break;
+		default:
+		}
+		return purpose;
+	}
+
+	private boolean isObjectExistInObjectStore(String container, String objectName) {
+		return objectStore.exists(objectStoreAccountName, container, null, null, objectName);
+	}
+
+	private InputStream getObjectFromObjectStore(String container, String objectName) {
+		return objectStore.getObject(objectStoreAccountName, container, null, null, objectName);
+	}
+	
 
 	public ResponseWrapper<TestCaseDto> getTestCaseById(String testCaseId) {
 		ResponseWrapper<TestCaseDto> responseWrapper = new ResponseWrapper<>();
