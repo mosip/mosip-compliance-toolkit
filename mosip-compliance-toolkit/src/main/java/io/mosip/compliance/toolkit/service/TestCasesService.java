@@ -2,6 +2,7 @@ package io.mosip.compliance.toolkit.service;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,9 +18,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
-import io.mosip.compliance.toolkit.constants.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -38,13 +41,23 @@ import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
 
+import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
+import io.mosip.compliance.toolkit.constants.AppConstants;
+import io.mosip.compliance.toolkit.constants.DeviceSubTypes;
+import io.mosip.compliance.toolkit.constants.DeviceTypes;
+import io.mosip.compliance.toolkit.constants.MethodName;
+import io.mosip.compliance.toolkit.constants.Purposes;
+import io.mosip.compliance.toolkit.constants.SbiSpecVersions;
+import io.mosip.compliance.toolkit.constants.SdkPurpose;
+import io.mosip.compliance.toolkit.constants.SdkSpecVersions;
+import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.sdk.CheckQualityRequestDto;
+import io.mosip.compliance.toolkit.dto.sdk.ConvertFormatRequestDto;
 import io.mosip.compliance.toolkit.dto.sdk.ExtractTemplateRequestDto;
 import io.mosip.compliance.toolkit.dto.sdk.MatchRequestDto;
-import io.mosip.compliance.toolkit.dto.sdk.ConvertFormatRequestDto;
-import io.mosip.compliance.toolkit.dto.sdk.SegmentRequestDto;
 import io.mosip.compliance.toolkit.dto.sdk.RequestDto;
+import io.mosip.compliance.toolkit.dto.sdk.SegmentRequestDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseResponseDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidateRequestSchemaDto;
@@ -54,6 +67,7 @@ import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidatorDefDto;
 import io.mosip.compliance.toolkit.entity.TestCaseEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
+import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
 import io.mosip.compliance.toolkit.repository.TestCasesRepository;
 import io.mosip.compliance.toolkit.validators.BaseValidator;
 import io.mosip.kernel.biometrics.constant.BiometricType;
@@ -297,26 +311,6 @@ public class TestCasesService {
 		} catch (Exception e) {
 			throw e;
 		}
-	}
-
-	private String getSdkPurpose(String methodName) {
-		String purpose = null;
-		if (methodName.equalsIgnoreCase(MethodName.CHECK_QUALITY.getCode())) {
-			purpose = SdkPurpose.CHECK_QUALITY.getCode();
-		}
-		if (methodName.equalsIgnoreCase(MethodName.MATCH.getCode())) {
-			purpose = SdkPurpose.MATCHER.getCode();
-		}
-		if (methodName.equalsIgnoreCase(MethodName.EXTRACT_TEMPLATE.getCode())) {
-			purpose = SdkPurpose.EXTRACT_TEMPLATE.getCode();
-		}
-		if (methodName.equalsIgnoreCase(MethodName.SEGMENT.getCode())) {
-			purpose = SdkPurpose.SEGMENT.getCode();
-		}
-		if (methodName.equalsIgnoreCase(MethodName.CONVERT_FORMAT.getCode())) {
-			purpose = SdkPurpose.CONVERT_FORMAT.getCode();
-		}
-		return purpose;
 	}
 
 	public ResponseWrapper<TestCaseResponseDto> saveTestCases(List<TestCaseDto> values) throws Exception {
