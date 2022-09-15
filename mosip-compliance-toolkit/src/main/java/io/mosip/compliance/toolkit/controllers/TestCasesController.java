@@ -129,13 +129,15 @@ public class TestCasesController {
 	}
 
 	@GetMapping(value = "/generateRequestForSDK")
-	public ResponseWrapper<String> generateRequestForSDK(@RequestParam(required = true) String methodName,
-			@RequestParam(required = true) String testcaseId, @RequestParam(required = true) List<String> modalities,
+	public ResponseWrapper<String> generateRequestForSDK(
+			@RequestParam(required = true) String methodName,
+			@RequestParam(required = true) String testcaseId,
+			@RequestParam(required = false) String bioTestDataName, 
+			@RequestParam(required = true) List<String> modalities,
 			@RequestParam(required = true) String convertSourceFormat,
-			@RequestParam(required = true) String convertTargetFormat,
-			@RequestParam(required = false) String bioTestDataName) throws Exception {
-		return service.generateRequestForSDKTestcase(methodName, testcaseId, modalities, convertSourceFormat,
-				convertTargetFormat, bioTestDataName);
+			@RequestParam(required = true) String convertTargetFormat) throws Exception {
+		return service.generateRequestForSDKTestcase(methodName, testcaseId, bioTestDataName, modalities, convertSourceFormat,
+				convertTargetFormat);
 	}
 
 	@PostMapping(value = "/saveTestCases", produces = "application/json")
