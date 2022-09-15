@@ -15,12 +15,12 @@ CREATE TABLE toolkit.abis_projects(
 	upd_dtimes timestamp,
 	is_deleted boolean,
 	del_dtimes timestamp,
-	CONSTRAINT abisprojectsid_pk PRIMARY KEY (id),
-	CONSTRAINT abisprojects_name_partnerid UNIQUE (name, partner_id)
+	CONSTRAINT abisprojectsid_pk PRIMARY KEY (id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_abis_projects_id ON toolkit.abis_projects USING btree (id);
 CREATE INDEX IF NOT EXISTS idx_abis_projects_partner_id ON toolkit.abis_projects USING btree (partner_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_abis_projects_name_partner_id ON toolkit.abis_projects USING btree(LOWER(name), LOWER(partner_id));
 COMMENT ON TABLE toolkit.abis_projects IS 'This table all the abis projects for the user.';
 COMMENT ON COLUMN toolkit.abis_projects.id IS 'ID: Unique Id generated for an project.';
 COMMENT ON COLUMN toolkit.abis_projects.name IS 'Name: name of the project.';
