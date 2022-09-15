@@ -15,7 +15,7 @@ CREATE TABLE toolkit.abis_projects(
 	upd_dtimes timestamp,
 	is_deleted boolean,
 	del_dtimes timestamp,
-	CONSTRAINT abisprojectsid_pk PRIMARY KEY (id),
+	CONSTRAINT abisprojectsid_pk PRIMARY KEY (id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_abis_projects_id ON toolkit.abis_projects USING btree (id);
