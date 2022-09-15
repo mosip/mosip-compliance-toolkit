@@ -43,8 +43,6 @@ public enum ToolkitErrorCodes {
 	GET_TEST_CASE_ERROR("TOOLKIT_REQ_ERR_020", "Get Test Case error"),
 	INVALID_CERTIFICATION_TYPE("TOOLKIT_REQ_ERR_021", "Invalid Certification Type"),
 	INVALID_DEVICE_STATUS("TOOLKIT_REQ_ERR_022", "Invalid Device Status"),
-	
-	DUPLICATE_VALUE_ERROR("TOOLKIT_DUPLICATE_VALUE_ERR_001", "Duplicate value not allowed"),
 
 	PROJECT_NAME_EXISTS("TOOLKIT_DB_ERR_001", "You have previously created a project with same name: "),
 	BIO_TEST_DATA_FILE_EXISTS("TOOLKIT_DB_ERR_002", "You have previously uploaded a file with same name: "),
