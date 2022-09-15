@@ -14,12 +14,12 @@ CREATE TABLE toolkit.biometric_testdata
 	upd_dtimes timestamp without time zone,
 	is_deleted boolean,
 	del_dtimes timestamp without time zone,
-	CONSTRAINT biometrictestdataid_pk PRIMARY KEY (id),
-	CONSTRAINT biometrictestdata_name_partnerid UNIQUE (name, partner_id)
+	CONSTRAINT biometrictestdataid_pk PRIMARY KEY (id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_biometric_testdata_id ON toolkit.biometric_testdata USING btree (id);
 CREATE INDEX IF NOT EXISTS idx_biometric_testdata_partner_id ON toolkit.biometric_testdata USING btree (partner_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_biometric_testdata_name_partner_id ON toolkit.biometric_testdata USING btree(LOWER(name), LOWER(partner_id));
 COMMENT ON TABLE toolkit.biometric_testdata IS 'This table have all the meta data of biometrics file added by the user.';
 COMMENT ON COLUMN toolkit.biometric_testdata.id IS 'ID: Unique Id generated for biometric test data.';
 COMMENT ON COLUMN toolkit.biometric_testdata.name IS 'Name: name of the biometric test data.';

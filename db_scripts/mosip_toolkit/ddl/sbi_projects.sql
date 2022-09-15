@@ -15,12 +15,12 @@ CREATE TABLE toolkit.sbi_projects(
 	upd_dtimes timestamp,
 	is_deleted boolean,
 	del_dtimes timestamp,
-	CONSTRAINT sbiprojectsid_pk PRIMARY KEY (id),
-	CONSTRAINT sbiprojects_name_partnerid UNIQUE (name, partner_id)
+	CONSTRAINT sbiprojectsid_pk PRIMARY KEY (id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_sbi_projects_id ON toolkit.sbi_projects USING btree (id);
 CREATE INDEX IF NOT EXISTS idx_sbi_projects_partner_id ON toolkit.sbi_projects USING btree (partner_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_sbi_projects_name_partner_id ON toolkit.sbi_projects USING btree(LOWER(name), LOWER(partner_id));
 COMMENT ON TABLE toolkit.sbi_projects IS 'This table all the sbi projects for the user.';
 COMMENT ON COLUMN toolkit.sbi_projects.id IS 'ID: Unique Id generated for an project.';
 COMMENT ON COLUMN toolkit.sbi_projects.name IS 'Name: name of the project.';

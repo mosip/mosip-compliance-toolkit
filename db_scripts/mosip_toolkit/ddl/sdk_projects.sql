@@ -15,12 +15,12 @@ CREATE TABLE toolkit.sdk_projects(
 	upd_dtimes timestamp,
 	is_deleted boolean,
 	del_dtimes timestamp,
-	CONSTRAINT sdkprojectsid_pk PRIMARY KEY (id),
-	CONSTRAINT sdkprojects_name_partnerid UNIQUE (name, partner_id)
+	CONSTRAINT sdkprojectsid_pk PRIMARY KEY (id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_sdk_projects_id ON toolkit.sdk_projects USING btree (id);
 CREATE INDEX IF NOT EXISTS idx_sdk_projects_partner_id ON toolkit.sdk_projects USING btree (partner_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_sdk_projects_name_partner_id ON toolkit.sdk_projects USING btree(LOWER(name), LOWER(partner_id));
 COMMENT ON TABLE toolkit.sdk_projects IS 'This table all the SDK projects for the user.';
 COMMENT ON COLUMN toolkit.sdk_projects.id IS 'ID: Unique Id generated for an project.';
 COMMENT ON COLUMN toolkit.sdk_projects.name IS 'Name: name of the project.';

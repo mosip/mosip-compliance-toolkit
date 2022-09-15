@@ -198,8 +198,8 @@ public class BiometricTestDataService {
 					"In addBiometricTestdata method of BiometricTestDataService Service - " + ex.getMessage());
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
 			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.DUPLICATE_VALUE_ERROR.getErrorCode());
-			serviceError.setMessage(ToolkitErrorCodes.DUPLICATE_VALUE_ERROR.getErrorMessage() + BLANK_SPACE + ex.getMessage());
+			serviceError.setErrorCode(ToolkitErrorCodes.BIO_TEST_DATA_FILE_EXISTS.getErrorCode());
+			serviceError.setMessage(ToolkitErrorCodes.BIO_TEST_DATA_FILE_EXISTS.getErrorMessage() + BLANK_SPACE + ex.getMessage());
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		} catch (Exception ex) {
