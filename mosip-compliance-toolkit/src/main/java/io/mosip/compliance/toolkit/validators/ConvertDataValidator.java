@@ -36,11 +36,8 @@ public class ConvertDataValidator extends SDKValidator {
 				List<BIR> birList = biometricRecord.getSegments();
 				ObjectNode methodRequest = (ObjectNode) objectMapperConfig.objectMapper().readValue(inputDto.getMethodRequest(),
 						ObjectNode.class);
-				
-				
+								
 				ConvertFormatRequestDto convertFormatRequestDto = gson.fromJson(base64Decode(methodRequest.get("request").asText()), ConvertFormatRequestDto.class);
-				//objectMapperConfig.objectMapper().readValue(inputDto.getMethodRequest(),
-				//ConvertFormatRequestDto.class);
 				
 				String expectedCode = convertFormatRequestDto.getSourceFormat();
 				for(BIR value:birList)
@@ -57,7 +54,7 @@ public class ConvertDataValidator extends SDKValidator {
 					else
 					{
 						validationResultDto.setStatus(AppConstants.FAILURE);
-						validationResultDto.setDescription("Convert validation failed");
+						validationResultDto.setDescription("Convert validation failed for " + expectedCode);
 					}					
 				}
 			} else {
