@@ -49,6 +49,8 @@ public enum ToolkitErrorCodes {
 	
 	SCHEMA_UNABLE_TO_ADD("TOOLKIT_SCHEMA_ERR_001", "Unable to add schema"),
 	
+	SCHEMA_UNABLE_TO_ADD("TOOLKIT_SCHEMA_ERR_001", "Unable to add schema"),
+	
 	OBJECT_STORE_ERROR("TOOLKIT_OBJECT_STORE_ERR_001", "Object store error"),
 	OBJECT_STORE_FILE_EXISTS("TOOLKIT_OBJECT_STORE_ERR_002", "You have previously uploaded a file with same name: "),
 	OBJECT_STORE_UNABLE_TO_ADD_FILE("TOOLKIT_OBJECT_STORE_ERR_003", "Unable to add file"),
