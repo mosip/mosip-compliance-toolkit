@@ -14,10 +14,6 @@ import lombok.Setter;
 @Setter
 public class AuthorizedRolesDto {
 
-	private List<String> uploadschema;
-
-	private List<String> uploadsamplebiotestdata;
-
-	private List<String> uploaddefaultbiotestdata;
+	private List<String> uploadResource;
 
 }

@@ -16,24 +16,10 @@ public class ResourceManagementController {
 	@Autowired
 	private ResourceManagementService resourceMgmtService;
 
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getUploadschema())")
-	@PostMapping(value = "uploadSchema")
-	public ResponseWrapper<Boolean> uploadSchema(@RequestParam(required = true) String projectType,
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getUploadResource())")
+	@PostMapping(value = "/uploadResourceFile")
+	public ResponseWrapper<Boolean> uploadResourceFile(@RequestParam(required = true) String type,
 			@RequestParam("file") MultipartFile file) {
-		return resourceMgmtService.uploadSchema(projectType, file);
-	}
-
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getUploadsamplebiotestdata())")
-	@PostMapping(value = "/uploadSampleBioTestDataFile")
-	public ResponseWrapper<Boolean> uploadSampleBioTestDataFile(@RequestParam(required = true) String purpose,
-			@RequestParam("file") MultipartFile file) {
-		return resourceMgmtService.uploadSampleBioTestDataFile(purpose, file);
-	}
-
-	@PreAuthorize("hasAnyRole(@authorizedRoles.getUploaddefaultbiotestdata())")
-	@PostMapping(value = "/uploadDefaultBioTestDataFile")
-	public ResponseWrapper<Boolean> uploadDefaultBioTestDataFile(@RequestParam(required = true) String purpose,
-			@RequestParam("file") MultipartFile file) {
-		return resourceMgmtService.uploadDefaultBioTestDataFile(purpose, file);
+		return resourceMgmtService.uploadResourceFile(type, file);
 	}
 }

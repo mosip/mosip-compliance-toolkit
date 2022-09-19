@@ -47,7 +47,7 @@ public enum ToolkitErrorCodes {
 	PROJECT_NAME_EXISTS("TOOLKIT_DB_ERR_001", "You have previously created a project with name: "),
 	BIO_TEST_DATA_FILE_EXISTS("TOOLKIT_DB_ERR_002", "You have previously added biometric test data with name: "),
 	
-	SCHEMA_UNABLE_TO_ADD("TOOLKIT_SCHEMA_ERR_001", "Unable to add schema"),
+	RESOURCE_UPLOAD_ERROR("TOOLKIT_RESOURCE_UPLOAD_ERR_001", "Unable to upload resource"),
 	
 	OBJECT_STORE_ERROR("TOOLKIT_OBJECT_STORE_ERR_001", "Object store error"),
 	OBJECT_STORE_FILE_EXISTS("TOOLKIT_OBJECT_STORE_ERR_002", "You have previously uploaded a file with same name: "),
