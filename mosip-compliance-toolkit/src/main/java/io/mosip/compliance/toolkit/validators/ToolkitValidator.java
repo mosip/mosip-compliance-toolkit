@@ -37,8 +37,8 @@ public abstract class ToolkitValidator implements BaseValidator {
 
 	protected String getSchemaJson(String container, String fileName) throws Exception {
 		// Read File Content
-		if (isObjectExistInObjectStore(container, fileName)) {
-			InputStream inputStream = getObjectFromObjectStore(container, fileName);
+		if (existsInObjectStore(container, fileName)) {
+			InputStream inputStream = getFromObjectStore(container, fileName);
 			try (Reader reader = new InputStreamReader(inputStream, UTF_8)) {
 				return FileCopyUtils.copyToString(reader);
 			} catch (IOException e) {
@@ -50,11 +50,11 @@ public abstract class ToolkitValidator implements BaseValidator {
 		}
 	}
 	
-	private boolean isObjectExistInObjectStore(String container, String objectName) {
+	private boolean existsInObjectStore(String container, String objectName) {
 		return objectStore.exists(objectStoreAccountName, container, null, null, objectName);
 	}
 	
-	private InputStream getObjectFromObjectStore(String container, String objectName) {
+	private InputStream getFromObjectStore(String container, String objectName) {
 		return objectStore.getObject(objectStoreAccountName, container, null, null, objectName);
 	}
 }

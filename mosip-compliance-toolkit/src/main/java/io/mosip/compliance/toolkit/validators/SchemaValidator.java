@@ -10,7 +10,11 @@ import io.mosip.compliance.toolkit.service.TestCasesService;
 
 @Component
 public class SchemaValidator extends ToolkitValidator {
+	
+	private static final String SCHEMAS = "schemas";
 
+	private static final String JSON_EXT = ".json";
+	
 	@Autowired
 	TestCasesService service;
 	
@@ -18,8 +22,8 @@ public class SchemaValidator extends ToolkitValidator {
 	public ValidationResultDto validateResponse(ValidationInputDto responseDto) {
 		try {
 			String methodResponseJson = responseDto.getMethodResponse();
-			String container = "schemas/" + responseDto.getTestCaseType().toLowerCase();
-			String responseSchemaJson = getSchemaJson(container, responseDto.getResponseSchema() + ".json");
+			String container = SCHEMAS + "/" + responseDto.getTestCaseType().toLowerCase();
+			String responseSchemaJson = getSchemaJson(container, responseDto.getResponseSchema() + JSON_EXT);
 			return service.validateJsonWithSchema(methodResponseJson, responseSchemaJson);
 		} catch (Exception e) {
 			ValidationResultDto validationResultDto = new ValidationResultDto();
