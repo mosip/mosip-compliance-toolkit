@@ -86,11 +86,4 @@ public class BiometricTestDataController {
 	public ResponseEntity<Resource> getSampleBioTestDataFile(@RequestParam(required = true) String purpose) {
 		return biometricTestDataService.getSampleBioTestDataFile(purpose);
 	}
-
-	@PostMapping(value = "/uploadSampleBioTestDataFile")
-	public ResponseWrapper<Boolean> uploadSampleBioTestDataFile(@RequestParam String type,
-			@RequestParam("file") MultipartFile file) {
-		return biometricTestDataService.uploadSampleBioTestDataFile(type, file);
-	}
-
 }

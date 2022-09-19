@@ -120,15 +120,4 @@ public class BiometricTestDataControllerTest {
         Assert.assertEquals(response, biometricTestDataController.getSampleBioTestDataFile(purpose));
     }
 
-    /*
-     * This class tests the addDefaultBioTestData
-     */
-    @Test
-    public void uploadSampleBioTestDataFile(){
-        MultipartFile file = null;
-        String type = null;
-        ResponseWrapper<Boolean> response = new ResponseWrapper<>();
-        Mockito.when(biometricTestDataService.uploadSampleBioTestDataFile(type, file)).thenReturn(response);
-        Assert.assertEquals(response, biometricTestDataController.uploadSampleBioTestDataFile(type, file));
-    }
 }
