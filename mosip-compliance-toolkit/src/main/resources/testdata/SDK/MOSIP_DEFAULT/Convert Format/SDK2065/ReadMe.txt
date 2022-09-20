@@ -1,1 +1,0 @@
-Convert probe face input data to JPEG

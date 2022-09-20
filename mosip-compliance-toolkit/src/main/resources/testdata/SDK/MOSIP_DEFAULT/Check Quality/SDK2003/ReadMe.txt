@@ -1,1 +1,0 @@
-Invalid face data for quality check

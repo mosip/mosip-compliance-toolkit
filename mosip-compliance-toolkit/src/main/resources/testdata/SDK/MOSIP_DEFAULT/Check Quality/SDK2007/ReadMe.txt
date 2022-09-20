@@ -1,1 +1,0 @@
-Invalid finger data for quality check
