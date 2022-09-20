@@ -145,7 +145,7 @@ public class TestCasesService {
 		List<ServiceError> serviceErrorsList = new ArrayList<>();
 		ServiceError serviceError = null;
 		try {
-			String testCaseSchemaJson = this.getSchemaJson("schemas/testcase_schema.json");
+			String testCaseSchemaJson = this.getSchemaJson(AppConstants.SCHEMAS, "testcase_schema.json");
 			if (isValidSbiTestCase(specVersion, purpose, deviceType, deviceSubType)) {
 				List<TestCaseEntity> testCaseEntities = testCasesRepository
 						.findAllSbiTestCaseBySpecVersion(specVersion);
@@ -213,7 +213,7 @@ public class TestCasesService {
 		List<ServiceError> serviceErrorsList = new ArrayList<>();
 		ServiceError serviceError = null;
 		try {
-			String testCaseSchemaJson = this.getSchemaJson("schemas/testcase_schema.json");
+			String testCaseSchemaJson = this.getSchemaJson(AppConstants.SCHEMAS, "testcase_schema.json");
 			if (isValidSdkTestCase(specVersion, sdkPurpose)) {
 				List<TestCaseEntity> testCaseEntities = testCasesRepository
 						.findAllSdkTestCaseBySpecVersion(specVersion);
@@ -319,7 +319,7 @@ public class TestCasesService {
 		Map<String, String> savedValues = new HashMap<String, String>();
 
 		try {
-			String testCaseSchemaJson = this.getSchemaJson("schemas/testcase_schema.json");
+			String testCaseSchemaJson = this.getSchemaJson(AppConstants.SCHEMAS, "testcase_schema.json");
 			for (TestCaseDto testCaseDto : values) {
 				// Do JSON Schema Validation
 				String jsonValue = objectMapper.writeValueAsString(testCaseDto);
@@ -386,10 +386,10 @@ public class TestCasesService {
 			String sourceJson = requestDto.getMethodRequest();
 			String testCaseSchemaJson = null;
 			if (requestDto.getTestCaseType().equalsIgnoreCase(AppConstants.SBI)) {
-				testCaseSchemaJson = this.getSchemaJson("schemas/sbi/" + requestDto.getRequestSchema() + ".json");
+				testCaseSchemaJson = this.getSchemaJson(AppConstants.SCHEMAS + "/sbi", requestDto.getRequestSchema() + ".json");
 			}
 			if (requestDto.getTestCaseType().equalsIgnoreCase(AppConstants.SDK)) {
-				testCaseSchemaJson = this.getSchemaJson("schemas/sdk/" + requestDto.getRequestSchema() + ".json");
+				testCaseSchemaJson = this.getSchemaJson(AppConstants.SCHEMAS + "/sdk", requestDto.getRequestSchema() + ".json");
 			}
 			resultDto = this.validateJsonWithSchema(sourceJson, testCaseSchemaJson);
 			resultDto.setValidatorName("SchemaValidator");
@@ -490,14 +490,18 @@ public class TestCasesService {
 		return Base64.getEncoder().encodeToString(data.getBytes());
 	}
 
-	public String getSchemaJson(String fileName) throws Exception {
+	public String getSchemaJson(String container, String fileName) throws Exception {
 		// Read File Content
-		Resource resource = resourceLoader.getResource("classpath:" + fileName);
-		InputStream inputStream = resource.getInputStream();
-		try (Reader reader = new InputStreamReader(inputStream, UTF_8)) {
-			return FileCopyUtils.copyToString(reader);
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
+		if (isObjectExistInObjectStore(container, fileName)) {
+			InputStream inputStream = getFromObjectStore(container, fileName);
+			try (Reader reader = new InputStreamReader(inputStream, UTF_8)) {
+				return FileCopyUtils.copyToString(reader);
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
+		} else {
+			throw new ToolkitException(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode(),
+					ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage());
 		}
 	}
 
@@ -522,7 +526,7 @@ public class TestCasesService {
 					String fileName = biometricTestDataRepository.findFileNameByName(bioTestDataName, partnerId);
 					if (Objects.nonNull(fileName)) {
 						String container = partnerId + "/" + sdkPurpose.getCode();
-						objectStoreIs = getObjectFromObjectStore(container, fileName);
+						objectStoreIs = getFromObjectStore(container, fileName);
 					}
 				}
 				if (Objects.nonNull(objectStoreIs)) {
@@ -706,7 +710,7 @@ public class TestCasesService {
 		InputStream defaultTestDataStrem = null;
 		String objectName = AppConstants.MOSIP_DEFAULT + "_" + sdkPurpose.toString() + ".zip";
 		if (isObjectExistInObjectStore(null, objectName)) {
-			defaultTestDataStrem = getObjectFromObjectStore(null, objectName);
+			defaultTestDataStrem = getFromObjectStore(null, objectName);
 		}
 		return defaultTestDataStrem;
 	}
@@ -738,7 +742,7 @@ public class TestCasesService {
 		return objectStore.exists(objectStoreAccountName, container, null, null, objectName);
 	}
 
-	private InputStream getObjectFromObjectStore(String container, String objectName) {
+	private InputStream getFromObjectStore(String container, String objectName) {
 		return objectStore.getObject(objectStoreAccountName, container, null, null, objectName);
 	}
 	

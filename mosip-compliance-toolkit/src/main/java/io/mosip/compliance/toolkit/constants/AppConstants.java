@@ -11,6 +11,8 @@ public class AppConstants {
 	public static final String MOSIP_DEFAULT = "MOSIP_DEFAULT";
 	
 	public static final String SAMPLE = "SAMPLE";
+	
+	public static final String SCHEMAS = "schemas";
 
 	public static final String ABIS = "ABIS";
 

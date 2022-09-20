@@ -32,8 +32,6 @@ public class ResourceManagementService {
 
 	private static final String UNDERSCORE = "_";
 
-	private static final String SCHEMAS = "schemas";
-
 	@Value("$(mosip.toolkit.api.id.resource.file.post)")
 	private String postResourceFileId;
 
@@ -67,9 +65,14 @@ public class ResourceManagementService {
 					objectName = AppConstants.MOSIP_DEFAULT + UNDERSCORE + sdkPurposeDefault.toString().toUpperCase()
 							+ ZIP_EXT;
 					break;
-				case SCHEMAS:
+				case AppConstants.SCHEMAS:
+					if(fileName.equals("testcase_schema.json")) {
+						container = AppConstants.SCHEMAS;
+						objectName = fileName;
+						break;
+					}
 					ProjectTypes projectTypes = ProjectTypes.fromCode(fileName.split(UNDERSCORE)[0]);
-					container = SCHEMAS + "/" + projectTypes.toString().toLowerCase();
+					container = AppConstants.SCHEMAS + "/" + projectTypes.toString().toLowerCase();
 					objectName = fileName.replace(projectTypes.toString() + UNDERSCORE, "");
 					break;
 				default:
