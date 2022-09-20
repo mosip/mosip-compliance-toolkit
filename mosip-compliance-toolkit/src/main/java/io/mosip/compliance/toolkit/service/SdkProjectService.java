@@ -126,7 +126,7 @@ public class SdkProjectService {
 				} else {
 					String fileName = biometricTestDataRepository
 							.findFileNameByName(sdkProjectDto.getBioTestDataFileName(), partnerId);
-					String container = partnerId + "/" + sdkProjectDto.getPurpose();
+					String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/" + sdkProjectDto.getPurpose();
 					if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
 						isValidTestFile = true;
 					}
@@ -228,7 +228,7 @@ public class SdkProjectService {
 							} else {
 								String fileName = biometricTestDataRepository.findFileNameByName(bioTestDataName,
 										partnerId);
-								String container = partnerId + "/" + entity.getPurpose();
+								String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/" + entity.getPurpose();
 								if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
 									entity.setBioTestDataFileName(bioTestDataName);
 								} else {

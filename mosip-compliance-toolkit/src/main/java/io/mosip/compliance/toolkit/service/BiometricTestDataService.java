@@ -143,7 +143,8 @@ public class BiometricTestDataService {
 				inputEntity.setDeleted(false);
 				inputEntity.setDelTime(null);
 
-				String container = inputEntity.getPartnerId() + "/" + inputEntity.getPurpose();
+				String container = AppConstants.PARTNER_TESTDATA + "/" + inputEntity.getPartnerId() + "/"
+						+ inputEntity.getPurpose();
 				if (!objectStore.exists(objectStoreAccountName, container, null, null, inputEntity.getFileId())) {
 					BiometricTestDataEntity entity = biometricTestDataRepository.save(inputEntity);
 
@@ -223,7 +224,8 @@ public class BiometricTestDataService {
 		List<String> testDataNames = new ArrayList<>();
 		try {
 			String partnerId = getPartnerId();
-			List<ObjectDto> objects = objectStore.getAllObjects(objectStoreAccountName, partnerId + "/" + purpose);
+			String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/" + purpose;
+			List<ObjectDto> objects = objectStore.getAllObjects(objectStoreAccountName, container);
 			if (Objects.nonNull(objects) && !objects.isEmpty()) {
 				List<String> fileNames = new ArrayList<>();
 				for (ObjectDto objectDto : objects) {
@@ -263,8 +265,8 @@ public class BiometricTestDataService {
 		try {
 			SdkPurpose sdkPurpose = SdkPurpose.fromCode(purpose);
 			String defaultFileName = AppConstants.SAMPLE + UNDERSCORE + sdkPurpose.toString().toUpperCase() + ZIP_EXT;
-			if (existsInObjectStore(null, defaultFileName)) {
-				InputStream inputStream = getFromObjectStore(null, defaultFileName);
+			if (existsInObjectStore(AppConstants.TESTDATA, defaultFileName)) {
+				InputStream inputStream = getFromObjectStore(AppConstants.TESTDATA, defaultFileName);
 				resource = new ByteArrayResource(inputStream.readAllBytes());
 				inputStream.close();
 
@@ -296,7 +298,7 @@ public class BiometricTestDataService {
 				String fileName = biometricTestDataEntity.getFileId();
 				String purpose = biometricTestDataEntity.getPurpose();
 				if (Objects.nonNull(fileName) && Objects.nonNull(purpose)) {
-					String container = partnerId + "/" + purpose;
+					String container = AppConstants.PARTNER_TESTDATA + "/" +  partnerId + "/" + purpose;
 					InputStream inputStream = getFromObjectStore(container, fileName);
 					resource = new ByteArrayResource(inputStream.readAllBytes());
 					inputStream.close();

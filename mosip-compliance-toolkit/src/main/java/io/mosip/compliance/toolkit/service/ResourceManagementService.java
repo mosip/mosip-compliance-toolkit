@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
-import io.mosip.compliance.toolkit.constants.ProjectTypes;
 import io.mosip.compliance.toolkit.constants.SdkPurpose;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
@@ -29,8 +28,14 @@ public class ResourceManagementService {
 	private static final String BLANK_SPACE = " ";
 
 	private static final String ZIP_EXT = ".zip";
+	
+	private static final String JSON_EXT = ".json";
 
 	private static final String UNDERSCORE = "_";
+
+	private static final String SBI_SCHEMA = AppConstants.SCHEMAS + UNDERSCORE + "sbi";
+
+	private static final String SDK_SCHEMA = AppConstants.SCHEMAS + UNDERSCORE + "sdk";
 
 	@Value("$(mosip.toolkit.api.id.resource.file.post)")
 	private String postResourceFileId;
@@ -49,16 +54,28 @@ public class ResourceManagementService {
 		boolean status = false;
 		try {
 			if (Objects.nonNull(file) && Objects.nonNull(type) && !file.isEmpty() && file.getSize() > 0) {
+
 				String fileName = file.getOriginalFilename();
 				String container = null;
 				String objectName = null;
 				switch (type) {
 				case AppConstants.SAMPLE:
+					if (!fileName.endsWith(ZIP_EXT)) {
+						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+					}
+					container = AppConstants.TESTDATA;
 					String purposeSample = fileName.replace(AppConstants.SAMPLE + UNDERSCORE, "").replace(ZIP_EXT, "");
 					SdkPurpose sdkPurposeSample = SdkPurpose.valueOf(purposeSample);
 					objectName = AppConstants.SAMPLE + UNDERSCORE + sdkPurposeSample.toString().toUpperCase() + ZIP_EXT;
+
 					break;
 				case AppConstants.MOSIP_DEFAULT:
+					if (!fileName.endsWith(ZIP_EXT)) {
+						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+					}
+					container = AppConstants.TESTDATA;
 					String purposeDefault = fileName.replace(AppConstants.MOSIP_DEFAULT + UNDERSCORE, "")
 							.replace(ZIP_EXT, "");
 					SdkPurpose sdkPurposeDefault = SdkPurpose.valueOf(purposeDefault);
@@ -66,14 +83,28 @@ public class ResourceManagementService {
 							+ ZIP_EXT;
 					break;
 				case AppConstants.SCHEMAS:
-					if(fileName.equals("testcase_schema.json")) {
-						container = AppConstants.SCHEMAS;
-						objectName = fileName;
-						break;
+					if (!fileName.endsWith(JSON_EXT)) {
+						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
 					}
-					ProjectTypes projectTypes = ProjectTypes.fromCode(fileName.split(UNDERSCORE)[0]);
-					container = AppConstants.SCHEMAS + "/" + projectTypes.toString().toLowerCase();
-					objectName = fileName.replace(projectTypes.toString() + UNDERSCORE, "");
+					container = AppConstants.SCHEMAS;
+					objectName = fileName;
+					break;
+				case SBI_SCHEMA:
+					if (!fileName.endsWith(JSON_EXT)) {
+						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+					}
+					container = AppConstants.SCHEMAS + "/" + AppConstants.SBI.toLowerCase();
+					objectName = fileName;
+					break;
+				case SDK_SCHEMA:
+					if (!fileName.endsWith(JSON_EXT)) {
+						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+					}
+					container = AppConstants.SCHEMAS + "/" + AppConstants.SDK.toLowerCase();
+					objectName = fileName;
 					break;
 				default:
 					throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode(),
@@ -107,8 +138,8 @@ public class ResourceManagementService {
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
 			ServiceError serviceError = new ServiceError();
 			serviceError.setErrorCode(ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorCode());
-			serviceError
-					.setMessage(ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorMessage() + BLANK_SPACE + ex.getMessage());
+			serviceError.setMessage(
+					ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorMessage() + BLANK_SPACE + ex.getMessage());
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		}

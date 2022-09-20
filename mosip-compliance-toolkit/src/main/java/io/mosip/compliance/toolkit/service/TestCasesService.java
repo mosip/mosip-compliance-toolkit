@@ -386,10 +386,12 @@ public class TestCasesService {
 			String sourceJson = requestDto.getMethodRequest();
 			String testCaseSchemaJson = null;
 			if (requestDto.getTestCaseType().equalsIgnoreCase(AppConstants.SBI)) {
-				testCaseSchemaJson = this.getSchemaJson(AppConstants.SCHEMAS + "/sbi", requestDto.getRequestSchema() + ".json");
+				testCaseSchemaJson = this.getSchemaJson(AppConstants.SCHEMAS + "/" + AppConstants.SBI.toLowerCase(),
+						requestDto.getRequestSchema() + ".json");
 			}
 			if (requestDto.getTestCaseType().equalsIgnoreCase(AppConstants.SDK)) {
-				testCaseSchemaJson = this.getSchemaJson(AppConstants.SCHEMAS + "/sdk", requestDto.getRequestSchema() + ".json");
+				testCaseSchemaJson = this.getSchemaJson(AppConstants.SCHEMAS + "/" + AppConstants.SDK.toLowerCase(),
+						requestDto.getRequestSchema() + ".json");
 			}
 			resultDto = this.validateJsonWithSchema(sourceJson, testCaseSchemaJson);
 			resultDto.setValidatorName("SchemaValidator");
@@ -525,8 +527,10 @@ public class TestCasesService {
 				} else {
 					String fileName = biometricTestDataRepository.findFileNameByName(bioTestDataName, partnerId);
 					if (Objects.nonNull(fileName)) {
-						String container = partnerId + "/" + sdkPurpose.getCode();
-						objectStoreIs = getFromObjectStore(container, fileName);
+						String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/" + sdkPurpose.getCode();
+						if (isObjectExistInObjectStore(container, fileName)) {
+							objectStoreIs = getFromObjectStore(container, fileName);
+						}
 					}
 				}
 				if (Objects.nonNull(objectStoreIs)) {
@@ -709,8 +713,8 @@ public class TestCasesService {
 	private InputStream getDefaultTestData(String method, SdkPurpose sdkPurpose) {
 		InputStream defaultTestDataStrem = null;
 		String objectName = AppConstants.MOSIP_DEFAULT + "_" + sdkPurpose.toString() + ".zip";
-		if (isObjectExistInObjectStore(null, objectName)) {
-			defaultTestDataStrem = getFromObjectStore(null, objectName);
+		if (isObjectExistInObjectStore(AppConstants.TESTDATA, objectName)) {
+			defaultTestDataStrem = getFromObjectStore(AppConstants.TESTDATA, objectName);
 		}
 		return defaultTestDataStrem;
 	}

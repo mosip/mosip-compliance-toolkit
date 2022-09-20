@@ -13,6 +13,10 @@ public class AppConstants {
 	public static final String SAMPLE = "SAMPLE";
 	
 	public static final String SCHEMAS = "schemas";
+	
+	public static final String PARTNER_TESTDATA = "partner_testdata";
+	
+	public static final String TESTDATA = "testdata";
 
 	public static final String ABIS = "ABIS";
 
