@@ -148,7 +148,7 @@ public class TestCasesService {
 		List<ServiceError> serviceErrorsList = new ArrayList<>();
 		ServiceError serviceError = null;
 		try {
-			String testCaseSchemaJson = this.getSchemaJson(AppConstants.SCHEMAS, "testcase_schema.json");
+			String testCaseSchemaJson = this.getSchemaJson(AppConstants.SCHEMAS.toLowerCase(), "testcase_schema.json");
 			if (isValidSbiTestCase(specVersion, purpose, deviceType, deviceSubType)) {
 				List<TestCaseEntity> testCaseEntities = testCasesRepository
 						.findAllSbiTestCaseBySpecVersion(specVersion);
@@ -216,7 +216,7 @@ public class TestCasesService {
 		List<ServiceError> serviceErrorsList = new ArrayList<>();
 		ServiceError serviceError = null;
 		try {
-			String testCaseSchemaJson = this.getSchemaJson(AppConstants.SCHEMAS, "testcase_schema.json");
+			String testCaseSchemaJson = this.getSchemaJson(AppConstants.SCHEMAS.toLowerCase(), "testcase_schema.json");
 			if (isValidSdkTestCase(specVersion, sdkPurpose)) {
 				List<TestCaseEntity> testCaseEntities = testCasesRepository
 						.findAllSdkTestCaseBySpecVersion(specVersion);
@@ -322,7 +322,7 @@ public class TestCasesService {
 		Map<String, String> savedValues = new HashMap<String, String>();
 
 		try {
-			String testCaseSchemaJson = this.getSchemaJson(AppConstants.SCHEMAS, "testcase_schema.json");
+			String testCaseSchemaJson = this.getSchemaJson(AppConstants.SCHEMAS.toLowerCase(), "testcase_schema.json");
 			for (TestCaseDto testCaseDto : values) {
 				// Do JSON Schema Validation
 				String jsonValue = objectMapper.writeValueAsString(testCaseDto);
@@ -389,11 +389,11 @@ public class TestCasesService {
 			String sourceJson = requestDto.getMethodRequest();
 			String testCaseSchemaJson = null;
 			if (requestDto.getTestCaseType().equalsIgnoreCase(AppConstants.SBI)) {
-				testCaseSchemaJson = this.getSchemaJson(AppConstants.SCHEMAS + "/" + AppConstants.SBI.toLowerCase(),
+				testCaseSchemaJson = this.getSchemaJson(AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.SBI.toLowerCase(),
 						requestDto.getRequestSchema() + ".json");
 			}
 			if (requestDto.getTestCaseType().equalsIgnoreCase(AppConstants.SDK)) {
-				testCaseSchemaJson = this.getSchemaJson(AppConstants.SCHEMAS + "/" + AppConstants.SDK.toLowerCase(),
+				testCaseSchemaJson = this.getSchemaJson(AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.SDK.toLowerCase(),
 						requestDto.getRequestSchema() + ".json");
 			}
 			resultDto = this.validateJsonWithSchema(sourceJson, testCaseSchemaJson);
