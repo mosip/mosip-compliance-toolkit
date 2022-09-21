@@ -1,14 +1,8 @@
 package io.mosip.compliance.toolkit.controllers;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.mosip.compliance.toolkit.dto.BiometricTestDataDto;
-import io.mosip.compliance.toolkit.service.BiometricTestDataService;
-import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
-import io.mosip.compliance.toolkit.util.RequestValidator;
-import io.mosip.kernel.core.http.RequestWrapper;
-import io.mosip.kernel.core.http.ResponseWrapper;
+import java.io.IOException;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,8 +20,15 @@ import org.springframework.validation.Errors;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.List;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.mosip.compliance.toolkit.dto.BiometricTestDataDto;
+import io.mosip.compliance.toolkit.service.BiometricTestDataService;
+import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
+import io.mosip.compliance.toolkit.util.RequestValidator;
+import io.mosip.kernel.core.http.RequestWrapper;
+import io.mosip.kernel.core.http.ResponseWrapper;
 
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
 @RunWith(SpringRunner.class)
@@ -102,11 +103,11 @@ public class BiometricTestDataControllerTest {
      * This class tests the getBioTestDataFileNames
      */
     @Test
-    public void getBioTestDataFileNamesTest(){
+    public void getBioTestDataNamesTest(){
         String purpose = "Auth";
         ResponseWrapper<List<String>> response = new ResponseWrapper<>();
-        Mockito.when(biometricTestDataService.getBioTestDataFileNames(purpose)).thenReturn(response);
-        Assert.assertEquals(response, biometricTestDataController.getBioTestDataFileNames(purpose));
+        Mockito.when(biometricTestDataService.getBioTestDataNames(purpose)).thenReturn(response);
+        Assert.assertEquals(response, biometricTestDataController.getBioTestDataNames(purpose));
     }
 
     /*

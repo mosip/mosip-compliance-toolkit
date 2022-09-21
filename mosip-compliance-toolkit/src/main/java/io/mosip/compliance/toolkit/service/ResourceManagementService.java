@@ -33,9 +33,9 @@ public class ResourceManagementService {
 
 	private static final String UNDERSCORE = "_";
 
-	private static final String SBI_SCHEMA = AppConstants.SCHEMAS + UNDERSCORE + "sbi";
+	private static final String SBI_SCHEMA = AppConstants.SCHEMAS + UNDERSCORE + AppConstants.SBI;
 
-	private static final String SDK_SCHEMA = AppConstants.SCHEMAS + UNDERSCORE + "sdk";
+	private static final String SDK_SCHEMA = AppConstants.SCHEMAS + UNDERSCORE + AppConstants.SDK;
 
 	@Value("$(mosip.toolkit.api.id.resource.file.post)")
 	private String postResourceFileId;
@@ -87,7 +87,7 @@ public class ResourceManagementService {
 						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
 								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
 					}
-					container = AppConstants.SCHEMAS;
+					container = AppConstants.SCHEMAS.toLowerCase();
 					objectName = fileName;
 					break;
 				case SBI_SCHEMA:
@@ -95,7 +95,7 @@ public class ResourceManagementService {
 						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
 								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
 					}
-					container = AppConstants.SCHEMAS + "/" + AppConstants.SBI.toLowerCase();
+					container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.SBI.toLowerCase();
 					objectName = fileName;
 					break;
 				case SDK_SCHEMA:
@@ -103,7 +103,7 @@ public class ResourceManagementService {
 						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
 								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
 					}
-					container = AppConstants.SCHEMAS + "/" + AppConstants.SDK.toLowerCase();
+					container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.SDK.toLowerCase();
 					objectName = fileName;
 					break;
 				default:

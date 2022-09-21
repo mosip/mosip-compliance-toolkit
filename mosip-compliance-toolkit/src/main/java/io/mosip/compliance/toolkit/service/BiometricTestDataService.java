@@ -219,7 +219,7 @@ public class BiometricTestDataService {
 		return responseWrapper;
 	}
 
-	public ResponseWrapper<List<String>> getBioTestDataFileNames(String purpose) {
+	public ResponseWrapper<List<String>> getBioTestDataNames(String purpose) {
 		ResponseWrapper<List<String>> responseWrapper = new ResponseWrapper<>();
 		List<String> testDataNames = new ArrayList<>();
 		try {

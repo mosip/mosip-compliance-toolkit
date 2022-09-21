@@ -6,14 +6,22 @@
 		"specVersion": "0.9.0",
 		"testDescription": "Initialise Bio SDK Services",
 		"isNegativeTestcase": false,
-		"methodName": "init",
-		"requestSchema": "InitSDKRequestSchema",
-		"responseSchema": "InitSDKResponseSchema",
+		"methodName": [
+			"init"
+		],
+		"requestSchema": [
+			"InitSDKRequestSchema"
+		],
+		"responseSchema": [
+			"InitSDKResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -37,18 +45,26 @@
 		"testDescription": "Good face quality",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "check-quality",
-		"requestSchema": "CheckQualityRequestSchema",
-		"responseSchema": "CheckQualityResponseSchema",
+		"methodName": [
+			"check-quality"
+		],
+		"requestSchema": [
+			"CheckQualityRequestSchema"
+		],
+		"responseSchema": [
+			"CheckQualityResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "QualityCheckValidator",
-				"description": "Checks the quality score of the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "QualityCheckValidator",
+					"description": "Checks the quality score of the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -66,18 +82,26 @@
 		"testDescription": "Bad face quality",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": true,
-		"methodName": "check-quality",
-		"requestSchema": "CheckQualityRequestSchema",
-		"responseSchema": "CheckQualityResponseSchema",
+		"methodName": [
+			"check-quality"
+		],
+		"requestSchema": [
+			"CheckQualityRequestSchema"
+		],
+		"responseSchema": [
+			"CheckQualityResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "QualityCheckValidator",
-				"description": "Checks the quality score of the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "QualityCheckValidator",
+					"description": "Checks the quality score of the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -95,18 +119,26 @@
 		"testDescription": "Invalid face data for quality check",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "check-quality",
-		"requestSchema": "CheckQualityRequestSchema",
-		"responseSchema": "CheckQualityResponseSchema",
+		"methodName": [
+			"check-quality"
+		],
+		"requestSchema": [
+			"CheckQualityRequestSchema"
+		],
+		"responseSchema": [
+			"CheckQualityResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "QualityCheckInvalidDataValidator",
-				"description": "Validates the status code for invalid data"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "QualityCheckInvalidDataValidator",
+					"description": "Validates the status code for invalid data"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -124,18 +156,26 @@
 		"testDescription": "No face data for quality check",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "check-quality",
-		"requestSchema": "CheckQualityRequestSchema",
-		"responseSchema": "CheckQualityResponseSchema",
+		"methodName": [
+			"check-quality"
+		],
+		"requestSchema": [
+			"CheckQualityRequestSchema"
+		],
+		"responseSchema": [
+			"CheckQualityResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "QualityCheckNoDataValidator",
-				"description": "Validates the status code for no data"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "QualityCheckNoDataValidator",
+					"description": "Validates the status code for no data"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -153,18 +193,26 @@
 		"testDescription": "Bad finger quality",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": true,
-		"methodName": "check-quality",
-		"requestSchema": "CheckQualityRequestSchema",
-		"responseSchema": "CheckQualityResponseSchema",
+		"methodName": [
+			"check-quality"
+		],
+		"requestSchema": [
+			"CheckQualityRequestSchema"
+		],
+		"responseSchema": [
+			"CheckQualityResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "QualityCheckValidator",
-				"description": "Checks the quality score of the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "QualityCheckValidator",
+					"description": "Checks the quality score of the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -182,18 +230,26 @@
 		"testDescription": "Good finger quality",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "check-quality",
-		"requestSchema": "CheckQualityRequestSchema",
-		"responseSchema": "CheckQualityResponseSchema",
+		"methodName": [
+			"check-quality"
+		],
+		"requestSchema": [
+			"CheckQualityRequestSchema"
+		],
+		"responseSchema": [
+			"CheckQualityResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "QualityCheckValidator",
-				"description": "Checks the quality score of the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "QualityCheckValidator",
+					"description": "Checks the quality score of the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -211,18 +267,26 @@
 		"testDescription": "Invalid finger data for quality check",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "check-quality",
-		"requestSchema": "CheckQualityRequestSchema",
-		"responseSchema": "CheckQualityResponseSchema",
+		"methodName": [
+			"check-quality"
+		],
+		"requestSchema": [
+			"CheckQualityRequestSchema"
+		],
+		"responseSchema": [
+			"CheckQualityResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "QualityCheckInvalidDataValidator",
-				"description": "Validates the status code for invalid data"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "QualityCheckInvalidDataValidator",
+					"description": "Validates the status code for invalid data"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -240,18 +304,26 @@
 		"testDescription": "No finger data for quality check",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "check-quality",
-		"requestSchema": "CheckQualityRequestSchema",
-		"responseSchema": "CheckQualityResponseSchema",
+		"methodName": [
+			"check-quality"
+		],
+		"requestSchema": [
+			"CheckQualityRequestSchema"
+		],
+		"responseSchema": [
+			"CheckQualityResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "QualityCheckNoDataValidator",
-				"description": "Validates the status code for no data"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "QualityCheckNoDataValidator",
+					"description": "Validates the status code for no data"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -269,18 +341,26 @@
 		"testDescription": "Bad iris quality",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": true,
-		"methodName": "check-quality",
-		"requestSchema": "CheckQualityRequestSchema",
-		"responseSchema": "CheckQualityResponseSchema",
+		"methodName": [
+			"check-quality"
+		],
+		"requestSchema": [
+			"CheckQualityRequestSchema"
+		],
+		"responseSchema": [
+			"CheckQualityResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "QualityCheckValidator",
-				"description": "Checks the quality score of the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "QualityCheckValidator",
+					"description": "Checks the quality score of the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -298,18 +378,26 @@
 		"testDescription": "Good iris quality",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "check-quality",
-		"requestSchema": "CheckQualityRequestSchema",
-		"responseSchema": "CheckQualityResponseSchema",
+		"methodName": [
+			"check-quality"
+		],
+		"requestSchema": [
+			"CheckQualityRequestSchema"
+		],
+		"responseSchema": [
+			"CheckQualityResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "QualityCheckValidator",
-				"description": "Checks the quality score of the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "QualityCheckValidator",
+					"description": "Checks the quality score of the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -327,18 +415,26 @@
 		"testDescription": "Invalid iris data for quality check",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "check-quality",
-		"requestSchema": "CheckQualityRequestSchema",
-		"responseSchema": "CheckQualityResponseSchema",
+		"methodName": [
+			"check-quality"
+		],
+		"requestSchema": [
+			"CheckQualityRequestSchema"
+		],
+		"responseSchema": [
+			"CheckQualityResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "QualityCheckInvalidDataValidator",
-				"description": "Validates the status code for invalid data"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "QualityCheckInvalidDataValidator",
+					"description": "Validates the status code for invalid data"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -356,18 +452,26 @@
 		"testDescription": "No iris data for quality check",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "check-quality",
-		"requestSchema": "CheckQualityRequestSchema",
-		"responseSchema": "CheckQualityResponseSchema",
+		"methodName": [
+			"check-quality"
+		],
+		"requestSchema": [
+			"CheckQualityRequestSchema"
+		],
+		"responseSchema": [
+			"CheckQualityResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "QualityCheckNoDataValidator",
-				"description": "Validates the status code for no data"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "QualityCheckNoDataValidator",
+					"description": "Validates the status code for no data"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -385,18 +489,26 @@
 		"testDescription": "modality quality check success",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "check-quality",
-		"requestSchema": "CheckQualityRequestSchema",
-		"responseSchema": "CheckQualityResponseSchema",
+		"methodName": [
+			"check-quality"
+		],
+		"requestSchema": [
+			"CheckQualityRequestSchema"
+		],
+		"responseSchema": [
+			"CheckQualityResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "QualityCheckValidator",
-				"description": "Checks the quality score of the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "QualityCheckValidator",
+					"description": "Checks the quality score of the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -415,18 +527,26 @@
 		"testDescription": "modality quality check success",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "check-quality",
-		"requestSchema": "CheckQualityRequestSchema",
-		"responseSchema": "CheckQualityResponseSchema",
+		"methodName": [
+			"check-quality"
+		],
+		"requestSchema": [
+			"CheckQualityRequestSchema"
+		],
+		"responseSchema": [
+			"CheckQualityResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "QualityCheckValidator",
-				"description": "Checks the quality score of the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "QualityCheckValidator",
+					"description": "Checks the quality score of the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -439,15 +559,6 @@
 			]
 		}
 	},
-
-
-
-
-
-
-
-
-
 	{
 		"testCaseType": "SDK",
 		"testName": "Face match failure",
@@ -455,18 +566,26 @@
 		"testDescription": "Face match failure",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": true,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchValidator",
+					"description": "Validates if biomterics match for the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -484,18 +603,26 @@
 		"testDescription": "Face match success",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchValidator",
+					"description": "Validates if biomterics match for the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -513,18 +640,26 @@
 		"testDescription": "Invalid face data for match",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchInvalidDataValidator",
-				"description": "Validates the status code for invalid data"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchInvalidDataValidator",
+					"description": "Validates the status code for invalid data"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -542,18 +677,26 @@
 		"testDescription": "No face data for match",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchNoDataValidator",
-				"description": "Validates the status code for no data"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchNoDataValidator",
+					"description": "Validates the status code for no data"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -571,18 +714,26 @@
 		"testDescription": "Face match against more than one face",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchValidator",
+					"description": "Validates if biomterics match for the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -600,18 +751,26 @@
 		"testDescription": "Sending finger data instead of face",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchInvalidDataValidator",
-				"description": "Validates the status code for invalid data"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchInvalidDataValidator",
+					"description": "Validates the status code for invalid data"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -629,18 +788,26 @@
 		"testDescription": "Finger match failure",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": true,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchValidator",
+					"description": "Validates if biomterics match for the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -658,18 +825,26 @@
 		"testDescription": "Finger match success",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchValidator",
+					"description": "Validates if biomterics match for the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -687,18 +862,26 @@
 		"testDescription": "Invalid finger data for match",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchInvalidDataValidator",
-				"description": "Validates the status code for invalid data"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchInvalidDataValidator",
+					"description": "Validates the status code for invalid data"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -716,18 +899,26 @@
 		"testDescription": "No finger data for match",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchNoDataValidator",
-				"description": "Validates the status code for no data"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchNoDataValidator",
+					"description": "Validates the status code for no data"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -745,18 +936,26 @@
 		"testDescription": "Finger match against more than 10 fingers",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchValidator",
+					"description": "Validates if biomterics match for the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -774,18 +973,26 @@
 		"testDescription": "Finger match when wrong subtype",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": true,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchValidator",
+					"description": "Validates if biomterics match for the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -803,18 +1010,26 @@
 		"testDescription": "Sending face data instead of finger",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchInvalidDataValidator",
-				"description": "Validates the status code for invalid data"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchInvalidDataValidator",
+					"description": "Validates the status code for invalid data"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -832,18 +1047,26 @@
 		"testDescription": "Iris match failure",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": true,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchValidator",
+					"description": "Validates if biomterics match for the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -861,18 +1084,26 @@
 		"testDescription": "Iris match success",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchValidator",
+					"description": "Validates if biomterics match for the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -890,18 +1121,26 @@
 		"testDescription": "Invalid iris data for match",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchInvalidDataValidator",
-				"description": "Validates the status code for invalid data"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchInvalidDataValidator",
+					"description": "Validates the status code for invalid data"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -919,18 +1158,26 @@
 		"testDescription": "No iris data for match",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchNoDataValidator",
-				"description": "Validates the status code for no data"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchNoDataValidator",
+					"description": "Validates the status code for no data"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -948,18 +1195,26 @@
 		"testDescription": "Iris match against more than 2 iris",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchValidator",
+					"description": "Validates if biomterics match for the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -977,18 +1232,26 @@
 		"testDescription": "Iris match when wrong subtype",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": true,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchValidator",
+					"description": "Validates if biomterics match for the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1006,18 +1269,26 @@
 		"testDescription": "Sending face data instead of iris",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchInvalidDataValidator",
-				"description": "Validates the status code for invalid data"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchInvalidDataValidator",
+					"description": "Validates the status code for invalid data"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1035,18 +1306,26 @@
 		"testDescription": "modality match success",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchValidator",
+					"description": "Validates if biomterics match for the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1065,18 +1344,26 @@
 		"testDescription": "modality match success",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchValidator",
+					"description": "Validates if biomterics match for the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1096,18 +1383,26 @@
 		"testDescription": "modality match success - multi gallery",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
-		"methodName": "match",
-		"requestSchema": "MatchRequestSchema",
-		"responseSchema": "MatchResponseSchema",
+		"methodName": [
+			"match"
+		],
+		"requestSchema": [
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"MatchResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "MatchValidator",
-				"description": "Validates if biomterics match for the modality"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchValidator",
+					"description": "Validates if biomterics match for the modality"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1127,18 +1422,26 @@
 		"testName": "Finger segment good quality",
 		"testDescription": "Finger segment good quality",
 		"isNegativeTestcase": false,
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
+		"methodName": [
+			"segment"
+		],
+		"requestSchema": [
+			"SegmentRequestSchema"
+		],
+		"responseSchema": [
+			"SegmentResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentValidator",
-				"description": "Validates if input BDB data present in the Probe for the modality is valid"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SegmentValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1156,18 +1459,26 @@
 		"testName": "Face segment good quality",
 		"testDescription": "Face segment good quality",
 		"isNegativeTestcase": false,
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
+		"methodName": [
+			"segment"
+		],
+		"requestSchema": [
+			"SegmentRequestSchema"
+		],
+		"responseSchema": [
+			"SegmentResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentValidator",
-				"description": "Validates if input BDB data present in the Probe for the modality is valid"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SegmentValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1185,18 +1496,26 @@
 		"testName": "Iris segment good quality",
 		"testDescription": "Iris segment good quality",
 		"isNegativeTestcase": false,
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
+		"methodName": [
+			"segment"
+		],
+		"requestSchema": [
+			"SegmentRequestSchema"
+		],
+		"responseSchema": [
+			"SegmentResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentValidator",
-				"description": "Validates if input BDB data present in the Probe for the modality is valid"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SegmentValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1213,18 +1532,26 @@
 		"specVersion": "0.9.0",
 		"testName": "Finger segment invalid data failure",
 		"testDescription": "Finger segment invalid data failure",
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
+		"methodName": [
+			"segment"
+		],
+		"requestSchema": [
+			"SegmentRequestSchema"
+		],
+		"responseSchema": [
+			"SegmentResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentInvalidDataValidator",
-				"description": "Validates if input BDB data present in the Probe for the modality is valid"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SegmentInvalidDataValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1242,18 +1569,26 @@
 		"specVersion": "0.9.0",
 		"testName": "Face segment invalid data failure",
 		"testDescription": "Face segment invalid data failure",
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
+		"methodName": [
+			"segment"
+		],
+		"requestSchema": [
+			"SegmentRequestSchema"
+		],
+		"responseSchema": [
+			"SegmentResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentInvalidDataValidator",
-				"description": "Validates if input BDB data present in the Probe for the modality is valid"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SegmentInvalidDataValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1271,18 +1606,26 @@
 		"specVersion": "0.9.0",
 		"testName": "Iris segment invalid data failure",
 		"testDescription": "Iris segment invalid data failure",
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
+		"methodName": [
+			"segment"
+		],
+		"requestSchema": [
+			"SegmentRequestSchema"
+		],
+		"responseSchema": [
+			"SegmentResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentInvalidDataValidator",
-				"description": "Validates if input BDB data present in the Probe for the modality is valid"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SegmentInvalidDataValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1300,18 +1643,26 @@
 		"specVersion": "0.9.0",
 		"testName": "Finger segment no input failure",
 		"testDescription": "Finger segment no input failure",
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
+		"methodName": [
+			"segment"
+		],
+		"requestSchema": [
+			"SegmentRequestSchema"
+		],
+		"responseSchema": [
+			"SegmentResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentNoInputDataValidator",
-				"description": "Validates if no input BDB data present in the Probe"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SegmentNoInputDataValidator",
+					"description": "Validates if no input BDB data present in the Probe"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1329,18 +1680,26 @@
 		"specVersion": "0.9.0",
 		"testName": "Face segment no input failure",
 		"testDescription": "Face segment no input failure",
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
+		"methodName": [
+			"segment"
+		],
+		"requestSchema": [
+			"SegmentRequestSchema"
+		],
+		"responseSchema": [
+			"SegmentResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentNoInputDataValidator",
-				"description": "Validates if no input BDB data present in the Probe"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SegmentNoInputDataValidator",
+					"description": "Validates if no input BDB data present in the Probe"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1358,18 +1717,26 @@
 		"specVersion": "0.9.0",
 		"testName": "Iris segment no input failure",
 		"testDescription": "Iris segment no input failure",
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
+		"methodName": [
+			"segment"
+		],
+		"requestSchema": [
+			"SegmentRequestSchema"
+		],
+		"responseSchema": [
+			"SegmentResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentNoInputDataValidator",
-				"description": "Validates if no input BDB data present in the Probe"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SegmentNoInputDataValidator",
+					"description": "Validates if no input BDB data present in the Probe"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1388,18 +1755,26 @@
 		"testDescription": "Face extract invalid data failure",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": true,
-		"methodName": "extract-template",
-		"requestSchema": "ExtractTemplateRequestSchema",
-		"responseSchema": "ExtractTemplateResponseSchema",
+		"methodName": [
+			"extract-template"
+		],
+		"requestSchema": [
+			"ExtractTemplateRequestSchema"
+		],
+		"responseSchema": [
+			"ExtractTemplateResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "ExtractTemplateInvalidDataValidator",
-				"description": "Validates if input BDB data present in the Probe for the modality is valid"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExtractTemplateInvalidDataValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1417,22 +1792,80 @@
 		"testDescription": "Face extract no input failure",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": true,
-		"methodName": "extract-template",
-		"requestSchema": "ExtractTemplateRequestSchema",
-		"responseSchema": "ExtractTemplateResponseSchema",
+		"methodName": [
+			"extract-template"
+		],
+		"requestSchema": [
+			"ExtractTemplateRequestSchema"
+		],
+		"responseSchema": [
+			"ExtractTemplateResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "ExtractTemplateNoInputDataValidator",
-				"description": "Validates if no input BDB data present in the Probe"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExtractTemplateNoInputDataValidator",
+					"description": "Validates if no input BDB data present in the Probe"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
 				"face"
+			],
+			"sdkPurpose": [
+				"Extract Template"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Extract Template And Check Quality Success",
+		"testId": "SDK2049",
+		"testDescription": "extractTemplateAndCheckQualitySuccess",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"extract-template",
+			"check-quality"
+		],
+		"requestSchema": [
+			"ExtractTemplateRequestSchema",
+			"CheckQualityRequestSchema"
+		],
+		"responseSchema": [
+			"ExtractTemplateResponseSchema",
+			"CheckQualityResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExtractTemplateValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			],
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "QualityCheckValidator",
+					"description": "Validates the status code for invalid data"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
 			],
 			"sdkPurpose": [
 				"Extract Template"
@@ -1446,18 +1879,26 @@
 		"testName": "Finger segment good quality",
 		"testDescription": "Finger segment good quality",
 		"isNegativeTestcase": false,
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
+		"methodName": [
+			"segment"
+		],
+		"requestSchema": [
+			"SegmentRequestSchema"
+		],
+		"responseSchema": [
+			"SegmentResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentValidator",
-				"description": "Validates if input BDB data present in the Probe for the modality is valid"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SegmentValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1475,18 +1916,26 @@
 		"testName": "Face segment good quality",
 		"testDescription": "Face segment good quality",
 		"isNegativeTestcase": false,
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
+		"methodName": [
+			"segment"
+		],
+		"requestSchema": [
+			"SegmentRequestSchema"
+		],
+		"responseSchema": [
+			"SegmentResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentValidator",
-				"description": "Validates if input BDB data present in the Probe for the modality is valid"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SegmentValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1504,18 +1953,26 @@
 		"testName": "Iris segment good quality",
 		"testDescription": "Iris segment good quality",
 		"isNegativeTestcase": false,
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
+		"methodName": [
+			"segment"
+		],
+		"requestSchema": [
+			"SegmentRequestSchema"
+		],
+		"responseSchema": [
+			"SegmentResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentValidator",
-				"description": "Validates if input BDB data present in the Probe for the modality is valid"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SegmentValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1532,18 +1989,26 @@
 		"specVersion": "0.9.0",
 		"testName": "Finger segment invalid data failure",
 		"testDescription": "Finger segment invalid data failure",
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
+		"methodName": [
+			"segment"
+		],
+		"requestSchema": [
+			"SegmentRequestSchema"
+		],
+		"responseSchema": [
+			"SegmentResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentInvalidDataValidator",
-				"description": "Validates if input BDB data present in the Probe for the modality is valid"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SegmentInvalidDataValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1561,18 +2026,26 @@
 		"specVersion": "0.9.0",
 		"testName": "Face segment invalid data failure",
 		"testDescription": "Face segment invalid data failure",
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
+		"methodName": [
+			"segment"
+		],
+		"requestSchema": [
+			"SegmentRequestSchema"
+		],
+		"responseSchema": [
+			"SegmentResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentInvalidDataValidator",
-				"description": "Validates if input BDB data present in the Probe for the modality is valid"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SegmentInvalidDataValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1590,18 +2063,26 @@
 		"specVersion": "0.9.0",
 		"testName": "Iris segment invalid data failure",
 		"testDescription": "Iris segment invalid data failure",
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
+		"methodName": [
+			"segment"
+		],
+		"requestSchema": [
+			"SegmentRequestSchema"
+		],
+		"responseSchema": [
+			"SegmentResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentInvalidDataValidator",
-				"description": "Validates if input BDB data present in the Probe for the modality is valid"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SegmentInvalidDataValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1619,18 +2100,26 @@
 		"specVersion": "0.9.0",
 		"testName": "Finger segment no input failure",
 		"testDescription": "Finger segment no input failure",
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
+		"methodName": [
+			"segment"
+		],
+		"requestSchema": [
+			"SegmentRequestSchema"
+		],
+		"responseSchema": [
+			"SegmentResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentNoInputDataValidator",
-				"description": "Validates if no input BDB data present in the Probe"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SegmentNoInputDataValidator",
+					"description": "Validates if no input BDB data present in the Probe"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1648,18 +2137,26 @@
 		"specVersion": "0.9.0",
 		"testName": "Face segment no input failure",
 		"testDescription": "Face segment no input failure",
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
+		"methodName": [
+			"segment"
+		],
+		"requestSchema": [
+			"SegmentRequestSchema"
+		],
+		"responseSchema": [
+			"SegmentResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentNoInputDataValidator",
-				"description": "Validates if no input BDB data present in the Probe"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SegmentNoInputDataValidator",
+					"description": "Validates if no input BDB data present in the Probe"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1677,18 +2174,26 @@
 		"specVersion": "0.9.0",
 		"testName": "Iris segment no input failure",
 		"testDescription": "Iris segment no input failure",
-		"methodName": "segment",
-		"requestSchema": "SegmentRequestSchema",
-		"responseSchema": "SegmentResponseSchema",
+		"methodName": [
+			"segment"
+		],
+		"requestSchema": [
+			"SegmentRequestSchema"
+		],
+		"responseSchema": [
+			"SegmentResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SegmentNoInputDataValidator",
-				"description": "Validates if no input BDB data present in the Probe"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SegmentNoInputDataValidator",
+					"description": "Validates if no input BDB data present in the Probe"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1706,18 +2211,26 @@
 		"specVersion": "0.9.0",
 		"testName": "Face convert from ISO19794_5_2011 to IMAGE/JPEG",
 		"testDescription": "Face convert from ISO19794_5_2011 to IMAGE/JPEG",
-		"methodName": "convert-format",
-		"requestSchema": "ConvertRequestSchema",
-		"responseSchema": "ConvertResponseSchema",
+		"methodName": [
+			"convert-format"
+		],
+		"requestSchema": [
+			"ConvertRequestSchema"
+		],
+		"responseSchema": [
+			"ConvertResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "ConvertDataValidator",
-				"description": "Validates the input BDB data present in the Probe"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ConvertDataValidator",
+					"description": "Validates the input BDB data present in the Probe"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1737,18 +2250,26 @@
 		"specVersion": "0.9.0",
 		"testName": "Face convert from ISO19794_5_2011 to IMAGE/PNG",
 		"testDescription": "Face convert from ISO19794_5_2011 to IMAGE/PNG",
-		"methodName": "convert-format",
-		"requestSchema": "ConvertRequestSchema",
-		"responseSchema": "ConvertResponseSchema",
+		"methodName": [
+			"convert-format"
+		],
+		"requestSchema": [
+			"ConvertRequestSchema"
+		],
+		"responseSchema": [
+			"ConvertResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "ConvertDataValidator",
-				"description": "Validates the input BDB data present in the Probe"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ConvertDataValidator",
+					"description": "Validates the input BDB data present in the Probe"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1761,25 +2282,33 @@
 			"convertTargetFormat": "IMAGE/PNG"
 		},
 		"isNegativeTestcase": false
-	},	
+	},
 	{
 		"testCaseType": "SDK",
 		"testId": "SDK2074",
 		"specVersion": "0.9.0",
 		"testName": "Face convert invalid data failure",
 		"testDescription": "Face convert invalid data failure",
-		"methodName": "convert-format",
-		"requestSchema": "ConvertRequestSchema",
-		"responseSchema": "ConvertResponseSchema",
+		"methodName": [
+			"convert-format"
+		],
+		"requestSchema": [
+			"ConvertRequestSchema"
+		],
+		"responseSchema": [
+			"ConvertResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "ConvertInvalidDataValidator",
-				"description": "Validates if input BDB data present in the Probe for the modality is valid"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ConvertInvalidDataValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
@@ -1799,18 +2328,26 @@
 		"specVersion": "0.9.0",
 		"testName": "Face convert no input failure",
 		"testDescription": "Face convert no input failure",
-		"methodName": "convert-format",
-		"requestSchema": "ConvertRequestSchema",
-		"responseSchema": "ConvertResponseSchema",
+		"methodName": [
+			"convert-format"
+		],
+		"requestSchema": [
+			"ConvertRequestSchema"
+		],
+		"responseSchema": [
+			"ConvertResponseSchema"
+		],
 		"validatorDefs": [
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "ConvertNoInputDataValidator",
-				"description": "Validates if no input BDB data present in the Probe"
-			}
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ConvertNoInputDataValidator",
+					"description": "Validates if no input BDB data present in the Probe"
+				}
+			]
 		],
 		"otherAttributes": {
 			"modalities": [
