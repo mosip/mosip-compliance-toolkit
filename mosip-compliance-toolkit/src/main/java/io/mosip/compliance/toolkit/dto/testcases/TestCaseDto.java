@@ -2,6 +2,8 @@ package io.mosip.compliance.toolkit.dto.testcases;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,10 +24,10 @@ public class TestCaseDto implements Serializable {
 	public String testDescription;
 	@JsonProperty("isNegativeTestcase")
 	public boolean isNegativeTestcase;
-	public String methodName;
-	public Object requestSchema;
-	public String responseSchema;
-	public ArrayList<ValidatorDef> validatorDefs;
+	public List<String> methodName;
+	public List<String> requestSchema;
+	public List<String> responseSchema;
+	public List<List<ValidatorDef>> validatorDefs;
 	public OtherAttributes otherAttributes;
 
 	@Getter

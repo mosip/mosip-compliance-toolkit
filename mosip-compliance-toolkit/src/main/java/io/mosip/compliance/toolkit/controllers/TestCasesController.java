@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
+import io.mosip.compliance.toolkit.dto.testcases.SdkRequestDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseRequestDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseResponseDto;
@@ -47,6 +48,8 @@ public class TestCasesController {
 	 * The Constant VALIDATIONS_POST_ID application.
 	 */
 	private static final String VALIDATIONS_POST_ID = "validations.post";
+	
+	private static final String GENERATE_SDK_REQUEST_POST_ID = "generate.sdk.request.post";
 
 	@Value("${mosip.toolkit.api.id.testcase.project.get}")
 	private String getTestCasesId;
@@ -137,6 +140,14 @@ public class TestCasesController {
 			@RequestParam(required = true) String convertSourceFormat,
 			@RequestParam(required = true) String convertTargetFormat) throws Exception {
 		return service.generateRequestForSDKTestcase(methodName, testcaseId, bioTestDataName, modalities, convertSourceFormat, convertTargetFormat);
+	}
+	
+	@PostMapping(value = "/generateRequestForSDKFrmBirs")
+	public ResponseWrapper<String> generateRequestForSDKFrmBirs(
+			@RequestBody @Valid RequestWrapper<SdkRequestDto> request, Errors errors) throws Exception {
+		requestValidator.validateId(GENERATE_SDK_REQUEST_POST_ID, request.getId(), errors);
+		DataValidationUtil.validate(errors, GENERATE_SDK_REQUEST_POST_ID);
+		return service.generateRequestForSDKFrmBirs(request.getRequest());
 	}
 
 	@PostMapping(value = "/saveTestCases", produces = "application/json")

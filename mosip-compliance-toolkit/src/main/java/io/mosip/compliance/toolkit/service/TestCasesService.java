@@ -8,8 +8,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -47,6 +48,7 @@ import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.DeviceSubTypes;
 import io.mosip.compliance.toolkit.constants.DeviceTypes;
 import io.mosip.compliance.toolkit.constants.MethodName;
+import io.mosip.compliance.toolkit.constants.ProjectTypes;
 import io.mosip.compliance.toolkit.constants.Purposes;
 import io.mosip.compliance.toolkit.constants.SbiSpecVersions;
 import io.mosip.compliance.toolkit.constants.SdkPurpose;
@@ -58,6 +60,7 @@ import io.mosip.compliance.toolkit.dto.sdk.ExtractTemplateRequestDto;
 import io.mosip.compliance.toolkit.dto.sdk.MatchRequestDto;
 import io.mosip.compliance.toolkit.dto.sdk.RequestDto;
 import io.mosip.compliance.toolkit.dto.sdk.SegmentRequestDto;
+import io.mosip.compliance.toolkit.dto.testcases.SdkRequestDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseResponseDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidateRequestSchemaDto;
@@ -327,7 +330,7 @@ public class TestCasesService {
 				if (AppConstants.SUCCESS.equals(validationResultDto.getStatus())) {
 					// Get JSON Object
 					// Do Validation on content of JSON
-					if (isValidTestCaseId(testCaseDto)) {
+					if (isValidTestCaseId(testCaseDto) && validateArrayLengths(testCaseDto)) {
 						String testCaseId = testCaseDto.getTestId();
 						Optional<TestCaseEntity> checkTestCaseEntity = Optional.empty();
 						checkTestCaseEntity = testCasesRepository.findById(testCaseId);
@@ -488,10 +491,44 @@ public class TestCasesService {
 
 	}
 
+	private boolean validateArrayLengths(TestCaseDto testCaseDto) {
+		if (testCaseDto.getMethodName().size() > 1
+				&& !ProjectTypes.SDK.getCode().equals(testCaseDto.getTestCaseType())) {
+			ToolkitErrorCodes errorCode = ToolkitErrorCodes.INVALID_TEST_CASE_JSON;
+			throw new ToolkitException(errorCode.getErrorCode(),
+					errorCode.getErrorMessage() + " - the 'methodName' array length should be only 1.");
+		}
+		if (testCaseDto.getMethodName().size() > 2) {
+			ToolkitErrorCodes errorCode = ToolkitErrorCodes.INVALID_TEST_CASE_JSON;
+			throw new ToolkitException(errorCode.getErrorCode(),
+					errorCode.getErrorMessage() + " - the 'methodName' array length should not be more than 2.");
+		}
+		if (testCaseDto.getMethodName().size() != testCaseDto.getRequestSchema().size()) {
+			ToolkitErrorCodes errorCode = ToolkitErrorCodes.INVALID_TEST_CASE_JSON;
+			throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage()
+					+ " - the 'requestSchema' array length does not match the 'methodName'  array length.");
+		}
+		if (testCaseDto.getMethodName().size() != testCaseDto.getResponseSchema().size()) {
+			ToolkitErrorCodes errorCode = ToolkitErrorCodes.INVALID_TEST_CASE_JSON;
+			throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage()
+					+ " - the 'responseSchema' array length does not match the 'methodName'  array length.");
+		}
+		if (testCaseDto.getMethodName().size() != testCaseDto.getValidatorDefs().size()) {
+			ToolkitErrorCodes errorCode = ToolkitErrorCodes.INVALID_TEST_CASE_JSON;
+			throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage()
+					+ " - the 'validatorDefs' array length does not match the 'methodName' array length.");
+		}
+		return true;
+	}
+
 	private String base64Encode(String data) {
 		return Base64.getEncoder().encodeToString(data.getBytes());
 	}
 
+private String base64Decode(String data) {
+		return new String(Base64.getDecoder().decode(data), StandardCharsets.UTF_8);
+	}
+	
 	public String getSchemaJson(String container, String fileName) throws Exception {
 		// Read File Content
 		if (isObjectExistInObjectStore(container, fileName)) {
@@ -640,6 +677,80 @@ public class TestCasesService {
 				}
 
 			}
+			// convert the request json to base64encoded string
+			if (requestJson != null) {
+				RequestDto requestDto = new RequestDto();
+				requestDto.setVersion(VERSION);
+				requestDto.setRequest(this.base64Encode(requestJson));
+				responseWrapper.setResponse(gson.toJson(requestDto));
+			}
+		} catch (ToolkitException ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In generateRequestForSDKTestcase method of TestCasesService - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ex.getErrorCode());
+			serviceError.setMessage(ex.getErrorText());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In generateRequestForSDKTestcase method of TestCasesService - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.GENERATE_SDK_REQUEST_ERROR.getErrorCode());
+			serviceError
+					.setMessage(ToolkitErrorCodes.GENERATE_SDK_REQUEST_ERROR.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		}
+		responseWrapper.setId(generateSdkRequest);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+	
+	public ResponseWrapper<String> generateRequestForSDKFrmBirs(SdkRequestDto sdkRequestDto) throws Exception {
+		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
+		try {
+
+			String methodName = sdkRequestDto.getMethodName();
+			String testcaseId = sdkRequestDto.getTestcaseId();
+			List<String> modalities = sdkRequestDto.getModalities();
+			String decodedVal = this.base64Decode(sdkRequestDto.getBirsForProbe());
+			io.mosip.kernel.biometrics.entities.BIR[] birs = gson.fromJson(decodedVal,
+					io.mosip.kernel.biometrics.entities.BIR[].class);
+
+			List<io.mosip.kernel.biometrics.entities.BIR> birsForProbe = Arrays.asList(birs);
+			String requestJson = null;
+			// convert BIRS to Biometric Record
+			BiometricRecord biometricRecord = new BiometricRecord();
+			biometricRecord.setSegments(birsForProbe);
+			// get the Biometric types
+			List<BiometricType> bioTypeList = modalities.stream().map(bioType -> this.getBiometricType(bioType))
+					.collect(Collectors.toList());
+
+			// populate the request object based on the method name
+			if (methodName.equalsIgnoreCase(MethodName.CHECK_QUALITY.getCode())) {
+				CheckQualityRequestDto checkQualityRequestDto = new CheckQualityRequestDto();
+				checkQualityRequestDto.setSample(biometricRecord);
+				checkQualityRequestDto.setModalitiesToCheck(bioTypeList);
+				// TODO: set flags
+				checkQualityRequestDto.setFlags(null);
+				requestJson = gson.toJson(checkQualityRequestDto);
+			}
+//				if (methodName.equalsIgnoreCase(MethodName.MATCH.getCode())) {
+//					MatchRequestDto matchRequestDto = new MatchRequestDto();
+//					matchRequestDto.setSample(biometricRecord);
+//					matchRequestDto.setGallery(
+//							(BiometricRecord[]) biometricRecordsArr.toArray(new BiometricRecord[0]));
+//					matchRequestDto.setModalitiesToMatch(bioTypeList);
+//					// TODO: set flags
+//					matchRequestDto.setFlags(null);
+//					requestJson = gson.toJson(matchRequestDto);
+//				}
 			// convert the request json to base64encoded string
 			if (requestJson != null) {
 				RequestDto requestDto = new RequestDto();

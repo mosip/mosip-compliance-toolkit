@@ -77,9 +77,9 @@ public class BiometricTestDataController {
 		return biometricTestDataService.getBiometricTestDataFile(id);
 	}
 
-	@GetMapping(value = "/getBioTestDataFileNames")
-	public ResponseWrapper<List<String>> getBioTestDataFileNames(@RequestParam(required = true) String purpose) {
-		return biometricTestDataService.getBioTestDataFileNames(purpose);
+	@GetMapping(value = "/getBioTestDataNames")
+	public ResponseWrapper<List<String>> getBioTestDataNames(@RequestParam(required = true) String purpose) {
+		return biometricTestDataService.getBioTestDataNames(purpose);
 	}
 
 	@GetMapping(value = "/getSampleBioTestDataFile")

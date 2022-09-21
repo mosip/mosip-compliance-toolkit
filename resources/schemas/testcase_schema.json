@@ -35,52 +35,60 @@
 			"type": "boolean"
 		},
 		"methodName": {
-			"type": "string",
-			"enum": [
-				"device",
-				"info",
-				"capture",
-				"rcapture",
-				"stream",
-				"insert",
-				"identify",
-				"delete",
-				"init",
-				"check-quality",
-				"match",
-				"extract-template",
-				"convert-format",
-				"segment"
-			]
+			"type": "array",
+			"items": {
+				"type": "string",
+				"enum": [
+					"device",
+					"info",
+					"capture",
+					"rcapture",
+					"stream",
+					"insert",
+					"identify",
+					"delete",
+					"init",
+					"check-quality",
+					"match",
+					"extract-template",
+					"convert-format",
+					"segment"
+				]
+			}
 		},
 		"requestSchema": {
-			"type": [
-				"string",
-				"null"
-			]
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
 		},
 		"responseSchema": {
-			"type": [
-				"string",
-				"null"
-			]
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
 		},
 		"validatorDefs": {
 			"type": "array",
 			"items": [
 				{
-					"type": "object",
-					"properties": {
-						"name": {
-							"type": "string"
-						},
-						"description": {
-							"type": "string"
+					"type": "array",
+					"items": [
+						{
+							"type": "object",
+							"properties": {
+								"name": {
+									"type": "string"
+								},
+								"description": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"name",
+								"description"
+							]
 						}
-					},
-					"required": [
-						"name",
-						"description"
 					]
 				}
 			]
