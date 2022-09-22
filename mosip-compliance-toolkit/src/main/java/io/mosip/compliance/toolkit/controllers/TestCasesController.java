@@ -131,15 +131,12 @@ public class TestCasesController {
 		}
 	}
 
-	@GetMapping(value = "/generateRequestForSDK")
+	@PostMapping(value = "/generateRequestForSDK")
 	public ResponseWrapper<String> generateRequestForSDK(
-			@RequestParam(required = true) String methodName,
-			@RequestParam(required = true) String testcaseId,
-			@RequestParam(required = false) String bioTestDataName, 
-			@RequestParam(required = true) List<String> modalities,
-			@RequestParam(required = true) String convertSourceFormat,
-			@RequestParam(required = true) String convertTargetFormat) throws Exception {
-		return service.generateRequestForSDKTestcase(methodName, testcaseId, bioTestDataName, modalities, convertSourceFormat, convertTargetFormat);
+			@RequestBody @Valid RequestWrapper<SdkRequestDto> request, Errors errors) throws Exception {
+		requestValidator.validateId(GENERATE_SDK_REQUEST_POST_ID, request.getId(), errors);
+		DataValidationUtil.validate(errors, GENERATE_SDK_REQUEST_POST_ID);
+		return service.generateRequestForSDKTestcase(request.getRequest());
 	}
 	
 	@PostMapping(value = "/generateRequestForSDKFrmBirs")

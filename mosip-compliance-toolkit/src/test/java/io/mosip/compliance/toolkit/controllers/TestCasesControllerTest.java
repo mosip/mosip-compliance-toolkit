@@ -123,17 +123,26 @@ public class TestCasesControllerTest {
      * This class tests the generateRequestForSDK method
      */
     @Test
-    public void generateRequestForSDKTest() throws Exception {
-        String methodName = "Segment";
-        String testcaseId = "SDK2009";
-        List<String> modalities = new ArrayList<>();
-        String convertSourceFormat =null;
-        String convertTargetFormat = null;
-        String bioTestDataName = null;
-        ResponseWrapper<String> response = new ResponseWrapper<>();
-        Mockito.when(testCasesService.generateRequestForSDKTestcase(methodName, testcaseId, bioTestDataName,  modalities,convertTargetFormat, convertTargetFormat)).thenReturn(response);
-        Assert.assertEquals(response, testCasesController.generateRequestForSDK(methodName, testcaseId, bioTestDataName, modalities, convertSourceFormat, convertTargetFormat));
-    }
+	public void generateRequestForSDKTest() throws Exception {
+		List<String> modalities = new ArrayList<>();
+		String convertSourceFormat = null;
+		String convertTargetFormat = null;
+		String bioTestDataName = null;
+		ResponseWrapper<String> response = new ResponseWrapper<>();
+
+		SdkRequestDto requestDto = new SdkRequestDto();
+		requestDto.setMethodName("Segment");
+		requestDto.setTestcaseId("SDK2009");
+		requestDto.setModalities(modalities);
+		requestDto.setBioTestDataName(bioTestDataName);
+		requestDto.setConvertSourceFormat(convertSourceFormat);
+		requestDto.setConvertSourceFormat(convertTargetFormat);
+
+		RequestWrapper<SdkRequestDto> request = new RequestWrapper<>();
+		request.setRequest(requestDto);
+		Mockito.when(testCasesService.generateRequestForSDKTestcase(requestDto)).thenReturn(response);
+		Assert.assertEquals(response, testCasesController.generateRequestForSDK(request, errors));
+	}
 
     /*
      * This class tests the saveTestCases method
