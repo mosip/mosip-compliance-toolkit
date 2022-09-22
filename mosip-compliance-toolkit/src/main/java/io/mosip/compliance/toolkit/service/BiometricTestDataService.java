@@ -232,7 +232,7 @@ public class BiometricTestDataService {
 					fileNames.add(objectDto.getObjectName());
 				}
 				String[] inputFileNames = fileNames.toArray(new String[0]);
-				testDataNames = biometricTestDataRepository.findNamesByFileIds(inputFileNames, partnerId);
+				testDataNames = biometricTestDataRepository.findNamesByFileIds(inputFileNames, purpose, partnerId);
 			} else {
 				List<ServiceError> serviceErrorsList = new ArrayList<>();
 				ServiceError serviceError = new ServiceError();
