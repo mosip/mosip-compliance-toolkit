@@ -544,25 +544,26 @@ private String base64Decode(String data) {
 		}
 	}
 
-	public ResponseWrapper<String> generateRequestForSDKTestcase(String methodName, String testcaseId,
-			String bioTestDataName, List<String> modalities, String convertSourceFormat, String convertTargetFormat) throws Exception {
+	public ResponseWrapper<String> generateRequestForSDKTestcase(SdkRequestDto requestDto) throws Exception {
 		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
 		try {
 			String requestJson = null;
 			InputStream objectStoreIs = null;
 
-			if (methodName.equalsIgnoreCase(MethodName.INIT.getCode())) {
+			if (requestDto.getMethodName().equalsIgnoreCase(MethodName.INIT.getCode())) {
 				ObjectNode rootNode = objectMapper.createObjectNode();
 				ObjectNode childNode = objectMapper.createObjectNode();
 				rootNode.set("initParams", childNode);
 				requestJson = gson.toJson(rootNode);
 			} else {
 				String partnerId = getPartnerId();
-				SdkPurpose sdkPurpose = getSdkPurpose(methodName);
-				if (Objects.isNull(bioTestDataName) || bioTestDataName.equals(AppConstants.MOSIP_DEFAULT)) {
-					objectStoreIs = getDefaultTestData(methodName, sdkPurpose);
+				SdkPurpose sdkPurpose = getSdkPurpose(requestDto.getMethodName());
+				if (Objects.isNull(requestDto.getBioTestDataName())
+						|| requestDto.getBioTestDataName().equals(AppConstants.MOSIP_DEFAULT)) {
+					objectStoreIs = getDefaultTestData(requestDto.getMethodName(), sdkPurpose);
 				} else {
-					String fileName = biometricTestDataRepository.findFileNameByName(bioTestDataName, partnerId);
+					String fileName = biometricTestDataRepository.findFileNameByName(requestDto.getBioTestDataName(),
+							partnerId);
 					if (Objects.nonNull(fileName)) {
 						String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/" + sdkPurpose.getCode();
 						if (isObjectExistInObjectStore(container, fileName)) {
@@ -573,7 +574,8 @@ private String base64Decode(String data) {
 				if (Objects.nonNull(objectStoreIs)) {
 					objectStoreIs.reset();
 					String purpose = sdkPurpose.getCode();
-					byte[] probeFileBytes = this.getXmlDataFromZipFile(objectStoreIs, purpose, testcaseId, "probe.xml");
+					byte[] probeFileBytes = this.getXmlDataFromZipFile(objectStoreIs, purpose,
+							requestDto.getTestcaseId(), "probe.xml");
 
 					if (Objects.nonNull(probeFileBytes)) {
 						// get the BIRs from the XML
@@ -584,14 +586,14 @@ private String base64Decode(String data) {
 						biometricRecord.setSegments(birsForProbe);
 
 						List<BiometricRecord> biometricRecordsArr = new ArrayList<BiometricRecord>();
-						if (methodName.equalsIgnoreCase(MethodName.MATCH.getCode())) {
+						if (requestDto.getMethodName().equalsIgnoreCase(MethodName.MATCH.getCode())) {
 							for (int i = 1; i <= 5; i++) {
 								// TODO pass the orgname / partnerId
 								byte[] galleryFileBytes = null;
 								if (Objects.nonNull(objectStoreIs)) {
 									objectStoreIs.reset();
-									galleryFileBytes = this.getXmlDataFromZipFile(objectStoreIs, purpose, testcaseId,
-											"gallery" + i + ".xml");
+									galleryFileBytes = this.getXmlDataFromZipFile(objectStoreIs, purpose,
+											requestDto.getTestcaseId(), "gallery" + i + ".xml");
 								}
 								if (galleryFileBytes != null) {
 									// get the BIRs from the XML
@@ -611,11 +613,11 @@ private String base64Decode(String data) {
 						}
 
 						// get the Biometric types
-						List<BiometricType> bioTypeList = modalities.stream()
+						List<BiometricType> bioTypeList = requestDto.getModalities().stream()
 								.map(bioType -> this.getBiometricType(bioType)).collect(Collectors.toList());
 
 						// populate the request object based on the method name
-						if (methodName.equalsIgnoreCase(MethodName.CHECK_QUALITY.getCode())) {
+						if (requestDto.getMethodName().equalsIgnoreCase(MethodName.CHECK_QUALITY.getCode())) {
 							CheckQualityRequestDto checkQualityRequestDto = new CheckQualityRequestDto();
 							checkQualityRequestDto.setSample(biometricRecord);
 							checkQualityRequestDto.setModalitiesToCheck(bioTypeList);
@@ -623,7 +625,7 @@ private String base64Decode(String data) {
 							checkQualityRequestDto.setFlags(null);
 							requestJson = gson.toJson(checkQualityRequestDto);
 						}
-						if (methodName.equalsIgnoreCase(MethodName.MATCH.getCode())) {
+						if (requestDto.getMethodName().equalsIgnoreCase(MethodName.MATCH.getCode())) {
 							MatchRequestDto matchRequestDto = new MatchRequestDto();
 							matchRequestDto.setSample(biometricRecord);
 							matchRequestDto.setGallery(
@@ -633,7 +635,7 @@ private String base64Decode(String data) {
 							matchRequestDto.setFlags(null);
 							requestJson = gson.toJson(matchRequestDto);
 						}
-						if (methodName.equalsIgnoreCase(MethodName.EXTRACT_TEMPLATE.getCode())) {
+						if (requestDto.getMethodName().equalsIgnoreCase(MethodName.EXTRACT_TEMPLATE.getCode())) {
 							ExtractTemplateRequestDto extractTemplateRequestDto = new ExtractTemplateRequestDto();
 							extractTemplateRequestDto.setSample(biometricRecord);
 							extractTemplateRequestDto.setModalitiesToExtract(bioTypeList);
@@ -641,7 +643,7 @@ private String base64Decode(String data) {
 							extractTemplateRequestDto.setFlags(null);
 							requestJson = gson.toJson(extractTemplateRequestDto);
 						}
-						if (methodName.equalsIgnoreCase(MethodName.SEGMENT.getCode())) {
+						if (requestDto.getMethodName().equalsIgnoreCase(MethodName.SEGMENT.getCode())) {
 							SegmentRequestDto segmentRequestDto = new SegmentRequestDto();
 							segmentRequestDto.setSample(biometricRecord);
 							segmentRequestDto.setModalitiesToSegment(bioTypeList);
@@ -649,11 +651,11 @@ private String base64Decode(String data) {
 							segmentRequestDto.setFlags(null);
 							requestJson = gson.toJson(segmentRequestDto);
 						}
-						if (methodName.equalsIgnoreCase(MethodName.CONVERT_FORMAT.getCode())) {
+						if (requestDto.getMethodName().equalsIgnoreCase(MethodName.CONVERT_FORMAT.getCode())) {
 							ConvertFormatRequestDto convertFormatRequestDto = new ConvertFormatRequestDto();
 							convertFormatRequestDto.setSample(biometricRecord);
-							convertFormatRequestDto.setSourceFormat(convertSourceFormat);
-							convertFormatRequestDto.setTargetFormat(convertTargetFormat);
+							convertFormatRequestDto.setSourceFormat(requestDto.getConvertSourceFormat());
+							convertFormatRequestDto.setTargetFormat(requestDto.getConvertTargetFormat());
 							convertFormatRequestDto.setSourceParams(null);
 							convertFormatRequestDto.setTargetParams(null);
 							convertFormatRequestDto.setModalitiesToConvert(bioTypeList);
@@ -679,10 +681,10 @@ private String base64Decode(String data) {
 			}
 			// convert the request json to base64encoded string
 			if (requestJson != null) {
-				RequestDto requestDto = new RequestDto();
-				requestDto.setVersion(VERSION);
-				requestDto.setRequest(this.base64Encode(requestJson));
-				responseWrapper.setResponse(gson.toJson(requestDto));
+				RequestDto inputDto = new RequestDto();
+				inputDto.setVersion(VERSION);
+				inputDto.setRequest(this.base64Encode(requestJson));
+				responseWrapper.setResponse(gson.toJson(inputDto));
 			}
 		} catch (ToolkitException ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());

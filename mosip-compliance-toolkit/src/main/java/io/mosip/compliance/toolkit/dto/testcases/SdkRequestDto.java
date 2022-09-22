@@ -24,4 +24,9 @@ public class SdkRequestDto implements Serializable {
 	
 	public String birsForProbe;
 	
+	public String convertSourceFormat;
+	
+	public String convertTargetFormat;
+	
+	
 }
