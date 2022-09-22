@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Component("authorizedRoles")
-@ConfigurationProperties(prefix = "mosip.roles.compliance.toolkit")
+@ConfigurationProperties(prefix = "mosip.toolkit.roles")
 @Getter
 @Setter
 public class AuthorizedRolesDto {

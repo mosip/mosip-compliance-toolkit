@@ -18,13 +18,13 @@ import io.mosip.kernel.biometrics.model.QualityScore;
 
 public class QualityCheckValidator extends SDKValidator {
 
-	@Value("${sdk.finger.qualitycheck.threshold.value}")
+	@Value("${mosip.toolkit.sdk.finger.qualitycheck.threshold.value}")
 	private String fingerThresholdValue;
 
-	@Value("${sdk.face.qualitycheck.threshold.value}")
+	@Value("${mosip.toolkit.sdk.face.qualitycheck.threshold.value}")
 	private String faceThresholdValue;
 
-	@Value("${sdk.iris.qualitycheck.threshold.value}")
+	@Value("${mosip.toolkit.sdk.iris.qualitycheck.threshold.value}")
 	private String irisThresholdValue;
 
 	@Override
