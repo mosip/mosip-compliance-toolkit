@@ -102,6 +102,9 @@ public class TestCasesService {
 	@Value("$(mosip.toolkit.api.id.testcase.get)")
 	private String getTestCaseId;
 
+	@Value("${mosip.toolkit.max.allowed.gallery.files}")
+	private String maxAllowedGalleryFiles;
+	
 	@Autowired
 	ResourceLoader resourceLoader;
 
@@ -548,7 +551,7 @@ private String base64Decode(String data) {
 		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
 		try {
 			String requestJson = null;
-			InputStream objectStoreIs = null;
+			InputStream objectStoreStream = null;
 			byte[] probeFileBytes = null;
 			if (Objects.nonNull(requestDto)) {
 				if (requestDto.getMethodName().equalsIgnoreCase(MethodName.INIT.getCode())) {
@@ -559,32 +562,13 @@ private String base64Decode(String data) {
 				} else {
 					String partnerId = getPartnerId();
 					SdkPurpose sdkPurpose = getSdkPurpose(requestDto.getMethodName());
-					if (Objects.nonNull(requestDto.getBioTestDataName())
-							&& !requestDto.getBioTestDataName().equals(AppConstants.MOSIP_DEFAULT)) {
-						String fileName = biometricTestDataRepository
-								.findFileNameByName(requestDto.getBioTestDataName(), partnerId);
-						if (Objects.nonNull(fileName)) {
-							String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/"
-									+ sdkPurpose.getCode();
-							if (isObjectExistInObjectStore(container, fileName)) {
-								objectStoreIs = getFromObjectStore(container, fileName);
-								if (Objects.nonNull(objectStoreIs)) {
-									objectStoreIs.reset();
-									probeFileBytes = this.getXmlDataFromZipFile(objectStoreIs, sdkPurpose.getCode(),
-											requestDto.getTestcaseId(), "probe.xml");
-								}
-							}
-						}
+					objectStoreStream = getPartnerTestDataStream(requestDto, partnerId, sdkPurpose);
+					probeFileBytes = getProbeData(requestDto, objectStoreStream, sdkPurpose, requestDto.getTestcaseId());				
+					if (Objects.isNull(objectStoreStream) || Objects.isNull(probeFileBytes)) {
+						objectStoreStream = getDefaultTestDataStream(requestDto.getMethodName(), sdkPurpose);
+						probeFileBytes = getProbeData(requestDto, objectStoreStream, sdkPurpose, requestDto.getTestcaseId());
 					}
-					if (Objects.isNull(objectStoreIs) || Objects.isNull(probeFileBytes)) {
-						objectStoreIs = getDefaultTestData(requestDto.getMethodName(), sdkPurpose);
-						if (Objects.nonNull(objectStoreIs)) {
-							objectStoreIs.reset();
-							probeFileBytes = this.getXmlDataFromZipFile(objectStoreIs, sdkPurpose.getCode(),
-									requestDto.getTestcaseId(), "probe.xml");
-						}
-					}
-					if (Objects.nonNull(objectStoreIs)) {
+					if (Objects.nonNull(objectStoreStream)) {
 						if (Objects.nonNull(probeFileBytes)) {
 							// get the BIRs from the XML
 							List<io.mosip.kernel.biometrics.entities.BIR> birsForProbe = cbeffReader
@@ -595,12 +579,12 @@ private String base64Decode(String data) {
 
 							List<BiometricRecord> biometricRecordsArr = new ArrayList<BiometricRecord>();
 							if (requestDto.getMethodName().equalsIgnoreCase(MethodName.MATCH.getCode())) {
-								for (int i = 1; i <= 5; i++) {
+								for (int i = 1; i <= Integer.parseInt(maxAllowedGalleryFiles); i++) {
 									// TODO pass the orgname / partnerId
 									byte[] galleryFileBytes = null;
-									if (Objects.nonNull(objectStoreIs)) {
-										objectStoreIs.reset();
-										galleryFileBytes = this.getXmlDataFromZipFile(objectStoreIs,
+									if (Objects.nonNull(objectStoreStream)) {
+										objectStoreStream.reset();
+										galleryFileBytes = this.getXmlDataFromZipFile(objectStoreStream,
 												sdkPurpose.getCode(), requestDto.getTestcaseId(),
 												"gallery" + i + ".xml");
 									}
@@ -617,8 +601,8 @@ private String base64Decode(String data) {
 								}
 							}
 
-							if (Objects.nonNull(objectStoreIs)) {
-								objectStoreIs.close();
+							if (Objects.nonNull(objectStoreStream)) {
+								objectStoreStream.close();
 							}
 
 							// get the Biometric types
@@ -730,46 +714,127 @@ private String base64Decode(String data) {
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
+
+	private byte[] getProbeData(SdkRequestDto requestDto, InputStream objectStoreStream, 
+			SdkPurpose sdkPurpose, String testcaseId) throws IOException, Exception {
+		byte[] probeFileBytes = null;
+		if (Objects.nonNull(objectStoreStream)) {
+			objectStoreStream.reset();
+			probeFileBytes = this.getXmlDataFromZipFile(objectStoreStream, sdkPurpose.getCode(),
+					testcaseId, "probe.xml");
+		}
+		return probeFileBytes;
+	}
+
+	private InputStream getPartnerTestDataStream(SdkRequestDto requestDto, 
+			String partnerId, SdkPurpose sdkPurpose) {
+		InputStream objectStoreStream = null;
+		if (Objects.nonNull(requestDto.getBioTestDataName())
+				&& !requestDto.getBioTestDataName().equals(AppConstants.MOSIP_DEFAULT)) {
+			String zipFileName = biometricTestDataRepository
+					.findFileIdByTestDataName(requestDto.getBioTestDataName(), partnerId);
+			if (Objects.nonNull(zipFileName)) {
+				String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/"
+						+ sdkPurpose.getCode();
+				if (isObjectExistInObjectStore(container, zipFileName)) {
+					objectStoreStream = getFromObjectStore(container, zipFileName);
+				}
+			}
+		}
+		return objectStoreStream;
+	}
 	
 	public ResponseWrapper<String> generateRequestForSDKFrmBirs(SdkRequestDto sdkRequestDto) throws Exception {
 		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
 		try {
 
-			String methodName = sdkRequestDto.getMethodName();
-			String testcaseId = sdkRequestDto.getTestcaseId();
+			String[] methods = sdkRequestDto.getMethodName().split(",");
+			String methodName1 = null;
+			String methodName2 = null;
+			if (methods.length == 2) {
+				methodName1 = methods[0];
+				methodName2 = methods[1];
+			} else {
+				List<ServiceError> serviceErrorsList = new ArrayList<>();
+				ServiceError serviceError = new ServiceError();
+				serviceError.setErrorCode(ToolkitErrorCodes.INVALID_METHOD_NAME.getErrorCode());
+				serviceError.setMessage(ToolkitErrorCodes.INVALID_METHOD_NAME.getErrorMessage());
+				serviceErrorsList.add(serviceError);
+				responseWrapper.setErrors(serviceErrorsList);
+			}
 			List<String> modalities = sdkRequestDto.getModalities();
 			String decodedVal = this.base64Decode(sdkRequestDto.getBirsForProbe());
-			io.mosip.kernel.biometrics.entities.BIR[] birs = gson.fromJson(decodedVal,
+			io.mosip.kernel.biometrics.entities.BIR[] birsFromRequestDto = gson.fromJson(decodedVal,
 					io.mosip.kernel.biometrics.entities.BIR[].class);
-
-			List<io.mosip.kernel.biometrics.entities.BIR> birsForProbe = Arrays.asList(birs);
-			String requestJson = null;
-			// convert BIRS to Biometric Record
-			BiometricRecord biometricRecord = new BiometricRecord();
-			biometricRecord.setSegments(birsForProbe);
 			// get the Biometric types
 			List<BiometricType> bioTypeList = modalities.stream().map(bioType -> this.getBiometricType(bioType))
 					.collect(Collectors.toList());
-
+			String requestJson = null;
 			// populate the request object based on the method name
-			if (methodName.equalsIgnoreCase(MethodName.CHECK_QUALITY.getCode())) {
+			if (methodName2.equalsIgnoreCase(MethodName.CHECK_QUALITY.getCode())) {
+				//the birs in sdkRequestDto are the extracted probe for the check quality method
+				List<io.mosip.kernel.biometrics.entities.BIR> probeBirs = Arrays.asList(birsFromRequestDto);
+				// convert BIRS to Biometric Record
+				BiometricRecord checkQualityBiometricRecord = new BiometricRecord();
+				checkQualityBiometricRecord.setSegments(probeBirs);
 				CheckQualityRequestDto checkQualityRequestDto = new CheckQualityRequestDto();
-				checkQualityRequestDto.setSample(biometricRecord);
+				checkQualityRequestDto.setSample(checkQualityBiometricRecord);
 				checkQualityRequestDto.setModalitiesToCheck(bioTypeList);
 				// TODO: set flags
 				checkQualityRequestDto.setFlags(null);
 				requestJson = gson.toJson(checkQualityRequestDto);
 			}
-//				if (methodName.equalsIgnoreCase(MethodName.MATCH.getCode())) {
-//					MatchRequestDto matchRequestDto = new MatchRequestDto();
-//					matchRequestDto.setSample(biometricRecord);
-//					matchRequestDto.setGallery(
-//							(BiometricRecord[]) biometricRecordsArr.toArray(new BiometricRecord[0]));
-//					matchRequestDto.setModalitiesToMatch(bioTypeList);
-//					// TODO: set flags
-//					matchRequestDto.setFlags(null);
-//					requestJson = gson.toJson(matchRequestDto);
-//				}
+			else if (methodName2.equalsIgnoreCase(MethodName.MATCH.getCode())) {
+				//the birs in sdkRequestDto are the extracted gallery for the match method
+				List<io.mosip.kernel.biometrics.entities.BIR> galleryBirs = Arrays.asList(birsFromRequestDto);
+				List<BiometricRecord> galleryArr = new ArrayList<BiometricRecord>();
+				BiometricRecord biometricRecordGallery = new BiometricRecord();
+				biometricRecordGallery.setSegments(galleryBirs);
+				galleryArr.add(biometricRecordGallery);
+				
+				//get the probe from /testcaseId/match folder
+				String partnerId = getPartnerId();
+				SdkPurpose sdkPurpose = getSdkPurpose(methodName1);
+				InputStream objectStoreStream = getPartnerTestDataStream(sdkRequestDto, partnerId, sdkPurpose);
+				
+				//Here the probe is nested under "match" folder
+				String testcaseFolder = sdkRequestDto.getTestcaseId()+"/" + MethodName.MATCH.toString().toLowerCase();
+				byte[] probeFileBytes = getProbeData(sdkRequestDto, objectStoreStream, sdkPurpose, testcaseFolder);				
+				if (Objects.isNull(probeFileBytes)) {
+					objectStoreStream = getDefaultTestDataStream(sdkRequestDto.getMethodName(), sdkPurpose);
+					probeFileBytes = getProbeData(sdkRequestDto, objectStoreStream, sdkPurpose, testcaseFolder);
+				}
+				if (Objects.nonNull(objectStoreStream) && Objects.nonNull(probeFileBytes)) {
+					List<io.mosip.kernel.biometrics.entities.BIR> matchProbeBirs = cbeffReader
+							.getBIRDataFromXML(probeFileBytes);
+					// convert BIRS to Biometric Record
+					BiometricRecord matchBiometricRecord = new BiometricRecord();
+					matchBiometricRecord.setSegments(matchProbeBirs);
+					//create match request DTO	
+					MatchRequestDto matchRequestDto = new MatchRequestDto();
+					matchRequestDto.setSample(matchBiometricRecord);
+					matchRequestDto.setGallery(
+							(BiometricRecord[]) galleryArr.toArray(new BiometricRecord[0]));
+					matchRequestDto.setModalitiesToMatch(bioTypeList);
+					// TODO: set flags
+					matchRequestDto.setFlags(null);
+					requestJson = gson.toJson(matchRequestDto);
+				} else {
+					List<ServiceError> serviceErrorsList = new ArrayList<>();
+					ServiceError serviceError = new ServiceError();
+					serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode());
+					serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage());
+					serviceErrorsList.add(serviceError);
+					responseWrapper.setErrors(serviceErrorsList);	
+				}
+			} else {
+				List<ServiceError> serviceErrorsList = new ArrayList<>();
+				ServiceError serviceError = new ServiceError();
+				serviceError.setErrorCode(ToolkitErrorCodes.INVALID_METHOD_NAME.getErrorCode());
+				serviceError.setMessage(ToolkitErrorCodes.INVALID_METHOD_NAME.getErrorMessage());
+				serviceErrorsList.add(serviceError);
+				responseWrapper.setErrors(serviceErrorsList);
+			}
 			// convert the request json to base64encoded string
 			if (requestJson != null) {
 				RequestDto requestDto = new RequestDto();
@@ -840,7 +905,7 @@ private String base64Decode(String data) {
 		return out.toByteArray();
 	}
 	
-	private InputStream getDefaultTestData(String method, SdkPurpose sdkPurpose) {
+	private InputStream getDefaultTestDataStream(String method, SdkPurpose sdkPurpose) {
 		InputStream defaultTestDataStrem = null;
 		String objectName = AppConstants.MOSIP_DEFAULT + "_" + sdkPurpose.toString() + ".zip";
 		if (isObjectExistInObjectStore(AppConstants.TESTDATA, objectName)) {

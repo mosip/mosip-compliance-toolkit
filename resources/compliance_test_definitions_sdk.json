@@ -1417,19 +1417,22 @@
 	},
 	{
 		"testCaseType": "SDK",
+		"testName": "Extract Template And Check Quality Success",
 		"testId": "SDK2038",
+		"testDescription": "extractTemplateAndCheckQualitySuccess",
 		"specVersion": "0.9.0",
-		"testName": "Finger segment good quality",
-		"testDescription": "Finger segment good quality",
 		"isNegativeTestcase": false,
 		"methodName": [
-			"segment"
+			"extract-template",
+			"check-quality"
 		],
 		"requestSchema": [
-			"SegmentRequestSchema"
+			"ExtractTemplateRequestSchema",
+			"CheckQualityRequestSchema"
 		],
 		"responseSchema": [
-			"SegmentResponseSchema"
+			"ExtractTemplateResponseSchema",
+			"CheckQualityResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -1438,8 +1441,18 @@
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
 				},
 				{
-					"name": "SegmentValidator",
+					"name": "ExtractTemplateValidator",
 					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			],
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "QualityCheckValidator",
+					"description": "Validates the status code for invalid data"
 				}
 			]
 		],
@@ -1448,310 +1461,14 @@
 				"finger"
 			],
 			"sdkPurpose": [
-				"Segment"
+				"Extract Template"
 			]
 		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testId": "SDK2039",
-		"specVersion": "0.9.0",
-		"testName": "Face segment good quality",
-		"testDescription": "Face segment good quality",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"segment"
-		],
-		"requestSchema": [
-			"SegmentRequestSchema"
-		],
-		"responseSchema": [
-			"SegmentResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "SegmentValidator",
-					"description": "Validates if input BDB data present in the Probe for the modality is valid"
-				}
-			]
-		],
-		"otherAttributes": {
-			"modalities": [
-				"face"
-			],
-			"sdkPurpose": [
-				"Segment"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testId": "SDK2040",
-		"specVersion": "0.9.0",
-		"testName": "Iris segment good quality",
-		"testDescription": "Iris segment good quality",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"segment"
-		],
-		"requestSchema": [
-			"SegmentRequestSchema"
-		],
-		"responseSchema": [
-			"SegmentResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "SegmentValidator",
-					"description": "Validates if input BDB data present in the Probe for the modality is valid"
-				}
-			]
-		],
-		"otherAttributes": {
-			"modalities": [
-				"iris"
-			],
-			"sdkPurpose": [
-				"Segment"
-			]
-		}
-	},
-	{
-		"testCaseType": "SDK",
-		"testId": "SDK2041",
-		"specVersion": "0.9.0",
-		"testName": "Finger segment invalid data failure",
-		"testDescription": "Finger segment invalid data failure",
-		"methodName": [
-			"segment"
-		],
-		"requestSchema": [
-			"SegmentRequestSchema"
-		],
-		"responseSchema": [
-			"SegmentResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "SegmentInvalidDataValidator",
-					"description": "Validates if input BDB data present in the Probe for the modality is valid"
-				}
-			]
-		],
-		"otherAttributes": {
-			"modalities": [
-				"finger"
-			],
-			"sdkPurpose": [
-				"Segment"
-			]
-		},
-		"isNegativeTestcase": true
-	},
-	{
-		"testCaseType": "SDK",
-		"testId": "SDK2042",
-		"specVersion": "0.9.0",
-		"testName": "Face segment invalid data failure",
-		"testDescription": "Face segment invalid data failure",
-		"methodName": [
-			"segment"
-		],
-		"requestSchema": [
-			"SegmentRequestSchema"
-		],
-		"responseSchema": [
-			"SegmentResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "SegmentInvalidDataValidator",
-					"description": "Validates if input BDB data present in the Probe for the modality is valid"
-				}
-			]
-		],
-		"otherAttributes": {
-			"modalities": [
-				"face"
-			],
-			"sdkPurpose": [
-				"Segment"
-			]
-		},
-		"isNegativeTestcase": true
-	},
-	{
-		"testCaseType": "SDK",
-		"testId": "SDK2043",
-		"specVersion": "0.9.0",
-		"testName": "Iris segment invalid data failure",
-		"testDescription": "Iris segment invalid data failure",
-		"methodName": [
-			"segment"
-		],
-		"requestSchema": [
-			"SegmentRequestSchema"
-		],
-		"responseSchema": [
-			"SegmentResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "SegmentInvalidDataValidator",
-					"description": "Validates if input BDB data present in the Probe for the modality is valid"
-				}
-			]
-		],
-		"otherAttributes": {
-			"modalities": [
-				"iris"
-			],
-			"sdkPurpose": [
-				"Segment"
-			]
-		},
-		"isNegativeTestcase": true
-	},
-	{
-		"testCaseType": "SDK",
-		"testId": "SDK2044",
-		"specVersion": "0.9.0",
-		"testName": "Finger segment no input failure",
-		"testDescription": "Finger segment no input failure",
-		"methodName": [
-			"segment"
-		],
-		"requestSchema": [
-			"SegmentRequestSchema"
-		],
-		"responseSchema": [
-			"SegmentResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "SegmentNoInputDataValidator",
-					"description": "Validates if no input BDB data present in the Probe"
-				}
-			]
-		],
-		"otherAttributes": {
-			"modalities": [
-				"finger"
-			],
-			"sdkPurpose": [
-				"Segment"
-			]
-		},
-		"isNegativeTestcase": true
-	},
-	{
-		"testCaseType": "SDK",
-		"testId": "SDK2045",
-		"specVersion": "0.9.0",
-		"testName": "Face segment no input failure",
-		"testDescription": "Face segment no input failure",
-		"methodName": [
-			"segment"
-		],
-		"requestSchema": [
-			"SegmentRequestSchema"
-		],
-		"responseSchema": [
-			"SegmentResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "SegmentNoInputDataValidator",
-					"description": "Validates if no input BDB data present in the Probe"
-				}
-			]
-		],
-		"otherAttributes": {
-			"modalities": [
-				"face"
-			],
-			"sdkPurpose": [
-				"Segment"
-			]
-		},
-		"isNegativeTestcase": true
-	},
-	{
-		"testCaseType": "SDK",
-		"testId": "SDK2046",
-		"specVersion": "0.9.0",
-		"testName": "Iris segment no input failure",
-		"testDescription": "Iris segment no input failure",
-		"methodName": [
-			"segment"
-		],
-		"requestSchema": [
-			"SegmentRequestSchema"
-		],
-		"responseSchema": [
-			"SegmentResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "SegmentNoInputDataValidator",
-					"description": "Validates if no input BDB data present in the Probe"
-				}
-			]
-		],
-		"otherAttributes": {
-			"modalities": [
-				"iris"
-			],
-			"sdkPurpose": [
-				"Segment"
-			]
-		},
-		"isNegativeTestcase": true
 	},
 	{
 		"testCaseType": "SDK",
 		"testName": "Face extract invalid data failure",
-		"testId": "SDK2047",
+		"testId": "SDK2045",
 		"testDescription": "Face extract invalid data failure",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": true,
@@ -1824,22 +1541,22 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "Extract Template And Check Quality Success",
-		"testId": "SDK2049",
-		"testDescription": "extractTemplateAndCheckQualitySuccess",
+		"testName": "Extract Template And Match FMR Success",
+		"testId": "SDK2050",
+		"testDescription": "Extract And Match FMR Success",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"extract-template",
-			"check-quality"
+			"match"
 		],
 		"requestSchema": [
 			"ExtractTemplateRequestSchema",
-			"CheckQualityRequestSchema"
+			"MatchRequestSchema"
 		],
 		"responseSchema": [
 			"ExtractTemplateResponseSchema",
-			"CheckQualityResponseSchema"
+			"MatchResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -1858,8 +1575,8 @@
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
 				},
 				{
-					"name": "QualityCheckValidator",
-					"description": "Validates the status code for invalid data"
+					"name": "MatchValidator",
+					"description": "Validates if biomterics match for the modality"
 				}
 			]
 		],
@@ -1871,8 +1588,7 @@
 				"Extract Template"
 			]
 		}
-	},
-	{
+	},{
 		"testCaseType": "SDK",
 		"testId": "SDK2056",
 		"specVersion": "0.9.0",

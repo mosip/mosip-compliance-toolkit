@@ -1,7 +1,6 @@
 package io.mosip.compliance.toolkit.controllers;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -14,16 +13,16 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 @RestController
 public class MainController {
 
-	@Value("${sbi.ports}")
+	@Value("${mosip.toolkit.sbi.ports}")
 	private String sbiPorts;
 	
-	@Value("${compliance.documentupload.allowed.file.type}")
+	@Value("${mosip.toolkit.documentupload.allowed.file.type}")
 	private String allowedFileTypes;
 
-	@Value("${compliance.documentupload.allowed.file.nameLength}")
+	@Value("${mosip.toolkit.documentupload.allowed.file.nameLength}")
 	private String allowedFileNameLegth;
 
-	@Value("${compliance.documentupload.allowed.file.size}")
+	@Value("${mosip.toolkit.documentupload.allowed.file.size}")
 	private String allowedFileSize;
 
 	@ResponseFilter
