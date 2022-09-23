@@ -2001,7 +2001,7 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testId": "SDK2074",
+		"testId": "SDK2067",
 		"specVersion": "0.9.0",
 		"testName": "Face convert invalid data failure",
 		"testDescription": "Face convert invalid data failure",
@@ -2040,7 +2040,7 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testId": "SDK2075",
+		"testId": "SDK2068",
 		"specVersion": "0.9.0",
 		"testName": "Face convert no input failure",
 		"testDescription": "Face convert no input failure",
@@ -2074,6 +2074,281 @@
 			],
 			"convertSourceFormat": "ISO19794_5_2011",
 			"convertTargetFormat": "IMAGE/JPEG"
+		},
+		"isNegativeTestcase": true
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2069",
+		"specVersion": "0.9.0",
+		"testName": "Finger convert from ISO19794_4_2011 to IMAGE/JPEG",
+		"testDescription": "Finger convert from ISO19794_4_2011 to IMAGE/JPEG",
+		"methodName": [
+			"convert-format"
+		],
+		"requestSchema": [
+			"ConvertRequestSchema"
+		],
+		"responseSchema": [
+			"ConvertResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ConvertDataValidator",
+					"description": "Validates the input BDB data present in the Probe"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Convert Format"
+			],
+			"convertSourceFormat": "ISO19794_4_2011",
+			"convertTargetFormat": "IMAGE/JPEG"
+		},
+		"isNegativeTestcase": false
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2070",
+		"specVersion": "0.9.0",
+		"testName": "Finger convert from ISO19794_4_2011 to IMAGE/PNG",
+		"testDescription": "Finger convert from ISO19794_4_2011 to IMAGE/PNG",
+		"methodName": [
+			"convert-format"
+		],
+		"requestSchema": [
+			"ConvertRequestSchema"
+		],
+		"responseSchema": [
+			"ConvertResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ConvertDataValidator",
+					"description": "Validates the input BDB data present in the Probe"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Convert Format"
+			],
+			"convertSourceFormat": "ISO19794_4_2011",
+			"convertTargetFormat": "IMAGE/PNG"
+		},
+		"isNegativeTestcase": false
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2071",
+		"specVersion": "0.9.0",
+		"testName": "Finger convert invalid data failure",
+		"testDescription": "Finger convert invalid data failure",
+		"methodName": [
+			"convert-format"
+		],
+		"requestSchema": [
+			"ConvertRequestSchema"
+		],
+		"responseSchema": [
+			"ConvertResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ConvertInvalidDataValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Convert Format"
+			],
+			"convertSourceFormat": "ISO19794_4_2011",
+			"convertTargetFormat": "IMAGE/JPEG"
+		},
+		"isNegativeTestcase": true
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2072",
+		"specVersion": "0.9.0",
+		"testName": "Finger convert no input failure",
+		"testDescription": "Finger convert no input failure",
+		"methodName": [
+			"convert-format"
+		],
+		"requestSchema": [
+			"ConvertRequestSchema"
+		],
+		"responseSchema": [
+			"ConvertResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ConvertNoInputDataValidator",
+					"description": "Validates if no input BDB data present in the Probe"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Convert Format"
+			],
+			"convertSourceFormat": "ISO19794_4_2011",
+			"convertTargetFormat": "IMAGE/JPEG"
+		},
+		"isNegativeTestcase": true
+	}
+	
+	,
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2073",
+		"specVersion": "0.9.0",
+		"testName": "Iris convert from ISO19794_6_2011 to IMAGE/PNG",
+		"testDescription": "Iris convert from ISO19794_6_2011 to IMAGE/PNG",
+		"methodName": [
+			"convert-format"
+		],
+		"requestSchema": [
+			"ConvertRequestSchema"
+		],
+		"responseSchema": [
+			"ConvertResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ConvertDataValidator",
+					"description": "Validates the input BDB data present in the Probe"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Convert Format"
+			],
+			"convertSourceFormat": "ISO19794_6_2011",
+			"convertTargetFormat": "IMAGE/PNG"
+		},
+		"isNegativeTestcase": false
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2074",
+		"specVersion": "0.9.0",
+		"testName": "Iris convert invalid data failure",
+		"testDescription": "Iris convert invalid data failure",
+		"methodName": [
+			"convert-format"
+		],
+		"requestSchema": [
+			"ConvertRequestSchema"
+		],
+		"responseSchema": [
+			"ConvertResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ConvertInvalidDataValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Convert Format"
+			],
+			"convertSourceFormat": "ISO19794_6_2011",
+			"convertTargetFormat": "IMAGE/PNG"
+		},
+		"isNegativeTestcase": true
+	},
+	{
+		"testCaseType": "SDK",
+		"testId": "SDK2075",
+		"specVersion": "0.9.0",
+		"testName": "Iris convert no input failure",
+		"testDescription": "Iris convert no input failure",
+		"methodName": [
+			"convert-format"
+		],
+		"requestSchema": [
+			"ConvertRequestSchema"
+		],
+		"responseSchema": [
+			"ConvertResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ConvertNoInputDataValidator",
+					"description": "Validates if no input BDB data present in the Probe"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Convert Format"
+			],
+			"convertSourceFormat": "ISO19794_6_2011",
+			"convertTargetFormat": "IMAGE/PNG"
 		},
 		"isNegativeTestcase": true
 	}
