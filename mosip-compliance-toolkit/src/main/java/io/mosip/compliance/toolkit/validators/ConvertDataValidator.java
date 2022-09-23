@@ -14,7 +14,6 @@ import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.util.ConverterDataUtil;
 import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
-import io.mosip.kernel.biometrics.model.MatchDecision;
 
 public class ConvertDataValidator extends SDKValidator {
 	private Gson gson = new GsonBuilder().serializeNulls().create();
@@ -39,22 +38,23 @@ public class ConvertDataValidator extends SDKValidator {
 								
 				ConvertFormatRequestDto convertFormatRequestDto = gson.fromJson(base64Decode(methodRequest.get("request").asText()), ConvertFormatRequestDto.class);
 				
-				String expectedCode = convertFormatRequestDto.getSourceFormat();
+				String sourceCode = convertFormatRequestDto.getSourceFormat();
+				String targetCode = convertFormatRequestDto.getTargetFormat();
 				for(BIR value:birList)
 				{
 					byte[] responseData = value.getBdb();
-					if (expectedCode.equalsIgnoreCase ("IMAGE/JPEG") && ConverterDataUtil.isJPEG(responseData)){
+					if (targetCode.equalsIgnoreCase ("IMAGE/JPEG") && ConverterDataUtil.isJPEG(responseData)){
 						validationResultDto.setStatus(AppConstants.SUCCESS);
 						validationResultDto.setDescription("Convert validation is successful");
 					}
-					else if (expectedCode.equalsIgnoreCase ("IMAGE/PNG") && ConverterDataUtil.isPNG(responseData)){
+					else if (targetCode.equalsIgnoreCase ("IMAGE/PNG") && ConverterDataUtil.isPNG(responseData)){
 						validationResultDto.setStatus(AppConstants.SUCCESS);
 						validationResultDto.setDescription("Convert validation is successful");
 					}
 					else
 					{
 						validationResultDto.setStatus(AppConstants.FAILURE);
-						validationResultDto.setDescription("Convert validation failed for " + expectedCode);
+						validationResultDto.setDescription("Convert validation failed for SourceCode [" + sourceCode + "] to TargetCode [" + targetCode + "]");
 					}					
 				}
 			} else {
