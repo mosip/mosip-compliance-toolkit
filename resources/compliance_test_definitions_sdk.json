@@ -42,7 +42,7 @@
 		"testCaseType": "SDK",
 		"testName": "Good face quality",
 		"testId": "SDK2001",
-		"testDescription": "Good face quality",
+		"testDescription": "1. This testcase checks the biomterics for face to be of good quality.<br>2. Add the appropriate probe.xml",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
 		"methodName": [
