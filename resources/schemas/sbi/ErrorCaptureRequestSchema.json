@@ -57,9 +57,7 @@
 						]
 					},
 					"count": {
-						"type": "number",
-						"minimum": 1,
-						"maximum": 11
+						"type": "string"
 					},
 					"bioSubType": {
 						"type": "array",
