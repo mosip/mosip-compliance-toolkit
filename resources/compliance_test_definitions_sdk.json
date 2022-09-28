@@ -1417,9 +1417,9 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "Extract Template And Check Quality Success",
+		"testName": "Finger Extract Template And Check Quality Success",
 		"testId": "SDK2038",
-		"testDescription": "extractTemplateAndCheckQualitySuccess",
+		"testDescription": "Finger extract Template And CheckQuality Success",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
 		"methodName": [
@@ -1453,6 +1453,293 @@
 				{
 					"name": "QualityCheckValidator",
 					"description": "Validates the status code for invalid data"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Extract Template"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Face Extract Template And Check Quality Success",
+		"testId": "SDK2039",
+		"testDescription": "Face extract Template And CheckQuality Success",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"extract-template",
+			"check-quality"
+		],
+		"requestSchema": [
+			"ExtractTemplateRequestSchema",
+			"CheckQualityRequestSchema"
+		],
+		"responseSchema": [
+			"ExtractTemplateResponseSchema",
+			"CheckQualityResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExtractTemplateValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			],
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "QualityCheckValidator",
+					"description": "Validates the status code for invalid data"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Extract Template"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Iris Extract Template And Check Quality Success",
+		"testId": "SDK2040",
+		"testDescription": "Iris extract Template And CheckQuality Success",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"extract-template",
+			"check-quality"
+		],
+		"requestSchema": [
+			"ExtractTemplateRequestSchema",
+			"CheckQualityRequestSchema"
+		],
+		"responseSchema": [
+			"ExtractTemplateResponseSchema",
+			"CheckQualityResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExtractTemplateValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			],
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "QualityCheckValidator",
+					"description": "Validates the status code for invalid data"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Extract Template"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Finger Extract Template And Check Quality Fail",
+		"testId": "SDK2041",
+		"testDescription": "Finger extract Template And CheckQuality Fail",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"extract-template",
+			"check-quality"
+		],
+		"requestSchema": [
+			"ExtractTemplateRequestSchema",
+			"CheckQualityRequestSchema"
+		],
+		"responseSchema": [
+			"ExtractTemplateResponseSchema",
+			"CheckQualityResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExtractTemplateValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			],
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "QualityCheckValidator",
+					"description": "Validates the status code for invalid data"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Extract Template"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Face Extract Template And Check Quality Fail",
+		"testId": "SDK2042",
+		"testDescription": "Face extract Template And CheckQuality Fail",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"extract-template",
+			"check-quality"
+		],
+		"requestSchema": [
+			"ExtractTemplateRequestSchema",
+			"CheckQualityRequestSchema"
+		],
+		"responseSchema": [
+			"ExtractTemplateResponseSchema",
+			"CheckQualityResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExtractTemplateValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			],
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "QualityCheckValidator",
+					"description": "Validates the status code for invalid data"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Extract Template"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Iris Extract Template And Check Quality Fail",
+		"testId": "SDK2043",
+		"testDescription": "Iris extract Template And CheckQuality Fail",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"extract-template",
+			"check-quality"
+		],
+		"requestSchema": [
+			"ExtractTemplateRequestSchema",
+			"CheckQualityRequestSchema"
+		],
+		"responseSchema": [
+			"ExtractTemplateResponseSchema",
+			"CheckQualityResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExtractTemplateValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			],
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "QualityCheckValidator",
+					"description": "Validates the status code for invalid data"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Extract Template"
+			]
+		}
+	},	
+	{
+		"testCaseType": "SDK",
+		"testName": "Finger extract invalid data failure",
+		"testId": "SDK2044",
+		"testDescription": "Finger extract invalid data failure",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": true,
+		"methodName": [
+			"extract-template"
+		],
+		"requestSchema": [
+			"ExtractTemplateRequestSchema"
+		],
+		"responseSchema": [
+			"ExtractTemplateResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExtractTemplateInvalidDataValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
 				}
 			]
 		],
@@ -1504,6 +1791,80 @@
 	},
 	{
 		"testCaseType": "SDK",
+		"testName": "Iris extract invalid data failure",
+		"testId": "SDK2046",
+		"testDescription": "Iris extract invalid data failure",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": true,
+		"methodName": [
+			"extract-template"
+		],
+		"requestSchema": [
+			"ExtractTemplateRequestSchema"
+		],
+		"responseSchema": [
+			"ExtractTemplateResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExtractTemplateInvalidDataValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Extract Template"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Finger extract no input failure",
+		"testId": "SDK2047",
+		"testDescription": "Finger extract no input failure",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": true,
+		"methodName": [
+			"extract-template"
+		],
+		"requestSchema": [
+			"ExtractTemplateRequestSchema"
+		],
+		"responseSchema": [
+			"ExtractTemplateResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExtractTemplateNoInputDataValidator",
+					"description": "Validates if no input BDB data present in the Probe"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Extract Template"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
 		"testName": "Face extract no input failure",
 		"testId": "SDK2048",
 		"testDescription": "Face extract no input failure",
@@ -1541,9 +1902,46 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "Extract Template And Match FMR Success",
+		"testName": "Iris extract no input failure",
+		"testId": "SDK2049",
+		"testDescription": "Iris extract no input failure",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": true,
+		"methodName": [
+			"extract-template"
+		],
+		"requestSchema": [
+			"ExtractTemplateRequestSchema"
+		],
+		"responseSchema": [
+			"ExtractTemplateResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExtractTemplateNoInputDataValidator",
+					"description": "Validates if no input BDB data present in the Probe"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Extract Template"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Finger Extract Template And Match FMR Success",
 		"testId": "SDK2050",
-		"testDescription": "Extract And Match FMR Success",
+		"testDescription": "Finger Extract And Match FMR Success",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
 		"methodName": [
@@ -1588,7 +1986,258 @@
 				"Extract Template"
 			]
 		}
-	},{
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Face Extract Template And Match FMR Success",
+		"testId": "SDK2051",
+		"testDescription": "Face Extract And Match FMR Success",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"extract-template",
+			"match"
+		],
+		"requestSchema": [
+			"ExtractTemplateRequestSchema",
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"ExtractTemplateResponseSchema",
+			"MatchResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExtractTemplateValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			],
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchValidator",
+					"description": "Validates if biomterics match for the modality"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Extract Template"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Iris Extract Template And Match FMR Success",
+		"testId": "SDK2052",
+		"testDescription": "Iris Extract And Match FMR Success",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"extract-template",
+			"match"
+		],
+		"requestSchema": [
+			"ExtractTemplateRequestSchema",
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"ExtractTemplateResponseSchema",
+			"MatchResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExtractTemplateValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			],
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchValidator",
+					"description": "Validates if biomterics match for the modality"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Extract Template"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Finger Extract Template And Match FMR Fail",
+		"testId": "SDK2053",
+		"testDescription": "Finger Extract And Match FMR Fail",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"extract-template",
+			"match"
+		],
+		"requestSchema": [
+			"ExtractTemplateRequestSchema",
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"ExtractTemplateResponseSchema",
+			"MatchResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExtractTemplateValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			],
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchValidator",
+					"description": "Validates if biomterics match for the modality"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"finger"
+			],
+			"sdkPurpose": [
+				"Extract Template"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Face Extract Template And Match FMR Fail",
+		"testId": "SDK2054",
+		"testDescription": "Face Extract And Match FMR Fail",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"extract-template",
+			"match"
+		],
+		"requestSchema": [
+			"ExtractTemplateRequestSchema",
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"ExtractTemplateResponseSchema",
+			"MatchResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExtractTemplateValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			],
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchValidator",
+					"description": "Validates if biomterics match for the modality"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"face"
+			],
+			"sdkPurpose": [
+				"Extract Template"
+			]
+		}
+	},
+	{
+		"testCaseType": "SDK",
+		"testName": "Iris Extract Template And Match FMR Fail",
+		"testId": "SDK2055",
+		"testDescription": "Iris Extract And Match FMR Fail",
+		"specVersion": "0.9.0",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"extract-template",
+			"match"
+		],
+		"requestSchema": [
+			"ExtractTemplateRequestSchema",
+			"MatchRequestSchema"
+		],
+		"responseSchema": [
+			"ExtractTemplateResponseSchema",
+			"MatchResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExtractTemplateValidator",
+					"description": "Validates if input BDB data present in the Probe for the modality is valid"
+				}
+			],
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "MatchValidator",
+					"description": "Validates if biomterics match for the modality"
+				}
+			]
+		],
+		"otherAttributes": {
+			"modalities": [
+				"iris"
+			],
+			"sdkPurpose": [
+				"Extract Template"
+			]
+		}
+	},
+	{
 		"testCaseType": "SDK",
 		"testId": "SDK2056",
 		"specVersion": "0.9.0",
@@ -2232,9 +2881,7 @@
 			"convertTargetFormat": "IMAGE/JPEG"
 		},
 		"isNegativeTestcase": true
-	}
-	
-	,
+	},
 	{
 		"testCaseType": "SDK",
 		"testId": "SDK2073",
