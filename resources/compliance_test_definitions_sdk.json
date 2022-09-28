@@ -484,7 +484,7 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "modality quality check success",
+		"testName": "Multi modality (face & finger) quality check success",
 		"testId": "SDK2013",
 		"testDescription": "modality quality check success",
 		"specVersion": "0.9.0",
@@ -522,7 +522,7 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "modality quality check success",
+		"testName": "Multi modality (Face,Finger,Iris) quality check success",
 		"testId": "SDK2014",
 		"testDescription": "modality quality check success",
 		"specVersion": "0.9.0",
@@ -1339,9 +1339,9 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "modality match success",
+		"testName": "Multi modality (Face,Finger,Iris) match success",
 		"testId": "SDK2036",
-		"testDescription": "modality match success",
+		"testDescription": "Multi modality match success",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
 		"methodName": [
@@ -1378,9 +1378,9 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "modality match success - multi gallery",
+		"testName": "Multi modality (Face,Finger,Iris) match success - multi gallery",
 		"testId": "SDK2037",
-		"testDescription": "modality match success - multi gallery",
+		"testDescription": "Multi modality match success - multi gallery",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
 		"methodName": [
@@ -1571,7 +1571,7 @@
 		"testId": "SDK2041",
 		"testDescription": "Finger extract Template And CheckQuality Fail",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
+		"isNegativeTestcase": true,
 		"methodName": [
 			"extract-template",
 			"check-quality"
@@ -1621,7 +1621,7 @@
 		"testId": "SDK2042",
 		"testDescription": "Face extract Template And CheckQuality Fail",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
+		"isNegativeTestcase": true,
 		"methodName": [
 			"extract-template",
 			"check-quality"
@@ -1671,7 +1671,7 @@
 		"testId": "SDK2043",
 		"testDescription": "Iris extract Template And CheckQuality Fail",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
+		"isNegativeTestcase": true,
 		"methodName": [
 			"extract-template",
 			"check-quality"
@@ -1721,7 +1721,7 @@
 		"testId": "SDK2044",
 		"testDescription": "Finger extract invalid data failure",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": true,
+		"isNegativeTestcase": false,
 		"methodName": [
 			"extract-template"
 		],
@@ -1758,7 +1758,7 @@
 		"testId": "SDK2045",
 		"testDescription": "Face extract invalid data failure",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": true,
+		"isNegativeTestcase": false,
 		"methodName": [
 			"extract-template"
 		],
@@ -1795,7 +1795,7 @@
 		"testId": "SDK2046",
 		"testDescription": "Iris extract invalid data failure",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": true,
+		"isNegativeTestcase": false,
 		"methodName": [
 			"extract-template"
 		],
@@ -1832,7 +1832,7 @@
 		"testId": "SDK2047",
 		"testDescription": "Finger extract no input failure",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": true,
+		"isNegativeTestcase": false,
 		"methodName": [
 			"extract-template"
 		],
@@ -1869,7 +1869,7 @@
 		"testId": "SDK2048",
 		"testDescription": "Face extract no input failure",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": true,
+		"isNegativeTestcase": false,
 		"methodName": [
 			"extract-template"
 		],
@@ -1906,7 +1906,7 @@
 		"testId": "SDK2049",
 		"testDescription": "Iris extract no input failure",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": true,
+		"isNegativeTestcase": false,
 		"methodName": [
 			"extract-template"
 		],
@@ -2093,7 +2093,7 @@
 		"testId": "SDK2053",
 		"testDescription": "Finger Extract And Match FMR Fail",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
+		"isNegativeTestcase": true,
 		"methodName": [
 			"extract-template",
 			"match"
@@ -2143,7 +2143,7 @@
 		"testId": "SDK2054",
 		"testDescription": "Face Extract And Match FMR Fail",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
+		"isNegativeTestcase": true,
 		"methodName": [
 			"extract-template",
 			"match"
@@ -2193,7 +2193,7 @@
 		"testId": "SDK2055",
 		"testDescription": "Iris Extract And Match FMR Fail",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
+		"isNegativeTestcase": true,
 		"methodName": [
 			"extract-template",
 			"match"
@@ -2354,6 +2354,7 @@
 		"specVersion": "0.9.0",
 		"testName": "Finger segment invalid data failure",
 		"testDescription": "Finger segment invalid data failure",
+		"isNegativeTestcase": false,
 		"methodName": [
 			"segment"
 		],
@@ -2382,8 +2383,7 @@
 			"sdkPurpose": [
 				"Segment"
 			]
-		},
-		"isNegativeTestcase": true
+		}
 	},
 	{
 		"testCaseType": "SDK",
@@ -2391,6 +2391,7 @@
 		"specVersion": "0.9.0",
 		"testName": "Face segment invalid data failure",
 		"testDescription": "Face segment invalid data failure",
+		"isNegativeTestcase": false,
 		"methodName": [
 			"segment"
 		],
@@ -2419,8 +2420,7 @@
 			"sdkPurpose": [
 				"Segment"
 			]
-		},
-		"isNegativeTestcase": true
+		}
 	},
 	{
 		"testCaseType": "SDK",
@@ -2428,6 +2428,7 @@
 		"specVersion": "0.9.0",
 		"testName": "Iris segment invalid data failure",
 		"testDescription": "Iris segment invalid data failure",
+		"isNegativeTestcase": false,
 		"methodName": [
 			"segment"
 		],
@@ -2456,8 +2457,7 @@
 			"sdkPurpose": [
 				"Segment"
 			]
-		},
-		"isNegativeTestcase": true
+		}
 	},
 	{
 		"testCaseType": "SDK",
@@ -2465,6 +2465,7 @@
 		"specVersion": "0.9.0",
 		"testName": "Finger segment no input failure",
 		"testDescription": "Finger segment no input failure",
+		"isNegativeTestcase": false,
 		"methodName": [
 			"segment"
 		],
@@ -2493,8 +2494,7 @@
 			"sdkPurpose": [
 				"Segment"
 			]
-		},
-		"isNegativeTestcase": true
+		}
 	},
 	{
 		"testCaseType": "SDK",
@@ -2502,6 +2502,7 @@
 		"specVersion": "0.9.0",
 		"testName": "Face segment no input failure",
 		"testDescription": "Face segment no input failure",
+		"isNegativeTestcase": false,
 		"methodName": [
 			"segment"
 		],
@@ -2530,8 +2531,7 @@
 			"sdkPurpose": [
 				"Segment"
 			]
-		},
-		"isNegativeTestcase": true
+		}
 	},
 	{
 		"testCaseType": "SDK",
@@ -2539,6 +2539,7 @@
 		"specVersion": "0.9.0",
 		"testName": "Iris segment no input failure",
 		"testDescription": "Iris segment no input failure",
+		"isNegativeTestcase": false,
 		"methodName": [
 			"segment"
 		],
@@ -2567,8 +2568,7 @@
 			"sdkPurpose": [
 				"Segment"
 			]
-		},
-		"isNegativeTestcase": true
+		}
 	},
 	{
 		"testCaseType": "SDK",
@@ -2576,6 +2576,7 @@
 		"specVersion": "0.9.0",
 		"testName": "Face convert from ISO19794_5_2011 to IMAGE/JPEG",
 		"testDescription": "Face convert from ISO19794_5_2011 to IMAGE/JPEG",
+		"isNegativeTestcase": false,
 		"methodName": [
 			"convert-format"
 		],
@@ -2606,8 +2607,7 @@
 			],
 			"convertSourceFormat": "ISO19794_5_2011",
 			"convertTargetFormat": "IMAGE/JPEG"
-		},
-		"isNegativeTestcase": false
+		}
 	},
 	{
 		"testCaseType": "SDK",
@@ -2615,6 +2615,7 @@
 		"specVersion": "0.9.0",
 		"testName": "Face convert from ISO19794_5_2011 to IMAGE/PNG",
 		"testDescription": "Face convert from ISO19794_5_2011 to IMAGE/PNG",
+		"isNegativeTestcase": false,
 		"methodName": [
 			"convert-format"
 		],
@@ -2645,8 +2646,7 @@
 			],
 			"convertSourceFormat": "ISO19794_5_2011",
 			"convertTargetFormat": "IMAGE/PNG"
-		},
-		"isNegativeTestcase": false
+		}
 	},
 	{
 		"testCaseType": "SDK",
@@ -2654,6 +2654,7 @@
 		"specVersion": "0.9.0",
 		"testName": "Face convert invalid data failure",
 		"testDescription": "Face convert invalid data failure",
+		"isNegativeTestcase": false,
 		"methodName": [
 			"convert-format"
 		],
@@ -2684,8 +2685,7 @@
 			],
 			"convertSourceFormat": "ISO19794_5_2011",
 			"convertTargetFormat": "IMAGE/JPEG"
-		},
-		"isNegativeTestcase": true
+		}
 	},
 	{
 		"testCaseType": "SDK",
@@ -2693,6 +2693,7 @@
 		"specVersion": "0.9.0",
 		"testName": "Face convert no input failure",
 		"testDescription": "Face convert no input failure",
+		"isNegativeTestcase": false,
 		"methodName": [
 			"convert-format"
 		],
@@ -2723,8 +2724,7 @@
 			],
 			"convertSourceFormat": "ISO19794_5_2011",
 			"convertTargetFormat": "IMAGE/JPEG"
-		},
-		"isNegativeTestcase": true
+		}
 	},
 	{
 		"testCaseType": "SDK",
@@ -2732,6 +2732,7 @@
 		"specVersion": "0.9.0",
 		"testName": "Finger convert from ISO19794_4_2011 to IMAGE/JPEG",
 		"testDescription": "Finger convert from ISO19794_4_2011 to IMAGE/JPEG",
+		"isNegativeTestcase": false,
 		"methodName": [
 			"convert-format"
 		],
@@ -2762,8 +2763,7 @@
 			],
 			"convertSourceFormat": "ISO19794_4_2011",
 			"convertTargetFormat": "IMAGE/JPEG"
-		},
-		"isNegativeTestcase": false
+		}
 	},
 	{
 		"testCaseType": "SDK",
@@ -2771,6 +2771,7 @@
 		"specVersion": "0.9.0",
 		"testName": "Finger convert from ISO19794_4_2011 to IMAGE/PNG",
 		"testDescription": "Finger convert from ISO19794_4_2011 to IMAGE/PNG",
+		"isNegativeTestcase": false,
 		"methodName": [
 			"convert-format"
 		],
@@ -2801,8 +2802,7 @@
 			],
 			"convertSourceFormat": "ISO19794_4_2011",
 			"convertTargetFormat": "IMAGE/PNG"
-		},
-		"isNegativeTestcase": false
+		}
 	},
 	{
 		"testCaseType": "SDK",
@@ -2810,6 +2810,7 @@
 		"specVersion": "0.9.0",
 		"testName": "Finger convert invalid data failure",
 		"testDescription": "Finger convert invalid data failure",
+		"isNegativeTestcase": false,
 		"methodName": [
 			"convert-format"
 		],
@@ -2840,8 +2841,7 @@
 			],
 			"convertSourceFormat": "ISO19794_4_2011",
 			"convertTargetFormat": "IMAGE/JPEG"
-		},
-		"isNegativeTestcase": true
+		}
 	},
 	{
 		"testCaseType": "SDK",
@@ -2849,6 +2849,7 @@
 		"specVersion": "0.9.0",
 		"testName": "Finger convert no input failure",
 		"testDescription": "Finger convert no input failure",
+		"isNegativeTestcase": false,
 		"methodName": [
 			"convert-format"
 		],
@@ -2879,8 +2880,7 @@
 			],
 			"convertSourceFormat": "ISO19794_4_2011",
 			"convertTargetFormat": "IMAGE/JPEG"
-		},
-		"isNegativeTestcase": true
+		}
 	},
 	{
 		"testCaseType": "SDK",
@@ -2888,6 +2888,7 @@
 		"specVersion": "0.9.0",
 		"testName": "Iris convert from ISO19794_6_2011 to IMAGE/PNG",
 		"testDescription": "Iris convert from ISO19794_6_2011 to IMAGE/PNG",
+		"isNegativeTestcase": false,
 		"methodName": [
 			"convert-format"
 		],
@@ -2918,8 +2919,7 @@
 			],
 			"convertSourceFormat": "ISO19794_6_2011",
 			"convertTargetFormat": "IMAGE/PNG"
-		},
-		"isNegativeTestcase": false
+		}
 	},
 	{
 		"testCaseType": "SDK",
@@ -2927,6 +2927,7 @@
 		"specVersion": "0.9.0",
 		"testName": "Iris convert invalid data failure",
 		"testDescription": "Iris convert invalid data failure",
+		"isNegativeTestcase": false,
 		"methodName": [
 			"convert-format"
 		],
@@ -2957,8 +2958,7 @@
 			],
 			"convertSourceFormat": "ISO19794_6_2011",
 			"convertTargetFormat": "IMAGE/PNG"
-		},
-		"isNegativeTestcase": true
+		}
 	},
 	{
 		"testCaseType": "SDK",
@@ -2966,6 +2966,7 @@
 		"specVersion": "0.9.0",
 		"testName": "Iris convert no input failure",
 		"testDescription": "Iris convert no input failure",
+		"isNegativeTestcase": false,
 		"methodName": [
 			"convert-format"
 		],
@@ -2996,7 +2997,6 @@
 			],
 			"convertSourceFormat": "ISO19794_6_2011",
 			"convertTargetFormat": "IMAGE/PNG"
-		},
-		"isNegativeTestcase": true
+		}
 	}
 ]
