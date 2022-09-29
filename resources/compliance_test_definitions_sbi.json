@@ -356,8 +356,8 @@
 		"responseSchema": ["RegistrationCaptureResponseSchema"],
 		"validatorDefs": [[
 			{
-				"name": "ValidErrorResponseValidator",
-				"description": "Error Response Validator"
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
 			}
 		]],
 		"otherAttributes": {
@@ -476,8 +476,8 @@
 		"responseSchema": ["RegistrationCaptureResponseSchema"],
 		"validatorDefs": [[
 			{
-				"name": "ValidErrorResponseValidator",
-				"description": "Error Response Validator"
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
 			}
 		]],
 		"otherAttributes": {
