@@ -118,6 +118,9 @@ public class TestCasesService {
 	TestCasesRepository testCasesRepository;
 	
 	@Autowired
+	TestCaseCacheService testCaseCacheService;
+	
+	@Autowired
 	BiometricTestDataRepository biometricTestDataRepository;
 	
 	@Value("${mosip.kernel.objectstore.account-name}")
@@ -153,8 +156,7 @@ public class TestCasesService {
 		try {
 			String testCaseSchemaJson = this.getSchemaJson(AppConstants.SCHEMAS.toLowerCase(), "testcase_schema.json");
 			if (isValidSbiTestCase(specVersion, purpose, deviceType, deviceSubType)) {
-				List<TestCaseEntity> testCaseEntities = testCasesRepository
-						.findAllSbiTestCaseBySpecVersion(specVersion);
+				List<TestCaseEntity> testCaseEntities = testCaseCacheService.getSbiTestCases(AppConstants.SBI, specVersion);//testCasesRepository.findAllSbiTestCaseBySpecVersion(specVersion);
 				for (final TestCaseEntity testCaseEntity : testCaseEntities) {
 					String testcaseJson = testCaseEntity.getTestcaseJson();
 					if (AppConstants.SUCCESS
@@ -221,8 +223,7 @@ public class TestCasesService {
 		try {
 			String testCaseSchemaJson = this.getSchemaJson(AppConstants.SCHEMAS.toLowerCase(), "testcase_schema.json");
 			if (isValidSdkTestCase(specVersion, sdkPurpose)) {
-				List<TestCaseEntity> testCaseEntities = testCasesRepository
-						.findAllSdkTestCaseBySpecVersion(specVersion);
+				List<TestCaseEntity> testCaseEntities = testCaseCacheService.getSdkTestCases(AppConstants.SDK, specVersion);//testCasesRepository.findAllSdkTestCaseBySpecVersion(specVersion);
 				for (final TestCaseEntity testCaseEntity : testCaseEntities) {
 					String testcaseJson = testCaseEntity.getTestcaseJson();
 					if (AppConstants.SUCCESS
@@ -345,7 +346,7 @@ public class TestCasesService {
 							testCase.setTestcaseJson(jsonValue);
 							testCase.setTestcaseType(testCaseDto.getTestCaseType());
 							testCase.setSpecVersion(testCaseDto.getSpecVersion());
-							testCase = testCasesRepository.save(testCase);
+							testCase = testCaseCacheService.saveTestCase(testCase);
 						}
 						// Check if test case present .. update
 						else {
@@ -353,7 +354,7 @@ public class TestCasesService {
 							testCase.setTestcaseJson(jsonValue);
 							testCase.setTestcaseType(testCaseDto.getTestCaseType());
 							testCase.setSpecVersion(testCaseDto.getSpecVersion());
-							testCase = testCasesRepository.update(testCase);
+							testCase = testCaseCacheService.updateTestCase(testCase);
 						}
 						savedValues.put(testCaseId, jsonValue);
 					}
