@@ -101,6 +101,7 @@ public class TestRunService {
 					entity.setId(RandomIdGenerator.generateUUID(
 							collectionId.substring(0, Math.min(5, collectionId.length())).toLowerCase(), "", 36));
 					entity.setRunDtimes(LocalDateTime.now());
+					entity.setPartnerId(getPartnerId());
 					entity.setCrBy(getUserBy());
 					entity.setCrDtimes(LocalDateTime.now());
 					entity.setUpdBy(null);
@@ -145,31 +146,20 @@ public class TestRunService {
 		return responseWrapper;
 	}
 
-	public ResponseWrapper<TestRunDto> updateTestRunExecutiionTime(TestRunDto inputTestRun) {
+	public ResponseWrapper<TestRunDto> updateTestRunExecutionTime(TestRunDto inputTestRun) {
 		ResponseWrapper<TestRunDto> responseWrapper = new ResponseWrapper<TestRunDto>();
 		TestRunDto testRun = null;
 		try {
 			if (Objects.nonNull(inputTestRun)) {
-				ToolkitErrorCodes toolkitError = validatePartnerId(inputTestRun.getCollectionId(), getPartnerId());
-				if (ToolkitErrorCodes.SUCCESS.equals(toolkitError)) {
-
-					int updateRowCount = testRunRepository.updateExecutionDateById(inputTestRun.getExecutionDtimes(),
-							getUserBy(), LocalDateTime.now(), inputTestRun.getId());
-					if (updateRowCount > 0) {
-						testRun = inputTestRun;
-					} else {
-						List<ServiceError> serviceErrorsList = new ArrayList<>();
-						ServiceError serviceError = new ServiceError();
-						serviceError.setErrorCode(ToolkitErrorCodes.TESTRUN_UNABLE_TO_UPDATE.getErrorCode());
-						serviceError.setMessage(ToolkitErrorCodes.TESTRUN_UNABLE_TO_UPDATE.getErrorMessage());
-						serviceErrorsList.add(serviceError);
-						responseWrapper.setErrors(serviceErrorsList);
-					}
+				int updateRowCount = testRunRepository.updateExecutionDateById(inputTestRun.getExecutionDtimes(),
+						getUserBy(), LocalDateTime.now(), inputTestRun.getId(), getPartnerId());
+				if (updateRowCount > 0) {
+					testRun = inputTestRun;
 				} else {
 					List<ServiceError> serviceErrorsList = new ArrayList<>();
 					ServiceError serviceError = new ServiceError();
-					serviceError.setErrorCode(toolkitError.getErrorCode());
-					serviceError.setMessage(toolkitError.getErrorMessage());
+					serviceError.setErrorCode(ToolkitErrorCodes.TESTRUN_UNABLE_TO_UPDATE.getErrorCode());
+					serviceError.setMessage(ToolkitErrorCodes.TESTRUN_UNABLE_TO_UPDATE.getErrorMessage());
 					serviceErrorsList.add(serviceError);
 					responseWrapper.setErrors(serviceErrorsList);
 				}
@@ -205,7 +195,7 @@ public class TestRunService {
 		TestRunDetailsDto testRunDetails = null;
 		try {
 			if (Objects.nonNull(inputTestRunDetails)) {
-				ToolkitErrorCodes toolkitError = validatePartnerIdByRunId(inputTestRunDetails.getRunId(),
+				ToolkitErrorCodes toolkitError = validateRunId(inputTestRunDetails.getRunId(),
 						getPartnerId());
 				if (ToolkitErrorCodes.SUCCESS.equals(toolkitError)) {
 					ObjectMapper mapper = objectMapperConfig.objectMapper();
@@ -217,7 +207,7 @@ public class TestRunService {
 					entity.setUpdDtimes(null);
 					entity.setDeleted(false);
 					entity.setDelTime(null);
-
+					entity.setPartnerId(getPartnerId());	
 					TestRunDetailsEntity outputEntity = testRunDetailsRepository.save(entity);
 
 					testRunDetails = mapper.convertValue(outputEntity, TestRunDetailsDto.class);
@@ -265,7 +255,7 @@ public class TestRunService {
 				TestRunEntity testRunEntity = testRunRepository.getTestRunById(runId, getPartnerId());
 				if (Objects.nonNull(testRunEntity)) {
 					List<TestRunDetailsEntity> testRunDetailsEntityList = testRunDetailsRepository
-							.getTestRunDetails(runId);
+							.getTestRunDetails(runId, getPartnerId());
 					if (Objects.nonNull(testRunDetailsEntityList) && !testRunDetailsEntityList.isEmpty()) {
 						ObjectMapper mapper = objectMapperConfig.objectMapper();
 						for (TestRunDetailsEntity testRunDetailsEntity : testRunDetailsEntityList) {
@@ -388,17 +378,16 @@ public class TestRunService {
 		TestRunStatusDto testRunStatus = null;
 		try {
 			if (Objects.nonNull(runId) && !runId.isEmpty()) {
-				ToolkitErrorCodes toolkitError = validatePartnerIdByRunId(runId, getPartnerId());
+				ToolkitErrorCodes toolkitError = validateRunId(runId, getPartnerId());
 				if (ToolkitErrorCodes.SUCCESS.equals(toolkitError)) {
 					boolean resultStatus = false;
-					int successCount = testRunDetailsRepository.getTestRunSuccessCount(runId);
+					int successCount = testRunDetailsRepository.getTestRunSuccessCount(runId, getPartnerId());
 					if (successCount > 0) {
 						int testcaseCount = testRunRepository.getTestCaseCount(runId);
 						if (testcaseCount == successCount) {
 							resultStatus = true;
 						}
 					}
-
 					testRunStatus = new TestRunStatusDto();
 					testRunStatus.setResultStatus(resultStatus);
 				} else {
@@ -437,15 +426,13 @@ public class TestRunService {
 		return responseWrapper;
 	}
 
-	private ToolkitErrorCodes validatePartnerIdByRunId(String runId, String partnerId) {
+	private ToolkitErrorCodes validateRunId(String runId, String partnerId) {
 		ToolkitErrorCodes errorCode = ToolkitErrorCodes.PARTNERID_VALIDATION_ERR;
 		try {
 			if (Objects.nonNull(runId)) {
-				String referencePartnerid = testRunRepository.getPartnerIdByRunId(runId);
+				String referencePartnerid = testRunRepository.getPartnerIdByRunId(runId, partnerId);
 				if (Objects.nonNull(referencePartnerid)) {
-					if (partnerId.equals(referencePartnerid)) {
-						errorCode = ToolkitErrorCodes.SUCCESS;
-					}
+					errorCode = ToolkitErrorCodes.SUCCESS;
 				}
 			}
 		} catch (Exception ex) {

@@ -44,6 +44,9 @@ public class TestRunEntity implements Serializable {
 	@Column(name = "run_configuration_json")
 	private String runConfigurationJson;
 
+	@Column(name = "partner_id")
+	private String partnerId;
+	
 	@Column(name = "cr_by")
 	private String crBy;
 

@@ -45,6 +45,9 @@ public class TestRunDetailsEntity {
 	@Column(name = "result_description")
 	private String resultDescription;
 	
+	@Column(name = "partner_id")
+	private String partnerId;
+	
 	@Column(name = "cr_by")
 	private String crBy;
 	
