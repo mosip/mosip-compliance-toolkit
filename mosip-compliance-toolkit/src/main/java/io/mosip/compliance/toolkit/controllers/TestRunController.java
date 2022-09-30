@@ -55,7 +55,7 @@ public class TestRunController {
 		requestValidator.validate(requestWrapper, errors);
 		requestValidator.validateId(TEST_RUN_PUT_ID, requestWrapper.getId(), errors);
 		DataValidationUtil.validate(errors, TEST_RUN_PUT_ID);
-		return testRunService.updateTestRunExecutiionTime(requestWrapper.getRequest());
+		return testRunService.updateTestRunExecutionTime(requestWrapper.getRequest());
 	}
 
 	@PostMapping(value = "/addTestRunDetails")
