@@ -207,13 +207,13 @@ public class TestRunServiceTest {
         TestRunDetailsDto inputTestRunDetails = new TestRunDetailsDto();
         String id="ABCKALKJA";
         inputTestRunDetails.setRunId(id);
-        Mockito.when(testRunRepository.getPartnerIdByRunId(id, Mockito.any())).thenReturn("456");
+        Mockito.when(testRunRepository.getPartnerIdByRunId(id, "456")).thenReturn("456");
         testRunService.addTestRunDetails(inputTestRunDetails);
 
         Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
         TestRunDetailsEntity entity = new TestRunDetailsEntity();
         Mockito.when(mapper.convertValue(inputTestRunDetails, TestRunDetailsEntity.class)).thenReturn(entity);
-        Mockito.when(testRunRepository.getPartnerIdByRunId(id, Mockito.any())).thenReturn("123");
+        Mockito.when(testRunRepository.getPartnerIdByRunId(id, "123")).thenReturn("123");
         Mockito.when(testRunDetailsRepository.save(entity)).thenReturn(entity);
         ResponseWrapper<TestRunDetailsDto> result = testRunService.addTestRunDetails(inputTestRunDetails);
         Assert.assertNull(result.getResponse());
@@ -251,12 +251,12 @@ public class TestRunServiceTest {
 
         Mockito.when(testRunRepository.getTestRunById(Mockito.any(),Mockito.any())).thenReturn(entity);
         List<TestRunDetailsEntity> testRunDetailsEntityList = new ArrayList<>();
-        Mockito.when(testRunDetailsRepository.getTestRunDetails(runId, Mockito.any())).thenReturn(testRunDetailsEntityList);
+        Mockito.when(testRunDetailsRepository.getTestRunDetails(runId, "123")).thenReturn(testRunDetailsEntityList);
         testRunService.getTestRunDetails(runId);
 
         TestRunDetailsEntity testRunDetailsEntity = new TestRunDetailsEntity();
         testRunDetailsEntityList.add(testRunDetailsEntity);
-        Mockito.when(testRunDetailsRepository.getTestRunDetails(runId, Mockito.any())).thenReturn(testRunDetailsEntityList);
+        Mockito.when(testRunDetailsRepository.getTestRunDetails(runId, "123")).thenReturn(testRunDetailsEntityList);
         Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
         TestRunDetailsDto dto = new TestRunDetailsDto();
         Mockito.when(mapper.convertValue(testRunDetailsEntity, TestRunDetailsDto.class)).thenReturn(dto);
@@ -334,10 +334,10 @@ public class TestRunServiceTest {
         List<TestRunHistoryEntity> testRunHistoryEntityList = new ArrayList<>();
         Mockito.when(testRunRepository.getTestCaseCount(Mockito.any())).thenReturn(1);
         Mockito.when(testRunDetailsRepository.getTestRunSuccessCount(Mockito.any(), Mockito.any())).thenReturn(1);
-        Mockito.when(testRunRepository.getPartnerIdByRunId(runId, Mockito.any())).thenReturn("456");
+        Mockito.when(testRunRepository.getPartnerIdByRunId(runId, "456")).thenReturn("456");
         testRunService.getTestRunStatus(runId);
 
-        Mockito.when(testRunRepository.getPartnerIdByRunId(runId, Mockito.any())).thenReturn(runId);
+        Mockito.when(testRunRepository.getPartnerIdByRunId(runId, runId)).thenReturn(runId);
         ResponseWrapper<TestRunStatusDto> result = testRunService.getTestRunStatus(runId);
         TestRunStatusDto dto = new TestRunStatusDto();
         dto.setResultStatus(true);
