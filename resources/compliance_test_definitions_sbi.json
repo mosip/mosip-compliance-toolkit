@@ -503,88 +503,8 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Single Iris - Left Iris",
-		"testId": "SBI1012",
-		"specVersion": "0.9.5",
-		"testDescription": "Valid Registration capture Request for left iris",
-		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["RegistrationCaptureRequestSchema"],
-		"responseSchema": ["RegistrationCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
-		"otherAttributes": {
-			"runtimeInput": "",
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Iris"
-			],
-			"deviceSubTypes": [
-				"Single"
-			],
-			"segments": [
-				"Left"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "1",
-			"deviceSubId": "0"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Single Iris - Right Iris",
-		"testId": "SBI1013",
-		"specVersion": "0.9.5",
-		"testDescription": "Valid Registration capture Request for right iris",
-		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["RegistrationCaptureRequestSchema"],
-		"responseSchema": ["RegistrationCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
-		"otherAttributes": {
-			"runtimeInput": "",
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Iris"
-			],
-			"deviceSubTypes": [
-				"Single"
-			],
-			"segments": [
-				"Right"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "1",
-			"deviceSubId": "0"
-		}
-	},
-	{
-		"testCaseType": "SBI",
 		"testName": "Registration capture - Face",
-		"testId": "SBI1014",
+		"testId": "SBI1012",
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Registration capture Request only for Face",
 		"isNegativeTestcase": false,
@@ -622,7 +542,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Registration capture - Exception Photo",
-		"testId": "SBI1015",
+		"testId": "SBI1013",
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Registration capture Request for Face device type exception value left little finger or any will give  Exception photo ",
 		"isNegativeTestcase": false,
@@ -662,7 +582,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Auth capture - Face",
-		"testId": "SBI1016",
+		"testId": "SBI1014",
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Request only for Face",
 		"isNegativeTestcase": false,
@@ -700,7 +620,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Auth capture - Single Iris - Unknown Iris",
-		"testId": "SBI1017",
+		"testId": "SBI1015",
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Request for Unknown iris",
 		"isNegativeTestcase": false,
@@ -740,7 +660,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Auth capture - Single Iris - Left Iris",
-		"testId": "SBI1018",
+		"testId": "SBI1016",
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Request for Left iris",
 		"isNegativeTestcase": false,
@@ -780,7 +700,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Auth capture - Single Iris - Right Iris",
-		"testId": "SBI1019",
+		"testId": "SBI1017",
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Request for Right iris",
 		"isNegativeTestcase": false,
@@ -820,7 +740,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Auth capture - Unknown Finger",
-		"testId": "SBI1020",
+		"testId": "SBI1018",
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Request for Unknown Finger",
 		"isNegativeTestcase": false,
@@ -860,7 +780,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Auth capture -Two Unknown Finger",
-		"testId": "SBI1021",
+		"testId": "SBI1019",
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Request for Two Unknown Finger",
 		"isNegativeTestcase": false,
@@ -901,7 +821,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Auth capture - LeftIndex Finger",
-		"testId": "SBI1022",
+		"testId": "SBI1020",
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Request for LeftIndex Finger",
 		"isNegativeTestcase": false,
@@ -941,7 +861,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Auth capture - Two Finger",
-		"testId": "SBI1023",
+		"testId": "SBI1021",
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Request for Two Finger",
 		"isNegativeTestcase": false,
@@ -982,7 +902,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Registration capture -Key Rotation - Left Slab",
-		"testId": "SBI1024",
+		"testId": "SBI1022",
 		"specVersion": "0.9.5",
 		"testDescription": "Key Rotation Registration capture Request for Slap scanner",
 		"isNegativeTestcase": false,
@@ -1021,7 +941,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Auth capture -Key Rotation - Single Iris - Left Iris",
-		"testId": "SBI1025",
+		"testId": "SBI1023",
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Key Rotation Request for Left iris",
 		"isNegativeTestcase": false,
@@ -1057,7 +977,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Auth capture -Key Rotation - LeftIndex Finger",
-		"testId": "SBI1026",
+		"testId": "SBI1024",
 		"specVersion": "0.9.5",
 		"testDescription": "Key Rotation Auth capture Request for LeftIndex Finger",
 		"isNegativeTestcase": false,
@@ -1093,7 +1013,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Auth capture - Face",
-		"testId": "SBI1027",
+		"testId": "SBI1025",
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Request only for Face",
 		"isNegativeTestcase": false,
@@ -1127,7 +1047,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Device Info - Ready",
-		"testId": "SBI1028",
+		"testId": "SBI1026",
 		"specVersion": "0.9.5",
 		"testDescription": "Valid DeviceInfo Ready Status",
 		"isNegativeTestcase": false,
@@ -1171,7 +1091,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Device Info - Busy",
-		"testId": "SBI1029",
+		"testId": "SBI1027",
 		"specVersion": "0.9.5",
 		"testDescription": "Valid DeviceInfo Busy Status",
 		"isNegativeTestcase": false,
@@ -1215,7 +1135,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Device Info - Not Ready",
-		"testId": "SBI1030",
+		"testId": "SBI1028",
 		"specVersion": "0.9.5",
 		"testDescription": "Valid DeviceInfo Not Ready Status",
 		"isNegativeTestcase": false,
@@ -1255,7 +1175,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Device Info - Not Registered",
-		"testId": "SBI1031",
+		"testId": "SBI1029",
 		"specVersion": "0.9.5",
 		"testDescription": "Valid DeviceInfo Not Registered Status",
 		"isNegativeTestcase": false,
@@ -1299,7 +1219,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Auth capture - Bio count - Mismatch",
-		"testId": "SBI1032",
+		"testId": "SBI1030",
 		"specVersion": "0.9.5",
 		"testDescription": "Bio Count mismatch auth capture request for Finger",
 		"isNegativeTestcase": false,
@@ -1335,7 +1255,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Auth capture - Bio count - Mismatch",
-		"testId": "SBI1033",
+		"testId": "SBI1031",
 		"specVersion": "0.9.5",
 		"testDescription": "Bio Count mismatch auth capture request for Iris",
 		"isNegativeTestcase": false,
@@ -1371,7 +1291,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Auth capture - Bio count - Mismatch",
-		"testId": "SBI1034",
+		"testId": "SBI1032",
 		"specVersion": "0.9.5",
 		"testDescription": "Bio Count mismatch auth capture request for face",
 		"isNegativeTestcase": false,
@@ -1407,7 +1327,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Registration capture - Left Slap - Bio count - Mismatch",
-		"testId": "SBI1035",
+		"testId": "SBI1033",
 		"specVersion": "0.9.5",
 		"testDescription": "Bio Count mismatch registration capture request for Finger Left Slap",
 		"isNegativeTestcase": false,
@@ -1443,7 +1363,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Registration capture - Right Slap - Bio count - Mismatch",
-		"testId": "SBI1036",
+		"testId": "SBI1034",
 		"specVersion": "0.9.5",
 		"testDescription": "Bio Count mismatch registration capture request for Finger Right Slap",
 		"isNegativeTestcase": false,
@@ -1479,7 +1399,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Registration capture - Two Thumbs - Bio count - Mismatch",
-		"testId": "SBI1037",
+		"testId": "SBI1035",
 		"specVersion": "0.9.5",
 		"testDescription": "Bio Count mismatch registration capture request for Finger Two Thumbs",
 		"isNegativeTestcase": false,
@@ -1515,7 +1435,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Registration capture - Left - Bio count - Mismatch",
-		"testId": "SBI1038",
+		"testId": "SBI1036",
 		"specVersion": "0.9.5",
 		"testDescription": "Bio Count mismatch registration capture request for Left Iris",
 		"isNegativeTestcase": false,
@@ -1551,7 +1471,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Registration capture - Right - Bio count - Mismatch",
-		"testId": "SBI1039",
+		"testId": "SBI1037",
 		"specVersion": "0.9.5",
 		"testDescription": "Bio Count mismatch registration capture request for Right Iris",
 		"isNegativeTestcase": false,
@@ -1587,7 +1507,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Registration capture - Both Iris - Bio count - Mismatch",
-		"testId": "SBI1040",
+		"testId": "SBI1038",
 		"specVersion": "0.9.5",
 		"testDescription": "Bio Count mismatch registration capture request for Both iris",
 		"isNegativeTestcase": false,
@@ -1623,7 +1543,7 @@
 	{
 		"testCaseType": "SBI",
 		"testName": "Registration capture - Bio count - Mismatch",
-		"testId": "SBI1041",
+		"testId": "SBI1039",
 		"specVersion": "0.9.5",
 		"testDescription": "Bio Count mismatch registration capture request for face",
 		"isNegativeTestcase": false,
