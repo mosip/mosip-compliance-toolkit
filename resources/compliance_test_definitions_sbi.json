@@ -352,8 +352,8 @@
 		"testDescription": "Valid Registration capture Request for slap device type with two thumbs except right thumb finger and left thumb finger ",
 		"isNegativeTestcase": false,
 		"methodName": ["rcapture"],
-		"requestSchema": ["RegistrationCaptureRequestSchema"],
-		"responseSchema": ["RegistrationCaptureResponseSchema"],
+		"requestSchema": ["ErrorCaptureRequestSchema"],
+		"responseSchema": ["ErrorCaptureResponseSchema"],
 		"validatorDefs": [[
 			{
 				"name": "SchemaValidator",
@@ -472,8 +472,8 @@
 		"testDescription": "Valid Registration capture Request for Double iris device type except left iris and right iris ",
 		"isNegativeTestcase": false,
 		"methodName": ["rcapture"],
-		"requestSchema": ["RegistrationCaptureRequestSchema"],
-		"responseSchema": ["RegistrationCaptureResponseSchema"],
+		"requestSchema": ["ErrorCaptureRequestSchema"],
+		"responseSchema": ["ErrorCaptureResponseSchema"],
 		"validatorDefs": [[
 			{
 				"name": "SchemaValidator",
