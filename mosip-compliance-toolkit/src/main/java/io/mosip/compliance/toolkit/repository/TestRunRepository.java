@@ -38,7 +38,7 @@ public interface TestRunRepository extends BaseRepository<TestRunEntity, String>
 	public int getTestCaseCount(String runId);
 
 	@Query(value = "SELECT id FROM toolkit.test_run WHERE collection_id = ?1 AND partner_Id = ?3 AND is_deleted<>'true' ORDER BY run_dtimes DESC OFFSET ?2", nativeQuery = true)
-	public List<String> getByCollectionIdWithOffset(String collectionId, int i, String partnerId);
+	public List<String> getRunIdsWithOffset(String collectionId, int i, String partnerId);
 
 	@Modifying
 	@Transactional

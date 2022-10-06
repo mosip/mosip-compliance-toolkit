@@ -151,7 +151,7 @@ public class TestRunService {
 	}
 
 	private void archiveTestRun(String collectionId) {
-		List<String> runIdList = testRunRepository.getByCollectionIdWithOffset(collectionId, archiveOffset,
+		List<String> runIdList = testRunRepository.getRunIdsWithOffset(collectionId, archiveOffset,
 				getPartnerId());
 		if (Objects.nonNull(runIdList) && runIdList.size() > 0) {
 			for (String runId : runIdList) {
