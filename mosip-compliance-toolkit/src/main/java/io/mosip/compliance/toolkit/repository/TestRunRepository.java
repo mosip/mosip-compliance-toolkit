@@ -1,6 +1,7 @@
 package io.mosip.compliance.toolkit.repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -34,4 +35,7 @@ public interface TestRunRepository extends BaseRepository<TestRunEntity, String>
 
 	@Query("SELECT COUNT(ct.testcaseId) FROM TestRunEntity AS tr LEFT JOIN CollectionTestCaseEntity AS ct ON (tr.collectionId = ct.collectionId) WHERE tr.id = ?1 AND tr.isDeleted<>'true' GROUP BY (ct.collectionId)")
 	public int getTestCaseCount(String runId);
+
+	@Query(value = "SELECT * FROM toolkit.test_run WHERE collection_id = ?1 AND partner_Id = ?3 AND is_deleted<>'true' ORDER BY run_dtimes DESC OFFSET ?2", nativeQuery = true)
+	public List<TestRunEntity> getByCollectionIdWithOffset(String collectionId, int i, String partnerId);
 }

@@ -14,6 +14,9 @@ public interface TestRunDetailsRepository extends BaseRepository<TestRunDetailsE
 
 	@Query("SELECT e FROM TestRunDetailsEntity e  WHERE e.runId= ?1 and e.partnerId= ?2 and e.isDeleted<>'true' order by e.crDtimes desc")
 	public List<TestRunDetailsEntity> getTestRunDetails(String runId, String partnerId);
+	
+	@Query("SELECT e FROM TestRunDetailsEntity e  WHERE e.runId IN ?1 and e.partnerId= ?2 and e.isDeleted<>'true' order by e.crDtimes desc")
+	public List<TestRunDetailsEntity> getTestRunDetailsByRunIdArray(String[] runIdArray, String partnerId);
 
 	@Query("SELECT COUNT(CASE WHEN LOWER(trd.resultStatus)='success' THEN 1 ELSE NULL END) FROM TestRunDetailsEntity AS trd WHERE trd.runId = ?1 AND trd.partnerId = ?2 AND trd.isDeleted<>'true'")
 	public int getTestRunSuccessCount(String runId, String partnerId);

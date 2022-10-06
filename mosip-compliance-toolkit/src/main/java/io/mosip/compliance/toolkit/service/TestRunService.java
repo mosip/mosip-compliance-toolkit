@@ -24,10 +24,14 @@ import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunHistoryDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunStatusDto;
+import io.mosip.compliance.toolkit.entity.TestRunArchiveEntity;
+import io.mosip.compliance.toolkit.entity.TestRunDetailsArchiveEntity;
 import io.mosip.compliance.toolkit.entity.TestRunDetailsEntity;
 import io.mosip.compliance.toolkit.entity.TestRunEntity;
 import io.mosip.compliance.toolkit.entity.TestRunHistoryEntity;
 import io.mosip.compliance.toolkit.repository.CollectionsRepository;
+import io.mosip.compliance.toolkit.repository.TestRunArchiveRepository;
+import io.mosip.compliance.toolkit.repository.TestRunDetailsArchiveRepository;
 import io.mosip.compliance.toolkit.repository.TestRunDetailsRepository;
 import io.mosip.compliance.toolkit.repository.TestRunRepository;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
@@ -58,12 +62,21 @@ public class TestRunService {
 
 	@Value("${mosip.toolkit.api.id.testrun.status.get}")
 	private String getTestRunStatusId;
+	
+	@Value("${mosip.toolkit.testrun.archive.offset}")
+	private int archiveOffset;
 
 	@Autowired
 	TestRunRepository testRunRepository;
+	
+	@Autowired
+	TestRunArchiveRepository testRunArchiveRepository;
 
 	@Autowired
 	TestRunDetailsRepository testRunDetailsRepository;
+	
+	@Autowired
+	TestRunDetailsArchiveRepository testRunDetailsArchiveRepository;
 
 	@Autowired
 	CollectionsRepository collectionsRepository;
@@ -109,6 +122,7 @@ public class TestRunService {
 					entity.setDeleted(false);
 					entity.setDelTime(null);
 
+					archiveTestRun(inputTestRun.getCollectionId());
 					TestRunEntity outputEntity = testRunRepository.save(entity);
 
 					testRun = mapper.convertValue(outputEntity, TestRunDto.class);
@@ -144,6 +158,30 @@ public class TestRunService {
 		responseWrapper.setResponse(testRun);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
+	}
+
+	private void archiveTestRun(String collectionId) {
+		List<TestRunEntity> testRuns = testRunRepository.getByCollectionIdWithOffset(collectionId, archiveOffset, getPartnerId());
+		if (Objects.nonNull(testRuns) && testRuns.size() > 0) {
+			ObjectMapper mapper = objectMapperConfig.objectMapper();
+			List<String> runIdList = new ArrayList<>();
+			for (TestRunEntity testRun : testRuns) {
+				runIdList.add(testRun.getId());
+				TestRunArchiveEntity entity = mapper.convertValue(testRun, TestRunArchiveEntity.class);
+				testRunArchiveRepository.save(entity);
+				testRunRepository.delete(testRun);
+			}
+			List<TestRunDetailsEntity> testRunDetailsEntities = testRunDetailsRepository
+					.getTestRunDetailsByRunIdArray(runIdList.toArray(new String[0]), getPartnerId());
+			if (Objects.nonNull(testRunDetailsEntities) && testRunDetailsEntities.size() > 0) {
+				for (TestRunDetailsEntity testRunDetails : testRunDetailsEntities) {
+					TestRunDetailsArchiveEntity entity = mapper.convertValue(testRunDetails,
+							TestRunDetailsArchiveEntity.class);
+					testRunDetailsArchiveRepository.save(entity);
+					testRunDetailsRepository.delete(testRunDetails);
+				}
+			}
+		}
 	}
 
 	public ResponseWrapper<TestRunDto> updateTestRunExecutionTime(TestRunDto inputTestRun) {
