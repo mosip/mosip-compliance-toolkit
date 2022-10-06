@@ -58,10 +58,13 @@ public class TestRunService {
 
 	@Value("${mosip.toolkit.api.id.testrun.status.get}")
 	private String getTestRunStatusId;
+	
+	@Value("${mosip.toolkit.testrun.archive.offset}")
+	private int archiveOffset;
 
 	@Autowired
 	TestRunRepository testRunRepository;
-
+	
 	@Autowired
 	TestRunDetailsRepository testRunDetailsRepository;
 
@@ -108,8 +111,9 @@ public class TestRunService {
 					entity.setUpdDtimes(null);
 					entity.setDeleted(false);
 					entity.setDelTime(null);
-
 					TestRunEntity outputEntity = testRunRepository.save(entity);
+
+					archiveTestRun(inputTestRun.getCollectionId());
 
 					testRun = mapper.convertValue(outputEntity, TestRunDto.class);
 				} else {
@@ -144,6 +148,25 @@ public class TestRunService {
 		responseWrapper.setResponse(testRun);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
+	}
+
+	private void archiveTestRun(String collectionId) {
+		List<String> runIdList = testRunRepository.getRunIdsWithOffset(collectionId, archiveOffset,
+				getPartnerId());
+		if (Objects.nonNull(runIdList) && runIdList.size() > 0) {
+			for (String runId : runIdList) {
+				try {
+					testRunRepository.copyTestRunToArchive(runId, getPartnerId());
+					testRunRepository.deleteById(runId, getPartnerId());
+					testRunDetailsRepository.copyTestRunDetailsToArchive(runId, collectionId);
+					testRunDetailsRepository.deleteById(runId, getPartnerId());
+				} catch (Exception ex) {
+					log.debug("sessionId", "idType", "id", ex.getStackTrace());
+					log.error("sessionId", "idType", "id",
+							"In archiveTestRun method of TestRunService Service - " + runId + " : " + ex.getMessage());
+				}
+			}
+		}
 	}
 
 	public ResponseWrapper<TestRunDto> updateTestRunExecutionTime(TestRunDto inputTestRun) {
