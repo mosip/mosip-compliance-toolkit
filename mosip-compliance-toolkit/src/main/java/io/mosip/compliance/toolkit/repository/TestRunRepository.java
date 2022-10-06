@@ -24,7 +24,8 @@ public interface TestRunRepository extends BaseRepository<TestRunEntity, String>
 	@Modifying
 	@Transactional
 	@Query("UPDATE TestRunEntity e SET e.executionDtimes= ?1, e.updBy= ?2, e.updDtimes= ?3 WHERE e.id = ?4 and e.partnerId= ?5 AND e.isDeleted<>'true'")
-	public int updateExecutionDateById(LocalDateTime excutionDtimes, String upBy, LocalDateTime updDtimes, String id, String partnerId);
+	public int updateExecutionDateById(LocalDateTime excutionDtimes, String upBy, LocalDateTime updDtimes, String id,
+			String partnerId);
 
 	@Query("SELECT e.partnerId FROM TestRunEntity e WHERE e.id = ?1 AND e.isDeleted<>'true' and e.partnerId= ?2")
 	public String getPartnerIdByRunId(String id, String partnerId);
@@ -36,6 +37,16 @@ public interface TestRunRepository extends BaseRepository<TestRunEntity, String>
 	@Query("SELECT COUNT(ct.testcaseId) FROM TestRunEntity AS tr LEFT JOIN CollectionTestCaseEntity AS ct ON (tr.collectionId = ct.collectionId) WHERE tr.id = ?1 AND tr.isDeleted<>'true' GROUP BY (ct.collectionId)")
 	public int getTestCaseCount(String runId);
 
-	@Query(value = "SELECT * FROM toolkit.test_run WHERE collection_id = ?1 AND partner_Id = ?3 AND is_deleted<>'true' ORDER BY run_dtimes DESC OFFSET ?2", nativeQuery = true)
-	public List<TestRunEntity> getByCollectionIdWithOffset(String collectionId, int i, String partnerId);
+	@Query(value = "SELECT id FROM toolkit.test_run WHERE collection_id = ?1 AND partner_Id = ?3 AND is_deleted<>'true' ORDER BY run_dtimes DESC OFFSET ?2", nativeQuery = true)
+	public List<String> getByCollectionIdWithOffset(String collectionId, int i, String partnerId);
+
+	@Modifying
+	@Transactional
+	@Query(value = "INSERT INTO toolkit.test_run_archive (SELECT * FROM toolkit.test_run tr WHERE tr.id = ?1 AND tr.partner_id = ?2)", nativeQuery = true)
+	public void copyTestRunToArchive(String runId, String partnerId);
+
+	@Modifying
+	@Transactional
+	@Query("DELETE FROM TestRunEntity e WHERE e.id = ?1 AND e.partnerId = ?2")
+	public void deleteById(String runId, String partnerId);
 }

@@ -24,14 +24,10 @@ import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunHistoryDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunStatusDto;
-import io.mosip.compliance.toolkit.entity.TestRunArchiveEntity;
-import io.mosip.compliance.toolkit.entity.TestRunDetailsArchiveEntity;
 import io.mosip.compliance.toolkit.entity.TestRunDetailsEntity;
 import io.mosip.compliance.toolkit.entity.TestRunEntity;
 import io.mosip.compliance.toolkit.entity.TestRunHistoryEntity;
 import io.mosip.compliance.toolkit.repository.CollectionsRepository;
-import io.mosip.compliance.toolkit.repository.TestRunArchiveRepository;
-import io.mosip.compliance.toolkit.repository.TestRunDetailsArchiveRepository;
 import io.mosip.compliance.toolkit.repository.TestRunDetailsRepository;
 import io.mosip.compliance.toolkit.repository.TestRunRepository;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
@@ -70,13 +66,7 @@ public class TestRunService {
 	TestRunRepository testRunRepository;
 	
 	@Autowired
-	TestRunArchiveRepository testRunArchiveRepository;
-
-	@Autowired
 	TestRunDetailsRepository testRunDetailsRepository;
-	
-	@Autowired
-	TestRunDetailsArchiveRepository testRunDetailsArchiveRepository;
 
 	@Autowired
 	CollectionsRepository collectionsRepository;
@@ -121,9 +111,9 @@ public class TestRunService {
 					entity.setUpdDtimes(null);
 					entity.setDeleted(false);
 					entity.setDelTime(null);
+					TestRunEntity outputEntity = testRunRepository.save(entity);
 
 					archiveTestRun(inputTestRun.getCollectionId());
-					TestRunEntity outputEntity = testRunRepository.save(entity);
 
 					testRun = mapper.convertValue(outputEntity, TestRunDto.class);
 				} else {
@@ -161,24 +151,19 @@ public class TestRunService {
 	}
 
 	private void archiveTestRun(String collectionId) {
-		List<TestRunEntity> testRuns = testRunRepository.getByCollectionIdWithOffset(collectionId, archiveOffset, getPartnerId());
-		if (Objects.nonNull(testRuns) && testRuns.size() > 0) {
-			ObjectMapper mapper = objectMapperConfig.objectMapper();
-			List<String> runIdList = new ArrayList<>();
-			for (TestRunEntity testRun : testRuns) {
-				runIdList.add(testRun.getId());
-				TestRunArchiveEntity entity = mapper.convertValue(testRun, TestRunArchiveEntity.class);
-				testRunArchiveRepository.save(entity);
-				testRunRepository.delete(testRun);
-			}
-			List<TestRunDetailsEntity> testRunDetailsEntities = testRunDetailsRepository
-					.getTestRunDetailsByRunIdArray(runIdList.toArray(new String[0]), getPartnerId());
-			if (Objects.nonNull(testRunDetailsEntities) && testRunDetailsEntities.size() > 0) {
-				for (TestRunDetailsEntity testRunDetails : testRunDetailsEntities) {
-					TestRunDetailsArchiveEntity entity = mapper.convertValue(testRunDetails,
-							TestRunDetailsArchiveEntity.class);
-					testRunDetailsArchiveRepository.save(entity);
-					testRunDetailsRepository.delete(testRunDetails);
+		List<String> runIdList = testRunRepository.getByCollectionIdWithOffset(collectionId, archiveOffset,
+				getPartnerId());
+		if (Objects.nonNull(runIdList) && runIdList.size() > 0) {
+			for (String runId : runIdList) {
+				try {
+					testRunRepository.copyTestRunToArchive(runId, getPartnerId());
+					testRunRepository.deleteById(runId, getPartnerId());
+					testRunDetailsRepository.copyTestRunDetailsToArchive(runId, collectionId);
+					testRunDetailsRepository.deleteById(runId, getPartnerId());
+				} catch (Exception ex) {
+					log.debug("sessionId", "idType", "id", ex.getStackTrace());
+					log.error("sessionId", "idType", "id",
+							"In archiveTestRun method of TestRunService Service - " + runId + " : " + ex.getMessage());
 				}
 			}
 		}
