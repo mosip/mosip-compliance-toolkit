@@ -158,7 +158,7 @@ public class TestRunService {
 				try {
 					testRunRepository.copyTestRunToArchive(runId, getPartnerId());
 					testRunRepository.deleteById(runId, getPartnerId());
-					testRunDetailsRepository.copyTestRunDetailsToArchive(runId, collectionId);
+					testRunDetailsRepository.copyTestRunDetailsToArchive(runId, getPartnerId());
 					testRunDetailsRepository.deleteById(runId, getPartnerId());
 				} catch (Exception ex) {
 					log.debug("sessionId", "idType", "id", ex.getStackTrace());
