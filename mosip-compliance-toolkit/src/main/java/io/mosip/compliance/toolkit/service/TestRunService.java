@@ -154,16 +154,37 @@ public class TestRunService {
 		List<String> runIdList = testRunRepository.getRunIdsWithOffset(collectionId, archiveOffset,
 				getPartnerId());
 		if (Objects.nonNull(runIdList) && runIdList.size() > 0) {
+			boolean rollback = false;
 			for (String runId : runIdList) {
 				try {
-					testRunRepository.copyTestRunToArchive(runId, getPartnerId());
-					testRunRepository.deleteById(runId, getPartnerId());
 					testRunDetailsRepository.copyTestRunDetailsToArchive(runId, getPartnerId());
+					testRunRepository.copyTestRunToArchive(runId, getPartnerId());
 					testRunDetailsRepository.deleteById(runId, getPartnerId());
+					testRunRepository.deleteById(runId, getPartnerId());
 				} catch (Exception ex) {
+					rollback =  true;
 					log.debug("sessionId", "idType", "id", ex.getStackTrace());
 					log.error("sessionId", "idType", "id",
 							"In archiveTestRun method of TestRunService Service - " + runId + " : " + ex.getMessage());
+				}
+				if(rollback) {
+					rollback = false;
+					try {
+						testRunDetailsRepository.rollBackTestRunDetailsFromArchive(runId, getPartnerId());
+					}catch (Exception ex) {
+					}
+					try {
+						testRunRepository.rollBackTestRunFromArchive(runId, getPartnerId());
+					}catch (Exception ex) {
+					}
+					try {
+						testRunDetailsRepository.deleteFromArchiveById(runId, getPartnerId());
+					}catch (Exception ex) {
+					}
+					try {
+						testRunRepository.deleteFromArchiveById(runId, getPartnerId());
+					}catch (Exception ex) {
+					}
 				}
 			}
 		}
