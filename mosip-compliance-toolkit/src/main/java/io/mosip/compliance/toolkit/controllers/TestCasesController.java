@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -147,6 +148,7 @@ public class TestCasesController {
 		return service.generateRequestForSDKFrmBirs(request.getRequest());
 	}
 
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getSaveTestCases())")
 	@PostMapping(value = "/saveTestCases", produces = "application/json")
 	public ResponseWrapper<TestCaseResponseDto> saveTestCases(
 			@RequestBody @Valid RequestWrapper<TestCaseRequestDto> testCaseRequestDto) throws Exception {

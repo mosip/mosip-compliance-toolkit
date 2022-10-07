@@ -15,5 +15,7 @@ import lombok.Setter;
 public class AuthorizedRolesDto {
 
 	private List<String> uploadResource;
+	
+	private List<String> saveTestCases;
 
 }

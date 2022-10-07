@@ -25,9 +25,19 @@ public interface TestRunDetailsRepository extends BaseRepository<TestRunDetailsE
 	@Transactional
 	@Query(value = "INSERT INTO toolkit.test_run_details_archive (SELECT * FROM toolkit.test_run_details trd WHERE trd.run_id = ?1 AND trd.partner_id = ?2)", nativeQuery = true)
 	public void copyTestRunDetailsToArchive(String runId, String partnerId);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "INSERT INTO toolkit.test_run_details (SELECT * FROM toolkit.test_run_details_archive trd WHERE trd.run_id = ?1 AND trd.partner_id = ?2)", nativeQuery = true)
+	public void rollBackTestRunDetailsFromArchive(String runId, String partnerId);
 
 	@Modifying
 	@Transactional
 	@Query("DELETE FROM TestRunDetailsEntity e WHERE e.runId = ?1 AND e.partnerId = ?2")
 	public void deleteById(String runId, String partnerId);
+	
+	@Modifying
+	@Transactional
+	@Query(value = "DELETE FROM toolkit.test_run_details_archive WHERE run_id = ?1 AND partner_id = ?2", nativeQuery = true)
+	public void deleteFromArchiveById(String runId, String partnerId);
 }
