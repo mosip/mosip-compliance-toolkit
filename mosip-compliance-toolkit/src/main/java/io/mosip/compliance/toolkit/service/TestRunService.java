@@ -63,6 +63,9 @@ public class TestRunService {
 	private int archiveOffset;
 
 	@Autowired
+	TestRunArchiveService testRunArchiveService;
+	
+	@Autowired
 	TestRunRepository testRunRepository;
 	
 	@Autowired
@@ -113,7 +116,7 @@ public class TestRunService {
 					entity.setDelTime(null);
 					TestRunEntity outputEntity = testRunRepository.save(entity);
 
-					archiveTestRun(inputTestRun.getCollectionId());
+					archiveTestRuns(inputTestRun.getCollectionId());
 
 					testRun = mapper.convertValue(outputEntity, TestRunDto.class);
 				} else {
@@ -150,41 +153,16 @@ public class TestRunService {
 		return responseWrapper;
 	}
 
-	private void archiveTestRun(String collectionId) {
-		List<String> runIdList = testRunRepository.getRunIdsWithOffset(collectionId, archiveOffset,
-				getPartnerId());
+	public void archiveTestRuns(String collectionId) {
+		List<String> runIdList = testRunRepository.getRunIdsWithOffset(collectionId, archiveOffset, getPartnerId());
 		if (Objects.nonNull(runIdList) && runIdList.size() > 0) {
-			boolean rollback = false;
 			for (String runId : runIdList) {
 				try {
-					testRunDetailsRepository.copyTestRunDetailsToArchive(runId, getPartnerId());
-					testRunRepository.copyTestRunToArchive(runId, getPartnerId());
-					testRunDetailsRepository.deleteById(runId, getPartnerId());
-					testRunRepository.deleteById(runId, getPartnerId());
+					testRunArchiveService.archiveTestRun(runId);
 				} catch (Exception ex) {
-					rollback =  true;
 					log.debug("sessionId", "idType", "id", ex.getStackTrace());
 					log.error("sessionId", "idType", "id",
-							"In archiveTestRun method of TestRunService Service - " + runId + " : " + ex.getMessage());
-				}
-				if(rollback) {
-					rollback = false;
-					try {
-						testRunDetailsRepository.rollBackTestRunDetailsFromArchive(runId, getPartnerId());
-					}catch (Exception ex) {
-					}
-					try {
-						testRunRepository.rollBackTestRunFromArchive(runId, getPartnerId());
-					}catch (Exception ex) {
-					}
-					try {
-						testRunDetailsRepository.deleteFromArchiveById(runId, getPartnerId());
-					}catch (Exception ex) {
-					}
-					try {
-						testRunRepository.deleteFromArchiveById(runId, getPartnerId());
-					}catch (Exception ex) {
-					}
+							"In archiveTestRun method of TestRunService Service - " + ex.getMessage());
 				}
 			}
 		}
