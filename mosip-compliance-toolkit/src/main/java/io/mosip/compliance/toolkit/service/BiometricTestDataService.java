@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import io.mosip.kernel.core.exception.ExceptionUtils;
-import io.mosip.kernel.core.virusscanner.exception.VirusScannerException;
-import io.mosip.kernel.core.virusscanner.spi.VirusScanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,15 +54,6 @@ public class BiometricTestDataService {
 
 	@Value("$(mosip.toolkit.api.id.biometric.testdata.filenames.get)")
 	private String getBioTestDataFileNames;
-
-	@Value("${mosip.toolkit.document.scan}")
-	private Boolean scanDocument;
-
-	/**
-	 * Autowired reference for {@link #VirusScanner}
-	 */
-	@Autowired
-	VirusScanner<Boolean, String> virusScan;
 
 	private Logger log = LoggerConfiguration.logConfig(BiometricTestDataService.class);
 
@@ -139,9 +127,6 @@ public class BiometricTestDataService {
 		ResponseWrapper<BiometricTestDataDto> responseWrapper = new ResponseWrapper<>();
 		BiometricTestDataDto biometricTestData = null;
 		try {
-			if (scanDocument) {
-				isVirusScanSuccess(file);
-			}
 			if (Objects.nonNull(inputBiometricTestDataDto) && Objects.nonNull(file) && !file.isEmpty()
 					&& file.getSize() > 0) {
 
@@ -349,21 +334,4 @@ public class BiometricTestDataService {
 		return objectStore.putObject(objectStoreAccountName, container, null, null, objectName, data);
 	}
 
-	/**
-	 * This method checks the file extension
-	 *
-	 * @param file pass uploaded file
-	 * @throws DocumentNotValidException if uploaded document is not valid
-	 */
-	public boolean isVirusScanSuccess(MultipartFile file) {
-		try {
-			log.info("sessionId", "idType", "id", "In isVirusScanSuccess method of document service util");
-			return virusScan.scanDocument(file.getBytes());
-		} catch (Exception e) {
-			log.error("sessionId", "idType", "id", ExceptionUtils.getStackTrace(e));
-			log.error("sessionId", "idType", "id", e.getMessage());
-			throw new VirusScannerException(ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorCode(),
-					ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorMessage());
-		}
-	}
 }
