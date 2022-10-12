@@ -59,17 +59,6 @@ public class ResourceManagementService {
 				String container = null;
 				String objectName = null;
 				switch (type) {
-				case AppConstants.SAMPLE:
-					if (!fileName.endsWith(ZIP_EXT)) {
-						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
-								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
-					}
-					container = AppConstants.TESTDATA;
-					String purposeSample = fileName.replace(AppConstants.SAMPLE + UNDERSCORE, "").replace(ZIP_EXT, "");
-					SdkPurpose sdkPurposeSample = SdkPurpose.valueOf(purposeSample);
-					objectName = AppConstants.SAMPLE + UNDERSCORE + sdkPurposeSample.toString().toUpperCase() + ZIP_EXT;
-
-					break;
 				case AppConstants.MOSIP_DEFAULT:
 					if (!fileName.endsWith(ZIP_EXT)) {
 						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
