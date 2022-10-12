@@ -25,12 +25,16 @@ public class MainController {
 	@Value("${mosip.toolkit.documentupload.allowed.file.size}")
 	private String allowedFileSize;
 
+	@Value("${mosip.toolkit.sbi.timeout}")
+	private String sbiTimeout;
+
 	@ResponseFilter
 	@GetMapping("/configs")
 	public ResponseWrapper<Map<String, String>> getConfigValues() {
 		ResponseWrapper<Map<String, String>> responseWrapper = new ResponseWrapper<>();
 		Map<String, String> configMap = new HashMap<String, String>();
 		configMap.put("sbiPorts", sbiPorts);
+		configMap.put("sbiTimeout", sbiTimeout);
 		configMap.put("allowedFileTypes", allowedFileTypes);
 		configMap.put("allowedFileNameLegth", allowedFileNameLegth);
 		configMap.put("allowedFileSize", allowedFileSize);

@@ -40,9 +40,12 @@ import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.core.virusscanner.exception.VirusScannerException;
+import io.mosip.kernel.core.virusscanner.spi.VirusScanner;
 
 @Component
 public class BiometricTestDataService {
@@ -53,6 +56,14 @@ public class BiometricTestDataService {
 
 	private static final String UNDERSCORE = "_";
 
+
+    /**
+     * Autowired reference for {@link #VirusScanner}
+     */
+	@Autowired
+    VirusScanner<Boolean, InputStream> virusScan;
+
+    
 	@Value("$(mosip.toolkit.api.id.biometric.testdata.get)")
 	private String getBiometricTestDataId;
 
@@ -62,6 +73,8 @@ public class BiometricTestDataService {
 	@Value("$(mosip.toolkit.api.id.biometric.testdata.filenames.get)")
 	private String getBioTestDataFileNames;
 
+	@Value("${mosip.toolkit.document.scan}")
+	private Boolean scanDocument;
 	private Logger log = LoggerConfiguration.logConfig(BiometricTestDataService.class);
 
 	@Autowired
@@ -143,6 +156,9 @@ public class BiometricTestDataService {
 		ResponseWrapper<BiometricTestDataDto> responseWrapper = new ResponseWrapper<>();
 		BiometricTestDataDto biometricTestData = null;
 		try {
+		    if (scanDocument) {
+                isVirusScanSuccess(file);
+            }
 			if (Objects.nonNull(inputBiometricTestDataDto) && Objects.nonNull(file) && !file.isEmpty()
 					&& file.getSize() > 0) {
 
@@ -439,4 +455,22 @@ public class BiometricTestDataService {
 	private boolean putInObjectStore(String container, String objectName, InputStream data) {
 		return objectStore.putObject(objectStoreAccountName, container, null, null, objectName, data);
 	}
+	
+	   /**
+     * This method checks the file extension
+     *
+     * @param file pass uploaded file
+     * @throws DocumentNotValidException if uploaded document is not valid
+     */
+	private boolean isVirusScanSuccess(MultipartFile file) {
+        try {
+            log.info("sessionId", "idType", "id", "In isVirusScanSuccess method of document service util");
+            return virusScan.scanDocument(file.getBytes());
+        } catch (Exception e) {
+            log.error("sessionId", "idType", "id", ExceptionUtils.getStackTrace(e));
+            log.error("sessionId", "idType", "id", e.getMessage());
+            throw new VirusScannerException(ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorCode(),
+                    ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorMessage());
+        }
+    }
 }
