@@ -1,10 +1,14 @@
 package io.mosip.compliance.toolkit.service;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,7 +32,10 @@ import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.SdkPurpose;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.BiometricTestDataDto;
+import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
+import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto.ValidatorDef;
 import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
+import io.mosip.compliance.toolkit.entity.TestCaseEntity;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
@@ -62,6 +69,12 @@ public class BiometricTestDataService {
 
 	@Value("${mosip.kernel.objectstore.account-name}")
 	private String objectStoreAccountName;
+	
+	@Value("${mosip.toolkit.sample.testdata.sdk.specversion}")
+	private String sdkSampleTestdataSpecVer;
+	
+	@Value("${mosip.toolkit.sample.testdata.sdk.readme.text}")
+	private String readmeIntro;
 
 	@Qualifier("S3Adapter")
 	@Autowired
@@ -80,6 +93,9 @@ public class BiometricTestDataService {
 		String crBy = authUserDetails().getMail();
 		return crBy;
 	}
+	
+	@Autowired
+	private TestCaseCacheService testCaseCacheService;
 
 	@Autowired
 	private BiometricTestDataRepository biometricTestDataRepository;
@@ -261,15 +277,15 @@ public class BiometricTestDataService {
 	}
 
 	public ResponseEntity<Resource> getSampleBioTestDataFile(String purpose) {
-		ByteArrayResource resource = null;
+		Resource resource = null;
 		try {
-			SdkPurpose sdkPurpose = SdkPurpose.fromCode(purpose);
-			String defaultFileName = AppConstants.SAMPLE + UNDERSCORE + sdkPurpose.toString().toUpperCase() + ZIP_EXT;
-			if (existsInObjectStore(AppConstants.TESTDATA, defaultFileName)) {
-				InputStream inputStream = getFromObjectStore(AppConstants.TESTDATA, defaultFileName);
-				resource = new ByteArrayResource(inputStream.readAllBytes());
-				inputStream.close();
-
+			byte[] bytes = generateSampleSdkTestData(purpose);
+			if(Objects.nonNull(bytes)) {
+				SdkPurpose sdkPurpose = SdkPurpose.fromCode(purpose);
+				String defaultFileName = AppConstants.SAMPLE + UNDERSCORE + sdkPurpose.toString().toUpperCase() + ZIP_EXT;
+				
+				resource = new ByteArrayResource(bytes);
+				
 				HttpHeaders header = new HttpHeaders();
 				header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + defaultFileName);
 				header.add("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -287,6 +303,94 @@ public class BiometricTestDataService {
 
 		return ResponseEntity.noContent().build();
 	}
+	
+	private byte[] generateSampleSdkTestData(String purpose) {
+		byte[] response = null;
+		try {
+			List<TestCaseEntity> testCaseEntities = testCaseCacheService.getSdkTestCases(AppConstants.SDK,
+					sdkSampleTestdataSpecVer);
+
+			if (Objects.nonNull(testCaseEntities) && testCaseEntities.size() > 0) {
+				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+				BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
+				ZipOutputStream zipOutputStream = new ZipOutputStream(bufferedOutputStream);
+
+				for (final TestCaseEntity testCaseEntity : testCaseEntities) {
+					String testcaseJson = testCaseEntity.getTestcaseJson();
+					TestCaseDto testCaseDto = objectMapperConfig.objectMapper().readValue(testcaseJson,
+							TestCaseDto.class);
+					if (testCaseDto.getSpecVersion() != null
+							&& testCaseDto.getSpecVersion().equals(sdkSampleTestdataSpecVer)
+							&& (testCaseDto.getOtherAttributes().getSdkPurpose().size() == 1)
+							&& testCaseDto.getOtherAttributes().getSdkPurpose().contains(purpose)) {
+
+						String content = prepareReadme(testCaseDto);
+
+						ByteArrayOutputStream bos = new ByteArrayOutputStream();
+						bos.write(content.getBytes());
+						byte[] contentBytes = bos.toByteArray();
+						bos.close();
+
+						zipOutputStream.putNextEntry(new ZipEntry(purpose + "/" + testCaseDto.testId + "/Readme.txt"));
+						zipOutputStream.write(contentBytes);
+						zipOutputStream.closeEntry();
+
+					}
+				}
+				if (null != zipOutputStream) {
+					zipOutputStream.finish();
+					zipOutputStream.flush();
+					zipOutputStream.close();
+				}
+				bufferedOutputStream.close();
+				byteArrayOutputStream.close();
+
+				response = byteArrayOutputStream.toByteArray();
+			}
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In generateSampleSdkTestData method of BiometricTestDataService Service - " + ex.getMessage());
+		}
+		return response;
+	}
+	
+	private String prepareReadme(TestCaseDto testCaseDto) {
+		String readMeFileData = "";
+		try {
+			if (Objects.nonNull(testCaseDto)) {
+				StringBuilder builder = new StringBuilder();
+				builder.append(readmeIntro + "\n\n");
+				builder.append("Name - " + testCaseDto.testName + "\n");
+				builder.append("ID - " + testCaseDto.testId + "\n");
+				builder.append("Description - " + testCaseDto.testDescription + "\n");
+				builder.append("Spec Version - " + testCaseDto.specVersion + "\n");
+				builder.append("Purpose - " + testCaseDto.getOtherAttributes().getSdkPurpose().toString() + "\n");
+				builder.append("Modality - " + testCaseDto.getOtherAttributes().getModalities().toString() + "\n\n");
+				if (testCaseDto.isNegativeTestcase) {
+					builder.append("This is Negative Testcase\n\n");
+				}
+
+				List<List<ValidatorDef>> validatorDefsList = testCaseDto.getValidatorDefs();
+				for (int i = 0; i < validatorDefsList.size(); i++) {
+					if (testCaseDto.getMethodName().size() > i) {
+						builder.append("Validators for " + testCaseDto.getMethodName().get(i) + "\n");
+						for (ValidatorDef validatorDef : validatorDefsList.get(i)) {
+							builder.append("Name - " + validatorDef.getName() + "\n");
+							builder.append("Description - " + validatorDef.getDescription() + "\n");
+						}
+						builder.append("\n");
+					}
+				}
+				readMeFileData = builder.toString();
+			}
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In prepareReadme method of BiometricTestDataService Service - " + ex.getMessage());
+		}
+		return readMeFileData;
+	}
 
 	public ResponseEntity<Resource> getBiometricTestDataFile(String bioTestDataId) {
 		ByteArrayResource resource = null;
@@ -298,19 +402,21 @@ public class BiometricTestDataService {
 				String fileName = biometricTestDataEntity.getFileId();
 				String purpose = biometricTestDataEntity.getPurpose();
 				if (Objects.nonNull(fileName) && Objects.nonNull(purpose)) {
-					String container = AppConstants.PARTNER_TESTDATA + "/" +  partnerId + "/" + purpose;
-					InputStream inputStream = getFromObjectStore(container, fileName);
-					resource = new ByteArrayResource(inputStream.readAllBytes());
-					inputStream.close();
+					String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/" + purpose;
+					if (existsInObjectStore(container, fileName)) {
+						InputStream inputStream = getFromObjectStore(container, fileName);
+						resource = new ByteArrayResource(inputStream.readAllBytes());
+						inputStream.close();
 
-					HttpHeaders header = new HttpHeaders();
-					header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
-					header.add("Cache-Control", "no-cache, no-store, must-revalidate");
-					header.add("Pragma", "no-cache");
-					header.add("Expires", "0");
+						HttpHeaders header = new HttpHeaders();
+						header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
+						header.add("Cache-Control", "no-cache, no-store, must-revalidate");
+						header.add("Pragma", "no-cache");
+						header.add("Expires", "0");
 
-					return ResponseEntity.ok().headers(header).contentLength(resource.contentLength())
-							.contentType(MediaType.APPLICATION_OCTET_STREAM).body(resource);
+						return ResponseEntity.ok().headers(header).contentLength(resource.contentLength())
+								.contentType(MediaType.APPLICATION_OCTET_STREAM).body(resource);
+					}
 				}
 			}
 		} catch (Exception ex) {
@@ -333,5 +439,4 @@ public class BiometricTestDataService {
 	private boolean putInObjectStore(String container, String objectName, InputStream data) {
 		return objectStore.putObject(objectStoreAccountName, container, null, null, objectName, data);
 	}
-
 }
