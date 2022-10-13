@@ -54,5 +54,6 @@ public class TestCaseDto implements Serializable {
 		public ArrayList<String> sdkPurpose;
 		public String convertSourceFormat;
 		public String convertTargetFormat;
+		public String timeout;
 	}
 }

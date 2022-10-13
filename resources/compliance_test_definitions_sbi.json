@@ -1576,4 +1576,43 @@
 			"modalities": []
 		}
 	}
+	
+	,
+	{
+		"testCaseType": "SBI",
+		"testName": "Face Registration capture - Timeout",
+		"testId": "SBI1040",
+		"specVersion": "0.9.5",
+		"testDescription": "Timeout for registration capture request for face",
+		"isNegativeTestcase": false,
+		"methodName": ["rcapture"],
+		"requestSchema": ["RegistrationCaptureRequestSchema"],
+		"responseSchema": ["ErrorCaptureResponseSchema"],
+		"validatorDefs": [[
+			{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			}
+		]],
+		"otherAttributes": {
+			"timeout": "500",
+			"runtimeInput": "",
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Face"
+			],
+			"deviceSubTypes": [
+				"Full face"
+			],
+			"segments": [
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0",
+			"modalities": []
+		}
+	}
 ]
