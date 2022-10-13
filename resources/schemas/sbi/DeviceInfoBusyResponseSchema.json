@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2019-09/schema#",
-	"$id": "http://mosip-compliance-toolkit.com/schemas/DeviceInfoResponseSchema.json",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/DeviceInfoBusyResponseSchema.json",
 	"title": "DeviceInfo response Schema",
 	"description": "DeviceInfo response Schema",
 	"additionalProperties": false,
