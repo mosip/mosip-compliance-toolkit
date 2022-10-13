@@ -96,6 +96,12 @@
 		"otherAttributes": {
 			"type": "object",
 			"properties": {
+				"timeout": {
+					"type": [
+						"string",
+						"null"
+					]
+				},
 				"runtimeInput": {
 					"type": [
 						"string",
