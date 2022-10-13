@@ -29,6 +29,7 @@ import io.mosip.commons.khazana.dto.ObjectDto;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
+import io.mosip.compliance.toolkit.constants.MethodName;
 import io.mosip.compliance.toolkit.constants.SdkPurpose;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.BiometricTestDataDto;
@@ -337,19 +338,29 @@ public class BiometricTestDataService {
 							TestCaseDto.class);
 					if (testCaseDto.getSpecVersion() != null
 							&& testCaseDto.getSpecVersion().equals(sdkSampleTestdataSpecVer)
-							&& (testCaseDto.getOtherAttributes().getSdkPurpose().size() == 1)
+							&& !testCaseDto.getTestId().equals("SDK2000")
 							&& testCaseDto.getOtherAttributes().getSdkPurpose().contains(purpose)) {
-
+						
+						String folderName = purpose + "/" + testCaseDto.testId;
+						String fileName = "Readme.txt";
+												
 						String content = prepareReadme(testCaseDto);
 
-						ByteArrayOutputStream bos = new ByteArrayOutputStream();
-						bos.write(content.getBytes());
-						byte[] contentBytes = bos.toByteArray();
-						bos.close();
-
-						zipOutputStream.putNextEntry(new ZipEntry(purpose + "/" + testCaseDto.testId + "/Readme.txt"));
-						zipOutputStream.write(contentBytes);
+						zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
+						zipOutputStream.write(content.getBytes());
 						zipOutputStream.closeEntry();
+						
+						if (testCaseDto.getMethodName().size() > 1
+								&& testCaseDto.getMethodName().get(1).equals(MethodName.MATCH.getCode())) {
+							folderName = purpose + "/" + testCaseDto.testId + "/" + testCaseDto.getMethodName().get(1);
+							fileName = "Readme.txt";
+
+							content = prepareReadme(testCaseDto);
+
+							zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
+							zipOutputStream.write(content.getBytes());
+							zipOutputStream.closeEntry();
+						}
 
 					}
 				}
