@@ -98,6 +98,7 @@ public class TestRunService {
 		TestRunDto testRun = null;
 		try {
 			if (Objects.nonNull(inputTestRun)) {
+				log.info("addTestRun" + inputTestRun);
 				ToolkitErrorCodes toolkitError = validatePartnerId(inputTestRun.getCollectionId(), getPartnerId());
 				if (ToolkitErrorCodes.SUCCESS.equals(toolkitError)) {
 
@@ -116,9 +117,10 @@ public class TestRunService {
 					entity.setDelTime(null);
 					TestRunEntity outputEntity = testRunRepository.save(entity);
 
-					archiveTestRuns(inputTestRun.getCollectionId());
+					//archiveTestRuns(inputTestRun.getCollectionId());
 
 					testRun = mapper.convertValue(outputEntity, TestRunDto.class);
+					log.info("outputEntity" + outputEntity);
 				} else {
 					List<ServiceError> serviceErrorsList = new ArrayList<>();
 					ServiceError serviceError = new ServiceError();
