@@ -1,6 +1,9 @@
 package io.mosip.compliance.toolkit.service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +26,25 @@ public class ResourceCacheService {
 	private ObjectStoreAdapter objectStore;
 
 	@Cacheable(cacheNames = "schemas", key = "{#type, #fileName}")
-	public InputStream getSchema(String type, String fileName) {
-		InputStream inputStream = null;
+	public String getSchema(String type, String fileName) throws IOException {
+		String schemaResponse = null;
 		String container = AppConstants.SCHEMAS.toLowerCase();
 		container += (Objects.nonNull(type) ? ("/" + type) : "");
 		if (existsInObjectStore(container, fileName)) {
-			inputStream = getFromObjectStore(container, fileName);
+			InputStream inputStream = getFromObjectStore(container, fileName);
+			if(Objects.nonNull(inputStream)) {				
+				inputStream.reset();
+				InputStreamReader isr = new InputStreamReader(inputStream); 
+				BufferedReader br = new BufferedReader(isr); 
+	            StringBuffer sb = new StringBuffer(); 
+	            String str; 
+	            while ((str = br.readLine()) != null) { 
+	                sb.append(str); 
+	            }
+	            schemaResponse = sb.toString();
+			}
 		}
-		return inputStream;
+		return schemaResponse;
 	}
 
 	@CacheEvict(cacheNames = "schemas", key = "{#type, #fileName}")

@@ -31,13 +31,9 @@ public abstract class ToolkitValidator implements BaseValidator {
 
 	protected String getSchemaJson(String type, String fileName) throws Exception {
 		// Read File Content
-		InputStream inputStream = resourceCacheService.getSchema(type, fileName);
-		if(Objects.nonNull(inputStream)) {
-			try (Reader reader = new InputStreamReader(inputStream, UTF_8)) {
-				return FileCopyUtils.copyToString(reader);
-			} catch (IOException e) {
-				throw new UncheckedIOException(e);
-			}
+		String schemaResponse = resourceCacheService.getSchema(type, fileName);
+		if(Objects.nonNull(schemaResponse)) {
+			return schemaResponse;
 		}else {
 			throw new ToolkitException(ToolkitErrorCodes.OBJECT_STORE_SCHEMA_NOT_AVAILABLE.getErrorCode(),
 					ToolkitErrorCodes.OBJECT_STORE_SCHEMA_NOT_AVAILABLE.getErrorMessage());

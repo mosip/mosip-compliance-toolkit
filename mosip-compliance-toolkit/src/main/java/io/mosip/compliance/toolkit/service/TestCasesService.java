@@ -1,13 +1,8 @@
 package io.mosip.compliance.toolkit.service;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,7 +25,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.FileCopyUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -538,13 +532,9 @@ private String base64Decode(String data) {
 	
 	public String getSchemaJson(String type, String fileName) throws Exception {
 		// Read File Content
-		InputStream inputStream = resourceCacheService.getSchema(type, fileName);
-		if(Objects.nonNull(inputStream)) {
-			try (Reader reader = new InputStreamReader(inputStream, UTF_8)) {
-				return FileCopyUtils.copyToString(reader);
-			} catch (IOException e) {
-				throw new UncheckedIOException(e);
-			}
+		String schemaResponse = resourceCacheService.getSchema(type, fileName);
+		if(Objects.nonNull(schemaResponse)) {
+			return schemaResponse;
 		}else {
 			throw new ToolkitException(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode(),
 					ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage());
