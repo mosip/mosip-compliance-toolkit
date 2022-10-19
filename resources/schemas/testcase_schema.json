@@ -96,18 +96,6 @@
 		"otherAttributes": {
 			"type": "object",
 			"properties": {
-				"timeout": {
-					"type": [
-						"string",
-						"null"
-					]
-				},
-				"runtimeInput": {
-					"type": [
-						"string",
-						"null"
-					]
-				},
 				"purpose": {
 					"type": "array",
 					"items": {
@@ -203,6 +191,18 @@
 						"null"
 					]
 				},
+				"timeout": {
+					"type": [
+						"string",
+						"null"
+					]
+				},
+				"resumeBtn": {
+					"type": "boolean"
+				},
+				"resumeAgainBtn": {
+					"type": "boolean"
+				},
 				"modalities": {
 					"type": "array",
 					"items": [
@@ -271,7 +271,6 @@
 				"properties": {
 					"otherAttributes": {
 						"required": [
-							"runtimeInput",
 							"purpose",
 							"biometricTypes",
 							"deviceSubTypes",

@@ -41,7 +41,6 @@ public class TestCaseDto implements Serializable {
 	@Setter
 	@JsonInclude(Include.NON_NULL)
 	public static class OtherAttributes {
-		public Object runtimeInput;
 		public ArrayList<Object> purpose;
 		public ArrayList<Object> biometricTypes;
 		public ArrayList<Object> deviceSubTypes;
@@ -55,5 +54,9 @@ public class TestCaseDto implements Serializable {
 		public String convertSourceFormat;
 		public String convertTargetFormat;
 		public String timeout;
+		@JsonProperty("resumeBtn")
+	    public boolean resumeBtn;
+		@JsonProperty("resumeAgainBtn")
+	    public boolean resumeAgainBtn;
 	}
 }
