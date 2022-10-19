@@ -6,21 +6,28 @@
 		"specVersion": "0.9.5",
 		"testDescription": "This testcase will perform device discovery for the selected device.",
 		"isNegativeTestcase": false,
-		"methodName": ["device"],
-		"requestSchema": ["DiscoverRequestSchema"],
-		"responseSchema": ["DiscoverResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"device"
+		],
+		"requestSchema": [
+			"DiscoverRequestSchema"
+		],
+		"responseSchema": [
+			"DiscoverResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration",
 				"Auth"
@@ -50,21 +57,28 @@
 		"specVersion": "0.9.5",
 		"testDescription": "This testcase will validate the device info for the selected device including trust validation.",
 		"isNegativeTestcase": false,
-		"methodName": ["info"],
-		"requestSchema": ["DeviceInfoRequestSchema"],
-		"responseSchema": ["DeviceInfoResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"info"
+		],
+		"requestSchema": [
+			"DeviceInfoRequestSchema"
+		],
+		"responseSchema": [
+			"DeviceInfoResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration",
 				"Auth"
@@ -94,21 +108,28 @@
 		"specVersion": "0.9.5",
 		"testDescription": "This testcase is to check if Registration Capture for Left Slap from the device is valid or not.",
 		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["RegistrationCaptureRequestSchema"],
-		"responseSchema": ["RegistrationCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration"
 			],
@@ -137,21 +158,28 @@
 		"specVersion": "0.9.5",
 		"testDescription": "1. This testcase is to check if Registration Capture for Left Slap from the device is valid or not.<br> 2. Please place your left slap <b>except left ring finger</b> on the device. ",
 		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["RegistrationCaptureRequestSchema"],
-		"responseSchema": ["RegistrationCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration"
 			],
@@ -181,21 +209,28 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Registration capture Request for Slap scanner type",
 		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["RegistrationCaptureRequestSchema"],
-		"responseSchema": ["RegistrationCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration"
 			],
@@ -224,21 +259,28 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Registration capture Request for slap device type with right slap except right ring finger and right little finger",
 		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["RegistrationCaptureRequestSchema"],
-		"responseSchema": ["RegistrationCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration"
 			],
@@ -268,21 +310,28 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Registration capture Request for Slap scanner type",
 		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["RegistrationCaptureRequestSchema"],
-		"responseSchema": ["RegistrationCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration"
 			],
@@ -309,21 +358,28 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Registration capture Request for slap device type with two thumbs except left thumb finger",
 		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["RegistrationCaptureRequestSchema"],
-		"responseSchema": ["RegistrationCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration"
 			],
@@ -351,17 +407,24 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Registration capture Request for slap device type with two thumbs except right thumb finger and left thumb finger ",
 		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["ErrorCaptureRequestSchema"],
-		"responseSchema": ["ErrorCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			}
-		]],
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"ErrorCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"ErrorCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration"
 			],
@@ -388,21 +451,28 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Registration capture Request",
 		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["RegistrationCaptureRequestSchema"],
-		"responseSchema": ["RegistrationCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration"
 			],
@@ -429,21 +499,28 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Registration capture Request for Double iris device type except left iris ",
 		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["RegistrationCaptureRequestSchema"],
-		"responseSchema": ["RegistrationCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration"
 			],
@@ -471,17 +548,24 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Registration capture Request for Double iris device type except left iris and right iris ",
 		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["ErrorCaptureRequestSchema"],
-		"responseSchema": ["ErrorCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			}
-		]],
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"ErrorCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"ErrorCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration"
 			],
@@ -508,21 +592,28 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Registration capture Request only for Face",
 		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["RegistrationCaptureRequestSchema"],
-		"responseSchema": ["RegistrationCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration"
 			],
@@ -546,21 +637,28 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Registration capture Request for Face device type exception value left little finger or any will give  Exception photo ",
 		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["RegistrationCaptureRequestSchema"],
-		"responseSchema": ["RegistrationCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration"
 			],
@@ -586,21 +684,28 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Request only for Face",
 		"isNegativeTestcase": false,
-		"methodName": ["capture"],
-		"requestSchema": ["AuthCaptureRequestSchema"],
-		"responseSchema": ["AuthCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Auth"
 			],
@@ -624,21 +729,28 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Request for Unknown iris",
 		"isNegativeTestcase": false,
-		"methodName": ["capture"],
-		"requestSchema": ["AuthCaptureRequestSchema"],
-		"responseSchema": ["AuthCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Auth"
 			],
@@ -664,21 +776,28 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Request for Left iris",
 		"isNegativeTestcase": false,
-		"methodName": ["capture"],
-		"requestSchema": ["AuthCaptureRequestSchema"],
-		"responseSchema": ["AuthCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Auth"
 			],
@@ -704,21 +823,28 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Request for Right iris",
 		"isNegativeTestcase": false,
-		"methodName": ["capture"],
-		"requestSchema": ["AuthCaptureRequestSchema"],
-		"responseSchema": ["AuthCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Auth"
 			],
@@ -744,21 +870,28 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Request for Unknown Finger",
 		"isNegativeTestcase": false,
-		"methodName": ["capture"],
-		"requestSchema": ["AuthCaptureRequestSchema"],
-		"responseSchema": ["AuthCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Auth"
 			],
@@ -784,21 +917,28 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Request for Two Unknown Finger",
 		"isNegativeTestcase": false,
-		"methodName": ["capture"],
-		"requestSchema": ["AuthCaptureRequestSchema"],
-		"responseSchema": ["AuthCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Auth"
 			],
@@ -825,21 +965,28 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Request for LeftIndex Finger",
 		"isNegativeTestcase": false,
-		"methodName": ["capture"],
-		"requestSchema": ["AuthCaptureRequestSchema"],
-		"responseSchema": ["AuthCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Auth"
 			],
@@ -865,21 +1012,28 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Request for Two Finger",
 		"isNegativeTestcase": false,
-		"methodName": ["capture"],
-		"requestSchema": ["AuthCaptureRequestSchema"],
-		"responseSchema": ["AuthCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Auth"
 			],
@@ -906,17 +1060,24 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Key Rotation Registration capture Request for Slap scanner",
 		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["RegistrationCaptureRequestSchema"],
-		"responseSchema": ["RegistrationCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "RCaptureKeyRotationValidator",
-				"description": "RCapture Key Rotation Validator"
-			}
-		]],
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "RCaptureKeyRotationValidator",
+					"description": "RCapture Key Rotation Validator"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration"
 			],
@@ -945,17 +1106,24 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Key Rotation Request for Left iris",
 		"isNegativeTestcase": false,
-		"methodName": ["capture"],
-		"requestSchema": ["AuthCaptureRequestSchema"],
-		"responseSchema": ["AuthCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "KeyRotationValidator",
-				"description": "Key Rotation Validator"
-			}
-		]],
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "KeyRotationValidator",
+					"description": "Key Rotation Validator"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Auth"
 			],
@@ -981,17 +1149,24 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Key Rotation Auth capture Request for LeftIndex Finger",
 		"isNegativeTestcase": false,
-		"methodName": ["capture"],
-		"requestSchema": ["AuthCaptureRequestSchema"],
-		"responseSchema": ["AuthCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "KeyRotationValidator",
-				"description": "Key Rotation Validator"
-			}
-		]],
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "KeyRotationValidator",
+					"description": "Key Rotation Validator"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Auth"
 			],
@@ -1017,17 +1192,24 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Request only for Face",
 		"isNegativeTestcase": false,
-		"methodName": ["capture"],
-		"requestSchema": ["AuthCaptureRequestSchema"],
-		"responseSchema": ["AuthCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "KeyRotationValidator",
-				"description": "Key Rotation Validator"
-			}
-		]],
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "KeyRotationValidator",
+					"description": "Key Rotation Validator"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Auth"
 			],
@@ -1051,21 +1233,28 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid DeviceInfo Ready Status",
 		"isNegativeTestcase": false,
-		"methodName": ["info"],
-		"requestSchema": ["DeviceInfoRequestSchema"],
-		"responseSchema": ["DeviceInfoReadyResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"info"
+		],
+		"requestSchema": [
+			"DeviceInfoRequestSchema"
+		],
+		"responseSchema": [
+			"DeviceInfoReadyResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration",
 				"Auth"
@@ -1090,26 +1279,33 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Device Info - Busy",
+		"testName": "Check Device Status - Busy",
 		"testId": "SBI1027",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid DeviceInfo Busy Status",
+		"testDescription": "Checks the device to test for <b>Busy</b> status. <br>Initiate Busy status by invoking appropriate API, then click on <b>Resume</b> button.<br> After testcase execution is done, revert the device status and click on <b>Resume Next</b> button.",
 		"isNegativeTestcase": false,
-		"methodName": ["info"],
-		"requestSchema": ["DeviceInfoRequestSchema"],
-		"responseSchema": ["DeviceInfoBusyResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"info"
+		],
+		"requestSchema": [
+			"DeviceInfoRequestSchema"
+		],
+		"responseSchema": [
+			"DeviceInfoBusyResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration",
 				"Auth"
@@ -1129,27 +1325,36 @@
 			"exceptions": [],
 			"requestedScore": "",
 			"bioCount": "",
-			"deviceSubId": ""
+			"deviceSubId": "",
+			"resumeBtn": true,
+			"resumeAgainBtn": true
 		}
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Device Info - Not Ready",
+		"testName": "Check Device Status - Not Ready",
 		"testId": "SBI1028",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid DeviceInfo Not Ready Status",
+		"testDescription": "Disconnect the device to test for <b>Not Ready</b> status. <br> Once disconnected , click on <b>Resume</b> button.<br> After testcase execution is done, re-connect the device and click on <b>Resume Next</b> button.",
 		"isNegativeTestcase": false,
-		"methodName": ["info"],
-		"requestSchema": ["DeviceInfoRequestSchema"],
-		"responseSchema": ["DeviceInfoNotReadyResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			}
-		]],
+		"methodName": [
+			"info"
+		],
+		"requestSchema": [
+			"DeviceInfoRequestSchema"
+		],
+		"responseSchema": [
+			"DeviceInfoNotReadyResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration",
 				"Auth"
@@ -1169,31 +1374,40 @@
 			"exceptions": [],
 			"requestedScore": "",
 			"bioCount": "",
-			"deviceSubId": ""
+			"deviceSubId": "",
+			"resumeBtn": true,
+			"resumeAgainBtn": true
 		}
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Device Info - Not Registered",
+		"testName": "Check Device Status - Not Registered",
 		"testId": "SBI1029",
 		"specVersion": "0.9.5",
 		"testDescription": "Valid DeviceInfo Not Registered Status",
 		"isNegativeTestcase": false,
-		"methodName": ["info"],
-		"requestSchema": ["DeviceInfoRequestSchema"],
-		"responseSchema": ["DeviceInfoNotRegisteredResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			},
-			{
-				"name": "SignatureValidator",
-				"description": "Validates if response signature is valid or not"
-			}
-		]],
+		"methodName": [
+			"info"
+		],
+		"requestSchema": [
+			"DeviceInfoRequestSchema"
+		],
+		"responseSchema": [
+			"DeviceInfoNotRegisteredResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration",
 				"Auth"
@@ -1223,17 +1437,24 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Bio Count mismatch auth capture request for Finger",
 		"isNegativeTestcase": false,
-		"methodName": ["capture"],
-		"requestSchema": ["ErrorCaptureRequestSchema"],
-		"responseSchema": ["ErrorCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			}
-		]],
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"ErrorCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"ErrorCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Auth"
 			],
@@ -1243,8 +1464,7 @@
 			"deviceSubTypes": [
 				"Single"
 			],
-			"segments": [
-			],
+			"segments": [],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": "11",
@@ -1259,17 +1479,24 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Bio Count mismatch auth capture request for Iris",
 		"isNegativeTestcase": false,
-		"methodName": ["capture"],
-		"requestSchema": ["ErrorCaptureRequestSchema"],
-		"responseSchema": ["ErrorCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			}
-		]],
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"ErrorCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"ErrorCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Auth"
 			],
@@ -1279,8 +1506,7 @@
 			"deviceSubTypes": [
 				"Single"
 			],
-			"segments": [
-			],
+			"segments": [],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": "3",
@@ -1295,17 +1521,24 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Bio Count mismatch auth capture request for face",
 		"isNegativeTestcase": false,
-		"methodName": ["capture"],
-		"requestSchema": ["ErrorCaptureRequestSchema"],
-		"responseSchema": ["ErrorCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			}
-		]],
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"ErrorCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"ErrorCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Auth"
 			],
@@ -1315,8 +1548,7 @@
 			"deviceSubTypes": [
 				"Full face"
 			],
-			"segments": [
-			],
+			"segments": [],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": "2",
@@ -1331,17 +1563,24 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Bio Count mismatch registration capture request for Finger Left Slap",
 		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["ErrorCaptureRequestSchema"],
-		"responseSchema": ["ErrorCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			}
-		]],
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"ErrorCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"ErrorCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration"
 			],
@@ -1351,8 +1590,7 @@
 			"deviceSubTypes": [
 				"Slap"
 			],
-			"segments": [
-			],
+			"segments": [],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": "5",
@@ -1367,17 +1605,24 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Bio Count mismatch registration capture request for Finger Right Slap",
 		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["ErrorCaptureRequestSchema"],
-		"responseSchema": ["ErrorCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			}
-		]],
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"ErrorCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"ErrorCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration"
 			],
@@ -1387,8 +1632,7 @@
 			"deviceSubTypes": [
 				"Slap"
 			],
-			"segments": [
-			],
+			"segments": [],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": "5",
@@ -1403,17 +1647,24 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Bio Count mismatch registration capture request for Finger Two Thumbs",
 		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["ErrorCaptureRequestSchema"],
-		"responseSchema": ["ErrorCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			}
-		]],
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"ErrorCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"ErrorCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration"
 			],
@@ -1423,8 +1674,7 @@
 			"deviceSubTypes": [
 				"Slap"
 			],
-			"segments": [
-			],
+			"segments": [],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": "3",
@@ -1439,17 +1689,24 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Bio Count mismatch registration capture request for Left Iris",
 		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["ErrorCaptureRequestSchema"],
-		"responseSchema": ["ErrorCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			}
-		]],
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"ErrorCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"ErrorCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration"
 			],
@@ -1459,8 +1716,7 @@
 			"deviceSubTypes": [
 				"Double"
 			],
-			"segments": [
-			],
+			"segments": [],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": "2",
@@ -1475,17 +1731,24 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Bio Count mismatch registration capture request for Right Iris",
 		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["ErrorCaptureRequestSchema"],
-		"responseSchema": ["ErrorCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			}
-		]],
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"ErrorCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"ErrorCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration"
 			],
@@ -1495,8 +1758,7 @@
 			"deviceSubTypes": [
 				"Double"
 			],
-			"segments": [
-			],
+			"segments": [],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": "2",
@@ -1511,17 +1773,24 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Bio Count mismatch registration capture request for Both iris",
 		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["ErrorCaptureRequestSchema"],
-		"responseSchema": ["ErrorCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			}
-		]],
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"ErrorCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"ErrorCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration"
 			],
@@ -1531,8 +1800,7 @@
 			"deviceSubTypes": [
 				"Double"
 			],
-			"segments": [
-			],
+			"segments": [],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": "3",
@@ -1547,17 +1815,24 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Bio Count mismatch registration capture request for face",
 		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["ErrorCaptureRequestSchema"],
-		"responseSchema": ["ErrorCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			}
-		]],
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"ErrorCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"ErrorCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			]
+		],
 		"otherAttributes": {
-			"runtimeInput": "",
 			"purpose": [
 				"Registration"
 			],
@@ -1567,17 +1842,14 @@
 			"deviceSubTypes": [
 				"Full face"
 			],
-			"segments": [
-			],
+			"segments": [],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": "2",
 			"deviceSubId": "0",
 			"modalities": []
 		}
-	}
-	
-	,
+	},
 	{
 		"testCaseType": "SBI",
 		"testName": "Face Registration capture - Timeout",
@@ -1585,18 +1857,25 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Timeout for registration capture request for face",
 		"isNegativeTestcase": false,
-		"methodName": ["rcapture"],
-		"requestSchema": ["RegistrationCaptureRequestSchema"],
-		"responseSchema": ["ErrorCaptureResponseSchema"],
-		"validatorDefs": [[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			}
-		]],
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"ErrorCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			]
+		],
 		"otherAttributes": {
 			"timeout": "500",
-			"runtimeInput": "",
 			"purpose": [
 				"Registration"
 			],
@@ -1606,8 +1885,7 @@
 			"deviceSubTypes": [
 				"Full face"
 			],
-			"segments": [
-			],
+			"segments": [],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": "1",
