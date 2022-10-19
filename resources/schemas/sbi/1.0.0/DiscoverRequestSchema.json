@@ -1,0 +1,22 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema#",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/DiscoverRequestSchema.json",
+	"type": "object",
+	"title": "Discover Request Schema",
+	"description": "Discover Request Schema",
+	"additionalProperties": false,
+	"properties": {
+		"type": {
+			"type": "string",
+			"enum": [
+				"Biometric Device",
+				"Finger",
+				"Iris",
+				"Face"
+			]
+		}
+	},
+	"required": [
+		"type"
+	]
+}

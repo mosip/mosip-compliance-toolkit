@@ -29,9 +29,9 @@ public abstract class ToolkitValidator implements BaseValidator {
 	@Autowired
 	private ResourceCacheService resourceCacheService;
 
-	protected String getSchemaJson(String type, String fileName) throws Exception {
+	protected String getSchemaJson(String type, String version, String fileName) throws Exception {
 		// Read File Content
-		String schemaResponse = resourceCacheService.getSchema(type, fileName);
+		String schemaResponse = resourceCacheService.getSchema(type, version, fileName);
 		if(Objects.nonNull(schemaResponse)) {
 			return schemaResponse;
 		}else {

@@ -1,0 +1,248 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema#",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/AuthCapureRequestSchema.json",
+	"title": "Auth Capture Request Schema",
+	"description": "Auth Capture Request Schema",
+	"type": "object",
+	"properties": {
+		"env": {
+			"type": "string",
+			"enum": [
+				"Staging",
+				"Developer",
+				"Pre-Production",
+				"Production"
+			]
+		},
+		"purpose": {
+			"type": "string",
+			"enum": [
+				"Auth"
+			]
+		},
+		"specVersion": {
+			"type": "string",
+			"enum": [
+				"0.9.5",
+				"1.0.0"
+			]
+		},
+		"timeout": {
+			"$ref": "#/definitions/non-empty-string",
+			"pattern": "[0-9]$"
+		},
+		"captureTime": {
+			"type": "string",
+			"format": "date-time",
+			"description": "We expect YYYY-MM-ddTHH:mm:SSZ"
+		},
+		"domainUri": {
+			"type": ["string", "null"]
+		},
+		"transactionId": {
+			"$ref": "#/definitions/non-empty-string"
+		},
+		"bio": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"type": {
+						"type": "string",
+						"enum": [
+							"Finger",
+							"Iris",
+							"Face"
+						]
+					},
+					"count": {
+						"type": "string",
+						"enum": [
+							"0",
+							"1",
+							"2",
+							"3",
+							"4",
+							"5",
+							"6",
+							"7",
+							"8",
+							"9",
+							"10",
+							"11"
+						]
+					},
+					"bioSubType": {
+						"type": "array",
+						"items": {
+							"type": [
+								"string",
+								"null"
+							]
+						}
+					},
+					"requestedScore": {
+						"type": "string",
+						"pattern": "^[0-9]+$",
+						"minLength": 1,
+						"maxLength": 3
+					},
+					"deviceId": {
+						"$ref": "#/definitions/non-empty-string"
+					},
+					"deviceSubId": {
+						"type": "string",
+						"enum": [
+							"0"
+						]
+					},
+					"previousHash": {
+						"type": "string"
+					}
+				},
+				"definitions": {
+					"non-empty-string": {
+						"type": "string",
+						"minLength": 1
+					}
+				},
+				"allOf": [
+					{
+						"if": {
+							"properties": {
+								"type": {
+									"const": "Finger"
+								}
+							}
+						},
+						"then": {
+							"properties": {
+								"bioSubType": {
+									"contains": {
+										"enum": [
+											"Left IndexFinger",
+											"Left MiddleFinger",
+											"Left RingFinger",
+											"Left LittleFinger",
+											"Left Thumb",
+											"Right IndexFinger",
+											"Right MiddleFinger",
+											"Right RingFinger",
+											"Right LittleFinger",
+											"Right Thumb",
+											"UNKNOWN"
+										]
+									}
+								},
+								"count": {
+									"enum": [
+										"0",
+										"1",
+										"2",
+										"3",
+										"4",
+										"5",
+										"6",
+										"7",
+										"8",
+										"9",
+										"10",
+										"11"
+									]
+								}
+							}
+						}
+					},
+					{
+						"if": {
+							"properties": {
+								"type": {
+									"const": "Iris"
+								}
+							}
+						},
+						"then": {
+							"properties": {
+								"bioSubType": {
+									"contains": {
+										"enum": [
+											"Left",
+											"Right",
+											"UNKNOWN"
+										]
+									}
+								},
+								"count": {
+									"enum": [
+										"0",
+										"1",
+										"2",
+										"3"
+									]
+								}
+							}
+						}
+					},
+					{
+						"if": {
+							"properties": {
+								"type": {
+									"const": "Face"
+								}
+							}
+						},
+						"then": {
+							"properties": {
+								"bioSubType": {
+									"type": "array",
+									"items": {
+										"type": [
+											"null"
+										]
+									}
+								},
+								"count": {
+									"enum": [
+										"0",
+										"1",
+										"2"
+									]
+								}
+							}
+						}
+					}
+				]
+			},
+			"required": [
+				"type",
+				"count",
+				"bioSubType",
+				"requestedScore",
+				"deviceId",
+				"deviceSubId",
+				"previousHash"
+			]
+		},
+		"customOpts": {
+			"type": [
+				"null",
+				"object"
+			]
+		}
+	},
+	"required": [
+		"env",
+		"purpose",
+		"specVersion",
+		"timeout",
+		"captureTime",
+		"transactionId",
+		"bio"
+	],
+	"definitions": {
+		"non-empty-string": {
+			"type": "string",
+			"minLength": 1
+		}
+	}
+}

@@ -49,11 +49,11 @@ public class ResourceManagementService {
 
 	private Logger log = LoggerConfiguration.logConfig(ResourceManagementService.class);
 
-	public ResponseWrapper<Boolean> uploadResourceFile(String type, MultipartFile file) {
+	public ResponseWrapper<Boolean> uploadResourceFile(String type, String version, MultipartFile file) {
 		ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
 		boolean status = false;
 		try {
-			if (Objects.nonNull(file) && Objects.nonNull(type) && !file.isEmpty() && file.getSize() > 0) {
+			if (Objects.nonNull(file) && Objects.nonNull(type) && Objects.nonNull(version) && !file.isEmpty() && file.getSize() > 0) {
 
 				String fileName = file.getOriginalFilename();
 				String container = null;
@@ -84,7 +84,7 @@ public class ResourceManagementService {
 						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
 								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
 					}
-					container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.SBI.toLowerCase();
+					container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.SBI.toLowerCase() + "/" + version;
 					objectName = fileName;
 					break;
 				case SDK_SCHEMA:
@@ -92,7 +92,7 @@ public class ResourceManagementService {
 						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
 								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
 					}
-					container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.SDK.toLowerCase();
+					container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.SDK.toLowerCase() +"/" + version;
 					objectName = fileName;
 					break;
 				default:
