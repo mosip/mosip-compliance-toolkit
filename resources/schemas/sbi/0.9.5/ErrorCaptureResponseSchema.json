@@ -1,0 +1,92 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema#",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/ErrorCaptureResponseSchema.json",
+	"title": "Error Capture Response Schema",
+	"description": "Error Capture Response Schema",
+	"type": "object",
+	"additionalProperties": false,
+	"properties": {
+		"biometrics": {
+			"type": "array",
+			"items": [
+				{
+					"type": "object",
+					"properties": {
+						"specVersion": {
+							"type": [
+								"string",
+								"null"
+							]
+						},
+						"data": {
+							"type": [
+								"string",
+								"null"
+							]
+						},
+						"hash": {
+							"type": [
+								"string",
+								"null"
+							]
+						},
+						"sessionKey": {
+							"type": [
+								"string",
+								"null"
+							]
+						},
+						"thumbprint": {
+							"type": [
+								"string",
+								"null"
+							]
+						},
+						"error": {
+							"type": "object",
+							"properties": {
+								"errorCode": {
+									"$ref": "#/definitions/non-empty-string",
+									"pattern": "^[1-9][0-9][0-9]$"
+								},
+								"errorInfo": {
+									"$ref": "#/definitions/non-empty-string",
+									"not": {
+										"enum": [
+											"Success"
+										]
+									}
+								}
+							},
+							"required": [
+								"errorCode",
+								"errorInfo"
+							],
+							"definitions": {
+								"non-empty-string": {
+									"type": "string",
+									"minLength": 1
+								}
+							}
+						}
+					},
+					"required": [
+						"specVersion",
+						"data",
+						"hash",
+						"error"
+					]
+				}
+			]
+		}
+	},
+	"required": [
+		"biometrics"
+	],
+	"definitions": {
+		"non-empty-string": {
+			"type": "string",
+			"minLength": 1
+		}
+	}
+}

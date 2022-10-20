@@ -1,0 +1,125 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema#",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/MatchResponseSchema.json",
+	"type": "object",
+	"properties": {
+		"version": {
+			"type": "string"
+		},
+		"responsetime": {
+			"type": "string"
+		},
+		"response": {
+			"type": "object",
+			"properties": {
+				"statusCode": {
+					"type": "integer"
+				},
+				"statusMessage": {
+					"type": "null"
+				},
+				"response": {
+					"type": "array",
+					"items": [
+						{
+							"type": "object",
+							"properties": {
+								"galleryIndex": {
+									"type": "integer"
+								},
+								"decisions": {
+									"type": "object",
+									"properties": {
+										"FACE": {
+											"type": "object",
+											"properties": {
+												"match": {
+													"type": "string"
+												},
+												"errors": {
+													"type": "array",
+													"items": {}
+												},
+												"analyticsInfo": {
+													"type": "object"
+												}
+											},
+											"required": [
+												"match",
+												"errors",
+												"analyticsInfo"
+											]
+										},
+										"FINGER": {
+											"type": "object",
+											"properties": {
+												"match": {
+													"type": "string"
+												},
+												"errors": {
+													"type": "array",
+													"items": {}
+												},
+												"analyticsInfo": {
+													"type": "object"
+												}
+											},
+											"required": [
+												"match",
+												"errors",
+												"analyticsInfo"
+											]
+										},
+										"IRIS": {
+											"type": "object",
+											"properties": {
+												"match": {
+													"type": "string"
+												},
+												"errors": {
+													"type": "array",
+													"items": {}
+												},
+												"analyticsInfo": {
+													"type": "object"
+												}
+											},
+											"required": [
+												"match",
+												"errors",
+												"analyticsInfo"
+											]
+										}
+									}
+								},
+								"analyticsInfo": {
+									"type": "object"
+								}
+							},
+							"required": [
+								"galleryIndex",
+								"decisions",
+								"analyticsInfo"
+							]
+						}
+					]
+				}
+			},
+			"required": [
+				"statusCode",
+				"statusMessage",
+				"response"
+			]
+		},
+		"errors": {
+			"type": "array",
+			"items": {}
+		}
+	},
+	"required": [
+		"version",
+		"responsetime",
+		"response",
+		"errors"
+	]
+}

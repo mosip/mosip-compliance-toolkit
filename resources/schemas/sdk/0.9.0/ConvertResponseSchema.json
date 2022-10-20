@@ -1,0 +1,689 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "http://mosip-compliance-toolkit.com/schemas/ConvertResponseSchema.json",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "responsetime": {
+      "type": "string"
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "statusCode": {
+          "type": "integer"
+        },
+        "statusMessage": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "response": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "version": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "major": {
+                  "type": "integer"
+                },
+                "minor": {
+                  "type": "integer"
+                }
+              }
+            },
+            "cbeffversion": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "major": {
+                  "type": "integer"
+                },
+                "minor": {
+                  "type": "integer"
+                }
+              }
+            },
+            "birInfo": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "integrity": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "segments": {
+              "type": [
+                "array",
+                "null"
+              ],
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "version": {
+                      "type": "object",
+                      "properties": {
+                        "major": {
+                          "type": "integer"
+                        },
+                        "minor": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "major",
+                        "minor"
+                      ]
+                    },
+                    "cbeffversion": {
+                      "type": "object",
+                      "properties": {
+                        "major": {
+                          "type": "integer"
+                        },
+                        "minor": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "major",
+                        "minor"
+                      ]
+                    },
+                    "birInfo": {
+                      "type": "object",
+                      "properties": {
+                        "creator": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "index": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "integrity": {
+                          "type": "boolean"
+                        },
+                        "creationDate": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "notValidBefore": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "notValidAfter": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "payload": {
+                          "type": [
+                            "array"
+                          ],
+                          "items": [
+                            {
+                              "type": [
+                                "integer"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "integrity",
+                        "payload"
+                      ]
+                    },
+                    "bdbInfo": {
+                      "type": "object",
+                      "properties": {
+                        "format": {
+                          "type": "object",
+                          "properties": {
+                            "organization": {
+                              "type": "string"
+                            },
+                            "type": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "organization",
+                            "type"
+                          ]
+                        },
+                        "creationDate": {
+                          "type": "object",
+                          "properties": {
+                            "date": {
+                              "type": "object",
+                              "properties": {
+                                "year": {
+                                  "type": "integer"
+                                },
+                                "month": {
+                                  "type": "integer"
+                                },
+                                "day": {
+                                  "type": "integer"
+                                }
+                              },
+                              "required": [
+                                "year",
+                                "month",
+                                "day"
+                              ]
+                            },
+                            "time": {
+                              "type": "object",
+                              "properties": {
+                                "hour": {
+                                  "type": "integer"
+                                },
+                                "minute": {
+                                  "type": "integer"
+                                },
+                                "second": {
+                                  "type": "integer"
+                                },
+                                "nano": {
+                                  "type": "integer"
+                                }
+                              },
+                              "required": [
+                                "hour",
+                                "minute",
+                                "second",
+                                "nano"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "date",
+                            "time"
+                          ]
+                        },
+                        "type": {
+                          "type": "array",
+                          "items": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "FACE",
+                                "FINGER",
+                                "IRIS"
+                              ]
+                            }
+                          ],
+                          "minItems": 1,
+                          "maxItems": 1,
+                          "uniqueItems": true
+                        },
+                        "subtype": {
+                          "type": [
+                            "array",
+                            "null"
+                          ],
+                          "items": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "Right MiddleFinger",
+                                "Right IndexFinger",
+                                "Right LittleFinger",
+                                "Right RingFinger",
+                                "Right Thumb",
+                                "Left MiddleFinger",
+                                "Left IndexFinger",
+                                "Left LittleFinger",
+                                "Left RingFinger",
+                                "Left Thumb",
+                                "Right",
+                                "Left"
+                              ]
+                            }
+                          ],
+                          "minItems": 1,
+                          "maxItems": 1,
+                          "uniqueItems": true
+                        },
+                        "level": {
+                          "type": "string",
+                          "enum": [
+                            "RAW"
+                          ]
+                        },
+                        "purpose": {
+                          "type": "string",
+                          "enum": [
+                            "ENROLL",
+                            "IDENTIFY",
+                            "VERIFY",
+                            "ENROLLVERIFY",
+                            "ENROLLIDENTIFY",
+                            "AUDIT"
+                          ]
+                        },
+                        "quality": {
+                          "type": "object",
+                          "properties": {
+                            "algorithm": {
+                              "type": "object",
+                              "properties": {
+                                "organization": {
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "organization",
+                                "type"
+                              ]
+                            },
+                            "score": {
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "algorithm",
+                            "score"
+                          ]
+                        }
+                      },
+                      "allOf": [
+                        {
+                          "if": {
+                            "properties": {
+                              "type": {
+                                "contains": {
+                                  "type": "string",
+                                  "const": "Finger"
+                                }
+                              }
+                            }
+                          },
+                          "then": {
+                            "properties": {
+                              "subtype": {
+                                "type": "array",
+                                "items": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "Right RingFinger",
+                                      "Right MiddleFinger",
+                                      "Right LittleFinger",
+                                      "Right IndexFinger",
+                                      "Right Thumb",
+                                      "Left RingFinger",
+                                      "Left MiddleFinger",
+                                      "Left LittleFinger",
+                                      "Left IndexFinger",
+                                      "Left Thumb"
+                                    ]
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "format",
+                              "creationDate",
+                              "type",
+                              "subtype",
+                              "level",
+                              "purpose",
+                              "quality"
+                            ]
+                          }
+                        },
+                        {
+                          "if": {
+                            "properties": {
+                              "type": {
+                                "contains": {
+                                  "type": "string",
+                                  "const": "Iris"
+                                }
+                              }
+                            }
+                          },
+                          "then": {
+                            "properties": {
+                              "subtype": {
+                                "type": "array",
+                                "items": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "Left",
+                                      "Right"
+                                    ]
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "format",
+                              "creationDate",
+                              "type",
+                              "subtype",
+                              "level",
+                              "purpose",
+                              "quality"
+                            ]
+                          }
+                        },
+                        {
+                          "if": {
+                            "properties": {
+                              "type": {
+                                "contains": {
+                                  "type": "string",
+                                  "const": "Face"
+                                }
+                              }
+                            }
+                          },
+                          "then": {
+                            "properties": {
+                              "subtype": {
+                                "type": [
+                                  "array",
+                                  "null"
+                                ],
+                                "items": [
+                                  {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "enum": [
+                                      "Unknown"
+                                    ]
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "format",
+                              "creationDate",
+                              "type",
+                              "level",
+                              "purpose",
+                              "quality"
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    "bdb": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "items": {
+                        "type": "integer"
+                      }
+                    },
+                    "sb": {
+                      "type": [
+                        "array",
+                        "null"
+                      ],
+                      "items": {
+                        "type": [
+                          "integer"
+                        ]
+                      },
+                      "minItems": 1
+                    },
+                    "sbInfo": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "format": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "properties": {
+                            "organization": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            },
+                            "type": {
+                              "type": [
+                                "string",
+                                "null"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "organization",
+                            "type"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "version",
+                    "cbeffversion",
+                    "birInfo",
+                    "bdbInfo",
+                    "bdb",
+                    "sb",
+                    "sbInfo"
+                  ]
+                }
+              ]
+            },
+            "others": {
+              "type": "object"
+            }
+          },
+          "required": [
+            "version",
+            "cbeffversion",
+            "birInfo",
+            "segments",
+            "others"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "statusCode": {
+                "enum": [
+                  200,
+                  201,
+                  202,
+                  203,
+                  204,
+                  205,
+                  206,
+                  207,
+                  208,
+                  209,
+                  210,
+                  211,
+                  212,
+                  213,
+                  214,
+                  215,
+                  216,
+                  217,
+                  218,
+                  219,
+                  220,
+                  221,
+                  222,
+                  223,
+                  224,
+                  225,
+                  226,
+                  227,
+                  228,
+                  229,
+                  230,
+                  231,
+                  232,
+                  233,
+                  234,
+                  235,
+                  236,
+                  237,
+                  238,
+                  239,
+                  240,
+                  241,
+                  242,
+                  243,
+                  244,
+                  245,
+                  246,
+                  247,
+                  248,
+                  249,
+                  250,
+                  251,
+                  252,
+                  253,
+                  254,
+                  255,
+                  256,
+                  257,
+                  258,
+                  259,
+                  260,
+                  261,
+                  262,
+                  263,
+                  264,
+                  265,
+                  266,
+                  267,
+                  268,
+                  269,
+                  270,
+                  271,
+                  272,
+                  273,
+                  274,
+                  275,
+                  276,
+                  277,
+                  278,
+                  279,
+                  280,
+                  281,
+                  282,
+                  283,
+                  284,
+                  285,
+                  286,
+                  287,
+                  288,
+                  289,
+                  290,
+                  291,
+                  292,
+                  293,
+                  294,
+                  295,
+                  296,
+                  297,
+                  298,
+                  299
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "response": {
+                "type": [
+                  "object"
+                ],
+                "properties": {
+                  "segments": {
+                    "type": [
+                      "array"
+                    ],
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "response": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "properties": {
+                  "segments": {
+                    "type": [
+                      "array",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "required": [
+        "statusCode",
+        "statusMessage",
+        "response"
+      ]
+    },
+    "errors": {
+      "type": "array",
+      "items": {}
+    }
+  },
+  "required": [
+    "version",
+    "responsetime",
+    "response",
+    "errors"
+  ]
+}

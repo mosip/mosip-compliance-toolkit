@@ -1,0 +1,133 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema#",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/ErrorCaptureRequestSchema.json",
+	"title": "Error Capture Request Schema",
+	"description": "Error Capture Request Schema",
+	"type": "object",
+	"properties": {
+		"env": {
+			"type": "string",
+			"enum": [
+				"Staging",
+				"Developer",
+				"Pre-Production",
+				"Production"
+			]
+		},
+		"purpose": {
+			"type": "string",
+			"enum": [
+				"Auth",
+				"Registration"
+			]
+		},
+		"specVersion": {
+			"type": "string",
+			"enum": [
+				"0.9.5",
+				"1.0.0"
+			]
+		},
+		"timeout": {
+			"$ref": "#/definitions/non-empty-string",
+			"pattern": "[0-9]$"
+		},
+		"captureTime": {
+			"type": "string",
+			"format": "date-time",
+			"description": "We expect YYYY-MM-ddTHH:mm:SSZ"
+		},
+		"domainUri": {
+			"type": ["string", "null"]
+		},
+		"transactionId": {
+			"$ref": "#/definitions/non-empty-string"
+		},
+		"bio": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"type": {
+						"type": "string",
+						"enum": [
+							"Finger",
+							"Iris",
+							"Face"
+						]
+					},
+					"count": {
+						"type": "string"
+					},
+					"bioSubType": {
+						"type": "array",
+						"items": {
+							"type": [
+								"string",
+								"null"
+							]
+						},
+						"uniqueItems": true
+					},
+					"requestedScore": {
+						"type": "string",
+						"pattern": "^[0-9]+$",
+						"minLength": 1,
+						"maxLength": 3
+					},
+					"deviceId": {
+						"$ref": "#/definitions/non-empty-string"
+					},
+					"deviceSubId": {
+						"type": "string",
+						"enum": [
+							"0",
+							"1",
+							"2",
+							"3"
+						]
+					},
+					"previousHash": {
+						"type": "string"
+					}
+				},
+				"definitions": {
+					"non-empty-string": {
+						"type": "string",
+						"minLength": 1
+					}
+				}				
+			},
+			"required": [
+				"type",
+				"count",
+				"bioSubType",
+				"requestedScore",
+				"deviceId",
+				"deviceSubId",
+				"previousHash"
+			]
+		},
+		"customOpts": {
+			"type": [
+				"null",
+				"object"
+			]
+		}
+	},
+	"required": [
+		"env",
+		"purpose",
+		"specVersion",
+		"timeout",
+		"captureTime",
+		"transactionId",
+		"bio"
+	],
+	"definitions": {
+		"non-empty-string": {
+			"type": "string",
+			"minLength": 1
+		}
+	}
+}
