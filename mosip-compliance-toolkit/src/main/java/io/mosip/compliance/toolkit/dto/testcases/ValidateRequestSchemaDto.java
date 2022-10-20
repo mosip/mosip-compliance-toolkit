@@ -17,6 +17,8 @@ public class ValidateRequestSchemaDto implements Serializable {
 	
 	public String testName;
 
+	public String specVersion;
+
 	public String testDescription;
 	
 	public String requestSchema;

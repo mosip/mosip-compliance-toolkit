@@ -25,11 +25,16 @@ public class ResourceCacheService {
 	@Autowired
 	private ObjectStoreAdapter objectStore;
 
-	@Cacheable(cacheNames = "schemas", key = "{#type, #fileName}")
-	public String getSchema(String type, String fileName) throws IOException {
+	@Cacheable(cacheNames = "schemas", key = "{#type, #version, #fileName}")
+	public String getSchema(String type, String version, String fileName) throws IOException {
 		String schemaResponse = null;
 		String container = AppConstants.SCHEMAS.toLowerCase();
-		container += (Objects.nonNull(type) ? ("/" + type) : "");
+		if(Objects.nonNull(type) && Objects.nonNull(version)){
+			container += ("/" + type + "/" + version);
+		}
+		else{
+			container += "";
+		}
 		if (existsInObjectStore(container, fileName)) {
 			InputStream inputStream = getFromObjectStore(container, fileName);
 			if(Objects.nonNull(inputStream)) {				
@@ -47,10 +52,15 @@ public class ResourceCacheService {
 		return schemaResponse;
 	}
 
-	@CacheEvict(cacheNames = "schemas", key = "{#type, #fileName}")
-	public boolean putSchema(String type, String fileName, InputStream inputStream) {
+	@CacheEvict(cacheNames = "schemas", key = "{#type, #version #fileName}")
+	public boolean putSchema(String type, String version, String fileName, InputStream inputStream) {
 		String container = AppConstants.SCHEMAS.toLowerCase();
-		container += (Objects.nonNull(type) ? ("/" + type) : "");
+		if(Objects.nonNull(type) && Objects.nonNull(version)){
+			container += ("/" + type + "/" + version);
+		}
+		else{
+			container += "";
+		}
 		return putInObjectStore(container, fileName, inputStream);
 	}
 

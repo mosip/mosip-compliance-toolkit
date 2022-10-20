@@ -18,8 +18,8 @@ public class ResourceManagementController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getUploadResource())")
 	@PostMapping(value = "/uploadResourceFile")
-	public ResponseWrapper<Boolean> uploadResourceFile(@RequestParam(required = true) String type,
+	public ResponseWrapper<Boolean> uploadResourceFile(@RequestParam(required = true) String type, @RequestParam(required = true) String version,
 			@RequestParam("file") MultipartFile file) {
-		return resourceMgmtService.uploadResourceFile(type, file);
+		return resourceMgmtService.uploadResourceFile(type, version, file);
 	}
 }
