@@ -151,7 +151,7 @@ public class TestCasesService {
 		List<ServiceError> serviceErrorsList = new ArrayList<>();
 		ServiceError serviceError = null;
 		try {
-			String testCaseSchemaJson = this.getSchemaJson(null, "testcase_schema.json");
+			String testCaseSchemaJson = this.getSchemaJson(null, null,"testcase_schema.json");
 			if (isValidSbiTestCase(specVersion, purpose, deviceType, deviceSubType)) {
 				List<TestCaseEntity> testCaseEntities = testCaseCacheService.getSbiTestCases(AppConstants.SBI, specVersion);//testCasesRepository.findAllSbiTestCaseBySpecVersion(specVersion);
 				for (final TestCaseEntity testCaseEntity : testCaseEntities) {
@@ -218,7 +218,7 @@ public class TestCasesService {
 		List<ServiceError> serviceErrorsList = new ArrayList<>();
 		ServiceError serviceError = null;
 		try {
-			String testCaseSchemaJson = this.getSchemaJson(null, "testcase_schema.json");
+			String testCaseSchemaJson = this.getSchemaJson(null, null, "testcase_schema.json");
 			if (isValidSdkTestCase(specVersion, sdkPurpose)) {
 				List<TestCaseEntity> testCaseEntities = testCaseCacheService.getSdkTestCases(AppConstants.SDK, specVersion);//testCasesRepository.findAllSdkTestCaseBySpecVersion(specVersion);
 				for (final TestCaseEntity testCaseEntity : testCaseEntities) {
@@ -323,7 +323,7 @@ public class TestCasesService {
 		Map<String, String> savedValues = new HashMap<String, String>();
 
 		try {
-			String testCaseSchemaJson = this.getSchemaJson(null, "testcase_schema.json");
+			String testCaseSchemaJson = this.getSchemaJson(null, null, "testcase_schema.json");
 			for (TestCaseDto testCaseDto : values) {
 				// Do JSON Schema Validation
 				String jsonValue = objectMapper.writeValueAsString(testCaseDto);
@@ -390,11 +390,11 @@ public class TestCasesService {
 			String sourceJson = requestDto.getMethodRequest();
 			String testCaseSchemaJson = null;
 			if (requestDto.getTestCaseType().equalsIgnoreCase(AppConstants.SBI)) {
-				testCaseSchemaJson = this.getSchemaJson(AppConstants.SBI.toLowerCase(),
+				testCaseSchemaJson = this.getSchemaJson(AppConstants.SBI.toLowerCase(), requestDto.getSpecVersion(),
 						requestDto.getRequestSchema() + ".json");
 			}
 			if (requestDto.getTestCaseType().equalsIgnoreCase(AppConstants.SDK)) {
-				testCaseSchemaJson = this.getSchemaJson(AppConstants.SDK.toLowerCase(),
+				testCaseSchemaJson = this.getSchemaJson(AppConstants.SDK.toLowerCase(), requestDto.getSpecVersion(),
 						requestDto.getRequestSchema() + ".json");
 			}
 			resultDto = this.validateJsonWithSchema(sourceJson, testCaseSchemaJson);
@@ -530,9 +530,9 @@ private String base64Decode(String data) {
 		return new String(Base64.getDecoder().decode(data), StandardCharsets.UTF_8);
 	}
 	
-	public String getSchemaJson(String type, String fileName) throws Exception {
+	public String getSchemaJson(String type, String version, String fileName) throws Exception {
 		// Read File Content
-		String schemaResponse = resourceCacheService.getSchema(type, fileName);
+		String schemaResponse = resourceCacheService.getSchema(type, version, fileName);
 		if(Objects.nonNull(schemaResponse)) {
 			return schemaResponse;
 		}else {

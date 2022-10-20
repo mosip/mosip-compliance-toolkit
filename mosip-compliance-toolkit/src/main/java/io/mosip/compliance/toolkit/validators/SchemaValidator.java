@@ -21,7 +21,8 @@ public class SchemaValidator extends ToolkitValidator {
 		try {
 			String methodResponseJson = responseDto.getMethodResponse();
 			String type = responseDto.getTestCaseType().toLowerCase();
-			String responseSchemaJson = getSchemaJson(type, responseDto.getResponseSchema() + JSON_EXT);
+			String version = responseDto.getSpecVersion();
+			String responseSchemaJson = getSchemaJson(type, version, responseDto.getResponseSchema() + JSON_EXT);
 			return service.validateJsonWithSchema(methodResponseJson, responseSchemaJson);
 		} catch (Exception e) {
 			ValidationResultDto validationResultDto = new ValidationResultDto();
