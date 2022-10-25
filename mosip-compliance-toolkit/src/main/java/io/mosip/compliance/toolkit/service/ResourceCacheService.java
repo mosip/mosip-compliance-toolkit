@@ -47,6 +47,7 @@ public class ResourceCacheService {
 	                sb.append(str); 
 	            }
 	            schemaResponse = sb.toString();
+	            inputStream.close();
 			}
 		}
 		return schemaResponse;

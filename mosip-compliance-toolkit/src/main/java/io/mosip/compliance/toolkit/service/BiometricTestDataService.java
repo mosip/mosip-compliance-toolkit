@@ -2,12 +2,14 @@ package io.mosip.compliance.toolkit.service;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +39,11 @@ import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto.ValidatorDef;
 import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
 import io.mosip.compliance.toolkit.entity.TestCaseEntity;
+import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
+import io.mosip.compliance.toolkit.util.TestDataValidationUtil;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
@@ -63,7 +67,6 @@ public class BiometricTestDataService {
      */
 	@Autowired
     VirusScanner<Boolean, InputStream> virusScan;
-
     
 	@Value("$(mosip.toolkit.api.id.biometric.testdata.get)")
 	private String getBiometricTestDataId;
@@ -163,6 +166,21 @@ public class BiometricTestDataService {
 			if (Objects.nonNull(inputBiometricTestDataDto) && Objects.nonNull(file) && !file.isEmpty()
 					&& file.getSize() > 0) {
 
+				String purpose = inputBiometricTestDataDto.getPurpose();
+				SdkPurpose sdkPurpose = SdkPurpose.fromCode(purpose);
+				TestDataValidationUtil testDataValidationUtil = validateTestData(sdkPurpose.getCode(), file);
+				if (Objects.nonNull(testDataValidationUtil)) {
+					if (!testDataValidationUtil.getProbeFolders().isEmpty()) {
+						List<ServiceError> serviceErrorsList = new ArrayList<>();
+						ServiceError serviceError = new ServiceError();
+						serviceError.setErrorCode(ToolkitErrorCodes.TESTDATA_PROBES_MISSING.getErrorCode());
+						serviceError.setMessage(ToolkitErrorCodes.TESTDATA_PROBES_MISSING.getErrorMessage() + " - "
+								+ testDataValidationUtil.getProbeFolders());
+						serviceErrorsList.add(serviceError);
+						responseWrapper.setErrors(serviceErrorsList);
+					}
+				}
+
 				ObjectMapper mapper = objectMapperConfig.objectMapper();
 				BiometricTestDataEntity inputEntity = mapper.convertValue(inputBiometricTestDataDto,
 						BiometricTestDataEntity.class);
@@ -222,7 +240,17 @@ public class BiometricTestDataService {
 				serviceErrorsList.add(serviceError);
 				responseWrapper.setErrors(serviceErrorsList);
 			}
-		} catch (DataIntegrityViolationException ex) {
+		} catch (ToolkitException ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In addBiometricTestdata method of BiometricTestDataService - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ex.getErrorCode());
+			serviceError.setMessage(ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		}  catch (DataIntegrityViolationException ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In addBiometricTestdata method of BiometricTestDataService Service - " + ex.getMessage());
@@ -250,6 +278,92 @@ public class BiometricTestDataService {
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
+	}
+
+	private TestDataValidationUtil validateTestData(String purpose, MultipartFile file) throws IOException {
+		TestDataValidationUtil testDataValidation = new TestDataValidationUtil();
+		try {
+			testDataValidation.setPurpose(purpose);
+			List<TestCaseEntity> testcases = testCaseCacheService.getSdkTestCases(AppConstants.SDK,
+					sdkSampleTestdataSpecVer);
+			if (Objects.nonNull(testcases)) {
+				List<String> folders = new ArrayList<>();
+				List<String> probeFolders = new ArrayList<>();
+				for (TestCaseEntity testcase : testcases) {
+					String testcaseJson = testcase.getTestcaseJson();
+					TestCaseDto testCaseDto = objectMapperConfig.objectMapper().readValue(testcaseJson,
+							TestCaseDto.class);
+					if (!testCaseDto.getTestId().equals("SDK2000")
+							&& testCaseDto.getOtherAttributes().getSdkPurpose().contains(purpose)) {
+						String folderName = testCaseDto.getTestId();
+						folders.add(folderName);
+						probeFolders.add(folderName);
+						if (testCaseDto.getMethodName().size() > 1
+								&& testCaseDto.getMethodName().get(1).equals(MethodName.MATCH.getCode())) {
+							folderName += "/" + testCaseDto.getMethodName().get(1);
+							folders.add(folderName);
+							probeFolders.add(folderName);
+						}
+					}
+				}
+				testDataValidation.setFolders(folders);
+				testDataValidation.setProbeFolders(probeFolders);
+			}
+
+			if (testDataValidation.getFolders().size() == 0 || testDataValidation.getProbeFolders().size() == 0) {
+				throw new ToolkitException(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode(),
+						ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
+			}
+
+			if (Objects.nonNull(file)) {
+				InputStream zipFileIs = file.getInputStream();
+				ZipInputStream zis = new ZipInputStream(zipFileIs);
+				ZipEntry zipEntry = zis.getNextEntry();
+				if(!file.getOriginalFilename().endsWith(".zip") || Objects.isNull(zipEntry)) {
+					throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorCode(),
+							ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorMessage());
+				}
+				do {
+					String entryName = zipEntry.getName();
+					if (!entryName.startsWith(purpose)) {
+						throw new ToolkitException(ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode(),
+								ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorMessage() + " " + entryName);
+					} else {
+						entryName = entryName.replace(purpose + "/", "");
+					}
+					if (!entryName.isBlank()) {
+						if (zipEntry.isDirectory()) {
+							String testcaseId = entryName.substring(0, entryName.length() - 1);
+							if(testDataValidation.getFolders().contains(testcaseId)) {
+								testDataValidation.getFolders().remove(testcaseId);
+							}else {
+								throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorCode(),
+										ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorMessage() + " " + testcaseId);
+							}
+						} else if (entryName.endsWith("probe.xml")) {
+							String testcaseId = entryName.substring(entryName.indexOf("SDK"),
+									entryName.indexOf("probe.xml") - 1);
+							testDataValidation.getProbeFolders().remove(testcaseId);
+						}
+					}
+				}while ((zipEntry = zis.getNextEntry()) != null);
+			} else {
+				throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+						ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+			}
+			
+			if (testDataValidation.getFolders().isEmpty()) {
+				testDataValidation.setValidated(true);
+			} else {
+				throw new ToolkitException(ToolkitErrorCodes.TESTDATA_TESTCASE_MISSING.getErrorCode(),
+						ToolkitErrorCodes.TESTDATA_TESTCASE_MISSING.getErrorMessage() + " - "
+								+ testDataValidation.getFolders());
+			}
+		} catch (Exception ex) {			
+			throw new ToolkitException(ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode(),
+					ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorMessage() + " " + ex.getMessage());
+		}
+		return testDataValidation;
 	}
 
 	public ResponseWrapper<List<String>> getBioTestDataNames(String purpose) {
