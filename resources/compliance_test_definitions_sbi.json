@@ -103,7 +103,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Left Slab",
+		"testName": "Registration capture - Left Slap",
 		"testId": "SBI1002",
 		"specVersion": "0.9.5",
 		"testDescription": "This testcase is to check if Registration Capture for Left Slap from the device is valid or not.",
@@ -153,7 +153,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Left Slab - One Exception",
+		"testName": "Registration capture - Left Slap - One Exception",
 		"testId": "SBI1003",
 		"specVersion": "0.9.5",
 		"testDescription": "1. This testcase is to check if Registration Capture for Left Slap from the device is valid or not.<br> 2. Please place your left slap <b>except left ring finger</b> on the device. ",
@@ -204,7 +204,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Right Slab",
+		"testName": "Registration capture - Right Slap",
 		"testId": "SBI1004",
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Registration capture Request for Slap scanner type",
@@ -254,7 +254,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Right Slab - Two Exception",
+		"testName": "Registration capture - Right Slap - Two Exception",
 		"testId": "SBI1005",
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Registration capture Request for slap device type with right slap except right ring finger and right little finger",
@@ -635,7 +635,7 @@
 		"testName": "Registration capture - Exception Photo",
 		"testId": "SBI1013",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid Registration capture Request for Face device type exception value left little finger or any will give  Exception photo ",
+		"testDescription": "Valid Registration capture Request for Face device type exception value left little finger or any will give Exception photo ",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1055,7 +1055,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture -Key Rotation - Left Slab",
+		"testName": "Registration capture -Key Rotation - Left Slap",
 		"testId": "SBI1022",
 		"specVersion": "0.9.5",
 		"testDescription": "Key Rotation Registration capture Request for Slap scanner",
@@ -1852,10 +1852,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Face Registration capture - Timeout",
+		"testName": "Registration capture - Face - Timeout",
 		"testId": "SBI1040",
 		"specVersion": "0.9.5",
-		"testDescription": "Timeout for registration capture request for face",
+		"testDescription": "Timeout validation for registration capture request for face",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1871,11 +1871,16 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				},{
+					"name": "TimeoutValidator",
+					"description": "Validates if response is received within the given timeout period or not"
 				}
 			]
 		],
 		"otherAttributes": {
-			"timeout": "500",
 			"purpose": [
 				"Registration"
 			],
@@ -1890,7 +1895,414 @@
 			"requestedScore": "40",
 			"bioCount": "1",
 			"deviceSubId": "0",
-			"modalities": []
+			"timeout": "500"
+		}
+	},{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Double Iris - Timeout",
+		"testId": "SBI1041",
+		"specVersion": "0.9.5",
+		"testDescription": "Timeout validation for registration capture request for double iris",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				},{
+					"name": "TimeoutValidator",
+					"description": "Validates if response is received within the given timeout period or not"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Double"
+			],
+			"segments": [
+				"Left",
+				"Right"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "2",
+			"deviceSubId": "3",
+			"timeout": "500"
+		}
+	},{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Left Slap - Timeout",
+		"testId": "SBI1042",
+		"specVersion": "0.9.5",
+		"testDescription": "Timeout validation for registration capture request for Left Slap",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				},{
+					"name": "TimeoutValidator",
+					"description": "Validates if response is received within the given timeout period or not"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+				"LeftIndex",
+				"LeftMiddle",
+				"LeftRing",
+				"LeftLittle"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "4",
+			"deviceSubId": "1",
+			"timeout": "500"
+		}
+	},{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Right Slap - Timeout",
+		"testId": "SBI1043",
+		"specVersion": "0.9.5",
+		"testDescription": "Timeout validation for registration capture request for Right Slap",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				},{
+					"name": "TimeoutValidator",
+					"description": "Validates if response is received within the given timeout period or not"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+				"RightIndex",
+				"RightMiddle",
+				"RightRing",
+				"RightLittle"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "4",
+			"deviceSubId": "2",
+			"timeout": "500"
+		}
+	},{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Two Thumbs - Timeout",
+		"testId": "SBI1044",
+		"specVersion": "0.9.5",
+		"testDescription": "Timeout validation for registration capture request for Two Thumbs",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				},{
+					"name": "TimeoutValidator",
+					"description": "Validates if response is received within the given timeout period or not"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+				"RightThumb",
+				"LeftThumb"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "2",
+			"deviceSubId": "3",
+			"timeout": "500"
+		}
+	},{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Exception Photo - Timeout",
+		"testId": "SBI1045",
+		"specVersion": "0.9.5",
+		"testDescription": "Timeout validation for Face device type exception value left little finger or any will give Exception photo ",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				},{
+					"name": "TimeoutValidator",
+					"description": "Validates if response is received within the given timeout period or not"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Face"
+			],
+			"deviceSubTypes": [
+				"Full face"
+			],
+			"segments": [],
+			"exceptions": [
+				"LeftLittle"
+			],
+			"requestedScore": "10",
+			"bioCount": "1",
+			"deviceSubId": "0",
+			"timeout": "500"
+		}
+	},{
+		"testCaseType": "SBI",
+		"testName": "Auth capture - Face - Timeout",
+		"testId": "SBI1046",
+		"specVersion": "0.9.5",
+		"testDescription": "Timeout validation for Auth capture Request only for Face",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				},{
+					"name": "TimeoutValidator",
+					"description": "Validates if response is received within the given timeout period or not"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Face"
+			],
+			"deviceSubTypes": [
+				"Full face"
+			],
+			"segments": [],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0",
+			"timeout": "500"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Auth capture - Single Iris - Unknown Iris - Timeout",
+		"testId": "SBI1047",
+		"specVersion": "0.9.5",
+		"testDescription": "Timeout validation for Auth capture Request for Unknown iris",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				},{
+					"name": "TimeoutValidator",
+					"description": "Validates if response is received within the given timeout period or not"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Single"
+			],
+			"segments": [
+				"UNKNOWN"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0",
+			"timeout": "500"
+		}
+	},{
+		"testCaseType": "SBI",
+		"testName": "Auth capture - Unknown Finger - Timeout",
+		"testId": "SBI1048",
+		"specVersion": "0.9.5",
+		"testDescription": "Timeout validation for Auth capture Request for Unknown Finger",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates if response signature is valid or not"
+				},{
+					"name": "TimeoutValidator",
+					"description": "Validates if response is received within the given timeout period or not"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Single"
+			],
+			"segments": [
+				"UNKNOWN"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0",
+			"timeout": "500"
 		}
 	}
 ]
