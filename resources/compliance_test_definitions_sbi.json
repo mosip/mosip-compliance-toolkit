@@ -4,7 +4,7 @@
 		"testName": "Discover device",
 		"testId": "SBI1000",
 		"specVersion": "0.9.5",
-		"testDescription": "This testcase will perform device discovery for the selected device.",
+		"testDescription": "Test to perform validation for the device discovery interface",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"device"
@@ -19,11 +19,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -55,7 +55,7 @@
 		"testName": "Device Info",
 		"testId": "SBI1001",
 		"specVersion": "0.9.5",
-		"testDescription": "This testcase will validate the device info for the selected device including trust validation.",
+		"testDescription": "Test to perform validation for the device info interface",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"info"
@@ -70,11 +70,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -106,7 +106,7 @@
 		"testName": "Registration capture - Left Slap",
 		"testId": "SBI1002",
 		"specVersion": "0.9.5",
-		"testDescription": "This testcase is to check if Registration Capture for Left Slap from the device is valid or not.",
+		"testDescription": "Test to validate the RCapture interface for Left Slap Fingerprints<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left slap on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -121,11 +121,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -156,7 +156,7 @@
 		"testName": "Registration capture - Left Slap - One Exception",
 		"testId": "SBI1003",
 		"specVersion": "0.9.5",
-		"testDescription": "1. This testcase is to check if Registration Capture for Left Slap from the device is valid or not.<br> 2. Please place your left slap <b>except left ring finger</b> on the device. ",
+		"testDescription": "Test to validate RCapture interface for Left Slap Fingerprints with one missing finger<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left slap on the device except the left index finger until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -171,11 +171,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -207,7 +207,7 @@
 		"testName": "Registration capture - Right Slap",
 		"testId": "SBI1004",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid Registration capture Request for Slap scanner type",
+		"testDescription": "Test to validate RCapture interface for Right Slap Fingerprints<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your right slap on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -222,11 +222,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -257,7 +257,7 @@
 		"testName": "Registration capture - Right Slap - Two Exception",
 		"testId": "SBI1005",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid Registration capture Request for slap device type with right slap except right ring finger and right little finger",
+		"testDescription": "Test to validate RCapture interface for Right Slap Fingerprints with two missing fingers<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your right slap on the device except the right ring and little finger until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -272,11 +272,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -308,7 +308,7 @@
 		"testName": "Registration capture - Two Thumbs",
 		"testId": "SBI1006",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid Registration capture Request for Slap scanner type",
+		"testDescription": "Test to validate RCapture interface for Two Thumbs<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place both your thumbs on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -323,11 +323,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -356,7 +356,7 @@
 		"testName": "Registration capture - Two Thumbs - One Exception",
 		"testId": "SBI1007",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid Registration capture Request for slap device type with two thumbs except left thumb finger",
+		"testDescription": "Test to validate RCapture interface for Two Thumbs with one missing thumb<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place only the right thumb on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -371,11 +371,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -405,7 +405,7 @@
 		"testName": "Registration capture - Two Thumbs - Both Exception",
 		"testId": "SBI1008",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid Registration capture Request for slap device type with two thumbs except right thumb finger and left thumb finger ",
+		"testDescription": "Test to validate RCapture interface for Two Thumbs when both the thumbs are missing<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot press any finger or thumb on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -420,7 +420,7 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				}
 			]
 		],
@@ -449,7 +449,7 @@
 		"testName": "Registration capture - Double Iris",
 		"testId": "SBI1009",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid Registration capture Request",
+		"testDescription": "Test to validate RCapture interface for Two Iris<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place both your iris on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -464,11 +464,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -497,7 +497,7 @@
 		"testName": "Registration capture - Double Iris - One Exception",
 		"testId": "SBI1010",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid Registration capture Request for Double iris device type except left iris ",
+		"testDescription": "Test to validate RCapture interface for iris with one missing iris<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place only the right iris on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -512,11 +512,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -546,7 +546,7 @@
 		"testName": "Registration capture - Double Iris - Both Exception",
 		"testId": "SBI1011",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid Registration capture Request for Double iris device type except left iris and right iris ",
+		"testDescription": "Test to validate RCapture interface for iris when both iris are missing<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place any iris on the device during capture",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -561,7 +561,7 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				}
 			]
 		],
@@ -590,7 +590,7 @@
 		"testName": "Registration capture - Face",
 		"testId": "SBI1012",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid Registration capture Request only for Face",
+		"testDescription": "Test to validate RCapture interface for face<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your face infornt of the camera until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -605,11 +605,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -635,7 +635,7 @@
 		"testName": "Registration capture - Exception Photo",
 		"testId": "SBI1013",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid Registration capture Request for Face device type exception value left little finger or any will give Exception photo ",
+		"testDescription": "Test to validate RCapture interface for exception photo<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Raise your hands during capture",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -650,11 +650,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -682,7 +682,7 @@
 		"testName": "Auth capture - Face",
 		"testId": "SBI1014",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid Auth capture Request only for Face",
+		"testDescription": "Test to validate Capture interface for face<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your face infornt of the camera until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -697,11 +697,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -727,7 +727,7 @@
 		"testName": "Auth capture - Single Iris - Unknown Iris",
 		"testId": "SBI1015",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid Auth capture Request for Unknown iris",
+		"testDescription": "Test to validate Capture interface for a single iris<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place one of your iris infornt of the iris scanner",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -742,11 +742,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -774,7 +774,7 @@
 		"testName": "Auth capture - Single Iris - Left Iris",
 		"testId": "SBI1016",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid Auth capture Request for Left iris",
+		"testDescription": "Test to validate Capture interface for left iris<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left iris infornt of the iris scanner",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -789,11 +789,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -821,7 +821,7 @@
 		"testName": "Auth capture - Single Iris - Right Iris",
 		"testId": "SBI1017",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid Auth capture Request for Right iris",
+		"testDescription": "Test to validate Capture interface for right iris<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your right iris infornt of the iris scanner",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -836,11 +836,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -868,7 +868,7 @@
 		"testName": "Auth capture - Unknown Finger",
 		"testId": "SBI1018",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid Auth capture Request for Unknown Finger",
+		"testDescription": "Test to validate Capture interface for a finger<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place one of your finger on the single fingerprint scanner",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -883,11 +883,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -915,7 +915,7 @@
 		"testName": "Auth capture -Two Unknown Finger",
 		"testId": "SBI1019",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid Auth capture Request for Two Unknown Finger",
+		"testDescription": "Test to validate Capture interface for two fingers<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place two fingers, one by one on the fingerprint scanner",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -930,11 +930,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -963,7 +963,7 @@
 		"testName": "Auth capture - LeftIndex Finger",
 		"testId": "SBI1020",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid Auth capture Request for LeftIndex Finger",
+		"testDescription": "Test to validate Capture interface for left index finger<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left index finger on the fingerprint scanner",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -978,11 +978,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -1010,7 +1010,7 @@
 		"testName": "Auth capture - Two Finger",
 		"testId": "SBI1021",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid Auth capture Request for Two Finger",
+		"testDescription": "Test to validate Capture interface for two fingers<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place two fingers, one by one on the fingerprint scanner",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -1025,11 +1025,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -1055,7 +1055,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture -Key Rotation - Left Slap",
+		"testName": "Registration capture - Key Rotation - Left Slap",
 		"testId": "SBI1022",
 		"specVersion": "0.9.5",
 		"testDescription": "Key Rotation Registration capture Request for Slap scanner",
@@ -1101,7 +1101,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Auth capture -Key Rotation - Single Iris - Left Iris",
+		"testName": "Auth capture - Key Rotation - Single Iris - Left Iris",
 		"testId": "SBI1023",
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Key Rotation Request for Left iris",
@@ -1144,7 +1144,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Auth capture -Key Rotation - LeftIndex Finger",
+		"testName": "Auth capture - Key Rotation - LeftIndex Finger",
 		"testId": "SBI1024",
 		"specVersion": "0.9.5",
 		"testDescription": "Key Rotation Auth capture Request for LeftIndex Finger",
@@ -1190,7 +1190,7 @@
 		"testName": "Auth capture - Face",
 		"testId": "SBI1025",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid Auth capture Request only for Face",
+		"testDescription": "Test to validate Capture interface for face<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place face infornt of the camera during capture",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -1231,7 +1231,7 @@
 		"testName": "Device Info - Ready",
 		"testId": "SBI1026",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid DeviceInfo Ready Status",
+		"testDescription": "Test to validate Device Info interface for a device that is in Ready state<br>Steps:<br>1. Make sure the device placed is in Ready state",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"info"
@@ -1246,11 +1246,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -1282,7 +1282,7 @@
 		"testName": "Check Device Status - Busy",
 		"testId": "SBI1027",
 		"specVersion": "0.9.5",
-		"testDescription": "Checks the device to test for <b>Busy</b> status. <br>Initiate Busy status by invoking appropriate API, then click on <b>Resume</b> button.<br> After testcase execution is done, revert the device status and click on <b>Resume Next</b> button.",
+		"testDescription": "Test to validate if the device is in Busy state<br>Steps:<br>1. Make sure the device placed is in Busy state",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"info"
@@ -1297,11 +1297,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -1335,7 +1335,7 @@
 		"testName": "Check Device Status - Not Ready",
 		"testId": "SBI1028",
 		"specVersion": "0.9.5",
-		"testDescription": "Disconnect the device to test for <b>Not Ready</b> status. <br> Once disconnected , click on <b>Resume</b> button.<br> After testcase execution is done, re-connect the device and click on <b>Resume Next</b> button.",
+		"testDescription": "Test to validate if the device is in Not Ready state<br>Steps:<br>1. <b>Disconnect</b> the device<br>2. Click on </b>Resume</b> button<br>3. After test execution is done, re-connect the device and click on <b>Resume Next</b> button",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"info"
@@ -1350,7 +1350,7 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				}
 			]
 		],
@@ -1384,7 +1384,7 @@
 		"testName": "Check Device Status - Not Registered",
 		"testId": "SBI1029",
 		"specVersion": "0.9.5",
-		"testDescription": "Valid DeviceInfo Not Registered Status",
+		"testDescription": "Test to validate if the device is in Not Registered state<br>Steps:<br>1. De-register the device and clikc on <b>Resume</b> button",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"info"
@@ -1399,11 +1399,11 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
 					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
+					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -1432,10 +1432,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Auth capture - Bio count - Mismatch",
+		"testName": "Auth capture - Fingerprint - Bio Count Mismatch",
 		"testId": "SBI1030",
 		"specVersion": "0.9.5",
-		"testDescription": "Bio Count mismatch auth capture request for Finger",
+		"testDescription": "Test to validate bio count mismatch for auth fingerprint device<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your finger on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -1450,7 +1450,7 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				}
 			]
 		],
@@ -1474,10 +1474,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Auth capture - Bio count - Mismatch",
+		"testName": "Auth capture - Iris - Bio Count Mismatch",
 		"testId": "SBI1031",
 		"specVersion": "0.9.5",
-		"testDescription": "Bio Count mismatch auth capture request for Iris",
+		"testDescription": "Test to validate bio count mismatch for auth iris device<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your iris on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -1492,7 +1492,7 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				}
 			]
 		],
@@ -1516,10 +1516,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Auth capture - Bio count - Mismatch",
+		"testName": "Auth capture - Face - Bio Count Mismatch",
 		"testId": "SBI1032",
 		"specVersion": "0.9.5",
-		"testDescription": "Bio Count mismatch auth capture request for face",
+		"testDescription": "Test to validate bio count mismatch for face<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your face infront of the camera until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -1534,7 +1534,7 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				}
 			]
 		],
@@ -1558,10 +1558,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Left Slap - Bio count - Mismatch",
+		"testName": "Registration capture - Left Slap - Bio Count Mismatch",
 		"testId": "SBI1033",
 		"specVersion": "0.9.5",
-		"testDescription": "Bio Count mismatch registration capture request for Finger Left Slap",
+		"testDescription": "Test to validate bio count mismatch for registration left slap<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left slap on the slap scanner until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1576,7 +1576,7 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				}
 			]
 		],
@@ -1600,10 +1600,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Right Slap - Bio count - Mismatch",
+		"testName": "Registration capture - Right Slap - Bio Count Mismatch",
 		"testId": "SBI1034",
 		"specVersion": "0.9.5",
-		"testDescription": "Bio Count mismatch registration capture request for Finger Right Slap",
+		"testDescription": "Test to validate bio count mismatch for registration right slap<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your right slap on the slap scanner until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1618,7 +1618,7 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				}
 			]
 		],
@@ -1642,10 +1642,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Two Thumbs - Bio count - Mismatch",
+		"testName": "Registration capture - Two Thumbs - Bio Count Mismatch",
 		"testId": "SBI1035",
 		"specVersion": "0.9.5",
-		"testDescription": "Bio Count mismatch registration capture request for Finger Two Thumbs",
+		"testDescription": "Test to validate bio count mismatch for registration thumbs<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your thumbs on the slap scanner until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1660,7 +1660,7 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				}
 			]
 		],
@@ -1684,10 +1684,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Left - Bio count - Mismatch",
+		"testName": "Registration capture - Left iris - Bio Count Mismatch",
 		"testId": "SBI1036",
 		"specVersion": "0.9.5",
-		"testDescription": "Bio Count mismatch registration capture request for Left Iris",
+		"testDescription": "Test to validate bio count mismatch for registration left iris<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left iris on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1702,7 +1702,7 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				}
 			]
 		],
@@ -1726,10 +1726,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Right - Bio count - Mismatch",
+		"testName": "Registration capture - Right Iris - Bio Count Mismatch",
 		"testId": "SBI1037",
 		"specVersion": "0.9.5",
-		"testDescription": "Bio Count mismatch registration capture request for Right Iris",
+		"testDescription": "Test to validate bio count mismatch for registration right iris<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your right iris on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1744,7 +1744,7 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				}
 			]
 		],
@@ -1768,10 +1768,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Both Iris - Bio count - Mismatch",
+		"testName": "Registration capture - Both Iris - Bio Count Mismatch",
 		"testId": "SBI1038",
 		"specVersion": "0.9.5",
-		"testDescription": "Bio Count mismatch registration capture request for Both iris",
+		"testDescription": "Test to validate bio count mismatch for registration both iris<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place both your iris on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1786,7 +1786,7 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				}
 			]
 		],
@@ -1810,10 +1810,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Bio count - Mismatch",
+		"testName": "Registration capture - Face - Bio Count Mismatch",
 		"testId": "SBI1039",
 		"specVersion": "0.9.5",
-		"testDescription": "Bio Count mismatch registration capture request for face",
+		"testDescription": "Test to validate bio count mismatch for registration face<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your face infront of the camera until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1828,7 +1828,7 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
+					"description": "Validates the response for mandatory attributes and correct values"
 				}
 			]
 		],
@@ -1855,7 +1855,7 @@
 		"testName": "Registration capture - Face - Timeout",
 		"testId": "SBI1040",
 		"specVersion": "0.9.5",
-		"testDescription": "Timeout validation for registration capture request for face",
+		"testDescription": "Test to validate face timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your face infornt of the camera and wait for capture to timeout",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1870,8 +1870,9 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},{
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
 				}
@@ -1894,12 +1895,13 @@
 			"deviceSubId": "0",
 			"timeout": "500"
 		}
-	},{
+	},
+	{
 		"testCaseType": "SBI",
 		"testName": "Registration capture - Double Iris - Timeout",
 		"testId": "SBI1041",
 		"specVersion": "0.9.5",
-		"testDescription": "Timeout validation for registration capture request for double iris",
+		"testDescription": "Test to validate iris timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your iris on the iris scanner and wait for capture to timeout",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1914,8 +1916,9 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},{
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
 				}
@@ -1941,12 +1944,13 @@
 			"deviceSubId": "3",
 			"timeout": "500"
 		}
-	},{
+	},
+	{
 		"testCaseType": "SBI",
 		"testName": "Registration capture - Left Slap - Timeout",
 		"testId": "SBI1042",
 		"specVersion": "0.9.5",
-		"testDescription": "Timeout validation for registration capture request for Left Slap",
+		"testDescription": "Test to validate left slap timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your fingers on the slap scanner and wait for capture to timeout",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1961,8 +1965,9 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},{
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
 				}
@@ -1990,12 +1995,13 @@
 			"deviceSubId": "1",
 			"timeout": "500"
 		}
-	},{
+	},
+	{
 		"testCaseType": "SBI",
 		"testName": "Registration capture - Right Slap - Timeout",
 		"testId": "SBI1043",
 		"specVersion": "0.9.5",
-		"testDescription": "Timeout validation for registration capture request for Right Slap",
+		"testDescription": "Test to validate right slap timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your fingers on the slap scanner and wait for capture to timeout",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2010,8 +2016,9 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},{
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
 				}
@@ -2039,12 +2046,13 @@
 			"deviceSubId": "2",
 			"timeout": "500"
 		}
-	},{
+	},
+	{
 		"testCaseType": "SBI",
 		"testName": "Registration capture - Two Thumbs - Timeout",
 		"testId": "SBI1044",
 		"specVersion": "0.9.5",
-		"testDescription": "Timeout validation for registration capture request for Two Thumbs",
+		"testDescription": "Test to validate thumb timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your fingers on the slap scanner and wait for capture to timeout",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2059,8 +2067,9 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},{
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
 				}
@@ -2086,12 +2095,13 @@
 			"deviceSubId": "3",
 			"timeout": "500"
 		}
-	},{
+	},
+	{
 		"testCaseType": "SBI",
 		"testName": "Registration capture - Exception Photo - Timeout",
 		"testId": "SBI1045",
 		"specVersion": "0.9.5",
-		"testDescription": "Timeout validation for Face device type exception value left little finger or any will give Exception photo ",
+		"testDescription": "Test to validate exception photo timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your face infornt of the camera and wait for capture to timeout",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2106,8 +2116,9 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},{
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
 				}
@@ -2132,12 +2143,13 @@
 			"deviceSubId": "0",
 			"timeout": "500"
 		}
-	},{
+	},
+	{
 		"testCaseType": "SBI",
 		"testName": "Auth capture - Face - Timeout",
 		"testId": "SBI1046",
 		"specVersion": "0.9.5",
-		"testDescription": "Timeout validation for Auth capture Request only for Face",
+		"testDescription": "Test to validate face timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your face infornt of the camera and wait for capture to timeout",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -2152,8 +2164,9 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},{
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
 				}
@@ -2182,7 +2195,7 @@
 		"testName": "Auth capture - Single Iris - Unknown Iris - Timeout",
 		"testId": "SBI1047",
 		"specVersion": "0.9.5",
-		"testDescription": "Timeout validation for Auth capture Request for Unknown iris",
+		"testDescription": "Test to validate iris timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your iris on ths iris scanner and wait for capture to timeout",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -2197,8 +2210,9 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},{
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
 				}
@@ -2223,12 +2237,13 @@
 			"deviceSubId": "0",
 			"timeout": "500"
 		}
-	},{
+	},
+	{
 		"testCaseType": "SBI",
 		"testName": "Auth capture - Unknown Finger - Timeout",
 		"testId": "SBI1048",
 		"specVersion": "0.9.5",
-		"testDescription": "Timeout validation for Auth capture Request for Unknown Finger",
+		"testDescription": "Test to validate finger timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your finger on the finger scanner and wait for capture to timeout",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -2243,8 +2258,9 @@
 			[
 				{
 					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},{
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
 				}
