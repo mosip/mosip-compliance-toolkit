@@ -1872,9 +1872,6 @@
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
 				},{
-					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
-				},{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
 				}
@@ -1911,17 +1908,13 @@
 			"RegistrationCaptureRequestSchema"
 		],
 		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
+			"ErrorCaptureResponseSchema"
 		],
 		"validatorDefs": [
 			[
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
 				},{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
@@ -1962,17 +1955,13 @@
 			"RegistrationCaptureRequestSchema"
 		],
 		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
+			"ErrorCaptureResponseSchema"
 		],
 		"validatorDefs": [
 			[
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
 				},{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
@@ -2015,17 +2004,13 @@
 			"RegistrationCaptureRequestSchema"
 		],
 		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
+			"ErrorCaptureResponseSchema"
 		],
 		"validatorDefs": [
 			[
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
 				},{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
@@ -2068,17 +2053,13 @@
 			"RegistrationCaptureRequestSchema"
 		],
 		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
+			"ErrorCaptureResponseSchema"
 		],
 		"validatorDefs": [
 			[
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
 				},{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
@@ -2119,17 +2100,13 @@
 			"RegistrationCaptureRequestSchema"
 		],
 		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
+			"ErrorCaptureResponseSchema"
 		],
 		"validatorDefs": [
 			[
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
 				},{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
@@ -2169,17 +2146,13 @@
 			"AuthCaptureRequestSchema"
 		],
 		"responseSchema": [
-			"AuthCaptureResponseSchema"
+			"ErrorCaptureResponseSchema"
 		],
 		"validatorDefs": [
 			[
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
 				},{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
@@ -2218,17 +2191,13 @@
 			"AuthCaptureRequestSchema"
 		],
 		"responseSchema": [
-			"AuthCaptureResponseSchema"
+			"ErrorCaptureResponseSchema"
 		],
 		"validatorDefs": [
 			[
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
 				},{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
@@ -2268,17 +2237,13 @@
 			"AuthCaptureRequestSchema"
 		],
 		"responseSchema": [
-			"AuthCaptureResponseSchema"
+			"ErrorCaptureResponseSchema"
 		],
 		"validatorDefs": [
 			[
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates if response signature is valid or not"
 				},{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
