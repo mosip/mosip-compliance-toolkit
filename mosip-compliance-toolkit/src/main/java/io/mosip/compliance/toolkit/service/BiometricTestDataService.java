@@ -322,7 +322,7 @@ public class BiometricTestDataService {
 						String folderName = testCaseDto.getTestId();
 						folders.add(folderName);
 						probeFolders.add(folderName);
-						if(testCaseDto.getOtherAttributes().getSdkPurpose().equals(SdkPurpose.MATCHER.getCode())) {
+						if(testCaseDto.getOtherAttributes().getSdkPurpose().contains(SdkPurpose.MATCHER.getCode())) {
 							galleryFolders.add(folderName);
 						}
 						if (testCaseDto.getMethodName().size() > 1
