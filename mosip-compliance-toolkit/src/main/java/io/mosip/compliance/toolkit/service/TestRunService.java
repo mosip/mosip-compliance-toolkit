@@ -117,8 +117,6 @@ public class TestRunService {
 					entity.setDelTime(null);
 					TestRunEntity outputEntity = testRunRepository.save(entity);
 
-					//archiveTestRuns(inputTestRun.getCollectionId());
-
 					testRun = mapper.convertValue(outputEntity, TestRunDto.class);
 					log.info("outputEntity" + outputEntity);
 				} else {
@@ -153,21 +151,6 @@ public class TestRunService {
 		responseWrapper.setResponse(testRun);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
-	}
-
-	public void archiveTestRuns(String collectionId) {
-		List<String> runIdList = testRunRepository.getRunIdsWithOffset(collectionId, archiveOffset, getPartnerId());
-		if (Objects.nonNull(runIdList) && runIdList.size() > 0) {
-			for (String runId : runIdList) {
-				try {
-					testRunArchiveService.archiveTestRun(runId);
-				} catch (Exception ex) {
-					log.debug("sessionId", "idType", "id", ex.getStackTrace());
-					log.error("sessionId", "idType", "id",
-							"In archiveTestRun method of TestRunService Service - " + ex.getMessage());
-				}
-			}
-		}
 	}
 
 	public ResponseWrapper<TestRunDto> updateTestRunExecutionTime(TestRunDto inputTestRun) {
