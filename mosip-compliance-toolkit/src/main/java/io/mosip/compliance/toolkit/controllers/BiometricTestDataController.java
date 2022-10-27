@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
+import io.mosip.compliance.toolkit.dto.AddBioTestDataResponseDto;
 import io.mosip.compliance.toolkit.dto.BiometricTestDataDto;
 import io.mosip.compliance.toolkit.service.BiometricTestDataService;
 import io.mosip.compliance.toolkit.util.DataValidationUtil;
@@ -50,7 +51,7 @@ public class BiometricTestDataController {
 
 	@PostMapping(value = "/addBiometricTestData", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE,
 			MediaType.APPLICATION_JSON_VALUE })
-	public ResponseWrapper<BiometricTestDataDto> addBiometricTestData(@RequestParam("file") MultipartFile file,
+	public ResponseWrapper<AddBioTestDataResponseDto> addBiometricTestData(@RequestParam("file") MultipartFile file,
 			@RequestPart("biometricMetaData") String strRequestWrapper, Errors errors) {
 		try {
 			RequestWrapper<BiometricTestDataDto> requestWrapper = objectMapperConfig.objectMapper()
@@ -61,7 +62,7 @@ public class BiometricTestDataController {
 			DataValidationUtil.validate(errors, BIOMETRIC_TESTDATA_POST_ID);
 			return biometricTestDataService.addBiometricTestdata(requestWrapper.getRequest(), file);
 		} catch (Exception ex) {
-			ResponseWrapper<BiometricTestDataDto> responseWrapper = new ResponseWrapper<>();
+			ResponseWrapper<AddBioTestDataResponseDto> responseWrapper = new ResponseWrapper<>();
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
 			ServiceError serviceError = new ServiceError();
 			serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode());

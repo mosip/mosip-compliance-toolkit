@@ -5,6 +5,7 @@ import io.mosip.commons.khazana.dto.ObjectDto;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.SdkPurpose;
+import io.mosip.compliance.toolkit.dto.AddBioTestDataResponseDto;
 import io.mosip.compliance.toolkit.dto.BiometricTestDataDto;
 import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
@@ -142,7 +143,7 @@ public class BiometricTestDataServiceTest {
      */
     @Test
     public void addBiometricTestdataTest() throws IOException {
-        ResponseWrapper<BiometricTestDataDto> response = new ResponseWrapper<>();
+        ResponseWrapper<AddBioTestDataResponseDto> response = new ResponseWrapper<>();
         BiometricTestDataDto biometricTestDataDto= new BiometricTestDataDto();
         FileInputStream inputFile = new FileInputStream( "src/test/java/io/mosip/compliance/toolkit/testFile.txt");
         MockMultipartFile file = new MockMultipartFile("file", "NameOfTheFile", "multipart/form-data", inputFile);

@@ -72,9 +72,8 @@ public enum ToolkitErrorCodes {
 	INVALID_METHOD_NAME("TOOLKIT_VALIDATION_ERR_004", "Invalid MethodName"),
 	
 	TESTDATA_WRONG_PURPOSE("TOOLKIT_TESTDATA_ERR_001", "Testdata has wrong purpose"),
-	TESTDATA_TESTCASE_MISSING("TOOLKIT_TESTDATA_ERR_002", "Testcases are missing in testdata"),
+	TESTDATA_INVALID_GALLERY("TOOLKIT_TESTDATA_ERR_002", "Testdata has invalid gallery file "),
 	TESTDATA_STRUCTURE_ERROR("TOOLKIT_TESTDATA_ERR_003", "Testdata folder structure error"),
-	TESTDATA_PROBES_MISSING("TOOLKIT_TESTDATA_WARN_001", "Testdata probe xml/s missing in testcase folder"),
 	TESTDATA_INVALID_FOLDER("TOOLKIT_TESTDATA_ERR_004", "Testdata has invalid folder"),
 	TESTDATA_INVALID_FILE("TOOLKIT_TESTDATA_ERR_005", "Testdata file is invalid"),
 	TESTDATA_VALIDATION_UNSUCCESSFULL("TOOLKIT_TESTDATA_ERR_006", "Testdata validation failed."),
