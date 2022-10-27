@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -14,7 +15,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import org.assertj.core.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -304,7 +304,7 @@ public class BiometricTestDataService {
 			for (int i = 1; i <= Integer.valueOf(maxAllowedGalleryFiles); i++) {
 				validGalleryXmls.add(GALLERY + i + DOT_XML);
 			}
-			List<Object> ignoreTestcaseList = Arrays.asList(ignoreTestcases.split(","));
+			List<String> ignoreTestcaseList = Arrays.asList(ignoreTestcases.split(","));
 			testDataValidation.setPurpose(purpose);
 			List<TestCaseEntity> testcases = testCaseCacheService.getSdkTestCases(AppConstants.SDK,
 					sdkSampleTestdataSpecVer);
@@ -478,7 +478,7 @@ public class BiometricTestDataService {
 				BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
 				ZipOutputStream zipOutputStream = new ZipOutputStream(bufferedOutputStream);
 
-				List<Object> ignoreTestcaseList = Arrays.asList(ignoreTestcases.split(","));
+				List<String> ignoreTestcaseList = Arrays.asList(ignoreTestcases.split(","));
 				
 				for (final TestCaseEntity testCaseEntity : testCaseEntities) {
 					String testcaseJson = testCaseEntity.getTestcaseJson();
