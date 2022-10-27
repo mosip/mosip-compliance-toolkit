@@ -347,6 +347,7 @@ public class BiometricTestDataService {
 				InputStream zipFileIs = file.getInputStream();
 				ZipInputStream zis = new ZipInputStream(zipFileIs);
 				ZipEntry zipEntry = zis.getNextEntry();
+				
 				if(!file.getOriginalFilename().endsWith(ZIP_EXT) || Objects.isNull(zipEntry)) {
 					throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorCode(),
 							ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorMessage());
