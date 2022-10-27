@@ -175,7 +175,6 @@ public class BiometricTestDataService {
 			MultipartFile file) {
 		ResponseWrapper<AddBioTestDataResponseDto> responseWrapper = new ResponseWrapper<>();
 		AddBioTestDataResponseDto addBioTestDataResponseDto = null;
-		//BiometricTestDataDto biometricTestData = null;
 		try {
 		    if (scanDocument) {
                 isVirusScanSuccess(file);
