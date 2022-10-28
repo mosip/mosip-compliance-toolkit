@@ -46,6 +46,7 @@ import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
 import io.mosip.compliance.toolkit.entity.TestCaseEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
+import io.mosip.compliance.toolkit.util.CryptoUtil;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
@@ -186,12 +187,15 @@ public class BiometricTestDataService {
 				SdkPurpose sdkPurpose = SdkPurpose.fromCode(purpose);
 				TestDataValidationDto testDataValidation = validateTestData(sdkPurpose.getCode(), file);
 
+				String encodedHash = CryptoUtil.getEncodedHash(file.getBytes());
+				
 				ObjectMapper mapper = objectMapperConfig.objectMapper();
 				BiometricTestDataEntity inputEntity = mapper.convertValue(inputBiometricTestDataDto,
 						BiometricTestDataEntity.class);
 				inputEntity.setId(RandomIdGenerator.generateUUID("btd", "", 36));
 				inputEntity.setPartnerId(getPartnerId());
 				inputEntity.setFileId(file.getOriginalFilename());
+				inputEntity.setFileHash(encodedHash);
 				inputEntity.setCrBy(getUserBy());
 				inputEntity.setCrDate(LocalDateTime.now());
 				inputEntity.setUpBy(null);

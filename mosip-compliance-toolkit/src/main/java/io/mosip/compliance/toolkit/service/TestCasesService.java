@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,10 +64,12 @@ import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResponseDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidatorDefDto;
+import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
 import io.mosip.compliance.toolkit.entity.TestCaseEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
 import io.mosip.compliance.toolkit.repository.TestCasesRepository;
+import io.mosip.compliance.toolkit.util.CryptoUtil;
 import io.mosip.compliance.toolkit.validators.BaseValidator;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
@@ -721,17 +725,34 @@ private String base64Decode(String data) {
 	}
 
 	private InputStream getPartnerTestDataStream(SdkRequestDto requestDto, 
-			String partnerId, SdkPurpose sdkPurpose) {
+			String partnerId, SdkPurpose sdkPurpose) throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
 		InputStream objectStoreStream = null;
 		if (Objects.nonNull(requestDto.getBioTestDataName())
 				&& !requestDto.getBioTestDataName().equals(AppConstants.MOSIP_DEFAULT)) {
-			String zipFileName = biometricTestDataRepository
+			BiometricTestDataEntity biometricTestData = biometricTestDataRepository
 					.findFileIdByTestDataName(requestDto.getBioTestDataName(), partnerId);
+			String zipFileName = biometricTestData.getFileId();
+			String zipFileHash = biometricTestData.getFileHash();
 			if (Objects.nonNull(zipFileName)) {
 				String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/"
 						+ sdkPurpose.getCode();
 				if (isObjectExistInObjectStore(container, zipFileName)) {
 					objectStoreStream = getFromObjectStore(container, zipFileName);
+					if (Objects.nonNull(objectStoreStream)) {
+						ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+						int nRead;
+						byte[] data = new byte[16384];
+						while ((nRead = objectStoreStream.read(data, 0, data.length)) != -1) {
+							buffer.write(data, 0, nRead);
+						}
+						byte[] bytes = buffer.toByteArray();
+						objectStoreStream.reset();
+						String encodedHash = CryptoUtil.getEncodedHash(bytes);
+						if(Objects.isNull(encodedHash) || !encodedHash.equals(zipFileHash)) {
+							objectStoreStream.close();
+							objectStoreStream = null;
+						}
+					}
 				}
 			}
 		}
