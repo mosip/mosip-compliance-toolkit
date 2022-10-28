@@ -2244,6 +2244,7 @@
 		"testName": "Finger segment good quality",
 		"testDescription": "Finger segment good quality",
 		"isNegativeTestcase": false,
+		"inactive": true,
 		"methodName": [
 			"segment"
 		],
@@ -2281,6 +2282,7 @@
 		"testName": "Face segment good quality",
 		"testDescription": "Face segment good quality",
 		"isNegativeTestcase": false,
+		"inactive": true,
 		"methodName": [
 			"segment"
 		],
@@ -2318,6 +2320,7 @@
 		"testName": "Iris segment good quality",
 		"testDescription": "Iris segment good quality",
 		"isNegativeTestcase": false,
+		"inactive": true,
 		"methodName": [
 			"segment"
 		],
@@ -2355,6 +2358,7 @@
 		"testName": "Finger segment invalid data failure",
 		"testDescription": "Finger segment invalid data failure",
 		"isNegativeTestcase": false,
+		"inactive": true,
 		"methodName": [
 			"segment"
 		],
@@ -2392,6 +2396,7 @@
 		"testName": "Face segment invalid data failure",
 		"testDescription": "Face segment invalid data failure",
 		"isNegativeTestcase": false,
+		"inactive": true,
 		"methodName": [
 			"segment"
 		],
@@ -2429,6 +2434,7 @@
 		"testName": "Iris segment invalid data failure",
 		"testDescription": "Iris segment invalid data failure",
 		"isNegativeTestcase": false,
+		"inactive": true,
 		"methodName": [
 			"segment"
 		],
@@ -2466,6 +2472,7 @@
 		"testName": "Finger segment no input failure",
 		"testDescription": "Finger segment no input failure",
 		"isNegativeTestcase": false,
+		"inactive": true,
 		"methodName": [
 			"segment"
 		],
@@ -2503,6 +2510,7 @@
 		"testName": "Face segment no input failure",
 		"testDescription": "Face segment no input failure",
 		"isNegativeTestcase": false,
+		"inactive": true,
 		"methodName": [
 			"segment"
 		],
@@ -2540,6 +2548,7 @@
 		"testName": "Iris segment no input failure",
 		"testDescription": "Iris segment no input failure",
 		"isNegativeTestcase": false,
+		"inactive": true,
 		"methodName": [
 			"segment"
 		],
