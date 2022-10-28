@@ -25,8 +25,6 @@ public class TimeoutValidator extends SBIValidator {
             LocalDateTime startLocalDateTime = getLocalDate(startExecutionTime);
             LocalDateTime endLocalDateTime = getLocalDate(endExecutionTime);
             long diff = Duration.between(startLocalDateTime, endLocalDateTime).toMillis();
-            //add extra time of 10 seconds
-            timeout = timeout + 10000;
             if (diff >= timeout) {
                 validationResultDto.setStatus(AppConstants.SUCCESS);
                 validationResultDto.setDescription("Timeout validation is successful");
