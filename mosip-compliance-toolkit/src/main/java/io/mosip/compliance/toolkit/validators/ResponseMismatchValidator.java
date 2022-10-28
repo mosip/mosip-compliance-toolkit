@@ -39,17 +39,14 @@ public class ResponseMismatchValidator extends ToolkitValidator {
                     ObjectNode.class);
             JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
             JsonNode arrBioNodes = captureInfoRequest.get(BIO);
-            String reqType = null;
             int reqCount = -1;
             List<String> reqBioSubtype = null;
             List<String> reqException = null;
-            String reqRequestedScore = null;
             String reqPurpose = captureInfoRequest.get(PURPOSE).asText();
             String resPurpose = null;
             String reqDeviceSubId = null;
             if (!arrBioNodes.isNull() && arrBioNodes.isArray()) {
                 JsonNode biometricNode = arrBioNodes.get(0);
-                reqType = biometricNode.get(TYPE).textValue();
                 reqCount = biometricNode.get(COUNT).asInt();
                 reqBioSubtype = new ArrayList<>();
                 JsonNode bioSubTypeNode = biometricNode.get(BIO_SUBTYPE);
@@ -66,7 +63,6 @@ public class ResponseMismatchValidator extends ToolkitValidator {
                     }
                 }
                 reqDeviceSubId = biometricNode.get(DEVICE_SUBID).textValue();
-                reqRequestedScore = biometricNode.get(REQUESTED_SCORE).textValue();
             }else{
                 errorCode = ToolkitErrorCodes.INVALID_TEST_CASE_JSON;
                 throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
