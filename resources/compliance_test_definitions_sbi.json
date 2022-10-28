@@ -1060,6 +1060,7 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Key Rotation Registration capture Request for Slap scanner",
 		"isNegativeTestcase": false,
+		"inactive": true,
 		"methodName": [
 			"rcapture"
 		],
@@ -1106,6 +1107,7 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Valid Auth capture Key Rotation Request for Left iris",
 		"isNegativeTestcase": false,
+		"inactive": true,
 		"methodName": [
 			"capture"
 		],
@@ -1149,6 +1151,7 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Key Rotation Auth capture Request for LeftIndex Finger",
 		"isNegativeTestcase": false,
+		"inactive": true,
 		"methodName": [
 			"capture"
 		],
@@ -1187,11 +1190,12 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Auth capture - Face",
+		"testName": "Auth capture - Face - Key Rotation",
 		"testId": "SBI1025",
 		"specVersion": "0.9.5",
 		"testDescription": "Test to validate Capture interface for face<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place face infornt of the camera during capture",
 		"isNegativeTestcase": false,
+		"inactive": true,
 		"methodName": [
 			"capture"
 		],

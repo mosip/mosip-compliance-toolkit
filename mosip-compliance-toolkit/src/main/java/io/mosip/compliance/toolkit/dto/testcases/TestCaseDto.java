@@ -24,6 +24,8 @@ public class TestCaseDto implements Serializable {
 	public String testDescription;
 	@JsonProperty("isNegativeTestcase")
 	public boolean isNegativeTestcase;
+	@JsonProperty("inactive")
+    public boolean inactive;
 	public List<String> methodName;
 	public List<String> requestSchema;
 	public List<String> responseSchema;

@@ -159,7 +159,7 @@ public class TestCasesService {
 					if (AppConstants.SUCCESS
 							.equals(this.validateJsonWithSchema(testcaseJson, testCaseSchemaJson).getStatus())) {
 						TestCaseDto testCaseDto = objectMapper.readValue(testcaseJson, TestCaseDto.class);
-						if (testCaseDto.getSpecVersion() != null && testCaseDto.getSpecVersion().equals(specVersion)
+						if (!testCaseDto.isInactive() && testCaseDto.getSpecVersion() != null && testCaseDto.getSpecVersion().equals(specVersion)
 								&& testCaseDto.getOtherAttributes().getPurpose().contains(purpose)
 								&& testCaseDto.getOtherAttributes().getBiometricTypes().contains(deviceType)
 								&& testCaseDto.getOtherAttributes().getDeviceSubTypes().contains(deviceSubType)) {
@@ -226,7 +226,7 @@ public class TestCasesService {
 					if (AppConstants.SUCCESS
 							.equals(this.validateJsonWithSchema(testcaseJson, testCaseSchemaJson).getStatus())) {
 						TestCaseDto testCaseDto = objectMapper.readValue(testcaseJson, TestCaseDto.class);
-						if (testCaseDto.getSpecVersion() != null && testCaseDto.getSpecVersion().equals(specVersion)
+						if (!testCaseDto.isInactive() && testCaseDto.getSpecVersion() != null && testCaseDto.getSpecVersion().equals(specVersion)
 								&& testCaseDto.getOtherAttributes().getSdkPurpose().contains(sdkPurpose)) {
 							testCases.add(testCaseDto);
 						}
