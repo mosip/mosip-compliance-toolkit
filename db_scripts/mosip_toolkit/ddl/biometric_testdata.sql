@@ -27,8 +27,8 @@ COMMENT ON COLUMN toolkit.biometric_testdata.name IS 'Name: name of the biometri
 COMMENT ON COLUMN toolkit.biometric_testdata.type IS 'Type: typeof project SDK or ABIS.';
 COMMENT ON COLUMN toolkit.biometric_testdata.purpose IS 'Purpose: the purpose of the biometric test data.';
 COMMENT ON COLUMN toolkit.biometric_testdata.partner_id IS 'Partner Id: partner id who has created this project.';
-COMMENT ON COLUMN toolkit.biometric_testdata.file_id IS 'File Id: File name of the biometric test data.';
-COMMENT ON COLUMN toolkit.biometric_testdata.file_hash IS 'File Hash: SHA256 file hash of the biometric test data.';
+COMMENT ON COLUMN toolkit.biometric_testdata.file_id IS 'File Id: Name of the biometric test data file.';
+COMMENT ON COLUMN toolkit.biometric_testdata.file_hash IS 'File Hash: Encoded SHA256 hash of the biometric test data file.';
 COMMENT ON COLUMN toolkit.biometric_testdata.cr_by IS 'Created By : ID or name of the user who create / insert record.';
 COMMENT ON COLUMN toolkit.biometric_testdata.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
 COMMENT ON COLUMN toolkit.biometric_testdata.upd_by IS 'Updated By : ID or name of the user who update the record with new values';
