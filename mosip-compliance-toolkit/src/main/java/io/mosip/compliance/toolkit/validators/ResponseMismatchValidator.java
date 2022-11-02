@@ -11,19 +11,19 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.mosip.compliance.toolkit.constants.DeviceSubIds;
+
 @Component
 public class ResponseMismatchValidator extends ToolkitValidator {
+
     public static final String BIOMETRICS = "biometrics";
     public static final String BIO = "bio";
-    public static final String DECODED_DATA = "decodedData";
     public static final String DATA_DECODED = "dataDecoded";
     public static final String PURPOSE = "purpose";
-    public static final String TYPE = "type";
     public static final String COUNT = "count";
     public static final String BIO_TYPE = "bioType";
     public static final String BIO_SUBTYPE = "bioSubType";
     public static final String EXCEPTION = "exception";
-    public static final String REQUESTED_SCORE = "requestedScore";
     public static final String DEVICE_SUBID = "deviceSubId";
 
     @Override
@@ -81,7 +81,7 @@ public class ResponseMismatchValidator extends ToolkitValidator {
                         if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
 
                             String resType = dataNode.get(BIO_TYPE).asText();
-                            String resBioSubType = dataNode.get(BIO_SUBTYPE).asText();
+                            String resBioSubType = (resType.equals(DeviceTypes.FACE.getCode()))? null : dataNode.get(BIO_SUBTYPE).asText();
                             //Check Segment mismatch
                             validationResultDto = isValidSegment(resType, reqDeviceSubId, resBioSubType);
                             if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
@@ -202,7 +202,7 @@ public class ResponseMismatchValidator extends ToolkitValidator {
         try {
             switch (DeviceTypes.fromCode(resType)) {
                 case FINGER:
-                    switch (DeviceSubIds.fromCode(reqDeviceSubId)) {
+                    switch (DeviceSubIds.DeviceSubIdsFinger.fromCode(reqDeviceSubId)) {
                         case FINGER_SINGLE:
                             switch (BioSubTypes.fromCode(resBioSubType)) {
                                 case LEFT_INDEXFINGER:
@@ -253,7 +253,7 @@ public class ResponseMismatchValidator extends ToolkitValidator {
                             throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
                     }
                 case IRIS:
-                    switch (DeviceSubIds.fromCode(reqDeviceSubId)) {
+                    switch (DeviceSubIds.DeviceSubIdsIris.fromCode(reqDeviceSubId)) {
                         case IRIS_SINGLE:
                             switch (BioSubTypes.fromCode(resBioSubType)) {
                                 case LEFT:
@@ -264,15 +264,19 @@ public class ResponseMismatchValidator extends ToolkitValidator {
                                     return false;
                             }
                         case IRIS_DOUBLE_LEFT:
-                            if (BioSubTypes.fromCode(resBioSubType) == BioSubTypes.LEFT) {
-                                return true;
+                            switch (BioSubTypes.fromCode(resBioSubType)) {
+                                case LEFT:
+                                    return true;
+                                default:
+                                    return false;
                             }
-                            return false;
                         case IRIS_DOUBLE_RIGHT:
-                            if (BioSubTypes.fromCode(resBioSubType) == BioSubTypes.RIGHT) {
-                                return true;
+                            switch (BioSubTypes.fromCode(resBioSubType)) {
+                                case RIGHT:
+                                    return true;
+                                default:
+                                    return false;
                             }
-                            return false;
                         case IRIS_DOUBLE_BOTH:
                             switch (BioSubTypes.fromCode(resBioSubType)) {
                                 case LEFT:
@@ -286,7 +290,7 @@ public class ResponseMismatchValidator extends ToolkitValidator {
                             throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
                     }
                 case FACE:
-                    switch (DeviceSubIds.fromCode(reqDeviceSubId)) {
+                    switch (DeviceSubIds.DeviceSubIdsFace.fromCode(reqDeviceSubId)) {
                         case FACE_SINGLE:
                             return true;
                         default:
