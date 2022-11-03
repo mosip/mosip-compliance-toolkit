@@ -37,17 +37,19 @@ public class ResponseMismatchValidator extends ToolkitValidator {
                     ObjectNode.class);
             ObjectNode captureInfoRequest = (ObjectNode) objectMapperConfig.objectMapper().readValue(requestJson,
                     ObjectNode.class);
-            JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
-            JsonNode arrBioNodes = captureInfoRequest.get(BIO);
-            int reqCount = -1;
+            JsonNode respBiometricNodesArr = captureInfoResponse.get(BIOMETRICS);
+            JsonNode reqBiometricNodesArr = captureInfoRequest.get(BIO);
+
+            int reqBioCount = -1;
             List<String> reqBioSubtype = null;
             List<String> reqException = null;
             String reqPurpose = captureInfoRequest.get(PURPOSE).asText();
             String resPurpose = null;
             String reqDeviceSubId = null;
-            if (!arrBioNodes.isNull() && arrBioNodes.isArray()) {
-                JsonNode biometricNode = arrBioNodes.get(0);
-                reqCount = biometricNode.get(COUNT).asInt();
+
+            if (!reqBiometricNodesArr.isNull() && reqBiometricNodesArr.isArray()) {
+                JsonNode biometricNode = reqBiometricNodesArr.get(0);
+                reqBioCount = biometricNode.get(COUNT).asInt();
                 reqBioSubtype = new ArrayList<>();
                 JsonNode bioSubTypeNode = biometricNode.get(BIO_SUBTYPE);
                 if (bioSubTypeNode.isArray()) {
@@ -68,24 +70,25 @@ public class ResponseMismatchValidator extends ToolkitValidator {
                 throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
             }
 
-            if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
-                int resCount = arrBiometricNodes.size();
-                //Check Biocount mismatch
-                validationResultDto = isValidBioCount(reqCount, resCount);
+            if (!respBiometricNodesArr.isNull() && respBiometricNodesArr.isArray()) {
+                int resCount = respBiometricNodesArr.size();
+                // Check Biocount mismatch
+                validationResultDto = isValidBioCount(reqBioCount, resCount);
                 if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
-                    for (final JsonNode biometricNode : arrBiometricNodes) {
+                    for (final JsonNode biometricNode : respBiometricNodesArr) {
                         JsonNode dataNode = biometricNode.get(DATA_DECODED);
-                        //Check Purpose mismatch
+                        // Check Purpose mismatch
                         resPurpose = dataNode.get(PURPOSE).textValue();
                         validationResultDto = isValidPurpose(reqPurpose, resPurpose);
                         if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
 
                             String resType = dataNode.get(BIO_TYPE).asText();
-                            String resBioSubType = (resType.equals(DeviceTypes.FACE.getCode())) ? null : dataNode.get(BIO_SUBTYPE).asText();
-                            //Check Segment mismatch
+                            String resBioSubType = (resType.equals(DeviceTypes.FACE.getCode())) ? null
+                                    : dataNode.get(BIO_SUBTYPE).asText();
+                            // Check Segment mismatch
                             validationResultDto = isValidSegment(resType, reqDeviceSubId, resBioSubType);
                             if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
-                                //Check Exception mismatch
+                                // Check Exception mismatch
                                 if (isValidException(reqException, resBioSubType).getStatus()
                                         .equals(AppConstants.SUCCESS)) {
                                     continue;
@@ -101,10 +104,18 @@ public class ResponseMismatchValidator extends ToolkitValidator {
                     }
                 }
             }
+            if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
+                validationResultDto.setDescription(
+                        "The bioCount, segments and exceptions in response match the request.");
+            }
+        } catch (ToolkitException e) {
+            validationResultDto.setStatus(AppConstants.FAILURE);
+            validationResultDto.setDescription(
+                    "ResponseMismatchValidator failure, " + "with Message, " + e.getLocalizedMessage());
         } catch (Exception e) {
             validationResultDto.setStatus(AppConstants.FAILURE);
             validationResultDto.setDescription(
-                    "ResponseMismatchValidator failure - " + "with Message - " + e.getLocalizedMessage());
+                    "ResponseMismatchValidator failure, " + "with Message, " + e.getLocalizedMessage());
         }
         return validationResultDto;
     }
@@ -116,196 +127,160 @@ public class ResponseMismatchValidator extends ToolkitValidator {
             validationResultDto.setStatus(AppConstants.SUCCESS);
         } else {
             validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription("ResponseMismatchValidator failure - " + "with Message - "
-                    + " mismatch request count = " + reqCount + " and response count = " + resCount);
+            validationResultDto.setDescription("ResponseMismatchValidator failure, " + "with Message, "
+                    + " mismatch request bio count = " + reqCount + " and response bio count = " + resCount);
         }
         return validationResultDto;
     }
 
-    private ValidationResultDto isValidPurpose(String reqPurpose, String resPurpose) {
+    private ValidationResultDto isValidPurpose(String reqPurpose, String resPurpose) throws Exception {
         ValidationResultDto validationResultDto = new ValidationResultDto();
         validationResultDto.setStatus(AppConstants.SUCCESS);
-        try {
-            if (Purposes.fromCode(reqPurpose) == Purposes.fromCode(resPurpose)) {
-                validationResultDto.setStatus(AppConstants.SUCCESS);
-            } else {
-                validationResultDto.setStatus(AppConstants.FAILURE);
-                validationResultDto.setDescription("ResponseMismatchValidator failure - " + "with Message - "
-                        + " mismatch request purpose = " + reqPurpose + " and response purpose = " + resPurpose);
-            }
-        } catch (ToolkitException e) {
+        if (Purposes.fromCode(reqPurpose) == Purposes.fromCode(resPurpose)) {
+            validationResultDto.setStatus(AppConstants.SUCCESS);
+        } else {
             validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription(
-                    "ResponseMismatchValidator failure - " + "with Message - " + e.getLocalizedMessage());
-        } catch (Exception e) {
-            validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription(
-                    "ResponseMismatchValidator failure - " + "with Message - " + e.getLocalizedMessage());
+            validationResultDto.setDescription("ResponseMismatchValidator failure, " + "with Message, "
+                    + " mismatch request purpose = " + reqPurpose + " and response purpose = " + resPurpose);
         }
+
         return validationResultDto;
     }
 
     private ValidationResultDto isValidSegment(String resType, String reqDeviceSubId,
-                                               String resBioSubType) {
+            String resBioSubType) throws Exception {
         ValidationResultDto validationResultDto = new ValidationResultDto();
         validationResultDto.setStatus(AppConstants.SUCCESS);
-        try {
-            if (isValidBioSubType(resType, reqDeviceSubId, resBioSubType)) {
-                validationResultDto.setStatus(AppConstants.SUCCESS);
-            } else {
-                validationResultDto.setStatus(AppConstants.FAILURE);
-                validationResultDto.setDescription(
-                        "ResponseMismatchValidator failure - " + "with Message - invalid Response BioSubType for Response Type ");
-            }
-        } catch (ToolkitException e) {
+        if (isValidBioSubType(resType, reqDeviceSubId, resBioSubType)) {
+            validationResultDto.setStatus(AppConstants.SUCCESS);
+        } else {
             validationResultDto.setStatus(AppConstants.FAILURE);
             validationResultDto.setDescription(
-                    "ResponseMismatchValidator failure - " + "with Message - " + e.getLocalizedMessage());
-        } catch (Exception e) {
-            validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription(
-                    "ResponseMismatchValidator failure - " + "with Message - " + e.getLocalizedMessage());
+                    "ResponseMismatchValidator failure, "
+                            + "with Message, invalid Response BioSubType for Response Type ");
         }
         return validationResultDto;
     }
 
-    private ValidationResultDto isValidException(List<String> reqException, String resBioSubType) {
+    private ValidationResultDto isValidException(List<String> reqException, String resBioSubType) throws Exception {
         ValidationResultDto validationResultDto = new ValidationResultDto();
         validationResultDto.setStatus(AppConstants.SUCCESS);
-        try {
-            if (!reqException.isEmpty()) {
-                for (String exception : reqException) {
-                    if (resBioSubType.equals(exception)) {
-                        validationResultDto.setStatus(AppConstants.FAILURE);
-                        validationResultDto.setDescription(
-                                "ResponseMismatchValidator failure - " + "with Message - exception biosubtype = " + resBioSubType + " not valid");
-                        break;
-                    }
+        if (!reqException.isEmpty()) {
+            for (String exception : reqException) {
+                if (resBioSubType.equals(exception)) {
+                    validationResultDto.setStatus(AppConstants.FAILURE);
+                    validationResultDto.setDescription(
+                            "ResponseMismatchValidator failure, " + "with Message, exception biosubtype = "
+                                    + resBioSubType + " not valid");
+                    break;
                 }
             }
-        } catch (ToolkitException e) {
-            validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription(
-                    "ResponseMismatchValidator failure - " + "with Message - " + e.getLocalizedMessage());
-        } catch (Exception e) {
-            validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription(
-                    "ResponseMismatchValidator failure - " + "with Message - " + e.getLocalizedMessage());
         }
         return validationResultDto;
     }
 
-    private boolean isValidBioSubType(String resType, String reqDeviceSubId, String resBioSubType) {
+    private boolean isValidBioSubType(String resType, String reqDeviceSubId, String resBioSubType) throws Exception {
         ToolkitErrorCodes errorCode = null;
-        // finger 123 LEFT
-        ValidationResultDto validationResultDto = new ValidationResultDto();
-        try {
-            switch (DeviceTypes.fromCode(resType)) {
-                case FINGER:
-                    switch (DeviceSubIds.DeviceSubIdsFinger.fromCode(reqDeviceSubId)) {
-                        case FINGER_SINGLE:
-                            switch (BioSubTypes.fromCode(resBioSubType)) {
-                                case LEFT_INDEXFINGER:
-                                case LEFT_MIDDLEFINGER:
-                                case LEFT_RINGFINGER:
-                                case LEFT_LITTLEFINGER:
-                                case RIGHT_INDEXFINGER:
-                                case RIGHT_MIDDLEFINGER:
-                                case RIGHT_RINGFINGER:
-                                case RIGHT_LITTLEFINGER:
-                                case LEFT_THUMB:
-                                case RIGHT_THUMB:
-                                case UNKNOWN:
-                                    return true;
-                                default:
-                                    return false;
-                            }
-                        case FINGER_SLAP_LEFT:
-                            switch (BioSubTypes.fromCode(resBioSubType)) {
-                                case LEFT_INDEXFINGER:
-                                case LEFT_MIDDLEFINGER:
-                                case LEFT_RINGFINGER:
-                                case LEFT_LITTLEFINGER:
-                                    return true;
-                                default:
-                                    return false;
-                            }
-                        case FINGER_SLAP_RIGHT:
-                            switch (BioSubTypes.fromCode(resBioSubType)) {
-                                case RIGHT_INDEXFINGER:
-                                case RIGHT_MIDDLEFINGER:
-                                case RIGHT_RINGFINGER:
-                                case RIGHT_LITTLEFINGER:
-                                    return true;
-                                default:
-                                    return false;
-                            }
-                        case FINGER_SLAP_TWO_THUMBS:
-                            switch (BioSubTypes.fromCode(resBioSubType)) {
-                                case LEFT_THUMB:
-                                case RIGHT_THUMB:
-                                    return true;
-                                default:
-                                    return false;
-                            }
-                        default:
-                            errorCode = ToolkitErrorCodes.INVALID_DEVICE_TYPE;
-                            throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
-                    }
-                case IRIS:
-                    switch (DeviceSubIds.DeviceSubIdsIris.fromCode(reqDeviceSubId)) {
-                        case IRIS_SINGLE:
-                            switch (BioSubTypes.fromCode(resBioSubType)) {
-                                case LEFT:
-                                case RIGHT:
-                                case UNKNOWN:
-                                    return true;
-                                default:
-                                    return false;
-                            }
-                        case IRIS_DOUBLE_LEFT:
-                            switch (BioSubTypes.fromCode(resBioSubType)) {
-                                case LEFT:
-                                    return true;
-                                default:
-                                    return false;
-                            }
-                        case IRIS_DOUBLE_RIGHT:
-                            switch (BioSubTypes.fromCode(resBioSubType)) {
-                                case RIGHT:
-                                    return true;
-                                default:
-                                    return false;
-                            }
-                        case IRIS_DOUBLE_BOTH:
-                            switch (BioSubTypes.fromCode(resBioSubType)) {
-                                case LEFT:
-                                case RIGHT:
-                                    return true;
-                                default:
-                                    return false;
-                            }
-                        default:
-                            errorCode = ToolkitErrorCodes.INVALID_DEVICE_TYPE;
-                            throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
-                    }
-                case FACE:
-                    switch (DeviceSubIds.DeviceSubIdsFace.fromCode(reqDeviceSubId)) {
-                        case FACE_SINGLE:
-                            return true;
-                        default:
-                            errorCode = ToolkitErrorCodes.INVALID_DEVICE_TYPE;
-                            throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
-                    }
-                default:
-                    errorCode = ToolkitErrorCodes.INVALID_DEVICE_TYPE;
-                    throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
-            }
-        } catch (Exception e) {
-            validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription(
-                    "ResponseMismatchValidator failure - " + "with Message - " + e.getLocalizedMessage());
+        switch (DeviceTypes.fromCode(resType)) {
+            case FINGER:
+                switch (DeviceSubIds.DeviceSubIdsFinger.fromCode(reqDeviceSubId)) {
+                    case FINGER_SINGLE:
+                        switch (BioSubTypes.fromCode(resBioSubType)) {
+                            case LEFT_INDEXFINGER:
+                            case LEFT_MIDDLEFINGER:
+                            case LEFT_RINGFINGER:
+                            case LEFT_LITTLEFINGER:
+                            case RIGHT_INDEXFINGER:
+                            case RIGHT_MIDDLEFINGER:
+                            case RIGHT_RINGFINGER:
+                            case RIGHT_LITTLEFINGER:
+                            case LEFT_THUMB:
+                            case RIGHT_THUMB:
+                            case UNKNOWN:
+                                return true;
+                            default:
+                                return false;
+                        }
+                    case FINGER_SLAP_LEFT:
+                        switch (BioSubTypes.fromCode(resBioSubType)) {
+                            case LEFT_INDEXFINGER:
+                            case LEFT_MIDDLEFINGER:
+                            case LEFT_RINGFINGER:
+                            case LEFT_LITTLEFINGER:
+                                return true;
+                            default:
+                                return false;
+                        }
+                    case FINGER_SLAP_RIGHT:
+                        switch (BioSubTypes.fromCode(resBioSubType)) {
+                            case RIGHT_INDEXFINGER:
+                            case RIGHT_MIDDLEFINGER:
+                            case RIGHT_RINGFINGER:
+                            case RIGHT_LITTLEFINGER:
+                                return true;
+                            default:
+                                return false;
+                        }
+                    case FINGER_SLAP_TWO_THUMBS:
+                        switch (BioSubTypes.fromCode(resBioSubType)) {
+                            case LEFT_THUMB:
+                            case RIGHT_THUMB:
+                                return true;
+                            default:
+                                return false;
+                        }
+                    default:
+                        errorCode = ToolkitErrorCodes.INVALID_DEVICE_TYPE;
+                        throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
+                }
+            case IRIS:
+                switch (DeviceSubIds.DeviceSubIdsIris.fromCode(reqDeviceSubId)) {
+                    case IRIS_SINGLE:
+                        switch (BioSubTypes.fromCode(resBioSubType)) {
+                            case LEFT:
+                            case RIGHT:
+                            case UNKNOWN:
+                                return true;
+                            default:
+                                return false;
+                        }
+                    case IRIS_DOUBLE_LEFT:
+                        switch (BioSubTypes.fromCode(resBioSubType)) {
+                            case LEFT:
+                                return true;
+                            default:
+                                return false;
+                        }
+                    case IRIS_DOUBLE_RIGHT:
+                        switch (BioSubTypes.fromCode(resBioSubType)) {
+                            case RIGHT:
+                                return true;
+                            default:
+                                return false;
+                        }
+                    case IRIS_DOUBLE_BOTH:
+                        switch (BioSubTypes.fromCode(resBioSubType)) {
+                            case LEFT:
+                            case RIGHT:
+                                return true;
+                            default:
+                                return false;
+                        }
+                    default:
+                        errorCode = ToolkitErrorCodes.INVALID_DEVICE_TYPE;
+                        throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
+                }
+            case FACE:
+                switch (DeviceSubIds.DeviceSubIdsFace.fromCode(reqDeviceSubId)) {
+                    case FACE_SINGLE:
+                        return true;
+                    default:
+                        errorCode = ToolkitErrorCodes.INVALID_DEVICE_TYPE;
+                        throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
+                }
+            default:
+                errorCode = ToolkitErrorCodes.INVALID_DEVICE_TYPE;
+                throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
         }
-        return false;
     }
 }
