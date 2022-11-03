@@ -729,8 +729,8 @@ private String base64Decode(String data) {
 		return probeFileBytes;
 	}
 
-	private InputStream getPartnerTestDataStream(SdkRequestDto requestDto, String partnerId, SdkPurpose sdkPurpose)
-			throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
+	private InputStream getPartnerTestDataStream(SdkRequestDto requestDto, 
+			String partnerId, SdkPurpose sdkPurpose) throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
 		InputStream objectStoreStream = null;
 		if (Objects.nonNull(requestDto.getBioTestDataName())
 				&& !requestDto.getBioTestDataName().equals(AppConstants.MOSIP_DEFAULT)) {
