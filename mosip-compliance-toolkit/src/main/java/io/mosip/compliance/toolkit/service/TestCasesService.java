@@ -753,7 +753,7 @@ private String base64Decode(String data) {
 						objectStoreStream.reset();
 						String encodedHash = CryptoUtil.getEncodedHash(bytes);
 						if (Objects.isNull(encodedHash) || !encodedHash.equals(zipFileHash)) {
-							log.info("testdata " + zipFileName + " encoded file hash mismatch." + "\n"
+							log.info("testdata " + requestDto.getBioTestDataName() + " encoded file hash mismatch." + "\n"
 									+ "stored hash : " + zipFileHash + "\n" + "calculated hash : " + encodedHash);
 							objectStoreStream.close();
 							objectStoreStream = null;
