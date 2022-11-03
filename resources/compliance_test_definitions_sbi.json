@@ -1,2710 +1,2787 @@
-[
-	{
-		"testCaseType": "SBI",
-		"testName": "Discover device",
-		"testId": "SBI1000",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to perform validation for the device discovery interface",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"device"
-		],
-		"requestSchema": [
-			"DiscoverRequestSchema"
-		],
-		"responseSchema": [
-			"DiscoverResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration",
-				"Auth"
-			],
-			"biometricTypes": [
-				"Finger",
-				"Iris",
-				"Face"
-			],
-			"deviceSubTypes": [
-				"Slap",
-				"Single",
-				"Double",
-				"Full face"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "",
-			"bioCount": "",
-			"deviceSubId": ""
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Device Info",
-		"testId": "SBI1001",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to perform validation for the device info interface",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"info"
-		],
-		"requestSchema": [
-			"DeviceInfoRequestSchema"
-		],
-		"responseSchema": [
-			"DeviceInfoResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration",
-				"Auth"
-			],
-			"biometricTypes": [
-				"Finger",
-				"Iris",
-				"Face"
-			],
-			"deviceSubTypes": [
-				"Slap",
-				"Single",
-				"Double",
-				"Full face"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "",
-			"bioCount": "",
-			"deviceSubId": ""
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Left Slap",
-		"testId": "SBI1002",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate the RCapture interface for Left Slap Fingerprints<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left slap on the device until the capture completes",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Slap"
-			],
-			"segments": [
-				"LeftIndex",
-				"LeftMiddle",
-				"LeftRing",
-				"LeftLittle"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "4",
-			"deviceSubId": "1"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Left Slap - One Exception",
-		"testId": "SBI1003",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for Left Slap Fingerprints with one missing finger<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left slap on the device except the left index finger until the capture completes",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Slap"
-			],
-			"segments": [
-				"LeftIndex",
-				"LeftMiddle",
-				"LeftLittle"
-			],
-			"exceptions": [
-				"LeftRing"
-			],
-			"requestedScore": "40",
-			"bioCount": "3",
-			"deviceSubId": "1"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Right Slap",
-		"testId": "SBI1004",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for Right Slap Fingerprints<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your right slap on the device until the capture completes",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Slap"
-			],
-			"segments": [
-				"RightIndex",
-				"RightMiddle",
-				"RightRing",
-				"RightLittle"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "4",
-			"deviceSubId": "2"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Right Slap - Two Exception",
-		"testId": "SBI1005",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for Right Slap Fingerprints with two missing fingers<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your right slap on the device except the right ring and little finger until the capture completes",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Slap"
-			],
-			"segments": [
-				"RightRing",
-				"RightLittle"
-			],
-			"exceptions": [
-				"RightIndex",
-				"RightMiddle"
-			],
-			"requestedScore": "40",
-			"bioCount": "2",
-			"deviceSubId": "2"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Two Thumbs",
-		"testId": "SBI1006",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for Two Thumbs<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place both your thumbs on the device until the capture completes",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Slap"
-			],
-			"segments": [
-				"RightThumb",
-				"LeftThumb"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "2",
-			"deviceSubId": "3"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Two Thumbs - One Exception",
-		"testId": "SBI1007",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for Two Thumbs with one missing thumb<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place only the right thumb on the device until the capture completes",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Slap"
-			],
-			"segments": [
-				"RightThumb"
-			],
-			"exceptions": [
-				"LeftThumb"
-			],
-			"requestedScore": "40",
-			"bioCount": "1",
-			"deviceSubId": "3"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Two Thumbs - Both Exception",
-		"testId": "SBI1008",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for Two Thumbs when both the thumbs are missing<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot press any finger or thumb on the device until the capture completes",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"ErrorCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"ErrorCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Slap"
-			],
-			"segments": [],
-			"exceptions": [
-				"RightThumb",
-				"LeftThumb"
-			],
-			"requestedScore": "40",
-			"bioCount": "0",
-			"deviceSubId": "3"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Double Iris",
-		"testId": "SBI1009",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for Two Iris<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place both your iris on the device until the capture completes",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Iris"
-			],
-			"deviceSubTypes": [
-				"Double"
-			],
-			"segments": [
-				"Left",
-				"Right"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "2",
-			"deviceSubId": "3"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Double Iris - One Exception",
-		"testId": "SBI1010",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for iris with one missing iris<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place only the right iris on the device until the capture completes",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Iris"
-			],
-			"deviceSubTypes": [
-				"Double"
-			],
-			"segments": [
-				"Right"
-			],
-			"exceptions": [
-				"Left"
-			],
-			"requestedScore": "40",
-			"bioCount": "1",
-			"deviceSubId": "3"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Double Iris - Both Exception",
-		"testId": "SBI1011",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for iris when both iris are missing<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place any iris on the device during capture",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"ErrorCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"ErrorCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Iris"
-			],
-			"deviceSubTypes": [
-				"Double"
-			],
-			"segments": [],
-			"exceptions": [
-				"Left",
-				"Right"
-			],
-			"requestedScore": "40",
-			"bioCount": "0",
-			"deviceSubId": "3"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Face",
-		"testId": "SBI1012",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for face<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your face infornt of the camera until the capture completes",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Face"
-			],
-			"deviceSubTypes": [
-				"Full face"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "1",
-			"deviceSubId": "0"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Exception Photo",
-		"testId": "SBI1013",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for exception photo<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Raise your hands during capture",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Face"
-			],
-			"deviceSubTypes": [
-				"Full face"
-			],
-			"segments": [],
-			"exceptions": [
-				"LeftLittle"
-			],
-			"requestedScore": "10",
-			"bioCount": "1",
-			"deviceSubId": "0"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Auth capture - Face",
-		"testId": "SBI1014",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate Capture interface for face<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your face infornt of the camera until the capture completes",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"capture"
-		],
-		"requestSchema": [
-			"AuthCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"AuthCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Auth"
-			],
-			"biometricTypes": [
-				"Face"
-			],
-			"deviceSubTypes": [
-				"Full face"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "1",
-			"deviceSubId": "0"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Auth capture - Single Iris - Unknown Iris",
-		"testId": "SBI1015",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate Capture interface for a single iris<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place one of your iris infornt of the iris scanner",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"capture"
-		],
-		"requestSchema": [
-			"AuthCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"AuthCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Auth"
-			],
-			"biometricTypes": [
-				"Iris"
-			],
-			"deviceSubTypes": [
-				"Single"
-			],
-			"segments": [
-				"UNKNOWN"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "1",
-			"deviceSubId": "0"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Auth capture - Single Iris - Left Iris",
-		"testId": "SBI1016",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate Capture interface for left iris<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left iris infornt of the iris scanner",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"capture"
-		],
-		"requestSchema": [
-			"AuthCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"AuthCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Auth"
-			],
-			"biometricTypes": [
-				"Iris"
-			],
-			"deviceSubTypes": [
-				"Single"
-			],
-			"segments": [
-				"Left"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "1",
-			"deviceSubId": "0"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Auth capture - Single Iris - Right Iris",
-		"testId": "SBI1017",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate Capture interface for right iris<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your right iris infornt of the iris scanner",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"capture"
-		],
-		"requestSchema": [
-			"AuthCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"AuthCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Auth"
-			],
-			"biometricTypes": [
-				"Iris"
-			],
-			"deviceSubTypes": [
-				"Single"
-			],
-			"segments": [
-				"Right"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "1",
-			"deviceSubId": "0"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Auth capture - Unknown Finger",
-		"testId": "SBI1018",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate Capture interface for a finger<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place one of your finger on the single fingerprint scanner",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"capture"
-		],
-		"requestSchema": [
-			"AuthCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"AuthCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Auth"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Single"
-			],
-			"segments": [
-				"UNKNOWN"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "1",
-			"deviceSubId": "0"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Auth capture -Two Unknown Finger",
-		"testId": "SBI1019",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate Capture interface for two fingers<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place two fingers, one by one on the fingerprint scanner",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"capture"
-		],
-		"requestSchema": [
-			"AuthCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"AuthCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Auth"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Single"
-			],
-			"segments": [
-				"UNKNOWN",
-				"UNKNOWN"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "2",
-			"deviceSubId": "0"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Auth capture - LeftIndex Finger",
-		"testId": "SBI1020",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate Capture interface for left index finger<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left index finger on the fingerprint scanner",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"capture"
-		],
-		"requestSchema": [
-			"AuthCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"AuthCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Auth"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Single"
-			],
-			"segments": [
-				"LeftIndex"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "1",
-			"deviceSubId": "0"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Auth capture - Two Finger",
-		"testId": "SBI1021",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate Capture interface for two fingers<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place two fingers, one by one on the fingerprint scanner",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"capture"
-		],
-		"requestSchema": [
-			"AuthCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"AuthCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Auth"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Single"
-			],
-			"segments": [
-				"LeftIndex",
-				"LeftMiddle"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "2",
-			"deviceSubId": "0"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Key Rotation - Left Slap",
-		"testId": "SBI1022",
-		"specVersion": "0.9.5",
-		"testDescription": "Key Rotation Registration capture Request for Slap scanner",
-		"isNegativeTestcase": false,
-		"inactive": true,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "RCaptureKeyRotationValidator",
-					"description": "RCapture Key Rotation Validator"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Slap"
-			],
-			"segments": [
-				"LeftIndex",
-				"LeftMiddle",
-				"LeftRing",
-				"LeftLittle"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "4",
-			"deviceSubId": "1"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Auth capture - Key Rotation - Single Iris - Left Iris",
-		"testId": "SBI1023",
-		"specVersion": "0.9.5",
-		"testDescription": "Valid Auth capture Key Rotation Request for Left iris",
-		"isNegativeTestcase": false,
-		"inactive": true,
-		"methodName": [
-			"capture"
-		],
-		"requestSchema": [
-			"AuthCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"AuthCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "KeyRotationValidator",
-					"description": "Key Rotation Validator"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Auth"
-			],
-			"biometricTypes": [
-				"Iris"
-			],
-			"deviceSubTypes": [
-				"Single"
-			],
-			"segments": [
-				"Left"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "1",
-			"deviceSubId": "0"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Auth capture - Key Rotation - LeftIndex Finger",
-		"testId": "SBI1024",
-		"specVersion": "0.9.5",
-		"testDescription": "Key Rotation Auth capture Request for LeftIndex Finger",
-		"isNegativeTestcase": false,
-		"inactive": true,
-		"methodName": [
-			"capture"
-		],
-		"requestSchema": [
-			"AuthCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"AuthCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "KeyRotationValidator",
-					"description": "Key Rotation Validator"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Auth"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Single"
-			],
-			"segments": [
-				"LeftIndex"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "1",
-			"deviceSubId": "0"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Auth capture - Face - Key Rotation",
-		"testId": "SBI1025",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate Capture interface for face<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place face infornt of the camera during capture",
-		"isNegativeTestcase": false,
-		"inactive": true,
-		"methodName": [
-			"capture"
-		],
-		"requestSchema": [
-			"AuthCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"AuthCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "KeyRotationValidator",
-					"description": "Key Rotation Validator"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Auth"
-			],
-			"biometricTypes": [
-				"Face"
-			],
-			"deviceSubTypes": [
-				"Full face"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "1",
-			"deviceSubId": "0"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Check Device Status - Ready",
-		"testId": "SBI1026",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate Device Info interface for a device that is in Ready state<br>Steps:<br>1. Make sure the device placed is in Ready state",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"info"
-		],
-		"requestSchema": [
-			"DeviceInfoRequestSchema"
-		],
-		"responseSchema": [
-			"DeviceInfoReadyResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration",
-				"Auth"
-			],
-			"biometricTypes": [
-				"Finger",
-				"Iris",
-				"Face"
-			],
-			"deviceSubTypes": [
-				"Slap",
-				"Single",
-				"Double",
-				"Full face"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "",
-			"bioCount": "",
-			"deviceSubId": ""
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Check Device Status - Busy",
-		"testId": "SBI1027",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate if the device is in Busy state<br>Steps:<br>1. Make the device is in <b>busy</b> state<br>2. Click on <b>Resume</b> button<br>3. After test execution is done, make the device status as <b>ready</b> and click on <b>Resume Next</b> button",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"info"
-		],
-		"requestSchema": [
-			"DeviceInfoRequestSchema"
-		],
-		"responseSchema": [
-			"DeviceInfoBusyResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration",
-				"Auth"
-			],
-			"biometricTypes": [
-				"Finger",
-				"Iris",
-				"Face"
-			],
-			"deviceSubTypes": [
-				"Slap",
-				"Single",
-				"Double",
-				"Full face"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "",
-			"bioCount": "",
-			"deviceSubId": "",
-			"resumeBtn": true,
-			"resumeAgainBtn": true
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Check Device Status - Not Ready",
-		"testId": "SBI1028",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate if the device is in Not Ready state<br>Steps:<br>1. <b>Disconnect</b> the device<br>2. Click on <b>Resume</b> button<br>3. After test execution is done, <b>re-connect</b> the device and click on <b>Resume Next</b> button",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"info"
-		],
-		"requestSchema": [
-			"DeviceInfoRequestSchema"
-		],
-		"responseSchema": [
-			"DeviceInfoNotReadyResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration",
-				"Auth"
-			],
-			"biometricTypes": [
-				"Finger",
-				"Iris",
-				"Face"
-			],
-			"deviceSubTypes": [
-				"Slap",
-				"Single",
-				"Double",
-				"Full face"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "",
-			"bioCount": "",
-			"deviceSubId": "",
-			"resumeBtn": true,
-			"resumeAgainBtn": true
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Check Device Status - Not Registered",
-		"testId": "SBI1029",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate if the device is in Not Registered state<br>Steps:<br>1. <b>De-register</b> the device <br>2. Click on <b>Resume</b> button<br>3. After test execution is done, <b>register</b> the device and click on <b>Resume Next</b> button",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"info"
-		],
-		"requestSchema": [
-			"DeviceInfoRequestSchema"
-		],
-		"responseSchema": [
-			"DeviceInfoNotRegisteredResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration",
-				"Auth"
-			],
-			"biometricTypes": [
-				"Finger",
-				"Iris",
-				"Face"
-			],
-			"deviceSubTypes": [
-				"Slap",
-				"Single",
-				"Double",
-				"Full face"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "",
-			"bioCount": "",
-			"deviceSubId": "",
-			"resumeBtn": true,
-			"resumeAgainBtn": true
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Auth capture - Fingerprint - Bio Count Mismatch",
-		"testId": "SBI1030",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for auth fingerprint device<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your finger on the device until the capture completes",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"capture"
-		],
-		"requestSchema": [
-			"ErrorCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"ErrorCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Auth"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Single"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "11",
-			"deviceSubId": "0",
-			"modalities": []
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Auth capture - Iris - Bio Count Mismatch",
-		"testId": "SBI1031",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for auth iris device<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your iris on the device until the capture completes",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"capture"
-		],
-		"requestSchema": [
-			"ErrorCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"ErrorCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Auth"
-			],
-			"biometricTypes": [
-				"Iris"
-			],
-			"deviceSubTypes": [
-				"Single"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "3",
-			"deviceSubId": "0",
-			"modalities": []
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Auth capture - Face - Bio Count Mismatch",
-		"testId": "SBI1032",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for face<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your face infront of the camera until the capture completes",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"capture"
-		],
-		"requestSchema": [
-			"ErrorCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"ErrorCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Auth"
-			],
-			"biometricTypes": [
-				"Face"
-			],
-			"deviceSubTypes": [
-				"Full face"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "2",
-			"deviceSubId": "0",
-			"modalities": []
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Left Slap - Bio Count Mismatch",
-		"testId": "SBI1033",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for registration left slap<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left slap on the slap scanner until the capture completes",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"ErrorCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"ErrorCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Slap"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "5",
-			"deviceSubId": "1",
-			"modalities": []
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Right Slap - Bio Count Mismatch",
-		"testId": "SBI1034",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for registration right slap<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your right slap on the slap scanner until the capture completes",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"ErrorCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"ErrorCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Slap"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "5",
-			"deviceSubId": "2",
-			"modalities": []
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Two Thumbs - Bio Count Mismatch",
-		"testId": "SBI1035",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for registration thumbs<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your thumbs on the slap scanner until the capture completes",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"ErrorCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"ErrorCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Slap"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "3",
-			"deviceSubId": "3",
-			"modalities": []
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Left iris - Bio Count Mismatch",
-		"testId": "SBI1036",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for registration left iris<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left iris on the device until the capture completes",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"ErrorCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"ErrorCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Iris"
-			],
-			"deviceSubTypes": [
-				"Double"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "2",
-			"deviceSubId": "1",
-			"modalities": []
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Right Iris - Bio Count Mismatch",
-		"testId": "SBI1037",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for registration right iris<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your right iris on the device until the capture completes",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"ErrorCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"ErrorCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Iris"
-			],
-			"deviceSubTypes": [
-				"Double"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "2",
-			"deviceSubId": "2",
-			"modalities": []
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Both Iris - Bio Count Mismatch",
-		"testId": "SBI1038",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for registration both iris<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place both your iris on the device until the capture completes",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"ErrorCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"ErrorCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Iris"
-			],
-			"deviceSubTypes": [
-				"Double"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "3",
-			"deviceSubId": "3",
-			"modalities": []
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Face - Bio Count Mismatch",
-		"testId": "SBI1039",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for registration face<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your face infront of the camera until the capture completes",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"ErrorCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"ErrorCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Face"
-			],
-			"deviceSubTypes": [
-				"Full face"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "2",
-			"deviceSubId": "0",
-			"modalities": []
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Face - Timeout",
-		"testId": "SBI1040",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate face timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your face infornt of the camera and wait for capture to timeout",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"ErrorCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "TimeoutValidator",
-					"description": "Validates if response is received within the given timeout period or not"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Face"
-			],
-			"deviceSubTypes": [
-				"Full face"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "1",
-			"deviceSubId": "0",
-			"timeout": "500"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Double Iris - Timeout",
-		"testId": "SBI1041",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate iris timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your iris on the iris scanner and wait for capture to timeout",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"ErrorCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "TimeoutValidator",
-					"description": "Validates if response is received within the given timeout period or not"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Iris"
-			],
-			"deviceSubTypes": [
-				"Double"
-			],
-			"segments": [
-				"Left",
-				"Right"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "2",
-			"deviceSubId": "3",
-			"timeout": "500"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Left Slap - Timeout",
-		"testId": "SBI1042",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate left slap timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your fingers on the slap scanner and wait for capture to timeout",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"ErrorCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "TimeoutValidator",
-					"description": "Validates if response is received within the given timeout period or not"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Slap"
-			],
-			"segments": [
-				"LeftIndex",
-				"LeftMiddle",
-				"LeftRing",
-				"LeftLittle"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "4",
-			"deviceSubId": "1",
-			"timeout": "500"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Right Slap - Timeout",
-		"testId": "SBI1043",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate right slap timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your fingers on the slap scanner and wait for capture to timeout",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"ErrorCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "TimeoutValidator",
-					"description": "Validates if response is received within the given timeout period or not"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Slap"
-			],
-			"segments": [
-				"RightIndex",
-				"RightMiddle",
-				"RightRing",
-				"RightLittle"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "4",
-			"deviceSubId": "2",
-			"timeout": "500"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Two Thumbs - Timeout",
-		"testId": "SBI1044",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate thumb timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your fingers on the slap scanner and wait for capture to timeout",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"ErrorCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "TimeoutValidator",
-					"description": "Validates if response is received within the given timeout period or not"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Slap"
-			],
-			"segments": [
-				"RightThumb",
-				"LeftThumb"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "2",
-			"deviceSubId": "3",
-			"timeout": "500"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Exception Photo - Timeout",
-		"testId": "SBI1045",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate exception photo timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your face infornt of the camera and wait for capture to timeout",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"ErrorCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "TimeoutValidator",
-					"description": "Validates if response is received within the given timeout period or not"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Face"
-			],
-			"deviceSubTypes": [
-				"Full face"
-			],
-			"segments": [],
-			"exceptions": [
-				"LeftLittle"
-			],
-			"requestedScore": "10",
-			"bioCount": "1",
-			"deviceSubId": "0",
-			"timeout": "500"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Auth capture - Face - Timeout",
-		"testId": "SBI1046",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate face timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your face infornt of the camera and wait for capture to timeout",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"capture"
-		],
-		"requestSchema": [
-			"AuthCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"ErrorCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "TimeoutValidator",
-					"description": "Validates if response is received within the given timeout period or not"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Auth"
-			],
-			"biometricTypes": [
-				"Face"
-			],
-			"deviceSubTypes": [
-				"Full face"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "1",
-			"deviceSubId": "0",
-			"timeout": "500"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Auth capture - Single Iris - Unknown Iris - Timeout",
-		"testId": "SBI1047",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate iris timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your iris on ths iris scanner and wait for capture to timeout",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"capture"
-		],
-		"requestSchema": [
-			"AuthCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"ErrorCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "TimeoutValidator",
-					"description": "Validates if response is received within the given timeout period or not"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Auth"
-			],
-			"biometricTypes": [
-				"Iris"
-			],
-			"deviceSubTypes": [
-				"Single"
-			],
-			"segments": [
-				"UNKNOWN"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "1",
-			"deviceSubId": "0",
-			"timeout": "500"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Auth capture - Unknown Finger - Timeout",
-		"testId": "SBI1048",
-		"specVersion": "0.9.5",
-		"testDescription": "Test to validate finger timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your finger on the finger scanner and wait for capture to timeout",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"capture"
-		],
-		"requestSchema": [
-			"AuthCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"ErrorCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "TimeoutValidator",
-					"description": "Validates if response is received within the given timeout period or not"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Auth"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Single"
-			],
-			"segments": [
-				"UNKNOWN"
-			],
-			"exceptions": [],
-			"requestedScore": "40",
-			"bioCount": "1",
-			"deviceSubId": "0",
-			"timeout": "500"
-		}
-	},{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Face - Force Capture",
-		"testId": "SBI1049",
-		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for registration capture request for face",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},{
-					"name": "TimeoutValidator",
-					"description": "Validates if response is received within the given timeout period or not"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Face"
-			],
-			"deviceSubTypes": [
-				"Full face"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "100",
-			"bioCount": "1",
-			"deviceSubId": "0",
-			"timeout": "10000"
-		}
-	},{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Double Iris - Force Capture",
-		"testId": "SBI1050",
-		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for registration capture request for double iris",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},{
-					"name": "TimeoutValidator",
-					"description": "Validates if response is received within the given timeout period or not"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Iris"
-			],
-			"deviceSubTypes": [
-				"Double"
-			],
-			"segments": [
-				"Left",
-				"Right"
-			],
-			"exceptions": [],
-			"requestedScore": "100",
-			"bioCount": "2",
-			"deviceSubId": "3",
-			"timeout": "10000"
-		}
-	},{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Left Slap - Force Capture",
-		"testId": "SBI1051",
-		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for registration capture request for Left Slap",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},{
-					"name": "TimeoutValidator",
-					"description": "Validates if response is received within the given timeout period or not"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Slap"
-			],
-			"segments": [
-				"LeftIndex",
-				"LeftMiddle",
-				"LeftRing",
-				"LeftLittle"
-			],
-			"exceptions": [],
-			"requestedScore": "100",
-			"bioCount": "4",
-			"deviceSubId": "1",
-			"timeout": "10000"
-		}
-	},{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Right Slap - Force Capture",
-		"testId": "SBI1052",
-		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for registration capture request for Right Slap",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},{
-					"name": "TimeoutValidator",
-					"description": "Validates if response is received within the given timeout period or not"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Slap"
-			],
-			"segments": [
-				"RightIndex",
-				"RightMiddle",
-				"RightRing",
-				"RightLittle"
-			],
-			"exceptions": [],
-			"requestedScore": "100",
-			"bioCount": "4",
-			"deviceSubId": "2",
-			"timeout": "10000"
-		}
-	},{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Two Thumbs - Force Capture",
-		"testId": "SBI1053",
-		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for registration capture request for Two Thumbs",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},{
-					"name": "TimeoutValidator",
-					"description": "Validates if response is received within the given timeout period or not"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Slap"
-			],
-			"segments": [
-				"RightThumb",
-				"LeftThumb"
-			],
-			"exceptions": [],
-			"requestedScore": "100",
-			"bioCount": "2",
-			"deviceSubId": "3",
-			"timeout": "10000"
-		}
-	},{
-		"testCaseType": "SBI",
-		"testName": "Registration capture - Exception Photo - Force Capture",
-		"testId": "SBI1054",
-		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for Face device type exception value left little finger or any will give Exception photo ",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"rcapture"
-		],
-		"requestSchema": [
-			"RegistrationCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"RegistrationCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},{
-					"name": "TimeoutValidator",
-					"description": "Validates if response is received within the given timeout period or not"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Registration"
-			],
-			"biometricTypes": [
-				"Face"
-			],
-			"deviceSubTypes": [
-				"Full face"
-			],
-			"segments": [],
-			"exceptions": [
-				"LeftLittle"
-			],
-			"requestedScore": "100",
-			"bioCount": "1",
-			"deviceSubId": "0",
-			"timeout": "10000"
-		}
-	},{
-		"testCaseType": "SBI",
-		"testName": "Auth capture - Face - Force Capture",
-		"testId": "SBI1055",
-		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for Auth capture Request only for Face",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"capture"
-		],
-		"requestSchema": [
-			"AuthCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"AuthCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},{
-					"name": "TimeoutValidator",
-					"description": "Validates if response is received within the given timeout period or not"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Auth"
-			],
-			"biometricTypes": [
-				"Face"
-			],
-			"deviceSubTypes": [
-				"Full face"
-			],
-			"segments": [],
-			"exceptions": [],
-			"requestedScore": "100",
-			"bioCount": "1",
-			"deviceSubId": "0",
-			"timeout": "10000"
-		}
-	},
-	{
-		"testCaseType": "SBI",
-		"testName": "Auth capture - Single Iris - Unknown Iris - Force Capture",
-		"testId": "SBI1056",
-		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for Auth capture Request for Unknown iris",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"capture"
-		],
-		"requestSchema": [
-			"AuthCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"AuthCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},{
-					"name": "TimeoutValidator",
-					"description": "Validates if response is received within the given timeout period or not"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Auth"
-			],
-			"biometricTypes": [
-				"Iris"
-			],
-			"deviceSubTypes": [
-				"Single"
-			],
-			"segments": [
-				"UNKNOWN"
-			],
-			"exceptions": [],
-			"requestedScore": "100",
-			"bioCount": "1",
-			"deviceSubId": "0",
-			"timeout": "10000"
-		}
-	},{
-		"testCaseType": "SBI",
-		"testName": "Auth capture - Unknown Finger - Force Capture",
-		"testId": "SBI1057",
-		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for Auth capture Request for Unknown Finger",
-		"isNegativeTestcase": false,
-		"methodName": [
-			"capture"
-		],
-		"requestSchema": [
-			"AuthCaptureRequestSchema"
-		],
-		"responseSchema": [
-			"AuthCaptureResponseSchema"
-		],
-		"validatorDefs": [
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},{
-					"name": "TimeoutValidator",
-					"description": "Validates if response is received within the given timeout period or not"
-				}
-			]
-		],
-		"otherAttributes": {
-			"purpose": [
-				"Auth"
-			],
-			"biometricTypes": [
-				"Finger"
-			],
-			"deviceSubTypes": [
-				"Single"
-			],
-			"segments": [
-				"UNKNOWN"
-			],
-			"exceptions": [],
-			"requestedScore": "100",
-			"bioCount": "1",
-			"deviceSubId": "0",
-			"timeout": "10000"
-		}
+[{
+	"testCaseType": "SBI",
+	"testName": "Discover device",
+	"testId": "SBI1000",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to perform validation for the device discovery interface",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"device"
+	],
+	"requestSchema": [
+		"DiscoverRequestSchema"
+	],
+	"responseSchema": [
+		"DiscoverResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration",
+			"Auth"
+		],
+		"biometricTypes": [
+			"Finger",
+			"Iris",
+			"Face"
+		],
+		"deviceSubTypes": [
+			"Slap",
+			"Single",
+			"Double",
+			"Full face"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "",
+		"bioCount": "",
+		"deviceSubId": ""
 	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Device Info",
+	"testId": "SBI1001",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to perform validation for the device info interface",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"info"
+	],
+	"requestSchema": [
+		"DeviceInfoRequestSchema"
+	],
+	"responseSchema": [
+		"DeviceInfoResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration",
+			"Auth"
+		],
+		"biometricTypes": [
+			"Finger",
+			"Iris",
+			"Face"
+		],
+		"deviceSubTypes": [
+			"Slap",
+			"Single",
+			"Double",
+			"Full face"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "",
+		"bioCount": "",
+		"deviceSubId": ""
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Left Slap",
+	"testId": "SBI1002",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate the RCapture interface for Left Slap Fingerprints<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left slap on the device until the capture completes",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"RegistrationCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Slap"
+		],
+		"segments": [
+			"LeftIndex",
+			"LeftMiddle",
+			"LeftRing",
+			"LeftLittle"
+		],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "4",
+		"deviceSubId": "1"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Left Slap - One Exception",
+	"testId": "SBI1003",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate RCapture interface for Left Slap Fingerprints with one missing finger<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left slap on the device except the left index finger until the capture completes",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"RegistrationCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Slap"
+		],
+		"segments": [
+			"LeftIndex",
+			"LeftMiddle",
+			"LeftLittle"
+		],
+		"exceptions": [
+			"LeftRing"
+		],
+		"requestedScore": "40",
+		"bioCount": "3",
+		"deviceSubId": "1"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Right Slap",
+	"testId": "SBI1004",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate RCapture interface for Right Slap Fingerprints<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your right slap on the device until the capture completes",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"RegistrationCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Slap"
+		],
+		"segments": [
+			"RightIndex",
+			"RightMiddle",
+			"RightRing",
+			"RightLittle"
+		],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "4",
+		"deviceSubId": "2"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Right Slap - Two Exception",
+	"testId": "SBI1005",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate RCapture interface for Right Slap Fingerprints with two missing fingers<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your right slap on the device except the right ring and little finger until the capture completes",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"RegistrationCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Slap"
+		],
+		"segments": [
+			"RightRing",
+			"RightLittle"
+		],
+		"exceptions": [
+			"RightIndex",
+			"RightMiddle"
+		],
+		"requestedScore": "40",
+		"bioCount": "2",
+		"deviceSubId": "2"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Two Thumbs",
+	"testId": "SBI1006",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate RCapture interface for Two Thumbs<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place both your thumbs on the device until the capture completes",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"RegistrationCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Slap"
+		],
+		"segments": [
+			"RightThumb",
+			"LeftThumb"
+		],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "2",
+		"deviceSubId": "3"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Two Thumbs - One Exception",
+	"testId": "SBI1007",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate RCapture interface for Two Thumbs with one missing thumb<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place only the right thumb on the device until the capture completes",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"RegistrationCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Slap"
+		],
+		"segments": [
+			"RightThumb"
+		],
+		"exceptions": [
+			"LeftThumb"
+		],
+		"requestedScore": "40",
+		"bioCount": "1",
+		"deviceSubId": "3"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Two Thumbs - Both Exception",
+	"testId": "SBI1008",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate RCapture interface for Two Thumbs when both the thumbs are missing<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot press any finger or thumb on the device until the capture completes",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"ErrorCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"ErrorCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Slap"
+		],
+		"segments": [],
+		"exceptions": [
+			"RightThumb",
+			"LeftThumb"
+		],
+		"requestedScore": "40",
+		"bioCount": "0",
+		"deviceSubId": "3"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Double Iris",
+	"testId": "SBI1009",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate RCapture interface for Two Iris<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place both your iris on the device until the capture completes",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"RegistrationCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Iris"
+		],
+		"deviceSubTypes": [
+			"Double"
+		],
+		"segments": [
+			"Left",
+			"Right"
+		],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "2",
+		"deviceSubId": "3"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Double Iris - One Exception",
+	"testId": "SBI1010",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate RCapture interface for iris with one missing iris<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place only the right iris on the device until the capture completes",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"RegistrationCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Iris"
+		],
+		"deviceSubTypes": [
+			"Double"
+		],
+		"segments": [
+			"Right"
+		],
+		"exceptions": [
+			"Left"
+		],
+		"requestedScore": "40",
+		"bioCount": "1",
+		"deviceSubId": "3"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Double Iris - Both Exception",
+	"testId": "SBI1011",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate RCapture interface for iris when both iris are missing<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place any iris on the device during capture",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"ErrorCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"ErrorCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Iris"
+		],
+		"deviceSubTypes": [
+			"Double"
+		],
+		"segments": [],
+		"exceptions": [
+			"Left",
+			"Right"
+		],
+		"requestedScore": "40",
+		"bioCount": "0",
+		"deviceSubId": "3"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Face",
+	"testId": "SBI1012",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate RCapture interface for face<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your face infornt of the camera until the capture completes",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"RegistrationCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Face"
+		],
+		"deviceSubTypes": [
+			"Full face"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "1",
+		"deviceSubId": "0"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Exception Photo",
+	"testId": "SBI1013",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate RCapture interface for exception photo<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Raise your hands during capture",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"RegistrationCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Face"
+		],
+		"deviceSubTypes": [
+			"Full face"
+		],
+		"segments": [],
+		"exceptions": [
+			"LeftLittle"
+		],
+		"requestedScore": "10",
+		"bioCount": "1",
+		"deviceSubId": "0"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Auth capture - Face",
+	"testId": "SBI1014",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate Capture interface for face<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your face infornt of the camera until the capture completes",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"capture"
+	],
+	"requestSchema": [
+		"AuthCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"AuthCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Auth"
+		],
+		"biometricTypes": [
+			"Face"
+		],
+		"deviceSubTypes": [
+			"Full face"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "1",
+		"deviceSubId": "0"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Auth capture - Single Iris - Unknown Iris",
+	"testId": "SBI1015",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate Capture interface for a single iris<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place one of your iris infornt of the iris scanner",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"capture"
+	],
+	"requestSchema": [
+		"AuthCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"AuthCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Auth"
+		],
+		"biometricTypes": [
+			"Iris"
+		],
+		"deviceSubTypes": [
+			"Single"
+		],
+		"segments": [
+			"UNKNOWN"
+		],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "1",
+		"deviceSubId": "0"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Auth capture - Single Iris - Left Iris",
+	"testId": "SBI1016",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate Capture interface for left iris<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left iris infornt of the iris scanner",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"capture"
+	],
+	"requestSchema": [
+		"AuthCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"AuthCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Auth"
+		],
+		"biometricTypes": [
+			"Iris"
+		],
+		"deviceSubTypes": [
+			"Single"
+		],
+		"segments": [
+			"Left"
+		],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "1",
+		"deviceSubId": "0"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Auth capture - Single Iris - Right Iris",
+	"testId": "SBI1017",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate Capture interface for right iris<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your right iris infornt of the iris scanner",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"capture"
+	],
+	"requestSchema": [
+		"AuthCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"AuthCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Auth"
+		],
+		"biometricTypes": [
+			"Iris"
+		],
+		"deviceSubTypes": [
+			"Single"
+		],
+		"segments": [
+			"Right"
+		],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "1",
+		"deviceSubId": "0"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Auth capture - Unknown Finger",
+	"testId": "SBI1018",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate Capture interface for a finger<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place one of your finger on the single fingerprint scanner",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"capture"
+	],
+	"requestSchema": [
+		"AuthCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"AuthCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Auth"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Single"
+		],
+		"segments": [
+			"UNKNOWN"
+		],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "1",
+		"deviceSubId": "0"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Auth capture -Two Unknown Finger",
+	"testId": "SBI1019",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate Capture interface for two fingers<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place two fingers, one by one on the fingerprint scanner",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"capture"
+	],
+	"requestSchema": [
+		"AuthCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"AuthCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Auth"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Single"
+		],
+		"segments": [
+			"UNKNOWN",
+			"UNKNOWN"
+		],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "2",
+		"deviceSubId": "0"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Auth capture - LeftIndex Finger",
+	"testId": "SBI1020",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate Capture interface for left index finger<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left index finger on the fingerprint scanner",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"capture"
+	],
+	"requestSchema": [
+		"AuthCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"AuthCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Auth"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Single"
+		],
+		"segments": [
+			"LeftIndex"
+		],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "1",
+		"deviceSubId": "0"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Auth capture - Two Finger",
+	"testId": "SBI1021",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate Capture interface for two fingers<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place two fingers, one by one on the fingerprint scanner",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"capture"
+	],
+	"requestSchema": [
+		"AuthCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"AuthCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Auth"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Single"
+		],
+		"segments": [
+			"LeftIndex",
+			"LeftMiddle"
+		],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "2",
+		"deviceSubId": "0"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Key Rotation - Left Slap",
+	"testId": "SBI1022",
+	"specVersion": "0.9.5",
+	"testDescription": "Key Rotation Registration capture Request for Slap scanner",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"RegistrationCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "RCaptureKeyRotationValidator",
+				"description": "RCapture Key Rotation Validator"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Slap"
+		],
+		"segments": [
+			"LeftIndex",
+			"LeftMiddle",
+			"LeftRing",
+			"LeftLittle"
+		],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "4",
+		"deviceSubId": "1"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Auth capture - Key Rotation - Single Iris - Left Iris",
+	"testId": "SBI1023",
+	"specVersion": "0.9.5",
+	"testDescription": "Valid Auth capture Key Rotation Request for Left iris",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"capture"
+	],
+	"requestSchema": [
+		"AuthCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"AuthCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+			"name": "KeyRotationValidator",
+			"description": "Key Rotation Validator"
+		}]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Auth"
+		],
+		"biometricTypes": [
+			"Iris"
+		],
+		"deviceSubTypes": [
+			"Single"
+		],
+		"segments": [
+			"Left"
+		],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "1",
+		"deviceSubId": "0"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Auth capture - Key Rotation - LeftIndex Finger",
+	"testId": "SBI1024",
+	"specVersion": "0.9.5",
+	"testDescription": "Key Rotation Auth capture Request for LeftIndex Finger",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"capture"
+	],
+	"requestSchema": [
+		"AuthCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"AuthCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+			"name": "KeyRotationValidator",
+			"description": "Key Rotation Validator"
+		}]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Auth"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Single"
+		],
+		"segments": [
+			"LeftIndex"
+		],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "1",
+		"deviceSubId": "0"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Auth capture - Face",
+	"testId": "SBI1025",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate Capture interface for face<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place face infornt of the camera during capture",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"capture"
+	],
+	"requestSchema": [
+		"AuthCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"AuthCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+			"name": "KeyRotationValidator",
+			"description": "Key Rotation Validator"
+		}]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Auth"
+		],
+		"biometricTypes": [
+			"Face"
+		],
+		"deviceSubTypes": [
+			"Full face"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "1",
+		"deviceSubId": "0"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Check Device Status - Ready",
+	"testId": "SBI1026",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate Device Info interface for a device that is in Ready state<br>Steps:<br>1. Make sure the device placed is in Ready state",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"info"
+	],
+	"requestSchema": [
+		"DeviceInfoRequestSchema"
+	],
+	"responseSchema": [
+		"DeviceInfoReadyResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration",
+			"Auth"
+		],
+		"biometricTypes": [
+			"Finger",
+			"Iris",
+			"Face"
+		],
+		"deviceSubTypes": [
+			"Slap",
+			"Single",
+			"Double",
+			"Full face"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "",
+		"bioCount": "",
+		"deviceSubId": ""
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Check Device Status - Busy",
+	"testId": "SBI1027",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate if the device is in Busy state<br>Steps:<br>1. Make the device is in <b>busy</b> state<br>2. Click on <b>Resume</b> button<br>3. After test execution is done, make the device status as <b>ready</b> and click on <b>Resume Next</b> button",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"info"
+	],
+	"requestSchema": [
+		"DeviceInfoRequestSchema"
+	],
+	"responseSchema": [
+		"DeviceInfoBusyResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration",
+			"Auth"
+		],
+		"biometricTypes": [
+			"Finger",
+			"Iris",
+			"Face"
+		],
+		"deviceSubTypes": [
+			"Slap",
+			"Single",
+			"Double",
+			"Full face"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "",
+		"bioCount": "",
+		"deviceSubId": "",
+		"resumeBtn": true,
+		"resumeAgainBtn": true
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Check Device Status - Not Ready",
+	"testId": "SBI1028",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate if the device is in Not Ready state<br>Steps:<br>1. <b>Disconnect</b> the device<br>2. Click on <b>Resume</b> button<br>3. After test execution is done, <b>re-connect</b> the device and click on <b>Resume Next</b> button",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"info"
+	],
+	"requestSchema": [
+		"DeviceInfoRequestSchema"
+	],
+	"responseSchema": [
+		"DeviceInfoNotReadyResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+			"name": "SchemaValidator",
+			"description": "Validates the response for mandatory attributes and correct values"
+		}]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration",
+			"Auth"
+		],
+		"biometricTypes": [
+			"Finger",
+			"Iris",
+			"Face"
+		],
+		"deviceSubTypes": [
+			"Slap",
+			"Single",
+			"Double",
+			"Full face"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "",
+		"bioCount": "",
+		"deviceSubId": "",
+		"resumeBtn": true,
+		"resumeAgainBtn": true
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Check Device Status - Not Registered",
+	"testId": "SBI1029",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate if the device is in Not Registered state<br>Steps:<br>1. <b>De-register</b> the device <br>2. Click on <b>Resume</b> button<br>3. After test execution is done, <b>register</b> the device and click on <b>Resume Next</b> button",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"info"
+	],
+	"requestSchema": [
+		"DeviceInfoRequestSchema"
+	],
+	"responseSchema": [
+		"DeviceInfoNotRegisteredResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "SignatureValidator",
+				"description": "Validates the response signature"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration",
+			"Auth"
+		],
+		"biometricTypes": [
+			"Finger",
+			"Iris",
+			"Face"
+		],
+		"deviceSubTypes": [
+			"Slap",
+			"Single",
+			"Double",
+			"Full face"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "",
+		"bioCount": "",
+		"deviceSubId": "",
+		"resumeBtn": true,
+		"resumeAgainBtn": true
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Auth capture - Fingerprint - Bio Count Mismatch",
+	"testId": "SBI1030",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate bio count mismatch for auth fingerprint device<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your finger on the device until the capture completes",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"capture"
+	],
+	"requestSchema": [
+		"ErrorCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"ErrorCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+			"name": "SchemaValidator",
+			"description": "Validates the response for mandatory attributes and correct values"
+		}]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Auth"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Single"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "11",
+		"deviceSubId": "0",
+		"modalities": []
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Auth capture - Iris - Bio Count Mismatch",
+	"testId": "SBI1031",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate bio count mismatch for auth iris device<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your iris on the device until the capture completes",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"capture"
+	],
+	"requestSchema": [
+		"ErrorCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"ErrorCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+			"name": "SchemaValidator",
+			"description": "Validates the response for mandatory attributes and correct values"
+		}]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Auth"
+		],
+		"biometricTypes": [
+			"Iris"
+		],
+		"deviceSubTypes": [
+			"Single"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "3",
+		"deviceSubId": "0",
+		"modalities": []
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Auth capture - Face - Bio Count Mismatch",
+	"testId": "SBI1032",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate bio count mismatch for face<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your face infront of the camera until the capture completes",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"capture"
+	],
+	"requestSchema": [
+		"ErrorCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"ErrorCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+			"name": "SchemaValidator",
+			"description": "Validates the response for mandatory attributes and correct values"
+		}]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Auth"
+		],
+		"biometricTypes": [
+			"Face"
+		],
+		"deviceSubTypes": [
+			"Full face"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "2",
+		"deviceSubId": "0",
+		"modalities": []
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Left Slap - Bio Count Mismatch",
+	"testId": "SBI1033",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate bio count mismatch for registration left slap<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left slap on the slap scanner until the capture completes",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"ErrorCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"ErrorCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Slap"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "5",
+		"deviceSubId": "1",
+		"modalities": []
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Right Slap - Bio Count Mismatch",
+	"testId": "SBI1034",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate bio count mismatch for registration right slap<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your right slap on the slap scanner until the capture completes",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"ErrorCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"ErrorCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Slap"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "5",
+		"deviceSubId": "2",
+		"modalities": []
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Two Thumbs - Bio Count Mismatch",
+	"testId": "SBI1035",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate bio count mismatch for registration thumbs<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your thumbs on the slap scanner until the capture completes",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"ErrorCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"ErrorCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Slap"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "3",
+		"deviceSubId": "3",
+		"modalities": []
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Left iris - Bio Count Mismatch",
+	"testId": "SBI1036",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate bio count mismatch for registration left iris<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left iris on the device until the capture completes",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"ErrorCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"ErrorCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Iris"
+		],
+		"deviceSubTypes": [
+			"Double"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "2",
+		"deviceSubId": "1",
+		"modalities": []
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Right Iris - Bio Count Mismatch",
+	"testId": "SBI1037",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate bio count mismatch for registration right iris<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your right iris on the device until the capture completes",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"ErrorCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"ErrorCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Iris"
+		],
+		"deviceSubTypes": [
+			"Double"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "2",
+		"deviceSubId": "2",
+		"modalities": []
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Both Iris - Bio Count Mismatch",
+	"testId": "SBI1038",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate bio count mismatch for registration both iris<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place both your iris on the device until the capture completes",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"ErrorCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"ErrorCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Iris"
+		],
+		"deviceSubTypes": [
+			"Double"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "3",
+		"deviceSubId": "3",
+		"modalities": []
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Face - Bio Count Mismatch",
+	"testId": "SBI1039",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate bio count mismatch for registration face<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your face infront of the camera until the capture completes",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"ErrorCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"ErrorCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Face"
+		],
+		"deviceSubTypes": [
+			"Full face"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "2",
+		"deviceSubId": "0",
+		"modalities": []
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Face - Timeout",
+	"testId": "SBI1040",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate face timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your face infornt of the camera and wait for capture to timeout",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"ErrorCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "TimeoutValidator",
+				"description": "Validates if response is received within the given timeout period or not"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Face"
+		],
+		"deviceSubTypes": [
+			"Full face"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "1",
+		"deviceSubId": "0",
+		"timeout": "500"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Double Iris - Timeout",
+	"testId": "SBI1041",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate iris timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your iris on the iris scanner and wait for capture to timeout",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"ErrorCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "TimeoutValidator",
+				"description": "Validates if response is received within the given timeout period or not"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Iris"
+		],
+		"deviceSubTypes": [
+			"Double"
+		],
+		"segments": [
+			"Left",
+			"Right"
+		],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "2",
+		"deviceSubId": "3",
+		"timeout": "500"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Left Slap - Timeout",
+	"testId": "SBI1042",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate left slap timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your fingers on the slap scanner and wait for capture to timeout",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"ErrorCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "TimeoutValidator",
+				"description": "Validates if response is received within the given timeout period or not"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Slap"
+		],
+		"segments": [
+			"LeftIndex",
+			"LeftMiddle",
+			"LeftRing",
+			"LeftLittle"
+		],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "4",
+		"deviceSubId": "1",
+		"timeout": "500"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Right Slap - Timeout",
+	"testId": "SBI1043",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate right slap timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your fingers on the slap scanner and wait for capture to timeout",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"ErrorCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "TimeoutValidator",
+				"description": "Validates if response is received within the given timeout period or not"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Slap"
+		],
+		"segments": [
+			"RightIndex",
+			"RightMiddle",
+			"RightRing",
+			"RightLittle"
+		],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "4",
+		"deviceSubId": "2",
+		"timeout": "500"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Two Thumbs - Timeout",
+	"testId": "SBI1044",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate thumb timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your fingers on the slap scanner and wait for capture to timeout",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"ErrorCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "TimeoutValidator",
+				"description": "Validates if response is received within the given timeout period or not"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Slap"
+		],
+		"segments": [
+			"RightThumb",
+			"LeftThumb"
+		],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "2",
+		"deviceSubId": "3",
+		"timeout": "500"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Exception Photo - Timeout",
+	"testId": "SBI1045",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate exception photo timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your face infornt of the camera and wait for capture to timeout",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"ErrorCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "TimeoutValidator",
+				"description": "Validates if response is received within the given timeout period or not"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Face"
+		],
+		"deviceSubTypes": [
+			"Full face"
+		],
+		"segments": [],
+		"exceptions": [
+			"LeftLittle"
+		],
+		"requestedScore": "10",
+		"bioCount": "1",
+		"deviceSubId": "0",
+		"timeout": "500"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Auth capture - Face - Timeout",
+	"testId": "SBI1046",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate face timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your face infornt of the camera and wait for capture to timeout",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"capture"
+	],
+	"requestSchema": [
+		"AuthCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"ErrorCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "TimeoutValidator",
+				"description": "Validates if response is received within the given timeout period or not"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Auth"
+		],
+		"biometricTypes": [
+			"Face"
+		],
+		"deviceSubTypes": [
+			"Full face"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "1",
+		"deviceSubId": "0",
+		"timeout": "500"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Auth capture - Single Iris - Unknown Iris - Timeout",
+	"testId": "SBI1047",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate iris timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your iris on ths iris scanner and wait for capture to timeout",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"capture"
+	],
+	"requestSchema": [
+		"AuthCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"ErrorCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "TimeoutValidator",
+				"description": "Validates if response is received within the given timeout period or not"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Auth"
+		],
+		"biometricTypes": [
+			"Iris"
+		],
+		"deviceSubTypes": [
+			"Single"
+		],
+		"segments": [
+			"UNKNOWN"
+		],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "1",
+		"deviceSubId": "0",
+		"timeout": "500"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Auth capture - Unknown Finger - Timeout",
+	"testId": "SBI1048",
+	"specVersion": "0.9.5",
+	"testDescription": "Test to validate finger timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your finger on the finger scanner and wait for capture to timeout",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"capture"
+	],
+	"requestSchema": [
+		"AuthCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"ErrorCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates the response for mandatory attributes and correct values"
+			},
+			{
+				"name": "TimeoutValidator",
+				"description": "Validates if response is received within the given timeout period or not"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Auth"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Single"
+		],
+		"segments": [
+			"UNKNOWN"
+		],
+		"exceptions": [],
+		"requestedScore": "40",
+		"bioCount": "1",
+		"deviceSubId": "0",
+		"timeout": "500"
+	}
+}, {
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Face - Force Capture",
+	"testId": "SBI1049",
+	"specVersion": "0.9.5",
+	"testDescription": "Force Capture validation for registration capture request for face",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"RegistrationCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "TimeoutValidator",
+				"description": "Validates if response is received within the given timeout period or not"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Face"
+		],
+		"deviceSubTypes": [
+			"Full face"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "100",
+		"bioCount": "1",
+		"deviceSubId": "0",
+		"timeout": "10000"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Double Iris - Force Capture",
+	"testId": "SBI1050",
+	"specVersion": "0.9.5",
+	"testDescription": "Force Capture validation for registration capture request for double iris",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"RegistrationCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "TimeoutValidator",
+				"description": "Validates if response is received within the given timeout period or not"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Iris"
+		],
+		"deviceSubTypes": [
+			"Double"
+		],
+		"segments": [
+			"Left",
+			"Right"
+		],
+		"exceptions": [],
+		"requestedScore": "100",
+		"bioCount": "2",
+		"deviceSubId": "3",
+		"timeout": "10000"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Left Slap - Force Capture",
+	"testId": "SBI1051",
+	"specVersion": "0.9.5",
+	"testDescription": "Force Capture validation for registration capture request for Left Slap",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"RegistrationCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "TimeoutValidator",
+				"description": "Validates if response is received within the given timeout period or not"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Slap"
+		],
+		"segments": [
+			"LeftIndex",
+			"LeftMiddle",
+			"LeftRing",
+			"LeftLittle"
+		],
+		"exceptions": [],
+		"requestedScore": "100",
+		"bioCount": "4",
+		"deviceSubId": "1",
+		"timeout": "10000"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Right Slap - Force Capture",
+	"testId": "SBI1052",
+	"specVersion": "0.9.5",
+	"testDescription": "Force Capture validation for registration capture request for Right Slap",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"RegistrationCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "TimeoutValidator",
+				"description": "Validates if response is received within the given timeout period or not"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Slap"
+		],
+		"segments": [
+			"RightIndex",
+			"RightMiddle",
+			"RightRing",
+			"RightLittle"
+		],
+		"exceptions": [],
+		"requestedScore": "100",
+		"bioCount": "4",
+		"deviceSubId": "2",
+		"timeout": "10000"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Two Thumbs - Force Capture",
+	"testId": "SBI1053",
+	"specVersion": "0.9.5",
+	"testDescription": "Force Capture validation for registration capture request for Two Thumbs",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"RegistrationCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "TimeoutValidator",
+				"description": "Validates if response is received within the given timeout period or not"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Slap"
+		],
+		"segments": [
+			"RightThumb",
+			"LeftThumb"
+		],
+		"exceptions": [],
+		"requestedScore": "100",
+		"bioCount": "2",
+		"deviceSubId": "3",
+		"timeout": "10000"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Registration capture - Exception Photo - Force Capture",
+	"testId": "SBI1054",
+	"specVersion": "0.9.5",
+	"testDescription": "Force Capture validation for Face device type exception value left little finger or any will give Exception photo ",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"rcapture"
+	],
+	"requestSchema": [
+		"RegistrationCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"RegistrationCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "TimeoutValidator",
+				"description": "Validates if response is received within the given timeout period or not"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Registration"
+		],
+		"biometricTypes": [
+			"Face"
+		],
+		"deviceSubTypes": [
+			"Full face"
+		],
+		"segments": [],
+		"exceptions": [
+			"LeftLittle"
+		],
+		"requestedScore": "100",
+		"bioCount": "1",
+		"deviceSubId": "0",
+		"timeout": "10000"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Auth capture - Face - Force Capture",
+	"testId": "SBI1055",
+	"specVersion": "0.9.5",
+	"testDescription": "Force Capture validation for Auth capture Request only for Face",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"capture"
+	],
+	"requestSchema": [
+		"AuthCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"AuthCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+				"name": "SchemaValidator",
+				"description": "Validates if response has all mandatory attributes and they have allowed values"
+			},
+			{
+				"name": "ResponseMismatchValidator",
+				"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+			},
+			{
+				"name": "TimeoutValidator",
+				"description": "Validates if response is received within the given timeout period or not"
+			}
+		]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Auth"
+		],
+		"biometricTypes": [
+			"Face"
+		],
+		"deviceSubTypes": [
+			"Full face"
+		],
+		"segments": [],
+		"exceptions": [],
+		"requestedScore": "100",
+		"bioCount": "1",
+		"deviceSubId": "0",
+		"timeout": "10000"
+	}
+},
+{
+	"testCaseType": "SBI",
+	"testName": "Auth capture - Single Iris - Unknown Iris - Force Capture",
+	"testId": "SBI1056",
+	"specVersion": "0.9.5",
+	"testDescription": "Force Capture validation for Auth capture Request for Unknown iris",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"capture"
+	],
+	"requestSchema": [
+		"AuthCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"AuthCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+			"name": "SchemaValidator",
+			"description": "Validates if response has all mandatory attributes and they have allowed values"
+		}, {
+			"name": "TimeoutValidator",
+			"description": "Validates if response is received within the given timeout period or not"
+		}]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Auth"
+		],
+		"biometricTypes": [
+			"Iris"
+		],
+		"deviceSubTypes": [
+			"Single"
+		],
+		"segments": [
+			"UNKNOWN"
+		],
+		"exceptions": [],
+		"requestedScore": "100",
+		"bioCount": "1",
+		"deviceSubId": "0",
+		"timeout": "10000"
+	}
+}, {
+	"testCaseType": "SBI",
+	"testName": "Auth capture - Unknown Finger - Force Capture",
+	"testId": "SBI1057",
+	"specVersion": "0.9.5",
+	"testDescription": "Force Capture validation for Auth capture Request for Unknown Finger",
+	"isNegativeTestcase": false,
+	"methodName": [
+		"capture"
+	],
+	"requestSchema": [
+		"AuthCaptureRequestSchema"
+	],
+	"responseSchema": [
+		"AuthCaptureResponseSchema"
+	],
+	"validatorDefs": [
+		[{
+			"name": "SchemaValidator",
+			"description": "Validates if response has all mandatory attributes and they have allowed values"
+		}, {
+			"name": "TimeoutValidator",
+			"description": "Validates if response is received within the given timeout period or not"
+		}]
+	],
+	"otherAttributes": {
+		"purpose": [
+			"Auth"
+		],
+		"biometricTypes": [
+			"Finger"
+		],
+		"deviceSubTypes": [
+			"Single"
+		],
+		"segments": [
+			"UNKNOWN"
+		],
+		"exceptions": [],
+		"requestedScore": "100",
+		"bioCount": "1",
+		"deviceSubId": "0",
+		"timeout": "10000"
+	}
+}
 ]
