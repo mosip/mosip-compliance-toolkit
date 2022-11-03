@@ -63,7 +63,7 @@ public class ResponseMismatchValidator extends ToolkitValidator {
                     }
                 }
                 reqDeviceSubId = biometricNode.get(DEVICE_SUBID).textValue();
-            }else{
+            } else {
                 errorCode = ToolkitErrorCodes.INVALID_TEST_CASE_JSON;
                 throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
             }
@@ -81,7 +81,7 @@ public class ResponseMismatchValidator extends ToolkitValidator {
                         if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
 
                             String resType = dataNode.get(BIO_TYPE).asText();
-                            String resBioSubType = (resType.equals(DeviceTypes.FACE.getCode()))? null : dataNode.get(BIO_SUBTYPE).asText();
+                            String resBioSubType = (resType.equals(DeviceTypes.FACE.getCode())) ? null : dataNode.get(BIO_SUBTYPE).asText();
                             //Check Segment mismatch
                             validationResultDto = isValidSegment(resType, reqDeviceSubId, resBioSubType);
                             if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
