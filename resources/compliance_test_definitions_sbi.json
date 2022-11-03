@@ -1123,10 +1123,6 @@
 				{
 					"name": "RCaptureKeyRotationValidator",
 					"description": "RCapture Key Rotation Validator"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
 				}
 			]
 		],
@@ -1955,10 +1951,6 @@
 					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
-				},
-				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
 				}
@@ -2003,10 +1995,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
 				},
 				{
 					"name": "TimeoutValidator",
@@ -2056,10 +2044,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
 				},
 				{
 					"name": "TimeoutValidator",
@@ -2113,10 +2097,6 @@
 					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
-				},
-				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
 				}
@@ -2168,10 +2148,6 @@
 					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
-				},
-				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
 				}
@@ -2219,10 +2195,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
 				},
 				{
 					"name": "TimeoutValidator",
@@ -2414,10 +2386,6 @@
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
 				},
 				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
-				},
-				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
 				}
@@ -2461,10 +2429,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
 				},
 				{
 					"name": "TimeoutValidator",
@@ -2513,10 +2477,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
 				},
 				{
 					"name": "TimeoutValidator",
@@ -2569,10 +2529,6 @@
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
 				},
 				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
-				},
-				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
 				}
@@ -2623,10 +2579,6 @@
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
 				},
 				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
-				},
-				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
 				}
@@ -2673,10 +2625,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
 				},
 				{
 					"name": "TimeoutValidator",
