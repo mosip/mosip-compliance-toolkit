@@ -20,5 +20,7 @@ public class TestRunDetailsDto {
 	private String resultStatus;
 
 	private String resultDescription;
+	
+	private String testDataSource;
 
 }

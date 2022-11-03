@@ -21,5 +21,5 @@ public interface BiometricTestDataRepository extends BaseRepository<BiometricTes
 	public List<String> findTestDataNamesByFileIds(String[] filenames, String purpose, String partnerId);
 
 	@Query("SELECT e FROM BiometricTestDataEntity e  WHERE e.name= ?1 AND e.partnerId= ?2 AND e.isDeleted<>'true' order by e.crDate desc")
-	public BiometricTestDataEntity findFileIdByTestDataName(String name, String partnerId);
+	public BiometricTestDataEntity findByTestDataName(String name, String partnerId);
 }

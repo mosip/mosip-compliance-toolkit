@@ -1,5 +1,6 @@
 package io.mosip.compliance.toolkit.controllers;
 
+import io.mosip.compliance.toolkit.dto.GenerateSdkRequestResponseDto;
 import io.mosip.compliance.toolkit.dto.testcases.*;
 import io.mosip.compliance.toolkit.service.TestCasesService;
 import io.mosip.compliance.toolkit.util.RequestValidator;
@@ -128,7 +129,7 @@ public class TestCasesControllerTest {
 		String convertSourceFormat = null;
 		String convertTargetFormat = null;
 		String bioTestDataName = null;
-		ResponseWrapper<String> response = new ResponseWrapper<>();
+		ResponseWrapper<GenerateSdkRequestResponseDto> response = new ResponseWrapper<>();
 
 		SdkRequestDto requestDto = new SdkRequestDto();
 		requestDto.setMethodName("Segment");

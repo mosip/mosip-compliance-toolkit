@@ -50,6 +50,7 @@ import io.mosip.compliance.toolkit.constants.SbiSpecVersions;
 import io.mosip.compliance.toolkit.constants.SdkPurpose;
 import io.mosip.compliance.toolkit.constants.SdkSpecVersions;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
+import io.mosip.compliance.toolkit.dto.GenerateSdkRequestResponseDto;
 import io.mosip.compliance.toolkit.dto.sdk.CheckQualityRequestDto;
 import io.mosip.compliance.toolkit.dto.sdk.ConvertFormatRequestDto;
 import io.mosip.compliance.toolkit.dto.sdk.ExtractTemplateRequestDto;
@@ -545,9 +546,10 @@ private String base64Decode(String data) {
 		}
 	}
 
-	public ResponseWrapper<String> generateRequestForSDKTestcase(SdkRequestDto requestDto) throws Exception {
-		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
+	public ResponseWrapper<GenerateSdkRequestResponseDto> generateRequestForSDKTestcase(SdkRequestDto requestDto) throws Exception {
+		ResponseWrapper<GenerateSdkRequestResponseDto> responseWrapper = new ResponseWrapper<>();
 		try {
+			GenerateSdkRequestResponseDto generateSdkRequestResponseDto = new GenerateSdkRequestResponseDto();
 			String requestJson = null;
 			InputStream objectStoreStream = null;
 			byte[] probeFileBytes = null;
@@ -561,10 +563,12 @@ private String base64Decode(String data) {
 					String partnerId = getPartnerId();
 					SdkPurpose sdkPurpose = getSdkPurpose(requestDto.getMethodName());
 					objectStoreStream = getPartnerTestDataStream(requestDto, partnerId, sdkPurpose);
-					probeFileBytes = getProbeData(requestDto, objectStoreStream, sdkPurpose, requestDto.getTestcaseId());				
+					probeFileBytes = getProbeData(requestDto, objectStoreStream, sdkPurpose, requestDto.getTestcaseId());
+					generateSdkRequestResponseDto.setTestDataSource(requestDto.bioTestDataName);
 					if (Objects.isNull(objectStoreStream) || Objects.isNull(probeFileBytes)) {
 						objectStoreStream = getDefaultTestDataStream(requestDto.getMethodName(), sdkPurpose);
 						probeFileBytes = getProbeData(requestDto, objectStoreStream, sdkPurpose, requestDto.getTestcaseId());
+						generateSdkRequestResponseDto.setTestDataSource(AppConstants.MOSIP_DEFAULT);
 					}
 					if (Objects.nonNull(objectStoreStream)) {
 						if (Objects.nonNull(probeFileBytes)) {
@@ -675,7 +679,8 @@ private String base64Decode(String data) {
 					RequestDto inputDto = new RequestDto();
 					inputDto.setVersion(VERSION);
 					inputDto.setRequest(this.base64Encode(requestJson));
-					responseWrapper.setResponse(gson.toJson(inputDto));
+					generateSdkRequestResponseDto.setGeneratedRequest(gson.toJson(inputDto));		
+					responseWrapper.setResponse(generateSdkRequestResponseDto);
 				}
 			} else {
 				List<ServiceError> serviceErrorsList = new ArrayList<>();
@@ -724,18 +729,17 @@ private String base64Decode(String data) {
 		return probeFileBytes;
 	}
 
-	private InputStream getPartnerTestDataStream(SdkRequestDto requestDto, 
-			String partnerId, SdkPurpose sdkPurpose) throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
+	private InputStream getPartnerTestDataStream(SdkRequestDto requestDto, String partnerId, SdkPurpose sdkPurpose)
+			throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
 		InputStream objectStoreStream = null;
 		if (Objects.nonNull(requestDto.getBioTestDataName())
 				&& !requestDto.getBioTestDataName().equals(AppConstants.MOSIP_DEFAULT)) {
 			BiometricTestDataEntity biometricTestData = biometricTestDataRepository
-					.findFileIdByTestDataName(requestDto.getBioTestDataName(), partnerId);
+					.findByTestDataName(requestDto.getBioTestDataName(), partnerId);
 			String zipFileName = biometricTestData.getFileId();
 			String zipFileHash = biometricTestData.getFileHash();
 			if (Objects.nonNull(zipFileName)) {
-				String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/"
-						+ sdkPurpose.getCode();
+				String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/" + sdkPurpose.getCode();
 				if (isObjectExistInObjectStore(container, zipFileName)) {
 					objectStoreStream = getFromObjectStore(container, zipFileName);
 					if (Objects.nonNull(objectStoreStream)) {
@@ -748,7 +752,9 @@ private String base64Decode(String data) {
 						byte[] bytes = buffer.toByteArray();
 						objectStoreStream.reset();
 						String encodedHash = CryptoUtil.getEncodedHash(bytes);
-						if(Objects.isNull(encodedHash) || !encodedHash.equals(zipFileHash)) {
+						if (Objects.isNull(encodedHash) || !encodedHash.equals(zipFileHash)) {
+							log.info("testdata " + zipFileName + " encoded file hash mismatch." + "\n"
+									+ "stored hash : " + zipFileHash + "\n" + "calculated hash : " + encodedHash);
 							objectStoreStream.close();
 							objectStoreStream = null;
 						}
@@ -759,10 +765,10 @@ private String base64Decode(String data) {
 		return objectStoreStream;
 	}
 	
-	public ResponseWrapper<String> generateRequestForSDKFrmBirs(SdkRequestDto sdkRequestDto) throws Exception {
-		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
+	public ResponseWrapper<GenerateSdkRequestResponseDto> generateRequestForSDKFrmBirs(SdkRequestDto sdkRequestDto) throws Exception {
+		ResponseWrapper<GenerateSdkRequestResponseDto> responseWrapper = new ResponseWrapper<>();
 		try {
-
+			GenerateSdkRequestResponseDto generateSdkRequestResponseDto = null;
 			String[] methods = sdkRequestDto.getMethodName().split(",");
 			String methodName1 = null;
 			String methodName2 = null;
@@ -785,6 +791,7 @@ private String base64Decode(String data) {
 			List<BiometricType> bioTypeList = modalities.stream().map(bioType -> this.getBiometricType(bioType))
 					.collect(Collectors.toList());
 			String requestJson = null;
+			generateSdkRequestResponseDto = new GenerateSdkRequestResponseDto();
 			// populate the request object based on the method name
 			if (methodName2.equalsIgnoreCase(MethodName.CHECK_QUALITY.getCode())) {
 				//the birs in sdkRequestDto are the extracted probe for the check quality method
@@ -814,10 +821,12 @@ private String base64Decode(String data) {
 				
 				//Here the probe is nested under "match" folder
 				String testcaseFolder = sdkRequestDto.getTestcaseId()+"/" + MethodName.MATCH.toString().toLowerCase();
-				byte[] probeFileBytes = getProbeData(sdkRequestDto, objectStoreStream, sdkPurpose, testcaseFolder);				
+				byte[] probeFileBytes = getProbeData(sdkRequestDto, objectStoreStream, sdkPurpose, testcaseFolder);
+				generateSdkRequestResponseDto.setTestDataSource(sdkRequestDto.getBioTestDataName());
 				if (Objects.isNull(probeFileBytes)) {
 					objectStoreStream = getDefaultTestDataStream(sdkRequestDto.getMethodName(), sdkPurpose);
 					probeFileBytes = getProbeData(sdkRequestDto, objectStoreStream, sdkPurpose, testcaseFolder);
+					generateSdkRequestResponseDto.setTestDataSource(AppConstants.MOSIP_DEFAULT);
 				}
 				if (Objects.nonNull(objectStoreStream) && Objects.nonNull(probeFileBytes)) {
 					List<io.mosip.kernel.biometrics.entities.BIR> matchProbeBirs = cbeffReader
@@ -855,7 +864,8 @@ private String base64Decode(String data) {
 				RequestDto requestDto = new RequestDto();
 				requestDto.setVersion(VERSION);
 				requestDto.setRequest(this.base64Encode(requestJson));
-				responseWrapper.setResponse(gson.toJson(requestDto));
+				generateSdkRequestResponseDto.setGeneratedRequest(gson.toJson(requestDto));
+				responseWrapper.setResponse(generateSdkRequestResponseDto);
 			}
 		} catch (ToolkitException ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
