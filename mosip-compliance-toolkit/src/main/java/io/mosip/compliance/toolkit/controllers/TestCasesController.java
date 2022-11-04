@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
+import io.mosip.compliance.toolkit.dto.GenerateSdkRequestResponseDto;
 import io.mosip.compliance.toolkit.dto.testcases.SdkRequestDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseRequestDto;
@@ -133,7 +134,7 @@ public class TestCasesController {
 	}
 
 	@PostMapping(value = "/generateRequestForSDK")
-	public ResponseWrapper<String> generateRequestForSDK(
+	public ResponseWrapper<GenerateSdkRequestResponseDto> generateRequestForSDK(
 			@RequestBody @Valid RequestWrapper<SdkRequestDto> request, Errors errors) throws Exception {
 		requestValidator.validateId(GENERATE_SDK_REQUEST_POST_ID, request.getId(), errors);
 		DataValidationUtil.validate(errors, GENERATE_SDK_REQUEST_POST_ID);
@@ -141,7 +142,7 @@ public class TestCasesController {
 	}
 	
 	@PostMapping(value = "/generateRequestForSDKFrmBirs")
-	public ResponseWrapper<String> generateRequestForSDKFrmBirs(
+	public ResponseWrapper<GenerateSdkRequestResponseDto> generateRequestForSDKFrmBirs(
 			@RequestBody @Valid RequestWrapper<SdkRequestDto> request, Errors errors) throws Exception {
 		requestValidator.validateId(GENERATE_SDK_REQUEST_POST_ID, request.getId(), errors);
 		DataValidationUtil.validate(errors, GENERATE_SDK_REQUEST_POST_ID);

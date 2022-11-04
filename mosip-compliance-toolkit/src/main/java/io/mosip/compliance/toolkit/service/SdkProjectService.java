@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.*;
+import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
 import io.mosip.compliance.toolkit.entity.SdkProjectEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
@@ -124,8 +125,9 @@ public class SdkProjectService {
 				} else if(sdkProjectDto.getBioTestDataFileName().equals(AppConstants.MOSIP_DEFAULT)) {
 					isValidTestFile = true;
 				} else {
-					String fileName = biometricTestDataRepository
-							.findFileIdByTestDataName(sdkProjectDto.getBioTestDataFileName(), partnerId);
+					BiometricTestDataEntity biometricTestData = biometricTestDataRepository
+							.findByTestDataName(sdkProjectDto.getBioTestDataFileName(), partnerId);
+					String fileName = biometricTestData.getFileId();
 					String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/" + sdkProjectDto.getPurpose();
 					if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
 						isValidTestFile = true;
@@ -226,9 +228,11 @@ public class SdkProjectService {
 							if (bioTestDataName.equals(AppConstants.MOSIP_DEFAULT)) {
 								entity.setBioTestDataFileName(AppConstants.MOSIP_DEFAULT);
 							} else {
-								String fileName = biometricTestDataRepository.findFileIdByTestDataName(bioTestDataName,
-										partnerId);
-								String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/" + entity.getPurpose();
+								BiometricTestDataEntity biometricTestData = biometricTestDataRepository
+										.findByTestDataName(bioTestDataName, partnerId);
+								String fileName = biometricTestData.getFileId();
+								String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/"
+										+ entity.getPurpose();
 								if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
 									entity.setBioTestDataFileName(bioTestDataName);
 								} else {
