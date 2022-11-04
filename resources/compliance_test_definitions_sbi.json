@@ -125,7 +125,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -179,7 +179,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -234,7 +234,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -288,7 +288,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -343,7 +343,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -395,7 +395,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -445,10 +445,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
 				}
 			]
 		],
@@ -496,7 +492,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -548,7 +544,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -598,10 +594,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
 				}
 			]
 		],
@@ -649,7 +641,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -698,7 +690,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -748,6 +740,10 @@
 					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+				},
+				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
 				}
@@ -791,6 +787,10 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -840,6 +840,10 @@
 					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+				},
+				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
 				}
@@ -885,6 +889,10 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -934,6 +942,10 @@
 					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+				},
+				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
 				}
@@ -979,6 +991,10 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -1029,6 +1045,10 @@
 					"description": "Validates the response for mandatory attributes and correct values"
 				},
 				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+				},
+				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
 				}
@@ -1074,6 +1094,10 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -1627,10 +1651,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
 				}
 			]
 		],
@@ -1673,10 +1693,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
 				}
 			]
 		],
@@ -1719,10 +1735,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
 				}
 			]
 		],
@@ -1765,10 +1777,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
 				}
 			]
 		],
@@ -1811,10 +1819,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
 				}
 			]
 		],
@@ -1857,10 +1861,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
 				}
 			]
 		],
@@ -1903,10 +1903,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates if response has bioCount, exceptions and segments should match as per the ones set in request."
 				}
 			]
 		],
@@ -2363,7 +2359,8 @@
 			"deviceSubId": "0",
 			"timeout": "500"
 		}
-	},{
+	},
+	{
 		"testCaseType": "SBI",
 		"testName": "Registration capture - Face - Force Capture",
 		"testId": "SBI1049",
@@ -2408,7 +2405,8 @@
 			"deviceSubId": "0",
 			"timeout": "10000"
 		}
-	},{
+	},
+	{
 		"testCaseType": "SBI",
 		"testName": "Registration capture - Double Iris - Force Capture",
 		"testId": "SBI1050",
@@ -2456,7 +2454,8 @@
 			"deviceSubId": "3",
 			"timeout": "10000"
 		}
-	},{
+	},
+	{
 		"testCaseType": "SBI",
 		"testName": "Registration capture - Left Slap - Force Capture",
 		"testId": "SBI1051",
@@ -2506,7 +2505,8 @@
 			"deviceSubId": "1",
 			"timeout": "10000"
 		}
-	},{
+	},
+	{
 		"testCaseType": "SBI",
 		"testName": "Registration capture - Right Slap - Force Capture",
 		"testId": "SBI1052",
@@ -2556,7 +2556,8 @@
 			"deviceSubId": "2",
 			"timeout": "10000"
 		}
-	},{
+	},
+	{
 		"testCaseType": "SBI",
 		"testName": "Registration capture - Two Thumbs - Force Capture",
 		"testId": "SBI1053",
@@ -2604,7 +2605,8 @@
 			"deviceSubId": "3",
 			"timeout": "10000"
 		}
-	},{
+	},
+	{
 		"testCaseType": "SBI",
 		"testName": "Registration capture - Exception Photo - Force Capture",
 		"testId": "SBI1054",
@@ -2651,7 +2653,8 @@
 			"deviceSubId": "0",
 			"timeout": "10000"
 		}
-	},{
+	},
+	{
 		"testCaseType": "SBI",
 		"testName": "Auth capture - Face - Force Capture",
 		"testId": "SBI1055",
@@ -2672,7 +2675,8 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},{
+				},
+				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
 				}
@@ -2717,7 +2721,8 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},{
+				},
+				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
 				}
@@ -2742,7 +2747,8 @@
 			"deviceSubId": "0",
 			"timeout": "10000"
 		}
-	},{
+	},
+	{
 		"testCaseType": "SBI",
 		"testName": "Auth capture - Unknown Finger - Force Capture",
 		"testId": "SBI1057",
@@ -2763,7 +2769,8 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},{
+				},
+				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
 				}

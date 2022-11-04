@@ -58,10 +58,12 @@ public class ResponseMismatchValidator extends ToolkitValidator {
                     }
                 }
                 reqException = new ArrayList<>();
-                JsonNode exceptionNode = biometricNode.get(EXCEPTION);
-                if (exceptionNode.isArray()) {
-                    for (final JsonNode exNode : exceptionNode) {
-                        reqException.add(exNode.textValue());
+                if (Purposes.REGISTRATION.getCode().equals(reqPurpose)) {
+                    JsonNode exceptionNode = biometricNode.get(EXCEPTION);
+                    if (exceptionNode.isArray()) {
+                        for (final JsonNode exNode : exceptionNode) {
+                            reqException.add(exNode.textValue());
+                        }
                     }
                 }
                 reqDeviceSubId = biometricNode.get(DEVICE_SUBID).textValue();
@@ -89,11 +91,15 @@ public class ResponseMismatchValidator extends ToolkitValidator {
                             validationResultDto = isValidSegment(resType, reqDeviceSubId, resBioSubType);
                             if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
                                 // Check Exception mismatch
-                                if (isValidException(reqException, resBioSubType).getStatus()
-                                        .equals(AppConstants.SUCCESS)) {
-                                    continue;
+                                if (Purposes.REGISTRATION.getCode().equals(reqPurpose)) {
+                                    if (isValidException(reqException, resBioSubType).getStatus()
+                                            .equals(AppConstants.SUCCESS)) {
+                                        continue;
+                                    } else {
+                                        break;
+                                    }
                                 } else {
-                                    break;
+                                    continue;
                                 }
                             } else {
                                 break;
