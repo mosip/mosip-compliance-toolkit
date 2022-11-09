@@ -5,7 +5,6 @@
 	"description": "DeviceInfo response Schema",
 	"additionalProperties": false,
 	"type": "array",
-	"minItems": 1,
 	"items": [
 		{
 			"type": "object",
