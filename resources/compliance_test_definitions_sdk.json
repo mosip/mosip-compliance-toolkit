@@ -1301,9 +1301,9 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "modality match success",
+		"testName": "Multi modality (Face, Finger) match success",
 		"testId": "SDK2035",
-		"testDescription": "modality match success",
+		"testDescription": "Multi modality (Face, Finger) match success",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
 		"methodName": [

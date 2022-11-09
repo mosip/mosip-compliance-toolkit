@@ -1400,10 +1400,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
 				}
 			]
 		],

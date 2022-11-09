@@ -16,7 +16,7 @@
 					"type": "integer"
 				},
 				"statusMessage": {
-					"type": "null"
+					"type": ["null","string"]
 				},
 				"response": {
 					"type": "array",
