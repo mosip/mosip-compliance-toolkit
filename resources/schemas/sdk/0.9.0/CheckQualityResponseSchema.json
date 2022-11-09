@@ -16,7 +16,7 @@
 					"type": "integer"
 				},
 				"statusMessage": {
-					"type": "string"
+					"type": ["null","string"]
 				},
 				"response": {
 					"type": "object",

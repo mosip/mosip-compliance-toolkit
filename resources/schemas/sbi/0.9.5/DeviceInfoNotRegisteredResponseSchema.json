@@ -8,10 +8,10 @@
 	"minItems": 1,
 	"items": [
 		{
-			"type": "object",
+		"type": ["object", "null"],
 			"properties": {
 				"deviceInfo": {
-					"$ref": "#/definitions/non-empty-string"
+					"type": "string"
 				},
 				"deviceInfoDecoded": {
 					"type": "object",
