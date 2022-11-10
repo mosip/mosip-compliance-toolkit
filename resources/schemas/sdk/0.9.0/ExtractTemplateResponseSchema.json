@@ -22,10 +22,7 @@
 					]
 				},
 				"response": {
-					"type": [
-						"object",
-						"null"
-					],
+					"type": "object",
 					"properties": {
 						"version": {
 							"type": [

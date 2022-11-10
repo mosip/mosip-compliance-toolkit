@@ -1,0 +1,45 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema#",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/CheckQualityNullResponseSchema.json",
+	"type": "object",
+	"properties": {
+		"version": {
+			"type": "string"
+		},
+		"responsetime": {
+			"type": "string"
+		},
+		"response": {
+			"type": "object",
+			"properties": {
+				"statusCode": {
+					"type": "integer"
+				},
+				"statusMessage": {
+					"type": [
+						"string",
+						"null"
+					]
+				},
+				"response": {
+					"type": "null"
+				}
+			},
+			"required": [
+				"statusCode",
+				"statusMessage",
+				"response"
+			]
+		},
+		"errors": {
+			"type": "array",
+			"items": {}
+		}
+	},
+	"required": [
+		"version",
+		"responsetime",
+		"response",
+		"errors"
+	]
+}
