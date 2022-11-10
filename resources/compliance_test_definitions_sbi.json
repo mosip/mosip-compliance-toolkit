@@ -106,7 +106,7 @@
 		"testName": "Registration capture - Left Slap",
 		"testId": "SBI1002",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate the RCapture interface for Left Slap Fingerprints<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left slap on the device until the capture completes",
+		"testDescription": "Test to validate the RCapture interface for Left Slap Fingerprints<br><br>Steps:<br>1. Click on Start Streaming button. <br> until the capture completes <br> 3. Once streaming is done, click on Inititate Capture to start the capture <br>",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -160,7 +160,7 @@
 		"testName": "Registration capture - Left Slap - One Exception",
 		"testId": "SBI1003",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for Left Slap Fingerprints with one missing finger<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left slap on the device except the left index finger until the capture completes",
+		"testDescription": "Test to validate RCapture interface for Left Slap Fingerprints with one missing finger<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>2. Place your left slap on the device except the left index finger until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -215,7 +215,7 @@
 		"testName": "Registration capture - Right Slap",
 		"testId": "SBI1004",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for Right Slap Fingerprints<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your right slap on the device until the capture completes",
+		"testDescription": "Test to validate RCapture interface for Right Slap Fingerprints<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>2. Place your right slap on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -269,7 +269,7 @@
 		"testName": "Registration capture - Right Slap - Two Exception",
 		"testId": "SBI1005",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for Right Slap Fingerprints with two missing fingers<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your right slap on the device except the right ring and little finger until the capture completes",
+		"testDescription": "Test to validate RCapture interface for Right Slap Fingerprints with two missing fingers<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>2. Place your right slap on the device except the right ring and little finger until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -324,7 +324,7 @@
 		"testName": "Registration capture - Two Thumbs",
 		"testId": "SBI1006",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for Two Thumbs<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place both your thumbs on the device until the capture completes",
+		"testDescription": "Test to validate RCapture interface for Two Thumbs<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>2. Place both your thumbs on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -376,7 +376,7 @@
 		"testName": "Registration capture - Two Thumbs - One Exception",
 		"testId": "SBI1007",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for Two Thumbs with one missing thumb<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place only the right thumb on the device until the capture completes",
+		"testDescription": "Test to validate RCapture interface for Two Thumbs with one missing thumb<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>2. Place only the right thumb on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -429,7 +429,7 @@
 		"testName": "Registration capture - Two Thumbs - Both Exception",
 		"testId": "SBI1008",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for Two Thumbs when both the thumbs are missing<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot press any finger or thumb on the device until the capture completes",
+		"testDescription": "Test to validate RCapture interface for Two Thumbs when both the thumbs are missing<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>2. Donot press any finger or thumb on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -473,7 +473,7 @@
 		"testName": "Registration capture - Double Iris",
 		"testId": "SBI1009",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for Two Iris<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place both your iris on the device until the capture completes",
+		"testDescription": "Test to validate RCapture interface for Two Iris<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>2. Place both your iris on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -525,7 +525,7 @@
 		"testName": "Registration capture - Double Iris - One Exception",
 		"testId": "SBI1010",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for iris with one missing iris<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place only the right iris on the device until the capture completes",
+		"testDescription": "Test to validate RCapture interface for iris with one missing iris<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>2. Place only the right iris on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -578,7 +578,7 @@
 		"testName": "Registration capture - Double Iris - Both Exception",
 		"testId": "SBI1011",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for iris when both iris are missing<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place any iris on the device during capture",
+		"testDescription": "Test to validate RCapture interface for iris when both iris are missing<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>2. Donot place any iris on the device during capture",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -622,7 +622,7 @@
 		"testName": "Registration capture - Face",
 		"testId": "SBI1012",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for face<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your face infornt of the camera until the capture completes",
+		"testDescription": "Test to validate RCapture interface for face<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -671,7 +671,7 @@
 		"testName": "Registration capture - Exception Photo",
 		"testId": "SBI1013",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for exception photo<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Raise your hands during capture",
+		"testDescription": "Test to validate RCapture interface for exception photo<br>Steps:<br><br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Raise your hands during capture",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -687,10 +687,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -722,7 +718,7 @@
 		"testName": "Auth capture - Face",
 		"testId": "SBI1014",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate Capture interface for face<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your face infornt of the camera until the capture completes",
+		"testDescription": "Test to validate Capture interface for face<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -771,7 +767,7 @@
 		"testName": "Auth capture - Single Iris - Unknown Iris",
 		"testId": "SBI1015",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate Capture interface for a single iris<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place one of your iris infornt of the iris scanner",
+		"testDescription": "Test to validate Capture interface for a single iris<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your iris infront of the iris scanner",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -822,7 +818,7 @@
 		"testName": "Auth capture - Single Iris - Left Iris",
 		"testId": "SBI1016",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate Capture interface for left iris<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left iris infornt of the iris scanner",
+		"testDescription": "Test to validate Capture interface for left iris<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your left iris infront of the iris scanner",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -873,7 +869,7 @@
 		"testName": "Auth capture - Single Iris - Right Iris",
 		"testId": "SBI1017",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate Capture interface for right iris<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your right iris infornt of the iris scanner",
+		"testDescription": "Test to validate Capture interface for right iris<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your right iris infront of the iris scanner",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -924,7 +920,7 @@
 		"testName": "Auth capture - Unknown Finger",
 		"testId": "SBI1018",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate Capture interface for a finger<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place one of your finger on the single fingerprint scanner",
+		"testDescription": "Test to validate Capture interface for a finger<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -975,7 +971,7 @@
 		"testName": "Auth capture -Two Unknown Finger",
 		"testId": "SBI1019",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate Capture interface for two fingers<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place two fingers, one by one on the fingerprint scanner",
+		"testDescription": "Test to validate Capture interface for two fingers<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place two fingers, one by one on the fingerprint scanner",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -1027,7 +1023,7 @@
 		"testName": "Auth capture - LeftIndex Finger",
 		"testId": "SBI1020",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate Capture interface for left index finger<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left index finger on the fingerprint scanner",
+		"testDescription": "Test to validate Capture interface for left index finger<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your left index finger on the fingerprint scanner",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -1078,7 +1074,7 @@
 		"testName": "Auth capture - Two Finger",
 		"testId": "SBI1021",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate Capture interface for two fingers<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place two fingers, one by one on the fingerprint scanner",
+		"testDescription": "Test to validate Capture interface for two fingers<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place two fingers, one by one on the fingerprint scanner",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -1265,7 +1261,7 @@
 		"testName": "Auth capture - Face - Key Rotation",
 		"testId": "SBI1025",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate Capture interface for face<br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place face infornt of the camera during capture",
+		"testDescription": "Test to validate Capture interface for face<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place face infront of the camera during capture",
 		"isNegativeTestcase": false,
 		"inactive": true,
 		"methodName": [
@@ -1505,7 +1501,7 @@
 		"testName": "Auth capture - Fingerprint - Bio Count Mismatch",
 		"testId": "SBI1030",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for auth fingerprint device<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your finger on the device until the capture completes",
+		"testDescription": "Test to validate bio count mismatch for auth fingerprint device<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your finger on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -1547,7 +1543,7 @@
 		"testName": "Auth capture - Iris - Bio Count Mismatch",
 		"testId": "SBI1031",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for auth iris device<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your iris on the device until the capture completes",
+		"testDescription": "Test to validate bio count mismatch for auth iris device<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your iris on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -1589,7 +1585,7 @@
 		"testName": "Auth capture - Face - Bio Count Mismatch",
 		"testId": "SBI1032",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for face<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your face infront of the camera until the capture completes",
+		"testDescription": "Test to validate bio count mismatch for face<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -1631,7 +1627,7 @@
 		"testName": "Registration capture - Left Slap - Bio Count Mismatch",
 		"testId": "SBI1033",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for registration left slap<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left slap on the slap scanner until the capture completes",
+		"testDescription": "Test to validate bio count mismatch for registration left slap<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your left slap on the slap scanner until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1673,7 +1669,7 @@
 		"testName": "Registration capture - Right Slap - Bio Count Mismatch",
 		"testId": "SBI1034",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for registration right slap<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your right slap on the slap scanner until the capture completes",
+		"testDescription": "Test to validate bio count mismatch for registration right slap<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your right slap on the slap scanner until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1715,7 +1711,7 @@
 		"testName": "Registration capture - Two Thumbs - Bio Count Mismatch",
 		"testId": "SBI1035",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for registration thumbs<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your thumbs on the slap scanner until the capture completes",
+		"testDescription": "Test to validate bio count mismatch for registration thumbs<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your thumbs on the slap scanner until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1757,7 +1753,7 @@
 		"testName": "Registration capture - Left iris - Bio Count Mismatch",
 		"testId": "SBI1036",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for registration left iris<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your left iris on the device until the capture completes",
+		"testDescription": "Test to validate bio count mismatch for registration left iris<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your left iris on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1799,7 +1795,7 @@
 		"testName": "Registration capture - Right Iris - Bio Count Mismatch",
 		"testId": "SBI1037",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for registration right iris<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your right iris on the device until the capture completes",
+		"testDescription": "Test to validate bio count mismatch for registration right iris<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your right iris on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1841,7 +1837,7 @@
 		"testName": "Registration capture - Both Iris - Bio Count Mismatch",
 		"testId": "SBI1038",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for registration both iris<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place both your iris on the device until the capture completes",
+		"testDescription": "Test to validate bio count mismatch for registration both iris<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place both your iris on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1883,7 +1879,7 @@
 		"testName": "Registration capture - Face - Bio Count Mismatch",
 		"testId": "SBI1039",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for registration face<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Place your face infront of the camera until the capture completes",
+		"testDescription": "Test to validate bio count mismatch for registration face<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1925,7 +1921,7 @@
 		"testName": "Registration capture - Face - Timeout",
 		"testId": "SBI1040",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate face timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your face infornt of the camera and wait for capture to timeout",
+		"testDescription": "Test to validate face timeout<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Donot place your face infront of the camera and wait for capture to timeout",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1971,7 +1967,7 @@
 		"testName": "Registration capture - Double Iris - Timeout",
 		"testId": "SBI1041",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate iris timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your iris on the iris scanner and wait for capture to timeout",
+		"testDescription": "Test to validate iris timeout<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Donot place your iris on the iris scanner and wait for capture to timeout",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2020,7 +2016,7 @@
 		"testName": "Registration capture - Left Slap - Timeout",
 		"testId": "SBI1042",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate left slap timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your fingers on the slap scanner and wait for capture to timeout",
+		"testDescription": "Test to validate left slap timeout<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>2. Donot place your fingers on the slap scanner and wait for capture to timeout",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2071,7 +2067,7 @@
 		"testName": "Registration capture - Right Slap - Timeout",
 		"testId": "SBI1043",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate right slap timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your fingers on the slap scanner and wait for capture to timeout",
+		"testDescription": "Test to validate right slap timeout<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Donot place your fingers on the slap scanner and wait for capture to timeout",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2122,7 +2118,7 @@
 		"testName": "Registration capture - Two Thumbs - Timeout",
 		"testId": "SBI1044",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate thumb timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your fingers on the slap scanner and wait for capture to timeout",
+		"testDescription": "Test to validate thumb timeout<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Donot place your fingers on the slap scanner and wait for capture to timeout",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2171,7 +2167,7 @@
 		"testName": "Registration capture - Exception Photo - Timeout",
 		"testId": "SBI1045",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate exception photo timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your face infornt of the camera and wait for capture to timeout",
+		"testDescription": "Test to validate exception photo timeout<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Donot place your face infront of the camera and wait for capture to timeout",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2219,7 +2215,7 @@
 		"testName": "Auth capture - Face - Timeout",
 		"testId": "SBI1046",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate face timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your face infornt of the camera and wait for capture to timeout",
+		"testDescription": "Test to validate face timeout<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Donot place your face infront of the camera and wait for capture to timeout",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -2265,7 +2261,7 @@
 		"testName": "Auth capture - Single Iris - Unknown Iris - Timeout",
 		"testId": "SBI1047",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate iris timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your iris on ths iris scanner and wait for capture to timeout",
+		"testDescription": "Test to validate iris timeout<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Donot place your iris on ths iris scanner and wait for capture to timeout",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -2313,7 +2309,7 @@
 		"testName": "Auth capture - Unknown Finger - Timeout",
 		"testId": "SBI1048",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate finger timeout<br><br>Steps:<br>1. Click on inititate capture to start the capture <br>2. Donot place your finger on the finger scanner and wait for capture to timeout",
+		"testDescription": "Test to validate finger timeout<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Donot place your finger on the finger scanner and wait for capture to timeout",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -2361,7 +2357,7 @@
 		"testName": "Registration capture - Face - Force Capture",
 		"testId": "SBI1049",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for registration capture request for face",
+		"testDescription": "Force Capture validation for registration capture request for face<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera and wait for capture",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2407,7 +2403,7 @@
 		"testName": "Registration capture - Double Iris - Force Capture",
 		"testId": "SBI1050",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for registration capture request for double iris",
+		"testDescription": "Force Capture validation for registration capture request for double iris<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your iris infront of the camera and wait for capture",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2456,7 +2452,7 @@
 		"testName": "Registration capture - Left Slap - Force Capture",
 		"testId": "SBI1051",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for registration capture request for Left Slap",
+		"testDescription": "Force Capture validation for registration capture request for Left Slap<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your left slap on device and wait for capture",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2507,7 +2503,7 @@
 		"testName": "Registration capture - Right Slap - Force Capture",
 		"testId": "SBI1052",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for registration capture request for Right Slap",
+		"testDescription": "Force Capture validation for registration capture request for Right Slap<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your right slap on device and wait for capture",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2558,7 +2554,7 @@
 		"testName": "Registration capture - Two Thumbs - Force Capture",
 		"testId": "SBI1053",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for registration capture request for Two Thumbs",
+		"testDescription": "Force Capture validation for registration capture request for Two Thumbs<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your two thumbs on device and wait for capture",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
