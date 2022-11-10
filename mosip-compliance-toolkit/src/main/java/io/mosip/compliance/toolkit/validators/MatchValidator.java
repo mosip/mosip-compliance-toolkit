@@ -95,7 +95,7 @@ public class MatchValidator extends SDKValidator {
 									validationResultDto.setStatus(AppConstants.SUCCESS);
 								}
 								results += "Positive Match for " + entry2.getKey().toString()
-										+ " is successful for galleryIndex: " + galleryIndex;
+										+ " is successful for galleryIndex: " + (galleryIndex + 1);
 							} else {
 								//if status is previously failed, then do not reset
 								if (validationResultDto.getStatus() != null
@@ -105,20 +105,20 @@ public class MatchValidator extends SDKValidator {
 									validationResultDto.setStatus(AppConstants.SUCCESS);
 								}
 								results += "Negative Match for " + entry2.getKey().toString()
-										+ " is successful for galleryIndex: " + galleryIndex;
+										+ " is successful for galleryIndex: " + (galleryIndex + 1);
 							}
 						} else {
 							if (!inputDto.isNegativeTestCase()) {
 								validationResultDto.setStatus(AppConstants.FAILURE);
 								results += "Positive Match for " + entry2.getKey().toString()
-										+ " failed for galleryIndex: " + galleryIndex;
+										+ " failed for galleryIndex: " + (galleryIndex + 1);
 							} else {
 								validationResultDto.setStatus(AppConstants.FAILURE);
 								results += "Negative Match for " + entry2.getKey().toString()
-										+ " failed for galleryIndex: " + galleryIndex;
+										+ " failed for galleryIndex: " + (galleryIndex + 1);
 							}
 						}
-						results += ", ";
+						results += "<br>";
 					}
 				}
 				validationResultDto.setDescription(results);
