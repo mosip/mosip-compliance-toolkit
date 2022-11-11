@@ -730,7 +730,7 @@
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
 				},
 				{
-					"name": "MatchValidator",
+					"name": "MatchMultiGalleryValidator",
 					"description": "Validates if biomterics match for the modality"
 				}
 			]
@@ -952,7 +952,7 @@
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
 				},
 				{
-					"name": "MatchValidator",
+					"name": "MatchMultiGalleryValidator",
 					"description": "Validates if biomterics match for the modality"
 				}
 			]
@@ -1211,7 +1211,7 @@
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
 				},
 				{
-					"name": "MatchValidator",
+					"name": "MatchMultiGalleryValidator",
 					"description": "Validates if biomterics match for the modality"
 				}
 			]
@@ -1399,7 +1399,7 @@
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
 				},
 				{
-					"name": "MatchValidator",
+					"name": "MatchMultiGalleryValidator",
 					"description": "Validates if biomterics match for the modality"
 				}
 			]

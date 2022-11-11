@@ -15,6 +15,12 @@ ALTER TABLE IF EXISTS toolkit.biometric_testdata
 
 ALTER TABLE IF EXISTS toolkit.test_run_details
 	DROP COLUMN IF EXISTS test_data_source;
+
+ALTER TABLE IF EXISTS toolkit.test_run_details
+	DROP COLUMN IF EXISTS method_url;
 	
 ALTER TABLE IF EXISTS toolkit.test_run_details_archive
 	DROP COLUMN IF EXISTS test_data_source;
+
+ALTER TABLE IF EXISTS toolkit.test_run_details_archive
+	DROP COLUMN IF EXISTS method_url;

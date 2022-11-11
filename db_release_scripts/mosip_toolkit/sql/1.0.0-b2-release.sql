@@ -11,10 +11,16 @@
 \c mosip_toolkit
 
 ALTER TABLE IF EXISTS toolkit.biometric_testdata
-    ADD COLUMN IF NOT EXISTS file_hash character varying(64) NOT NULL;
+    ADD COLUMN IF NOT EXISTS file_hash character varying(64);
 	
 ALTER TABLE IF EXISTS toolkit.test_run_details
+    ADD COLUMN IF NOT EXISTS method_url character varying(256);
+
+ALTER TABLE IF EXISTS toolkit.test_run_details
     ADD COLUMN IF NOT EXISTS test_data_source character varying(256);
-	
+
+ALTER TABLE IF EXISTS toolkit.test_run_details_archive
+    ADD COLUMN IF NOT EXISTS method_url character varying(256);
+
 ALTER TABLE IF EXISTS toolkit.test_run_details_archive
     ADD COLUMN IF NOT EXISTS test_data_source character varying(256);
