@@ -3,6 +3,7 @@
 CREATE TABLE toolkit.test_run_details_archive(
 	run_id character varying(36) NOT NULL,
     testcase_id character varying(36) NOT NULL,
+	method_url character varying NOT NULL,
 	method_request character varying NOT NULL,
     method_response character varying NOT NULL, 
     result_status character varying(256) NOT NULL,     
@@ -23,6 +24,7 @@ CREATE INDEX IF NOT EXISTS idx_test_run_details_archive_id_partner_id ON toolkit
 COMMENT ON TABLE toolkit.test_run_details_archive IS 'This table has all the execution details archives for a test run for a given collection in compliance toolkit project.';
 COMMENT ON COLUMN toolkit.test_run_details_archive.run_id IS 'run_id: Unique run Id generated for an test run.';
 COMMENT ON COLUMN toolkit.test_run_details_archive.testcase_id IS 'Testcase ID: Id of the corresponding testcase.';
+COMMENT ON COLUMN toolkit.test_run_details.method_url IS 'Method URL: URL used for method execution.';
 COMMENT ON COLUMN toolkit.test_run_details_archive.method_request IS 'Method Request: request used for method execution.';
 COMMENT ON COLUMN toolkit.test_run_details_archive.method_response IS 'Method Response: response received on method execution.';
 COMMENT ON COLUMN toolkit.test_run_details_archive.result_status IS 'result_status: status of a test run execution.';

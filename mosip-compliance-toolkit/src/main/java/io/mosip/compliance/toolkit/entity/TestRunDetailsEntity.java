@@ -33,6 +33,9 @@ public class TestRunDetailsEntity {
 	@Column(name = "testcase_id")
 	private String testcaseId;
 	
+	@Column(name = "method_url")
+	private String methodUrl;
+	
 	@Column(name = "method_request")
 	private String methodRequest;
 	
