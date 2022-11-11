@@ -2787,5 +2787,119 @@
 			"deviceSubId": "0",
 			"timeout": "10000"
 		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Auth capture - 10 Fingers",
+		"testId": "SBI1058",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to perform Auth capture for 10 Fingers",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Single"
+			],
+			"segments": [
+				"LeftIndex",
+				"LeftMiddle",
+				"LeftRing",
+				"LeftLittle",
+				"LeftThumb",
+				"RightIndex",
+				"RightMiddle",
+				"RightRing",
+				"RightLittle",
+				"RightThumb"
+			],
+			"exceptions": [],
+			"requestedScore": "100",
+			"bioCount": "10",
+			"deviceSubId": "0",
+			"timeout": "10000"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Auth capture - 2 Iris",
+		"testId": "SBI1059",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to perform Auth capture for 2 Iris",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Double"
+			],
+			"segments": [
+				"Left",
+				"Right"
+			],
+			"exceptions": [],
+			"requestedScore": "100",
+			"bioCount": "2",
+			"deviceSubId": "0",
+			"timeout": "10000"
+		}
 	}
 ]
