@@ -20,7 +20,7 @@ import io.mosip.kernel.biometrics.constant.Match;
 import io.mosip.kernel.biometrics.model.Decision;
 import io.mosip.kernel.biometrics.model.MatchDecision;
 
-public class MatchValidator extends SDKValidator {
+public class MatchMultiGalleryValidator extends SDKValidator {
 
 	private Gson gson = new GsonBuilder().serializeNulls().create();
 
@@ -66,15 +66,17 @@ public class MatchValidator extends SDKValidator {
 							if (!inputDto.isNegativeTestCase()) {
 								if (Match.MATCHED.toString().equals(matchValue)) {
 									setResults(resultsMap, galleryIndex, biometricType, Boolean.TRUE);
-								} else {
-									setResults(resultsMap, galleryIndex, biometricType, Boolean.FALSE);
-								}
+								} 
+//								else {
+//									setResults(resultsMap, galleryIndex, biometricType, Boolean.FALSE);
+//								}
 							} else {
 								if (Match.NOT_MATCHED.toString().equals(matchValue)) {
 									setResults(resultsMap, galleryIndex, biometricType, Boolean.TRUE);
-								} else {
-									setResults(resultsMap, galleryIndex, biometricType, Boolean.FALSE);
-								}
+								} 
+//								else {
+//									setResults(resultsMap, galleryIndex, biometricType, Boolean.FALSE);
+//								}
 							}
 						}
 					}
@@ -105,7 +107,7 @@ public class MatchValidator extends SDKValidator {
 									validationResultDto.setStatus(AppConstants.SUCCESS);
 								}
 								results += "Negative Match for " + entry2.getKey().toString()
-										+ " is successful for gallery" + (galleryIndex + 1) + ".xml";
+										+ " is successful for gallery"  + (galleryIndex + 1) + ".xml";
 							}
 						} else {
 							if (!inputDto.isNegativeTestCase()) {
