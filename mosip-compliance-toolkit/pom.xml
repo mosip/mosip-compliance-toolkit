@@ -57,11 +57,25 @@
 		<!-- Object Store -->
 		<kernel.khazana.version>1.2.0</kernel.khazana.version>
 
+		<biometrics-util.version>1.2.1-SNAPSHOT</biometrics-util.version>
+		<jnbis.version>2.0.2</jnbis.version>
+
 		<sonar.coverage.exclusions>
 		</sonar.coverage.exclusions>
 		<sonar.cpd.exclusions></sonar.cpd.exclusions>
 	</properties>
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/com.github.mhshams/jnbis -->
+		<dependency>
+		    <groupId>com.github.mhshams</groupId>
+		    <artifactId>jnbis</artifactId>
+		    <version>${jnbis.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.mosip.biometric.util</groupId>
+			<artifactId>biometrics-util</artifactId>
+			<version>${biometrics-util.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>io.mosip.commons</groupId>
 			<artifactId>khazana</artifactId>
