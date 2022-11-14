@@ -908,7 +908,7 @@ private String base64Decode(String data) {
 			xmlFileName += name;
 			while ((zipEntry = zis.getNextEntry()) != null) {
 				if (xmlFileName.equals(zipEntry.getName())) {
-					bytes = getZipEntryBytes(zis);
+					bytes = getZipEntryBytes(zis, zipEntry.getCompressedSize());
 					break;
 				}
 			}
@@ -920,12 +920,25 @@ private String base64Decode(String data) {
 		return bytes;
 	}
 
-	private byte[] getZipEntryBytes(ZipInputStream zis) throws IOException {
+	private byte[] getZipEntryBytes(ZipInputStream zis, long entryCompressedSize) throws IOException {
+		int totalSizeEntry = 0;
+		double THRESHOLD_RATIO = 10;
 		byte[] b = new byte[1024];
 		int len = 0;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		while ((len = zis.read(b)) > 0) {
 			out.write(b, 0, len);
+			totalSizeEntry += len;
+
+			double compressionRatio = totalSizeEntry / entryCompressedSize;
+			if (compressionRatio > THRESHOLD_RATIO) {
+				// ratio between compressed and uncompressed data is highly suspicious, looks
+				// like a Zip Bomb Attack
+				log.error("sessionId", "idType", "id", "In getZipEntryBytes method of TestCasesService.");
+				log.error(
+						"ratio between compressed and uncompressed data is highly suspicious, looks like a Zip Bomb Attack");
+				return null;
+			}
 		}
 		return out.toByteArray();
 	}

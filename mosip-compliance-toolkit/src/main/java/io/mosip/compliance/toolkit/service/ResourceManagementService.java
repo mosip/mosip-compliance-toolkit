@@ -60,7 +60,7 @@ public class ResourceManagementService {
 				String objectName = null;
 				switch (type) {
 				case AppConstants.MOSIP_DEFAULT:
-					if (!fileName.endsWith(ZIP_EXT)) {
+					if (Objects.isNull(fileName) || !fileName.endsWith(ZIP_EXT)) {
 						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
 								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
 					}
@@ -72,7 +72,7 @@ public class ResourceManagementService {
 							+ ZIP_EXT;
 					break;
 				case AppConstants.SCHEMAS:
-					if (!fileName.endsWith(JSON_EXT)) {
+					if (Objects.isNull(fileName) || !fileName.endsWith(JSON_EXT)) {
 						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
 								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
 					}
@@ -80,7 +80,7 @@ public class ResourceManagementService {
 					objectName = fileName;
 					break;
 				case SBI_SCHEMA:
-					if (!fileName.endsWith(JSON_EXT)) {
+					if (Objects.isNull(fileName) || !fileName.endsWith(JSON_EXT)) {
 						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
 								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
 					}
@@ -88,7 +88,7 @@ public class ResourceManagementService {
 					objectName = fileName;
 					break;
 				case SDK_SCHEMA:
-					if (!fileName.endsWith(JSON_EXT)) {
+					if (Objects.isNull(fileName) || !fileName.endsWith(JSON_EXT)) {
 						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
 								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
 					}
