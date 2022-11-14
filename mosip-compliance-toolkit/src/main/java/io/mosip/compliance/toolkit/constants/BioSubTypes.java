@@ -33,6 +33,6 @@ public enum BioSubTypes {
                 return paramCode;
             }
         }
-        throw new ToolkitException(ToolkitErrorCodes.INVALID_DEVICE_SUB_TYPE.getErrorCode(), ToolkitErrorCodes.INVALID_DEVICE_SUB_TYPE.getErrorMessage());
+        throw new ToolkitException(ToolkitErrorCodes.INVALID_BIO_SUB_TYPE.getErrorCode(), ToolkitErrorCodes.INVALID_BIO_SUB_TYPE.getErrorMessage());
     }
 }
