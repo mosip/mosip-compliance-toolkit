@@ -932,7 +932,6 @@ private String base64Decode(String data) {
 			totalSizeEntry += len;
 
 			double compressionRatio = totalSizeEntry / entryCompressedSize;
-
 			if (compressionRatio > ZIP_COMPRESSION_RATION_THRESHOLD) {
 				// ratio between compressed and uncompressed data is highly suspicious, looks
 				// like a Zip Bomb Attack
