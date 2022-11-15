@@ -58,8 +58,15 @@
 		<kernel.khazana.version>1.2.0</kernel.khazana.version>
 
 		<sonar.coverage.exclusions>
+			**/config/**,
+			**/constants/**,
+			**/dto/**,
+			**/entity/**,
+			**/exceptions/**,
+			**/repository/**,
+			**/util/**
 		</sonar.coverage.exclusions>
-		<sonar.cpd.exclusions></sonar.cpd.exclusions>
+		<sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
 	</properties>
 	<dependencies>
 		<dependency>
