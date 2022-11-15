@@ -65,6 +65,7 @@
 			**/exceptions/**,
 			**/repository/**,
 			**/util/**
+			**/validators/**
 		</sonar.coverage.exclusions>
 		<sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
 	</properties>
