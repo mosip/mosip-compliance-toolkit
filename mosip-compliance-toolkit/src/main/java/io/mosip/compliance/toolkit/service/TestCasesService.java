@@ -85,6 +85,8 @@ import io.mosip.kernel.core.logger.spi.Logger;
 
 @Component
 public class TestCasesService {
+	
+	private static final double ZIP_COMPRESSION_RATIO_THRESHOLD = 10;
 
 	@Value("${mosip.toolkit.api.id.projects.get}")
 	private String getProjectsId;
@@ -908,7 +910,7 @@ private String base64Decode(String data) {
 			xmlFileName += name;
 			while ((zipEntry = zis.getNextEntry()) != null) {
 				if (xmlFileName.equals(zipEntry.getName())) {
-					bytes = getZipEntryBytes(zis);
+					bytes = getZipEntryBytes(zis, zipEntry.getCompressedSize());
 					break;
 				}
 			}
@@ -920,12 +922,25 @@ private String base64Decode(String data) {
 		return bytes;
 	}
 
-	private byte[] getZipEntryBytes(ZipInputStream zis) throws IOException {
+	private byte[] getZipEntryBytes(ZipInputStream zis, long entryCompressedSize) throws IOException {
+		double totalSizeEntry = 0;
 		byte[] b = new byte[1024];
 		int len = 0;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		while ((len = zis.read(b)) > 0) {
 			out.write(b, 0, len);
+			totalSizeEntry += len;
+
+			double compressionRatio = totalSizeEntry / entryCompressedSize;
+
+			if (compressionRatio > ZIP_COMPRESSION_RATIO_THRESHOLD) {
+				// ratio between compressed and uncompressed data is highly suspicious, looks
+				// like a Zip Bomb Attack
+				log.error("sessionId", "idType", "id", "In getZipEntryBytes method of TestCasesService.");
+				log.error(
+						"ratio between compressed and uncompressed data is highly suspicious, looks like a Zip Bomb Attack");
+				return null;
+			}
 		}
 		return out.toByteArray();
 	}
