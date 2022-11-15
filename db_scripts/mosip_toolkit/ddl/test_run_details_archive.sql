@@ -29,7 +29,7 @@ COMMENT ON COLUMN toolkit.test_run_details_archive.method_request IS 'Method Req
 COMMENT ON COLUMN toolkit.test_run_details_archive.method_response IS 'Method Response: response received on method execution.';
 COMMENT ON COLUMN toolkit.test_run_details_archive.result_status IS 'result_status: status of a test run execution.';
 COMMENT ON COLUMN toolkit.test_run_details_archive.result_description IS 'result_description: description of a test run execution as received from validators.';
-COMMENT ON COLUMN toolkit.test_run_details_archive.test_data_source IS 'test_data_source: biometric test data used for this testcase'
+COMMENT ON COLUMN toolkit.test_run_details_archive.test_data_source IS 'test_data_source: biometric test data used for this testcase';
 COMMENT ON COLUMN toolkit.test_run_details_archive.partner_id IS 'Partner Id: partner id who has created this project.';
 COMMENT ON COLUMN toolkit.test_run_details_archive.cr_by IS 'Created By : ID or name of the user who create / insert record.';
 COMMENT ON COLUMN toolkit.test_run_details_archive.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
