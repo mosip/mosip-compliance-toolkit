@@ -2953,7 +2953,7 @@
 				"Iris"
 			],
 			"deviceSubTypes": [
-				"Double"
+				"Single"
 			],
 			"segments": [
 				"Left",
