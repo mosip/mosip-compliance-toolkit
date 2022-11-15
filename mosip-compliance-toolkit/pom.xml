@@ -61,8 +61,17 @@
 		<jnbis.version>2.0.2</jnbis.version>
 
 		<sonar.coverage.exclusions>
+			**/config/**,
+			**/constants/**,
+			**/dto/**,
+			**/entity/**,
+			**/exceptions/**,
+			**/repository/**,
+			**/util/**,
+			**/validators/**,
+			**/*Application.java
 		</sonar.coverage.exclusions>
-		<sonar.cpd.exclusions></sonar.cpd.exclusions>
+		<sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
 	</properties>
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/com.github.mhshams/jnbis -->
