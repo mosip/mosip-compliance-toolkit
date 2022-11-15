@@ -86,7 +86,7 @@ import io.mosip.kernel.core.logger.spi.Logger;
 @Component
 public class TestCasesService {
 	
-	private double ZIP_COMPRESSION_RATIO_THRESHOLD = 10;
+	private static final double ZIP_COMPRESSION_RATIO_THRESHOLD = 10;
 
 	@Value("${mosip.toolkit.api.id.projects.get}")
 	private String getProjectsId;
