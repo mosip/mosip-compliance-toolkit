@@ -938,7 +938,7 @@ private String base64Decode(String data) {
 				log.error("sessionId", "idType", "id", "In getZipEntryBytes method of TestCasesService.");
 				log.error(
 						"ratio between compressed and uncompressed data is highly suspicious, looks like a Zip Bomb Attack");
-				return null;
+				return new byte[0];
 			}
 		}
 		return out.toByteArray();
