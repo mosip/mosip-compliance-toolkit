@@ -71,6 +71,7 @@ import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
 import io.mosip.compliance.toolkit.repository.TestCasesRepository;
 import io.mosip.compliance.toolkit.util.CryptoUtil;
+import io.mosip.compliance.toolkit.util.ZipFileUtil;
 import io.mosip.compliance.toolkit.validators.BaseValidator;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
@@ -85,8 +86,6 @@ import io.mosip.kernel.core.logger.spi.Logger;
 
 @Component
 public class TestCasesService {
-	
-	private static final double ZIP_COMPRESSION_RATIO_THRESHOLD = 10;
 
 	@Value("${mosip.toolkit.api.id.projects.get}")
 	private String getProjectsId;
@@ -896,7 +895,7 @@ private String base64Decode(String data) {
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
-
+	
 	private byte[] getXmlDataFromZipFile(InputStream zipFileIs, String purpose, String testcaseId, String name)
 			throws Exception {
 		byte[] bytes = null;
@@ -908,41 +907,29 @@ private String base64Decode(String data) {
 				xmlFileName += testcaseId + "/";
 			}
 			xmlFileName += name;
+
+			int totalSizeArchive = 0;
+			int totalEntryArchive = 0;
+			ZipFileUtil zipFileUtil = new ZipFileUtil();
+
 			while ((zipEntry = zis.getNextEntry()) != null) {
+				totalEntryArchive++;
+				zipFileUtil.checkZipEntryCount(totalEntryArchive);
 				if (xmlFileName.equals(zipEntry.getName())) {
-					bytes = getZipEntryBytes(zis, zipEntry.getCompressedSize());
+					bytes = zipFileUtil.getZipEntryBytes(zis, zipEntry.getCompressedSize());
+					totalSizeArchive += bytes.length;
+					zipFileUtil.checkZipFileSize(totalSizeArchive);
 					break;
 				}
 			}
 			zis.closeEntry();
 			zis.close();
+			
 		} catch (Exception ex) {
-			throw ex;
+			log.error("sessionId", "idType", "id",
+					"In getXmlDataFromZipFile method of TestCasesService - " + ex.getMessage());
 		}
 		return bytes;
-	}
-
-	private byte[] getZipEntryBytes(ZipInputStream zis, long entryCompressedSize) throws IOException {
-		double totalSizeEntry = 0;
-		byte[] b = new byte[1024];
-		int len = 0;
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		while ((len = zis.read(b)) > 0) {
-			out.write(b, 0, len);
-			totalSizeEntry += len;
-
-			double compressionRatio = totalSizeEntry / entryCompressedSize;
-
-			if (compressionRatio > ZIP_COMPRESSION_RATIO_THRESHOLD) {
-				// ratio between compressed and uncompressed data is highly suspicious, looks
-				// like a Zip Bomb Attack
-				log.error("sessionId", "idType", "id", "In getZipEntryBytes method of TestCasesService.");
-				log.error(
-						"ratio between compressed and uncompressed data is highly suspicious, looks like a Zip Bomb Attack");
-				return null;
-			}
-		}
-		return out.toByteArray();
 	}
 	
 	private InputStream getDefaultTestDataStream(String method, SdkPurpose sdkPurpose) {

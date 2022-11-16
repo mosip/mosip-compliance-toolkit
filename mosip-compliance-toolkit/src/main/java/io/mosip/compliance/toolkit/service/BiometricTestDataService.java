@@ -49,6 +49,7 @@ import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
 import io.mosip.compliance.toolkit.util.CryptoUtil;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
+import io.mosip.compliance.toolkit.util.ZipFileUtil;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
@@ -349,14 +350,24 @@ public class BiometricTestDataService {
 			if (Objects.nonNull(file)) {
 				InputStream zipFileIs = file.getInputStream();
 				ZipInputStream zis = new ZipInputStream(zipFileIs);
-				ZipEntry zipEntry = zis.getNextEntry();
+				ZipEntry zipEntry = null;
 				
-				if(!file.getOriginalFilename().endsWith(ZIP_EXT) || Objects.isNull(zipEntry)) {
+				if(!file.getOriginalFilename().endsWith(ZIP_EXT)) {
 					throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorCode(),
 							ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorMessage());
 				}
-				do {
+				
+				int totalSizeArchive = 0;
+				int totalEntryArchive = 0;
+				ZipFileUtil zipFileUtil = new ZipFileUtil();
+				
+				while ((zipEntry = zis.getNextEntry()) != null) {
 					String entryName = zipEntry.getName();
+					
+					totalEntryArchive++;
+					totalSizeArchive += zipFileUtil.getZipEntrySize(zis, zipEntry.getCompressedSize());
+					zipFileUtil.checkZipFileSize(totalSizeArchive);
+					zipFileUtil.checkZipEntryCount(totalEntryArchive);
 					if (!entryName.startsWith(purpose)) {
 						throw new ToolkitException(ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode(),
 								ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorMessage() + " " + entryName);
@@ -388,7 +399,14 @@ public class BiometricTestDataService {
 							}
 						}
 					}
-				}while ((zipEntry = zis.getNextEntry()) != null);
+				}
+				zis.closeEntry();
+				zis.close();
+				
+				if(0 == totalEntryArchive) {
+					throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorCode(),
+							ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorMessage());
+				}
 				
 				testDataValidation.setValidated(true);
 			} else {
