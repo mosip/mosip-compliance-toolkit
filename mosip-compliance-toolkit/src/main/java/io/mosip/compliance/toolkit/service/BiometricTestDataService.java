@@ -368,7 +368,6 @@ public class BiometricTestDataService {
 					totalSizeArchive += zipFileUtil.getZipEntrySize(zis, zipEntry.getCompressedSize());
 					zipFileUtil.checkZipFileSize(totalSizeArchive);
 					zipFileUtil.checkZipEntryCount(totalEntryArchive);
-
 					if (!entryName.startsWith(purpose)) {
 						throw new ToolkitException(ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode(),
 								ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorMessage() + " " + entryName);

@@ -896,7 +896,8 @@ private String base64Decode(String data) {
 		return responseWrapper;
 	}
 	
-	private byte[] getXmlDataFromZipFile(InputStream zipFileIs, String purpose, String testcaseId, String name){
+	private byte[] getXmlDataFromZipFile(InputStream zipFileIs, String purpose, String testcaseId, String name)
+			throws Exception {
 		byte[] bytes = null;
 		try {
 			ZipInputStream zis = new ZipInputStream(zipFileIs);
