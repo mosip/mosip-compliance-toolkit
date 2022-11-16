@@ -156,7 +156,6 @@ public class SdkProjectServiceTest {
 
         ResponseWrapper<SdkProjectDto> sdkProjectDtoResponseWrapper = new ResponseWrapper<>();
         sdkProjectDtoResponseWrapper = sdkProjectService.addSdkProject(sdkProjectDto);
-        SdkProjectDto sdkProjectDtoRes = new SdkProjectDto();
         Assert.assertNotNull(sdkProjectDtoResponseWrapper.getResponse());
     }
 
@@ -238,11 +237,6 @@ public class SdkProjectServiceTest {
         BiometricTestDataEntity biometricTestData = new BiometricTestDataEntity();
         biometricTestData.setFileId("1234");
         Mockito.when(biometricTestDataRepository.findByTestDataName(Mockito.any(), Mockito.any())).thenReturn(biometricTestData);
-//        Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
-//        Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
-//        SdkProjectDto sdkProjectDtoResponse = new SdkProjectDto();
-//        Mockito.when(mapper.convertValue(null, SdkProjectDto.class)).thenReturn(sdkProjectDtoResponse);
-
         ResponseWrapper<SdkProjectDto> sdkProjectDtoResponseWrapper = new ResponseWrapper<>();
         sdkProjectService.updateSdkProject(sdkProjectDto);
     }
