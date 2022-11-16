@@ -85,8 +85,6 @@ import io.mosip.kernel.core.logger.spi.Logger;
 
 @Component
 public class TestCasesService {
-	
-	private static final double ZIP_COMPRESSION_RATIO_THRESHOLD = 10;
 
 	@Value("${mosip.toolkit.api.id.projects.get}")
 	private String getProjectsId;
@@ -896,7 +894,7 @@ private String base64Decode(String data) {
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
-
+	
 	private byte[] getXmlDataFromZipFile(InputStream zipFileIs, String purpose, String testcaseId, String name)
 			throws Exception {
 		byte[] bytes = null;
@@ -908,41 +906,62 @@ private String base64Decode(String data) {
 				xmlFileName += testcaseId + "/";
 			}
 			xmlFileName += name;
+
+			int THRESHOLD_ENTRIES = 10000;
+			int THRESHOLD_SIZE = 1000000000; // 1 GB
+			double THRESHOLD_RATIO = 10;
+			int totalSizeArchive = 0;
+			int totalEntryArchive = 0;
+
 			while ((zipEntry = zis.getNextEntry()) != null) {
-				if (xmlFileName.equals(zipEntry.getName())) {
-					bytes = getZipEntryBytes(zis, zipEntry.getCompressedSize());
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				totalEntryArchive++;
+
+				int nBytes = -1;
+				byte[] buffer = new byte[2048];
+				int totalSizeEntry = 0;
+
+				while ((nBytes = zis.read(buffer)) > 0) { // Compliant
+					out.write(buffer, 0, nBytes);
+					totalSizeEntry += nBytes;
+					totalSizeArchive += nBytes;
+
+					double compressionRatio = totalSizeEntry / zipEntry.getCompressedSize();
+					if (compressionRatio > THRESHOLD_RATIO) {
+						// ratio between compressed and uncompressed data is highly suspicious, looks
+						// like a Zip Bomb Attack
+						log.error(
+								"ratio between compressed and uncompressed data is highly suspicious, looks like a Zip Bomb Attack");
+						return null;
+					}
+				}
+				
+				if (totalSizeArchive > THRESHOLD_SIZE) {
+					log.error(
+							"ratio between compressed and uncompressed data is highly suspicious, looks like a Zip Bomb Attack");
 					break;
 				}
+
+				if (totalEntryArchive > THRESHOLD_ENTRIES) {
+					log.error(
+							"ratio between compressed and uncompressed data is highly suspicious, looks like a Zip Bomb Attack");
+					break;
+				}
+				
+				if (xmlFileName.equals(zipEntry.getName())) {
+					bytes = out.toByteArray();
+					break;
+				}
+				
+				out.close();
 			}
 			zis.closeEntry();
 			zis.close();
+			
 		} catch (Exception ex) {
 			throw ex;
 		}
 		return bytes;
-	}
-
-	private byte[] getZipEntryBytes(ZipInputStream zis, long entryCompressedSize) throws IOException {
-		double totalSizeEntry = 0;
-		byte[] b = new byte[1024];
-		int len = 0;
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		while ((len = zis.read(b)) > 0) {
-			out.write(b, 0, len);
-			totalSizeEntry += len;
-
-			double compressionRatio = totalSizeEntry / entryCompressedSize;
-
-			if (compressionRatio > ZIP_COMPRESSION_RATIO_THRESHOLD) {
-				// ratio between compressed and uncompressed data is highly suspicious, looks
-				// like a Zip Bomb Attack
-				log.error("sessionId", "idType", "id", "In getZipEntryBytes method of TestCasesService.");
-				log.error(
-						"ratio between compressed and uncompressed data is highly suspicious, looks like a Zip Bomb Attack");
-				return null;
-			}
-		}
-		return out.toByteArray();
 	}
 	
 	private InputStream getDefaultTestDataStream(String method, SdkPurpose sdkPurpose) {

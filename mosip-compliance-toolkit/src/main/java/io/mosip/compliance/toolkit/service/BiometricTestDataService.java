@@ -349,14 +349,55 @@ public class BiometricTestDataService {
 			if (Objects.nonNull(file)) {
 				InputStream zipFileIs = file.getInputStream();
 				ZipInputStream zis = new ZipInputStream(zipFileIs);
-				ZipEntry zipEntry = zis.getNextEntry();
+				ZipEntry zipEntry = null;
 				
-				if(!file.getOriginalFilename().endsWith(ZIP_EXT) || Objects.isNull(zipEntry)) {
+				if(!file.getOriginalFilename().endsWith(ZIP_EXT)) {
 					throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorCode(),
 							ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorMessage());
 				}
-				do {
+				
+				
+				int THRESHOLD_ENTRIES = 10000;
+				int THRESHOLD_SIZE = 1000000000; // 1 GB
+				double THRESHOLD_RATIO = 10;
+				int totalSizeArchive = 0;
+				int totalEntryArchive = 0;
+				
+				while ((zipEntry = zis.getNextEntry()) != null) {
 					String entryName = zipEntry.getName();
+					
+					totalEntryArchive++;
+
+					int nBytes = -1;
+					byte[] buffer = new byte[2048];
+					int totalSizeEntry = 0;
+
+					while ((nBytes = zis.read(buffer)) > 0) { // Compliant
+						totalSizeEntry += nBytes;
+						totalSizeArchive += nBytes;
+
+						double compressionRatio = totalSizeEntry / zipEntry.getCompressedSize();
+						if (compressionRatio > THRESHOLD_RATIO) {
+							// ratio between compressed and uncompressed data is highly suspicious, looks
+							// like a Zip Bomb Attack
+							log.error(
+									"ratio between compressed and uncompressed data is highly suspicious, looks like a Zip Bomb Attack");
+							break;
+						}
+					}
+
+					if (totalSizeArchive > THRESHOLD_SIZE) {
+						log.error(
+								"ratio between compressed and uncompressed data is highly suspicious, looks like a Zip Bomb Attack");
+						break;
+					}
+
+					if (totalEntryArchive > THRESHOLD_ENTRIES) {
+						log.error(
+								"ratio between compressed and uncompressed data is highly suspicious, looks like a Zip Bomb Attack");
+						break;
+					}
+					
 					if (!entryName.startsWith(purpose)) {
 						throw new ToolkitException(ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode(),
 								ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorMessage() + " " + entryName);
@@ -388,7 +429,14 @@ public class BiometricTestDataService {
 							}
 						}
 					}
-				}while ((zipEntry = zis.getNextEntry()) != null);
+				}
+				zis.closeEntry();
+				zis.close();
+				
+				if(0 == totalEntryArchive) {
+					throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorCode(),
+							ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorMessage());
+				}
 				
 				testDataValidation.setValidated(true);
 			} else {
