@@ -16,7 +16,7 @@ public class ZipFileUtil {
 		byte[] zipEntryBytes = null;
 		int nBytes = -1;
 		byte[] buffer = new byte[2048];
-		int totalSizeEntry = 0;
+		double totalSizeEntry = 0;
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
@@ -30,19 +30,7 @@ public class ZipFileUtil {
 		return zipEntryBytes;
 	}
 
-	public int getZipEntrySize(ZipInputStream zis, long entryCompressedSize) throws IOException {
-		int nBytes = -1;
-		byte[] buffer = new byte[2048];
-		int totalSizeEntry = 0;
-
-		while ((nBytes = zis.read(buffer)) > 0) { // Compliant
-			totalSizeEntry += nBytes;
-			checkCompressionRatio(totalSizeEntry, entryCompressedSize);
-		}
-		return totalSizeEntry;
-	}
-
-	private void checkCompressionRatio(int totalSizeEntry, long entryCompressedSize) {
+	private void checkCompressionRatio(double totalSizeEntry, long entryCompressedSize) {
 		double compressionRatio = totalSizeEntry / entryCompressedSize;
 		if (compressionRatio > THRESHOLD_RATIO) {
 			// ratio between compressed and uncompressed data is highly suspicious, looks

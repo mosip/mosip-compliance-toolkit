@@ -362,12 +362,13 @@ public class BiometricTestDataService {
 				ZipFileUtil zipFileUtil = new ZipFileUtil();
 				
 				while ((zipEntry = zis.getNextEntry()) != null) {
-					String entryName = zipEntry.getName();
-					
 					totalEntryArchive++;
-					totalSizeArchive += zipFileUtil.getZipEntrySize(zis, zipEntry.getCompressedSize());
+					byte[] bytes = zipFileUtil.getZipEntryBytes(zis, zipEntry.getCompressedSize());
+					totalSizeArchive += bytes.length;
 					zipFileUtil.checkZipFileSize(totalSizeArchive);
 					zipFileUtil.checkZipEntryCount(totalEntryArchive);
+					
+					String entryName = zipEntry.getName();
 					if (!entryName.startsWith(purpose)) {
 						throw new ToolkitException(ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode(),
 								ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorMessage() + " " + entryName);
