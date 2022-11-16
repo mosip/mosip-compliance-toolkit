@@ -71,6 +71,7 @@ import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
 import io.mosip.compliance.toolkit.repository.TestCasesRepository;
 import io.mosip.compliance.toolkit.util.CryptoUtil;
+import io.mosip.compliance.toolkit.util.ZipFileUtil;
 import io.mosip.compliance.toolkit.validators.BaseValidator;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
@@ -895,8 +896,7 @@ private String base64Decode(String data) {
 		return responseWrapper;
 	}
 	
-	private byte[] getXmlDataFromZipFile(InputStream zipFileIs, String purpose, String testcaseId, String name)
-			throws Exception {
+	private byte[] getXmlDataFromZipFile(InputStream zipFileIs, String purpose, String testcaseId, String name){
 		byte[] bytes = null;
 		try {
 			ZipInputStream zis = new ZipInputStream(zipFileIs);
@@ -907,59 +907,26 @@ private String base64Decode(String data) {
 			}
 			xmlFileName += name;
 
-			int THRESHOLD_ENTRIES = 10000;
-			int THRESHOLD_SIZE = 1000000000; // 1 GB
-			double THRESHOLD_RATIO = 10;
 			int totalSizeArchive = 0;
 			int totalEntryArchive = 0;
+			ZipFileUtil zipFileUtil = new ZipFileUtil();
 
 			while ((zipEntry = zis.getNextEntry()) != null) {
-				ByteArrayOutputStream out = new ByteArrayOutputStream();
 				totalEntryArchive++;
-
-				int nBytes = -1;
-				byte[] buffer = new byte[2048];
-				int totalSizeEntry = 0;
-
-				while ((nBytes = zis.read(buffer)) > 0) { // Compliant
-					out.write(buffer, 0, nBytes);
-					totalSizeEntry += nBytes;
-					totalSizeArchive += nBytes;
-
-					double compressionRatio = totalSizeEntry / zipEntry.getCompressedSize();
-					if (compressionRatio > THRESHOLD_RATIO) {
-						// ratio between compressed and uncompressed data is highly suspicious, looks
-						// like a Zip Bomb Attack
-						log.error(
-								"ratio between compressed and uncompressed data is highly suspicious, looks like a Zip Bomb Attack");
-						return null;
-					}
-				}
-				
-				if (totalSizeArchive > THRESHOLD_SIZE) {
-					log.error(
-							"ratio between compressed and uncompressed data is highly suspicious, looks like a Zip Bomb Attack");
-					break;
-				}
-
-				if (totalEntryArchive > THRESHOLD_ENTRIES) {
-					log.error(
-							"ratio between compressed and uncompressed data is highly suspicious, looks like a Zip Bomb Attack");
-					break;
-				}
-				
+				zipFileUtil.checkZipEntryCount(totalEntryArchive);
 				if (xmlFileName.equals(zipEntry.getName())) {
-					bytes = out.toByteArray();
+					bytes = zipFileUtil.getZipEntryBytes(zis, zipEntry.getCompressedSize());
+					totalSizeArchive += bytes.length;
+					zipFileUtil.checkZipFileSize(totalSizeArchive);
 					break;
 				}
-				
-				out.close();
 			}
 			zis.closeEntry();
 			zis.close();
 			
 		} catch (Exception ex) {
-			throw ex;
+			log.error("sessionId", "idType", "id",
+					"In getXmlDataFromZipFile method of TestCasesService - " + ex.getMessage());
 		}
 		return bytes;
 	}

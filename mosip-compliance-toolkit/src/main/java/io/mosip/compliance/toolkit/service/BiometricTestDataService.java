@@ -49,6 +49,7 @@ import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
 import io.mosip.compliance.toolkit.util.CryptoUtil;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
+import io.mosip.compliance.toolkit.util.ZipFileUtil;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
@@ -356,48 +357,18 @@ public class BiometricTestDataService {
 							ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorMessage());
 				}
 				
-				
-				int THRESHOLD_ENTRIES = 10000;
-				int THRESHOLD_SIZE = 1000000000; // 1 GB
-				double THRESHOLD_RATIO = 10;
 				int totalSizeArchive = 0;
 				int totalEntryArchive = 0;
+				ZipFileUtil zipFileUtil = new ZipFileUtil();
 				
 				while ((zipEntry = zis.getNextEntry()) != null) {
 					String entryName = zipEntry.getName();
 					
 					totalEntryArchive++;
+					totalSizeArchive += zipFileUtil.getZipEntrySize(zis, zipEntry.getCompressedSize());
+					zipFileUtil.checkZipFileSize(totalSizeArchive);
+					zipFileUtil.checkZipEntryCount(totalEntryArchive);
 
-					int nBytes = -1;
-					byte[] buffer = new byte[2048];
-					int totalSizeEntry = 0;
-
-					while ((nBytes = zis.read(buffer)) > 0) { // Compliant
-						totalSizeEntry += nBytes;
-						totalSizeArchive += nBytes;
-
-						double compressionRatio = totalSizeEntry / zipEntry.getCompressedSize();
-						if (compressionRatio > THRESHOLD_RATIO) {
-							// ratio between compressed and uncompressed data is highly suspicious, looks
-							// like a Zip Bomb Attack
-							log.error(
-									"ratio between compressed and uncompressed data is highly suspicious, looks like a Zip Bomb Attack");
-							break;
-						}
-					}
-
-					if (totalSizeArchive > THRESHOLD_SIZE) {
-						log.error(
-								"ratio between compressed and uncompressed data is highly suspicious, looks like a Zip Bomb Attack");
-						break;
-					}
-
-					if (totalEntryArchive > THRESHOLD_ENTRIES) {
-						log.error(
-								"ratio between compressed and uncompressed data is highly suspicious, looks like a Zip Bomb Attack");
-						break;
-					}
-					
 					if (!entryName.startsWith(purpose)) {
 						throw new ToolkitException(ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode(),
 								ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorMessage() + " " + entryName);

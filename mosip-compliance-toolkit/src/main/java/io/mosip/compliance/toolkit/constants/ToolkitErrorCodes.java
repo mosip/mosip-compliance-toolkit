@@ -83,6 +83,10 @@ public enum ToolkitErrorCodes {
 	TESTDATA_INVALID_FOLDER("TOOLKIT_TESTDATA_ERR_004", "Testdata has invalid folder"),
 	TESTDATA_INVALID_FILE("TOOLKIT_TESTDATA_ERR_005", "Testdata file is invalid"),
 	TESTDATA_VALIDATION_UNSUCCESSFULL("TOOLKIT_TESTDATA_ERR_006", "Testdata validation failed."),
+	
+	ZIP_HIGH_COMPRESSION_RATIO_ERROR("TOOLKIT_ZIP_FILE_ERR_001", "Ratio between compressed and uncompressed data is highly suspicious, looks like a Zip Bomb Attack."),
+	ZIP_SIZE_TOO_LARGE_ERROR("TOOLKIT_ZIP_FILE_ERR_002", "The uncompressed data size is too much for the application resource capacity."),
+	ZIP_ENTRIES_TOO_MANY_ERROR("TOOLKIT_ZIP_FILE_ERR_003", "Too much entries in this archive, can lead to inodes exhaustion of the system."),
 
 	TECHNICAL_ERROR_EXCEPTION("TOOLKIT_REQ_ERR_500", "Technical Error");
 
