@@ -89,7 +89,7 @@
 			"CheckQualityRequestSchema"
 		],
 		"responseSchema": [
-			"CheckQualityResponseSchema"
+			"BadCheckQualityResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -200,7 +200,7 @@
 			"CheckQualityRequestSchema"
 		],
 		"responseSchema": [
-			"CheckQualityResponseSchema"
+			"BadCheckQualityResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -348,7 +348,7 @@
 			"CheckQualityRequestSchema"
 		],
 		"responseSchema": [
-			"CheckQualityResponseSchema"
+			"BadCheckQualityResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -1582,7 +1582,7 @@
 		],
 		"responseSchema": [
 			"ExtractTemplateResponseSchema",
-			"CheckQualityResponseSchema"
+			"BadCheckQualityResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -1632,7 +1632,7 @@
 		],
 		"responseSchema": [
 			"ExtractTemplateResponseSchema",
-			"CheckQualityResponseSchema"
+			"BadCheckQualityResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -1682,7 +1682,7 @@
 		],
 		"responseSchema": [
 			"ExtractTemplateResponseSchema",
-			"CheckQualityResponseSchema"
+			"BadCheckQualityResponseSchema"
 		],
 		"validatorDefs": [
 			[
