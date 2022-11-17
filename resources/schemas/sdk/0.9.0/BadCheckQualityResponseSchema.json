@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json-schema.org/draft/2019-09/schema#",
-	"$id": "http://mosip-compliance-toolkit.com/schemas/CheckQualityResponseSchema.json",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/BadCheckQualityResponseSchema.json",
 	"type": "object",
 	"properties": {
 		"version": {
@@ -19,7 +19,7 @@
 					"type": ["string", "null"]
 				},
 				"response": {
-					"type": "object",
+					"type": ["object", "null"],
 					"properties": {
 						"scores": {
 							"type": "object",
