@@ -302,104 +302,147 @@ public class BiometricTestDataService {
 	}
 
 	private TestDataValidationDto validateTestData(String purpose, MultipartFile file) throws IOException {
-		TestDataValidationDto testDataValidation = new TestDataValidationDto();
-		try {
-			List<String> validGalleryXmls = new ArrayList<>();
-			for (int i = 1; i <= Integer.valueOf(maxAllowedGalleryFiles); i++) {
-				validGalleryXmls.add(GALLERY + i + DOT_XML);
-			}
-			List<String> ignoreTestcaseList = Arrays.asList(ignoreTestcases.split(","));
-			testDataValidation.setPurpose(purpose);
-			List<TestCaseEntity> testcases = testCaseCacheService.getSdkTestCases(AppConstants.SDK,
-					sdkSampleTestdataSpecVer);
-			if (Objects.nonNull(testcases)) {
-				List<String> folders = new ArrayList<>();
-				List<String> probeFolders = new ArrayList<>();
-				List<String> galleryFolders = new ArrayList<>();
-				for (TestCaseEntity testcase : testcases) {
-					String testcaseJson = testcase.getTestcaseJson();
-					TestCaseDto testCaseDto = objectMapperConfig.objectMapper().readValue(testcaseJson,
-							TestCaseDto.class);
-					if (!ignoreTestcaseList.contains(testCaseDto.getTestId())
-							&& testCaseDto.getOtherAttributes().getSdkPurpose().contains(purpose)) {
-						String folderName = testCaseDto.getTestId();
-						folders.add(folderName);
-						probeFolders.add(folderName);
-						if(testCaseDto.getOtherAttributes().getSdkPurpose().contains(SdkPurpose.MATCHER.getCode())) {
-							galleryFolders.add(folderName);
-						}
-						if (testCaseDto.getMethodName().size() > 1
-								&& testCaseDto.getMethodName().get(1).equals(MethodName.MATCH.getCode())) {
-							folderName += "/" + testCaseDto.getMethodName().get(1);
-							folders.add(folderName);
-							probeFolders.add(folderName);
-						}
-					}
-				}
-				testDataValidation.setFolders(folders);
-				testDataValidation.setProbeFolders(probeFolders);
-				testDataValidation.setGalleryFolders(galleryFolders);
-			}
+        TestDataValidationDto testDataValidation = new TestDataValidationDto();
+        ZipInputStream zis = null;
+        try {
+            List<String> validGalleryXmls = new ArrayList<>();
+            for (int i = 1; i <= Integer.valueOf(maxAllowedGalleryFiles); i++) {
+                validGalleryXmls.add(GALLERY + i + DOT_XML);
+            }
+            List<String> ignoreTestcaseList = Arrays.asList(ignoreTestcases.split(","));
+            testDataValidation.setPurpose(purpose);
+            List<TestCaseEntity> testcases = testCaseCacheService.getSdkTestCases(AppConstants.SDK,
+                    sdkSampleTestdataSpecVer);
+            if (Objects.nonNull(testcases)) {
+                List<String> folders = new ArrayList<>();
+                List<String> probeFolders = new ArrayList<>();
+                List<String> galleryFolders = new ArrayList<>();
+                for (TestCaseEntity testcase : testcases) {
+                    String testcaseJson = testcase.getTestcaseJson();
+                    TestCaseDto testCaseDto = objectMapperConfig.objectMapper().readValue(testcaseJson,
+                            TestCaseDto.class);
+                    if (!ignoreTestcaseList.contains(testCaseDto.getTestId())
+                            && testCaseDto.getOtherAttributes().getSdkPurpose().contains(purpose)) {
+                        String folderName = testCaseDto.getTestId();
+                        folders.add(folderName);
+                        probeFolders.add(folderName);
+                        if (testCaseDto.getOtherAttributes().getSdkPurpose().contains(SdkPurpose.MATCHER.getCode())) {
+                            galleryFolders.add(folderName);
+                        }
+                        if (testCaseDto.getMethodName().size() > 1
+                                && testCaseDto.getMethodName().get(1).equals(MethodName.MATCH.getCode())) {
+                            folderName += "/" + testCaseDto.getMethodName().get(1);
+                            folders.add(folderName);
+                            probeFolders.add(folderName);
+                        }
+                    }
+                }
+                testDataValidation.setFolders(folders);
+                testDataValidation.setProbeFolders(probeFolders);
+                testDataValidation.setGalleryFolders(galleryFolders);
+            }
 
-			if (testDataValidation.getFolders().size() == 0 || testDataValidation.getProbeFolders().size() == 0) {
-				throw new ToolkitException(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode(),
-						ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
-			}
-			
-			if (Objects.nonNull(file)) {
-				InputStream zipFileIs = file.getInputStream();
-				ZipInputStream zis = new ZipInputStream(zipFileIs);
-				ZipEntry zipEntry = zis.getNextEntry();
-				
-				if(!file.getOriginalFilename().endsWith(ZIP_EXT) || Objects.isNull(zipEntry)) {
-					throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorCode(),
-							ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorMessage());
-				}
-				do {
-					String entryName = zipEntry.getName();
-					if (!entryName.startsWith(purpose)) {
-						throw new ToolkitException(ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode(),
-								ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorMessage() + " " + entryName);
-					} else {
-						entryName = entryName.replace(purpose + "/", "");
-					}
-					if (!entryName.isBlank()) {
-						if (zipEntry.isDirectory()) {
-							String testcaseId = entryName.substring(0, entryName.length() - 1);
-							if(testDataValidation.getFolders().contains(testcaseId)) {
-								testDataValidation.getFolders().remove(testcaseId);
-							}else {
-								throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorCode(),
-										ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorMessage() + " " + testcaseId);
-							}
-						} else if (entryName.endsWith(PROBE_XML)) {
-							String testcaseId = entryName.substring(entryName.indexOf(AppConstants.SDK),
-									entryName.indexOf(PROBE_XML) - 1);
-							testDataValidation.getProbeFolders().remove(testcaseId);
-						} else if (entryName.contains(GALLERY) && purpose.equals(SdkPurpose.MATCHER.getCode())) {
-							String testcaseId = entryName.substring(entryName.indexOf(AppConstants.SDK),
-									entryName.indexOf(GALLERY) - 1);
-							testDataValidation.getGalleryFolders().remove(testcaseId);
-							String galleryXml = entryName.substring(entryName.indexOf(GALLERY));
-							if (!validGalleryXmls.contains(galleryXml)) {
-								throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_GALLERY.getErrorCode(),
-										ToolkitErrorCodes.TESTDATA_INVALID_GALLERY.getErrorMessage() + " " + galleryXml
-												+ " in " + testcaseId);
-							}
+            if (testDataValidation.getFolders().size() == 0 || testDataValidation.getProbeFolders().size() == 0) {
+                throw new ToolkitException(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode(),
+                        ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
+            }
+
+            if (Objects.nonNull(file)) {
+                InputStream zipFileIs = file.getInputStream();
+                zis = new ZipInputStream(zipFileIs);
+                ZipEntry zipEntry = null;
+
+                if (!file.getOriginalFilename().endsWith(ZIP_EXT)) {
+                    throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorCode(),
+                            ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorMessage());
+                }
+                
+                double THRESHOLD_RATIO = 10;
+    			int THRESHOLD_ENTRIES = 10000;
+    			int THRESHOLD_SIZE = 1000000000; // 1 GB
+    			int totalSizeArchive = 0;
+    			int totalEntryArchive = 0;
+                while ((zipEntry = zis.getNextEntry()) != null) {
+                    totalEntryArchive++;
+                    int nBytes = -1;
+					byte[] buffer = new byte[2048];
+					double totalSizeEntry = 0;
+					while ((nBytes = zis.read(buffer)) > 0) { // Compliant
+						totalSizeEntry += nBytes;
+						totalSizeArchive += nBytes;
+						double compressionRatio = totalSizeEntry / zipEntry.getCompressedSize();
+						if (compressionRatio > THRESHOLD_RATIO) {
+							// ratio between compressed and uncompressed data is highly suspicious, looks
+							// like a Zip Bomb Attack
+							throw new ToolkitException(ToolkitErrorCodes.ZIP_HIGH_COMPRESSION_RATIO_ERROR.getErrorCode(),
+									ToolkitErrorCodes.ZIP_HIGH_COMPRESSION_RATIO_ERROR.getErrorMessage());
 						}
 					}
-				}while ((zipEntry = zis.getNextEntry()) != null);
-				
-				testDataValidation.setValidated(true);
-			} else {
-				throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
-						ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
-			}
-		} catch (Exception ex) {			
-			throw new ToolkitException(ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode(),
-					ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorMessage() + " " + ex.getMessage());
-		}
-		return testDataValidation;
+
+					if (totalSizeArchive > THRESHOLD_SIZE) {
+						throw new ToolkitException(ToolkitErrorCodes.ZIP_SIZE_TOO_LARGE_ERROR.getErrorCode(),
+								ToolkitErrorCodes.ZIP_SIZE_TOO_LARGE_ERROR.getErrorMessage());
+					}
+
+					if (totalEntryArchive > THRESHOLD_ENTRIES) {
+						throw new ToolkitException(ToolkitErrorCodes.ZIP_ENTRIES_TOO_MANY_ERROR.getErrorCode(),
+								ToolkitErrorCodes.ZIP_ENTRIES_TOO_MANY_ERROR.getErrorMessage());
+					}
+                    
+                    String entryName = zipEntry.getName();
+                    if (!entryName.startsWith(purpose)) {
+                        throw new ToolkitException(ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode(),
+                                ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorMessage() + " " + entryName);
+                    } else {
+                        entryName = entryName.replace(purpose + "/", "");
+                    }
+                    if (!entryName.isBlank()) {
+                        if (zipEntry.isDirectory()) {
+                            String testcaseId = entryName.substring(0, entryName.length() - 1);
+                            if (testDataValidation.getFolders().contains(testcaseId)) {
+                                testDataValidation.getFolders().remove(testcaseId);
+                            } else {
+                                throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorCode(),
+                                        ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorMessage() + " " + testcaseId);
+                            }
+                        } else if (entryName.endsWith(PROBE_XML)) {
+                            String testcaseId = entryName.substring(entryName.indexOf(AppConstants.SDK),
+                                    entryName.indexOf(PROBE_XML) - 1);
+                            testDataValidation.getProbeFolders().remove(testcaseId);
+                        } else if (entryName.contains(GALLERY) && purpose.equals(SdkPurpose.MATCHER.getCode())) {
+                            String testcaseId = entryName.substring(entryName.indexOf(AppConstants.SDK),
+                                    entryName.indexOf(GALLERY) - 1);
+                            testDataValidation.getGalleryFolders().remove(testcaseId);
+                            String galleryXml = entryName.substring(entryName.indexOf(GALLERY));
+                            if (!validGalleryXmls.contains(galleryXml)) {
+                                throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_GALLERY.getErrorCode(),
+                                        ToolkitErrorCodes.TESTDATA_INVALID_GALLERY.getErrorMessage() + " " + galleryXml
+                                                + " in " + testcaseId);
+                            }
+                        }
+                    }
+                }
+
+                if (0 == totalEntryArchive) {
+                    throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorCode(),
+                            ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorMessage());
+                }
+
+                testDataValidation.setValidated(true);
+            } else {
+                throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+                        ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+            }
+        } catch (Exception ex) {
+            throw new ToolkitException(ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode(),
+                    ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorMessage() + " " + ex.getMessage());
+        } finally {
+            if (zis != null) {
+                zis.closeEntry();
+                zis.close();
+            }
+        }
+        return testDataValidation;
 	}
 
 	public ResponseWrapper<List<String>> getBioTestDataNames(String purpose) {
