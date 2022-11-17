@@ -919,6 +919,7 @@ public class TestCasesService {
             ZipEntry zipEntry = null;
             // first validate for Zip Bomb Attack
             ZipFileUtil.checkForZipBombAttack(zis);
+            zis.reset();
             while ((zipEntry = zis.getNextEntry()) != null) {
                 if (xmlFileName == null || (xmlFileName != null && xmlFileName.equals(zipEntry.getName()))) {
                     int nBytes = -1;
@@ -930,8 +931,6 @@ public class TestCasesService {
                     break;
                 }
             }
-            zis.closeEntry();
-            zis.close();
         } catch (Exception ex) {
             log.error("sessionId", "idType", "id",
                     "In getXmlDataFromZipFile method of TestCasesService - " + ex.getMessage());

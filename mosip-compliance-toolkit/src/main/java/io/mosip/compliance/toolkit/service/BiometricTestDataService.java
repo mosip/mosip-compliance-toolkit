@@ -352,7 +352,7 @@ public class BiometricTestDataService {
             if (Objects.nonNull(file)) {
                 InputStream zipFileIs = file.getInputStream();
                 zis = new ZipInputStream(zipFileIs);
-                ZipEntry zipEntry;
+                ZipEntry zipEntry = null;
 
                 if (!file.getOriginalFilename().endsWith(ZIP_EXT)) {
                     throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorCode(),
@@ -361,6 +361,7 @@ public class BiometricTestDataService {
                 int totalEntryArchive = 0;
                 // first validate for Zip Bomb Attack
                 ZipFileUtil.checkForZipBombAttack(zis);
+                zis.reset();
                 while ((zipEntry = zis.getNextEntry()) != null) {
                     totalEntryArchive++;
                     String entryName = zipEntry.getName();
