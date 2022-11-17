@@ -85,8 +85,6 @@ import io.mosip.kernel.core.logger.spi.Logger;
 
 @Component
 public class TestCasesService {
-	
-	private static final double ZIP_COMPRESSION_RATIO_THRESHOLD = 10;
 
 	@Value("${mosip.toolkit.api.id.projects.get}")
 	private String getProjectsId;
@@ -899,49 +897,69 @@ private String base64Decode(String data) {
 
 	private byte[] getXmlDataFromZipFile(InputStream zipFileIs, String purpose, String testcaseId, String name)
 			throws Exception {
-		byte[] bytes = null;
-		try {
-			ZipInputStream zis = new ZipInputStream(zipFileIs);
-			ZipEntry zipEntry;
-			String xmlFileName = purpose + "/";
-			if (Objects.nonNull(testcaseId)) {
-				xmlFileName += testcaseId + "/";
-			}
-			xmlFileName += name;
-			while ((zipEntry = zis.getNextEntry()) != null) {
-				if (xmlFileName.equals(zipEntry.getName())) {
-					bytes = getZipEntryBytes(zis, zipEntry.getCompressedSize());
-					break;
-				}
-			}
-			zis.closeEntry();
-			zis.close();
-		} catch (Exception ex) {
-			throw ex;
-		}
-		return bytes;
-	}
+		  byte[] bytes = null;
+	        ZipInputStream zis = new ZipInputStream(zipFileIs);
+	        ByteArrayOutputStream out = new ByteArrayOutputStream();
+	        try {
+	            String xmlFileName = purpose + "/";
+	            if (Objects.nonNull(testcaseId)) {
+	                xmlFileName += testcaseId + "/";
+	            }
+	            xmlFileName += name;
+	            ZipEntry zipEntry = null;
+	            
+	        	double THRESHOLD_RATIO = 10;
+				int THRESHOLD_ENTRIES = 10000;
+				int THRESHOLD_SIZE = 1000000000; // 1 GB
+				
+				int totalSizeArchive = 0;
+				int totalEntryArchive = 0;
+	            
+	            while ((zipEntry = zis.getNextEntry()) != null) {
+	            	totalEntryArchive++;
+					if (totalEntryArchive > THRESHOLD_ENTRIES) {
+						throw new ToolkitException(ToolkitErrorCodes.ZIP_ENTRIES_TOO_MANY_ERROR.getErrorCode(),
+								ToolkitErrorCodes.ZIP_ENTRIES_TOO_MANY_ERROR.getErrorMessage());
+					}
+	                if (xmlFileName == null || (xmlFileName != null && xmlFileName.equals(zipEntry.getName()))) {
+	                	int nBytes = -1;
+						byte[] buffer = new byte[2048];
+						double totalSizeEntry = 0;
+						while ((nBytes = zis.read(buffer)) > 0) {
+							out.write(buffer, 0, nBytes);
+							totalSizeEntry += nBytes;
+							totalSizeArchive += nBytes;
+							double compressionRatio = totalSizeEntry / zipEntry.getCompressedSize();
+							if (compressionRatio > THRESHOLD_RATIO) {
+								// ratio between compressed and uncompressed data is highly suspicious, looks
+								// like a Zip Bomb Attack
+								throw new ToolkitException(ToolkitErrorCodes.ZIP_HIGH_COMPRESSION_RATIO_ERROR.getErrorCode(),
+										ToolkitErrorCodes.ZIP_HIGH_COMPRESSION_RATIO_ERROR.getErrorMessage());
+							}
+						}
+						bytes = out.toByteArray();
 
-	private byte[] getZipEntryBytes(ZipInputStream zis, long entryCompressedSize) throws IOException {
-		double totalSizeEntry = 0;
-		byte[] b = new byte[1024];
-		int len = 0;
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		while ((len = zis.read(b)) > 0) {
-			out.write(b, 0, len);
-			totalSizeEntry += len;
-
-			double compressionRatio = totalSizeEntry / entryCompressedSize;
-			if (compressionRatio > ZIP_COMPRESSION_RATIO_THRESHOLD) {
-				// ratio between compressed and uncompressed data is highly suspicious, looks
-				// like a Zip Bomb Attack
-				log.error("sessionId", "idType", "id", "In getZipEntryBytes method of TestCasesService.");
-				log.error(
-						"ratio between compressed and uncompressed data is highly suspicious, looks like a Zip Bomb Attack");
-				return null;
-			}
-		}
-		return out.toByteArray();
+						if (totalSizeArchive > THRESHOLD_SIZE) {
+							throw new ToolkitException(ToolkitErrorCodes.ZIP_SIZE_TOO_LARGE_ERROR.getErrorCode(),
+									ToolkitErrorCodes.ZIP_SIZE_TOO_LARGE_ERROR.getErrorMessage());
+						}
+	                    break;
+	                }
+	            }
+	        } catch (Exception ex) {
+	            log.error("sessionId", "idType", "id",
+	                    "In getXmlDataFromZipFile method of TestCasesService - " + ex.getMessage());
+	            throw ex;
+	        } finally {
+	            if (zis != null) {
+	                zis.closeEntry();
+	                zis.close();
+	            }
+	            if (out != null) {
+	                out.close();
+	            }
+	        }
+	        return bytes;
 	}
 	
 	private InputStream getDefaultTestDataStream(String method, SdkPurpose sdkPurpose) {

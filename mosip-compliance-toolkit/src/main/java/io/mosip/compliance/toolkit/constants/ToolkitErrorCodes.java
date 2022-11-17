@@ -44,6 +44,12 @@ public enum ToolkitErrorCodes {
 	INVALID_CERTIFICATION_TYPE("TOOLKIT_REQ_ERR_021", "Invalid Certification Type"),
 	INVALID_DEVICE_STATUS("TOOLKIT_REQ_ERR_022", "Invalid Device Status"),
 
+	INVALID_BIO_SUB_TYPE("TOOLKIT_REQ_ERR_023", "Invalid Bio Sub Type"),	
+	SOURCE_NOT_VALID_FINGER_ISO_FORMAT_EXCEPTION("TOOLKIT_REQ_ERR_024", "Source not valid ISO ISO19794_4_2011"),
+	SOURCE_NOT_VALID_FACE_ISO_FORMAT_EXCEPTION("TOOLKIT_REQ_ERR_025", "Source not valid ISO ISO19794_5_2011"),
+	SOURCE_NOT_VALID_IRIS_ISO_FORMAT_EXCEPTION("TOOLKIT_REQ_ERR_026", "Source not valid ISO ISO19794_6_2011"),
+	SOURCE_NOT_VALID_BASE64URLENCODED_EXCEPTION("TOOLKIT_REQ_ERR_027", "Source not valid base64urlencoded"),
+	
 	PROJECT_NAME_EXISTS("TOOLKIT_DB_ERR_001", "You have previously created a project with name: "),
 	BIO_TEST_DATA_FILE_EXISTS("TOOLKIT_DB_ERR_002", "You have previously added biometric test data with name: "),
 	
@@ -77,6 +83,10 @@ public enum ToolkitErrorCodes {
 	TESTDATA_INVALID_FOLDER("TOOLKIT_TESTDATA_ERR_004", "Testdata has invalid folder"),
 	TESTDATA_INVALID_FILE("TOOLKIT_TESTDATA_ERR_005", "Testdata file is invalid"),
 	TESTDATA_VALIDATION_UNSUCCESSFULL("TOOLKIT_TESTDATA_ERR_006", "Testdata validation failed."),
+	
+	ZIP_HIGH_COMPRESSION_RATIO_ERROR("TOOLKIT_ZIP_FILE_ERR_001", "Ratio between compressed and uncompressed data is highly suspicious, looks like a Zip Bomb Attack."),
+	ZIP_SIZE_TOO_LARGE_ERROR("TOOLKIT_ZIP_FILE_ERR_002", "The uncompressed data size is too much for the application resource capacity."),
+	ZIP_ENTRIES_TOO_MANY_ERROR("TOOLKIT_ZIP_FILE_ERR_003", "Too much entries in this archive, can lead to inodes exhaustion of the system."),
 
 	TECHNICAL_ERROR_EXCEPTION("TOOLKIT_REQ_ERR_500", "Technical Error");
 
