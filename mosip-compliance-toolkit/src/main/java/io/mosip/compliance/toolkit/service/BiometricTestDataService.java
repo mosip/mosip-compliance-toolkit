@@ -525,74 +525,74 @@ public class BiometricTestDataService {
 
     private byte[] generateSampleSdkTestData(String purpose) {
         byte[] response = null;
-        ByteArrayOutputStream byteArrayOutputStream = null;
+		ByteArrayOutputStream byteArrayOutputStream = null;
 		BufferedOutputStream bufferedOutputStream = null;
 		ZipOutputStream zipOutputStream = null;
-        try {
-            List<TestCaseEntity> testCaseEntities = testCaseCacheService.getSdkTestCases(AppConstants.SDK,
-                    sdkSampleTestdataSpecVer);
+		try {
+			List<TestCaseEntity> testCaseEntities = testCaseCacheService.getSdkTestCases(AppConstants.SDK,
+					sdkSampleTestdataSpecVer);
 
-            if (Objects.nonNull(testCaseEntities) && testCaseEntities.size() > 0) {
-            	String folderName = purpose;
+			if (Objects.nonNull(testCaseEntities) && testCaseEntities.size() > 0) {
+				String folderName = purpose;
 				String fileName = "Readme.txt";
-				
-                byteArrayOutputStream = new ByteArrayOutputStream();
-                bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
-                zipOutputStream = new ZipOutputStream(bufferedOutputStream);
 
-                List<String> ignoreTestcaseList = Arrays.asList(ignoreTestcases.split(","));
-                
-              //adding Readme file outside testcases
+				byteArrayOutputStream = new ByteArrayOutputStream();
+				bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
+				zipOutputStream = new ZipOutputStream(bufferedOutputStream);
+
+				List<String> ignoreTestcaseList = Arrays.asList(ignoreTestcases.split(","));
+
+				// adding Readme file outside testcases
 				StringBuilder builder = new StringBuilder();
 				builder.append(outerReadmeIntro + "\n\n");
 				builder.append("Method - " + purpose + "\n\n");
 				builder.append(outerReadmeBody);
-				
+
 				zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
 				zipOutputStream.write(builder.toString().getBytes());
 				zipOutputStream.closeEntry();
 
-                for (final TestCaseEntity testCaseEntity : testCaseEntities) {
-                    String testcaseJson = testCaseEntity.getTestcaseJson();
-                    TestCaseDto testCaseDto = objectMapperConfig.objectMapper().readValue(testcaseJson,
-                            TestCaseDto.class);
-                    if (testCaseDto.getSpecVersion() != null
-                            && testCaseDto.getSpecVersion().equals(sdkSampleTestdataSpecVer)
-                            && !ignoreTestcaseList.contains(testCaseDto.getTestId())
-                            && testCaseDto.getOtherAttributes().getSdkPurpose().contains(purpose)) {
+				for (final TestCaseEntity testCaseEntity : testCaseEntities) {
+					String testcaseJson = testCaseEntity.getTestcaseJson();
+					TestCaseDto testCaseDto = objectMapperConfig.objectMapper().readValue(testcaseJson,
+							TestCaseDto.class);
+					if (testCaseDto.getSpecVersion() != null
+							&& testCaseDto.getSpecVersion().equals(sdkSampleTestdataSpecVer)
+							&& !ignoreTestcaseList.contains(testCaseDto.getTestId())
+							&& testCaseDto.getOtherAttributes().getSdkPurpose().contains(purpose)) {
 
-                        folderName = purpose + "/" + testCaseDto.testId;
+						folderName = purpose + "/" + testCaseDto.testId;
 
-                        String content = prepareReadme(testCaseDto);
+						String content = prepareReadme(testCaseDto);
 
-                        zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
-                        zipOutputStream.write(content.getBytes());
-                        zipOutputStream.closeEntry();
+						zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
+						zipOutputStream.write(content.getBytes());
+						zipOutputStream.closeEntry();
 
-                        if (testCaseDto.getMethodName().size() > 1
-                                && testCaseDto.getMethodName().get(1).equals(MethodName.MATCH.getCode())) {
-                            folderName = purpose + "/" + testCaseDto.testId + "/" + testCaseDto.getMethodName().get(1);
-                            fileName = "Readme.txt";
+						if (testCaseDto.getMethodName().size() > 1
+								&& testCaseDto.getMethodName().get(1).equals(MethodName.MATCH.getCode())) {
+							folderName = purpose + "/" + testCaseDto.testId + "/" + testCaseDto.getMethodName().get(1);
+							fileName = "Readme.txt";
 
-                            content = prepareReadme(testCaseDto);
+							content = prepareReadme(testCaseDto);
 
-                            zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
-                            zipOutputStream.write(content.getBytes());
-                            zipOutputStream.closeEntry();
-                        }
+							zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
+							zipOutputStream.write(content.getBytes());
+							zipOutputStream.closeEntry();
+						}
 
-                    }
-                }
-                if (null != zipOutputStream) {
-                    zipOutputStream.finish();
-                    zipOutputStream.flush();
-                    zipOutputStream.close();
-                    zipOutputStream = null;
-                }
-                
-                response = byteArrayOutputStream.toByteArray();
-                
-                if (Objects.nonNull(bufferedOutputStream)) {
+					}
+				}
+				if (null != zipOutputStream) {
+					zipOutputStream.finish();
+					zipOutputStream.flush();
+					zipOutputStream.close();
+					zipOutputStream = null;
+				}
+
+				response = byteArrayOutputStream.toByteArray();
+
+				if (Objects.nonNull(bufferedOutputStream)) {
 					bufferedOutputStream.close();
 					bufferedOutputStream = null;
 				}
@@ -600,31 +600,31 @@ public class BiometricTestDataService {
 					byteArrayOutputStream.close();
 					byteArrayOutputStream = null;
 				}
-            }
-        } catch (Exception ex) {
-            log.debug("sessionId", "idType", "id", ex.getStackTrace());
-            log.error("sessionId", "idType", "id",
-                    "In generateSampleSdkTestData method of BiometricTestDataService Service - " + ex.getMessage());
-        }finally {
+			}
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In generateSampleSdkTestData method of BiometricTestDataService Service - " + ex.getMessage());
+		} finally {
 			try {
-			if (null != zipOutputStream) {
-				zipOutputStream.finish();
-				zipOutputStream.flush();
-				zipOutputStream.close();
-			}
-			if(null != bufferedOutputStream) {
-				bufferedOutputStream.close();
-			}
-			if(null != byteArrayOutputStream) {
-				byteArrayOutputStream.close();
-			}
-			}catch (Exception e) {
+				if (null != zipOutputStream) {
+					zipOutputStream.finish();
+					zipOutputStream.flush();
+					zipOutputStream.close();
+				}
+				if (null != bufferedOutputStream) {
+					bufferedOutputStream.close();
+				}
+				if (null != byteArrayOutputStream) {
+					byteArrayOutputStream.close();
+				}
+			} catch (Exception e) {
 				log.debug("sessionId", "idType", "id", e.getStackTrace());
 				log.error("sessionId", "idType", "id",
 						"In generateSampleSdkTestData method of BiometricTestDataService Service - " + e.getMessage());
 			}
 		}
-        return response;
+		return response;
     }
 
     private String prepareReadme(TestCaseDto testCaseDto) {
