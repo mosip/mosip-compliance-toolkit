@@ -102,6 +102,12 @@ public class BiometricTestDataService {
 
     @Value("${mosip.toolkit.sample.testdata.sdk.readme.text}")
     private String readmeIntro;
+	
+	@Value("${mosip.toolkit.sample.testdata.sdk.outer.readme.text.head}")
+	private String outerReadmeIntro;
+	
+	@Value("${mosip.toolkit.sample.testdata.sdk.outer.readme.text.body}")
+	private String outerReadmeBody;
 
     @Value("${mosip.toolkit.sdk.testcases.ignore.list}")
     private String ignoreTestcases;
@@ -519,16 +525,32 @@ public class BiometricTestDataService {
 
     private byte[] generateSampleSdkTestData(String purpose) {
         byte[] response = null;
+        ByteArrayOutputStream byteArrayOutputStream = null;
+		BufferedOutputStream bufferedOutputStream = null;
+		ZipOutputStream zipOutputStream = null;
         try {
             List<TestCaseEntity> testCaseEntities = testCaseCacheService.getSdkTestCases(AppConstants.SDK,
                     sdkSampleTestdataSpecVer);
 
             if (Objects.nonNull(testCaseEntities) && testCaseEntities.size() > 0) {
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
-                ZipOutputStream zipOutputStream = new ZipOutputStream(bufferedOutputStream);
+            	String folderName = purpose;
+				String fileName = "Readme.txt";
+				
+                byteArrayOutputStream = new ByteArrayOutputStream();
+                bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
+                zipOutputStream = new ZipOutputStream(bufferedOutputStream);
 
                 List<String> ignoreTestcaseList = Arrays.asList(ignoreTestcases.split(","));
+                
+              //adding Readme file outside testcases
+				StringBuilder builder = new StringBuilder();
+				builder.append(outerReadmeIntro + "\n\n");
+				builder.append("Method - " + purpose + "\n\n");
+				builder.append(outerReadmeBody);
+				
+				zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
+				zipOutputStream.write(builder.toString().getBytes());
+				zipOutputStream.closeEntry();
 
                 for (final TestCaseEntity testCaseEntity : testCaseEntities) {
                     String testcaseJson = testCaseEntity.getTestcaseJson();
@@ -539,8 +561,7 @@ public class BiometricTestDataService {
                             && !ignoreTestcaseList.contains(testCaseDto.getTestId())
                             && testCaseDto.getOtherAttributes().getSdkPurpose().contains(purpose)) {
 
-                        String folderName = purpose + "/" + testCaseDto.testId;
-                        String fileName = "Readme.txt";
+                        folderName = purpose + "/" + testCaseDto.testId;
 
                         String content = prepareReadme(testCaseDto);
 
@@ -566,17 +587,43 @@ public class BiometricTestDataService {
                     zipOutputStream.finish();
                     zipOutputStream.flush();
                     zipOutputStream.close();
+                    zipOutputStream = null;
                 }
-                bufferedOutputStream.close();
-                byteArrayOutputStream.close();
-
+                
                 response = byteArrayOutputStream.toByteArray();
+                
+                if (Objects.nonNull(bufferedOutputStream)) {
+					bufferedOutputStream.close();
+					bufferedOutputStream = null;
+				}
+				if (Objects.nonNull(byteArrayOutputStream)) {
+					byteArrayOutputStream.close();
+					byteArrayOutputStream = null;
+				}
             }
         } catch (Exception ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In generateSampleSdkTestData method of BiometricTestDataService Service - " + ex.getMessage());
-        }
+        }finally {
+			try {
+			if (null != zipOutputStream) {
+				zipOutputStream.finish();
+				zipOutputStream.flush();
+				zipOutputStream.close();
+			}
+			if(null != bufferedOutputStream) {
+				bufferedOutputStream.close();
+			}
+			if(null != byteArrayOutputStream) {
+				byteArrayOutputStream.close();
+			}
+			}catch (Exception e) {
+				log.debug("sessionId", "idType", "id", e.getStackTrace());
+				log.error("sessionId", "idType", "id",
+						"In generateSampleSdkTestData method of BiometricTestDataService Service - " + e.getMessage());
+			}
+		}
         return response;
     }
 
