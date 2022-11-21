@@ -52,6 +52,7 @@ public enum ToolkitErrorCodes {
 	
 	PROJECT_NAME_EXISTS("TOOLKIT_DB_ERR_001", "You have previously created a project with name: "),
 	BIO_TEST_DATA_FILE_EXISTS("TOOLKIT_DB_ERR_002", "You have previously added biometric test data with name: "),
+	COLLECTION_NAME_EXISTS("TOOLKIT_DB_ERR_003", "You have previously created a collection with name: "),
 	
 	RESOURCE_UPLOAD_ERROR("TOOLKIT_RESOURCE_UPLOAD_ERR_001", "Unable to upload resource"),
 	
