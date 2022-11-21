@@ -270,6 +270,9 @@ public class CollectionsServiceTest {
         requestDto.setCollectionName(String.valueOf(collectionDto));
 
         CollectionEntity outputEntity = new CollectionEntity();
+        Mockito.when(collectionsRepository.getSbiCollectionByName(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(null);
+        Mockito.when(collectionsRepository.getSdkCollectionByName(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(null);
+        Mockito.when(collectionsRepository.getAbisCollectionByName(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(null);
         Mockito.when(collectionsRepository.save(Mockito.any())).thenReturn(outputEntity);
         Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
         Mockito.when(mapper.convertValue(outputEntity, CollectionDto.class)).thenReturn(collectionDto);
