@@ -270,38 +270,55 @@ public class CollectionsService {
 				String sbiProjectId = null;
 				String sdkProjectId = null;
 				String abisProjectId = null;
+				List<CollectionEntity> duplicates = null;
 				
 				switch (collectionRequest.getProjectType()) {
 				case AppConstants.SBI:
 					sbiProjectId = collectionRequest.getProjectId();
+					duplicates = collectionsRepository.getSbiCollectionByName(
+							collectionRequest.getCollectionName(), sbiProjectId, getPartnerId());
 					break;
 				case AppConstants.SDK:
 					sdkProjectId = collectionRequest.getProjectId();
+					duplicates = collectionsRepository.getSdkCollectionByName(
+							collectionRequest.getCollectionName(), sdkProjectId, getPartnerId());
 					break;
 				case AppConstants.ABIS:
 					abisProjectId = collectionRequest.getProjectId();
+					duplicates = collectionsRepository.getAbisCollectionByName(
+							collectionRequest.getCollectionName(), abisProjectId, getPartnerId());
 					break;
 				}
 
-				CollectionEntity inputEntity = new CollectionEntity();
-				inputEntity.setId(RandomIdGenerator.generateUUID(collectionRequest.getProjectType().toLowerCase(), "", 36));
-				inputEntity.setName(collectionRequest.getCollectionName());
-				inputEntity.setSbiProjectId(sbiProjectId);
-				inputEntity.setSdkProjectId(sdkProjectId);
-				inputEntity.setAbisProjectId(abisProjectId);
-				inputEntity.setPartnerId(getPartnerId());
-				inputEntity.setCrBy(getUserBy());
-				inputEntity.setCrDate(LocalDateTime.now());
-				inputEntity.setUpBy(null);
-				inputEntity.setUpdDate(null);
-				inputEntity.setDeleted(false);
-				inputEntity.setDelTime(null);
-				CollectionEntity outputEntity = collectionsRepository.save(inputEntity);
+				if (Objects.isNull(duplicates) || duplicates.size() <= 0) {
+					CollectionEntity inputEntity = new CollectionEntity();
+					inputEntity.setId(
+							RandomIdGenerator.generateUUID(collectionRequest.getProjectType().toLowerCase(), "", 36));
+					inputEntity.setName(collectionRequest.getCollectionName());
+					inputEntity.setSbiProjectId(sbiProjectId);
+					inputEntity.setSdkProjectId(sdkProjectId);
+					inputEntity.setAbisProjectId(abisProjectId);
+					inputEntity.setPartnerId(getPartnerId());
+					inputEntity.setCrBy(getUserBy());
+					inputEntity.setCrDate(LocalDateTime.now());
+					inputEntity.setUpBy(null);
+					inputEntity.setUpdDate(null);
+					inputEntity.setDeleted(false);
+					inputEntity.setDelTime(null);
+					CollectionEntity outputEntity = collectionsRepository.save(inputEntity);
 
-				collection = objectMapperConfig.objectMapper().convertValue(outputEntity, CollectionDto.class);
-				collection.setCollectionId(outputEntity.getId());
-				collection.setProjectId(collectionRequest.getProjectId());
-				collection.setCrDtimes(outputEntity.getCrDate());
+					collection = objectMapperConfig.objectMapper().convertValue(outputEntity, CollectionDto.class);
+					collection.setCollectionId(outputEntity.getId());
+					collection.setProjectId(collectionRequest.getProjectId());
+					collection.setCrDtimes(outputEntity.getCrDate());
+				} else {
+					List<ServiceError> serviceErrorsList = new ArrayList<>();
+					ServiceError serviceError = new ServiceError();
+					serviceError.setErrorCode(ToolkitErrorCodes.COLLECTION_NAME_EXISTS.getErrorCode());
+					serviceError.setMessage(ToolkitErrorCodes.COLLECTION_NAME_EXISTS.getErrorMessage() + duplicates.get(0).getName());
+					serviceErrorsList.add(serviceError);
+					responseWrapper.setErrors(serviceErrorsList);
+				}
 			} else {
 				List<ServiceError> serviceErrorsList = new ArrayList<>();
 				ServiceError serviceError = new ServiceError();
