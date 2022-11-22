@@ -1,24 +1,30 @@
 package io.mosip.compliance.toolkit.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.constants.*;
-import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
-import io.mosip.compliance.toolkit.dto.testcases.TestCaseResponseDto;
-import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
+import io.mosip.compliance.toolkit.dto.testcases.*;
 import io.mosip.compliance.toolkit.entity.TestCaseEntity;
 import io.mosip.compliance.toolkit.repository.TestCasesRepository;
+import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.authmanager.authadapter.model.MosipUserDto;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +34,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -56,7 +63,18 @@ public class TestCasesServiceTest {
     private TestCasesRepository testCasesRepository;
 
     @Mock
+    private ApplicationContext context;
+
+    Gson gson = new GsonBuilder().create();
+
+    @Mock
     private ObjectMapper objectMapper;
+
+    @Mock
+    public ObjectMapperConfig objectMapperConfig;
+
+    @Mock
+    public ObjectStoreAdapter objectStore;
 
     private MosipUserDto mosipUserDto;
 
@@ -90,7 +108,7 @@ public class TestCasesServiceTest {
      * This class tests the getSbiTestCases method
      */
     @Test
-    public void getSbiTestCases() throws Exception {
+    public void getSbiTestCasesTest() throws Exception {
         String specVersion = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
         String purpose = Purposes.REGISTRATION.getCode();
         String deviceType = DeviceTypes.FINGER.getCode();
@@ -124,6 +142,27 @@ public class TestCasesServiceTest {
         testCasesServiceSpy.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType);
     }
 
+    /*
+     * This class tests the getSbiTestCases method in case of exception
+     */
+    @Test
+    public void getSbiTestCasesExceptionTest() throws Exception {
+        //toolkit exception
+        String specVersion = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
+        String purpose = Purposes.REGISTRATION.getCode();
+        String deviceType = DeviceTypes.FINGER.getCode();
+        String deviceSubType = DeviceSubTypes.SLAP.getCode();
+        Mockito.when(resourceCacheService.getSchema(null, null, "testcase_schema.json")).thenReturn(null);
+        testCasesService.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType);
+        //exception
+        String schemaResponse = "schemaResponse";
+        Mockito.when(resourceCacheService.getSchema(null, null, "testcase_schema.json")).thenReturn( schemaResponse);
+        List<TestCaseEntity> testCaseEntities = new ArrayList<>();
+        testCaseEntities.add(null);
+        Mockito.when(testCaseCacheService.getSbiTestCases(AppConstants.SBI, specVersion)).thenReturn(testCaseEntities);
+        testCasesService.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType);
+    }
+
 
     /*
      * This class tests the getSdkTestCases method
@@ -153,6 +192,25 @@ public class TestCasesServiceTest {
         testCaseDto.setOtherAttributes(otherAttributes);
         Mockito.when(objectMapper.readValue(testCaseEntity.getTestcaseJson(), TestCaseDto.class)).thenReturn(testCaseDto);
         testCasesServiceSpy.getSdkTestCases(specVersion, sdkPurpose);
+    }
+
+    /*
+     * This class tests the getSdkTestCases method in case of exception
+     */
+    @Test
+    public void getSdkTestCasesExceptionTest() throws Exception {
+        //toolkit exception
+        String specVersion = SdkSpecVersions.SPEC_VER_0_9_0.getCode();
+        String sdkPurpose = SdkPurpose.CHECK_QUALITY.getCode();
+        Mockito.when(resourceCacheService.getSchema(null, null, "testcase_schema.json")).thenReturn(null);
+        testCasesService.getSdkTestCases(specVersion, sdkPurpose);
+        //exception
+        String schemaResponse = "schemaResponse";
+        Mockito.when(resourceCacheService.getSchema(null, null, "testcase_schema.json")).thenReturn( schemaResponse);
+        List<TestCaseEntity> testCaseEntities = new ArrayList<>();
+        testCaseEntities.add(null);
+        Mockito.when(testCaseCacheService.getSdkTestCases(AppConstants.SDK, specVersion)).thenReturn(testCaseEntities);
+        testCasesService.getSdkTestCases(specVersion, sdkPurpose);
     }
 
     /*
@@ -222,7 +280,7 @@ public class TestCasesServiceTest {
     }
 
     /*
-     * This method is used to get validateArrayLengths in class
+     * This class tests the validArrayLengths method
      */
     @Test(expected = Exception.class)
     public void validateArrayLengthsTest1(){
@@ -242,7 +300,7 @@ public class TestCasesServiceTest {
     }
 
     /*
-     * This method is used to get validateArrayLengths in class
+     * This class tests the validArrayLengths method
      */
     @Test(expected = Exception.class)
     public void validateArrayLengthsTest2(){
@@ -257,7 +315,7 @@ public class TestCasesServiceTest {
     }
 
     /*
-     * This method is used to get validateArrayLengths in class
+     * This class tests the validArrayLengths method
      */
     @Test(expected = Exception.class)
     public void validateArrayLengthsTest3(){
@@ -271,7 +329,7 @@ public class TestCasesServiceTest {
     }
 
     /*
-     * This method is used to get validateArrayLengths in class
+     * This class tests the validArrayLengths method
      */
     @Test(expected = Exception.class)
     public void validateArrayLengthsTest4(){
@@ -288,7 +346,7 @@ public class TestCasesServiceTest {
     }
 
     /*
-     * This method is used to get validateArrayLengths in class
+     * This class tests the validArrayLengths method
      */
     @Test(expected = Exception.class)
     public void validateArrayLengthsTest5(){
@@ -307,14 +365,156 @@ public class TestCasesServiceTest {
     }
 
     /*
-     * This method is used to get isValidTestCaseId in class
+     * This class tests the isValidTestCaseId method
      */
     @Test(expected = Exception.class)
-    public void isValidTestCaseId(){
+    public void isValidTestCaseIdTest(){
         TestCaseDto testCaseDto = new TestCaseDto();
         testCaseDto.setTestCaseType(AppConstants.SDK);
         testCaseDto.setTestId("SBI1000");
         ReflectionTestUtils.invokeMethod(testCasesService, "isValidTestCaseId", testCaseDto);
+    }
+
+    /*
+     * This class tests the performRequestValidations method
+     */
+    @Test
+    public void performRequestValidationsTest() throws Exception {
+        //type SDK
+        ValidateRequestSchemaDto requestDto = new ValidateRequestSchemaDto();
+        requestDto.setTestCaseType(AppConstants.SDK);
+        requestDto.setSpecVersion(SdkSpecVersions.SPEC_VER_0_9_0.getCode());
+        String schemaResponse = "schemaResponse";
+        Mockito.when(resourceCacheService.getSchema(AppConstants.SDK.toLowerCase(), requestDto.getSpecVersion(), requestDto.getRequestSchema()+".json")).thenReturn(schemaResponse);
+        TestCasesService testCasesServiceSpy = Mockito.spy(testCasesService);
+        ValidationResultDto validationResultDto = new ValidationResultDto();
+        validationResultDto.setStatus(AppConstants.SUCCESS);
+        Mockito.doReturn(validationResultDto).when(testCasesServiceSpy).validateJsonWithSchema(requestDto.getMethodRequest(), schemaResponse);
+        testCasesService.performRequestValidations(requestDto);
+        //type SBI
+        requestDto.setTestCaseType(AppConstants.SBI);
+        requestDto.setSpecVersion(SbiSpecVersions.SPEC_VER_0_9_5.getCode());
+        Mockito.when(resourceCacheService.getSchema(AppConstants.SBI.toLowerCase(), requestDto.getSpecVersion(), requestDto.getRequestSchema()+".json")).thenReturn(schemaResponse);
+        Assert.assertEquals(AppConstants.SUCCESS, testCasesServiceSpy.performRequestValidations(requestDto).getResponse().getStatus());
+    }
+
+    /*
+     * This class tests the performRequestValidations method in case of exception
+     */
+    @Test
+    public void performRequestValidationsExceptionTest() throws Exception {
+        ValidateRequestSchemaDto requestDto = new ValidateRequestSchemaDto();
+        requestDto.setRequestSchema("requestSchema");
+        requestDto.setTestCaseType(AppConstants.SDK);
+        requestDto.setSpecVersion(SdkSpecVersions.SPEC_VER_0_9_0.getCode());
+        String schemaResponse = "schemaResponse";
+        Mockito.when(resourceCacheService.getSchema(AppConstants.SDK.toLowerCase(), requestDto.getSpecVersion(), requestDto.getRequestSchema()+".json")).thenReturn(schemaResponse);
+        testCasesService.performRequestValidations(requestDto);
+    }
+
+    /*
+     * This class tests the performValidations method
+     */
+    @Test
+    public void performValidationsTest(){
+        ValidationInputDto requestDto = new ValidationInputDto();
+        List<ValidatorDefDto> validatorDefs = new ArrayList<>();
+        ValidatorDefDto validatorDefDto = new ValidatorDefDto();
+        validatorDefDto.setName("ResponseMismatchValidator");
+        validatorDefDto.setDescription("Description");
+        validatorDefs.add(validatorDefDto);
+        requestDto.setValidatorDefs(validatorDefs);
+        testCasesService.performValidations(requestDto);
+    }
+
+    /*
+     * This class tests the performValidations method in case of exception
+     */
+    @Test
+    public void performValidationsException(){
+        ValidationInputDto requestDto = new ValidationInputDto();
+        requestDto.setValidatorDefs(null);
+        testCasesService.performValidations(requestDto);
+    }
+
+    /*
+     * This class tests the getBiometricType
+     */
+    @Test
+    public void getBiometricTypeTest(){
+        String type = AppConstants.FINGER;
+        ReflectionTestUtils.invokeMethod(testCasesService, "getBiometricType", type);
+        type = AppConstants.FACE;
+        ReflectionTestUtils.invokeMethod(testCasesService, "getBiometricType", type);
+        type = AppConstants.IRIS;
+        BiometricType biometricType = ReflectionTestUtils.invokeMethod(testCasesService, "getBiometricType", type);
+        Assert.assertEquals(BiometricType.IRIS, biometricType);
+    }
+
+    /*
+     * This class tests the getTestCaseById
+     */
+    @Test
+    public void getTestCaseByIdTest() throws JsonProcessingException {
+        String testCaseId = "SBI1000";
+        Mockito.when(testCasesRepository.getTestCasesById(testCaseId)).thenReturn(null);
+        testCasesService.getTestCaseById(testCaseId);
+        String testCaseJson = "testCaseJson";
+        Mockito.when(testCasesRepository.getTestCasesById(testCaseId)).thenReturn(testCaseJson);
+        TestCaseDto testCase = new TestCaseDto();
+        Mockito.when(objectMapper.readValue(testCaseJson, TestCaseDto.class)).thenReturn(testCase);
+        ResponseWrapper<TestCaseDto> responseWrapper =  testCasesService.getTestCaseById(testCaseId);
+        Assert.assertEquals(testCase, responseWrapper.getResponse());
+    }
+
+    /*
+     * This class tests the getTestCaseById in case of Exception
+     */
+    @Test
+    public void getTestCaseByIdExceptionTest() throws JsonProcessingException {
+        String testCaseId = "SBI1000";
+        Mockito.when(testCasesRepository.getTestCasesById(testCaseId)).thenReturn(null);
+        ReflectionTestUtils.setField(testCasesService, "testCasesRepository", null);
+        testCasesService.getTestCaseById(testCaseId);
+    }
+
+    /*
+     * This class tests the generateRequestForSDKTestcase
+     */
+    @Test
+    @Ignore
+    public void generateRequestForSDKTestcaseExceptionTest() throws Exception {
+        SdkRequestDto requestDto = new SdkRequestDto();
+        requestDto.setMethodName(MethodName.CHECK_QUALITY.getCode());
+        String json = "{\n" +
+                "\t\"name\": \"John\",\n" +
+                "\t\"age\": 30,\n" +
+                "\t\"car\": null\n" +
+                "}";
+        ObjectNode objectNode = (ObjectNode) objectMapper.readValue(json,
+                ObjectNode.class);
+        ReflectionTestUtils.setField(testCasesService, "objectMapper", objectMapper);
+        FileInputStream inputFile = new FileInputStream( "src/test/java/io/mosip/compliance/toolkit/testFile.zip");
+        Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
+        Mockito.when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(inputFile);
+        testCasesService.generateRequestForSDKTestcase(requestDto);
+    }
+
+    /*
+     * This class tests the getSdkPurpose
+     */
+    @Test
+    public void getSdkPurposeTest(){
+        String methodName = MethodName.MATCH.getCode();
+        ReflectionTestUtils.invokeMethod(testCasesService, "getSdkPurpose", methodName);
+        methodName = MethodName.SEGMENT.getCode();
+        ReflectionTestUtils.invokeMethod(testCasesService, "getSdkPurpose", methodName);
+        methodName = MethodName.CHECK_QUALITY.getCode();
+        ReflectionTestUtils.invokeMethod(testCasesService, "getSdkPurpose", methodName);
+        methodName = MethodName.EXTRACT_TEMPLATE.getCode();
+        ReflectionTestUtils.invokeMethod(testCasesService, "getSdkPurpose", methodName);
+        methodName = MethodName.CONVERT_FORMAT.getCode();
+        ReflectionTestUtils.invokeMethod(testCasesService, "getSdkPurpose", methodName);
     }
 
     /*
