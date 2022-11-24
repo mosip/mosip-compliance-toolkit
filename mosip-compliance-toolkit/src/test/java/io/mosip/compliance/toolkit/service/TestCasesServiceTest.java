@@ -596,7 +596,6 @@ public class TestCasesServiceTest {
         ReflectionTestUtils.invokeMethod(testCasesService, "getPartnerTestDataStream", requestDto, partnerId, sdkPurpose);
     }
 
-
     /*
      * This method is used to get MosipUserDto in class
      */
