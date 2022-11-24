@@ -14,6 +14,7 @@ import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,9 +38,21 @@ public class ResourceCacheServiceTest {
         String type = ProjectTypes.SBI.getCode();
         String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
         String fileName = "testFile";
+
         Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
         resourceCacheService.getSchema(null,version,fileName);
         resourceCacheService.getSchema(type,version,fileName);
+    }
+
+    @Test(expected = Exception.class)
+    public void getSchemaExceptionTest() throws IOException {
+        String type = ProjectTypes.SBI.getCode();
+        String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
+        String fileName = "testFile";
+        Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
+        InputStream input = new FileInputStream( "src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        Mockito.when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(input);
+        resourceCacheService.getSchema(type, version, fileName);
     }
 
     @Test
@@ -47,6 +60,7 @@ public class ResourceCacheServiceTest {
         String type = ProjectTypes.SBI.getCode();
         String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
         String fileName = "testFile";
+        InputStream input = new FileInputStream( "src/test/java/io/mosip/compliance/toolkit/testFile.txt");
         resourceCacheService.putSchema(null,version,fileName,inputStream);
         resourceCacheService.putSchema(type,version,fileName,inputStream);
     }

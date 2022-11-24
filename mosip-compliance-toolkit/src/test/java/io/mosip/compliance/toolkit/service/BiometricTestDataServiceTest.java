@@ -382,6 +382,16 @@ public class BiometricTestDataServiceTest {
     }
 
     /*
+     * This class tests the prepareReadMe
+     */
+    @Test
+    public void generateSampleSdkTestDataExceptionTest(){
+        String purpose = SdkPurpose.CHECK_QUALITY.getCode();
+        ReflectionTestUtils.setField(biometricTestDataService, "testCaseCacheService", null);
+        ReflectionTestUtils.invokeMethod(biometricTestDataService, "generateSampleSdkTestData", purpose);
+    }
+
+    /*
      * This method is used to get MosipUserDto in class
      */
     private MosipUserDto getMosipUserDto(){
