@@ -59,6 +59,9 @@ public class TestRunService {
 	@Value("${mosip.toolkit.api.id.testrun.status.get}")
 	private String getTestRunStatusId;
 	
+	@Value("${mosip.toolkit.api.id.testrun.delete}")
+	private String deleteTestRunId;
+	
 	@Value("${mosip.toolkit.testrun.archive.offset}")
 	private int archiveOffset;
 
@@ -429,6 +432,42 @@ public class TestRunService {
 		responseWrapper.setId(getTestRunStatusId);
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponse(testRunStatus);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+	
+	public ResponseWrapper<Boolean> deleteTestRun(String runId){
+		boolean deleteStatus = false;
+		ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
+		try {
+			if (Objects.nonNull(runId) && !runId.isEmpty()) {
+				deleteStatus = false;
+				testRunDetailsRepository.deleteById(runId, getPartnerId());
+				testRunRepository.deleteById(runId, getPartnerId());
+				deleteStatus = true;
+			}else {
+				List<ServiceError> serviceErrorsList = new ArrayList<>();
+				ServiceError serviceError = new ServiceError();
+				serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode());
+				serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
+				serviceErrorsList.add(serviceError);
+				responseWrapper.setErrors(serviceErrorsList);
+			}
+		}catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In deleteTestRun method of TestRunService Service - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.TESTRUN_DELETE_ERROR.getErrorCode());
+			serviceError.setMessage(
+					ToolkitErrorCodes.TESTRUN_DELETE_ERROR.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		}
+		responseWrapper.setId(deleteTestRunId);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponse(deleteStatus);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
