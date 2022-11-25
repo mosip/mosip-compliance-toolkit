@@ -441,10 +441,20 @@ public class TestRunService {
 		ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
 		try {
 			if (Objects.nonNull(runId) && !runId.isEmpty()) {
-				deleteStatus = false;
-				testRunDetailsRepository.deleteById(runId, getPartnerId());
-				testRunRepository.deleteById(runId, getPartnerId());
-				deleteStatus = true;
+				TestRunEntity entity = testRunRepository.getTestRunById(runId, getPartnerId());
+				if (Objects.nonNull(entity)) {
+					deleteStatus = false;
+					testRunDetailsRepository.deleteById(runId, getPartnerId());
+					testRunRepository.deleteById(runId, getPartnerId());
+					deleteStatus = true;
+				}else {
+					List<ServiceError> serviceErrorsList = new ArrayList<>();
+					ServiceError serviceError = new ServiceError();
+					serviceError.setErrorCode(ToolkitErrorCodes.TESTRUN_NOT_AVAILABLE.getErrorCode());
+					serviceError.setMessage(ToolkitErrorCodes.TESTRUN_NOT_AVAILABLE.getErrorMessage());
+					serviceErrorsList.add(serviceError);
+					responseWrapper.setErrors(serviceErrorsList);
+				}
 			}else {
 				List<ServiceError> serviceErrorsList = new ArrayList<>();
 				ServiceError serviceError = new ServiceError();
