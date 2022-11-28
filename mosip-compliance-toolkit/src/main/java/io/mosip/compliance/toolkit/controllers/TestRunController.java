@@ -89,4 +89,9 @@ public class TestRunController {
 	public ResponseWrapper<Boolean> deleteTestRun(@PathVariable String runId){
 		return testRunService.deleteTestRun(runId);
 	}
+	
+	@DeleteMapping(value = "/deleteCollectionTestRuns")
+	public ResponseWrapper<Boolean> deleteCollectionTestRuns(@RequestParam(required = true) String collectionId){
+		return testRunService.deleteTestRunByCollectionId(collectionId);
+	}
 }

@@ -39,6 +39,9 @@ public interface TestRunRepository extends BaseRepository<TestRunEntity, String>
 
 	@Query(value = "SELECT id FROM toolkit.test_run WHERE collection_id = ?1 AND partner_Id = ?3 AND is_deleted<>'true' ORDER BY run_dtimes DESC OFFSET ?2", nativeQuery = true)
 	public List<String> getRunIdsWithOffset(String collectionId, int i, String partnerId);
+	
+	@Query(value = "SELECT tr.id FROM TestRunEntity tr WHERE tr.collectionId = ?1 AND tr.partnerId = ?2 AND tr.isDeleted<>'true'")
+	public List<String> getRunIdByCollectionId(String collectionId, String partnerId);
 
 	@Modifying
 	@Transactional
@@ -49,4 +52,9 @@ public interface TestRunRepository extends BaseRepository<TestRunEntity, String>
 	@Transactional
 	@Query("DELETE FROM TestRunEntity e WHERE e.id = ?1 AND e.partnerId = ?2")
 	public void deleteById(String runId, String partnerId);
+	
+	@Modifying
+	@Transactional
+	@Query("DELETE FROM TestRunEntity e WHERE e.collectionId = ?1 AND e.partnerId = ?2")
+	public void deleteByCollectionId(String collectionId, String partnerId);
 }

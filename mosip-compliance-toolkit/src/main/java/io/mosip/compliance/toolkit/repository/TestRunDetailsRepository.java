@@ -30,4 +30,9 @@ public interface TestRunDetailsRepository extends BaseRepository<TestRunDetailsE
 	@Transactional
 	@Query("DELETE FROM TestRunDetailsEntity e WHERE e.runId = ?1 AND e.partnerId = ?2")
 	public void deleteById(String runId, String partnerId);
+	
+	@Modifying
+	@Transactional
+	@Query("DELETE FROM TestRunDetailsEntity e WHERE e.runId IN ?1 AND e.partnerId = ?2")
+	public void deleteByunIds(String[] runIds, String partnerId);
 }

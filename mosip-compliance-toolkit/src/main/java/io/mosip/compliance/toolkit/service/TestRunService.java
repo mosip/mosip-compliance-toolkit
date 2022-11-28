@@ -62,6 +62,9 @@ public class TestRunService {
 	@Value("${mosip.toolkit.api.id.testrun.delete}")
 	private String deleteTestRunId;
 	
+	@Value("${mosip.toolkit.api.id.collection.testrun.delete}")
+	private String deleteCollectionTestRunsId;
+	
 	@Value("${mosip.toolkit.testrun.archive.offset}")
 	private int archiveOffset;
 
@@ -476,6 +479,52 @@ public class TestRunService {
 			responseWrapper.setErrors(serviceErrorsList);
 		}
 		responseWrapper.setId(deleteTestRunId);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponse(deleteStatus);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+	
+	public ResponseWrapper<Boolean> deleteTestRunByCollectionId(String collectionId) {
+		boolean deleteStatus = false;
+		ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
+		try {
+			if (Objects.nonNull(collectionId) && !collectionId.isEmpty()) {
+				List<String> runIds = testRunRepository.getRunIdByCollectionId(collectionId, getPartnerId());
+				if (Objects.nonNull(runIds) && runIds.size() > 0) {
+					deleteStatus = false;
+					String[] runIdArray = runIds.toArray(new String[0]);
+					testRunDetailsRepository.deleteByunIds(runIdArray, getPartnerId());
+					testRunRepository.deleteByCollectionId(collectionId, getPartnerId());
+					deleteStatus = true;
+				} else {
+					List<ServiceError> serviceErrorsList = new ArrayList<>();
+					ServiceError serviceError = new ServiceError();
+					serviceError.setErrorCode(ToolkitErrorCodes.TESTRUN_NOT_AVAILABLE.getErrorCode());
+					serviceError.setMessage(ToolkitErrorCodes.TESTRUN_NOT_AVAILABLE.getErrorMessage());
+					serviceErrorsList.add(serviceError);
+					responseWrapper.setErrors(serviceErrorsList);
+				}
+			} else {
+				List<ServiceError> serviceErrorsList = new ArrayList<>();
+				ServiceError serviceError = new ServiceError();
+				serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode());
+				serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
+				serviceErrorsList.add(serviceError);
+				responseWrapper.setErrors(serviceErrorsList);
+			}
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In deleteTestRunByCollectionId method of TestRunService Service - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.TESTRUN_DELETE_ERROR.getErrorCode());
+			serviceError.setMessage(ToolkitErrorCodes.TESTRUN_DELETE_ERROR.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		}
+		responseWrapper.setId(deleteCollectionTestRunsId);
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponse(deleteStatus);
 		responseWrapper.setResponsetime(LocalDateTime.now());
