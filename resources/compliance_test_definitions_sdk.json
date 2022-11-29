@@ -2710,7 +2710,7 @@
 			"ConvertRequestSchema"
 		],
 		"responseSchema": [
-			"ConvertResponseSchema"
+			"ConvertNullResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -2866,7 +2866,7 @@
 			"ConvertRequestSchema"
 		],
 		"responseSchema": [
-			"ConvertResponseSchema"
+			"ConvertNullResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -2983,7 +2983,7 @@
 			"ConvertRequestSchema"
 		],
 		"responseSchema": [
-			"ConvertResponseSchema"
+			"ConvertNullResponseSchema"
 		],
 		"validatorDefs": [
 			[

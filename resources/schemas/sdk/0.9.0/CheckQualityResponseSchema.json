@@ -10,7 +10,7 @@
 			"type": "string"
 		},
 		"response": {
-			"type": "object",
+			"type": ["object", "null"],
 			"properties": {
 				"statusCode": {
 					"type": "integer"
