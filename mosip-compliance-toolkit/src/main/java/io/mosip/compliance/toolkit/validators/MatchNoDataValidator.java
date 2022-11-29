@@ -17,7 +17,7 @@ public class MatchNoDataValidator extends SDKValidator {
 					ObjectNode.class);
 			JsonNode mainResponse = (JsonNode) methodResponse.get("response");
 			int statusCode = Integer.parseInt(mainResponse.get("statusCode").asText());
-			if (statusCode == 402 || statusCode == 405) {
+			if (statusCode == 404) {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription("No data for Match, expected status code received:" + statusCode);
 			} else {

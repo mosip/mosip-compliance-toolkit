@@ -17,7 +17,7 @@ public class QualityCheckNoDataValidator extends SDKValidator {
 					ObjectNode.class);
 			JsonNode mainResponse = (JsonNode) methodResponse.get("response");
 			int statusCode = Integer.parseInt(mainResponse.get("statusCode").asText());
-			if (statusCode == 402 || statusCode == 403 || statusCode == 404) {
+			if (statusCode == 404) {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription("For no face data, expected status code received:" + statusCode);
 			} else {
