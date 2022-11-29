@@ -66,7 +66,7 @@ public class QualityCheckValidator extends SDKValidator {
                     }
                 }
             } else {
-                if (inputDto.isNegativeTestCase() && statusCode == 403) {
+                if (inputDto.isNegativeTestCase() && (statusCode == 403 || statusCode == 406 )) {
                     validationResultDto.setStatus(AppConstants.SUCCESS);
                     validationResultDto.setDescription("Positive Quality Check for is successful");
                 } else {
