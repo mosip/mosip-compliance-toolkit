@@ -261,7 +261,8 @@
                                 "Left RingFinger",
                                 "Left Thumb",
                                 "Right",
-                                "Left"
+                                "Left", 
+								"Unknown"
                               ]
                             }
                           ],
