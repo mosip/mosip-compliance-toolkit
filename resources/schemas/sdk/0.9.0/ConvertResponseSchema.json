@@ -250,23 +250,19 @@
                             {
                               "type": "string",
                               "enum": [
-                                "Right MiddleFinger",
-                                "Right IndexFinger",
-                                "Right LittleFinger",
-                                "Right RingFinger",
-                                "Right Thumb",
-                                "Left MiddleFinger",
-                                "Left IndexFinger",
-                                "Left LittleFinger",
-                                "Left RingFinger",
-                                "Left Thumb",
+                                "MiddleFinger",
+                                "IndexFinger",
+                                "LittleFinger",
+                                "RingFinger",
+                                "Thumb",
                                 "Right",
-                                "Left"
+                                "Left", 
+								"Unknown"
                               ]
                             }
                           ],
                           "minItems": 1,
-                          "maxItems": 1,
+                          "maxItems": 2,
                           "uniqueItems": true
                         },
                         "level": {
@@ -334,16 +330,13 @@
                                   {
                                     "type": "string",
                                     "enum": [
-                                      "Right RingFinger",
-                                      "Right MiddleFinger",
-                                      "Right LittleFinger",
-                                      "Right IndexFinger",
-                                      "Right Thumb",
-                                      "Left RingFinger",
-                                      "Left MiddleFinger",
-                                      "Left LittleFinger",
-                                      "Left IndexFinger",
-                                      "Left Thumb"
+									  "Right",
+									  "Left ",
+                                      "RingFinger",
+                                      "MiddleFinger",
+                                      "LittleFinger",
+                                      "IndexFinger",
+                                      "Thumb"
                                     ]
                                   }
                                 ]
