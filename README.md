@@ -3,7 +3,7 @@
 
 
 # Mosip-compliance-toolkit 
-This repository contains the source code for MOSIP Compliance-toolkit services.  For an overview refer [here](https://docs.mosip.io/1.2.0/modules).  The modules exposes API endpoints. For a reference front-end UI implementation refer to [Compliance-toolkit UI github repo](https://github.com/mosip/mosip-compliance-toolkit-ui/)
+This repository contains the source code for MOSIP Compliance-toolkit services.  For an overview refer [here](https://docs.mosip.io/1.2.0/modules/compliance-tool-kit).  The modules exposes API endpoints. For a reference front-end UI implementation refer to [Compliance-toolkit UI github repo](https://github.com/mosip/mosip-compliance-toolkit-ui/)
 
 Mosip-compliance-toolkit used to test following biometic components
 1. [Biomtric devices](https://docs.mosip.io/1.2.0/biometrics/biometric-devices)
