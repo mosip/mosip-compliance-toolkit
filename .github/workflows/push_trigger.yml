@@ -242,7 +242,7 @@ jobs:
       - name: Analyze with SonarCloud
         run: |
           cd mosip-compliance-toolkit
-          mvn -B -Dgpg.skip verify sonar:sonar -Dsonar.projectKey=mosip_${{ github.event.repository.name }} -Dsonar.organization=${{ secrets.ORG_KEY }} -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+          mvn -B -Dgpg.skip verify sonar:sonar -Dsonar.projectKey=mosip-compliance-toolkit -Dsonar.organization=mosip -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=11724a8b0efc0442d4e234b485e8182b350535e6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
