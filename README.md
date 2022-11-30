@@ -10,37 +10,29 @@ Mosip-compliance-toolkit used to test following biometic components
 3. [ABIS](https://docs.mosip.io/1.2.0/biometrics/abis)
 
 ## Database
-See [DB guide](db_scripts/README.md)
+See [DB guide](https://github.com/mosip/mosip-compliance-toolkit/blob/master/db_scripts/README.MD)
 
 ## Config-Server
-To run Compliance-toolkit services, run [Config Server](https://docs.mosip.io/1.2.0/modules/module-configuration#config-server)
+To run Compliance-toolkit services, run [Config Server](https://docs.mosip.io/1.2.0/modules/module-configuration#config-server).
+All properties mentioned is ```mosip-compliance-toolkit/src/main/resources/application.properties``` can be overwritten in config server file ```compliance-toolkit-default.properties```
 
 ## Build & run (for developers)
 Prerequisites:
 
 1. [Config Server](https://docs.mosip.io/1.2.0/modules/module-configuration#config-server)
-1. JDK 1.11  
-1. Build and install:
+2. JDK 1.11  
+3. Build and install:
     ```
-    $ cd kernel
-    $ mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true
+    $ cd mosip-compliance-toolkit
+    $ mvn clean install -Dgpg.skip=true
     ```
-1. Build Docker for a service:
+4. Build Docker for a service:
     ```
     $ cd <service folder>
     $ docker build -f Dockerfile
     ```
 ## Deploy
-To deploy Commons services on Kubernetes cluster using Dockers refer to [Sandbox Deployment](https://docs.mosip.io/1.2.0/deployment/sandbox-deployment).
-
-## Configuration
-Refer to the [configuration guide](docs/configuration.md).
-
-## Test
-Automated functional tests available in [Functional Tests repo](https://github.com/mosip/mosip-functional-tests).
-
-## APIs
-API documentation is available [here](https://mosip.github.io/documentation/).
+To deploy Commons services on Kubernetes cluster using Dockers refer to [Sandbox Deployment](https://docs.mosip.io/1.2.0/deployment).
 
 ## License
 This project is licensed under the terms of [Mozilla Public License 2.0](LICENSE).
