@@ -358,7 +358,6 @@ public class TestRunServiceTest {
 	@Test
 	public void deleteTestRunTest() {
 		String runId = "123";
-		String partnerId = "abc";
 		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
 		MosipUserDto mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
@@ -369,6 +368,20 @@ public class TestRunServiceTest {
 		testRunService.deleteTestRun(runId);
 		verify(testRunRepository, times(1)).deleteById(Mockito.any(), Mockito.any());
 		verify(testRunDetailsRepository, times(1)).deleteById(Mockito.any(), Mockito.any());
+	}
+	
+	@Test
+	public void deleteTestRunTestException() {
+		String runId = "";
+		testRunService.deleteTestRun(runId);
+		runId = "123";
+		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
+		Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		SecurityContextHolder.setContext(securityContext);
+		Mockito.when(testRunRepository.getTestRunById(Mockito.any(), Mockito.any())).thenReturn(null);
+		testRunService.deleteTestRun(runId);
 	}
 
 
