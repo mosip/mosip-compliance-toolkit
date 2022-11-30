@@ -1,5 +1,8 @@
 package io.mosip.compliance.toolkit.service;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -351,6 +354,22 @@ public class TestRunServiceTest {
     public void getTestRunStatusTestException(){
         testRunService.getTestRunStatus("123");
     }
+    
+	@Test
+	public void deleteTestRunTest() {
+		String runId = "123";
+		String partnerId = "abc";
+		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		MosipUserDto mosipUserDto = getMosipUserDto();
+		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
+		Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		SecurityContextHolder.setContext(securityContext);
+		TestRunEntity entity = new TestRunEntity();
+		Mockito.when(testRunRepository.getTestRunById(Mockito.any(), Mockito.any())).thenReturn(entity);
+		testRunService.deleteTestRun(runId);
+		verify(testRunRepository, times(1)).deleteById(Mockito.any(), Mockito.any());
+		verify(testRunDetailsRepository, times(1)).deleteById(Mockito.any(), Mockito.any());
+	}
 
 
     /*
