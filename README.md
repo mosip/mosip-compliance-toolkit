@@ -3,15 +3,14 @@
 
 
 # Mosip-compliance-toolkit 
-This repository contains the source code for MOSIP Compliance-toolkit services.  For an overview refer [here](https://docs.mosip.io/1.2.0/modules).  The modules exposes API endpoints. For a reference front-end UI implementation refer to [Compliance-toolkit UI github repo](https://github.com/mosip/mosip-compliance-toolkit-ui/)
+This repository contains the source code for MOSIP Compliance-toolkit services.  For an overview, refer [here](https://docs.mosip.io/1.2.0/modules). The modules expose API endpoints. For a reference front-end UI implementation, refer to [Compliance-toolkit UI github repo](https://github.com/mosip/mosip-compliance-toolkit-ui/)
 
-Mosip-compliance-toolkit used to test following biometic components
+Mosip-compliance-toolkit is used to test following biometric components:
 1. [Biomtric devices](https://docs.mosip.io/1.2.0/biometrics/biometric-devices)
 2. [Biometric SDK](https://docs.mosip.io/1.2.0/biometrics/biometric-sdk)
-3. [ABIS](https://docs.mosip.io/1.2.0/biometrics/abis)
 
 ## Database
-See [DB guide](https://github.com/mosip/mosip-compliance-toolkit/blob/master/db_scripts/README.MD)
+See [DB guide](https://github.com/mosip/mosip-compliance-toolkit/blob/master/db_scripts/README.MD).
 
 ## Config-Server
 To run Compliance-toolkit services, run [Config Server](https://docs.mosip.io/1.2.0/modules/module-configuration#config-server).
@@ -35,7 +34,7 @@ Prerequisites:
 ## Installing in k8s cluster using helm
 ### Pre-requisites
 1. Set the kube config file of the Mosip cluster having dependent services.
-1. Below are the dependent services required for compliance toolkit service.
+1. Below are the dependent services required for compliance toolkit service:
     | Chart | Chart version |
     |---|---|
     |[Clamav](https://github.com/mosip/mosip-infra/tree/v1.2.0.1-B1/deployment/v3/external/antivirus/clamav) | 2.4.1 |
@@ -53,7 +52,7 @@ Prerequisites:
     |[Partner manager service](https://github.com/mosip/mosip-infra/blob/v1.2.0.1-B1/deployment/v3/mosip/pms/install.sh) | 12.0.1-beta |
 
 ### Install
-Install `kubectl` and `helm` utilities. Then run:
+Install `kubectl` and `helm` utilities, then run:
 ```
 cd helm
 ./install.sh [cluster-kubeconfig-file]
