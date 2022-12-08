@@ -17,19 +17,7 @@ import io.mosip.compliance.toolkit.util.StringUtil;
 
 @Component
 public class AuthBioUtilValidator extends BioUtilValidator {
-    public static final String KEY_SPLITTER = "#KEY_SPLITTER#";
-
-    public static final String BIO = "bio";
-    public static final String DECODED_DATA = "dataDecoded";
-    public static final String THUMB_PRINT = "thumbprint";
-    public static final String SESSION_KEY = "sessionKey";
-    
-    public static final String BIO_VALUE = "bioValue";
-    public static final String TIME_STAMP = "timestamp";
-    public static final String TRANSACTION_ID = "transactionId";
-    public static final String PURPOSE = "purpose";
-    public static final String BIO_TYPE = "bioType";
-    public static final String BIO_SUBTYPE = "bioSubType";
+	public static final String KEY_SPLITTER = "#KEY_SPLITTER#";
 
 	@Value("${mosip.service.keymanager.decrypt.appid}")
 	private String appId;
@@ -41,48 +29,51 @@ public class AuthBioUtilValidator extends BioUtilValidator {
 	private String decryptUrl;
 
 	@Override
-    public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
-        ValidationResultDto validationResultDto = new ValidationResultDto();
-        try {
-            String responseJson = inputDto.getMethodResponse();
+	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
+		ValidationResultDto validationResultDto = new ValidationResultDto();
+		try {
+			String responseJson = inputDto.getMethodResponse();
 
-            ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper().readValue(responseJson,
-                    ObjectNode.class);
+			ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper().readValue(responseJson,
+					ObjectNode.class);
 
-            JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
-            if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
-                for (final JsonNode biometricNode : arrBiometricNodes) {
-                    JsonNode dataNode = biometricNode.get(DECODED_DATA);
+			JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
+			if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
+				for (final JsonNode biometricNode : arrBiometricNodes) {
+					JsonNode dataNode = biometricNode.get(DECODED_DATA);
 
-                    String purpose = dataNode.get(PURPOSE).asText();
-                    String bioType = dataNode.get(BIO_TYPE).asText();
-                    String bioValue = null;
-                    switch (Purposes.fromCode(purpose)) {
-	                    case AUTH:
-	                        bioValue = getDecryptBioValue (biometricNode.get(THUMB_PRINT).asText(), biometricNode.get(SESSION_KEY).asText(), KEY_SPLITTER, dataNode.get(TIME_STAMP).asText(), dataNode.get(TRANSACTION_ID).asText(), dataNode.get(BIO_VALUE).asText());
-	                        break;
-                        case REGISTRATION:
-                            throw new ToolkitException(ToolkitErrorCodes.INVALID_PURPOSE.getErrorCode(),
-                                    ToolkitErrorCodes.INVALID_PURPOSE.getErrorMessage());
-                    }
-                    validationResultDto = isValidISOTemplate(purpose, bioType, bioValue);
-                    if (validationResultDto.getStatus().equals(AppConstants.FAILURE)) {
-                        break;
-                    }
-                }
-            }
-        } catch (ToolkitException e) {
-            validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription(e.getLocalizedMessage());
-        } catch (Exception e) {
-            validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription(e.getLocalizedMessage());
-        }
-        return validationResultDto;
-    }
+					String purpose = dataNode.get(PURPOSE).asText();
+					String bioType = dataNode.get(BIO_TYPE).asText();
+					String bioValue = null;
+					switch (Purposes.fromCode(purpose)) {
+					case AUTH:
+						bioValue = getDecryptBioValue(biometricNode.get(THUMB_PRINT).asText(),
+								biometricNode.get(SESSION_KEY).asText(), KEY_SPLITTER,
+								dataNode.get(TIME_STAMP).asText(), dataNode.get(TRANSACTION_ID).asText(),
+								dataNode.get(BIO_VALUE).asText());
+						break;
+					case REGISTRATION:
+						throw new ToolkitException(ToolkitErrorCodes.INVALID_PURPOSE.getErrorCode(),
+								ToolkitErrorCodes.INVALID_PURPOSE.getErrorMessage());
+					}
+					validationResultDto = isValidISOTemplate(purpose, bioType, bioValue);
+					if (validationResultDto.getStatus().equals(AppConstants.FAILURE)) {
+						break;
+					}
+				}
+			}
+		} catch (ToolkitException e) {
+			validationResultDto.setStatus(AppConstants.FAILURE);
+			validationResultDto.setDescription(e.getLocalizedMessage());
+		} catch (Exception e) {
+			validationResultDto.setStatus(AppConstants.FAILURE);
+			validationResultDto.setDescription(e.getLocalizedMessage());
+		}
+		return validationResultDto;
+	}
 
-    private String getDecryptBioValue(String thumbprint, String sessionKey, String keySplitter, String timestamp, String transactionId,
-			String encryptedData) {
+	private String getDecryptBioValue(String thumbprint, String sessionKey, String keySplitter, String timestamp,
+			String transactionId, String encryptedData) {
 		byte[] xorResult = CryptoUtil.getXOR(timestamp, transactionId);
 		byte[] aadBytes = CryptoUtil.getLastBytes(xorResult, 16);
 		byte[] ivBytes = CryptoUtil.getLastBytes(xorResult, 12);
@@ -92,37 +83,38 @@ public class AuthBioUtilValidator extends BioUtilValidator {
 		byte[] keySplitterArr = StringUtil.toUtf8ByteArray(KEY_SPLITTER);
 		byte[] dataArr = StringUtil.base64UrlDecode(encryptedData);
 
-		String encodedData = StringUtil.base64UrlEncode(CryptoUtil.concatByteArrays(thumbprintArr, sessionKeyArr, keySplitterArr, dataArr));
-		
+		String encodedData = StringUtil
+				.base64UrlEncode(CryptoUtil.concatByteArrays(thumbprintArr, sessionKeyArr, keySplitterArr, dataArr));
+
 		String requesttime = getCurrentDateAndTimeForAPI();
-    	DecryptValidatorDto decryptValidatorDto = new DecryptValidatorDto();
-    	decryptValidatorDto.setRequesttime(requesttime);
- 
-    	DecryptRequestDto decryptRequest = new DecryptRequestDto();
-    	decryptRequest.setApplicationId(appId);
-    	decryptRequest.setReferenceId(refId);
-    	decryptRequest.setData(encodedData);
-    	decryptRequest.setSalt(StringUtil.base64UrlEncode(ivBytes));
-    	decryptRequest.setAad(StringUtil.base64UrlEncode(aadBytes));
-    	decryptRequest.setTimeStamp(requesttime);
-    	decryptValidatorDto.setRequest(decryptRequest);
+		DecryptValidatorDto decryptValidatorDto = new DecryptValidatorDto();
+		decryptValidatorDto.setRequesttime(requesttime);
+
+		DecryptRequestDto decryptRequest = new DecryptRequestDto();
+		decryptRequest.setApplicationId(appId);
+		decryptRequest.setReferenceId(refId);
+		decryptRequest.setData(encodedData);
+		decryptRequest.setSalt(StringUtil.base64UrlEncode(ivBytes));
+		decryptRequest.setAad(StringUtil.base64UrlEncode(aadBytes));
+		decryptRequest.setTimeStamp(requesttime);
+		decryptValidatorDto.setRequest(decryptRequest);
 
 		try {
 			io.restassured.response.Response postResponse = getDecryptPostResponse(decryptUrl, decryptValidatorDto);
 
-			DecryptValidatorResponseDto decryptValidatorResponseDto = objectMapperConfig.objectMapper().
-					readValue(postResponse.getBody().asString(), DecryptValidatorResponseDto.class);
+			DecryptValidatorResponseDto decryptValidatorResponseDto = objectMapperConfig.objectMapper()
+					.readValue(postResponse.getBody().asString(), DecryptValidatorResponseDto.class);
 
 			if ((decryptValidatorResponseDto.getErrors() != null && decryptValidatorResponseDto.getErrors().size() > 0)
 					|| (decryptValidatorResponseDto.getResponse().getData() == null)) {
-                throw new ToolkitException(ToolkitErrorCodes.AUTH_BIO_VALUE_DECRYPT_ERROR.getErrorCode(),
-                        ToolkitErrorCodes.AUTH_BIO_VALUE_DECRYPT_ERROR.getErrorMessage());
+				throw new ToolkitException(ToolkitErrorCodes.AUTH_BIO_VALUE_DECRYPT_ERROR.getErrorCode(),
+						ToolkitErrorCodes.AUTH_BIO_VALUE_DECRYPT_ERROR.getErrorMessage());
 			} else {
 				return decryptValidatorResponseDto.getResponse().getData();
 			}
 		} catch (Exception e) {
-            throw new ToolkitException(ToolkitErrorCodes.AUTH_BIO_VALUE_DECRYPT_ERROR.getErrorCode(),
-                    ToolkitErrorCodes.AUTH_BIO_VALUE_DECRYPT_ERROR.getErrorMessage() + e.getLocalizedMessage());
+			throw new ToolkitException(ToolkitErrorCodes.AUTH_BIO_VALUE_DECRYPT_ERROR.getErrorCode(),
+					ToolkitErrorCodes.AUTH_BIO_VALUE_DECRYPT_ERROR.getErrorMessage() + e.getLocalizedMessage());
 		}
 	}
 }

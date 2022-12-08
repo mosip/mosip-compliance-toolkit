@@ -14,51 +14,44 @@ import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 
 @Component
 public class RegistrationBioUtilValidator extends BioUtilValidator {
-    public static final String BIO = "bio";
-    public static final String DECODED_DATA = "dataDecoded";
-    public static final String BIO_VALUE = "bioValue";
-    public static final String PURPOSE = "purpose";
-    public static final String BIO_TYPE = "bioType";
-    public static final String BIO_SUBTYPE = "bioSubType";
+	@Override
+	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
+		ValidationResultDto validationResultDto = new ValidationResultDto();
+		try {
+			String responseJson = inputDto.getMethodResponse();
 
-    @Override
-    public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
-        ValidationResultDto validationResultDto = new ValidationResultDto();
-        try {
-            String responseJson = inputDto.getMethodResponse();
+			ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper().readValue(responseJson,
+					ObjectNode.class);
 
-            ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper().readValue(responseJson,
-                    ObjectNode.class);
+			JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
+			if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
+				for (final JsonNode biometricNode : arrBiometricNodes) {
+					JsonNode dataNode = biometricNode.get(DECODED_DATA);
 
-            JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
-            if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
-                for (final JsonNode biometricNode : arrBiometricNodes) {
-                    JsonNode dataNode = biometricNode.get(DECODED_DATA);
-
-                    String purpose = dataNode.get(PURPOSE).asText();
-                    String bioType = dataNode.get(BIO_TYPE).asText();
-                    String bioValue = null;
-                    switch (Purposes.fromCode(purpose)) {
-                        case REGISTRATION:
-                            bioValue = dataNode.get(BIO_VALUE).asText();
-                            break;
-                        case AUTH:
-                            throw new ToolkitException(ToolkitErrorCodes.INVALID_PURPOSE.getErrorCode(),
-                                    ToolkitErrorCodes.INVALID_PURPOSE.getErrorMessage());
-                    }
-                    validationResultDto = isValidISOTemplate(purpose, bioType, bioValue);
-                    if (validationResultDto.getStatus().equals(AppConstants.FAILURE)) {
-                        break;
-                    }
-                }
-            }
-        } catch (ToolkitException e) {
-            validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription(e.getLocalizedMessage());
-        } catch (Exception e) {
-            validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription(e.getLocalizedMessage());
-        }
-        return validationResultDto;
-    }
+					String purpose = dataNode.get(PURPOSE).asText();
+					String bioType = dataNode.get(BIO_TYPE).asText();
+					String bioValue = null;
+					switch (Purposes.fromCode(purpose)) {
+					case REGISTRATION:
+						bioValue = dataNode.get(BIO_VALUE).asText();
+						break;
+					case AUTH:
+						throw new ToolkitException(ToolkitErrorCodes.INVALID_PURPOSE.getErrorCode(),
+								ToolkitErrorCodes.INVALID_PURPOSE.getErrorMessage());
+					}
+					validationResultDto = isValidISOTemplate(purpose, bioType, bioValue);
+					if (validationResultDto.getStatus().equals(AppConstants.FAILURE)) {
+						break;
+					}
+				}
+			}
+		} catch (ToolkitException e) {
+			validationResultDto.setStatus(AppConstants.FAILURE);
+			validationResultDto.setDescription(e.getLocalizedMessage());
+		} catch (Exception e) {
+			validationResultDto.setStatus(AppConstants.FAILURE);
+			validationResultDto.setDescription(e.getLocalizedMessage());
+		}
+		return validationResultDto;
+	}
 }
