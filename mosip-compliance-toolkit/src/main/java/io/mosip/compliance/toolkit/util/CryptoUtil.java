@@ -55,7 +55,7 @@ public final class CryptoUtil {
 	
 	// Function to insert n 0s in the
 	// beginning of the given string
-	private static byte[] prependZeros(byte[] str, int n) {
+	public static byte[] prependZeros(byte[] str, int n) {
 		byte[] newBytes = new byte[str.length + n];
 		int i = 0;
 		for (; i < n; i++) {
@@ -69,7 +69,7 @@ public final class CryptoUtil {
 		return newBytes;
 	}
 	
-	private static byte[] getLastBytes(byte[] xorBytes, int lastBytesNum) {
+	public static byte[] getLastBytes(byte[] xorBytes, int lastBytesNum) {
 		assert(xorBytes.length >= lastBytesNum);
 		return Arrays.copyOfRange(xorBytes, xorBytes.length - lastBytesNum, xorBytes.length);
 	}
@@ -78,7 +78,7 @@ public final class CryptoUtil {
         return Hex.decodeHex(hexData);
     }
 	
-	private static byte[] hexStringToByteArray(String thumbprint) {
+	public static byte[] hexStringToByteArray(String thumbprint) {
 		int len = thumbprint.length();
 		byte[] data = new byte[len / 2];
 		for (int i = 0; i < len; i += 2) {
@@ -88,7 +88,7 @@ public final class CryptoUtil {
 		return data;
 	}
 
-	private static byte[] concatByteArrays(byte[] thumbprint, byte[] sessionkey, byte[] keySplitter, byte[] data) {
+	public static byte[] concatByteArrays(byte[] thumbprint, byte[] sessionkey, byte[] keySplitter, byte[] data) {
 		ByteBuffer result = ByteBuffer.allocate(thumbprint.length + sessionkey.length + keySplitter.length + data.length);
 		result.put(thumbprint);
 		result.put(sessionkey);
