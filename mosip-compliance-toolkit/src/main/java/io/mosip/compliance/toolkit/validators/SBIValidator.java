@@ -155,6 +155,16 @@ public abstract class SBIValidator extends ToolkitValidator {
         return objectMapperConfig.objectMapper().readValue(deviceInfo, ObjectNode.class);
     }
 
+    protected io.restassured.response.Response getDecryptPostResponse(String postUrl, DecryptValidatorDto decryptValidatorDto)
+            throws IOException {
+        Cookie.Builder builder = new Cookie.Builder("Authorization",
+                getAuthToken(getAuthManagerUrl, getAuthAppId, getAuthClientId, getAuthSecretKey));
+
+        return given().cookie(builder.build()).relaxedHTTPSValidation().body(decryptValidatorDto)
+                .contentType("application/json").log().all().when().post(postUrl).then().log().all().extract()
+                .response();
+    }
+
     protected io.restassured.response.Response getPostResponse(String postUrl, DeviceValidatorDto deviceValidatorDto)
             throws IOException {
         Cookie.Builder builder = new Cookie.Builder("Authorization",
@@ -298,6 +308,38 @@ public abstract class SBIValidator extends ToolkitValidator {
     }
 
     @Data
+    protected static class DecryptValidatorDto implements Serializable {
+		private static final long serialVersionUID = -2112567140911169485L;
+		String id;
+        Object metadata;
+        Object request;
+        String requesttime;
+        String version;
+    }
+
+    @Data
+    protected static class DecryptRequestDto implements Serializable {
+		private static final long serialVersionUID = 6098449354733115976L;
+		String applicationId;
+        String referenceId;
+        String timeStamp;
+        String data;
+        String salt;
+        String aad;
+    }
+
+    @Data
+    protected static class DecryptValidatorResponseDto implements Serializable {
+		private static final long serialVersionUID = 414320755574491361L;
+		String id;
+        Object metadata;
+        DecryptValidatorResponse response;
+        String responsetime;
+        String version;
+        List<ErrorDto> errors;
+    }
+
+    @Data
     protected static class DeviceValidatorResponseDto implements Serializable {
         private static final long serialVersionUID = -3533369757932860828L;
         String id;
@@ -312,6 +354,12 @@ public abstract class SBIValidator extends ToolkitValidator {
     protected static class ErrorDto {
         String errorCode;
         String message;
+    }
+
+    @Data
+    protected static class DecryptValidatorResponse implements Serializable {
+		private static final long serialVersionUID = 5675428669597716934L;
+		String data;
     }
 
     @Data
