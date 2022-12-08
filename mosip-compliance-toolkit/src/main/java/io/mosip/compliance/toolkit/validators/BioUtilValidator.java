@@ -6,7 +6,6 @@ import java.io.DataInputStream;
 
 import org.jnbis.api.model.Bitmap;
 import org.jnbis.internal.WsqDecoder;
-import org.springframework.stereotype.Component;
 
 import io.mosip.biometrics.util.CommonUtil;
 import io.mosip.biometrics.util.ConvertRequestDto;
@@ -26,7 +25,6 @@ import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 
-@Component
 public abstract class BioUtilValidator extends SBIValidator {
     
     private static final String ISO19794_5_2011 = "ISO19794_5_2011";
