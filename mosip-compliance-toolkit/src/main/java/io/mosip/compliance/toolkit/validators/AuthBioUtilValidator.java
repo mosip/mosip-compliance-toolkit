@@ -6,19 +6,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import io.mosip.biometrics.util.CommonUtil;
-import io.mosip.biometrics.util.ConvertRequestDto;
-import io.mosip.biometrics.util.face.FaceBDIR;
-import io.mosip.biometrics.util.face.FaceDecoder;
-import io.mosip.biometrics.util.face.ImageDataType;
-import io.mosip.biometrics.util.finger.FingerBDIR;
-import io.mosip.biometrics.util.finger.FingerDecoder;
-import io.mosip.biometrics.util.finger.FingerImageCompressionType;
-import io.mosip.biometrics.util.iris.IrisBDIR;
-import io.mosip.biometrics.util.iris.IrisDecoder;
-import io.mosip.biometrics.util.iris.IrisImageCompressionType;
 import io.mosip.compliance.toolkit.constants.AppConstants;
-import io.mosip.compliance.toolkit.constants.DeviceTypes;
 import io.mosip.compliance.toolkit.constants.Purposes;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
@@ -28,11 +16,7 @@ import io.mosip.compliance.toolkit.util.CryptoUtil;
 import io.mosip.compliance.toolkit.util.StringUtil;
 
 @Component
-public class AuthBioUtilValidator extends SBIValidator {
-    
-    private static final String ISO19794_5_2011 = "ISO19794_5_2011";
-    private static final String ISO19794_6_2011 = "ISO19794_6_2011";
-    private static final String ISO19794_4_2011 = "ISO19794_4_2011";
+public class AuthBioUtilValidator extends BioUtilValidator {
     public static final String KEY_SPLITTER = "#KEY_SPLITTER#";
 
     public static final String BIO = "bio";
@@ -141,142 +125,4 @@ public class AuthBioUtilValidator extends SBIValidator {
                     ToolkitErrorCodes.AUTH_BIO_VALUE_DECRYPT_ERROR.getErrorMessage() + e.getLocalizedMessage());
 		}
 	}
-
-	private ValidationResultDto isValidISOTemplate(String purpose, String bioType, String bioValue) {
-        ValidationResultDto validationResultDto = new ValidationResultDto();
-        DeviceTypes deviceTypeCode = DeviceTypes.fromCode(bioType);
-
-        if (bioValue != null) {
-            switch (deviceTypeCode) {
-                case FINGER:
-                    validationResultDto = isValidFingerISOTemplate(purpose, bioValue);
-                    break;
-                case IRIS:
-                    validationResultDto = isValidIrisISOTemplate(purpose, bioValue);
-                    break;
-                case FACE:
-                    validationResultDto = isValidFaceISOTemplate(purpose, bioValue);
-                    break;
-                default:
-                    validationResultDto.setStatus(AppConstants.FAILURE);
-                    validationResultDto.setDescription("BioUtilValidator failure - " + "with Message - "
-                            + " invalid bioType = " + bioType);
-                    break;
-            }
-        } else {
-            validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription("BioUtilValidator failure - " + "with Message - "
-                    + " isValidISOTemplate BioValue is Empty or Null");
-        }
-        return validationResultDto;
-    }
-
-    private ValidationResultDto isValidFingerISOTemplate(String purpose, String bioValue) {
-        ToolkitErrorCodes errorCode = null;
-        ValidationResultDto validationResultDto = new ValidationResultDto();
-        validationResultDto.setStatus(AppConstants.FAILURE);
-
-        ConvertRequestDto requestDto = new ConvertRequestDto();
-        requestDto.setModality(DeviceTypes.FINGER.getCode());
-        requestDto.setVersion(ISO19794_4_2011);
-
-        try {
-            requestDto.setInputBytes(CommonUtil.decodeURLSafeBase64(bioValue));
-        } catch (Exception e) {
-            errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_BASE64URLENCODED_EXCEPTION;
-            throw new ToolkitException(errorCode.getErrorCode(), e.getLocalizedMessage());
-        }
-
-        FingerBDIR bdir;
-        try {
-            bdir = FingerDecoder.getFingerBDIR(requestDto);
-        } catch (Exception e) {
-            errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_FINGER_ISO_FORMAT_EXCEPTION;
-            throw new ToolkitException(errorCode.getErrorCode(), e.getLocalizedMessage());
-        }
-
-        FingerImageCompressionType compressionType = bdir.getRepresentation().getRepresentationHeader().getCompressionType();        
-        if (!(compressionType == FingerImageCompressionType.JPEG_2000_LOSS_LESS || compressionType == FingerImageCompressionType.JPEG_2000_LOSSY || compressionType == FingerImageCompressionType.WSQ))
-        {
-            errorCode = ToolkitErrorCodes.INVALID_FINGER_COMPRESSION_TYPE;
-            throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
-        }
-        
-        byte[] inImageData = bdir.getRepresentation().getRepresentationBody().getImageData().getImage();
-        validationResultDto = isValidImageType(purpose, inImageData);
-        return validationResultDto;
-    }
-
-    private ValidationResultDto isValidIrisISOTemplate(String purpose, String bioValue) {
-        ToolkitErrorCodes errorCode = null;
-        ValidationResultDto validationResultDto = new ValidationResultDto();
-        validationResultDto.setStatus(AppConstants.FAILURE);
-
-        ConvertRequestDto requestDto = new ConvertRequestDto();
-        requestDto.setModality(DeviceTypes.IRIS.getCode());
-        requestDto.setVersion(ISO19794_6_2011);
-
-        try {
-            requestDto.setInputBytes(CommonUtil.decodeURLSafeBase64(bioValue));
-        } catch (Exception e) {
-            errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_BASE64URLENCODED_EXCEPTION;
-            throw new ToolkitException(errorCode.getErrorCode(), e.getLocalizedMessage());
-        }
-
-        IrisBDIR bdir;
-        try {
-            bdir = IrisDecoder.getIrisBDIR(requestDto);
-        } catch (Exception e) {
-            errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_IRIS_ISO_FORMAT_EXCEPTION;
-            throw new ToolkitException(errorCode.getErrorCode(), e.getLocalizedMessage());
-        }
-
-        IrisImageCompressionType compressionType = bdir.getRepresentation().getRepresentationHeader().getImageInformation().getCompressionType();        
-        if (!(compressionType == IrisImageCompressionType.JPEG_LOSSLESS_OR_NONE || compressionType == IrisImageCompressionType.JPEG_LOSSY))
-        {
-            errorCode = ToolkitErrorCodes.INVALID_IRIS_COMPRESSION_TYPE;
-            throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
-        }
-
-        byte[] inImageData = bdir.getRepresentation().getRepresentationData().getImageData().getImage();
-        validationResultDto = isValidImageType(purpose, inImageData);
-        return validationResultDto;
-    }
-
-    private ValidationResultDto isValidFaceISOTemplate(String purpose, String bioValue) {
-        ToolkitErrorCodes errorCode = null;
-        ValidationResultDto validationResultDto = new ValidationResultDto();
-        validationResultDto.setStatus(AppConstants.FAILURE);
-
-        ConvertRequestDto requestDto = new ConvertRequestDto();
-        requestDto.setModality(DeviceTypes.FACE.getCode());
-        requestDto.setVersion(ISO19794_5_2011);
-
-        try {
-            requestDto.setInputBytes(CommonUtil.decodeURLSafeBase64(bioValue));
-        } catch (Exception e) {
-            errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_BASE64URLENCODED_EXCEPTION;
-            throw new ToolkitException(errorCode.getErrorCode(), e.getLocalizedMessage());
-        }
-
-        FaceBDIR bdir;
-        try {
-            bdir = FaceDecoder.getFaceBDIR(requestDto);
-        } catch (Exception e) {
-            errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_FACE_ISO_FORMAT_EXCEPTION;
-            throw new ToolkitException(errorCode.getErrorCode(), e.getLocalizedMessage());
-        }
-
-        ImageDataType compressionType = bdir.getRepresentation().getRepresentationHeader().getImageInformation().getImageDataType();        
-        if (!(compressionType == ImageDataType.JPEG2000_LOSSY || compressionType == ImageDataType.JPEG2000_LOSS_LESS))
-        {
-            errorCode = ToolkitErrorCodes.INVALID_FACE_COMPRESSION_TYPE;
-            throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
-        }
-
-        byte[] inImageData = bdir.getRepresentation().getRepresentationData().getImageData().getImage();
-        validationResultDto = isValidImageType(purpose, inImageData);
-        return validationResultDto;
-    }
-
 }
