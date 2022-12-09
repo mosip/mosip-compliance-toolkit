@@ -782,6 +782,10 @@
 				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
+				},
+				{
+					"name": "AuthBioUtilValidator",
+					"description": "Validates the response biovalue for valid ISO and Image Type"
 				}
 			]
 		],
@@ -831,6 +835,10 @@
 				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
+				},
+				{
+					"name": "AuthBioUtilValidator",
+					"description": "Validates the response biovalue for valid ISO and Image Type"
 				}
 			]
 		],
@@ -882,6 +890,10 @@
 				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
+				},
+				{
+					"name": "AuthBioUtilValidator",
+					"description": "Validates the response biovalue for valid ISO and Image Type"
 				}
 			]
 		],
@@ -933,6 +945,10 @@
 				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
+				},
+				{
+					"name": "AuthBioUtilValidator",
+					"description": "Validates the response biovalue for valid ISO and Image Type"
 				}
 			]
 		],
@@ -984,6 +1000,10 @@
 				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
+				},
+				{
+					"name": "AuthBioUtilValidator",
+					"description": "Validates the response biovalue for valid ISO and Image Type"
 				}
 			]
 		],
@@ -1035,6 +1055,10 @@
 				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
+				},
+				{
+					"name": "AuthBioUtilValidator",
+					"description": "Validates the response biovalue for valid ISO and Image Type"
 				}
 			]
 		],
@@ -1087,6 +1111,10 @@
 				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
+				},
+				{
+					"name": "AuthBioUtilValidator",
+					"description": "Validates the response biovalue for valid ISO and Image Type"
 				}
 			]
 		],
@@ -1138,6 +1166,10 @@
 				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
+				},
+				{
+					"name": "AuthBioUtilValidator",
+					"description": "Validates the response biovalue for valid ISO and Image Type"
 				}
 			]
 		],
@@ -2419,6 +2451,10 @@
 					"description": "Validates if response is received within the given timeout period or not"
 				},
 				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
 					"name": "RegistrationBioUtilValidator",
 					"description": "Validates the response biovalue for valid ISO and Image Type"
 				}
@@ -2467,6 +2503,10 @@
 				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
 				},
 				{
 					"name": "RegistrationBioUtilValidator",
@@ -2520,6 +2560,10 @@
 				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
 				},
 				{
 					"name": "RegistrationBioUtilValidator",
@@ -2577,6 +2621,10 @@
 					"description": "Validates if response is received within the given timeout period or not"
 				},
 				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
 					"name": "RegistrationBioUtilValidator",
 					"description": "Validates the response biovalue for valid ISO and Image Type"
 				}
@@ -2632,6 +2680,10 @@
 					"description": "Validates if response is received within the given timeout period or not"
 				},
 				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
 					"name": "RegistrationBioUtilValidator",
 					"description": "Validates the response biovalue for valid ISO and Image Type"
 				}
@@ -2685,6 +2737,10 @@
 					"description": "Validates if response is received within the given timeout period or not"
 				},
 				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
 					"name": "RegistrationBioUtilValidator",
 					"description": "Validates the response biovalue for valid ISO and Image Type"
 				}
@@ -2735,6 +2791,14 @@
 				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "AuthBioUtilValidator",
+					"description": "Validates the response biovalue for valid ISO and Image Type"
 				}
 			]
 		],
@@ -2781,6 +2845,14 @@
 				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "AuthBioUtilValidator",
+					"description": "Validates the response biovalue for valid ISO and Image Type"
 				}
 			]
 		],
@@ -2829,6 +2901,14 @@
 				{
 					"name": "TimeoutValidator",
 					"description": "Validates if response is received within the given timeout period or not"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "AuthBioUtilValidator",
+					"description": "Validates the response biovalue for valid ISO and Image Type"
 				}
 			]
 		],
@@ -2881,6 +2961,10 @@
 				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
+				},
+				{
+					"name": "AuthBioUtilValidator",
+					"description": "Validates the response biovalue for valid ISO and Image Type"
 				}
 			]
 		],
@@ -2942,6 +3026,10 @@
 				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
+				},
+				{
+					"name": "AuthBioUtilValidator",
+					"description": "Validates the response biovalue for valid ISO and Image Type"
 				}
 			]
 		],
