@@ -206,6 +206,9 @@
 				"resumeAgainBtn": {
 					"type": "boolean"
 				},
+				"keyRotationTestCase": {
+					"type": "boolean"
+				},
 				"modalities": {
 					"type": "array",
 					"items": [
