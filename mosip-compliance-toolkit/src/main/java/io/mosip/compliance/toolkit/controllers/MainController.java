@@ -28,6 +28,9 @@ public class MainController {
 	@Value("${mosip.toolkit.sbi.timeout}")
 	private String sbiTimeout;
 
+	@Value("${mosip.toolkit.sbi.keyrotation.iterations}")
+	private String keyRotationIterations;
+	
 	@ResponseFilter
 	@GetMapping("/configs")
 	public ResponseWrapper<Map<String, String>> getConfigValues() {
@@ -38,6 +41,7 @@ public class MainController {
 		configMap.put("allowedFileTypes", allowedFileTypes);
 		configMap.put("allowedFileNameLegth", allowedFileNameLegth);
 		configMap.put("allowedFileSize", allowedFileSize);
+		configMap.put("keyRotationIterations", keyRotationIterations);
 		responseWrapper.setResponse(configMap);
 		return responseWrapper;
 	}
