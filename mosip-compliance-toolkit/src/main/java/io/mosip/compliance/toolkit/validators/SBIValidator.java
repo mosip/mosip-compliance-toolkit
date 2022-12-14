@@ -64,6 +64,9 @@ public abstract class SBIValidator extends ToolkitValidator {
 	private static final String ALG = "alg";
 	private static final String X5C = "x5c";
 
+	@Value("${mosip.service.authmanager.url}")
+	protected String getAuthManagerUrl;
+
 	@Value("${mosip.service.auth.appid}")
 	protected String getAuthAppId;
 
@@ -72,11 +75,6 @@ public abstract class SBIValidator extends ToolkitValidator {
 
 	@Value("${mosip.service.auth.secretkey}")
 	protected String getAuthSecretKey;
-
-	@Value("${mosip.service.authmanager.url}")
-	protected String getAuthManagerUrl;
-
-	private static String AUTH_REQ_TEMPLATE = "{ \"id\": \"string\",\"metadata\": {},\"request\": { \"appId\": \"%s\", \"clientId\": \"%s\", \"secretKey\": \"%s\" }, \"requesttime\": \"%s\", \"version\": \"string\"}";
 
 	private final String END_CERTIFICATE = "\n-----END CERTIFICATE-----\n";
 	private final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----\n";
@@ -160,41 +158,6 @@ public abstract class SBIValidator extends ToolkitValidator {
 		return objectMapperConfig.objectMapper().readValue(deviceInfo, ObjectNode.class);
 	}
 
-	protected io.restassured.response.Response getDecryptPostResponse(String postUrl,
-			DecryptValidatorDto decryptValidatorDto) throws IOException {
-		Cookie.Builder builder = new Cookie.Builder("Authorization",
-				getAuthToken(getAuthManagerUrl, getAuthAppId, getAuthClientId, getAuthSecretKey));
-
-		return given().cookie(builder.build()).relaxedHTTPSValidation().body(decryptValidatorDto)
-				.contentType("application/json").log().all().when().post(postUrl).then().log().all().extract()
-				.response();
-	}
-
-	protected io.restassured.response.Response getPostResponse(String postUrl, DeviceValidatorDto deviceValidatorDto)
-			throws IOException {
-		Cookie.Builder builder = new Cookie.Builder("Authorization",
-				getAuthToken(getAuthManagerUrl, getAuthAppId, getAuthClientId, getAuthSecretKey));
-
-		return given().cookie(builder.build()).relaxedHTTPSValidation().body(deviceValidatorDto)
-				.contentType("application/json").log().all().when().post(postUrl).then().log().all().extract()
-				.response();
-	}
-
-	protected String getAuthToken(String authUrl, String appId, String clientId, String secretKey) throws IOException {
-		OkHttpClient client = new OkHttpClient();
-		String requestBody = String.format(AUTH_REQ_TEMPLATE, appId, clientId, secretKey,
-				DateUtils.getUTCCurrentDateTime());
-
-		MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
-		RequestBody body = RequestBody.create(mediaType, requestBody);
-		Request request = new Request.Builder().url(authUrl).post(body).build();
-
-		Response response = client.newCall(request).execute();
-		if (response.isSuccessful()) {
-			return response.header("authorization");
-		}
-		return "";
-	}
 
 	protected String getCertificateData(String certificateInfo) {
 		return BEGIN_CERTIFICATE + certificateInfo + END_CERTIFICATE;
@@ -216,7 +179,7 @@ public abstract class SBIValidator extends ToolkitValidator {
 	}
 
 	@Data
-	protected static class DeviceValidatorDto implements Serializable {
+	public static class DeviceValidatorDto implements Serializable {
 		private static final long serialVersionUID = 6604417847897263692L;
 		String id;
 		Object metadata;
@@ -226,7 +189,7 @@ public abstract class SBIValidator extends ToolkitValidator {
 	}
 
 	@Data
-	protected static class DecryptValidatorDto implements Serializable {
+	public static class DecryptValidatorDto implements Serializable {
 		private static final long serialVersionUID = -2112567140911169485L;
 		String id;
 		Object metadata;

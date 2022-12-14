@@ -100,7 +100,8 @@ public class AuthBioUtilValidator extends BioUtilValidator {
 		decryptValidatorDto.setRequest(decryptRequest);
 
 		try {
-			io.restassured.response.Response postResponse = getDecryptPostResponse(decryptUrl, decryptValidatorDto);
+			io.restassured.response.Response postResponse = CryptoUtil.getDecryptPostResponse(getAuthManagerUrl,
+					getAuthAppId, getAuthClientId, getAuthSecretKey, decryptUrl, decryptValidatorDto);
 
 			DecryptValidatorResponseDto decryptValidatorResponseDto = objectMapperConfig.objectMapper()
 					.readValue(postResponse.getBody().asString(), DecryptValidatorResponseDto.class);
