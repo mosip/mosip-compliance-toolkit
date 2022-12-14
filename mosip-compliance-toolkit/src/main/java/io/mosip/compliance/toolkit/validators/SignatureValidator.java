@@ -23,9 +23,9 @@ import io.mosip.compliance.toolkit.util.StringUtil;
 @Component
 public class SignatureValidator extends SBIValidator {
 
-	private static final String CERTIFICATION = "certification";
+	protected static final String CERTIFICATION = "certification";
 	@Value("${mosip.service.keymanager.verifyCertificateTrust.url}")
-	private String keyManagerTrustUrl;
+	protected String keyManagerTrustUrl;
 
 	@Override
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
@@ -66,7 +66,7 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateDiscoverySignature(ValidationInputDto inputDto) {
+	protected ValidationResultDto validateDiscoverySignature(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			ArrayNode arrDiscoverResponse = (ArrayNode) objectMapperConfig.objectMapper()
@@ -84,7 +84,7 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateUnsignedDigitalID(String digitalId) throws Exception {
+	protected ValidationResultDto validateUnsignedDigitalID(String digitalId) throws Exception {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		ObjectNode digitalIdDto = objectMapperConfig.objectMapper().readValue(digitalId, ObjectNode.class);
 		if (Objects.isNull(digitalIdDto) || digitalIdDto.get(DEVICE_TYPE).isNull()
@@ -98,7 +98,7 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateDeviceSignature(ValidationInputDto inputDto) {
+	protected ValidationResultDto validateDeviceSignature(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			ArrayNode arrDeviceInfoResponse = (ArrayNode) objectMapperConfig.objectMapper()
@@ -122,7 +122,7 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateUnSignedDeviceInfo(ObjectNode objectNode) {
+	protected ValidationResultDto validateUnSignedDeviceInfo(ObjectNode objectNode) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			ObjectNode deviceInfoDto = getUnsignedDeviceInfo(objectNode.get(DEVICE_INFO).asText());
@@ -147,7 +147,7 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateSignedDeviceInfo(ObjectNode objectNode) {
+	protected ValidationResultDto validateSignedDeviceInfo(ObjectNode objectNode) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			String deviceInfo = objectNode.get(DEVICE_INFO).asText();
@@ -176,7 +176,7 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateCaptureSignature(ValidationInputDto inputDto) {
+	protected ValidationResultDto validateCaptureSignature(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper()
@@ -215,7 +215,7 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateRCaptureSignature(ValidationInputDto inputDto) {
+	protected ValidationResultDto validateRCaptureSignature(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper()
@@ -254,7 +254,7 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateSignedDigitalId(String digitalId, String certificationType, String trustFor) {
+	protected ValidationResultDto validateSignedDigitalId(String digitalId, String certificationType, String trustFor) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			CertificationTypes certification = CertificationTypes.fromCode(certificationType);
