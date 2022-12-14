@@ -18,6 +18,7 @@ import io.mosip.compliance.toolkit.constants.PartnerTypes;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
+import io.mosip.compliance.toolkit.util.CryptoUtil;
 import io.mosip.compliance.toolkit.util.StringUtil;
 
 @Component
@@ -290,10 +291,11 @@ public class SignatureValidator extends SBIValidator {
 		deviceValidatorDto.setRequest(trustRequest);
 
 		try {
-			io.restassured.response.Response postResponse = getPostResponse(keyManagerTrustUrl, deviceValidatorDto);
+			io.restassured.response.Response postResponse = CryptoUtil.getTrustRootPostResponse(getAuthManagerUrl,
+					getAuthAppId, getAuthClientId, getAuthSecretKey, keyManagerTrustUrl, deviceValidatorDto);
 
-			DeviceValidatorResponseDto deviceValidatorResponseDto = objectMapperConfig.objectMapper().
-					readValue(postResponse.getBody().asString(), DeviceValidatorResponseDto.class);
+			DeviceValidatorResponseDto deviceValidatorResponseDto = objectMapperConfig.objectMapper()
+					.readValue(postResponse.getBody().asString(), DeviceValidatorResponseDto.class);
 
 			if ((deviceValidatorResponseDto.getErrors() != null && deviceValidatorResponseDto.getErrors().size() > 0)
 					|| (deviceValidatorResponseDto.getResponse().getStatus().equals("false"))) {
