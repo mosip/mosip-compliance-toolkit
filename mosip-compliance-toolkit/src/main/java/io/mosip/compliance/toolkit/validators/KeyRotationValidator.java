@@ -84,15 +84,17 @@ public class KeyRotationValidator extends SignatureValidator {
 		ObjectNode digitalIdDecoded = (ObjectNode) deviceInfoDecoded.get(DIGITAL_ID_DECODED);
 		String make = digitalIdDecoded.get(MAKE).asText();
 		String model = digitalIdDecoded.get(MODEL).asText();
-
+		String serialNo = digitalIdDecoded.get(SERIAL_NO).asText();
+		
 		ObjectNode deviceInfoDecoded1 = (ObjectNode)afterKeyRotationResp.get(DEVICE_INFO_DECODED);
 		ObjectNode digitalIdDecoded1 = (ObjectNode) deviceInfoDecoded1.get(DIGITAL_ID_DECODED);
 		String make1 = digitalIdDecoded1.get(MAKE).asText();
 		String model1 = digitalIdDecoded1.get(MODEL).asText();
+		String serialNo1 = digitalIdDecoded1.get(SERIAL_NO).asText();
 
-		if (!(make.equals(make1) || model.equals(model1))) {
+		if (!(make.equals(make1) || model.equals(model1) || serialNo.equals(serialNo1))) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription("Make and Model of the device info is not matching. ");
+			validationResultDto.setDescription("Make, model or serialNo of the device info is not matching. ");
 			return validationResultDto;
 		}
 		validationResultDto.setStatus(AppConstants.SUCCESS);

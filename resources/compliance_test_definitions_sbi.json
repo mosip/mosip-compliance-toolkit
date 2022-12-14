@@ -1213,7 +1213,7 @@
 			[
 				{
 					"name": "KeyRotationValidator",
-					"description": "Key Rotation Validator"
+					"description": "Validator to validate the device key rotation"
 				}
 			]
 		],
@@ -1260,7 +1260,7 @@
 			[
 				{
 					"name": "KeyRotationValidator",
-					"description": "Key Rotation Validator"
+					"description": "Validator to validate the device key rotation"
 				}
 			]
 		],
@@ -1304,7 +1304,7 @@
 			[
 				{
 					"name": "KeyRotationValidator",
-					"description": "Key Rotation Validator"
+					"description": "Validator to validate the device key rotation"
 				}
 			]
 		],
@@ -1348,7 +1348,7 @@
 			[
 				{
 					"name": "KeyRotationValidator",
-					"description": "Key Rotation Validator"
+					"description": "Validator to validate the device key rotation"
 				}
 			]
 		],
@@ -3052,6 +3052,93 @@
 			"bioCount": "2",
 			"deviceSubId": "0",
 			"timeout": "10000"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Key Rotation - Face",
+		"testId": "SBI1060",
+		"specVersion": "0.9.5",
+		"testDescription": "Test for device key rotation<br>Steps:<br>1. Current device key information has been saved.<br>2. Rotate the device key in the SBI and click on <b>Continue</b> button,<br> 3. <i>Repeat step 2</i> as many times as setup in project configuration.",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"info"
+		],
+		"requestSchema": [
+			"DeviceInfoRequestSchema"
+		],
+		"responseSchema": [
+			"DeviceInfoReadyResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "KeyRotationValidator",
+					"description": "Validator to validate the device key rotation"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Face"
+			],
+			"deviceSubTypes": [
+				"Full face"
+			],
+			"segments": [],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0",
+			"keyRotationTestCase": true
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Key Rotation - Double Iris",
+		"testId": "SBI1061",
+		"specVersion": "0.9.5",
+		"testDescription": "Test for device key rotation<br>Steps:<br>1. Current device key information has been saved.<br>2. Rotate the device key in the SBI and click on <b>Continue</b> button,<br> 3. <i>Repeat step 2</i> as many times as setup in project configuration.",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"info"
+		],
+		"requestSchema": [
+			"DeviceInfoRequestSchema"
+		],
+		"responseSchema": [
+			"DeviceInfoReadyResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "KeyRotationValidator",
+					"description": "Validator to validate the device key rotation"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Double"
+			],
+			"segments": [
+				"Left",
+				"Right"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "2",
+			"deviceSubId": "3",
+			"keyRotationTestCase": true
 		}
 	}
 ]

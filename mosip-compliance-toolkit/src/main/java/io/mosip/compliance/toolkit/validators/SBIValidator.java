@@ -60,6 +60,7 @@ public abstract class SBIValidator extends ToolkitValidator {
 	protected static final String DEVICE_STATUS = "deviceStatus";
 	protected static final String MAKE = "make";
 	protected static final String MODEL = "model";
+	protected static final String SERIAL_NO = "serialNo";
 	private static final String ALG = "alg";
 	private static final String X5C = "x5c";
 
