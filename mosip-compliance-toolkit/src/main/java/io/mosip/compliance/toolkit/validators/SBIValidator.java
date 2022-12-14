@@ -49,13 +49,17 @@ public abstract class SBIValidator extends ToolkitValidator {
 	protected static final String TRUST_FOR_BIOMETRIC_INFO = "Biometric Data";
 
 	protected static final String DIGITAL_ID = "digitalId";
+	protected static final String DIGITAL_ID_DECODED = "digitalIdDecoded";
 	protected static final String DEVICE_SUB_TYPE = "deviceSubType";
 	protected static final String DEVICE_TYPE = "type";
 	protected static final String CERTIFICATION_TYPE = "certificationType";
 	protected static final String BIOMETRICS = "biometrics";
 	protected static final String DATA = "data";
 	protected static final String DEVICE_INFO = "deviceInfo";
+	protected static final String DEVICE_INFO_DECODED = "deviceInfoDecoded";
 	protected static final String DEVICE_STATUS = "deviceStatus";
+	protected static final String MAKE = "make";
+	protected static final String MODEL = "model";
 	private static final String ALG = "alg";
 	private static final String X5C = "x5c";
 
@@ -97,7 +101,7 @@ public abstract class SBIValidator extends ToolkitValidator {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription("JWT Signature validation is successful");
 			} else {
-				validationResultDto.setStatus(AppConstants.SUCCESS);
+				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("JWT Signature validation failed");
 			}
 		} catch (CertificateExpiredException e) {
