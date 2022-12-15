@@ -73,7 +73,10 @@
 									"type": "object",
 									"properties": {
 										"version": {
-											"type": "object",
+											"type": [
+												"object",
+												"null"
+											],
 											"properties": {
 												"major": {
 													"type": "integer"
@@ -88,7 +91,10 @@
 											]
 										},
 										"cbeffversion": {
-											"type": "object",
+											"type": [
+												"object",
+												"null"
+											],
 											"properties": {
 												"major": {
 													"type": "integer"
@@ -250,13 +256,13 @@
 														{
 															"type": "string",
 															"enum": [
-																"MiddleFinger",
-																"IndexFinger",
-																"LittleFinger",
-																"RingFinger",
-																"Thumb",
 																"Right",
-																"Left", 
+																"Left",
+																"RingFinger",
+																"MiddleFinger",
+																"LittleFinger",
+																"IndexFinger",
+																"Thumb",
 																"Unknown"
 															]
 														}
@@ -269,6 +275,7 @@
 													"type": "string",
 													"enum": [
 														"RAW",
+														"INTERMEDIATE",
 														"PROCESSED"
 													]
 												},
@@ -331,16 +338,14 @@
 																	{
 																		"type": "string",
 																		"enum": [
-																			"Right RingFinger",
-																			"Right MiddleFinger",
-																			"Right LittleFinger",
-																			"Right IndexFinger",
-																			"Right Thumb",
-																			"Left RingFinger",
-																			"Left MiddleFinger",
-																			"Left LittleFinger",
-																			"Left IndexFinger",
-																			"Left Thumb"
+																			"Right",
+																			"Left",
+																			"RingFinger",
+																			"MiddleFinger",
+																			"LittleFinger",
+																			"IndexFinger",
+																			"Thumb",
+																			"Unknown"
 																		]
 																	}
 																]
