@@ -257,7 +257,7 @@
 															"type": "string",
 															"enum": [
 																"Right",
-																"Left ",
+																"Left",
 																"RingFinger",
 																"MiddleFinger",
 																"LittleFinger",
@@ -268,7 +268,7 @@
 														}
 													],
 													"minItems": 1,
-													"maxItems": 1,
+													"maxItems": 2,
 													"uniqueItems": true
 												},
 												"level": {
@@ -338,16 +338,14 @@
 																	{
 																		"type": "string",
 																		"enum": [
-																			"Right RingFinger",
-																			"Right MiddleFinger",
-																			"Right LittleFinger",
-																			"Right IndexFinger",
-																			"Right Thumb",
-																			"Left RingFinger",
-																			"Left MiddleFinger",
-																			"Left LittleFinger",
-																			"Left IndexFinger",
-																			"Left Thumb"
+																			"Right",
+																			"Left",
+																			"RingFinger",
+																			"MiddleFinger",
+																			"LittleFinger",
+																			"IndexFinger",
+																			"Thumb",
+																			"Unknown"
 																		]
 																	}
 																]
