@@ -73,7 +73,10 @@
 									"type": "object",
 									"properties": {
 										"version": {
-											"type": "object",
+											"type": [
+												"object",
+												"null"
+											],
 											"properties": {
 												"major": {
 													"type": "integer"
@@ -88,7 +91,10 @@
 											]
 										},
 										"cbeffversion": {
-											"type": "object",
+											"type": [
+												"object",
+												"null"
+											],
 											"properties": {
 												"major": {
 													"type": "integer"
@@ -250,19 +256,13 @@
 														{
 															"type": "string",
 															"enum": [
-<<<<<<< HEAD
-=======
 																"Right",
 																"Left",
 																"RingFinger",
->>>>>>> ec0af0e (MOSIP-25233)
 																"MiddleFinger",
-																"IndexFinger",
 																"LittleFinger",
-																"RingFinger",
+																"IndexFinger",
 																"Thumb",
-																"Right",
-																"Left", 
 																"Unknown"
 															]
 														}
@@ -275,6 +275,7 @@
 													"type": "string",
 													"enum": [
 														"RAW",
+														"INTERMEDIATE",
 														"PROCESSED"
 													]
 												},
