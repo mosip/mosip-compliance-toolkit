@@ -62,7 +62,7 @@ public enum ToolkitErrorCodes {
 	INVALID_FINGER_COMPRESSION_TYPE("TOOLKIT_REQ_ERR_035", "Invalid Image Compression Type for Finger Modality, allowed values[JPEG_2000_LOSSY, JPEG_2000_LOSS_LESS, WSQ]"),	
 	INVALID_IRIS_COMPRESSION_TYPE("TOOLKIT_REQ_ERR_036", "Invalid Image Compression Type for Iris Modality, allowed values[JPEG_2000_LOSSY, JPEG_2000_LOSS_LESS]"),	
 	INVALID_FACE_COMPRESSION_TYPE("TOOLKIT_REQ_ERR_037", "Invalid Image Compression Type for Face Modality, allowed values[JPEG_2000_LOSSY, JPEG_2000_LOSS_LESS]"),	
-	AUTH_BIO_VALUE_DECRYPT_ERROR("TOOLKIT_REQ_ERR_038", "Auth Bio value decryption failed"),	
+	AUTH_BIO_VALUE_DECRYPT_ERROR("TOOLKIT_REQ_ERR_038", "Auth Bio value decryption failed"),
 
 	PROJECT_NAME_EXISTS("TOOLKIT_DB_ERR_001", "You have previously created a project with name: "),
 	BIO_TEST_DATA_FILE_EXISTS("TOOLKIT_DB_ERR_002", "You have previously added biometric test data with name: "),

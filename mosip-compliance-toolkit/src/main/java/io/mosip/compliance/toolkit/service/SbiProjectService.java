@@ -1,10 +1,12 @@
 package io.mosip.compliance.toolkit.service;
 
 import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.mosip.compliance.toolkit.validators.SBIValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -40,6 +42,9 @@ public class SbiProjectService {
 
 	@Value("${mosip.toolkit.api.id.sbi.project.post}")
 	private String getSbiProjectPostId;
+
+	@Autowired
+	SBIValidator sbiValidator;
 
 	@Autowired
 	private SbiProjectRepository sbiProjectRepository;
@@ -309,5 +314,23 @@ public class SbiProjectService {
 		}
 
 		return true;
+	}
+
+	public ResponseWrapper<String> getEncryptionKey(){
+		ResponseWrapper<String> responseWrapper=new ResponseWrapper<>();
+		String url="https://api-internal.dev.mosip.net/v1/keymanager/getCertificate?applicationId=COMPLIANCE_TOOLKIT&referenceId=COMP-FIR";
+		String result=null;
+		try {
+			io.restassured.response.Response postResponse = sbiValidator.getResponse(url);
+			result=String.valueOf(postResponse);
+		}catch (Exception e) {
+			throw new ToolkitException(ToolkitErrorCodes.AUTH_BIO_VALUE_DECRYPT_ERROR.getErrorCode(),
+					ToolkitErrorCodes.AUTH_BIO_VALUE_DECRYPT_ERROR.getErrorMessage() + e.getLocalizedMessage());
+		}
+		responseWrapper.setId(getSbiProjectId);
+		responseWrapper.setResponse(result);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
 	}
 }

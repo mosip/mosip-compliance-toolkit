@@ -17,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
+import io.mosip.compliance.toolkit.service.SbiProjectService;
 import org.jnbis.api.model.Bitmap;
 import org.jnbis.internal.WsqDecoder;
 import org.jose4j.jws.JsonWebSignature;
@@ -75,6 +76,10 @@ public abstract class SBIValidator extends ToolkitValidator {
 
 	@Value("${mosip.service.auth.secretkey}")
 	protected String getAuthSecretKey;
+
+	@Value("${")
+
+	private static String AUTH_REQ_TEMPLATE = "{ \"id\": \"string\",\"metadata\": {},\"request\": { \"appId\": \"%s\", \"clientId\": \"%s\", \"secretKey\": \"%s\" }, \"requesttime\": \"%s\", \"version\": \"string\"}";
 
 	private final String END_CERTIFICATE = "\n-----END CERTIFICATE-----\n";
 	private final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----\n";
@@ -157,7 +162,51 @@ public abstract class SBIValidator extends ToolkitValidator {
 		String deviceInfo = StringUtil.toUtf8String(StringUtil.base64UrlDecode(deviceInfoResponse));
 		return objectMapperConfig.objectMapper().readValue(deviceInfo, ObjectNode.class);
 	}
+	protected io.restassured.response.Response getDecryptPostResponse(String postUrl,
+			DecryptValidatorDto decryptValidatorDto) throws IOException {
+		Cookie.Builder builder = new Cookie.Builder("Authorization",
+				getAuthToken(getAuthManagerUrl, getAuthAppId, getAuthClientId, getAuthSecretKey));
 
+		return given().cookie(builder.build()).relaxedHTTPSValidation().body(decryptValidatorDto)
+				.contentType("application/json").log().all().when().post(postUrl).then().log().all().extract()
+				.response();
+	}
+
+	protected io.restassured.response.Response getPostResponse(String postUrl, DeviceValidatorDto deviceValidatorDto)
+			throws IOException {
+		Cookie.Builder builder = new Cookie.Builder("Authorization",
+				getAuthToken(getAuthManagerUrl, getAuthAppId, getAuthClientId, getAuthSecretKey));
+
+		return given().cookie(builder.build()).relaxedHTTPSValidation().body(deviceValidatorDto)
+				.contentType("application/json").log().all().when().post(postUrl).then().log().all().extract()
+				.response();
+	}
+
+	public io.restassured.response.Response getResponse(String postUrl)
+			throws IOException {
+		Cookie.Builder builder = new Cookie.Builder("Authorization",
+				getAuthToken(getAuthManagerUrl, getAuthAppId, getAuthClientId, getAuthSecretKey));
+
+		return given().cookie(builder.build()).relaxedHTTPSValidation()
+				.contentType("application/json").log().all().when().post(postUrl).then().log().all().extract()
+				.response();
+	}
+
+	protected String getAuthToken(String authUrl, String appId, String clientId, String secretKey) throws IOException {
+		OkHttpClient client = new OkHttpClient();
+		String requestBody = String.format(AUTH_REQ_TEMPLATE, appId, clientId, secretKey,
+				DateUtils.getUTCCurrentDateTime());
+
+		MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
+		RequestBody body = RequestBody.create(mediaType, requestBody);
+		Request request = new Request.Builder().url(authUrl).post(body).build();
+
+		Response response = client.newCall(request).execute();
+		if (response.isSuccessful()) {
+			return response.header("authorization");
+		}
+		return "";
+	}
 
 	protected String getCertificateData(String certificateInfo) {
 		return BEGIN_CERTIFICATE + certificateInfo + END_CERTIFICATE;
@@ -271,5 +320,4 @@ public abstract class SBIValidator extends ToolkitValidator {
 		String serialNo;
 		String type;
 	}
-
 }
