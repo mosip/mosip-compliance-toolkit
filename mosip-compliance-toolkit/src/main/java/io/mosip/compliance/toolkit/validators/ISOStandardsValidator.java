@@ -1,6 +1,6 @@
 package io.mosip.compliance.toolkit.validators;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -29,10 +29,15 @@ import io.mosip.compliance.toolkit.util.FaceISOStandardsUtil;
 import io.mosip.compliance.toolkit.util.FingerISOStandardsUtil;
 import io.mosip.compliance.toolkit.util.ISOStandardsUtil;
 import io.mosip.compliance.toolkit.util.IrisISOStandardsUtil;
+import io.mosip.compliance.toolkit.util.KeyManagerHelper;
 import io.mosip.compliance.toolkit.util.StringUtil;
 
 @Component
 public class ISOStandardsValidator extends SBIValidator {
+	
+	@Autowired
+	private KeyManagerHelper keyManagerHelper;
+	
 	public static final String KEY_SPLITTER = "#KEY_SPLITTER#";
 	public static final String ISO19794_5_2011 = "ISO19794_5_2011";
 	public static final String ISO19794_6_2011 = "ISO19794_6_2011";
@@ -50,14 +55,6 @@ public class ISOStandardsValidator extends SBIValidator {
 	public static final String BIO_TYPE = "bioType";
 	public static final String BIO_SUBTYPE = "bioSubType";
 
-	@Value("${mosip.service.keymanager.decrypt.appid}")
-	private String appId;
-
-	@Value("${mosip.service.keymanager.decrypt.refid}")
-	private String refId;
-
-	@Value("${mosip.service.keymanager.decrypt.url}")
-	private String decryptUrl;
 
 	@Override
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
@@ -78,7 +75,7 @@ public class ISOStandardsValidator extends SBIValidator {
 					String bioValue = null;
 					switch (Purposes.fromCode(purpose)) {
 					case AUTH:
-						bioValue = getDecryptBioValue(biometricNode.get(THUMB_PRINT).asText(),
+						bioValue = getDecryptedBioValue(biometricNode.get(THUMB_PRINT).asText(),
 								biometricNode.get(SESSION_KEY).asText(), KEY_SPLITTER,
 								dataNode.get(TIME_STAMP).asText(), dataNode.get(TRANSACTION_ID).asText(),
 								dataNode.get(BIO_VALUE).asText());
@@ -90,7 +87,7 @@ public class ISOStandardsValidator extends SBIValidator {
 						throw new ToolkitException(ToolkitErrorCodes.INVALID_PURPOSE.getErrorCode(),
 								ToolkitErrorCodes.INVALID_PURPOSE.getErrorMessage());
 					}
-					validationResultDto = isValidISOTemplate(purpose, bioType, bioValue);
+					validationResultDto = performISOValidations(purpose, bioType, bioValue);
 					if (validationResultDto.getStatus().equals(AppConstants.FAILURE)) {
 						break;
 					}
@@ -106,8 +103,9 @@ public class ISOStandardsValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private String getDecryptBioValue(String thumbprint, String sessionKey, String keySplitter, String timestamp,
+	private String getDecryptedBioValue(String thumbprint, String sessionKey, String keySplitter, String timestamp,
 			String transactionId, String encryptedData) {
+		
 		byte[] xorResult = CryptoUtil.getXOR(timestamp, transactionId);
 		byte[] aadBytes = CryptoUtil.getLastBytes(xorResult, 16);
 		byte[] ivBytes = CryptoUtil.getLastBytes(xorResult, 12);
@@ -125,8 +123,8 @@ public class ISOStandardsValidator extends SBIValidator {
 		decryptValidatorDto.setRequesttime(requesttime);
 
 		DecryptRequestDto decryptRequest = new DecryptRequestDto();
-		decryptRequest.setApplicationId(appId);
-		decryptRequest.setReferenceId(refId);
+		decryptRequest.setApplicationId(keyManagerHelper.getAppId());
+		decryptRequest.setReferenceId(keyManagerHelper.getRefId());
 		decryptRequest.setData(encodedData);
 		decryptRequest.setSalt(StringUtil.base64UrlEncode(ivBytes));
 		decryptRequest.setAad(StringUtil.base64UrlEncode(aadBytes));
@@ -134,8 +132,7 @@ public class ISOStandardsValidator extends SBIValidator {
 		decryptValidatorDto.setRequest(decryptRequest);
 
 		try {
-			io.restassured.response.Response postResponse = CryptoUtil.getDecryptPostResponse(getAuthManagerUrl,
-					getAuthAppId, getAuthClientId, getAuthSecretKey, decryptUrl, decryptValidatorDto);
+			io.restassured.response.Response postResponse = keyManagerHelper.decryptionResponse(decryptValidatorDto);
 
 			DecryptValidatorResponseDto decryptValidatorResponseDto = objectMapperConfig.objectMapper()
 					.readValue(postResponse.getBody().asString(), DecryptValidatorResponseDto.class);
@@ -153,20 +150,20 @@ public class ISOStandardsValidator extends SBIValidator {
 		}
 	}
 
-	protected ValidationResultDto isValidISOTemplate(String purpose, String bioType, String bioValue) {
+	protected ValidationResultDto performISOValidations(String purpose, String bioType, String bioValue) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		DeviceTypes deviceTypeCode = DeviceTypes.fromCode(bioType);
 
 		if (bioValue != null) {
 			switch (deviceTypeCode) {
 			case FINGER:
-				validationResultDto = isValidFingerISOTemplate(purpose, bioValue);
+				validationResultDto = performFingerISOValidations(purpose, bioValue);
 				break;
 			case IRIS:
-				validationResultDto = isValidIrisISOTemplate(purpose, bioValue);
+				validationResultDto = performIrisISOValidations(purpose, bioValue);
 				break;
 			case FACE:
-				validationResultDto = isValidFaceISOTemplate(purpose, bioValue);
+				validationResultDto = performFaceISOValidations(purpose, bioValue);
 				break;
 			default:
 				validationResultDto.setStatus(AppConstants.FAILURE);
@@ -182,7 +179,7 @@ public class ISOStandardsValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto isValidFingerISOTemplate(String purpose, String bioValue) {
+	private ValidationResultDto performFingerISOValidations(String purpose, String bioValue) {
 		ToolkitErrorCodes errorCode = null;
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		validationResultDto.setStatus(AppConstants.FAILURE);
@@ -232,7 +229,7 @@ public class ISOStandardsValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto isValidIrisISOTemplate(String purpose, String bioValue) {
+	private ValidationResultDto performIrisISOValidations(String purpose, String bioValue) {
 		ToolkitErrorCodes errorCode = null;
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		validationResultDto.setStatus(AppConstants.FAILURE);
@@ -282,7 +279,7 @@ public class ISOStandardsValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto isValidFaceISOTemplate(String purpose, String bioValue) {
+	private ValidationResultDto performFaceISOValidations(String purpose, String bioValue) {
 		ToolkitErrorCodes errorCode = null;
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		validationResultDto.setStatus(AppConstants.FAILURE);

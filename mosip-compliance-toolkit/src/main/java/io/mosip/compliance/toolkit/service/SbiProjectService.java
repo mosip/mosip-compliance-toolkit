@@ -23,10 +23,13 @@ import io.mosip.compliance.toolkit.constants.ProjectTypes;
 import io.mosip.compliance.toolkit.constants.Purposes;
 import io.mosip.compliance.toolkit.constants.SbiSpecVersions;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
+import io.mosip.compliance.toolkit.dto.EncryptionKeyResponseDto;
 import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
 import io.mosip.compliance.toolkit.entity.SbiProjectEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.SbiProjectRepository;
+import io.mosip.compliance.toolkit.util.KeyManagerHelper;
+import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.exception.ServiceError;
@@ -42,7 +45,14 @@ public class SbiProjectService {
 	private String getSbiProjectPostId;
 
 	@Autowired
+	public ObjectMapperConfig objectMapperConfig;
+
+	@Autowired
 	private SbiProjectRepository sbiProjectRepository;
+
+	@Autowired
+	private KeyManagerHelper keyManagerHelper;
+
 	private Logger log = LoggerConfiguration.logConfig(SbiProjectService.class);
 
 	private AuthUserDetails authUserDetails() {
@@ -143,10 +153,15 @@ public class SbiProjectService {
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
 			ServiceError serviceError = new ServiceError();
 			serviceError.setErrorCode(ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorCode());
-			serviceError.setMessage(ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorMessage() + " " + sbiProjectDto.getName());
+			if (sbiProjectDto != null) {
+				serviceError.setMessage(
+						ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorMessage() + " " + sbiProjectDto.getName());
+			} else {
+				serviceError.setMessage(ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorMessage());
+			}
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
-		}catch (Exception ex) {
+		} catch (Exception ex) {
 			sbiProjectDto = null;
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
@@ -182,22 +197,20 @@ public class SbiProjectService {
 		DeviceTypes deviceTypeCode = DeviceTypes.fromCode(sbiProjectDto.getDeviceType());
 		DeviceSubTypes deviceSubTypeCode = DeviceSubTypes.fromCode(sbiProjectDto.getDeviceSubType());
 
-		switch(projectTypesCode)
-		{
-			case SBI:
-				switch(specVersionCode)
-				{
-					case SPEC_VER_0_9_5:
-					case SPEC_VER_1_0_0:
-						break;
-					default:
-						errorCode = ToolkitErrorCodes.INVALID_SBI_SPEC_VERSION_FOR_PROJECT_TYPE;
-						throw new ToolkitException (errorCode.getErrorCode(), errorCode.getErrorMessage ());
-				}
+		switch (projectTypesCode) {
+		case SBI:
+			switch (specVersionCode) {
+			case SPEC_VER_0_9_5:
+			case SPEC_VER_1_0_0:
 				break;
 			default:
-				errorCode = ToolkitErrorCodes.INVALID_PROJECT_TYPE;
+				errorCode = ToolkitErrorCodes.INVALID_SBI_SPEC_VERSION_FOR_PROJECT_TYPE;
 				throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
+			}
+			break;
+		default:
+			errorCode = ToolkitErrorCodes.INVALID_PROJECT_TYPE;
+			throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
 		}
 
 		switch (purposeCode) {
@@ -309,5 +322,41 @@ public class SbiProjectService {
 		}
 
 		return true;
+	}
+
+	public ResponseWrapper<String> getEncryptionKey() {
+		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
+		String result = null;
+		try {
+			io.restassured.response.Response postResponse = keyManagerHelper.encryptionKeyResponse();
+			result = postResponse.getBody().asString();
+			EncryptionKeyResponseDto keyManagerResponseDto = objectMapperConfig.objectMapper()
+					.readValue(postResponse.getBody().asString(), EncryptionKeyResponseDto.class);
+
+			if ((keyManagerResponseDto.getErrors() != null && keyManagerResponseDto.getErrors().size() > 0)) {
+				keyManagerResponseDto.getErrors().get(0).getMessage();
+				throw new ToolkitException(ToolkitErrorCodes.ENCRYPTION_KEY_ERROR.getErrorCode(),
+						keyManagerResponseDto.getErrors().get(0).getMessage());
+			} else {
+				EncryptionKeyResponseDto.EncryptionKeyResponse e = keyManagerResponseDto.getResponse();
+				result = e.getCertificate();
+			}
+
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In getEncryptionKey method of SbiProjectService Service - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.ENCRYPTION_KEY_ERROR.getErrorCode());
+			serviceError.setMessage(ToolkitErrorCodes.ENCRYPTION_KEY_ERROR.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		}
+		responseWrapper.setId(getSbiProjectId);
+		responseWrapper.setResponse(result);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
 	}
 }

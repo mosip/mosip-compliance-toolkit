@@ -1,10 +1,5 @@
 package io.mosip.compliance.toolkit.validators;
 
-import static io.restassured.RestAssured.given;
-
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.security.PublicKey;
@@ -17,29 +12,18 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
-import org.jnbis.api.model.Bitmap;
-import org.jnbis.internal.WsqDecoder;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.lang.JoseException;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
 
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.MethodName;
-import io.mosip.compliance.toolkit.constants.Purposes;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.util.StringUtil;
-import io.mosip.kernel.core.util.DateUtils;
-import io.restassured.http.Cookie;
 import lombok.Data;
 
 public abstract class SBIValidator extends ToolkitValidator {
@@ -63,18 +47,6 @@ public abstract class SBIValidator extends ToolkitValidator {
 	protected static final String SERIAL_NO = "serialNo";
 	private static final String ALG = "alg";
 	private static final String X5C = "x5c";
-
-	@Value("${mosip.service.authmanager.url}")
-	protected String getAuthManagerUrl;
-
-	@Value("${mosip.service.auth.appid}")
-	protected String getAuthAppId;
-
-	@Value("${mosip.service.auth.clientid}")
-	protected String getAuthClientId;
-
-	@Value("${mosip.service.auth.secretkey}")
-	protected String getAuthSecretKey;
 
 	private final String END_CERTIFICATE = "\n-----END CERTIFICATE-----\n";
 	private final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----\n";
