@@ -3,7 +3,7 @@ package io.mosip.compliance.toolkit.validators;
 import java.io.IOException;
 import java.util.Objects;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -18,16 +18,17 @@ import io.mosip.compliance.toolkit.constants.PartnerTypes;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
-import io.mosip.compliance.toolkit.util.CryptoUtil;
+import io.mosip.compliance.toolkit.util.KeyManagerHelper;
 import io.mosip.compliance.toolkit.util.StringUtil;
 
 @Component
 public class SignatureValidator extends SBIValidator {
 
 	protected static final String CERTIFICATION = "certification";
-	@Value("${mosip.service.keymanager.verifyCertificateTrust.url}")
-	protected String keyManagerTrustUrl;
-
+	
+	@Autowired
+	private KeyManagerHelper keyManagerHelper;
+	
 	@Override
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
@@ -291,8 +292,7 @@ public class SignatureValidator extends SBIValidator {
 		deviceValidatorDto.setRequest(trustRequest);
 
 		try {
-			io.restassured.response.Response postResponse = CryptoUtil.getTrustRootPostResponse(getAuthManagerUrl,
-					getAuthAppId, getAuthClientId, getAuthSecretKey, keyManagerTrustUrl, deviceValidatorDto);
+			io.restassured.response.Response postResponse = keyManagerHelper.trustValidationResponse(deviceValidatorDto);
 
 			DeviceValidatorResponseDto deviceValidatorResponseDto = objectMapperConfig.objectMapper()
 					.readValue(postResponse.getBody().asString(), DeviceValidatorResponseDto.class);
