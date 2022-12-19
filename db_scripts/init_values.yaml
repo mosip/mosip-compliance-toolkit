@@ -1,0 +1,6 @@
+dbUserPasswords:
+  dbuserPassword: ""
+
+databases:
+  mosip_toolkit:
+    enabled: true
