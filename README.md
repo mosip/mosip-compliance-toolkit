@@ -32,7 +32,9 @@ Prerequisites:
     ```
 ## Installing in k8s cluster using helm
 ### Pre-requisites
-1. Set the kube config file of the Mosip cluster having dependent services.
+1. Set the kube config file of the Mosip cluster having dependent services is set correctly in PC.
+1. Make sure [DB setup](db_scripts#install-in-existing-mosip-k8-cluster) is done.
+1. Add [compliance-toolkit-default.properties](https://github.com/mosip/mosip-config/blob/v0.0.9-CTK/compliance-toolkit-default.properties) in required branch of config repo.
 1. Below are the dependent services required for compliance toolkit service:
     | Chart | Chart version |
     |---|---|
@@ -49,7 +51,6 @@ Prerequisites:
     |[Keymanager service](https://github.com/mosip/mosip-infra/blob/v1.2.0.1-B1/deployment/v3/mosip/kernel/install.sh) | 12.0.1-beta |
     |[Notifier service](https://github.com/mosip/mosip-infra/blob/v1.2.0.1-B1/deployment/v3/mosip/kernel/install.sh) | 12.0.1-beta |
     |[Partner manager service](https://github.com/mosip/mosip-infra/blob/v1.2.0.1-B1/deployment/v3/mosip/pms/install.sh) | 12.0.1-beta |
-
 ### Install
 Install `kubectl` and `helm` utilities, then run:
 ```
