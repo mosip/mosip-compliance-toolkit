@@ -16,6 +16,7 @@ These scripts are automatically run with below mentioned script in existing k8 c
   ```
 ### Install
 - Set your kube_config file or kube_config variable in PC.
+- Update `init_values.yaml` with db-common-password from postgres namespace in required field `dbUserPasswords.dbuserPassword`.
 - `./init_db.sh`
 
 ## Install for developers
