@@ -14,6 +14,9 @@ These scripts are automatically run with below mentioned script in existing k8 c
   helm repo add bitnami https://charts.bitnami.com/bitnami
   helm repo add mosip https://mosip.github.io/mosip-helm
   ```
+### Install
+- Set your kube_config file or kube_config variable in PC.
+- `./init_db.sh`
+
 ## Install for developers
 Developers may run the SQLs using `<db name>/deploy.sh` script.
-
