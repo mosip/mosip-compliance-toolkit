@@ -1,5 +1,5 @@
-[![Maven Package upon a push](https://github.com/mosip/mosip-compliance-toolkit/actions/workflows/push_trigger.yml/badge.svg?branch=0.0.9-B1)](https://github.com/mosip/mosip-compliance-toolkit/actions/workflows/push_trigger.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=0.0.9-B1&project=mosip_mosip-compliance-toolkit&metric=alert_status)](https://sonarcloud.io/dashboard?branch=0.0.9-B1&id=mosip_mosip-compliance-toolkit)
+[![Maven Package upon a push](https://github.com/mosip/mosip-compliance-toolkit/actions/workflows/push_trigger.yml/badge.svg?branch=develop)](https://github.com/mosip/mosip-compliance-toolkit/actions/workflows/push_trigger.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=0.0.9-B1&project=mosip_mosip-compliance-toolkit&metric=alert_status)](https://sonarcloud.io/dashboard?branch=develop&id=mosip_mosip-compliance-toolkit)
 
 # Mosip-compliance-toolkit 
 This repository contains the source code for MOSIP Compliance-toolkit services.  For an overview refer [here](https://docs.mosip.io/1.2.0/modules/compliance-tool-kit).  The modules exposes API endpoints. For a reference front-end UI implementation refer to [Compliance-toolkit UI github repo](https://github.com/mosip/mosip-compliance-toolkit-ui/)
