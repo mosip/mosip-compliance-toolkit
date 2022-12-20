@@ -9,7 +9,7 @@ Mosip-compliance-toolkit is used to test following biometric components:
 2. [Biometric SDK](https://docs.mosip.io/1.2.0/biometrics/biometric-sdk)
 
 ## Database
-See [DB guide](https://github.com/mosip/mosip-compliance-toolkit/blob/master/db_scripts/README.MD).
+See [DB guide](db_scripts/README.MD).
 
 ## Config-Server
 To run Compliance-toolkit services, run [Config Server](https://docs.mosip.io/1.2.0/modules/module-configuration#config-server).

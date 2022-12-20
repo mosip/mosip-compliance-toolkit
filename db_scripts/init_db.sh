@@ -20,7 +20,7 @@ while true; do
         echo Copy Postgres secrets
         ./copy_cm_func.sh secret postgres-postgresql postgres $NS
         echo Initializing DB
-        helm -n $NS install postgres-init-toolkit mosip/postgres-init -f init_values.yaml --version $CHART_VERSION --wait --wait-for-jobs
+        helm -n $NS install postgres-init-toolkit mosip/postgres-init -f init_values.yaml --version $CHART_VERSION --set image.repository=mosipid/postgres-init --set image.tag=0.0.9-CTK --wait --wait-for-jobs
         break
       else
         break
