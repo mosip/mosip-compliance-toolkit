@@ -1,6 +1,5 @@
-[![Maven Package upon a push](https://github.com/mosip/mosip-compliance-toolkit/actions/workflows/push_trigger.yml/badge.svg?branch=develop)](https://github.com/mosip/mosip-compliance-toolkit/actions/workflows/push_trigger.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=develop&project=mosip_mosip-compliance-toolkit&metric=alert_status)](https://sonarcloud.io/dashboard?branch=develop&id=mosip_mosip-compliance-toolkit)
-
+[![Maven Package upon a push](https://github.com/mosip/mosip-compliance-toolkit/actions/workflows/push_trigger.yml/badge.svg?branch=0.0.9-B1)](https://github.com/mosip/mosip-compliance-toolkit/actions/workflows/push_trigger.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=0.0.9-B1&project=mosip_mosip-compliance-toolkit&metric=alert_status)](https://sonarcloud.io/dashboard?branch=0.0.9-B1&id=mosip_mosip-compliance-toolkit)
 
 # Mosip-compliance-toolkit 
 This repository contains the source code for MOSIP Compliance-toolkit services.  For an overview refer [here](https://docs.mosip.io/1.2.0/modules/compliance-tool-kit).  The modules exposes API endpoints. For a reference front-end UI implementation refer to [Compliance-toolkit UI github repo](https://github.com/mosip/mosip-compliance-toolkit-ui/)
@@ -10,7 +9,7 @@ Mosip-compliance-toolkit is used to test following biometric components:
 2. [Biometric SDK](https://docs.mosip.io/1.2.0/biometrics/biometric-sdk)
 
 ## Database
-See [DB guide](https://github.com/mosip/mosip-compliance-toolkit/blob/master/db_scripts/README.MD).
+See [DB guide](db_scripts/README.MD).
 
 ## Config-Server
 To run Compliance-toolkit services, run [Config Server](https://docs.mosip.io/1.2.0/modules/module-configuration#config-server).
@@ -33,7 +32,9 @@ Prerequisites:
     ```
 ## Installing in k8s cluster using helm
 ### Pre-requisites
-1. Set the kube config file of the Mosip cluster having dependent services.
+1. Set the kube config file of the Mosip cluster having dependent services is set correctly in PC.
+1. Make sure [DB setup](db_scripts#install-in-existing-mosip-k8-cluster) is done.
+1. Add [compliance-toolkit-default.properties](https://github.com/mosip/mosip-config/blob/v0.0.9-CTK/compliance-toolkit-default.properties) in required branch of config repo.
 1. Below are the dependent services required for compliance toolkit service:
     | Chart | Chart version |
     |---|---|
@@ -50,7 +51,6 @@ Prerequisites:
     |[Keymanager service](https://github.com/mosip/mosip-infra/blob/v1.2.0.1-B1/deployment/v3/mosip/kernel/install.sh) | 12.0.1-beta |
     |[Notifier service](https://github.com/mosip/mosip-infra/blob/v1.2.0.1-B1/deployment/v3/mosip/kernel/install.sh) | 12.0.1-beta |
     |[Partner manager service](https://github.com/mosip/mosip-infra/blob/v1.2.0.1-B1/deployment/v3/mosip/pms/install.sh) | 12.0.1-beta |
-
 ### Install
 Install `kubectl` and `helm` utilities, then run:
 ```
