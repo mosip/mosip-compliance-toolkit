@@ -14,6 +14,8 @@ public class AppConstants {
 	
 	public static final String SCHEMAS = "SCHEMAS";
 	
+	public static final String TESTCASE_SCHEMA_JSON = "testcase_schema.json";
+    
 	public static final String PARTNER_TESTDATA = "partner_testdata";
 	
 	public static final String TESTDATA = "testdata";

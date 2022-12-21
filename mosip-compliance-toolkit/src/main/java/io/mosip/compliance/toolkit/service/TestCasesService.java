@@ -86,7 +86,8 @@ import io.mosip.kernel.core.logger.spi.Logger;
 @Component
 public class TestCasesService {
 
-    @Value("${mosip.toolkit.api.id.projects.get}")
+
+	@Value("${mosip.toolkit.api.id.projects.get}")
     private String getProjectsId;
 
     @Value("${mosip.toolkit.api.id.sdk.generate.request}")
@@ -156,7 +157,7 @@ public class TestCasesService {
         List<ServiceError> serviceErrorsList = new ArrayList<>();
         ServiceError serviceError = null;
         try {
-            String testCaseSchemaJson = this.getSchemaJson(null, null, "testcase_schema.json");
+            String testCaseSchemaJson = this.getSchemaJson(null, null,  AppConstants.TESTCASE_SCHEMA_JSON);
             if (isValidSbiTestCase(specVersion, purpose, deviceType, deviceSubType)) {
                 List<TestCaseEntity> testCaseEntities = testCaseCacheService.getSbiTestCases(AppConstants.SBI,
                         specVersion);// testCasesRepository.findAllSbiTestCaseBySpecVersion(specVersion);
@@ -225,7 +226,7 @@ public class TestCasesService {
         List<ServiceError> serviceErrorsList = new ArrayList<>();
         ServiceError serviceError = null;
         try {
-            String testCaseSchemaJson = this.getSchemaJson(null, null, "testcase_schema.json");
+            String testCaseSchemaJson = this.getSchemaJson(null, null,  AppConstants.TESTCASE_SCHEMA_JSON);
             if (isValidSdkTestCase(specVersion, sdkPurpose)) {
                 List<TestCaseEntity> testCaseEntities = testCaseCacheService.getSdkTestCases(AppConstants.SDK,
                         specVersion);// testCasesRepository.findAllSdkTestCaseBySpecVersion(specVersion);
@@ -332,7 +333,7 @@ public class TestCasesService {
         Map<String, String> savedValues = new HashMap<String, String>();
 
         try {
-            String testCaseSchemaJson = this.getSchemaJson(null, null, "testcase_schema.json");
+            String testCaseSchemaJson = this.getSchemaJson(null, null,  AppConstants.TESTCASE_SCHEMA_JSON);
             for (TestCaseDto testCaseDto : values) {
                 // Do JSON Schema Validation
                 String jsonValue = objectMapper.writeValueAsString(testCaseDto);
