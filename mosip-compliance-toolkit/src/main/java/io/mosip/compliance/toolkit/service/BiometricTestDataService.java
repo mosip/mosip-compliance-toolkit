@@ -712,21 +712,15 @@ public class BiometricTestDataService {
         return objectStore.putObject(objectStoreAccountName, container, null, null, objectName, data);
     }
 
-    /**
-     * This method checks the file extension
-     *
-     * @param file pass uploaded file
-     * @throws DocumentNotValidException if uploaded document is not valid
-     */
     private boolean isVirusScanSuccess(MultipartFile file) {
         try {
-            log.info("sessionId", "idType", "id", "In isVirusScanSuccess method of document service util");
+            log.info("sessionId", "idType", "id", "In isVirusScanSuccess method of BiometricTestDataService");
             return virusScan.scanDocument(file.getBytes());
         } catch (Exception e) {
             log.error("sessionId", "idType", "id", ExceptionUtils.getStackTrace(e));
             log.error("sessionId", "idType", "id", e.getMessage());
             throw new VirusScannerException(ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorCode(),
-                    ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorMessage());
+                    ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorMessage() + e.getMessage());
         }
     }
 }

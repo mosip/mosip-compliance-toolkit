@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.CertificationTypes;
 import io.mosip.compliance.toolkit.constants.DeviceStatus;
@@ -18,17 +19,21 @@ import io.mosip.compliance.toolkit.constants.PartnerTypes;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
+import io.mosip.compliance.toolkit.service.ResourceManagementService;
 import io.mosip.compliance.toolkit.util.KeyManagerHelper;
 import io.mosip.compliance.toolkit.util.StringUtil;
+import io.mosip.kernel.core.logger.spi.Logger;
 
 @Component
 public class SignatureValidator extends SBIValidator {
 
 	protected static final String CERTIFICATION = "certification";
-	
+
+	private Logger log = LoggerConfiguration.logConfig(SignatureValidator.class);
+
 	@Autowired
 	private KeyManagerHelper keyManagerHelper;
-	
+
 	@Override
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
@@ -59,9 +64,11 @@ public class SignatureValidator extends SBIValidator {
 				}
 			}
 		} catch (ToolkitException e) {
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
 		} catch (Exception e) {
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
 		}
@@ -292,7 +299,8 @@ public class SignatureValidator extends SBIValidator {
 		deviceValidatorDto.setRequest(trustRequest);
 
 		try {
-			io.restassured.response.Response postResponse = keyManagerHelper.trustValidationResponse(deviceValidatorDto);
+			io.restassured.response.Response postResponse = keyManagerHelper
+					.trustValidationResponse(deviceValidatorDto);
 
 			DeviceValidatorResponseDto deviceValidatorResponseDto = objectMapperConfig.objectMapper()
 					.readValue(postResponse.getBody().asString(), DeviceValidatorResponseDto.class);
