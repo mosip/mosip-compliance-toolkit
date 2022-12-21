@@ -3470,5 +3470,266 @@
 			"bioCount": "1",
 			"deviceSubId": "0"
 		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Streaming test with Registration capture - Left Slap",
+		"testId": "SBI1070",
+		"specVersion": "0.9.5",
+		"testDescription": "Streaming Test to validate the RCapture interface for Left Slap Fingerprints<br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+				"LeftIndex",
+				"LeftMiddle",
+				"LeftRing",
+				"LeftLittle"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "4",
+			"deviceSubId": "1"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Streaming test with Registration capture - Right Slap",
+		"testId": "SBI1071",
+		"specVersion": "0.9.5",
+		"testDescription": "Streaming Test to validate the RCapture interface for Right Slap Fingerprints<br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your Right slap on the device until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+				"RightIndex",
+				"RightMiddle",
+				"RightRing",
+				"RightLittle"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "4",
+			"deviceSubId": "2"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Streaming test with Registration capture - Two Thumbs",
+		"testId": "SBI1072",
+		"specVersion": "0.9.5",
+		"testDescription": "Streaming Test to validate the RCapture interface for Two Thumbs<br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place both your thumbs on the device until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+				"RightThumb",
+				"LeftThumb"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "2",
+			"deviceSubId": "3"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Streaming test with Registration capture - Double Iris",
+		"testId": "SBI1073",
+		"specVersion": "0.9.5",
+		"testDescription": "Streaming Test to validate the RCapture interface for Two Iris<br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place both your iris on the device until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Double"
+			],
+			"segments": [
+				"Left",
+				"Right"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "2",
+			"deviceSubId": "3"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Streaming test with Registration capture - Face",
+		"testId": "SBI1074",
+		"specVersion": "0.9.5",
+		"testDescription": "Streaming Test to validate the RCapture interface for face<br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your face infront of the camera until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Face"
+			],
+			"deviceSubTypes": [
+				"Full face"
+			],
+			"segments": [],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0"
+		}
 	}
 ]
