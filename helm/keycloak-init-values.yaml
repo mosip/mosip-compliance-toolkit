@@ -1,0 +1,7 @@
+keycloak:
+  realms: |-
+    
+    mosip: # realm
+      clients:   
+        - name: mosip-toolkit-client
+          saroles: []
