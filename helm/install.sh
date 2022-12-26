@@ -24,6 +24,8 @@ echo Copy configmaps
 API_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-api-internal-host})
 COMPLIANCE_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-compliance-host})
 
+./keycloak-init.sh
+
 echo Installing compliance-toolkit
 helm -n $NS install compliance-toolkit . --set istio.corsPolicy.allowOrigins\[0\].prefix=https://$COMPLIANCE_HOST
 
