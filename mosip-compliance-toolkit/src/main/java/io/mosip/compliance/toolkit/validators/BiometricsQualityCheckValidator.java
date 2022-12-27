@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -14,6 +13,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -45,16 +45,20 @@ import io.mosip.kernel.core.logger.spi.Logger;
 @Component
 public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 
+	private static final String COLON = ": ";
+
+	private static final String BR = "<br>";
+
 	private Logger log = LoggerConfiguration.logConfig(BiometricsQualityCheckValidator.class);
 
-	@Value("#{'${mosip.toolkit.sbi.qualitycheck.finger.sdk.urls}'.split(',')}")
-	private List<String> fingerSdkUrls;
+	@Value("${mosip.toolkit.sbi.qualitycheck.finger.sdk.urls}")
+	private String fingerSdkUrlsJsonStr;
 
-	@Value("#{'${mosip.toolkit.sbi.qualitycheck.face.sdk.urls}'.split(',')}")
-	private List<String> faceSdkUrls;
+	@Value("${mosip.toolkit.sbi.qualitycheck.face.sdk.urls}")
+	private String faceSdkUrlsJsonStr;
 
-	@Value("#{'${mosip.toolkit.sbi.qualitycheck.iris.sdk.urls}'.split(',')}")
-	private List<String> irisSdkUrls;
+	@Value("${mosip.toolkit.sbi.qualitycheck.iris.sdk.urls}")
+	private String irisSdkUrlsJsonStr;
 
 	private Gson gson = new GsonBuilder().create();
 
@@ -73,23 +77,34 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 		try {
 			StringBuffer messages = new StringBuffer();
 			Map<String, Boolean> testCaseSuccessfulMap = new HashMap<String, Boolean>();
-			List<String> sdkUrls = getSdkUrlsList(inputDto);
-			for (String sdkUrl : sdkUrls) {
+			String sdkUrls = getSdkUrlsJsonString(inputDto);
+			ArrayNode sdkUrlsArr = (ArrayNode) objectMapperConfig.objectMapper().readValue(sdkUrls, ArrayNode.class);
+			for (JsonNode item : sdkUrlsArr) {
 				// first check if init is successful
-				boolean isInitSuccessful = this.callSdkInitUrl(sdkUrl);
+				String sdkUrl = item.get("url").asText();
+				String healthUrl = item.get("healthUrl").asText();
+				String sdkName = item.get("name").asText();
+				boolean includeInResults = item.get("includeInResults").asBoolean();
+				boolean isSdkServiceAccessible = this.callSdkHealthUrl(healthUrl);
 				// if yes, then try calling quality check
-				if (isInitSuccessful) {
+				if (isSdkServiceAccessible) {
 					validationResultDto = this.performQualityCheck(sdkUrl, inputDto);
 					if (!validationResultDto.getStatus().equals(AppConstants.FAILURE)) {
-						testCaseSuccessfulMap.put(sdkUrl, Boolean.TRUE);
-						messages.append("<br>" + sdkUrl + ": " + validationResultDto.getDescription());
+						if (includeInResults) {
+							testCaseSuccessfulMap.put(sdkUrl, Boolean.TRUE);
+						}
+						messages.append(BR + sdkName + COLON + validationResultDto.getDescription());
 					} else {
-						testCaseSuccessfulMap.put(sdkUrl, Boolean.FALSE);
-						messages.append("<br>" + sdkUrl + ": " + validationResultDto.getDescription());
+						if (includeInResults) {
+							testCaseSuccessfulMap.put(sdkUrl, Boolean.FALSE);
+						}
+						messages.append(BR + sdkName + COLON + validationResultDto.getDescription());
 					}
 				} else {
-					testCaseSuccessfulMap.put(sdkUrl, Boolean.FALSE);
-					messages.append("<br>" + sdkUrl + ": Unable to connect");
+					if (includeInResults) {
+						testCaseSuccessfulMap.put(sdkUrl, Boolean.FALSE);
+					}
+					messages.append(BR + sdkName + COLON + "Unable to connect");
 				}
 			}
 			Boolean areAllQualityChecksSuccessful = Boolean.TRUE;
@@ -119,73 +134,48 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 		return validationResultDto;
 	}
 
-	private List<String> getSdkUrlsList(ValidationInputDto inputDto)
+	private String getSdkUrlsJsonString(ValidationInputDto inputDto)
 			throws JsonProcessingException, JsonMappingException {
 		ObjectNode extraInfo = (ObjectNode) objectMapperConfig.objectMapper().readValue(inputDto.getExtraInfoJson(),
 				ObjectNode.class);
 		String modality = extraInfo.get("modality").asText();
-		List<String> sdkUrls = new ArrayList<>();
+		String sdkUrlsJsonStr = "";
 		if (Modalities.FACE.getCode().equalsIgnoreCase(modality)) {
-			sdkUrls = faceSdkUrls;
+			sdkUrlsJsonStr = faceSdkUrlsJsonStr;
 		} else if (Modalities.FINGER.getCode().equalsIgnoreCase(modality)) {
-			sdkUrls = fingerSdkUrls;
+			sdkUrlsJsonStr = fingerSdkUrlsJsonStr;
 		} else if (Modalities.IRIS.getCode().equalsIgnoreCase(modality)) {
-			sdkUrls = irisSdkUrls;
+			sdkUrlsJsonStr = irisSdkUrlsJsonStr;
 		} else {
 			throw new ToolkitException(ToolkitErrorCodes.INVALID_MODALITY.getErrorCode(),
 					ToolkitErrorCodes.INVALID_MODALITY.getErrorMessage());
 		}
-		return sdkUrls;
+		return sdkUrlsJsonStr;
 	}
 
-	private boolean callSdkInitUrl(String sdkUrl) throws Exception {
+	private boolean callSdkHealthUrl(String sdkUrl) throws Exception {
 		OkHttpClient client = new OkHttpClient();
-		boolean isInitSuccessful = false;
+		boolean isHealthCheckSuccessful = false;
 		Response restCallResponse = null;
 		try {
-			// create request for init
-			ObjectNode rootNode = objectMapper.createObjectNode();
-			ObjectNode childNode = objectMapper.createObjectNode();
-			rootNode.set("initParams", childNode);
-			String requestJson = gson.toJson(rootNode);
 
-			RequestDto inputDto = new RequestDto();
-			inputDto.setVersion(AppConstants.VERSION);
-			inputDto.setRequest(StringUtil.base64Encode(requestJson));
-
-			String requestBody = gson.toJson(inputDto);
-
-			MediaType mediaType = MediaType.parse(AppConstants.APPLICATION_JSON_CHARSET_UTF_8);
-			RequestBody body = RequestBody.create(mediaType, requestBody);
-
-			if (sdkUrl.endsWith("/")) {
-				sdkUrl = sdkUrl + MethodName.INIT.getCode();
-			} else {
-				sdkUrl = sdkUrl + "/" + MethodName.INIT.getCode();
-			}
-			log.info(sdkUrl);
-			Request request = new Request.Builder().url(sdkUrl).post(body).build();
-
+			Request request = new Request.Builder().url(sdkUrl).get().build();
 			restCallResponse = client.newCall(request).execute();
-
 			if (restCallResponse.isSuccessful()) {
-				JSONObject jsonObject = new JSONObject(restCallResponse.body().string());
-				jsonObject = jsonObject.getJSONObject("response");
-				log.info(jsonObject.toString());
-				isInitSuccessful = true;
+				isHealthCheckSuccessful = true;
 			}
 			if (restCallResponse != null && restCallResponse.body() != null) {
 				restCallResponse.body().close();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 			if (restCallResponse != null && restCallResponse.body() != null) {
 				restCallResponse.body().close();
 			}
-			isInitSuccessful = false;
-			return isInitSuccessful;
+			isHealthCheckSuccessful = false;
+			return isHealthCheckSuccessful;
 		}
-		return isInitSuccessful;
+		return isHealthCheckSuccessful;
 
 	}
 
@@ -302,7 +292,7 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 			if (restCallResponse != null && restCallResponse.body() != null) {
 				restCallResponse.body().close();
 			}
-			e.printStackTrace();
+			// e.printStackTrace();
 			throw e;
 		}
 		validationResultDto.setStatus(AppConstants.FAILURE);
