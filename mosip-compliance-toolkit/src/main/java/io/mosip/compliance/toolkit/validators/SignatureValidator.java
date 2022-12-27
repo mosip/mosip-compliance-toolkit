@@ -19,7 +19,6 @@ import io.mosip.compliance.toolkit.constants.PartnerTypes;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
-import io.mosip.compliance.toolkit.service.ResourceManagementService;
 import io.mosip.compliance.toolkit.util.KeyManagerHelper;
 import io.mosip.compliance.toolkit.util.StringUtil;
 import io.mosip.kernel.core.logger.spi.Logger;

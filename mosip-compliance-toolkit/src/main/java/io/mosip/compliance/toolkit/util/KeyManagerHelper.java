@@ -87,6 +87,7 @@ public class KeyManagerHelper {
 
 	public String getAuthToken() throws IOException {
 		OkHttpClient client = new OkHttpClient();
+		String authToken = "";
 		String requestBody = String.format(AUTH_REQ_TEMPLATE, getAuthAppId, getAuthClientId, getAuthSecretKey,
 				DateUtils.getUTCCurrentDateTime());
 
@@ -96,9 +97,12 @@ public class KeyManagerHelper {
 
 		Response response = client.newCall(request).execute();
 		if (response.isSuccessful()) {
-			return response.header("authorization");
+			authToken = response.header("authorization");
 		}
-		return "";
+		if (response != null && response.body() != null) {
+			response.body().close();
+		}
+		return authToken;
 	}
 
 }

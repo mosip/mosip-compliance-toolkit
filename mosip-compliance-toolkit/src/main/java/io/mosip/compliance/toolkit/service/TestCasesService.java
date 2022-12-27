@@ -3,13 +3,11 @@ package io.mosip.compliance.toolkit.service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +69,7 @@ import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
 import io.mosip.compliance.toolkit.repository.TestCasesRepository;
 import io.mosip.compliance.toolkit.util.CryptoUtil;
+import io.mosip.compliance.toolkit.util.StringUtil;
 import io.mosip.compliance.toolkit.validators.BaseValidator;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
@@ -136,8 +135,6 @@ public class TestCasesService {
     private CbeffUtil cbeffReader = new CbeffImpl();
 
     Gson gson = new GsonBuilder().create();
-
-    private static final String VERSION = "1.0";
 
     private Logger log = LoggerConfiguration.logConfig(ProjectsService.class);
 
@@ -531,14 +528,7 @@ public class TestCasesService {
         return true;
     }
 
-    private String base64Encode(String data) {
-        return Base64.getEncoder().encodeToString(data.getBytes());
-    }
-
-    private String base64Decode(String data) {
-        return new String(Base64.getDecoder().decode(data), StandardCharsets.UTF_8);
-    }
-
+    
     public String getSchemaJson(String type, String version, String fileName) throws Exception {
         // Read File Content
         String schemaResponse = resourceCacheService.getSchema(type, version, fileName);
@@ -684,8 +674,8 @@ public class TestCasesService {
                 // convert the request json to base64encoded string
                 if (requestJson != null) {
                     RequestDto inputDto = new RequestDto();
-                    inputDto.setVersion(VERSION);
-                    inputDto.setRequest(this.base64Encode(requestJson));
+                    inputDto.setVersion(AppConstants.VERSION);
+                    inputDto.setRequest(StringUtil.base64Encode(requestJson));
                     generateSdkRequestResponseDto.setGeneratedRequest(gson.toJson(inputDto));
                     responseWrapper.setResponse(generateSdkRequestResponseDto);
                 }
@@ -794,7 +784,7 @@ public class TestCasesService {
                 responseWrapper.setErrors(serviceErrorsList);
             }
             List<String> modalities = sdkRequestDto.getModalities();
-            String decodedVal = this.base64Decode(sdkRequestDto.getBirsForProbe());
+            String decodedVal = StringUtil.base64Decode(sdkRequestDto.getBirsForProbe());
             io.mosip.kernel.biometrics.entities.BIR[] birsFromRequestDto = gson.fromJson(decodedVal,
                     io.mosip.kernel.biometrics.entities.BIR[].class);
             // get the Biometric types
@@ -872,8 +862,8 @@ public class TestCasesService {
             // convert the request json to base64encoded string
             if (requestJson != null) {
                 RequestDto requestDto = new RequestDto();
-                requestDto.setVersion(VERSION);
-                requestDto.setRequest(this.base64Encode(requestJson));
+                requestDto.setVersion(AppConstants.VERSION);
+                requestDto.setRequest(StringUtil.base64Encode(requestJson));
                 generateSdkRequestResponseDto.setGeneratedRequest(gson.toJson(requestDto));
                 responseWrapper.setResponse(generateSdkRequestResponseDto);
             }

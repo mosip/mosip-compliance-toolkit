@@ -6,19 +6,25 @@ import java.util.List;
 
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.lang.JoseException;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
+import io.mosip.kernel.core.logger.spi.Logger;
 
+@Component
 public class KeyRotationValidator extends SignatureValidator {
 
+	private Logger log = LoggerConfiguration.logConfig(KeyRotationValidator.class);
+	
 	@Override
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
@@ -67,9 +73,11 @@ public class KeyRotationValidator extends SignatureValidator {
 			validationResultDto.setStatus(AppConstants.SUCCESS);
 			validationResultDto.setDescription("Key Rotation validations are successful.");
 		} catch (ToolkitException e) {
+			log.error("sessionId", "idType", "id", "In KeyRotationValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
 		} catch (Exception e) {
+			log.error("sessionId", "idType", "id", "In KeyRotationValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
 		}

@@ -47,6 +47,22 @@ public abstract class SBIValidator extends ToolkitValidator {
 	protected static final String SERIAL_NO = "serialNo";
 	private static final String ALG = "alg";
 	private static final String X5C = "x5c";
+	public static final String KEY_SPLITTER = "#KEY_SPLITTER#";
+	public static final String ISO19794_5_2011 = "ISO19794_5_2011";
+	public static final String ISO19794_6_2011 = "ISO19794_6_2011";
+	public static final String ISO19794_4_2011 = "ISO19794_4_2011";
+
+	public static final String BIO = "bio";
+	public static final String DECODED_DATA = "dataDecoded";
+	public static final String THUMB_PRINT = "thumbprint";
+	public static final String SESSION_KEY = "sessionKey";
+
+	public static final String BIO_VALUE = "bioValue";
+	public static final String TIME_STAMP = "timestamp";
+	public static final String TRANSACTION_ID = "transactionId";
+	public static final String PURPOSE = "purpose";
+	public static final String BIO_TYPE = "bioType";
+	public static final String BIO_SUBTYPE = "bioSubType";
 
 	private final String END_CERTIFICATE = "\n-----END CERTIFICATE-----\n";
 	private final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----\n";
@@ -129,7 +145,6 @@ public abstract class SBIValidator extends ToolkitValidator {
 		String deviceInfo = StringUtil.toUtf8String(StringUtil.base64UrlDecode(deviceInfoResponse));
 		return objectMapperConfig.objectMapper().readValue(deviceInfo, ObjectNode.class);
 	}
-
 
 	protected String getCertificateData(String certificateInfo) {
 		return BEGIN_CERTIFICATE + certificateInfo + END_CERTIFICATE;
