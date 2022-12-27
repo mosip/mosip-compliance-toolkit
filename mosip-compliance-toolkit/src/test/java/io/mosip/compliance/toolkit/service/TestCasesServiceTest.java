@@ -591,12 +591,6 @@ public class TestCasesServiceTest {
 				name);
 	}
 
-	@Test
-	public void base64EncodeTest() {
-		String data = "abcdef";
-		ReflectionTestUtils.invokeMethod(testCasesService, "base64Encode", data);
-	}
-
 	@Test(expected = Exception.class)
 	public void getPartnerTestDataStreamExceptionTest() throws FileNotFoundException {
 		SdkRequestDto requestDto = new SdkRequestDto();
