@@ -34,27 +34,9 @@ import io.mosip.compliance.toolkit.util.StringUtil;
 
 @Component
 public class ISOStandardsValidator extends SBIValidator {
-	
+
 	@Autowired
 	private KeyManagerHelper keyManagerHelper;
-	
-	public static final String KEY_SPLITTER = "#KEY_SPLITTER#";
-	public static final String ISO19794_5_2011 = "ISO19794_5_2011";
-	public static final String ISO19794_6_2011 = "ISO19794_6_2011";
-	public static final String ISO19794_4_2011 = "ISO19794_4_2011";
-
-	public static final String BIO = "bio";
-	public static final String DECODED_DATA = "dataDecoded";
-	public static final String THUMB_PRINT = "thumbprint";
-	public static final String SESSION_KEY = "sessionKey";
-
-	public static final String BIO_VALUE = "bioValue";
-	public static final String TIME_STAMP = "timestamp";
-	public static final String TRANSACTION_ID = "transactionId";
-	public static final String PURPOSE = "purpose";
-	public static final String BIO_TYPE = "bioType";
-	public static final String BIO_SUBTYPE = "bioSubType";
-
 
 	@Override
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
@@ -103,9 +85,9 @@ public class ISOStandardsValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private String getDecryptedBioValue(String thumbprint, String sessionKey, String keySplitter, String timestamp,
+	public String getDecryptedBioValue(String thumbprint, String sessionKey, String keySplitter, String timestamp,
 			String transactionId, String encryptedData) {
-		
+
 		byte[] xorResult = CryptoUtil.getXOR(timestamp, transactionId);
 		byte[] aadBytes = CryptoUtil.getLastBytes(xorResult, 16);
 		byte[] ivBytes = CryptoUtil.getLastBytes(xorResult, 12);
@@ -211,10 +193,9 @@ public class ISOStandardsValidator extends SBIValidator {
 			return validationResultDto;
 		}
 
-		byte[] inImageData = bdir.getRepresentation().getRepresentationBody().getImageData().getImage();		
+		byte[] inImageData = bdir.getRepresentation().getRepresentationBody().getImageData().getImage();
 		try {
-			if (!ISOStandardsUtil.isValidImageType(purpose, inImageData))
-			{
+			if (!ISOStandardsUtil.isValidImageType(purpose, inImageData)) {
 				validationResultDto.setDescription("ISOStandardsValidator failure - " + "with Message - "
 						+ " isValidISOTemplate is not valid for image type JP2000 and WSQ");
 				return validationResultDto;
@@ -263,8 +244,7 @@ public class ISOStandardsValidator extends SBIValidator {
 
 		byte[] inImageData = bdir.getRepresentation().getRepresentationData().getImageData().getImage();
 		try {
-			if (!ISOStandardsUtil.isValidImageType(purpose, inImageData))
-			{
+			if (!ISOStandardsUtil.isValidImageType(purpose, inImageData)) {
 				validationResultDto.setDescription("ISOStandardsValidator failure - " + "with Message - "
 						+ " isValidISOTemplate is not valid for image type JP2000 and WSQ");
 				return validationResultDto;
@@ -313,8 +293,7 @@ public class ISOStandardsValidator extends SBIValidator {
 
 		byte[] inImageData = bdir.getRepresentation().getRepresentationData().getImageData().getImage();
 		try {
-			if (!ISOStandardsUtil.isValidImageType(purpose, inImageData))
-			{
+			if (!ISOStandardsUtil.isValidImageType(purpose, inImageData)) {
 				validationResultDto.setDescription("ISOStandardsValidator failure - " + "with Message - "
 						+ " isValidISOTemplate is not valid for image type JP2000 and WSQ");
 				return validationResultDto;

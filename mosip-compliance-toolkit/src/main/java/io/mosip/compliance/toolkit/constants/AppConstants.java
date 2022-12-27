@@ -2,6 +2,8 @@ package io.mosip.compliance.toolkit.constants;
 
 public class AppConstants {
 
+	public static final String APPLICATION_JSON_CHARSET_UTF_8 = "application/json; charset=utf-8";
+
 	public static final String IRIS = "iris";
 
 	public static final String FACE = "face";

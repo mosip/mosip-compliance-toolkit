@@ -3146,7 +3146,6 @@
 		"testName": "Registration capture - Double Iris - ISO Standard Validations",
 		"testId": "SBI1064",
 		"specVersion": "0.9.5",
-		"inactive":"true",
 		"testDescription": "Test to validate RCapture interface for Two Iris<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place both your iris on the device until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
@@ -3311,7 +3310,6 @@
 		"specVersion": "0.9.5",
 		"testDescription": "Test to validate Capture interface for left iris<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your left iris infront of the iris scanner",
 		"isNegativeTestcase": false,
-		"inactive":"true",
 		"methodName": [
 			"capture"
 		],
@@ -3365,7 +3363,6 @@
 		"testName": "Auth capture - Single Iris - Right Iris - ISO Standard Validations",
 		"testId": "SBI1068",
 		"specVersion": "0.9.5",
-		"inactive":"true",
 		"testDescription": "Test to validate Capture interface for right iris<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your right iris infront of the iris scanner",
 		"isNegativeTestcase": false,
 		"methodName": [
@@ -3726,6 +3723,449 @@
 				"Full face"
 			],
 			"segments": [],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Biometrics Quality Check for Registration capture - Left Slap",
+		"testId": "SBI1075",
+		"specVersion": "0.9.5",
+		"testDescription": "Quality Check Test to validate the biometrics captured by RCapture interface for left slap fingerprints<br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "BiometricsQualityCheckValidator",
+					"description": "Checks the quality of biometrics using all configured SDK services"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+				"LeftIndex",
+				"LeftMiddle",
+				"LeftRing",
+				"LeftLittle"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "4",
+			"deviceSubId": "1"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Biometrics Quality Check for Registration capture - Right Slap",
+		"testId": "SBI1076",
+		"specVersion": "0.9.5",
+		"testDescription": "Quality Check Test to validate the biometrics captured by RCapture interface for right slap fingerprints<br>Steps:<br>1. Click on Start Streaming button.<br>3. Once streaming is done, click on Inititate Capture button to start the capture <br>2. Place your right slap on the device until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "BiometricsQualityCheckValidator",
+					"description": "Checks the quality of biometrics using all configured SDK services"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+				"RightIndex",
+				"RightMiddle",
+				"RightRing",
+				"RightLittle"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "4",
+			"deviceSubId": "2"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Biometrics Quality Check for Registration capture - Double Iris",
+		"testId": "SBI1077",
+		"specVersion": "0.9.5",
+		"testDescription": "Quality Check Test to validate the biometrics captured by RCapture interface for both iris<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place both your iris on the device until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "BiometricsQualityCheckValidator",
+					"description": "Checks the quality of biometrics using all configured SDK services"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Double"
+			],
+			"segments": [
+				"Left",
+				"Right"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "2",
+			"deviceSubId": "3"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Biometrics Quality Check for Registration capture - Face",
+		"testId": "SBI1078",
+		"specVersion": "0.9.5",
+		"testDescription": "Quality Check Test to validate the biometrics captured by RCapture interface for face<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "BiometricsQualityCheckValidator",
+					"description": "Checks the quality of biometrics using all configured SDK services"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Face"
+			],
+			"deviceSubTypes": [
+				"Full face"
+			],
+			"segments": [],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Biometrics Quality Check for Auth capture - Face",
+		"testId": "SBI1079",
+		"specVersion": "0.9.5",
+		"testDescription": "Quality Check Test to validate the biometrics captured by Capture interface for face<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "BiometricsQualityCheckValidator",
+					"description": "Checks the quality of biometrics using all configured SDK services"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Face"
+			],
+			"deviceSubTypes": [
+				"Full face"
+			],
+			"segments": [],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Biometrics Quality Check for Auth capture - Single Iris - Left Iris",
+		"testId": "SBI1080",
+		"specVersion": "0.9.5",
+		"testDescription": "Quality Check Test to validate the biometrics captured by Capture interface for left iris<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your left iris infront of the iris scanner",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "BiometricsQualityCheckValidator",
+					"description": "Checks the quality of biometrics using all configured SDK services"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Single"
+			],
+			"segments": [
+				"Left"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Biometrics Quality Check for Auth capture - Single Iris - Right Iris",
+		"testId": "SBI1081",
+		"specVersion": "0.9.5",
+		"testDescription": "Quality Check Test to validate the biometrics captured by Capture interface for right iris<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your right iris infront of the iris scanner",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "BiometricsQualityCheckValidator",
+					"description": "Checks the quality of biometrics using all configured SDK services"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Single"
+			],
+			"segments": [
+				"Right"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Biometrics Quality Check for Auth capture - Unknown Finger",
+		"testId": "SBI1082",
+		"specVersion": "0.9.5",
+		"testDescription": "Quality Check Test to validate the biometrics captured by Capture interface for a finger<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "BiometricsQualityCheckValidator",
+					"description": "Checks the quality of biometrics using all configured SDK services"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Single"
+			],
+			"segments": [
+				"UNKNOWN"
+			],
 			"exceptions": [],
 			"requestedScore": "40",
 			"bioCount": "1",
