@@ -28,6 +28,8 @@ import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 public class BiometricTestDataController {

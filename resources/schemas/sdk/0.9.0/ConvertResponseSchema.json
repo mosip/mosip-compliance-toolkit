@@ -331,12 +331,13 @@
                                     "type": "string",
                                     "enum": [
 									  "Right",
-									  "Left ",
+									  "Left",
                                       "RingFinger",
                                       "MiddleFinger",
                                       "LittleFinger",
                                       "IndexFinger",
-                                      "Thumb"
+                                      "Thumb", 
+									  "Unknown"
                                     ]
                                   }
                                 ]

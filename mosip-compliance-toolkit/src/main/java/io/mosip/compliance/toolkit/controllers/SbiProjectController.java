@@ -3,7 +3,6 @@ package io.mosip.compliance.toolkit.controllers;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,5 +63,14 @@ public class SbiProjectController {
 		requestValidator.validateId(SBI_PROJECT_POST_ID, value.getId(), errors);
 		DataValidationUtil.validate(errors, SBI_PROJECT_POST_ID);
 		return sbiProjectService.addSbiProject(value.getRequest());
+	}
+	
+	/**
+	 * Returns the encryption key to be used by SBI for L1 devices. 
+	 * @return
+	 */
+	@GetMapping(value = "/getEncryptionKey")
+	private ResponseWrapper<String> getEncryptionKey(){
+		return sbiProjectService.getEncryptionKey();
 	}
 }

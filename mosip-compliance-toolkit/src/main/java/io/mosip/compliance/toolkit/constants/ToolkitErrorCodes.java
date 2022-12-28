@@ -51,6 +51,20 @@ public enum ToolkitErrorCodes {
 	SOURCE_NOT_VALID_IRIS_ISO_FORMAT_EXCEPTION("TOOLKIT_REQ_ERR_026", "Source not valid ISO ISO19794_6_2011"),
 	SOURCE_NOT_VALID_BASE64URLENCODED_EXCEPTION("TOOLKIT_REQ_ERR_027", "Source not valid base64urlencoded"),
 	
+	//	SDK
+	INVALID_SDK_PURPOSE("TOOLKIT_REQ_ERR_028", "Invalid SDK Purpose"),
+	INVALID_SDK_URL("TOOLKIT_REQ_ERR_029", "Invalid SDK url"),
+	SDK_PROJECT_NOT_AVAILABLE("TOOLKIT_PROJECTS_030", "No matching SDK project available for the given id"),
+	SDK_PROJECT_UNABLE_TO_ADD("TOOLKIT_REQ_ERR_031", "SDK Project unable to add"),
+	INVALID_SDK_SPEC_VERSION("TOOLKIT_REQ_ERR_032", "Invalid SDK Spec Version"),
+	INVALID_MODALITY("TOOLKIT_REQ_ERR_033", "Invalid Modality"),
+	GENERATE_SDK_REQUEST_ERROR("TOOLKIT_REQ_ERR_034", "Unable to generate request for SDK"),
+	INVALID_FINGER_COMPRESSION_TYPE("TOOLKIT_REQ_ERR_035", "Invalid Image Compression Type for Finger Modality, allowed values[JPEG_2000_LOSSY, JPEG_2000_LOSS_LESS, WSQ]"),	
+	INVALID_IRIS_COMPRESSION_TYPE("TOOLKIT_REQ_ERR_036", "Invalid Image Compression Type for Iris Modality, allowed values[JPEG_2000_LOSSY, JPEG_2000_LOSS_LESS]"),	
+	INVALID_FACE_COMPRESSION_TYPE("TOOLKIT_REQ_ERR_037", "Invalid Image Compression Type for Face Modality, allowed values[JPEG_2000_LOSSY, JPEG_2000_LOSS_LESS]"),	
+	AUTH_BIO_VALUE_DECRYPT_ERROR("TOOLKIT_REQ_ERR_038", "Auth Bio value decryption failed"),	
+	ENCRYPTION_KEY_ERROR("TOOLKIT_REQ_ERR_039", "Unable to get the encryption certificate from KeyManager for the appId"),	
+
 	PROJECT_NAME_EXISTS("TOOLKIT_DB_ERR_001", "You have previously created a project with name: "),
 	BIO_TEST_DATA_FILE_EXISTS("TOOLKIT_DB_ERR_002", "You have previously added biometric test data with name: "),
 	COLLECTION_NAME_EXISTS("TOOLKIT_DB_ERR_003", "You have previously created a collection with name: "),
@@ -65,14 +79,6 @@ public enum ToolkitErrorCodes {
 	OBJECT_STORE_INVALID_FILE_ID("TOOLKIT_OBJECT_STORE_ERR_005", "This file id is invalid for the logged in partner id."),
 	OBJECT_STORE_SCHEMA_NOT_AVAILABLE("TOOLKIT_OBJECT_STORE_ERR_006", "Schema file not available"),
 	
-	//	SDK
-	INVALID_SDK_PURPOSE("TOOLKIT_REQ_ERR_023", "Invalid SDK Purpose"),
-	INVALID_SDK_URL("TOOLKIT_REQ_ERR_024", "Invalid SDK url"),
-	SDK_PROJECT_NOT_AVAILABLE("TOOLKIT_PROJECTS_025", "No matching SDK project available for the given id"),
-	SDK_PROJECT_UNABLE_TO_ADD("TOOLKIT_REQ_ERR_026", "SDK Project unable to add"),
-	INVALID_SDK_SPEC_VERSION("TOOLKIT_REQ_ERR_027", "Invalid SDK Spec Version"),
-	INVALID_MODALITY("TOOLKIT_REQ_ERR_028", "Invalid Modality"),
-	GENERATE_SDK_REQUEST_ERROR("TOOLKIT_REQ_ERR_029", "Unable to generate request for SDK"),
 
 	INVALID_VALIDATOR_DEF("TOOLKIT_VALIDATION_ERR_001", "Invalid validator definition in testcase."),
 	TESTCASE_VALIDATION_ERR("TOOLKIT_VALIDATION_ERR_002", "Unable to perform validations."),

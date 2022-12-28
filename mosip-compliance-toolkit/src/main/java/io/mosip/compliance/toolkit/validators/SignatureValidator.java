@@ -3,13 +3,14 @@ package io.mosip.compliance.toolkit.validators;
 import java.io.IOException;
 import java.util.Objects;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.CertificationTypes;
 import io.mosip.compliance.toolkit.constants.DeviceStatus;
@@ -18,14 +19,19 @@ import io.mosip.compliance.toolkit.constants.PartnerTypes;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
+import io.mosip.compliance.toolkit.util.KeyManagerHelper;
 import io.mosip.compliance.toolkit.util.StringUtil;
+import io.mosip.kernel.core.logger.spi.Logger;
 
 @Component
 public class SignatureValidator extends SBIValidator {
 
-	private static final String CERTIFICATION = "certification";
-	@Value("${mosip.service.keymanager.verifyCertificateTrust.url}")
-	private String keyManagerTrustUrl;
+	protected static final String CERTIFICATION = "certification";
+
+	private Logger log = LoggerConfiguration.logConfig(SignatureValidator.class);
+
+	@Autowired
+	private KeyManagerHelper keyManagerHelper;
 
 	@Override
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
@@ -57,16 +63,18 @@ public class SignatureValidator extends SBIValidator {
 				}
 			}
 		} catch (ToolkitException e) {
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
 		} catch (Exception e) {
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
 		}
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateDiscoverySignature(ValidationInputDto inputDto) {
+	protected ValidationResultDto validateDiscoverySignature(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			ArrayNode arrDiscoverResponse = (ArrayNode) objectMapperConfig.objectMapper()
@@ -84,7 +92,7 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateUnsignedDigitalID(String digitalId) throws Exception {
+	protected ValidationResultDto validateUnsignedDigitalID(String digitalId) throws Exception {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		ObjectNode digitalIdDto = objectMapperConfig.objectMapper().readValue(digitalId, ObjectNode.class);
 		if (Objects.isNull(digitalIdDto) || digitalIdDto.get(DEVICE_TYPE).isNull()
@@ -98,7 +106,7 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateDeviceSignature(ValidationInputDto inputDto) {
+	protected ValidationResultDto validateDeviceSignature(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			ArrayNode arrDeviceInfoResponse = (ArrayNode) objectMapperConfig.objectMapper()
@@ -122,7 +130,7 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateUnSignedDeviceInfo(ObjectNode objectNode) {
+	protected ValidationResultDto validateUnSignedDeviceInfo(ObjectNode objectNode) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			ObjectNode deviceInfoDto = getUnsignedDeviceInfo(objectNode.get(DEVICE_INFO).asText());
@@ -147,7 +155,7 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateSignedDeviceInfo(ObjectNode objectNode) {
+	protected ValidationResultDto validateSignedDeviceInfo(ObjectNode objectNode) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			String deviceInfo = objectNode.get(DEVICE_INFO).asText();
@@ -176,7 +184,7 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateCaptureSignature(ValidationInputDto inputDto) {
+	protected ValidationResultDto validateCaptureSignature(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper()
@@ -215,7 +223,7 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateRCaptureSignature(ValidationInputDto inputDto) {
+	protected ValidationResultDto validateRCaptureSignature(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper()
@@ -254,7 +262,7 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private ValidationResultDto validateSignedDigitalId(String digitalId, String certificationType, String trustFor) {
+	protected ValidationResultDto validateSignedDigitalId(String digitalId, String certificationType, String trustFor) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			CertificationTypes certification = CertificationTypes.fromCode(certificationType);
@@ -290,10 +298,11 @@ public class SignatureValidator extends SBIValidator {
 		deviceValidatorDto.setRequest(trustRequest);
 
 		try {
-			io.restassured.response.Response postResponse = getPostResponse(keyManagerTrustUrl, deviceValidatorDto);
+			io.restassured.response.Response postResponse = keyManagerHelper
+					.trustValidationResponse(deviceValidatorDto);
 
-			DeviceValidatorResponseDto deviceValidatorResponseDto = objectMapperConfig.objectMapper().
-					readValue(postResponse.getBody().asString(), DeviceValidatorResponseDto.class);
+			DeviceValidatorResponseDto deviceValidatorResponseDto = objectMapperConfig.objectMapper()
+					.readValue(postResponse.getBody().asString(), DeviceValidatorResponseDto.class);
 
 			if ((deviceValidatorResponseDto.getErrors() != null && deviceValidatorResponseDto.getErrors().size() > 0)
 					|| (deviceValidatorResponseDto.getResponse().getStatus().equals("false"))) {

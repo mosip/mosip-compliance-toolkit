@@ -968,11 +968,11 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "Finger match when wrong subtype",
+		"testName": "Finger match fail when wrong subtype",
 		"testId": "SDK2026",
-		"testDescription": "Finger match when wrong subtype",
+		"testDescription": "Finger match fail when wrong subtype",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": true,
+		"isNegativeTestcase": false,
 		"methodName": [
 			"match"
 		],
@@ -980,7 +980,7 @@
 			"MatchRequestSchema"
 		],
 		"responseSchema": [
-			"MatchResponseSchema"
+			"MatchNullResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -989,7 +989,7 @@
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
 				},
 				{
-					"name": "MatchValidator",
+					"name": "MatchInvalidDataValidator",
 					"description": "Validates if biomterics match for the modality"
 				}
 			]
@@ -1227,11 +1227,11 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "Iris match when wrong subtype",
+		"testName": "Iris match fail when wrong subtype",
 		"testId": "SDK2033",
-		"testDescription": "Iris match when wrong subtype",
+		"testDescription": "Iris match fail when wrong subtype",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": true,
+		"isNegativeTestcase": false,
 		"methodName": [
 			"match"
 		],
@@ -1239,7 +1239,7 @@
 			"MatchRequestSchema"
 		],
 		"responseSchema": [
-			"MatchResponseSchema"
+			"MatchNullResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -1248,7 +1248,7 @@
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
 				},
 				{
-					"name": "MatchValidator",
+					"name": "MatchInvalidDataValidator",
 					"description": "Validates if biomterics match for the modality"
 				}
 			]
@@ -1417,22 +1417,19 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "Finger Extract Template And Check Quality Success",
+		"testName": "Finger Extract Template Success",
 		"testId": "SDK2038",
-		"testDescription": "Finger extract Template And CheckQuality Success",
+		"testDescription": "Finger extract template is successful or not",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
 		"methodName": [
-			"extract-template",
-			"check-quality"
+			"extract-template"
 		],
 		"requestSchema": [
-			"ExtractTemplateRequestSchema",
-			"CheckQualityRequestSchema"
+			"ExtractTemplateRequestSchema"
 		],
 		"responseSchema": [
-			"ExtractTemplateResponseSchema",
-			"CheckQualityResponseSchema"
+			"ExtractTemplateResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -1443,16 +1440,6 @@
 				{
 					"name": "ExtractTemplateValidator",
 					"description": "Validates if input BDB data present in the Probe for the modality is valid"
-				}
-			],
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "QualityCheckValidator",
-					"description": "Validates the status code for invalid data"
 				}
 			]
 		],
@@ -1467,22 +1454,19 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "Face Extract Template And Check Quality Success",
+		"testName": "Face Extract Template Success",
 		"testId": "SDK2039",
-		"testDescription": "Face extract Template And CheckQuality Success",
+		"testDescription": "Face extract template is successful or not",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
 		"methodName": [
-			"extract-template",
-			"check-quality"
+			"extract-template"
 		],
 		"requestSchema": [
-			"ExtractTemplateRequestSchema",
-			"CheckQualityRequestSchema"
+			"ExtractTemplateRequestSchema"
 		],
 		"responseSchema": [
-			"ExtractTemplateResponseSchema",
-			"CheckQualityResponseSchema"
+			"ExtractTemplateResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -1493,16 +1477,6 @@
 				{
 					"name": "ExtractTemplateValidator",
 					"description": "Validates if input BDB data present in the Probe for the modality is valid"
-				}
-			],
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "QualityCheckValidator",
-					"description": "Validates the status code for invalid data"
 				}
 			]
 		],
@@ -1517,22 +1491,19 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "Iris Extract Template And Check Quality Success",
+		"testName": "Iris Extract Template Success",
 		"testId": "SDK2040",
-		"testDescription": "Iris extract Template And CheckQuality Success",
+		"testDescription": "Iris extract template is successful or not",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": false,
 		"methodName": [
-			"extract-template",
-			"check-quality"
+			"extract-template"
 		],
 		"requestSchema": [
-			"ExtractTemplateRequestSchema",
-			"CheckQualityRequestSchema"
+			"ExtractTemplateRequestSchema"
 		],
 		"responseSchema": [
-			"ExtractTemplateResponseSchema",
-			"CheckQualityResponseSchema"
+			"ExtractTemplateResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -1543,16 +1514,6 @@
 				{
 					"name": "ExtractTemplateValidator",
 					"description": "Validates if input BDB data present in the Probe for the modality is valid"
-				}
-			],
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "QualityCheckValidator",
-					"description": "Validates the status code for invalid data"
 				}
 			]
 		],
@@ -1567,22 +1528,19 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "Finger Extract Template And Check Quality Fail",
+		"testName": "Finger Extract Template Fail",
 		"testId": "SDK2041",
-		"testDescription": "Finger extract Template And CheckQuality Fail",
+		"testDescription": "Finger extract template is failure or not",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": true,
 		"methodName": [
-			"extract-template",
-			"check-quality"
+			"extract-template"
 		],
 		"requestSchema": [
-			"ExtractTemplateRequestSchema",
-			"CheckQualityRequestSchema"
+			"ExtractTemplateRequestSchema"
 		],
 		"responseSchema": [
-			"ExtractTemplateResponseSchema",
-			"BadCheckQualityResponseSchema"
+			"ExtractTemplateResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -1593,16 +1551,6 @@
 				{
 					"name": "ExtractTemplateValidator",
 					"description": "Validates if input BDB data present in the Probe for the modality is valid"
-				}
-			],
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "QualityCheckValidator",
-					"description": "Validates the status code for invalid data"
 				}
 			]
 		],
@@ -1617,22 +1565,19 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "Face Extract Template And Check Quality Fail",
+		"testName": "Face Extract Template Fail",
 		"testId": "SDK2042",
-		"testDescription": "Face extract Template And CheckQuality Fail",
+		"testDescription": "Face extract template is failure or not",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": true,
 		"methodName": [
-			"extract-template",
-			"check-quality"
+			"extract-template"
 		],
 		"requestSchema": [
-			"ExtractTemplateRequestSchema",
-			"CheckQualityRequestSchema"
+			"ExtractTemplateRequestSchema"
 		],
 		"responseSchema": [
-			"ExtractTemplateResponseSchema",
-			"BadCheckQualityResponseSchema"
+			"ExtractTemplateResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -1643,16 +1588,6 @@
 				{
 					"name": "ExtractTemplateValidator",
 					"description": "Validates if input BDB data present in the Probe for the modality is valid"
-				}
-			],
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "QualityCheckValidator",
-					"description": "Validates the status code for invalid data"
 				}
 			]
 		],
@@ -1667,22 +1602,19 @@
 	},
 	{
 		"testCaseType": "SDK",
-		"testName": "Iris Extract Template And Check Quality Fail",
+		"testName": "Iris Extract Template Fail",
 		"testId": "SDK2043",
-		"testDescription": "Iris extract Template And CheckQuality Fail",
+		"testDescription": "Iris extract template is failure or not",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": true,
 		"methodName": [
-			"extract-template",
-			"check-quality"
+			"extract-template"
 		],
 		"requestSchema": [
-			"ExtractTemplateRequestSchema",
-			"CheckQualityRequestSchema"
+			"ExtractTemplateRequestSchema"
 		],
 		"responseSchema": [
-			"ExtractTemplateResponseSchema",
-			"BadCheckQualityResponseSchema"
+			"ExtractTemplateResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -1693,16 +1625,6 @@
 				{
 					"name": "ExtractTemplateValidator",
 					"description": "Validates if input BDB data present in the Probe for the modality is valid"
-				}
-			],
-			[
-				{
-					"name": "SchemaValidator",
-					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				},
-				{
-					"name": "QualityCheckValidator",
-					"description": "Validates the status code for invalid data"
 				}
 			]
 		],
@@ -1840,7 +1762,7 @@
 			"ExtractTemplateRequestSchema"
 		],
 		"responseSchema": [
-			"ExtractTemplateResponseSchema"
+			"ExtractTemplateNullResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -1877,7 +1799,7 @@
 			"ExtractTemplateRequestSchema"
 		],
 		"responseSchema": [
-			"ExtractTemplateResponseSchema"
+			"ExtractTemplateNullResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -1914,7 +1836,7 @@
 			"ExtractTemplateRequestSchema"
 		],
 		"responseSchema": [
-			"ExtractTemplateResponseSchema"
+			"ExtractTemplateNullResponseSchema"
 		],
 		"validatorDefs": [
 			[

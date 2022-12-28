@@ -18,9 +18,12 @@ import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.SdkPurpose;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
+import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.core.virusscanner.exception.VirusScannerException;
+import io.mosip.kernel.core.virusscanner.spi.VirusScanner;
 
 @Service
 public class ResourceManagementService {
@@ -37,6 +40,16 @@ public class ResourceManagementService {
 
 	private static final String SDK_SCHEMA = AppConstants.SCHEMAS + UNDERSCORE + AppConstants.SDK;
 
+    @Value("${mosip.toolkit.document.scan}")
+    private Boolean scanDocument;
+    
+	/**
+     * Autowired reference for {@link #VirusScanner}
+     */
+    @Autowired
+    VirusScanner<Boolean, InputStream> virusScan;
+
+    
 	@Value("$(mosip.toolkit.api.id.resource.file.post)")
 	private String postResourceFileId;
 
@@ -53,8 +66,15 @@ public class ResourceManagementService {
 		ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
 		boolean status = false;
 		try {
-			if (Objects.nonNull(file) && Objects.nonNull(type) && Objects.nonNull(version) && !file.isEmpty() && file.getSize() > 0) {
-
+			if (scanDocument) {
+                isVirusScanSuccess(file);
+            }
+			
+			if (Objects.nonNull(file) && Objects.nonNull(type) && !file.isEmpty() && file.getSize() > 0) {
+				if ((type.equals(SBI_SCHEMA) || type.equals(SDK_SCHEMA)) && !Objects.nonNull(version)) {
+					throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode(),
+							ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
+				}
 				String fileName = file.getOriginalFilename();
 				String container = null;
 				String objectName = null;
@@ -72,7 +92,7 @@ public class ResourceManagementService {
 							+ ZIP_EXT;
 					break;
 				case AppConstants.SCHEMAS:
-					if (Objects.isNull(fileName) || !fileName.endsWith(JSON_EXT)) {
+					if (Objects.isNull(fileName) || !fileName.equals(AppConstants.TESTCASE_SCHEMA_JSON)) {
 						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
 								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
 					}
@@ -142,5 +162,17 @@ public class ResourceManagementService {
 	private boolean putInObjectStore(String container, String objectName, InputStream data) {
 		return objectStore.putObject(objectStoreAccountName, container, null, null, objectName, data);
 	}
+	
+    private boolean isVirusScanSuccess(MultipartFile file) {
+        try {
+            log.info("sessionId", "idType", "id", "In isVirusScanSuccess method of ResourceManagementService");
+            return virusScan.scanDocument(file.getBytes());
+        } catch (Exception e) {
+            log.error("sessionId", "idType", "id", ExceptionUtils.getStackTrace(e));
+            log.error("sessionId", "idType", "id", e.getMessage());
+            throw new VirusScannerException(ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorCode(),
+                    ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorMessage() + e.getMessage());
+        }
+    }
 
 }
