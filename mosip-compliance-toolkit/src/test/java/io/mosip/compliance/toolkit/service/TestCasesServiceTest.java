@@ -151,6 +151,47 @@ public class TestCasesServiceTest {
 	}
 
 	/*
+	 * This class tests the getSbiTestCases method
+	 */
+	@Test
+	public void getSbiTestCasesTest1() throws Exception {
+		String specVersion = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
+		String purpose = Purposes.REGISTRATION.getCode();
+		String deviceType = DeviceTypes.IRIS.getCode();
+		String deviceSubType = DeviceSubTypes.DOUBLE.getCode();
+		String schemaResponse = "schemaResponse";
+		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
+				.thenReturn(schemaResponse);
+		List<TestCaseEntity> testCaseEntities = new ArrayList<>();
+		TestCaseEntity testCaseEntity = new TestCaseEntity();
+		testCaseEntity.setTestcaseJson("testCaseJson");
+		testCaseEntities.add(testCaseEntity);
+		Mockito.when(testCaseCacheService.getSbiTestCases(AppConstants.SBI, specVersion)).thenReturn(testCaseEntities);
+		TestCasesService testCasesServiceSpy = Mockito.spy(testCasesService);
+		ValidationResultDto validationResultDto = new ValidationResultDto();
+		validationResultDto.setStatus(AppConstants.FAILURE);
+		Mockito.doReturn(validationResultDto).when(testCasesServiceSpy)
+				.validateJsonWithSchema(testCaseEntity.getTestcaseJson(), schemaResponse);
+		TestCaseDto testCaseDto = new TestCaseDto();
+		testCaseDto.setInactive(false);
+		testCaseDto.setSpecVersion(SbiSpecVersions.SPEC_VER_0_9_5.getCode());
+		TestCaseDto.OtherAttributes otherAttributes = new TestCaseDto.OtherAttributes();
+		ArrayList<Object> purposes = new ArrayList<>();
+		purposes.add(Purposes.REGISTRATION.getCode());
+		otherAttributes.setPurpose(purposes);
+		ArrayList<Object> biometricTypes = new ArrayList<>();
+		biometricTypes.add(BiometricType.IRIS.value());
+		otherAttributes.setBiometricTypes(biometricTypes);
+		ArrayList<Object> deviceSubTypes = new ArrayList<>();
+		deviceSubTypes.add(DeviceSubTypes.DOUBLE.getCode());
+		otherAttributes.setDeviceSubTypes(deviceSubTypes);
+		testCaseDto.setOtherAttributes(otherAttributes);
+		Mockito.when(objectMapper.readValue(testCaseEntity.getTestcaseJson(), TestCaseDto.class))
+				.thenReturn(testCaseDto);
+		testCasesServiceSpy.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType);
+	}
+
+	/*
 	 * This class tests the getSbiTestCases method in case of exception
 	 */
 	@Test
@@ -170,6 +211,18 @@ public class TestCasesServiceTest {
 		testCaseEntities.add(null);
 		Mockito.when(testCaseCacheService.getSbiTestCases(AppConstants.SBI, specVersion)).thenReturn(testCaseEntities);
 		testCasesService.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType);
+	}
+
+	/*
+	 * This class tests the isvalidSbiTestCase method
+	 */
+	@Test
+	public void isValidSbiTestCaseTest(){
+		String specVersion = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
+		String purpose = Purposes.REGISTRATION.getCode();
+		String deviceType = DeviceTypes.FINGER.getCode();
+		String deviceSubType = DeviceSubTypes.SLAP.getCode();
+		ReflectionTestUtils.invokeMethod(testCasesService,"isValidSbiTestCase",specVersion,purpose,deviceType,deviceSubType);
 	}
 
 	/*
@@ -223,6 +276,16 @@ public class TestCasesServiceTest {
 		testCaseEntities.add(null);
 		Mockito.when(testCaseCacheService.getSdkTestCases(AppConstants.SDK, specVersion)).thenReturn(testCaseEntities);
 		testCasesService.getSdkTestCases(specVersion, sdkPurpose);
+	}
+
+	/*
+	 *This class tests the isValidSdkTestCase method
+	 */
+	@Test
+	public void isValidSdkTestCaseTest(){
+		String specVersion = SdkSpecVersions.SPEC_VER_0_9_0.getCode();
+		String sdkPurpose = SdkPurpose.CHECK_QUALITY.getCode();
+		ReflectionTestUtils.invokeMethod(testCasesService,"isValidSdkTestCase",specVersion,sdkPurpose);
 	}
 
 	/*

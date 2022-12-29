@@ -3,6 +3,7 @@ package io.mosip.compliance.toolkit.service;
 import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
 import io.mosip.compliance.toolkit.entity.SbiProjectEntity;
 import io.mosip.compliance.toolkit.repository.SbiProjectRepository;
+import io.mosip.compliance.toolkit.util.KeyManagerHelper;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.authmanager.authadapter.model.MosipUserDto;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -40,6 +41,9 @@ public class SbiProjectServiceTest {
 
     @Mock
     SecurityContext securityContext;
+
+    @Mock
+    KeyManagerHelper keyManagerHelper;
 
     /*
      * This class tests the authUserDetails method
@@ -248,6 +252,36 @@ public class SbiProjectServiceTest {
         sbiProjectDto.setDeviceType("Face");
         sbiProjectDto.setDeviceSubType("Full face");
         ReflectionTestUtils.invokeMethod(sbiProjectService, "isValidSbiProject", sbiProjectDto);
+    }
+
+    /*
+     * This class tests the isValidSbiProject method in case of exception
+     */
+    @Test(expected = Exception.class)
+    public void isValidSbiProjectTestException(){
+        SbiProjectDto sbiProjectDto = new SbiProjectDto();
+        sbiProjectDto.setProjectType("SBI");
+        sbiProjectDto.setSbiVersion(null);
+        // Registration:Finger
+        sbiProjectDto.setPurpose("Registration");
+        sbiProjectDto.setDeviceType("Finger");
+        sbiProjectDto.setDeviceSubType("Slap");
+        ReflectionTestUtils.invokeMethod(sbiProjectService, "isValidSbiProject", sbiProjectDto);
+    }
+
+    @Test
+    public void getEncryptionKeyTest() throws Exception{
+        ResponseWrapper<String> responseWrapper=new ResponseWrapper<>();
+        io.restassured.response.Response response=null;
+        Mockito.when(keyManagerHelper.encryptionKeyResponse()).thenReturn(response);
+        ReflectionTestUtils.invokeMethod(sbiProjectService,"getEncryptionKey");
+    }
+
+    @Test
+    public void getEncryptionKeyExceptionTest() throws Exception{
+        ResponseWrapper<String> responseWrapper=new ResponseWrapper<>();
+        io.restassured.response.Response response=null;
+        ReflectionTestUtils.invokeMethod(sbiProjectService,"getEncryptionKey");
     }
 
     /*
