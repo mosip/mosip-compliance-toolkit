@@ -5,7 +5,6 @@ import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.SbiSpecVersions;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.virusscanner.spi.VirusScanner;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -49,7 +48,7 @@ public class ResourceManagementServiceTest {
         ResponseWrapper<Boolean> response=new ResponseWrapper<>();
         FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
         MockMultipartFile file = new MockMultipartFile("file", "MOSIP_DEFAULT_CHECK_QUALITY.zip", "multipart/form-data", inputFile);
-        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(true);
+        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(false);
         String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
         String type = AppConstants.MOSIP_DEFAULT;
         Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
@@ -58,87 +57,149 @@ public class ResourceManagementServiceTest {
         type = AppConstants.SCHEMAS;
         inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
         MockMultipartFile jsonFile = new MockMultipartFile("file", "testFile.json", "multipart/form-data", inputFile);
-        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(true);
+        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(false);
         Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
         resourceManagementService.uploadResourceFile(type, version, jsonFile);
 
         type = SBI_SCHEMA;
         inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
         jsonFile = new MockMultipartFile("file", "testFile.json", "multipart/form-data", inputFile);
-        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(true);
+        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(false);
         Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
         resourceManagementService.uploadResourceFile(type, version, jsonFile);
 
         type = SDK_SCHEMA;
         inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
         jsonFile = new MockMultipartFile("file", "testFile.json", "multipart/form-data", inputFile);
-        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(true);
+        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(false);
         Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
         response = resourceManagementService.uploadResourceFile(type, version, jsonFile);
     }
 
     @Test
     public void uploadResourceFileTest1() throws IOException {
-        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
-        MockMultipartFile txtFile = new MockMultipartFile("file", "MOSIP_DEFAULT_CHECK_QUALITY.zip", "multipart/form-data", inputFile);
-        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(true);
-        String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
+        ResponseWrapper<Boolean> responseWrapper=new ResponseWrapper<>();
         String type = AppConstants.MOSIP_DEFAULT;
-        Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
-        ResponseWrapper<Boolean> responseWrapper = resourceManagementService.uploadResourceFile(type, version, txtFile);
-        Assert.assertEquals(responseWrapper.getResponse(), false);
+        String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        MockMultipartFile multipartFile = new MockMultipartFile("file", "MOSIP_DEFAULT_CHECK_QUALITY.zip", "multipart/form-data", inputFile);
+        ReflectionTestUtils.setField(resourceManagementService,"scanDocument",false);
+        Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
+        responseWrapper=resourceManagementService.uploadResourceFile(type,version,multipartFile);
+
+        type = AppConstants.SCHEMAS;
+        inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        MockMultipartFile jsonFile = new MockMultipartFile("file", "testFile.json", "multipart/form-data", inputFile);
+        ReflectionTestUtils.setField(resourceManagementService,"scanDocument",false);
+        Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
+        responseWrapper=resourceManagementService.uploadResourceFile(type,version,multipartFile);
+
+        type = SBI_SCHEMA;
+        inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        jsonFile = new MockMultipartFile("file", "testFile.json", "multipart/form-data", inputFile);
+        ReflectionTestUtils.setField(resourceManagementService,"scanDocument",false);
+        Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
+        responseWrapper=resourceManagementService.uploadResourceFile(type,version,multipartFile);
+
+        type = SDK_SCHEMA;
+        inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        jsonFile = new MockMultipartFile("file", "testFile.json", "multipart/form-data", inputFile);
+        ReflectionTestUtils.setField(resourceManagementService,"scanDocument",false);
+        Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
+        responseWrapper=resourceManagementService.uploadResourceFile(type,version,multipartFile);
+
     }
 
     @Test
     public void uploadResourceFileTest2() throws IOException {
-        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
-        MockMultipartFile jsonFile = new MockMultipartFile("file", "testFile.json", "multipart/form-data", inputFile);
-        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(true);
-        String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
+        ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
         String type = SBI_SCHEMA;
-        Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
-        ResponseWrapper<Boolean> responseWrapper = resourceManagementService.uploadResourceFile(type, version, jsonFile);
-        Assert.assertEquals(responseWrapper.getResponse(), false);
+        String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        MockMultipartFile multipartFile = new MockMultipartFile("file", "schema.json", "multipart/form-data", inputFile);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
+        Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
+        responseWrapper = resourceManagementService.uploadResourceFile(type, version, multipartFile);
     }
 
     @Test
     public void uploadResourceFileTest3() throws IOException {
-        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
-        MockMultipartFile jsonFile = new MockMultipartFile("file", "testFile.json", "multipart/form-data", inputFile);
-        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(true);
+        ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
+        String type = AppConstants.SCHEMAS;
         String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
-        String type = SDK_SCHEMA;;
-        Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
-        ReflectionTestUtils.invokeMethod(resourceManagementService,"uploadResourceFile",type,version,jsonFile);
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        MockMultipartFile multipartFile = new MockMultipartFile("file", "testcase_schema.json", "multipart/form-data", inputFile);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
+        Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
+        responseWrapper = resourceManagementService.uploadResourceFile(type, version, multipartFile);
+    }
+
+    @Test
+    public void uploadResourceFileTest4() throws IOException {
+        ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
+        String type = SDK_SCHEMA;
+        String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        MockMultipartFile multipartFile = new MockMultipartFile("file", "schema.json", "multipart/form-data", inputFile);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
+        Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
+        responseWrapper = resourceManagementService.uploadResourceFile(type, version, multipartFile);
+    }
+
+    @Test
+    public void uploadResourceFileTest5() throws IOException {
+        ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
+        String type = null;
+        String version = null;
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        MockMultipartFile multipartFile = new MockMultipartFile("file", null, "multipart/form-data", inputFile);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
+        Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
+        responseWrapper = resourceManagementService.uploadResourceFile(type, version, multipartFile);
     }
 
     @Test
     public void uploadResourceFileExceptionTest() throws IOException {
-        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
-        MockMultipartFile file = new MockMultipartFile("file", null, "multipart/form-data", inputFile);
-        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(true);
+        ResponseWrapper<Boolean> responseWrapper=new ResponseWrapper<>();
+        String type = AppConstants.MOSIP_DEFAULT;
         String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
-        String type = null;
-        Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
-        ResponseWrapper<Boolean> responseWrapper = resourceManagementService.uploadResourceFile(type, version, file);
-        Assert.assertEquals(responseWrapper.getResponse(), false);
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        MockMultipartFile multipartFile = new MockMultipartFile("file", null, "multipart/form-data", inputFile);
+        ReflectionTestUtils.setField(resourceManagementService,"scanDocument",false);
+        Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
+        responseWrapper=resourceManagementService.uploadResourceFile(type,version,multipartFile);
+
     }
 
     @Test
     public void uploadResourceFileExceptionTest1() throws IOException {
-        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
-        MockMultipartFile file = new MockMultipartFile("file", "testFile.zip", "multipart/form-data", inputFile);
-        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(true);
-        String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
+        ResponseWrapper<Boolean> responseWrapper=new ResponseWrapper<>();
         String type = SBI_SCHEMA;
-        Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
-        ResponseWrapper<Boolean> responseWrapper = resourceManagementService.uploadResourceFile(type, version, file);
+        String version = null;
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        MockMultipartFile multipartFile = new MockMultipartFile("file", "MOSIP_DEFAULT_CHECK_QUALITY.zip", "multipart/form-data", inputFile);
+        ReflectionTestUtils.setField(resourceManagementService,"scanDocument",false);
+        Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
+        responseWrapper=resourceManagementService.uploadResourceFile(type,version,multipartFile);
+
+    }
+
+    @Test
+    public void uploadResourceFileExceptionTest2() throws IOException {
+        ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
+        String type = "abc";
+        String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        MockMultipartFile multipartFile = new MockMultipartFile("file", "MOSIP_DEFAULT_CHECK_QUALITY.zip", "multipart/form-data", inputFile);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
+        Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
+        responseWrapper = resourceManagementService.uploadResourceFile(type, version, multipartFile);
     }
 
     @Test(expected = Exception.class)
     public void isVirusScanSuccessTest() throws Exception{
         FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
-        MockMultipartFile jsonFile = new MockMultipartFile("file", "testFile.json", "multipart/form-data", inputFile);
-        ReflectionTestUtils.invokeMethod(resourceManagementService,"isVirusScanSuccess",jsonFile);
+        MockMultipartFile file = new MockMultipartFile("file", "MOSIP_DEFAULT_CHECK_QUALITY.zip", "multipart/form-data", inputFile);
+        ReflectionTestUtils.invokeMethod(resourceManagementService,"isVirusScanSuccess",file);
     }
 }

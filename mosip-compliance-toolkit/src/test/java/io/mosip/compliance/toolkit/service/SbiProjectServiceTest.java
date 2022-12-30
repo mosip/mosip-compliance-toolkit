@@ -1,9 +1,14 @@
 package io.mosip.compliance.toolkit.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.mosip.compliance.toolkit.dto.EncryptionKeyResponseDto;
 import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
+import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.entity.SbiProjectEntity;
+import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.SbiProjectRepository;
 import io.mosip.compliance.toolkit.util.KeyManagerHelper;
+import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.authmanager.authadapter.model.MosipUserDto;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -23,6 +28,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
@@ -44,6 +50,12 @@ public class SbiProjectServiceTest {
 
     @Mock
     KeyManagerHelper keyManagerHelper;
+
+    @Mock
+    private ObjectMapperConfig objectMapperConfig;
+
+    @Mock
+    private ObjectMapper mapper;
 
     /*
      * This class tests the authUserDetails method
@@ -218,6 +230,60 @@ public class SbiProjectServiceTest {
     }
 
     /*
+     * This class tests the addSbiProject method in case of DataIntegrityViolation Exception
+     */
+    @Test
+    public void addSbiProjectTestDataIntegrityViolationException() {
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
+        Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        SecurityContextHolder.setContext(securityContext);
+
+        SbiProjectDto sbiProjectDto = new SbiProjectDto();
+        sbiProjectDto.setProjectType("SBI");
+        sbiProjectDto.setSbiVersion("0.9.5");
+        // Auth:Finger - Slap
+        sbiProjectDto.setName("SBI-Auth");
+        sbiProjectDto.setPurpose("Auth");
+        sbiProjectDto.setDeviceType("Finger");
+        sbiProjectDto.setDeviceSubType("Slap");
+        sbiProjectService.addSbiProject(sbiProjectDto);
+
+        // Auth:Iris - Double
+        sbiProjectDto.setName("SBI-Auth");
+        sbiProjectDto.setDeviceType("Iris");
+        sbiProjectDto.setDeviceSubType("Double");
+        sbiProjectService.addSbiProject(sbiProjectDto);
+
+        // Auth:Face - Full face
+        sbiProjectDto.setName("SBI-Auth");
+        sbiProjectDto.setDeviceType("Face");
+        sbiProjectDto.setDeviceSubType("Full face");
+        sbiProjectService.addSbiProject(sbiProjectDto);
+
+        // Registration:Finger - Slap
+        sbiProjectDto.setPurpose("Registration");
+        sbiProjectDto.setName("SBI-Reg");
+        sbiProjectDto.setDeviceType("Finger");
+        sbiProjectDto.setDeviceSubType("Slap");
+        sbiProjectService.addSbiProject(sbiProjectDto);
+
+        // Registration:Iris - Double
+        sbiProjectDto.setName("SBI-Reg");
+        sbiProjectDto.setDeviceType("Iris");
+        sbiProjectDto.setDeviceSubType("Double");
+        sbiProjectService.addSbiProject(sbiProjectDto);
+
+
+        // Registration:Face - Single
+        sbiProjectDto.setName("SBI-Reg");
+        sbiProjectDto.setDeviceType("Face");
+        sbiProjectDto.setDeviceSubType("Full face");
+        sbiProjectService.addSbiProject(sbiProjectDto);
+    }
+
+    /*
      * This class tests the isValidSbiProject method
      */
     @Test
@@ -261,7 +327,8 @@ public class SbiProjectServiceTest {
     public void isValidSbiProjectTestException(){
         SbiProjectDto sbiProjectDto = new SbiProjectDto();
         sbiProjectDto.setProjectType("SBI");
-        sbiProjectDto.setSbiVersion(null);
+        sbiProjectDto.setSbiVersion("abc");
+
         // Registration:Finger
         sbiProjectDto.setPurpose("Registration");
         sbiProjectDto.setDeviceType("Finger");
@@ -269,14 +336,32 @@ public class SbiProjectServiceTest {
         ReflectionTestUtils.invokeMethod(sbiProjectService, "isValidSbiProject", sbiProjectDto);
     }
 
+    @Test(expected = ToolkitException.class)
+    public void isValidSbiProjectTestException1(){
+        SbiProjectDto sbiProjectDto=new SbiProjectDto();
+        sbiProjectDto.setProjectType("SDK");
+        sbiProjectDto.setSbiVersion("0.9.5");
+
+        sbiProjectDto.setPurpose("Registration");
+        sbiProjectDto.setDeviceType("Finger");
+        sbiProjectDto.setDeviceSubType("Slap");
+        ReflectionTestUtils.invokeMethod(sbiProjectService, "isValidSbiProject", sbiProjectDto);
+    }
+
+    /*
+     * This class tests the getEncryptionKey method
+     */
     @Test
-    public void getEncryptionKeyTest() throws Exception{
+    public void getEncryptionKeyTest() throws IOException {
         ResponseWrapper<String> responseWrapper=new ResponseWrapper<>();
         io.restassured.response.Response response=null;
         Mockito.when(keyManagerHelper.encryptionKeyResponse()).thenReturn(response);
         ReflectionTestUtils.invokeMethod(sbiProjectService,"getEncryptionKey");
     }
 
+    /*
+     * This class tests the getEncryptionKey method in case of Exception
+     */
     @Test
     public void getEncryptionKeyExceptionTest() throws Exception{
         ResponseWrapper<String> responseWrapper=new ResponseWrapper<>();
