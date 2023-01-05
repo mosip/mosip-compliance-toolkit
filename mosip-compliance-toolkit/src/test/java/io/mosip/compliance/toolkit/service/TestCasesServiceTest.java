@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.constants.*;
+import io.mosip.compliance.toolkit.dto.GenerateSdkRequestResponseDto;
 import io.mosip.compliance.toolkit.dto.testcases.*;
 import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
 import io.mosip.compliance.toolkit.entity.TestCaseEntity;
@@ -15,6 +16,7 @@ import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.authmanager.authadapter.model.MosipUserDto;
+import io.mosip.kernel.core.exception.BaseUncheckedException;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import org.junit.Assert;
 import org.junit.Before;
@@ -169,7 +171,7 @@ public class TestCasesServiceTest {
 		Mockito.when(testCaseCacheService.getSbiTestCases(AppConstants.SBI, specVersion)).thenReturn(testCaseEntities);
 		TestCasesService testCasesServiceSpy = Mockito.spy(testCasesService);
 		ValidationResultDto validationResultDto = new ValidationResultDto();
-		validationResultDto.setStatus(AppConstants.FAILURE);
+		validationResultDto.setStatus(AppConstants.SUCCESS);
 		Mockito.doReturn(validationResultDto).when(testCasesServiceSpy)
 				.validateJsonWithSchema(testCaseEntity.getTestcaseJson(), schemaResponse);
 		TestCaseDto testCaseDto = new TestCaseDto();
@@ -288,6 +290,19 @@ public class TestCasesServiceTest {
 		ReflectionTestUtils.invokeMethod(testCasesService,"isValidSdkTestCase",specVersion,sdkPurpose);
 	}
 
+	@Test
+	public void validateJsonWithSchemaTest() throws Exception {
+		String schemaResponse = "schemaResponse";
+		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
+				.thenReturn(schemaResponse);
+		TestCaseEntity testCaseEntity = new TestCaseEntity();
+		testCaseEntity.setTestcaseJson("testCaseJson");
+		TestCasesService testCasesServiceSpy = Mockito.spy(testCasesService);
+		ValidationResultDto validationResultDto = new ValidationResultDto();
+		validationResultDto.setStatus(AppConstants.SUCCESS);
+		Mockito.doReturn(validationResultDto).when(testCasesServiceSpy)
+				.validateJsonWithSchema(testCaseEntity.getTestcaseJson(), schemaResponse);
+	}
 	/*
 	 * This class tests the saveTestCases method
 	 */
@@ -535,6 +550,11 @@ public class TestCasesServiceTest {
 		Assert.assertEquals(BiometricType.IRIS, biometricType);
 	}
 
+	@Test(expected = BaseUncheckedException.class)
+	public void getBiometricTypeTestException()throws BaseUncheckedException {
+		String type="abc";
+		ReflectionTestUtils.invokeMethod(testCasesService, "getBiometricType", type);
+	}
 	/*
 	 * This class tests the getTestCaseById
 	 */
@@ -560,6 +580,27 @@ public class TestCasesServiceTest {
 		Mockito.when(testCasesRepository.getTestCasesById(testCaseId)).thenReturn(null);
 		ReflectionTestUtils.setField(testCasesService, "testCasesRepository", null);
 		testCasesService.getTestCaseById(testCaseId);
+	}
+
+	@Test
+	public void generateRequestForSDKTestcaseTest() throws Exception {
+		SdkRequestDto requestDto = new SdkRequestDto();
+		requestDto.setMethodName(MethodName.CHECK_QUALITY.getCode());
+		requestDto.setTestcaseId("SDK2001");
+		requestDto.setBioTestDataName("bioTestData");
+		testCasesService.generateRequestForSDKTestcase(requestDto);
+
+		requestDto.setMethodName(MethodName.MATCH.getCode());
+		testCasesService.generateRequestForSDKTestcase(requestDto);
+
+		requestDto.setMethodName(MethodName.EXTRACT_TEMPLATE.getCode());
+		testCasesService.generateRequestForSDKTestcase(requestDto);
+
+		requestDto.setMethodName(MethodName.SEGMENT.getCode());
+		testCasesService.generateRequestForSDKTestcase(requestDto);
+
+		requestDto.setMethodName(MethodName.CONVERT_FORMAT.getCode());
+		testCasesService.generateRequestForSDKTestcase(requestDto);
 	}
 
 	/*
@@ -629,9 +670,26 @@ public class TestCasesServiceTest {
 				testcaseId);
 	}
 
+	@Test
+	public void generateRequestForSDKFrmBirsTest() throws Exception {
+		ResponseWrapper<GenerateSdkRequestResponseDto> responseWrapper=new ResponseWrapper<>();
+		SdkRequestDto requestDto=new SdkRequestDto();
+		requestDto.setMethodName("check-quality,match");
+		requestDto.setTestcaseId("SDK2015");
+		List<String> modalities=new ArrayList<>();
+		modalities.add("face");
+		requestDto.setModalities(modalities);
+		requestDto.setBioTestDataName("MOSIP_DEFAULT");
+		requestDto.setBirsForProbe("123");
+		ReflectionTestUtils.setField(testCasesService,"gson",gson);
+		ReflectionTestUtils.invokeMethod(testCasesService,"getBiometricType","face");
+		responseWrapper=testCasesService.generateRequestForSDKFrmBirs(requestDto);
+	}
+
 	/*
 	 * This class tests the generateRequestForSDKFrmBirs method in case of exception
 	 */
+
 	@Test
 	public void generateRequestForSDKFrmBirsExceptionTest() throws Exception {
 		SdkRequestDto requestDto = new SdkRequestDto();
@@ -641,6 +699,16 @@ public class TestCasesServiceTest {
 		testCasesService.generateRequestForSDKFrmBirs(requestDto);
 	}
 
+	@Test
+	public void getXmlDataFromZipFileTest() throws Exception {
+		byte[] bytes=null;
+		FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.zip");
+		String purpose = null;
+		String testcaseId = "SDK2001";
+		String name =null;
+		bytes=ReflectionTestUtils.invokeMethod(testCasesService, "getXmlDataFromZipFile", inputFile, purpose, testcaseId,
+				name);
+	}
 	/*
 	 * This class tests the getXmlDataFromZipFile method in case of exception
 	 */
