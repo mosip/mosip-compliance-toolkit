@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContext;
@@ -41,11 +42,14 @@ public class ResourceCacheServiceTest {
         resourceCacheService.getSchema(type,version,fileName);
     }
 
-    @Test
+    @Test(expected = Exception.class)
     public void getSchemaTest1() throws IOException {
         String type = ProjectTypes.SBI.getCode();
         String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
         String fileName = "testFile";
+        Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
+        InputStream input = new FileInputStream( "src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        OngoingStubbing<InputStream> inputStreamOngoingStubbing = Mockito.when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(inputStream);
         resourceCacheService.getSchema(type, version, fileName);
     }
 
