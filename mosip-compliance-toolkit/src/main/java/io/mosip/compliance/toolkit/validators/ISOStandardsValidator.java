@@ -17,6 +17,7 @@ import io.mosip.biometrics.util.finger.FingerImageCompressionType;
 import io.mosip.biometrics.util.iris.IrisBDIR;
 import io.mosip.biometrics.util.iris.IrisDecoder;
 import io.mosip.biometrics.util.iris.IrisImageCompressionType;
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.DeviceTypes;
 import io.mosip.compliance.toolkit.constants.Purposes;
@@ -31,12 +32,15 @@ import io.mosip.compliance.toolkit.util.ISOStandardsUtil;
 import io.mosip.compliance.toolkit.util.IrisISOStandardsUtil;
 import io.mosip.compliance.toolkit.util.KeyManagerHelper;
 import io.mosip.compliance.toolkit.util.StringUtil;
+import io.mosip.kernel.core.logger.spi.Logger;
 
 @Component
 public class ISOStandardsValidator extends SBIValidator {
 
 	@Autowired
 	private KeyManagerHelper keyManagerHelper;
+
+	private Logger log = LoggerConfiguration.logConfig(ISOStandardsValidator.class);
 
 	@Override
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
@@ -61,6 +65,8 @@ public class ISOStandardsValidator extends SBIValidator {
 								biometricNode.get(SESSION_KEY).asText(), KEY_SPLITTER,
 								dataNode.get(TIME_STAMP).asText(), dataNode.get(TRANSACTION_ID).asText(),
 								dataNode.get(BIO_VALUE).asText());
+						log.info("sessionId", "idType", "id", "auth bioValue - " + bioValue);
+						log.debug("sessionId", "idType", "id", "auth bioValue - " + bioValue);
 						break;
 					case REGISTRATION:
 						bioValue = dataNode.get(BIO_VALUE).asText();
