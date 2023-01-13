@@ -39,11 +39,15 @@ public final class ISOStandardsUtil {
 		boolean isValid = false;
 		DataInputStream ins = new DataInputStream(new BufferedInputStream(new ByteArrayInputStream(imageData)));
 		try {
+			// Make sure that the first 12 bytes is the JP2_SIGNATURE_BOX
 			while (true) {
-				if (ins.readInt() == 0x6a703268) {
+				if(ins.readInt() == 0x0000000c ||
+						ins.readInt() == 0x6a703268 ||
+								ins.readInt() == 0x0d0a870a){ // a JP2 file
 					isValid = true;
 					break;
 				}
+				break;
 			}
 		} finally {
 			ins.close();
