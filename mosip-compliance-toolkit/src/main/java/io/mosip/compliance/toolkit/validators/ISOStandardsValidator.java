@@ -22,7 +22,6 @@ import io.mosip.biometrics.util.finger.FingerQualityBlock;
 import io.mosip.biometrics.util.iris.IrisBDIR;
 import io.mosip.biometrics.util.iris.IrisDecoder;
 import io.mosip.biometrics.util.iris.IrisISOStandardsValidator;
-import io.mosip.biometrics.util.iris.IrisImageCompressionType;
 import io.mosip.biometrics.util.iris.IrisQualityBlock;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
@@ -194,255 +193,276 @@ public class ISOStandardsValidator extends SBIValidator {
 		FingerBDIR bdir;
 		try {
 			bdir = FingerDecoder.getFingerBDIR(requestDto);
-		} catch (Exception e) {
-			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_FINGER_ISO_FORMAT_EXCEPTION;
-			throw new ToolkitException(errorCode.getErrorCode(), e.getLocalizedMessage());
-		}
 
-		if (!FingerISOStandardsValidator.getInstance().isValidFormatIdentifier(bdir.getFormatIdentifier())) {
-			message.append("<BR>Invalid Format Identifier for Finger Modality, allowed values[0x46495200], input value["
-					+ Long.toHexString(bdir.getFormatIdentifier()) + "]");
-			isValid = false;
-		}
+			if (!FingerISOStandardsValidator.getInstance().isValidFormatIdentifier(bdir.getFormatIdentifier())) {
+				message.append(
+						"<BR>Invalid Format Identifier for Finger Modality, allowed values[0x46495200], input value["
+								+ "0x" + Long.toHexString(bdir.getFormatIdentifier()) + "]");
+				isValid = false;
+			}
 
-		if (!FingerISOStandardsValidator.getInstance().isValidVersionNumber(bdir.getVersionNumber())) {
-			message.append("<BR>Invalid Version Number for Finger Modality, allowed values[0x30323000], input value["
-					+ Long.toHexString(bdir.getVersionNumber()) + "]");
-			isValid = false;
-		}
+			if (!FingerISOStandardsValidator.getInstance().isValidVersionNumber(bdir.getVersionNumber())) {
+				message.append(
+						"<BR>Invalid Version Number for Finger Modality, allowed values[0x30323000], input value["
+								+ "0x" + Long.toHexString(bdir.getVersionNumber()) + "]");
+				isValid = false;
+			}
 
-		if (!FingerISOStandardsValidator.getInstance().isValidRecordLength(bioData != null ? bioData.length : 0,
-				bdir.getRecordLength())) {
-			message.append("<BR>Invalid Record Length for Finger Modality, input value["
-					+ Integer.toHexString(bioData != null ? bioData.length : 0) + "]");
-			isValid = false;
-		}
+			if (!FingerISOStandardsValidator.getInstance().isValidNoOfRepresentations(bdir.getNoOfRepresentations())) {
+				message.append(
+						"<BR>Invalid No Of Representations for Finger Modality, allowed values[0x0001], input value["
+								+ "0x" + Integer.toHexString(bdir.getNoOfRepresentations()) + "]");
+				isValid = false;
+			}
 
-		if (!FingerISOStandardsValidator.getInstance().isValidNoOfRepresentations(bdir.getNoOfRepresentations())) {
-			message.append("<BR>Invalid No Of Representations for Finger Modality, allowed values[0x0001], input value["
-					+ Integer.toHexString(bdir.getNoOfRepresentations()) + "]");
-			isValid = false;
-		}
+			if (!FingerISOStandardsValidator.getInstance().isValidRecordLength(bioData != null ? bioData.length : 0,
+					bdir.getRecordLength())) {
+				message.append(
+						"<BR>Invalid Record Length for Finger Modality, allowed values between[0x00000001 and 0xFFFFFFFF], input value["
+								+ "0x" + Integer.toHexString(bioData != null ? bioData.length : 0) + "]");
+				isValid = false;
+			}
 
-		if (!FingerISOStandardsValidator.getInstance().isValidCertificationFlag(bdir.getCertificationFlag())) {
-			message.append(
-					"<BR>Invalid Certification Flag for Finger Modality, allowed values[0x00, 0x01], input value["
-							+ Integer.toHexString(bdir.getCertificationFlag()) + "]");
-			isValid = false;
-		}
+			if (!FingerISOStandardsValidator.getInstance().isValidCertificationFlag(bdir.getCertificationFlag())) {
+				message.append(
+						"<BR>Invalid Certification Flag for Finger Modality, allowed values[0x00, 0x01], input value["
+								+ "0x" + Integer.toHexString(bdir.getCertificationFlag()) + "]");
+				isValid = false;
+			}
 
-		if (!FingerISOStandardsValidator.getInstance().isValidNoOfFingerPresent(bdir.getNoOfFingerPresent())) {
-			message.append("<BR>Invalid No Of Finger Present for Finger Modality, allowed values[0x01], input value["
-					+ Integer.toHexString(bdir.getNoOfFingerPresent()) + "]");
-			isValid = false;
-		}
+			if (!FingerISOStandardsValidator.getInstance().isValidNoOfFingerPresent(bdir.getNoOfFingerPresent())) {
+				message.append(
+						"<BR>Invalid No Of Finger Present for Finger Modality, allowed values[0x01], input value["
+								+ "0x" + Integer.toHexString(bdir.getNoOfFingerPresent()) + "]");
+				isValid = false;
+			}
 
-		if (!FingerISOStandardsValidator.getInstance().isValidRepresentationLength(bdir.getRepresentationsLength())) {
-			message.append(
-					"<BR>Invalid Representation Length for Finger Modality, allowed values between[0x00000029 And 0xFFFFFFEF], input value["
-							+ Long.toHexString(bdir.getRecordLength()) + "]");
-			isValid = false;
-		}
+			if (!FingerISOStandardsValidator.getInstance()
+					.isValidRepresentationLength(bdir.getRepresentationsLength())) {
+				message.append(
+						"<BR>Invalid Representation Length for Finger Modality, allowed values between[0x00000029 and 0xFFFFFFEF], input value["
+								+ "0x" + Long.toHexString(bdir.getRecordLength()) + "]");
+				isValid = false;
+			}
 
-		if (!FingerISOStandardsValidator.getInstance().isValidCaptureDateTime(bdir.getCaptureYear(),
-				bdir.getCaptureMonth(), bdir.getCaptureDay(), bdir.getCaptureHour(), bdir.getCaptureMinute(),
-				bdir.getCaptureSecond(), bdir.getCaptureMilliSecond())) {
-			message.append("<BR>Invalid CaptureDateTime for Finger Modality, The capture date and time field shall \r\n"
-					+ "indicate when the capture of this \r\n" + "representation stated in Coordinated \r\n"
-					+ "Universal Time (UTC). The capture date \r\n"
-					+ "and time field shall consist of 9 bytes., input value[" + bdir.getCaptureDateTime() + "]");
-			isValid = false;
-		}
+			if (!FingerISOStandardsValidator.getInstance().isValidCaptureDateTime(bdir.getCaptureYear(),
+					bdir.getCaptureMonth(), bdir.getCaptureDay(), bdir.getCaptureHour(), bdir.getCaptureMinute(),
+					bdir.getCaptureSecond(), bdir.getCaptureMilliSecond())) {
+				message.append(
+						"<BR>Invalid CaptureDateTime for Finger Modality, The capture date and time field shall \r\n"
+								+ "indicate when the capture of this \r\n" + "representation stated in Coordinated \r\n"
+								+ "Universal Time (UTC). The capture date \r\n"
+								+ "and time field shall consist of 9 bytes., input value[" + bdir.getCaptureDateTime()
+								+ "]");
+				isValid = false;
+			}
 
-		if (!FingerISOStandardsValidator.getInstance()
-				.isValidCaptureDeviceTechnologyIdentifier(bdir.getCaptureDeviceTechnologyIdentifier())) {
-			message.append("<BR>Invalid Capture Device Technology Identifier for Finger Modality, input value["
-					+ Integer.toHexString(bdir.getCaptureDeviceTechnologyIdentifier()) + "]");
-			isValid = false;
-		}
+			if (!FingerISOStandardsValidator.getInstance()
+					.isValidCaptureDeviceTechnologyIdentifier(bdir.getCaptureDeviceTechnologyIdentifier())) {
+				message.append(
+						"<BR>Invalid Capture Device Technology Identifier for Finger Modality, allowed values between[0x00 and 0x14], input value["
+								+ "0x" + Integer.toHexString(bdir.getCaptureDeviceTechnologyIdentifier()) + "]");
+				isValid = false;
+			}
 
-		if (!FingerISOStandardsValidator.getInstance()
-				.isValidCaptureDeviceVendor(bdir.getCaptureDeviceVendorIdentifier())) {
-			message.append("<BR>Invalid Capture Device Vendor Identifier for Finger Modality, input value["
-					+ Integer.toHexString(bdir.getCaptureDeviceVendorIdentifier()) + "]");
-			isValid = false;
-		}
+			if (!FingerISOStandardsValidator.getInstance()
+					.isValidCaptureDeviceVendor(bdir.getCaptureDeviceVendorIdentifier())) {
+				message.append(
+						"<BR>Invalid Capture Device Vendor Identifier for Finger Modality, allowed values between[0x0000 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getCaptureDeviceVendorIdentifier()) + "]");
+				isValid = false;
+			}
 
-		if (!FingerISOStandardsValidator.getInstance().isValidCaptureDeviceType(bdir.getCaptureDeviceVendorIdentifier(),
-				bdir.getCaptureDeviceTypeIdentifier())) {
-			message.append("<BR>Invalid Capture Device Type Identifier for Finger Modality, input value["
-					+ Integer.toHexString(bdir.getCaptureDeviceTypeIdentifier()) + "]");
-			isValid = false;
-		}
+			if (!FingerISOStandardsValidator.getInstance().isValidCaptureDeviceType(
+					bdir.getCaptureDeviceVendorIdentifier(), bdir.getCaptureDeviceTypeIdentifier())) {
+				message.append(
+						"<BR>Invalid Capture Device Type Identifier for Finger Modality, allowed values between[0x0000 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getCaptureDeviceTypeIdentifier()) + "]");
+				isValid = false;
+			}
 
-		if (!FingerISOStandardsValidator.getInstance().isValidNoOfQualityBlocks(bdir.getNoOfQualityBlocks())) {
-			message.append("<BR>Invalid No Of Quality Blocks value for Finger Modality, input value["
-					+ Integer.toHexString(bdir.getNoOfQualityBlocks()) + "]");
-			isValid = false;
-		}
+			if (!FingerISOStandardsValidator.getInstance().isValidNoOfQualityBlocks(bdir.getNoOfQualityBlocks())) {
+				message.append(
+						"<BR>Invalid No Of Quality Blocks value for Finger Modality, allowed values between[0x00 and 0xFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getNoOfQualityBlocks()) + "]");
+				isValid = false;
+			}
 
-		if (bdir.getNoOfQualityBlocks() > 0) {
-			for (FingerQualityBlock qualityBlock : bdir.getQualityBlocks()) {
-				if (!FingerISOStandardsValidator.getInstance().isValidQualityScore(qualityBlock.getQualityScore())) {
-					message.append("<BR>Invalid Quality Score value for Finger Modality, input value["
-							+ Integer.toHexString(qualityBlock.getQualityScore()) + "]");
-					isValid = false;
-				}
+			if (bdir.getNoOfQualityBlocks() > 0) {
+				for (FingerQualityBlock qualityBlock : bdir.getQualityBlocks()) {
+					if (!FingerISOStandardsValidator.getInstance()
+							.isValidQualityScore(qualityBlock.getQualityScore())) {
+						message.append(
+								"<BR>Invalid Quality Score value for Finger Modality, allowed values between[{0x00 and 0x64}, {0xFF}], input value["
+										+ "0x" + Integer.toHexString(qualityBlock.getQualityScore()) + "]");
+						isValid = false;
+					}
 
-				if (!FingerISOStandardsValidator.getInstance()
-						.isValidQualityAlgorithmIdentifier(qualityBlock.getQualityAlgorithmIdentifier())) {
-					message.append("<BR>Invalid Quality Algorithm Identifier for Finger Modality, input value["
-							+ Integer.toHexString(qualityBlock.getQualityAlgorithmIdentifier()) + "]");
-					isValid = false;
-				}
+					if (!FingerISOStandardsValidator.getInstance()
+							.isValidQualityAlgorithmIdentifier(qualityBlock.getQualityAlgorithmIdentifier())) {
+						message.append(
+								"<BR>Invalid Quality Algorithm Identifier for Finger Modality, allowed values between[0x0000 and 0xFFFF], input value["
+										+ "0x" + Integer.toHexString(qualityBlock.getQualityAlgorithmIdentifier())
+										+ "]");
+						isValid = false;
+					}
 
-				if (!FingerISOStandardsValidator.getInstance()
-						.isValidQualityAlgorithmVendorIdentifier(qualityBlock.getQualityAlgorithmVendorIdentifier())) {
-					message.append("<BR>Invalid Quality Algorithm Vendor Identifier for Finger Modality, input value["
-							+ Integer.toHexString(qualityBlock.getQualityAlgorithmVendorIdentifier()) + "]");
-					isValid = false;
+					if (!FingerISOStandardsValidator.getInstance().isValidQualityAlgorithmVendorIdentifier(
+							qualityBlock.getQualityAlgorithmVendorIdentifier())) {
+						message.append(
+								"<BR>Invalid Quality Algorithm Vendor Identifier for Finger Modality, allowed values between[0x0000 and 0xFFFF], input value["
+										+ "0x" + Integer.toHexString(qualityBlock.getQualityAlgorithmVendorIdentifier())
+										+ "]");
+						isValid = false;
+					}
 				}
 			}
-		}
 
-		if (!FingerISOStandardsValidator.getInstance()
-				.isValidNoOfCertificationBlocks(bdir.getNoOfCertificationBlocks())) {
-			message.append("<BR>Invalid No Of Certification Blocks for Finger Modality, input value["
-					+ Integer.toHexString(bdir.getNoOfCertificationBlocks()) + "]");
-			isValid = false;
-		}
+			if (!FingerISOStandardsValidator.getInstance()
+					.isValidNoOfCertificationBlocks(bdir.getNoOfCertificationBlocks())) {
+				message.append(
+						"<BR>Invalid No Of Certification Blocks for Finger Modality, allowed values between[0x00 and 0xFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getNoOfCertificationBlocks()) + "]");
+				isValid = false;
+			}
 
-		if (bdir.getNoOfCertificationBlocks() > 0) {
-			for (FingerCertificationBlock fingerCertificationBlock : bdir.getCertificationBlocks()) {
-				if (!FingerISOStandardsValidator.getInstance()
-						.isValidCertificationAuthorityID(fingerCertificationBlock.getCertificationAuthorityID())) {
-					message.append("<BR>Invalid Certification AuthorityID for Finger Modality, input value["
-							+ Integer.toHexString(fingerCertificationBlock.getCertificationAuthorityID()) + "]");
-					isValid = false;
-				}
+			if (bdir.getNoOfCertificationBlocks() > 0) {
+				for (FingerCertificationBlock fingerCertificationBlock : bdir.getCertificationBlocks()) {
+					if (!FingerISOStandardsValidator.getInstance()
+							.isValidCertificationAuthorityID(fingerCertificationBlock.getCertificationAuthorityID())) {
+						message.append(
+								"<BR>Invalid Certification AuthorityID for Finger Modality, allowed values between[0x0000 and 0xFFFF], input value["
+										+ "0x"
+										+ Integer.toHexString(fingerCertificationBlock.getCertificationAuthorityID())
+										+ "]");
+						isValid = false;
+					}
 
-				if (!FingerISOStandardsValidator.getInstance().isValidCertificationSchemeIdentifier(
-						fingerCertificationBlock.getCertificationSchemeIdentifier())) {
-					message.append("<BR>Invalid Certification Scheme Identifier for Finger Modality, input value["
-							+ Integer.toHexString(fingerCertificationBlock.getCertificationSchemeIdentifier()) + "]");
-					isValid = false;
+					if (!FingerISOStandardsValidator.getInstance().isValidCertificationSchemeIdentifier(
+							fingerCertificationBlock.getCertificationSchemeIdentifier())) {
+						message.append(
+								"<BR>Invalid Certification Scheme Identifier for Finger Modality, allowed values between[0x00 and 0xFF], input value["
+										+ "0x" + Integer.toHexString(
+												fingerCertificationBlock.getCertificationSchemeIdentifier())
+										+ "]");
+						isValid = false;
+					}
 				}
 			}
-		}
 
-		if (!FingerISOStandardsValidator.getInstance().isValidFingerPosition(purpose, bdir.getFingerPosition())) {
-			message.append("<BR>Invalid Finger Position Value for Finger Modality, input value["
-					+ Integer.toHexString(bdir.getFingerPosition()) + "]");
-			isValid = false;
-		}
+			if (!FingerISOStandardsValidator.getInstance().isValidFingerPosition(purpose, bdir.getFingerPosition())) {
+				message.append(
+						"<BR>Invalid Finger Position Value for Finger Modality, allowed values between[Auth{0x00 and 0x0A}, Registration{0x01 And 0x0A}], input value["
+								+ "0x" + Integer.toHexString(bdir.getFingerPosition()) + "]");
+				isValid = false;
+			}
 
-		if (!FingerISOStandardsValidator.getInstance().isValidRepresentationsNo(bdir.getRepresentationNo())) {
-			message.append(
-					"<BR>Invalid Representations No Value for Finger Modality, allowed values[0x00 till 0x0F], input value["
-							+ Integer.toHexString(bdir.getRepresentationNo()) + "]");
-			isValid = false;
-		}
+			if (!FingerISOStandardsValidator.getInstance().isValidRepresentationsNo(bdir.getRepresentationNo())) {
+				message.append(
+						"<BR>Invalid Representations No Value for Finger Modality, allowed values between[0x00 and 0x0F], input value["
+								+ "0x" + Integer.toHexString(bdir.getRepresentationNo()) + "]");
+				isValid = false;
+			}
 
-		// Used to check the image based on PIXELS_PER_INCH or PIXELS_PER_CM
-		int scaleUnitsType = bdir.getScaleUnits();
-		if (!FingerISOStandardsValidator.getInstance().isValidScaleUnits(scaleUnitsType)) {
-			message.append(
-					"<BR>Invalid Scale Unit Type Value for Finger Modality, allowed values[0x01, 0x02], input value["
-							+ Integer.toHexString(scaleUnitsType) + "]");
-			isValid = false;
-		}
+			// Used to check the image based on PIXELS_PER_INCH or PIXELS_PER_CM
+			int scaleUnitsType = bdir.getScaleUnits();
+			if (!FingerISOStandardsValidator.getInstance().isValidScaleUnits(scaleUnitsType)) {
+				message.append(
+						"<BR>Invalid Scale Unit Type Value for Finger Modality, allowed values[0x01, 0x02], input value["
+								+ "0x" + Integer.toHexString(scaleUnitsType) + "]");
+				isValid = false;
+			}
 
-		int scanSpatialSamplingRateHorizontal = bdir.getCaptureDeviceSpatialSamplingRateHorizontal();
-		if (!FingerISOStandardsValidator.getInstance()
-				.isValidScanSpatialSamplingRateHorizontal(scanSpatialSamplingRateHorizontal)) {
-			message.append(
-					"<BR>Invalid Device Scan Spatial Sampling Rate Horizontal for Finger Modality, allowed values[0x01F4(500), 0x03E8(10000)], input value["
-							+ Integer.toHexString(scanSpatialSamplingRateHorizontal) + "]");
-			isValid = false;
-		}
+			int scanSpatialSamplingRateHorizontal = bdir.getCaptureDeviceSpatialSamplingRateHorizontal();
+			if (!FingerISOStandardsValidator.getInstance()
+					.isValidScanSpatialSamplingRateHorizontal(scanSpatialSamplingRateHorizontal)) {
+				message.append(
+						"<BR>Invalid Device Scan Spatial Sampling Rate Horizontal for Finger Modality, allowed values between[0x01EA and 0x03F2], input value["
+								+ "0x" + Integer.toHexString(scanSpatialSamplingRateHorizontal) + "]");
+				isValid = false;
+			}
 
-		int scanSpatialSamplingRateVertical = bdir.getCaptureDeviceSpatialSamplingRateVertical();
-		if (!FingerISOStandardsValidator.getInstance()
-				.isValidScanSpatialSamplingRateVertical(scanSpatialSamplingRateVertical)) {
-			validationResultDto.setDescription(
-					"<BR>Invalid Device Scan Spatial Sampling Rate Vertical for Finger Modality, allowed values[0x01F4(500), 0x03E8(10000)], input value["
-							+ Integer.toHexString(scanSpatialSamplingRateVertical) + "]");
-			isValid = false;
-		}
+			int scanSpatialSamplingRateVertical = bdir.getCaptureDeviceSpatialSamplingRateVertical();
+			if (!FingerISOStandardsValidator.getInstance()
+					.isValidScanSpatialSamplingRateVertical(scanSpatialSamplingRateVertical)) {
+				validationResultDto.setDescription(
+						"<BR>Invalid Device Scan Spatial Sampling Rate Vertical for Finger Modality, allowed values between[0x01EA and 0x03F2], input value["
+								+ "0x" + Integer.toHexString(scanSpatialSamplingRateVertical) + "]");
+				isValid = false;
+			}
 
-		if (!FingerISOStandardsValidator.getInstance().isValidImageSpatialSamplingRateHorizontal(
-				scanSpatialSamplingRateHorizontal, bdir.getImageSpatialSamplingRateHorizontal())) {
-			message.append(
-					"<BR>Invalid Image Spatial SamplingRate Horizontal for Finger Modality, allowed values[0x01F4(500), 0x03E8(10000)] And less than or equal to "
-							+ Integer.toHexString(scanSpatialSamplingRateHorizontal) + ", input value["
-							+ Integer.toHexString(bdir.getImageSpatialSamplingRateHorizontal()) + "]");
-			isValid = false;
-		}
+			if (!FingerISOStandardsValidator.getInstance().isValidImageSpatialSamplingRateHorizontal(
+					scanSpatialSamplingRateHorizontal, bdir.getImageSpatialSamplingRateHorizontal())) {
+				message.append(
+						"<BR>Invalid Image Spatial SamplingRate Horizontal for Finger Modality, allowed values between[0x01EA and 0x03F2] And less than or equal to ScanSpatialSamplingRateHorizontal value of "
+								+ "0x" + Integer.toHexString(scanSpatialSamplingRateHorizontal) + ", input value["
+								+ "0x" + Integer.toHexString(bdir.getImageSpatialSamplingRateHorizontal()) + "]");
+				isValid = false;
+			}
 
-		if (!FingerISOStandardsValidator.getInstance().isValidImageSpatialSamplingRateVertical(
-				scanSpatialSamplingRateVertical, bdir.getImageSpatialSamplingRateVertical())) {
-			message.append(
-					"<BR>Invalid Device Scan Spatial Sampling Rate Vertical for Finger Modality, allowed values[0x01F4(500), 0x03E8(10000)] And less than or equal to "
-							+ Integer.toHexString(scanSpatialSamplingRateVertical) + ", input value["
-							+ Integer.toHexString(bdir.getImageSpatialSamplingRateVertical()) + "]");
-			isValid = false;
-		}
+			if (!FingerISOStandardsValidator.getInstance().isValidImageSpatialSamplingRateVertical(
+					scanSpatialSamplingRateVertical, bdir.getImageSpatialSamplingRateVertical())) {
+				message.append(
+						"<BR>Invalid Device Scan Spatial Sampling Rate Vertical for Finger Modality, allowed values between[0x01EA and 0x03F2] And less than or equal to ScanSpatialSamplingRateVertical value of "
+								+ "0x" + Integer.toHexString(scanSpatialSamplingRateVertical) + ", input value[" + "0x"
+								+ Integer.toHexString(bdir.getImageSpatialSamplingRateVertical()) + "]");
+				isValid = false;
+			}
 
-		byte[] inImageData = bdir.getImage();
-		if (!FingerISOStandardsValidator.getInstance().isValidBitDepth(inImageData, bdir.getBitDepth())) {
-			message.append(
-					"<BR>Invalid Image Bit Depth Value for Finger Modality, allowed values[0x08(Grayscale)], input value["
-							+ Integer.toHexString(bdir.getBitDepth()) + "]");
-			isValid = false;
-		}
+			byte[] inImageData = bdir.getImage();
+			if (!FingerISOStandardsValidator.getInstance().isValidBitDepth(inImageData, bdir.getBitDepth())) {
+				message.append(
+						"<BR>Invalid Image Bit Depth Value for Finger Modality, allowed values[0x08(Grayscale)], input value["
+								+ "0x" + Integer.toHexString(bdir.getBitDepth()) + "]");
+				isValid = false;
+			}
 
-		int compressionType = bdir.getCompressionType();
-		if (!FingerISOStandardsValidator.getInstance().isValidImageCompressionType(purpose, compressionType)) {
-			message.append(
-					"<BR>Invalid Image Compression Type for Finger Modality, allowed values[JPEG_2000_LOSSY/WSQ(AUTH), JPEG_2000_LOSS_LESS(Registration)], input value[Purpose("
-							+ purpose + "), CompressionType(" + Integer.toHexString(compressionType) + ")]");
-			isValid = false;
-		}
+			int compressionType = bdir.getCompressionType();
+			if (!FingerISOStandardsValidator.getInstance().isValidImageCompressionType(purpose, compressionType)) {
+				message.append(
+						"<BR>Invalid Image Compression Type for Finger Modality, allowed values[JPEG_2000_LOSSY(0x04)/WSQ(0x02)(AUTH), JPEG_2000_LOSS_LESS(0x05)(Registration)], input value[Purpose("
+								+ purpose + "), CompressionType(" + "0x" + Integer.toHexString(compressionType) + ")]");
+				isValid = false;
+			}
 
-		if (!FingerISOStandardsValidator.getInstance().isValidImageImpressionType(bdir.getImpressionType())) {
-			message.append(
-					"<BR>Invalid Image Compression Type for Finger Modality, allowed values[JPEG_2000_LOSSY/WSQ(AUTH), JPEG_2000_LOSS_LESS(Registration)], input value[]");
-			isValid = false;
-		}
+			if (!FingerISOStandardsValidator.getInstance().isValidImageImpressionType(bdir.getImpressionType())) {
+				message.append(
+						"<BR>Invalid Image Impression Type for Finger Modality, allowed values between[{0x00 and 0x0F}, 0x18, 0x1C, 0x1D], "
+								+ " input value[" + "0x" + Integer.toHexString(bdir.getImpressionType()) + "]");
+				isValid = false;
+			}
 
-		if (!FingerISOStandardsValidator.getInstance().isValidImageHorizontalLineLength(purpose, inImageData,
-				bdir.getLineLengthHorizontal())) {
-			message.append(
-					"<BR>Invalid Image Horizontal Line Length for Finger Modality, allowed values[0x0001, 0xFFFF], input value["
-							+ Integer.toHexString(bdir.getLineLengthHorizontal()) + "]");
-			isValid = false;
-		}
+			if (!FingerISOStandardsValidator.getInstance().isValidImageHorizontalLineLength(purpose, inImageData,
+					bdir.getLineLengthHorizontal())) {
+				message.append(
+						"<BR>Invalid Image Horizontal Line Length for Finger Modality, allowed values between[0x0001 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getLineLengthHorizontal()) + "]");
+				isValid = false;
+			}
 
-		if (!FingerISOStandardsValidator.getInstance().isValidImageVerticalLineLength(purpose, inImageData,
-				bdir.getLineLengthVertical())) {
-			message.append(
-					"<BR>Invalid Image Vertical Line Length for Finger Modality, allowed values[0x0001, 0xFFFF], input value["
-							+ Integer.toHexString(bdir.getLineLengthVertical()) + "]");
-			isValid = false;
-		}
+			if (!FingerISOStandardsValidator.getInstance().isValidImageVerticalLineLength(purpose, inImageData,
+					bdir.getLineLengthVertical())) {
+				message.append(
+						"<BR>Invalid Image Vertical Line Length for Finger Modality, allowed values[0x0001 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getLineLengthVertical()) + "]");
+				isValid = false;
+			}
 
-		if (!FingerISOStandardsValidator.getInstance().isValidImageDataLength(inImageData, bdir.getImageLength())) {
-			message.append(
-					"<BR>Invalid Image Data Length for Finger Modality, allowed values[0x00000001, 0xFFFFFFFF], input value["
-							+ Long.toHexString(bdir.getImageLength()) + "]");
-			isValid = false;
-		}
+			if (!FingerISOStandardsValidator.getInstance().isValidImageDataLength(inImageData, bdir.getImageLength())) {
+				message.append(
+						"<BR>Invalid Image Data Length for Finger Modality, allowed values[0x00000001 and 0xFFFFFFFF], input value["
+								+ "0x" + Long.toHexString(bdir.getImageLength()) + "]");
+				isValid = false;
+			}
 
-		try {
 			if (!FingerISOStandardsValidator.getInstance().isValidImageData(purpose, Modality.Finger, inImageData)) {
 				message.append(
 						"<BR>Invalid Image Data for Finger Modality, allowed values[JPEG_2000_LOSSY/WSQ(Auth), JPEG_2000_LOSS_LESS(Registration)]");
 				isValid = false;
 			}
 		} catch (Exception e) {
-			message.append(
-					"<BR>Invalid Image Data for Finger Modality, allowed values[JPEG_2000_LOSSY/WSQ(Auth), JPEG_2000_LOSS_LESS(Registration)] "
-							+ e.getLocalizedMessage());
+			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_FINGER_ISO_FORMAT_EXCEPTION;
+			message.append("<BR>" + errorCode.getErrorMessage() + "<BR>" + e.getLocalizedMessage());
 			isValid = false;
 		}
 
@@ -481,267 +501,289 @@ public class ISOStandardsValidator extends SBIValidator {
 		}
 
 		IrisBDIR bdir;
+		byte[] inImageData = null;
 		try {
 			bdir = IrisDecoder.getIrisBDIR(requestDto);
-		} catch (Exception e) {
-			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_IRIS_ISO_FORMAT_EXCEPTION;
-			throw new ToolkitException(errorCode.getErrorCode(), e.getLocalizedMessage());
-		}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidFormatIdentifier(bdir.getFormatIdentifier())) {
-			message.append("<BR>Invalid Format Identifier for Iris Modality, allowed values[0x49495200], input value["
-					+ Long.toHexString(bdir.getFormatIdentifier()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidFormatIdentifier(bdir.getFormatIdentifier())) {
+				message.append(
+						"<BR>Invalid Format Identifier for Iris Modality, allowed values[0x49495200], input value["
+								+ "0x" + Long.toHexString(bdir.getFormatIdentifier()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidVersionNumber(bdir.getVersionNumber())) {
-			message.append("<BR>Invalid Version Number for Iris Modality, allowed values[0x30323000], input value["
-					+ Long.toHexString(bdir.getVersionNumber()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidVersionNumber(bdir.getVersionNumber())) {
+				message.append("<BR>Invalid Version Number for Iris Modality, allowed values[0x30323000], input value["
+						+ "0x" + Long.toHexString(bdir.getVersionNumber()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidRecordLength(bioData != null ? bioData.length : 0,
-				bdir.getRecordLength())) {
-			message.append("<BR>Invalid Record Length for Iris Modality, input value["
-					+ Integer.toHexString(bioData != null ? bioData.length : 0) + "]");
-			isValid = false;
-		}
+			int noOfRepresentations = bdir.getNoOfRepresentations();
+			if (!IrisISOStandardsValidator.getInstance().isValidNoOfRepresentations(noOfRepresentations)) {
+				message.append(
+						"<BR>Invalid No Of Representations for Iris Modality, allowed values[0x0001], input value["
+								+ "0x" + Integer.toHexString(bdir.getNoOfRepresentations()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidNoOfRepresentations(bdir.getNoOfRepresentations())) {
-			message.append("<BR>Invalid No Of Representations for Iris Modality, allowed values[0x0001], input value["
-					+ Integer.toHexString(bdir.getNoOfRepresentations()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidRecordLength(bioData != null ? bioData.length : 0,
+					bdir.getRecordLength())) {
+				message.append(
+						"<BR>Invalid Record Length for Iris Modality, allowed values between[0x00000000 and 0xFFFFFFFF], input value["
+								+ "0x" + Integer.toHexString(bioData != null ? bioData.length : 0) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidCertificationFlag(bdir.getCertificationFlag())) {
-			message.append("<BR>Invalid Certification Flag for Iris Modality, allowed values[0x00], input value["
-					+ Integer.toHexString(bdir.getCertificationFlag()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidCertificationFlag(bdir.getCertificationFlag())) {
+				message.append("<BR>Invalid Certification Flag for Iris Modality, allowed values[0x00], input value["
+						+ "0x" + Integer.toHexString(bdir.getCertificationFlag()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidNoOfEyesRepresented(bdir.getNoOfEyesPresent())) {
-			message.append("<BR>Invalid No Of Eyes Present for Iris Modality, allowed values[0x00, 0x01], input value["
-					+ Integer.toHexString(bdir.getNoOfEyesPresent()) + "]");
-			isValid = false;
-		}
+			int noOfEyesPresent = bdir.getNoOfEyesPresent();
+			if (!IrisISOStandardsValidator.getInstance().isValidNoOfEyesRepresented(bdir.getNoOfEyesPresent())) {
+				message.append(
+						"<BR>Invalid No Of Eyes Present for Iris Modality, allowed values[0x00, 0x01], input value["
+								+ "0x" + Integer.toHexString(bdir.getNoOfEyesPresent()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidRepresentationLength(bdir.getRepresentationsLength())) {
-			message.append(
-					"<BR>Invalid Representation Length for Iris Modality, allowed values between[0x00000035 And 0xFFFFFFEF], input value["
-							+ Long.toHexString(bdir.getRecordLength()) + "]");
-			isValid = false;
-		}
+			if (noOfRepresentations != noOfEyesPresent) {
+				message.append("<BR>Invalid No Of Eyes Present[" + noOfEyesPresent
+						+ "] for Iris Modality, For given noOfRepresentations[" + noOfRepresentations + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidCaptureDateTime(bdir.getCaptureYear(),
-				bdir.getCaptureMonth(), bdir.getCaptureDay(), bdir.getCaptureHour(), bdir.getCaptureMinute(),
-				bdir.getCaptureSecond(), bdir.getCaptureMilliSecond())) {
-			message.append("<BR>Invalid CaptureDateTime for Iris Modality, The capture date and time field shall \r\n"
-					+ "indicate when the capture of this \r\n" + "representation stated in Coordinated \r\n"
-					+ "Universal Time (UTC). The capture date \r\n"
-					+ "and time field shall consist of 9 bytes., input value[" + bdir.getCaptureDateTime() + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidRepresentationLength(bdir.getRepresentationsLength())) {
+				message.append(
+						"<BR>Invalid Representation Length for Iris Modality, allowed values between[0x00000035 And 0xFFFFFFEF], input value["
+								+ "0x" + Long.toHexString(bdir.getRecordLength()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance()
-				.isValidCaptureDeviceTechnologyIdentifier(bdir.getCaptureDeviceTechnologyIdentifier())) {
-			message.append("<BR>Invalid Capture Device Technology Identifier for Iris Modality, input value["
-					+ Integer.toHexString(bdir.getCaptureDeviceTechnologyIdentifier()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidCaptureDateTime(bdir.getCaptureYear(),
+					bdir.getCaptureMonth(), bdir.getCaptureDay(), bdir.getCaptureHour(), bdir.getCaptureMinute(),
+					bdir.getCaptureSecond(), bdir.getCaptureMilliSecond())) {
+				message.append(
+						"<BR>Invalid CaptureDateTime for Iris Modality, The capture date and time field shall \r\n"
+								+ "indicate when the capture of this \r\n" + "representation stated in Coordinated \r\n"
+								+ "Universal Time (UTC). The capture date \r\n"
+								+ "and time field shall consist of 9 bytes., input value[" + bdir.getCaptureDateTime()
+								+ "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance()
-				.isValidCaptureDeviceVendor(bdir.getCaptureDeviceVendorIdentifier())) {
-			message.append("<BR>Invalid Capture Device Vendor Identifier for Iris Modality, input value["
-					+ Integer.toHexString(bdir.getCaptureDeviceVendorIdentifier()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance()
+					.isValidCaptureDeviceTechnologyIdentifier(bdir.getCaptureDeviceTechnologyIdentifier())) {
+				message.append(
+						"<BR>Invalid Capture Device Technology Identifier for Iris Modality, allowed values[0x00, 0x01], input value["
+								+ "0x" + Integer.toHexString(bdir.getCaptureDeviceTechnologyIdentifier()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidCaptureDeviceType(bdir.getCaptureDeviceVendorIdentifier(),
-				bdir.getCaptureDeviceTypeIdentifier())) {
-			message.append("<BR>Invalid Capture Device Type Identifier for Iris Modality, input value["
-					+ Integer.toHexString(bdir.getCaptureDeviceTypeIdentifier()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance()
+					.isValidCaptureDeviceVendor(bdir.getCaptureDeviceVendorIdentifier())) {
+				message.append(
+						"<BR>Invalid Capture Device Vendor Identifier for Iris Modality, allowed values between[0x0000 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getCaptureDeviceVendorIdentifier()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidNoOfQualityBlocks(bdir.getNoOfQualityBlocks())) {
-			message.append("<BR>Invalid No Of Quality Blocks value for Iris Modality, input value["
-					+ Integer.toHexString(bdir.getNoOfQualityBlocks()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidCaptureDeviceType(
+					bdir.getCaptureDeviceVendorIdentifier(), bdir.getCaptureDeviceTypeIdentifier())) {
+				message.append(
+						"<BR>Invalid Capture Device Type Identifier for Iris Modality, allowed values between[0x0000 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getCaptureDeviceTypeIdentifier()) + "]");
+				isValid = false;
+			}
 
-		if (bdir.getNoOfQualityBlocks() > 0) {
-			for (IrisQualityBlock qualityBlock : bdir.getQualityBlocks()) {
-				if (!IrisISOStandardsValidator.getInstance().isValidQualityScore(qualityBlock.getQualityScore())) {
-					message.append("<BR>Invalid Quality Score value for Iris Modality, input value["
-							+ Integer.toHexString(qualityBlock.getQualityScore()) + "]");
-					isValid = false;
-				}
+			if (!IrisISOStandardsValidator.getInstance().isValidNoOfQualityBlocks(bdir.getNoOfQualityBlocks())) {
+				message.append(
+						"<BR>Invalid No Of Quality Blocks value for Iris Modality, allowed values between [0x00 and 0xFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getNoOfQualityBlocks()) + "]");
+				isValid = false;
+			}
 
-				if (!IrisISOStandardsValidator.getInstance()
-						.isValidQualityAlgorithmIdentifier(qualityBlock.getQualityAlgorithmIdentifier())) {
-					message.append("<BR>Invalid Quality Algorithm Identifier for Iris Modality, input value["
-							+ Integer.toHexString(qualityBlock.getQualityAlgorithmIdentifier()) + "]");
-					isValid = false;
-				}
+			if (bdir.getNoOfQualityBlocks() > 0) {
+				for (IrisQualityBlock qualityBlock : bdir.getQualityBlocks()) {
+					if (!IrisISOStandardsValidator.getInstance().isValidQualityScore(qualityBlock.getQualityScore())) {
+						message.append(
+								"<BR>Invalid Quality Score value for Iris Modality, allowed values between[0x00 and 0x64], input value["
+										+ "0x" + Integer.toHexString(qualityBlock.getQualityScore()) + "]");
+						isValid = false;
+					}
 
-				if (!IrisISOStandardsValidator.getInstance()
-						.isValidQualityAlgorithmVendorIdentifier(qualityBlock.getQualityAlgorithmVendorIdentifier())) {
-					message.append("<BR>Invalid Quality Algorithm Vendor Identifier for Iris Modality, input value["
-							+ Integer.toHexString(qualityBlock.getQualityAlgorithmVendorIdentifier()) + "]");
-					isValid = false;
+					if (!IrisISOStandardsValidator.getInstance()
+							.isValidQualityAlgorithmIdentifier(qualityBlock.getQualityAlgorithmIdentifier())) {
+						message.append(
+								"<BR>Invalid Quality Algorithm Identifier for Iris Modality, allowed values between[0x0000 and 0xFFFF], input value["
+										+ "0x" + Integer.toHexString(qualityBlock.getQualityAlgorithmIdentifier())
+										+ "]");
+						isValid = false;
+					}
+
+					if (!IrisISOStandardsValidator.getInstance().isValidQualityAlgorithmVendorIdentifier(
+							qualityBlock.getQualityAlgorithmVendorIdentifier())) {
+						message.append(
+								"<BR>Invalid Quality Algorithm Vendor Identifier for Iris Modality, allowed values between[0x0000 and 0xFFFF], input value["
+										+ "0x" + Integer.toHexString(qualityBlock.getQualityAlgorithmVendorIdentifier())
+										+ "]");
+						isValid = false;
+					}
 				}
 			}
-		}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidNoOfRepresentation(bdir.getRepresentationNo())) {
-			message.append("<BR>Invalid No Of Representation for Iris Modality, allowed values[0x01],input value["
-					+ Integer.toHexString(bdir.getRepresentationNo()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidNoOfRepresentation(bdir.getRepresentationNo())) {
+				message.append("<BR>Invalid No Of Representation for Iris Modality, allowed values[0x01], input value["
+						+ "0x" + Integer.toHexString(bdir.getRepresentationNo()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidEyeLabel(purpose, bdir.getEyeLabel())) {
-			message.append("<BR>Invalid Iris Eye Label Value for Iris Modality, input value["
-					+ Integer.toHexString(bdir.getEyeLabel()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidEyeLabel(purpose, bdir.getEyeLabel())) {
+				message.append(
+						"<BR>Invalid Iris Eye Label Value for Iris Modality, allowed values[Registration(0x01, 0x02), Auth(0x00, 0x01, 0x02)], input value["
+								+ "0x" + Integer.toHexString(bdir.getEyeLabel()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidImageType(purpose, bdir.getImageType())) {
-			message.append("<BR>Invalid Image Type No Value Irisnger Modality, allowed values[0x03, 0x07], input value["
-					+ Integer.toHexString(bdir.getImageType()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidImageType(purpose, bdir.getImageType())) {
+				message.append(
+						"<BR>Invalid Image Type No Value Irisnger Modality, allowed values[0x03, 0x07], input value["
+								+ "0x" + Integer.toHexString(bdir.getImageType()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidImageFromat(bdir.getImageFormat())) {
-			message.append("<BR>Invalid Image Format Value for Iris Modality, allowed values[0x0A], input value["
-					+ Integer.toHexString(bdir.getImageFormat()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidImageFromat(bdir.getImageFormat())) {
+				message.append("<BR>Invalid Image Format Value for Iris Modality, allowed values[0x0A], input value["
+						+ "0x" + Integer.toHexString(bdir.getImageFormat()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance()
-				.isValidImageHorizontalOrientation(bdir.getHorizontalOrientation())) {
-			message.append(
-					"<BR>Invalid Image Horizontal Orientation for Iris Modality, allowed values[0x00, 0x01, 0x02], input value["
-							+ Integer.toHexString(bdir.getHorizontalOrientation()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance()
+					.isValidImageHorizontalOrientation(bdir.getHorizontalOrientation())) {
+				message.append(
+						"<BR>Invalid Image Horizontal Orientation for Iris Modality, allowed values[0x00, 0x01, 0x02], input value["
+								+ "0x" + Integer.toHexString(bdir.getHorizontalOrientation()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidImageVerticalOrientation(bdir.getVerticalOrientation())) {
-			message.append(
-					"<BR>Invalid Image Vertical Orientation for Iris Modality, allowed values[0x00, 0x01, 0x02], input value["
-							+ Integer.toHexString(bdir.getVerticalOrientation()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance()
+					.isValidImageVerticalOrientation(bdir.getVerticalOrientation())) {
+				message.append(
+						"<BR>Invalid Image Vertical Orientation for Iris Modality, allowed values[0x00, 0x01, 0x02], input value["
+								+ "0x" + Integer.toHexString(bdir.getVerticalOrientation()) + "]");
+				isValid = false;
+			}
 
-		int compressionType = bdir.getCompressionType();
-		if (!IrisISOStandardsValidator.getInstance().isValidImageCompressionType(purpose, compressionType)) {
-			message.append(
-					"<BR>Invalid Image Compression Type for Iris Modality, allowed values[JPEG_2000_LOSSY, JPEG_2000_LOSS_LESS(Registration)], input value[Purpose("
-							+ purpose + "), CompressionType(" + Integer.toHexString(compressionType) + ")]");
-			isValid = false;
-		}
+			int compressionType = bdir.getCompressionType();
+			if (!IrisISOStandardsValidator.getInstance().isValidImageCompressionType(purpose, compressionType)) {
+				message.append(
+						"<BR>Invalid Image Compression Type for Iris Modality, allowed values[JPEG_2000_LOSSY{0x02}(Auth), JPEG_2000_LOSS_LESS{0x01}(Registration)], input value[Purpose("
+								+ purpose + "), CompressionType(" + "0x" + Integer.toHexString(compressionType) + ")]");
+				isValid = false;
+			}
 
-		byte[] inImageData = bdir.getImage();
+			inImageData = bdir.getImage();
 
-		if (!IrisISOStandardsValidator.getInstance().isValidImageWidth(purpose, inImageData, bdir.getWidth())) {
-			message.append(
-					"<BR>Invalid Image Width Value for Iris Modality, allowed values[0x0001, 0xFFFF], input value["
-							+ Integer.toHexString(bdir.getWidth()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidImageWidth(purpose, inImageData, bdir.getWidth())) {
+				message.append(
+						"<BR>Invalid Image Width Value for Iris Modality, allowed values between[0x0001 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getWidth()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidImageHeight(purpose, inImageData, bdir.getHeight())) {
-			message.append(
-					"<BR>Invalid Image Height Value for Iris Modality, allowed values[0x0001, 0xFFFF], input value["
-							+ Integer.toHexString(bdir.getHeight()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidImageHeight(purpose, inImageData, bdir.getHeight())) {
+				message.append(
+						"<BR>Invalid Image Height Value for Iris Modality, allowed values between[0x0001 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getHeight()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidBitDepth(inImageData, bdir.getBitDepth())) {
-			message.append(
-					"<BR>Invalid Image Bit Depth Value for Iris Modality, allowed values[0x08(Grayscale)], input value["
-							+ Integer.toHexString(bdir.getBitDepth()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidBitDepth(inImageData, bdir.getBitDepth())) {
+				message.append(
+						"<BR>Invalid Image Bit Depth Value for Iris Modality, allowed values[0x08(Grayscale)], input value["
+								+ "0x" + Integer.toHexString(bdir.getBitDepth()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidRange(bdir.getRange())) {
-			message.append("<BR>Invalid Range Value for Iris Modality, allowed values[0x0000, 0xFFFF], input value["
-					+ Integer.toHexString(bdir.getRange()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidRange(bdir.getRange())) {
+				message.append(
+						"<BR>Invalid Range Value for Iris Modality, allowed values between[0x0000 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getRange()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidRollAngleOfEye(bdir.getRollAngleOfEye())) {
-			message.append(
-					"<BR>Invalid Roll Angle Of Eye Value for Iris Modality, allowed values[0x0000, 0xFFFF], input value["
-							+ Integer.toHexString(bdir.getRollAngleOfEye()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidRollAngleOfEye(bdir.getRollAngleOfEye())) {
+				message.append(
+						"<BR>Invalid Roll Angle Of Eye Value for Iris Modality, allowed values between[0x0000 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getRollAngleOfEye()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidRollAngleUncertainty(bdir.getRollAngleUncertainty())) {
-			message.append(
-					"<BR>Invalid Roll Angle Uncertainty Value for Iris Modality, allowed values[0x0000, 0xFFFF], input value["
-							+ Integer.toHexString(bdir.getRollAngleUncertainty()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidRollAngleUncertainty(bdir.getRollAngleUncertainty())) {
+				message.append(
+						"<BR>Invalid Roll Angle Uncertainty Value for Iris Modality, allowed values between[0x0000 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getRollAngleUncertainty()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidIrisCenterSmallestX(bdir.getIrisCenterSmallestX())) {
-			message.append(
-					"<BR>Invalid Iris Center Smallest X Value for Iris Modality, allowed values[0x0000, 0xFFFF], input value["
-							+ Integer.toHexString(bdir.getIrisCenterSmallestX()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidIrisCenterSmallestX(bdir.getIrisCenterSmallestX())) {
+				message.append(
+						"<BR>Invalid Iris Center Smallest X Value for Iris Modality, allowed values between[0x0000 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getIrisCenterSmallestX()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidIrisCenterLargestX(bdir.getIrisCenterLargestX())) {
-			message.append(
-					"<BR>Invalid Iris Center Largest X Value for Iris Modality, allowed values[0x0000, 0xFFFF], input value["
-							+ Integer.toHexString(bdir.getIrisCenterLargestX()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidIrisCenterLargestX(bdir.getIrisCenterLargestX())) {
+				message.append(
+						"<BR>Invalid Iris Center Largest X Value for Iris Modality, allowed values between[0x0000 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getIrisCenterLargestX()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidIrisCenterSmallestY(bdir.getIrisCenterSmallestY())) {
-			message.append(
-					"<BR>Invalid Iris Center Smallest Y Value for Iris Modality, allowed values[0x0000, 0xFFFF], input value["
-							+ Integer.toHexString(bdir.getIrisCenterSmallestY()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidIrisCenterSmallestY(bdir.getIrisCenterSmallestY())) {
+				message.append(
+						"<BR>Invalid Iris Center Smallest Y Value for Iris Modality, allowed values between[0x0000 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getIrisCenterSmallestY()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidIrisCenterLargestY(bdir.getIrisCenterLargestY())) {
-			message.append(
-					"<BR>Invalid Iris Center Largest Y Value for Iris Modality, allowed values[0x0000, 0xFFFF], input value["
-							+ Integer.toHexString(bdir.getIrisCenterLargestY()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidIrisCenterLargestY(bdir.getIrisCenterLargestY())) {
+				message.append(
+						"<BR>Invalid Iris Center Largest Y Value for Iris Modality, allowed values between[0x0000 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getIrisCenterLargestY()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidIrisDiameterSmallest(bdir.getIrisDiameterSmallest())) {
-			message.append(
-					"<BR>Invalid Iris Diameter Smallest Value for Iris Modality, allowed values[0x0000, 0xFFFF], input value["
-							+ Integer.toHexString(bdir.getIrisDiameterSmallest()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidIrisDiameterSmallest(bdir.getIrisDiameterSmallest())) {
+				message.append(
+						"<BR>Invalid Iris Diameter Smallest Value for Iris Modality, allowed values between[0x0000 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getIrisDiameterSmallest()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidIrisDiameterLargest(bdir.getIrisDiameterLargest())) {
-			message.append(
-					"<BR>Invalid Iris Diameter Largest Value for Iris Modality, allowed values[0x0000, 0xFFFF], input value["
-							+ Integer.toHexString(bdir.getIrisDiameterLargest()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidIrisDiameterLargest(bdir.getIrisDiameterLargest())) {
+				message.append(
+						"<BR>Invalid Iris Diameter Largest Value for Iris Modality, allowed values between[0x0000 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getIrisDiameterLargest()) + "]");
+				isValid = false;
+			}
 
-		if (!IrisISOStandardsValidator.getInstance().isValidImageDataLength(inImageData, bdir.getImageLength())) {
-			message.append(
-					"<BR>Invalid Image Data Length for Iris Modality, allowed values[0x00000001, 0xFFFFFFFF], input value["
-							+ Long.toHexString(bdir.getImageLength()) + "]");
-			isValid = false;
-		}
+			if (!IrisISOStandardsValidator.getInstance().isValidImageDataLength(inImageData, bdir.getImageLength())) {
+				message.append(
+						"<BR>Invalid Image Data Length for Iris Modality, allowed values between[0x00000001 and 0xFFFFFFFF], input value["
+								+ "0x" + Long.toHexString(bdir.getImageLength()) + "]");
+				isValid = false;
+			}
 
-		try {
 			if (!IrisISOStandardsValidator.getInstance().isValidImageData(purpose, Modality.Iris, inImageData)) {
 				message.append(
 						"<BR>Invalid Image Data for Iris Modality, allowed values[JPEG_2000_LOSSY(Auth), JPEG_2000_LOSS_LESS(Registration)]");
 				isValid = false;
 			}
 		} catch (Exception e) {
-			message.append(
-					"<BR>Invalid Image Data for Iris Modality, allowed values[JPEG_2000_LOSSY(Auth), JPEG_2000_LOSS_LESS(Registration)] "
-							+ e.getLocalizedMessage());
+			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_IRIS_ISO_FORMAT_EXCEPTION;
+			message.append("<BR>" + errorCode.getErrorMessage() + "<BR>" + e.getLocalizedMessage());
 			isValid = false;
 		}
 
@@ -782,287 +824,315 @@ public class ISOStandardsValidator extends SBIValidator {
 		FaceBDIR bdir;
 		try {
 			bdir = FaceDecoder.getFaceBDIR(requestDto);
-		} catch (Exception e) {
-			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_FACE_ISO_FORMAT_EXCEPTION;
-			throw new ToolkitException(errorCode.getErrorCode(), e.getLocalizedMessage());
-		}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidFormatIdentifier(bdir.getFormatIdentifier())) {
-			message.append("<BR>Invalid Format Identifier for Face Modality, allowed values[0x46414300], input value["
-					+ Long.toHexString(bdir.getFormatIdentifier()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidFormatIdentifier(bdir.getFormatIdentifier())) {
+				message.append(
+						"<BR>Invalid Format Identifier for Face Modality, allowed values[0x46414300], input value["
+								+ "0x" + Long.toHexString(bdir.getFormatIdentifier()) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidVersionNumber(bdir.getVersionNumber())) {
-			message.append("<BR>Invalid Version Number for Face Modality, allowed values[0x30333000], input value["
-					+ Long.toHexString(bdir.getVersionNumber()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidVersionNumber(bdir.getVersionNumber())) {
+				message.append("<BR>Invalid Version Number for Face Modality, allowed values[0x30333000], input value["
+						+ "0x" + Long.toHexString(bdir.getVersionNumber()) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidRecordLength(bioData != null ? bioData.length : 0,
-				bdir.getRecordLength())) {
-			message.append("<BR>Invalid Record Length for Face Modality, input value["
-					+ Integer.toHexString(bioData != null ? bioData.length : 0) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidNoOfRepresentations(bdir.getNoOfRepresentations())) {
+				message.append(
+						"<BR>Invalid No Of Representations for Face Modality, allowed values[0x0001], input value["
+								+ "0x" + Integer.toHexString(bdir.getNoOfRepresentations()) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidNoOfRepresentations(bdir.getNoOfRepresentations())) {
-			message.append("<BR>Invalid No Of Representations for Face Modality, allowed values[0x0001], input value["
-					+ Integer.toHexString(bdir.getNoOfRepresentations()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidRecordLength(bioData != null ? bioData.length : 0,
+					bdir.getRecordLength())) {
+				message.append(
+						"<BR>Invalid Record Length for Face Modality, allowed values between[0x00000001 and 0xFFFFFFFF], input value["
+								+ "0x" + Integer.toHexString(bioData != null ? bioData.length : 0) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidCertificationFlag(bdir.getCertificationFlag())) {
-			message.append("<BR>Invalid Certification Flag for Face Modality, allowed values[0x00], input value["
-					+ Integer.toHexString(bdir.getCertificationFlag()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidCertificationFlag(bdir.getCertificationFlag())) {
+				message.append("<BR>Invalid Certification Flag for Face Modality, allowed values[0x00], input value["
+						+ "0x" + Integer.toHexString(bdir.getCertificationFlag()) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidTemporalSemantics(bdir.getTemporalSemantics())) {
-			message.append("<BR>Invalid Certification Flag for Face Modality, allowed values[0x0000], input value["
-					+ Integer.toHexString(bdir.getTemporalSemantics()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidTemporalSemantics(bdir.getTemporalSemantics())) {
+				message.append("<BR>Invalid Certification Flag for Face Modality, allowed values[0x0000], input value["
+						+ "0x" + Integer.toHexString(bdir.getTemporalSemantics()) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidRepresentationLength(bdir.getRecordLength())) {
-			message.append("<BR>Invalid Representation Length for Face Modality, allowed values between[0x00000033 And 0xFFFFFFEF], input value["
-					+ Long.toHexString(bdir.getRecordLength()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidRepresentationLength(bdir.getRecordLength())) {
+				message.append(
+						"<BR>Invalid Representation Length for Face Modality, allowed values between[0x00000033 and 0xFFFFFFEF], input value["
+								+ "0x" + Long.toHexString(bdir.getRecordLength()) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidCaptureDateTime(bdir.getCaptureYear(),
-				bdir.getCaptureMonth(), bdir.getCaptureDay(), bdir.getCaptureHour(), bdir.getCaptureMinute(),
-				bdir.getCaptureSecond(), bdir.getCaptureMilliSecond())) {
-			message.append("<BR>Invalid CaptureDateTime for Face Modality, The capture date and time field shall \r\n"
-					+ "indicate when the capture of this \r\n" + "representation stated in Coordinated \r\n"
-					+ "Universal Time (UTC). The capture date \r\n"
-					+ "and time field shall consist of 9 bytes., input value[" + bdir.getCaptureDateTime() + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidCaptureDateTime(bdir.getCaptureYear(),
+					bdir.getCaptureMonth(), bdir.getCaptureDay(), bdir.getCaptureHour(), bdir.getCaptureMinute(),
+					bdir.getCaptureSecond(), bdir.getCaptureMilliSecond())) {
+				message.append(
+						"<BR>Invalid CaptureDateTime for Face Modality, The capture date and time field shall \r\n"
+								+ "indicate when the capture of this \r\n" + "representation stated in Coordinated \r\n"
+								+ "Universal Time (UTC). The capture date \r\n"
+								+ "and time field shall consist of 9 bytes., input value[" + bdir.getCaptureDateTime()
+								+ "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance()
-				.isValidCaptureDeviceTechnologyIdentifier(bdir.getCaptureDeviceTechnologyIdentifier())) {
-			message.append("<BR>Invalid Capture Device Technology Identifier for Face Modality, input value["
-					+ Integer.toHexString(bdir.getCaptureDeviceTechnologyIdentifier()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance()
+					.isValidCaptureDeviceTechnologyIdentifier(bdir.getCaptureDeviceTechnologyIdentifier())) {
+				message.append(
+						"<BR>Invalid Capture Device Technology Identifier for Face Modality, allowed values between[{0x00 and 0x06}, {0x80 and 0xFF}], input value["
+								+ "0x" + Integer.toHexString(bdir.getCaptureDeviceTechnologyIdentifier()) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance()
-				.isValidCaptureDeviceVendor(bdir.getCaptureDeviceVendorIdentifier())) {
-			message.append("<BR>Invalid Capture Device Vendor Identifier for Face Modality, input value["
-					+ Integer.toHexString(bdir.getCaptureDeviceVendorIdentifier()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance()
+					.isValidCaptureDeviceVendor(bdir.getCaptureDeviceVendorIdentifier())) {
+				message.append(
+						"<BR>Invalid Capture Device Vendor Identifier for Face Modality, allowed values between[0x0000 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getCaptureDeviceVendorIdentifier()) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidCaptureDeviceType(bdir.getCaptureDeviceVendorIdentifier(),
-				bdir.getCaptureDeviceTypeIdentifier())) {
-			message.append("<BR>Invalid Capture Device Type Identifier for Face Modality, input value["
-					+ Integer.toHexString(bdir.getCaptureDeviceTypeIdentifier()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidCaptureDeviceType(
+					bdir.getCaptureDeviceVendorIdentifier(), bdir.getCaptureDeviceTypeIdentifier())) {
+				message.append(
+						"<BR>Invalid Capture Device Type Identifier for Face Modality, allowed values between[0x0000 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getCaptureDeviceTypeIdentifier()) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidNoOfQualityBlocks(bdir.getNoOfQualityBlocks())) {
-			message.append("<BR>Invalid No Of Quality Blocks value for Face Modality, input value["
-					+ Integer.toHexString(bdir.getNoOfQualityBlocks()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidNoOfQualityBlocks(bdir.getNoOfQualityBlocks())) {
+				message.append(
+						"<BR>Invalid No Of Quality Blocks value for Face Modality, allowed values between[0x00 and 0xFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getNoOfQualityBlocks()) + "]");
+				isValid = false;
+			}
 
-		if (bdir.getNoOfQualityBlocks() > 0) {
-			for (FaceQualityBlock qualityBlock : bdir.getQualityBlocks()) {
-				if (!FaceISOStandardsValidator.getInstance().isValidQualityScore(qualityBlock.getQualityScore())) {
-					message.append("<BR>Invalid Quality Score value for Face Modality, input value["
-							+ Integer.toHexString(qualityBlock.getQualityScore()) + "]");
-					isValid = false;
-				}
+			if (bdir.getNoOfQualityBlocks() > 0) {
+				for (FaceQualityBlock qualityBlock : bdir.getQualityBlocks()) {
+					if (!FaceISOStandardsValidator.getInstance().isValidQualityScore(qualityBlock.getQualityScore())) {
+						message.append(
+								"<BR>Invalid Quality Score value for Face Modality, allowed values between[{0x00 and 0x64}, {0xFF}], input value["
+										+ "0x" + Integer.toHexString(qualityBlock.getQualityScore()) + "]");
+						isValid = false;
+					}
 
-				if (!FaceISOStandardsValidator.getInstance()
-						.isValidQualityAlgorithmIdentifier(qualityBlock.getQualityAlgorithmIdentifier())) {
-					message.append("<BR>Invalid Quality Algorithm Identifier for Face Modality, input value["
-							+ Integer.toHexString(qualityBlock.getQualityAlgorithmIdentifier()) + "]");
-					isValid = false;
-				}
+					if (!FaceISOStandardsValidator.getInstance()
+							.isValidQualityAlgorithmIdentifier(qualityBlock.getQualityAlgorithmIdentifier())) {
+						message.append(
+								"<BR>Invalid Quality Algorithm Identifier for Face Modality, allowed values between[0x0000 and 0xFFFF], input value["
+										+ "0x" + Integer.toHexString(qualityBlock.getQualityAlgorithmIdentifier())
+										+ "]");
+						isValid = false;
+					}
 
-				if (!FaceISOStandardsValidator.getInstance()
-						.isValidQualityAlgorithmVendorIdentifier(qualityBlock.getQualityAlgorithmVendorIdentifier())) {
-					message.append("<BR>Invalid Quality Algorithm Vendor Identifier for Face Modality, input value["
-							+ Integer.toHexString(qualityBlock.getQualityAlgorithmVendorIdentifier()) + "]");
-					isValid = false;
+					if (!FaceISOStandardsValidator.getInstance().isValidQualityAlgorithmVendorIdentifier(
+							qualityBlock.getQualityAlgorithmVendorIdentifier())) {
+						message.append(
+								"<BR>Invalid Quality Algorithm Vendor Identifier for Face Modality, allowed values between[0x0000 and 0xFFFF], input value["
+										+ "0x" + Integer.toHexString(qualityBlock.getQualityAlgorithmVendorIdentifier())
+										+ "]");
+						isValid = false;
+					}
 				}
 			}
-		}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidNoOfLandmarkPoints(bdir.getNoOfLandMarkPoints())) {
-			message.append("<BR>Invalid No Of Landmark Points for Face Modality, allowed values[0x0000, 0xFFFF],input value["
-					+ Integer.toHexString(bdir.getNoOfLandMarkPoints()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidNoOfLandmarkPoints(bdir.getNoOfLandMarkPoints())) {
+				message.append(
+						"<BR>Invalid No Of Landmark Points for Face Modality, allowed values between[0x0000 and 0xFFFF],input value["
+								+ "0x" + Integer.toHexString(bdir.getNoOfLandMarkPoints()) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidGender(bdir.getGender())) {
-			message.append("<BR>Invalid Gender value for Face Modality, allowed values[0x00, 0x01, 0x02, 0xFF],input value["
-					+ Integer.toHexString(bdir.getGender()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidGender(bdir.getGender())) {
+				message.append(
+						"<BR>Invalid Gender value for Face Modality, allowed values[0x00, 0x01, 0x02, 0xFF],input value["
+								+ "0x" + Integer.toHexString(bdir.getGender()) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidEyeColour(bdir.getEyeColor())) {
-			message.append("<BR>Invalid Eye Colour value for Face Modality, allowed values[0x00 till 0x07 or 0xFF], input value["
-					+ Integer.toHexString(bdir.getEyeColor()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidEyeColour(bdir.getEyeColor())) {
+				message.append(
+						"<BR>Invalid Eye Colour value for Face Modality, allowed values between[{0x00 and 0x07}, {0xFF}], input value["
+								+ "0x" + Integer.toHexString(bdir.getEyeColor()) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidHairColour(bdir.getHairColor())) {
-			message.append("<BR>Invalid Hair Colour Value for Face Modality, allowed values[0x00 till 0x07 or 0xFF], input value["
-					+ Integer.toHexString(bdir.getHairColor()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidHairColour(bdir.getHairColor())) {
+				message.append(
+						"<BR>Invalid Hair Colour Value for Face Modality, allowed values between[{0x00 and 0x07}, {0xFF}], input value["
+								+ "0x" + Integer.toHexString(bdir.getHairColor()) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidSubjectHeight(bdir.getSubjectHeight())) {
-			message.append("<BR>Invalid Subject Height Value for Face Modality, allowed values[0x00 till 0xFF], input value["
-					+ Integer.toHexString(bdir.getSubjectHeight()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidSubjectHeight(bdir.getSubjectHeight())) {
+				message.append(
+						"<BR>Invalid Subject Height Value for Face Modality, allowed values between[0x00 and 0xFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getSubjectHeight()) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidFeatureMask(bdir.getFeaturesMask())) {
-			message.append("<BR>Invalid Features Mask Value for Face Modality, allowed values[0x000000 till 0xFFFFFF]input value["
-					+ Integer.toHexString(bdir.getFeaturesMask()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidFeatureMask(bdir.getFeaturesMask())) {
+				message.append(
+						"<BR>Invalid Features Mask Value for Face Modality, allowed values between[0x000000 and 0xFFFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getFeaturesMask()) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidFeatureMask(bdir.getExpressionMask())) {
-			message.append("<BR>Invalid Expression Mask Value for Face Modality, allowed values[0x000000 till 0xFFFFFF], input value["
-					+ Integer.toHexString(bdir.getExpressionMask()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidFeatureMask(bdir.getExpressionMask())) {
+				message.append(
+						"<BR>Invalid Expression Mask Value for Face Modality, allowed values between[0x000000 and 0xFFFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getExpressionMask()) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidPoseAngle(bdir.getPoseAngle())) {
-			message.append("<BR>Invalid Pose Angle Value for Face Modality");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidPoseAngle(bdir.getPoseAngle())) {
+				message.append("<BR>Invalid Pose Angle Value for Face Modality");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidPoseAngleUncertainty(bdir.getPoseAngleUncertainty())) {
-			message.append("<BR>Invalid Pose Angle Uncertainty Value for Face Modality");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidPoseAngleUncertainty(bdir.getPoseAngleUncertainty())) {
+				message.append("<BR>Invalid Pose Angle Uncertainty Value for Face Modality");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidPoseAngleUncertainty(bdir.getPoseAngleUncertainty())) {
-			message.append("<BR>Invalid Pose Angle Uncertainty Value for Face Modality");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidPoseAngleUncertainty(bdir.getPoseAngleUncertainty())) {
+				message.append("<BR>Invalid Pose Angle Uncertainty Value for Face Modality");
+				isValid = false;
+			}
 
-		//Future Implemntation
-		if (bdir.getNoOfLandMarkPoints() > 0)
-		{
-			for (LandmarkPoints landmarkPoints : bdir.getLandmarkPoints()) {
-				if (!FaceISOStandardsValidator.getInstance()
-						.isValidLandmarkPointType(landmarkPoints.getLandmarkPointType())) {
-					message.append("<BR>Invalid Landmark Point Type for Face Modality, input value["
-							+ Integer.toHexString(landmarkPoints.getLandmarkPointType()) + "]");
-					isValid = false;
-				}
+			// Future Implemntation
+			if (bdir.getNoOfLandMarkPoints() > 0) {
+				for (LandmarkPoints landmarkPoints : bdir.getLandmarkPoints()) {
+					if (!FaceISOStandardsValidator.getInstance()
+							.isValidLandmarkPointType(landmarkPoints.getLandmarkPointType())) {
+						message.append(
+								"<BR>Invalid Landmark Point Type for Face Modality, allowed values between[0x00 and 0xFF], input value["
+										+ "0x" + Integer.toHexString(landmarkPoints.getLandmarkPointType()) + "]");
+						isValid = false;
+					}
 
-				if (!FaceISOStandardsValidator.getInstance()
-						.isValidLandmarkPointCode(landmarkPoints.getLandmarkPointType(), landmarkPoints.getLandmarkPointCode())) {
-					message.append("<BR>Invalid Landmark Point Code for Face Modality, input value["
-							+ Integer.toHexString(landmarkPoints.getLandmarkPointCode()) + "]");
-					isValid = false;
-				}
+					if (!FaceISOStandardsValidator.getInstance().isValidLandmarkPointCode(
+							landmarkPoints.getLandmarkPointType(), landmarkPoints.getLandmarkPointCode())) {
+						message.append(
+								"<BR>Invalid Landmark Point Code for Face Modality, allowed values between[0x00 and 0xFF], input value["
+										+ "0x" + Integer.toHexString(landmarkPoints.getLandmarkPointCode()) + "]");
+						isValid = false;
+					}
 
-				if (!FaceISOStandardsValidator.getInstance()
-						.isValidLandmarkXCooridinate(landmarkPoints.getLandmarkPointType(), landmarkPoints.getLandmarkPointCode(), landmarkPoints.getXCoordinate())) {
-					message.append("<BR>Invalid Landmark X Cooridinate for Face Modality, input value["
-							+ Integer.toHexString(landmarkPoints.getXCoordinate()) + "]");
-					isValid = false;
-				}
+					if (!FaceISOStandardsValidator.getInstance().isValidLandmarkXCooridinate(
+							landmarkPoints.getLandmarkPointType(), landmarkPoints.getLandmarkPointCode(),
+							landmarkPoints.getXCoordinate())) {
+						message.append(
+								"<BR>Invalid Landmark X Cooridinate for Face Modality, allowed values between[0x0000 and 0xFFFF], input value["
+										+ "0x" + Integer.toHexString(landmarkPoints.getXCoordinate()) + "]");
+						isValid = false;
+					}
 
-				if (!FaceISOStandardsValidator.getInstance()
-						.isValidLandmarkYCooridinate(landmarkPoints.getLandmarkPointType(), landmarkPoints.getLandmarkPointCode(), landmarkPoints.getYCoordinate())) {
-					message.append("<BR>Invalid Landmark Y Cooridinate for Face Modality, input value["
-							+ Integer.toHexString(landmarkPoints.getYCoordinate()) + "]");
-					isValid = false;
-				}
+					if (!FaceISOStandardsValidator.getInstance().isValidLandmarkYCooridinate(
+							landmarkPoints.getLandmarkPointType(), landmarkPoints.getLandmarkPointCode(),
+							landmarkPoints.getYCoordinate())) {
+						message.append(
+								"<BR>Invalid Landmark Y Cooridinate for Face Modality, allowed values between[0x0000 and 0xFFFF], input value["
+										+ "0x" + Integer.toHexString(landmarkPoints.getYCoordinate()) + "]");
+						isValid = false;
+					}
 
-				if (!FaceISOStandardsValidator.getInstance()
-						.isValidLandmarkZCooridinate(landmarkPoints.getLandmarkPointType(), landmarkPoints.getLandmarkPointCode(), landmarkPoints.getZCoordinate())) {
-					message.append("<BR>Invalid Landmark Z Cooridinate for Face Modality, input value["
-							+ Integer.toHexString(landmarkPoints.getZCoordinate()) + "]");
-					isValid = false;
+					if (!FaceISOStandardsValidator.getInstance().isValidLandmarkZCooridinate(
+							landmarkPoints.getLandmarkPointType(), landmarkPoints.getLandmarkPointCode(),
+							landmarkPoints.getZCoordinate())) {
+						message.append(
+								"<BR>Invalid Landmark Z Cooridinate for Face Modality, allowed values between[0x0000 and 0xFFFF], input value["
+										+ "0x" + Integer.toHexString(landmarkPoints.getZCoordinate()) + "]");
+						isValid = false;
+					}
 				}
 			}
-		}
-		
-		if (!FaceISOStandardsValidator.getInstance().isValidFaceImageType(bdir.getFaceImageType())) {
-			message.append("<BR>Invalid Face Image Type Value for Face Modality, allowed values[0x00 till 0x03 And 0x80 till 0x82 ], input value["
-					+ Integer.toHexString(bdir.getFaceImageType()) + "]");
-			isValid = false;
-		}
 
-		int compressionType = bdir.getImageDataType();
-		if (!FaceISOStandardsValidator.getInstance().isValidImageCompressionType(purpose, compressionType)) {
-			message.append(
-					"<BR>Invalid Image Compression Type for Face Modality, allowed values[0x01(Auth), 0x02(Registration)], input value[Purpose("
-							+ purpose + "), CompressionType(" + Integer.toHexString(compressionType) + ")]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidFaceImageType(bdir.getFaceImageType())) {
+				message.append(
+						"<BR>Invalid Face Image Type Value for Face Modality, allowed values between[{0x00 and 0x03}, {0x80 and 0x82}], input value["
+								+ "0x" + Integer.toHexString(bdir.getFaceImageType()) + "]");
+				isValid = false;
+			}
 
-		byte[] inImageData = bdir.getImage();
+			int compressionType = bdir.getImageDataType();
+			if (!FaceISOStandardsValidator.getInstance().isValidImageCompressionType(purpose, compressionType)) {
+				message.append(
+						"<BR>Invalid Image Compression Type for Face Modality, allowed values[0x01(Auth), 0x02(Registration)], input value[Purpose("
+								+ purpose + "), CompressionType(" + "0x" + Integer.toHexString(compressionType) + ")]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidImageWidth(purpose, inImageData, bdir.getWidth())) {
-			message.append(
-					"<BR>Invalid Image Width Value for Face Modality, allowed values[0x0001, 0xFFFF], input value["
-							+ Integer.toHexString(bdir.getWidth()) + "]");
-			isValid = false;
-		}
+			byte[] inImageData = bdir.getImage();
 
-		if (!FaceISOStandardsValidator.getInstance().isValidImageHeight(purpose, inImageData, bdir.getHeight())) {
-			message.append(
-					"<BR>Invalid Image Height Value for Face Modality, allowed values[0x0001, 0xFFFF], input value["
-							+ Integer.toHexString(bdir.getHeight()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidImageWidth(purpose, inImageData, bdir.getWidth())) {
+				message.append(
+						"<BR>Invalid Image Width Value for Face Modality, allowed values between[0x0001 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getWidth()) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidSpatialSamplingRateLevel(bdir.getSpatialSamplingRateLevel())) {
-			message.append(
-					"<BR>Invalid Spatial Sampling Rate Level Value for Face Modality, allowed values[0x00 till 0x07], input value["
-							+ Integer.toHexString(bdir.getSpatialSamplingRateLevel()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidImageHeight(purpose, inImageData, bdir.getHeight())) {
+				message.append(
+						"<BR>Invalid Image Height Value for Face Modality, allowed values between[0x0001 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getHeight()) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidPostAcquisitionProcessing(bdir.getPostAcquistionProcessing())) {
-			message.append(
-					"<BR>Invalid Post Acquisition Processing Value for Face Modality, allowed values[0x0000 till 0xFFFF], input value["
-							+ Integer.toHexString(bdir.getPostAcquistionProcessing()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance()
+					.isValidSpatialSamplingRateLevel(bdir.getSpatialSamplingRateLevel())) {
+				message.append(
+						"<BR>Invalid Spatial Sampling Rate Level Value for Face Modality, allowed values between[0x00 and 0x07], input value["
+								+ "0x" + Integer.toHexString(bdir.getSpatialSamplingRateLevel()) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidCrossReference(bdir.getCrossReference())) {
-			message.append("<BR>Invalid Cross Reference  Value for Face Modality, allowed values[0x00, 0xFF], input value["
-					+ Integer.toHexString(bdir.getCrossReference()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance()
+					.isValidPostAcquisitionProcessing(bdir.getPostAcquistionProcessing())) {
+				message.append(
+						"<BR>Invalid Post Acquisition Processing Value for Face Modality, allowed values between[0x0000 and 0xFFFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getPostAcquistionProcessing()) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidImageColourSpace(purpose, inImageData, bdir.getImageColorSpace())) {
-			message.append(
-					"<BR>Invalid Image Bit Depth Value for Face Modality, allowed values[0x01(BIT_24_RGB)], input value["
-							+ Integer.toHexString(bdir.getImageColorSpace()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidCrossReference(bdir.getCrossReference())) {
+				message.append(
+						"<BR>Invalid Cross Reference  Value for Face Modality, allowed values between[0x00 and 0xFF], input value["
+								+ "0x" + Integer.toHexString(bdir.getCrossReference()) + "]");
+				isValid = false;
+			}
 
-		if (!FaceISOStandardsValidator.getInstance().isValidImageDataLength(inImageData, bdir.getImageLength())) {
-			message.append(
-					"<BR>Invalid Image Data Length for Face Modality, allowed values[0x00000001, 0xFFFFFFFF], input value["
-							+ Long.toHexString(bdir.getImageLength()) + "]");
-			isValid = false;
-		}
+			if (!FaceISOStandardsValidator.getInstance().isValidImageColourSpace(purpose, inImageData,
+					bdir.getImageColorSpace())) {
+				message.append(
+						"<BR>Invalid Image Bit Depth Value for Face Modality, allowed values[0x01(BIT_24_RGB)], input value["
+								+ "0x" + Integer.toHexString(bdir.getImageColorSpace()) + "]");
+				isValid = false;
+			}
 
-		try {
+			if (!FaceISOStandardsValidator.getInstance().isValidImageDataLength(inImageData, bdir.getImageLength())) {
+				message.append(
+						"<BR>Invalid Image Data Length for Face Modality, allowed values between[0x00000001 and 0xFFFFFFFF], input value["
+								+ "0x" + Long.toHexString(bdir.getImageLength()) + "]");
+				isValid = false;
+			}
+
 			if (!FaceISOStandardsValidator.getInstance().isValidImageData(purpose, Modality.Face, inImageData)) {
 				message.append(
 						"<BR>Invalid Image Data for Face Modality, allowed values[JPEG_2000_LOSSY(Auth), JPEG_2000_LOSS_LESS(Registration)]");
 				isValid = false;
 			}
 		} catch (Exception e) {
-			message.append(
-					"<BR>Invalid Image Data for Face Modality, allowed values[JPEG_2000_LOSSY(Auth), JPEG_2000_LOSS_LESS(Registration)] "
-							+ e.getLocalizedMessage());
+			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_FACE_ISO_FORMAT_EXCEPTION;
+			message.append("<BR>" + errorCode.getErrorMessage() + "<BR>" + e.getLocalizedMessage());
 			isValid = false;
 		}
 
