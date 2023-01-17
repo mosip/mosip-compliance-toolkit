@@ -3057,7 +3057,7 @@
 				},
 				{
 					"name": "ISOStandardsValidator",
-					"description": "Validates the response biovalue for valid ISO and Image Type"
+					"description": "Validates the 'bioValue' in response of 'rcapture' is as per ISO standards ISO19794-4:2011"
 				}
 			]
 		],
@@ -3115,7 +3115,7 @@
 				},
 				{
 					"name": "ISOStandardsValidator",
-					"description": "Validates the response biovalue for valid ISO and Image Type"
+					"description": "Validates the 'bioValue' in response of 'rcapture' is as per ISO standards ISO19794-4:2011"
 				}
 			]
 		],
@@ -3173,7 +3173,7 @@
 				},
 				{
 					"name": "ISOStandardsValidator",
-					"description": "Validates the response biovalue for valid ISO and Image Type"
+					"description": "Validates the 'bioValue' in response of 'rcapture' is as per ISO standards ISO19794-6:2011"
 				}
 			]
 		],
@@ -3229,7 +3229,7 @@
 				},
 				{
 					"name": "ISOStandardsValidator",
-					"description": "Validates the response biovalue for valid ISO and Image Type"
+					"description": "Validates the 'bioValue' in response of 'rcapture' is as per ISO standards ISO19794-5:2011"
 				}
 			]
 		],
@@ -3282,7 +3282,7 @@
 				},
 				{
 					"name": "ISOStandardsValidator",
-					"description": "Validates the response biovalue for valid ISO and Image Type"
+					"description": "Validates the 'bioValue' in response of 'capture' is as per ISO standards ISO19794-5:2011"
 				}
 			]
 		],
@@ -3335,7 +3335,7 @@
 				},
 				{
 					"name": "ISOStandardsValidator",
-					"description": "Validates the response biovalue for valid ISO and Image Type"
+					"description": "Validates the 'bioValue' in response of 'capture' is as per ISO standards ISO19794-6:2011"
 				}
 			]
 		],
@@ -3390,7 +3390,7 @@
 				},
 				{
 					"name": "ISOStandardsValidator",
-					"description": "Validates the response biovalue for valid ISO and Image Type"
+					"description": "Validates the 'bioValue' in response of 'capture' is as per ISO standards ISO19794-6:2011"
 				}
 			]
 		],
@@ -3445,7 +3445,7 @@
 				},
 				{
 					"name": "ISOStandardsValidator",
-					"description": "Validates the response biovalue for valid ISO and Image Type"
+					"description": "Validates the 'bioValue' in response of 'capture' is as per ISO standards ISO19794-4:2011"
 				}
 			]
 		],
