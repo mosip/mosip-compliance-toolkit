@@ -1,8 +1,8 @@
-[![Maven Package upon a push](https://github.com/mosip/mosip-compliance-toolkit/actions/workflows/push_trigger.yml/badge.svg?branch=develop)](https://github.com/mosip/mosip-compliance-toolkit/actions/workflows/push_trigger.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=develop&project=mosip_mosip-compliance-toolkit&metric=alert_status)](https://sonarcloud.io/dashboard?branch=develop&id=mosip_mosip-compliance-toolkit)
+[![Maven Package upon a push](https://github.com/mosip/mosip-compliance-toolkit/actions/workflows/push_trigger.yml/badge.svg?branch=1.0.0)](https://github.com/mosip/mosip-compliance-toolkit/actions/workflows/push_trigger.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=1.0.0&project=mosip_mosip-compliance-toolkit&metric=alert_status)](https://sonarcloud.io/dashboard?branch=1.0.0&id=mosip_mosip-compliance-toolkit)
 
 # Mosip-compliance-toolkit 
-This repository contains the source code for MOSIP Compliance-toolkit services.  For an overview refer [here](https://docs.mosip.io/1.2.0/modules/compliance-tool-kit).  The modules exposes API endpoints. For a reference front-end UI implementation refer to [Compliance-toolkit UI github repo](https://github.com/mosip/mosip-compliance-toolkit-ui/)
+This repository contains the source code for MOSIP Compliance-toolkit services.  For an overview refer [here](https://docs.mosip.io/compliance-tool-kit).  The modules exposes API endpoints. For a reference front-end UI implementation refer to [Compliance-toolkit UI github repo](https://github.com/mosip/mosip-compliance-toolkit-ui/)
 
 Mosip-compliance-toolkit is used to test following biometric components:
 1. [Biomtric devices](https://docs.mosip.io/1.2.0/biometrics/biometric-devices)
@@ -34,7 +34,7 @@ Prerequisites:
 ### Pre-requisites
 1. Set the kube config file of the Mosip cluster having dependent services is set correctly in PC.
 1. Make sure [DB setup](db_scripts#install-in-existing-mosip-k8-cluster) is done.
-1. Add [compliance-toolkit-default.properties](https://github.com/mosip/mosip-config/blob/v0.0.9-CTK/compliance-toolkit-default.properties) in required branch of config repo.
+1. Add [compliance-toolkit-default.properties](https://github.com/mosip/mosip-config/blob/v1.0.0-CTK/compliance-toolkit-default.properties) in required branch of config repo.
 1. Below are the dependent services required for compliance toolkit service:
     | Chart | Chart version |
     |---|---|
