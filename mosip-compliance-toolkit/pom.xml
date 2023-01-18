@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>io.mosip.compliance</groupId>
 	<artifactId>mosip-compliance-toolkit-service</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.1.0-SNAPSHOT</version>
 	<name>mosip-compliance-toolkit-service</name>
 	<description>mosip compliance toolkit</description>
 
