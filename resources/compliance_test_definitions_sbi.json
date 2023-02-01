@@ -4171,5 +4171,448 @@
 			"bioCount": "1",
 			"deviceSubId": "0"
 		}
+	},
+		{
+		"testCaseType": "SBI",
+		"testName": "Time Check for Registration capture - Left Slap",
+		"testId": "SBI1083",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate the timestamp captured by RCapture interface for left slap fingerprints<br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "TimeCheckValidator",
+					"description": "Validates if response is received within the given timestamp interval or not"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+				"LeftIndex",
+				"LeftMiddle",
+				"LeftRing",
+				"LeftLittle"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "4",
+			"deviceSubId": "1"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Time Check for Registration capture - Right Slap",
+		"testId": "SBI1084",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate the timestamp captured by RCapture interface for right slap fingerprints<br>Steps:<br>1. Click on Start Streaming button.<br>3. Once streaming is done, click on Inititate Capture button to start the capture <br>2. Place your right slap on the device until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "TimeCheckValidator",
+					"description": "Validates if response is received within the given timestamp interval or not"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+				"RightIndex",
+				"RightMiddle",
+				"RightRing",
+				"RightLittle"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "4",
+			"deviceSubId": "2"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Time Check for Registration capture - Double Iris",
+		"testId": "SBI1085",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate the timestamp captured by RCapture interface for both iris<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place both your iris on the device until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "TimeCheckValidator",
+					"description": "Validates if response is received within the given timestamp interval or not"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Double"
+			],
+			"segments": [
+				"Left",
+				"Right"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "2",
+			"deviceSubId": "3"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Time Check for Registration capture - Face",
+		"testId": "SBI1086",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate the timestamp captured by RCapture interface for face<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "TimeCheckValidator",
+					"description": "Validates if response is received within the given timestamp interval or not"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Face"
+			],
+			"deviceSubTypes": [
+				"Full face"
+			],
+			"segments": [],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Time Check for Auth capture - Face",
+		"testId": "SBI1087",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate the timestamp captured by Capture interface for face<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "TimeCheckValidator",
+					"description": "Validates if response is received within the given timestamp interval or not"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Face"
+			],
+			"deviceSubTypes": [
+				"Full face"
+			],
+			"segments": [],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Time Check for Auth capture - Single Iris - Left Iris",
+		"testId": "SBI1088",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate the timestamp captured by Capture interface for left iris<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your left iris infront of the iris scanner",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "TimeCheckValidator",
+					"description": "Validates if response is received within the given timestamp interval or not"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Single"
+			],
+			"segments": [
+				"Left"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Time Check for Auth capture - Single Iris - Right Iris",
+		"testId": "SBI1089",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate the timestamp captured by Capture interface for right iris<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your right iris infront of the iris scanner",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "TimeCheckValidator",
+					"description": "Validates if response is received within the given timestamp interval or not"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Single"
+			],
+			"segments": [
+				"Right"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Time Check for Auth capture - Unknown Finger",
+		"testId": "SBI1090",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate the timestamp captured by Capture interface for a finger<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "TimeCheckValidator",
+					"description": "Validates if response is received within the given timestamp interval or not"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Single"
+			],
+			"segments": [
+				"UNKNOWN"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0"
+		}
 	}
 ]
