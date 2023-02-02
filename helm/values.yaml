@@ -419,7 +419,7 @@ istio:
   prefix: /v1/toolkit
   corsPolicy:
     allowOrigins:
-      - prefix: https://compliance.sandbox.xyz.net
+      - exact: https://compliance.sandbox.xyz.net
     allowCredentials: true
     allowHeaders:
       - Accept
