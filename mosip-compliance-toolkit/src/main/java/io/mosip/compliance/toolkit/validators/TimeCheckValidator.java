@@ -2,17 +2,22 @@ package io.mosip.compliance.toolkit.validators;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Component
 public class TimeCheckValidator extends SBIValidator{
+
     @Value("${mosip.toolkit.sbi.timestamp-interval}")
     String interval;
 
@@ -52,7 +57,7 @@ public class TimeCheckValidator extends SBIValidator{
                     validationResultDto.setDescription("Time Check validation failed. Timestamp interval given: " + interval + "m." + " Response received in: " + diff + "m");
                 }else{
                     validationResultDto.setStatus(AppConstants.SUCCESS);
-                    validationResultDto.setDescription("Time Check validation is successful");
+                    validationResultDto.setDescription("Time Check validation is Successful");
                 }
 
             }
