@@ -54,7 +54,7 @@ Prerequisites:
 ### Install
 
 * Install `kubectl` and `helm` utilities.
-* Run the `keycloak-init.sh` script to set up keycloak for the compliance toolkit. You can skip this step if you have already done it.
+* Run the `keycloak-init.sh` script to create the `mosip-toolkit-client` keycloak client. You can skip this step if you have already done it.
   ```
   cd helm
   ./keycloak-init.sh

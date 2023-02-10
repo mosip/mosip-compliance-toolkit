@@ -8,8 +8,8 @@ helm repo update
 
 echo checking if toolkit client is created already
 IAMHOST_URL=$(kubectl get cm global -o jsonpath={.data.mosip-iam-external-host})
-TOOLKIT_CLIENT="mosip_toolkit_client_secret"
-TOOLKIT_CLIENT_SECRET=$( kubectl -n keycloak get secret keycloak-client-secrets -o jsonpath={.data.mosip_toolkit_client_secret} | base64 -d )
+TOOLKIT_CLIENT_SECRET_KEY="mosip_toolkit_client_secret"
+TOOLKIT_CLIENT_SECRET_VALUE=$( kubectl -n keycloak get secret keycloak-client-secrets -o jsonpath={.data.mosip_toolkit_client_secret} | base64 -d )
 
 echo Creating Toolkit keycloak client
 echo "Copy keycloak configmap and secrets"
@@ -23,14 +23,14 @@ kubectl -n $NS delete secret  --ignore-not-found=true keycloak-client-secrets
 helm -n $NS install toolkit-keycloak-init mosip/keycloak-init \
 -f keycloak-init-values.yaml \
 --set frontend="https://$IAMHOST_URL/auth" \
---set clientSecrets[0].name="$TOOLKIT_CLIENT" \
---set clientSecrets[0].secret="$TOOLKIT_CLIENT_SECRET" \
+--set clientSecrets[0].name="$TOOLKIT_CLIENT_SECRET_KEY" \
+--set clientSecrets[0].secret="$TOOLKIT_CLIENT_SECRET_VALUE" \
 --version $CHART_VERSION --wait
 
-TOOLKIT_CLIENT_SECRET=$( kubectl -n $NS get secret keycloak-client-secrets -o json |  jq ".data.$TOOLKIT_CLIENT" )
+TOOLKIT_CLIENT_SECRET_VALUE=$( kubectl -n $NS get secret keycloak-client-secrets -o json |  jq ".data.$TOOLKIT_CLIENT_SECRET_KEY" )
 
-kubectl -n keycloak get secret keycloak-client-secrets -o json | jq ".data[\"$TOOLKIT_CLIENT\"]=$TOOLKIT_CLIENT_SECRET" | kubectl apply -f -
-kubectl -n config-server get secret keycloak-client-secrets -o json | jq ".data[\"$TOOLKIT_CLIENT\"]=$TOOLKIT_CLIENT_SECRET" | kubectl apply -f -
+kubectl -n keycloak get secret keycloak-client-secrets -o json | jq ".data[\"$TOOLKIT_CLIENT_SECRET_KEY\"]=$TOOLKIT_CLIENT_SECRET_VALUE" | kubectl apply -f -
+kubectl -n config-server get secret keycloak-client-secrets -o json | jq ".data[\"$TOOLKIT_CLIENT_SECRET_KEY\"]=$TOOLKIT_CLIENT_SECRET_VALUE" | kubectl apply -f -
 
 echo "Check the existence of the toolkit secret & host placeholder & pass the toolkit secret & toolkit host to config-server deployment if the placeholder does not exist."
 TOOLKIT_HOST=$( kubectl -n config-server get deployment -o json | jq -c '.items[].spec.template.spec.containers[].env[]| select(.name == "SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_MOSIP_COMPLIANCE_HOST")|.name' )
