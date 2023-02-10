@@ -52,11 +52,18 @@ Prerequisites:
     |[Notifier service](https://github.com/mosip/mosip-infra/blob/v1.2.0.1-B1/deployment/v3/mosip/kernel/install.sh) | 12.0.1-beta |
     |[Partner manager service](https://github.com/mosip/mosip-infra/blob/v1.2.0.1-B1/deployment/v3/mosip/pms/install.sh) | 12.0.1-beta |
 ### Install
-Install `kubectl` and `helm` utilities, then run:
-```
-cd helm
-./install.sh [cluster-kubeconfig-file]
-```
+
+* Install `kubectl` and `helm` utilities.
+* Run the `keycloak-init.sh` script to set up keycloak for the compliance toolkit. You can skip this step if you have already done it.
+  ```
+  cd helm
+  ./keycloak-init.sh
+  ```
+* Run the `install.sh` to deploy complaince-toolkit.
+  ```
+  cd helm
+  ./install.sh [cluster-kubeconfig-file]
+  ```
 ### Restart
 ```
 cd helm
