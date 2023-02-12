@@ -19,8 +19,13 @@ while true; do
         helm -n $NS delete postgres-init-toolkit
         echo Copy Postgres secrets
         ./copy_cm_func.sh secret postgres-postgresql postgres $NS
+        DB_USER_PASSWORD=$( kubectl -n postgres get secrets db-common-secrets -o jsonpath={.data.db-dbuser-password} | base64 -d )
         echo Initializing DB
-        helm -n $NS install postgres-init-toolkit mosip/postgres-init -f init_values.yaml --version $CHART_VERSION --wait --wait-for-jobs
+        helm -n $NS install postgres-init-toolkit mosip/postgres-init \
+        -f init_values.yaml \
+        --version $CHART_VERSION \
+        --set dbUserPasswords.dbuserPassword="$DB_USER_PASSWORD" \
+        --wait --wait-for-jobs
         break
       else
         break
