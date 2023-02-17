@@ -4614,5 +4614,322 @@
 			"bioCount": "1",
 			"deviceSubId": "0"
 		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Auth capture - Face - TransactionId",
+		"testId": "SBI1091",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate transactionId of Capture interface for face<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "TransactionIdValidator",
+					"description": "Validates the Methodrequest and MethodResponse transactionId are same"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Face"
+			],
+			"deviceSubTypes": [
+				"Full face"
+			],
+			"segments": [],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Auth capture - Single Iris - Left Iris - TransactionId",
+		"testId": "SBI1092",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate transactionId of Capture interface for left iris<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your left iris infront of the iris scanner",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "TransactionIdValidator",
+					"description": "Validates the Methodrequest and MethodResponse transactionId are same"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Single"
+			],
+			"segments": [
+				"Left"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Auth capture - Unknown Finger - TransactionId",
+		"testId": "SBI1093",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate transactionId of Capture interface for a finger<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "TransactionIdValidator",
+					"description": "Validates the Methodrequest and MethodResponse transactionId are same"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Single"
+			],
+			"segments": [
+				"UNKNOWN"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Auth capture - Face - Invalid TransactionId",
+		"testId": "SBI1094",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate transactionId of Capture interface for face<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes",
+		"isNegativeTestcase": true,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"TransactionIdErrorResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Face"
+			],
+			"deviceSubTypes": [
+				"Full face"
+			],
+			"segments": [],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0",
+			"transactionId":"SBI1094-635656783454765675346546526738495712345617645373336644"
+		}		
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Auth capture - Single Iris - Left Iris - Invalid TransactionId",
+		"testId": "SBI1095",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate transactionId of Capture interface for left iris<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your left iris infront of the iris scanner",
+		"isNegativeTestcase": true,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"TransactionIdErrorResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Single"
+			],
+			"segments": [
+				"Left"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0",
+			"transactionId":"SBI1095-8765432112345678128734658765432101133558833"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Auth capture - Unknown Finger - Invalid TransactionId",
+		"testId": "SBI1096",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate transactionId of Capture interface for a finger<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner",
+		"isNegativeTestcase": true,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"TransactionIdErrorResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Single"
+			],
+			"segments": [
+				"UNKNOWN"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0",
+			"transactionId":"SBI1096-32165678345476567534654652673849571234561764537333664789"
+		}
 	}
 ]

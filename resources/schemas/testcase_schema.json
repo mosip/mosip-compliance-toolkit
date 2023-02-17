@@ -209,6 +209,9 @@
 				"keyRotationTestCase": {
 					"type": "boolean"
 				},
+				"transactionId":{
+					"type": "string"
+				},
 				"modalities": {
 					"type": "array",
 					"items": [
