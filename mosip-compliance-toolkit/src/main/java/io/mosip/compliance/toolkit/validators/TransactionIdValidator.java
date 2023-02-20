@@ -31,6 +31,7 @@ public class TransactionIdValidator extends SBIValidator {
                     if((requestTransactionId.asText()).equals(transactionId)){
                         result=true;
                     }else{
+                        result=false;
                         validationResultDto.setStatus(AppConstants.FAILURE);
                         validationResultDto.setDescription("Transaction Id validation failed.");
                         break;
