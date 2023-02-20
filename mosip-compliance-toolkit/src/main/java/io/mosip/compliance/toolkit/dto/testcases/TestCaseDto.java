@@ -62,6 +62,6 @@ public class TestCaseDto implements Serializable {
 	    public boolean resumeAgainBtn;
 		@JsonProperty("keyRotationTestCase")
 	    public boolean keyRotationTestCase;
-		
+		public String transactionId;
 	}
 }
