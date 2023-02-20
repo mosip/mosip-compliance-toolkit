@@ -33,6 +33,7 @@ public class TransactionIdValidator extends SBIValidator {
                     }else{
                         validationResultDto.setStatus(AppConstants.FAILURE);
                         validationResultDto.setDescription("Transaction Id validation failed.");
+                        break;
                     }
                 }
                 if(result==true){
