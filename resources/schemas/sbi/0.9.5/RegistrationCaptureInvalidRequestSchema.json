@@ -1,11 +1,11 @@
 {
 	"$schema": "https://json-schema.org/draft/2019-09/schema#",
-	"$id": "http://mosip-compliance-toolkit.com/schemas/RegistrationCaptureRequestSchema.json",
-	"title": "Registration Capture Request Schema",
-	"description": "Registration Capture Request Schema",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/RegistrationCaptureInvalidRequestSchema.json",
+	"title": "Registration Capture Invalid Request Schema",
+	"description": "Registration Capture Invalid Request Schema",
 	"type": "object",
 	"properties": {
-		"env": {
+		"xxxenv": {
 			"type": "string",
 			"enum": [
 				"Staging",
@@ -455,7 +455,7 @@
 		}
 	},
 	"required": [
-		"env",
+		"xxxenv",
 		"purpose",
 		"specVersion",
 		"timeout",

@@ -212,6 +212,9 @@
 				"transactionId":{
 					"type": "string"
 				},
+				"xxxenv":{
+					"type": "string"
+				},
 				"modalities": {
 					"type": "array",
 					"items": [
