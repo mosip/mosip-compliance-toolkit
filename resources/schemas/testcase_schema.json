@@ -212,6 +212,9 @@
 				"transactionId":{
 					"type": "string"
 				},
+				"invalidAttributeName":{
+					"type": "string"
+				},
 				"modalities": {
 					"type": "array",
 					"items": [

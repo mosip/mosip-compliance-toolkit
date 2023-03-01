@@ -63,5 +63,6 @@ public class TestCaseDto implements Serializable {
 		@JsonProperty("keyRotationTestCase")
 	    public boolean keyRotationTestCase;
 		public String transactionId;
+		public String invalidAttributeName;
 	}
 }
