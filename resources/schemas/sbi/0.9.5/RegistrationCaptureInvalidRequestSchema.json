@@ -5,7 +5,7 @@
 	"description": "Registration Capture Invalid Request Schema",
 	"type": "object",
 	"properties": {
-		"envXXX": {
+		"env": {
 			"type": "string",
 			"enum": [
 				"Staging",
@@ -14,32 +14,32 @@
 				"Production"
 			]
 		},
-		"purposeXXX": {
+		"purpose": {
 			"type": "string",
 			"enum": [
 				"Registration"
 			]
 		},
-		"specVersionXXX": {
+		"specVersion": {
 			"type": "string",
 			"enum": [
 				"0.9.5",
 				"1.0.0"
 			]
 		},
-		"timeoutXXX": {
+		"timeout": {
 			"$ref": "#/definitions/non-empty-string",
 			"pattern": "[0-9]$"
 		},
-		"captureTimeXXX": {
+		"captureTime": {
 			"type": "string",
 			"format": "date-time",
 			"description": "We expect YYYY-MM-ddTHH:mm:SSZ"
 		},
-		"transactionIdXXX": {
+		"transactionId": {
 			"$ref": "#/definitions/non-empty-string"
 		},
-		"bioXXX": {
+		"bio": {
 			"type": "array",
 			"items": {
 				"type": "object",
@@ -437,15 +437,7 @@
 					}
 				]
 			},
-			"required": [
-				"type",
-				"count",
-				"bioSubType",
-				"requestedScore",
-				"deviceId",
-				"deviceSubId",
-				"previousHash"
-			]
+			"required": []
 		},
 		"customOpts": {
 			"type": [

@@ -4845,7 +4845,7 @@
 			"requestedScore": "40",
 			"bioCount": "4",
 			"deviceSubId": "1",
-			"invalidAttributeName": "env"
+			"invalidRequestAttribute": "env"
 		}
 	},
 	{
@@ -4892,7 +4892,7 @@
 			"requestedScore": "40",
 			"bioCount": "4",
 			"deviceSubId": "2",
-			"invalidAttributeName": "timeout"
+			"invalidRequestAttribute": "timeout"
 		}
 	},
 	{
@@ -4937,7 +4937,7 @@
 			"requestedScore": "40",
 			"bioCount": "2",
 			"deviceSubId": "3",
-			"invalidAttributeName": "specVersion"
+			"invalidRequestAttribute": "specVersion"
 		}
 	},
 	{
@@ -4982,7 +4982,7 @@
 			"requestedScore": "40",
 			"bioCount": "2",
 			"deviceSubId": "3",
-			"invalidAttributeName": "purpose"
+			"invalidRequestAttribute": "purpose"
 		}
 	},
 	{
@@ -5024,7 +5024,97 @@
 			"requestedScore": "40",
 			"bioCount": "1",
 			"deviceSubId": "0",
-			"invalidAttributeName": "bio"
+			"invalidRequestAttribute": "bio"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Double Iris - One Exception - Invalid Request Json (wrong attribute name countXXX)",
+		"testId": "SBI1099",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate invalid request json in RCapture method for iris with one missing iris<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place only the right iris on the device until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureInvalidRequestSchema"
+		],
+		"responseSchema": [
+			"ErrorCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Double"
+			],
+			"segments": [
+				"Right"
+			],
+			"exceptions": [
+				"Left"
+			],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "3",
+			"invalidRequestAttribute": "bio[0].count"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Exception Photo - Invalid Request Json (wrong attribute name deviceSubIdXXX)",
+		"testId": "SBI1100",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate invalid request json in RCapture method for exception photo<br>Steps:<br><br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Raise your hands during capture",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureInvalidRequestSchema"
+		],
+		"responseSchema": [
+			"ErrorCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Face"
+			],
+			"deviceSubTypes": [
+				"Full face"
+			],
+			"segments": [],
+			"exceptions": [
+				"LeftLittle"
+			],
+			"requestedScore": "10",
+			"bioCount": "1",
+			"deviceSubId": "0",
+			"invalidRequestAttribute": "bio[0].deviceSubId"
 		}
 	}
 ]
