@@ -1,6 +1,5 @@
 #!/bin/sh
 # Uninstalls all  compliance-toolkit helm charts
-
 NS=compliance-toolkit
 while true; do
     read -p "Are you sure you want to delete all compliance-toolkit helm charts?(Y/n) " yn
