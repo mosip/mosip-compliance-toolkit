@@ -212,7 +212,7 @@
 				"transactionId":{
 					"type": "string"
 				},
-				"invalidAttributeName":{
+				"invalidRequestAttribute":{
 					"type": "string"
 				},
 				"modalities": {
