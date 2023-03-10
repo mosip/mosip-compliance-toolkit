@@ -81,7 +81,7 @@ public class AndroidController {
 			}
 			// v imp to set the auth cookie
 			if (headerName.equalsIgnoreCase("Authorization")) {
-				headers.set("cookie", "Authorization=" + request.getHeader(headerName));
+				headers.set("Cookie", "Authorization=" + request.getHeader(headerName));
 				log.info("sessionId", "idType", "id", request.getHeader(headerName));
 			}
 		}
@@ -113,7 +113,7 @@ public class AndroidController {
 			}
 			// v imp to set the auth cookie
 			if (headerName.equalsIgnoreCase("Authorization")) {
-				headers.set("cookie", "Authorization=" + request.getHeader(headerName));
+				headers.set("Cookie", "Authorization=" + request.getHeader(headerName));
 			}
 		}
 		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
