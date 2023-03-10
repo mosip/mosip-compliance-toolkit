@@ -28,6 +28,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
+import io.mosip.kernel.core.logger.spi.Logger;
+
 @CrossOrigin(origins = "http://localhost", allowedHeaders = "*")
 @RestController
 /**
@@ -39,6 +42,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  *
  */
 public class AndroidController {
+	 private Logger log = LoggerConfiguration.logConfig(AndroidController.class);
 
 	@Value("${rest.server.protocol}")
 	private String protocol;
@@ -63,6 +67,7 @@ public class AndroidController {
 		}
 		String requestUrl = request.getRequestURI();
 		requestUrl = requestUrl.replaceAll("/android", "");
+		log.info("sessionId", "idType", "id", requestUrl);
 		URI uri = new URI(protocol, null, server, port, null, null, null);
 		uri = UriComponentsBuilder.fromUri(uri).path(serviceEndPoint + requestUrl).query(request.getQueryString())
 				.build(true).toUri();
@@ -77,11 +82,13 @@ public class AndroidController {
 			// v imp to set the auth cookie
 			if (headerName.equalsIgnoreCase("Authorization")) {
 				headers.set("cookie", "Authorization=" + request.getHeader(headerName));
+				log.info("sessionId", "idType", "id", request.getHeader(headerName));
 			}
 		}
 		HttpEntity<String> httpEntity = new HttpEntity<>(body, headers);
 		RestTemplate restTemplate = new RestTemplate();
 		try {
+			log.info("sessionId", "idType", "id",uri);
 			return restTemplate.exchange(uri, method, httpEntity, String.class);
 		} catch (HttpStatusCodeException e) {
 			return ResponseEntity.status(e.getRawStatusCode()).headers(e.getResponseHeaders())
