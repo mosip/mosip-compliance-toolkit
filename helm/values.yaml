@@ -444,6 +444,7 @@ istio:
       - x-xsrf-token
       - xsrf-token
       - Access-Control-Allow-Origin
+      - Authorization
     allowMethods:
       - GET
       - POST
