@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Enumeration;
+import java.util.Iterator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -61,13 +62,17 @@ public class AndroidController {
 	public ResponseEntity mirrorAnyRequest(@RequestBody(required = false) String body, HttpMethod method,
 			HttpServletRequest request, HttpServletResponse response)
 			throws URISyntaxException, IOException, ServletException {
+		System.out.println("mirrorAnyRequest");
+		System.out.println("**********************************************************************");
 		// handle the multipart form data request
 		if (isMultipart(request)) {
 			return mirrorMultiPartRequest(method, (MultipartHttpServletRequest) request, response);
 		}
 		String requestUrl = request.getRequestURI();
+		System.out.println(requestUrl);
 		requestUrl = requestUrl.replaceAll("/android", "");
 		log.debug("sessionId", "idType", "id", requestUrl);
+		
 		URI uri = new URI(protocol, null, server, port, null, null, null);
 		uri = UriComponentsBuilder.fromUri(uri).path(serviceEndPoint + requestUrl).query(request.getQueryString())
 				.build(true).toUri();
@@ -85,6 +90,10 @@ public class AndroidController {
 				log.debug("sessionId", "idType", "id", request.getHeader(headerName));
 			}
 		}
+		System.out.println("Calling method: " + method);
+		System.out.println("Calling URL: " + uri);
+		System.out.println("Request Body: " + body);
+		printHeaders(headers, "request");
 		HttpEntity<String> httpEntity = new HttpEntity<>(body, headers);
 		RestTemplate restTemplate = new RestTemplate();
 		try {
@@ -93,6 +102,13 @@ public class AndroidController {
 		} catch (HttpStatusCodeException e) {
 			return ResponseEntity.status(e.getRawStatusCode()).headers(e.getResponseHeaders())
 					.body(e.getResponseBodyAsString());
+		}
+	}
+	private void printHeaders(HttpHeaders headers, String headersType) {
+		System.out.println("With " + headersType + " Headers");
+		Iterator itr = headers.entrySet().iterator();
+		while (itr.hasNext()) {
+			System.out.println(itr.next().toString());
 		}
 	}
 
