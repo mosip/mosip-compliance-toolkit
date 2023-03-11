@@ -87,6 +87,7 @@ public class AndroidController {
 			// v imp to set the auth cookie
 			if (headerName.equalsIgnoreCase("Authorization")) {
 				headers.set("Cookie", "Authorization=" + request.getHeader(headerName));
+				headers.set("Authorization", null);
 				log.debug("sessionId", "idType", "id", request.getHeader(headerName));
 			}
 		}
@@ -98,8 +99,14 @@ public class AndroidController {
 		RestTemplate restTemplate = new RestTemplate();
 		try {
 			log.debug("sessionId", "idType", "id",uri);
-			return restTemplate.exchange(uri, method, httpEntity, String.class);
+			//return restTemplate.exchange(uri, method, httpEntity, String.class);
+			ResponseEntity responseEntity = restTemplate.exchange(uri, method, httpEntity, String.class);
+			System.out.println("recvd response");
+			System.out.println(responseEntity);
+			printHeaders(responseEntity.getHeaders(), "response");
+			return responseEntity;
 		} catch (HttpStatusCodeException e) {
+			System.out.println("Exception: " + e.getResponseBodyAsString());
 			return ResponseEntity.status(e.getRawStatusCode()).headers(e.getResponseHeaders())
 					.body(e.getResponseBodyAsString());
 		}
