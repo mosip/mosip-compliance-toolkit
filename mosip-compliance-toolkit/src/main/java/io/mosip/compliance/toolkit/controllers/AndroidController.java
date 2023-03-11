@@ -67,7 +67,7 @@ public class AndroidController {
 		}
 		String requestUrl = request.getRequestURI();
 		requestUrl = requestUrl.replaceAll("/android", "");
-		log.info("sessionId", "idType", "id", requestUrl);
+		log.debug("sessionId", "idType", "id", requestUrl);
 		URI uri = new URI(protocol, null, server, port, null, null, null);
 		uri = UriComponentsBuilder.fromUri(uri).path(serviceEndPoint + requestUrl).query(request.getQueryString())
 				.build(true).toUri();
@@ -82,13 +82,13 @@ public class AndroidController {
 			// v imp to set the auth cookie
 			if (headerName.equalsIgnoreCase("Authorization")) {
 				headers.set("Cookie", "Authorization=" + request.getHeader(headerName));
-				log.info("sessionId", "idType", "id", request.getHeader(headerName));
+				log.debug("sessionId", "idType", "id", request.getHeader(headerName));
 			}
 		}
 		HttpEntity<String> httpEntity = new HttpEntity<>(body, headers);
 		RestTemplate restTemplate = new RestTemplate();
 		try {
-			log.info("sessionId", "idType", "id",uri);
+			log.debug("sessionId", "idType", "id",uri);
 			return restTemplate.exchange(uri, method, httpEntity, String.class);
 		} catch (HttpStatusCodeException e) {
 			return ResponseEntity.status(e.getRawStatusCode()).headers(e.getResponseHeaders())
