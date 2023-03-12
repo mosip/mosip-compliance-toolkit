@@ -62,7 +62,7 @@ public class AndroidController {
 	public ResponseEntity mirrorAnyRequest(@RequestBody(required = false) String body, HttpMethod method,
 			HttpServletRequest request, HttpServletResponse response)
 			throws URISyntaxException, IOException, ServletException {
-		System.out.println("mirrorAnyRequest");
+		System.out.println("AndroidController mirrorAnyRequest");
 		System.out.println("**********************************************************************");
 		// handle the multipart form data request
 		if (isMultipart(request)) {
@@ -86,7 +86,7 @@ public class AndroidController {
 			}
 			// v imp to set the auth cookie
 			if (headerName.equalsIgnoreCase("Authorization")) {
-				headers.set("Cookie", "Authorization=" + request.getHeader(headerName));
+				headers.set("cookie", "Authorization=" + request.getHeader(headerName));
 				headers.set("Authorization", null);
 				log.debug("sessionId", "idType", "id", request.getHeader(headerName));
 			}
@@ -136,7 +136,7 @@ public class AndroidController {
 			}
 			// v imp to set the auth cookie
 			if (headerName.equalsIgnoreCase("Authorization")) {
-				headers.set("Cookie", "Authorization=" + request.getHeader(headerName));
+				headers.set("cookie", "Authorization=" + request.getHeader(headerName));
 			}
 		}
 		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
