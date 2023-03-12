@@ -417,6 +417,7 @@ istio:
   gateways:
     - istio-system/internal
   prefix: /v1/toolkit
+  androidprefix: /v1/toolkit/android
   corsPolicy:
     allowOrigins:
       - exact: https://compliance.sandbox.xyz.net
