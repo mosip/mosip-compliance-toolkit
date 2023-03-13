@@ -101,7 +101,7 @@ public class AndroidController {
 			System.out.println(responseEntity);
 			printHeaders(responseEntity.getHeaders(), "response");
 			System.out.println("**********************************************************************");
-			return responseEntity.getBody().;
+			return responseEntity;
 		} catch (HttpStatusCodeException e) {
 			System.out.println("Exception: " + e.getResponseBodyAsString());
 			return ResponseEntity.status(e.getRawStatusCode()).headers(e.getResponseHeaders())
