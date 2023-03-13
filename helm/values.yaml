@@ -420,7 +420,7 @@ istio:
   corsPolicy:
     allowOrigins:
       - exact: https://compliance.sandbox.xyz.net
-      - prefix: http://localhost
+      - exact: http://localhost
     allowCredentials: true
     allowHeaders:
       - Accept
