@@ -80,10 +80,6 @@ public class AndroidController {
 		Enumeration<String> headerNames = request.getHeaderNames();
 		while (headerNames.hasMoreElements()) {
 			String headerName = headerNames.nextElement();
-			// ignore the host header
-			if (!headerName.equalsIgnoreCase("host")) {
-				headers.set(headerName, request.getHeader(headerName));
-			}
 			// v imp to set the auth cookie
 			if (headerName.equalsIgnoreCase("Authorization")) {
 				headers.set("cookie", "Authorization=" + request.getHeader(headerName));
@@ -104,7 +100,8 @@ public class AndroidController {
 			System.out.println("recvd response");
 			System.out.println(responseEntity);
 			printHeaders(responseEntity.getHeaders(), "response");
-			return responseEntity;
+			System.out.println("**********************************************************************");
+			return responseEntity.getBody().;
 		} catch (HttpStatusCodeException e) {
 			System.out.println("Exception: " + e.getResponseBodyAsString());
 			return ResponseEntity.status(e.getRawStatusCode()).headers(e.getResponseHeaders())
@@ -131,9 +128,6 @@ public class AndroidController {
 		while (headerNames.hasMoreElements()) {
 			String headerName = headerNames.nextElement();
 			// ignore the host header
-			if (!headerName.equalsIgnoreCase("host")) {
-				headers.set(headerName, request.getHeader(headerName));
-			}
 			// v imp to set the auth cookie
 			if (headerName.equalsIgnoreCase("Authorization")) {
 				headers.set("cookie", "Authorization=" + request.getHeader(headerName));
