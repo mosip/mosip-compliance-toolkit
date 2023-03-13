@@ -19,9 +19,7 @@ spec:
   http:
   - match:
       - uri:
-          prefix: {{ .Values.istio.prefix }}
-      - uri:
-          prefix: {{ .Values.istio.androidprefix }}    
+          prefix: {{ .Values.istio.prefix }}    
     route:
     - destination:
         host: {{ template "common.names.fullname" . }}
