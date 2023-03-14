@@ -19,7 +19,7 @@ kubectl label ns $NS istio-injection=disabled --overwrite
 helm repo add mosip https://mosip.github.io/mosip-helm
 helm repo update
 
-read -p "Please provide IDP host (ex: compliance.sandbox.xyz.net ): " COMPLIANCE_HOST
+read -p "Please provide compliance host (ex: compliance.sandbox.xyz.net ): " COMPLIANCE_HOST
 
 if [ -z $COMPLIANCE_HOST ]; then
   echo "COMPLIANCE host not provided; EXITING;"
