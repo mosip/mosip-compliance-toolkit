@@ -11,13 +11,13 @@
 	</parent>
 	<groupId>io.mosip.compliance</groupId>
 	<artifactId>mosip-compliance-toolkit-service</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.1.0-SNAPSHOT</version>
 	<name>mosip-compliance-toolkit-service</name>
 	<description>mosip compliance toolkit</description>
 
 	<properties>
 		<java.version>11</java.version>
-		<kernel.version>1.2.0.1-SNAPSHOT</kernel.version>
+		<kernel.version>1.2.0.1-B1</kernel.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- maven -->
@@ -54,9 +54,10 @@
 		<io.micrometer.prometheus.version>1.4.2</io.micrometer.prometheus.version>
 		
 		<!-- Object Store -->
-		<kernel.khazana.version>1.2.0</kernel.khazana.version>
+		<kernel.khazana.version>1.2.1-SNAPSHOT</kernel.khazana.version>
 
 		<biometrics-util.version>1.2.1-SNAPSHOT</biometrics-util.version>
+		<org.openpnp.opencv.version>4.5.3-4</org.openpnp.opencv.version>
 		<jnbis.version>2.0.2</jnbis.version>
 
 		<sonar.coverage.exclusions>
@@ -83,6 +84,11 @@
 			<groupId>io.mosip.biometric.util</groupId>
 			<artifactId>biometrics-util</artifactId>
 			<version>${biometrics-util.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openpnp</groupId>
+			<artifactId>opencv</artifactId>
+			<version>${org.openpnp.opencv.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.commons</groupId>

@@ -2,7 +2,7 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=develop&project=mosip_mosip-compliance-toolkit&metric=alert_status)](https://sonarcloud.io/dashboard?branch=develop&id=mosip_mosip-compliance-toolkit)
 
 # Mosip-compliance-toolkit 
-This repository contains the source code for MOSIP Compliance-toolkit services.  For an overview refer [here](https://docs.mosip.io/1.2.0/modules/compliance-tool-kit).  The modules exposes API endpoints. For a reference front-end UI implementation refer to [Compliance-toolkit UI github repo](https://github.com/mosip/mosip-compliance-toolkit-ui/)
+This repository contains the source code for MOSIP Compliance-toolkit services.  For an overview refer [here](https://docs.mosip.io/compliance-tool-kit).  The modules exposes API endpoints. For a reference front-end UI implementation refer to [Compliance-toolkit UI github repo](https://github.com/mosip/mosip-compliance-toolkit-ui/)
 
 Mosip-compliance-toolkit is used to test following biometric components:
 1. [Biomtric devices](https://docs.mosip.io/1.2.0/biometrics/biometric-devices)
@@ -52,11 +52,18 @@ Prerequisites:
     |[Notifier service](https://github.com/mosip/mosip-infra/blob/v1.2.0.1-B1/deployment/v3/mosip/kernel/install.sh) | 12.0.1-beta |
     |[Partner manager service](https://github.com/mosip/mosip-infra/blob/v1.2.0.1-B1/deployment/v3/mosip/pms/install.sh) | 12.0.1-beta |
 ### Install
-Install `kubectl` and `helm` utilities, then run:
-```
-cd helm
-./install.sh [cluster-kubeconfig-file]
-```
+
+* Install `kubectl` and `helm` utilities.
+* Run the `keycloak-init.sh` script to create the `mosip-toolkit-client` keycloak client. You can skip this step if you have already done it.
+  ```
+  cd helm
+  ./keycloak-init.sh
+  ```
+* Run the `install.sh` to deploy complaince-toolkit.
+  ```
+  cd helm
+  ./install.sh [cluster-kubeconfig-file]
+  ```
 ### Restart
 ```
 cd helm

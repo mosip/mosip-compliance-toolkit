@@ -181,16 +181,13 @@ public class TestRunServiceTest {
     /*
      * This class tests the updateTestRunExecutionTime method in case Exception
      */
-//    @Test
-//    public void updateTestRunExecutionTimeTestException(){
-//        TestRunDto inputTestRun = new TestRunDto();
-//        String id="ABCKALKJA";
-//        inputTestRun.setCollectionId(id);
-//        Mockito.when(collectionsRepository.getPartnerById(id)).thenReturn("123");
-//
-//        Mockito.when(testRunRepository.updateExecutionDateById(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(1);
-//        testRunService.addTestRun(inputTestRun);
-//    }
+    @Test
+    public void updateTestRunExecutionTestException(){
+        TestRunDto inputTestRun = new TestRunDto();
+        String id="ABCKALKJA";
+        inputTestRun.setCollectionId(id);
+        testRunService.updateTestRunExecutionTime(inputTestRun);
+    }
 
     /*
      * This class tests the addTestRunDetails method
@@ -309,6 +306,13 @@ public class TestRunServiceTest {
         Mockito.when(mapper.convertValue(entity, TestRunHistoryDto.class)).thenReturn(dto);
         ResponseWrapper<PageDto<TestRunHistoryDto>>  testRunHistoryResponse= testRunService.getTestRunHistory(collectionId, pageNo, pageSize);
         Assert.assertEquals(dto, testRunHistoryResponse.getResponse().getContent().get(0));
+
+        testRunHistoryEntityPage = null;
+        Mockito.when(testRunRepository.getTestRunHistoryByCollectionId(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(testRunHistoryEntityPage);
+        collectionId = "123";
+        pageNo = 0;
+        pageSize = 10;
+        testRunService.getTestRunHistory(collectionId, pageNo, pageSize);
     }
 
     /*
@@ -350,6 +354,35 @@ public class TestRunServiceTest {
     @Test
     public void getTestRunStatusTestException(){
         testRunService.getTestRunStatus("123");
+    }
+
+    /*
+     * This class tests the deleteTestRun method in case of exception
+     */
+    @Test
+    public void deleteTestRunTest(){
+        testRunService.deleteTestRun(null);
+        String runId="123";
+        TestRunEntity entity=new TestRunEntity();
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
+        Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        SecurityContextHolder.setContext(securityContext);
+        Mockito.when(testRunRepository.getTestRunById(Mockito.any(),Mockito.any())).thenReturn(null);
+        testRunService.deleteTestRun(runId);
+
+
+        Mockito.when(testRunRepository.getTestRunById(Mockito.any(),Mockito.any())).thenReturn(entity);
+        testRunService.deleteTestRun(runId);
+    }
+
+    /*
+     * This class tests the deleteTestRun method in case of exception
+     */
+    @Test
+    public void deleteTestRunTestException(){
+        testRunService.deleteTestRun("123");
     }
 
 

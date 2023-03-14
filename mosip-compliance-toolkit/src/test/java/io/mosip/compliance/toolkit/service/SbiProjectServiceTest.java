@@ -1,8 +1,13 @@
 package io.mosip.compliance.toolkit.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.mosip.compliance.toolkit.dto.EncryptionKeyResponseDto;
 import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
 import io.mosip.compliance.toolkit.entity.SbiProjectEntity;
+import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.SbiProjectRepository;
+import io.mosip.compliance.toolkit.util.KeyManagerHelper;
+import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.authmanager.authadapter.model.MosipUserDto;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -22,6 +27,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
@@ -40,6 +46,15 @@ public class SbiProjectServiceTest {
 
     @Mock
     SecurityContext securityContext;
+
+    @Mock
+    KeyManagerHelper keyManagerHelper;
+
+    @Mock
+    private ObjectMapperConfig objectMapperConfig;
+
+    @Mock
+    private ObjectMapper mapper;
 
     /*
      * This class tests the authUserDetails method
@@ -214,6 +229,28 @@ public class SbiProjectServiceTest {
     }
 
     /*
+     * This class tests the addSbiProject method in case of Exception
+     */
+    @Test
+    public void addSbiProjectTestException1(){
+        SbiProjectDto sbiProjectDto = new SbiProjectDto();
+        sbiProjectDto.setProjectType("SBI");
+        sbiProjectDto.setSbiVersion("123");
+        sbiProjectDto.setPurpose("Registration");
+        sbiProjectDto.setDeviceType("Finger");
+        sbiProjectDto.setDeviceSubType("Slap");
+
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
+        Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        SecurityContextHolder.setContext(securityContext);
+
+        ResponseWrapper<SbiProjectDto> sbiProjectDtoResponseWrapper = new ResponseWrapper<>();
+        sbiProjectDtoResponseWrapper = sbiProjectService.addSbiProject(sbiProjectDto);
+    }
+
+    /*
      * This class tests the isValidSbiProject method
      */
     @Test
@@ -248,6 +285,53 @@ public class SbiProjectServiceTest {
         sbiProjectDto.setDeviceType("Face");
         sbiProjectDto.setDeviceSubType("Full face");
         ReflectionTestUtils.invokeMethod(sbiProjectService, "isValidSbiProject", sbiProjectDto);
+    }
+
+    /*
+     * This class tests the isValidSbiProject method in case of exception
+     */
+    @Test
+    public void isValidSbiProjectTestException(){
+        SbiProjectDto sbiProjectDto = new SbiProjectDto();
+        sbiProjectDto.setProjectType("SBI");
+        sbiProjectDto.setSbiVersion("0.9.5");
+
+        // Registration:Finger
+        sbiProjectDto.setPurpose("Registration");
+        sbiProjectDto.setDeviceType("Finger");
+        sbiProjectDto.setDeviceSubType("Slap");
+        Boolean result=ReflectionTestUtils.invokeMethod(sbiProjectService, "isValidSbiProject", sbiProjectDto);
+        Assert.assertEquals(true,result);
+    }
+
+    /*
+     * This class tests the isValidSbiProject method in case of exception
+     */
+    @Test(expected = ToolkitException.class)
+    public void isValidSbiProjectTestException1(){
+        SbiProjectDto sbiProjectDto=new SbiProjectDto();
+        sbiProjectDto.setProjectType("SDK");
+        sbiProjectDto.setSbiVersion("0.9.5");
+
+        sbiProjectDto.setPurpose("Registration");
+        sbiProjectDto.setDeviceType("Finger");
+        sbiProjectDto.setDeviceSubType("Slap");
+        Boolean result=ReflectionTestUtils.invokeMethod(sbiProjectService, "isValidSbiProject", sbiProjectDto);
+    }
+
+    /*
+     * This class tests the getEncryptionKey method
+     */
+    @Test(expected = Exception.class)
+    public void getEncryptionKeyTest() throws IOException {
+        io.restassured.response.Response response=keyManagerHelper.encryptionKeyResponse();
+        EncryptionKeyResponseDto keyResponseDto=new EncryptionKeyResponseDto();
+        EncryptionKeyResponseDto.EncryptionKeyResponse encryptionKeyResponse=null;
+        encryptionKeyResponse.setCertificate("abc");
+        keyResponseDto.setResponse(encryptionKeyResponse);
+        Mockito.when(objectMapperConfig.objectMapper().readValue(response.getBody().asString(),EncryptionKeyResponseDto.class)).thenReturn(keyResponseDto);
+        sbiProjectService.getEncryptionKey();
+
     }
 
     /*

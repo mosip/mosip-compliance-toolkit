@@ -1,8 +1,8 @@
 {
 	"$schema": "https://json-schema.org/draft/2019-09/schema#",
-	"$id": "http://mosip-compliance-toolkit.com/schemas/AuthCaptureResponseSchema.json",
-	"title": "Auth Capture Response Schema",
-	"description": "Auth Capture  Response Schema",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/TransactionIdErrorResponseSchema.json",
+	"title": "Transaction Id Error Response Schema",
+	"description": "Transaction Id Error Response Schema",
 	"type": "object",
 	"additionalProperties": false,
 	"properties": {
@@ -191,9 +191,7 @@
 									"$ref": "#/definitions/non-empty-string"
 								},
 								"transactionId": {
-									"$ref": "#/definitions/non-empty-string",
-									"minLength": 1,
-									"maxLength": 50
+									"$ref": "#/definitions/non-empty-string"
 								},
 								"timestamp": {
 									"string": "string",

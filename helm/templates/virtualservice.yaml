@@ -19,7 +19,7 @@ spec:
   http:
   - match:
       - uri:
-          prefix: {{ .Values.istio.prefix }}
+          prefix: {{ .Values.istio.prefix }}    
     route:
     - destination:
         host: {{ template "common.names.fullname" . }}
@@ -31,4 +31,9 @@ spec:
       request:
         set:
           x-forwarded-proto: https
+      response:
+        set:
+          Cache-control: no-store
+          Pragma: no-cache
+          Strict-Transport-Security: max-age=31536000; includeSubDomains
 {{- end }}
