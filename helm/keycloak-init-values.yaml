@@ -5,6 +5,10 @@ keycloak:
         - name: mosip-toolkit-client
           saroles: []
 
+        - name: mosip-toolkit-android-client
+          mappers: []
+          saroles: []
+
 ## These will be passed as environments variables to keycloak-init docker. Note the expected naming convention is
 ## <clientname>_<secret>.  If empty secret is passed, it shall be randomly generated
 #clientSecrets:
