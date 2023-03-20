@@ -14,12 +14,17 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
+import io.mosip.compliance.toolkit.validators.SignatureValidator;
+import io.mosip.kernel.core.logger.spi.Logger;
 
 @Service
 public class ResourceCacheService {
 	@Value("${mosip.kernel.objectstore.account-name}")
 	private String objectStoreAccountName;
+
+	private Logger log = LoggerConfiguration.logConfig(ResourceCacheService.class);
 
 	@Qualifier("S3Adapter")
 	@Autowired
@@ -27,39 +32,42 @@ public class ResourceCacheService {
 
 	@Cacheable(cacheNames = "schemas", key = "{#type, #version, #fileName}")
 	public String getSchema(String type, String version, String fileName) throws IOException {
-		String schemaResponse = null;
-		String container = AppConstants.SCHEMAS.toLowerCase();
-		if(Objects.nonNull(type) && Objects.nonNull(version)){
-			container += ("/" + type + "/" + version);
-		}
-		else{
-			container += "";
-		}
-		if (existsInObjectStore(container, fileName)) {
-			InputStream inputStream = getFromObjectStore(container, fileName);
-			if(Objects.nonNull(inputStream)) {				
-				inputStream.reset();
-				InputStreamReader isr = new InputStreamReader(inputStream); 
-				BufferedReader br = new BufferedReader(isr); 
-	            StringBuffer sb = new StringBuffer(); 
-	            String str; 
-	            while ((str = br.readLine()) != null) { 
-	                sb.append(str); 
-	            }
-	            schemaResponse = sb.toString();
-	            inputStream.close();
+		try {
+			String schemaResponse = null;
+			String container = AppConstants.SCHEMAS.toLowerCase();
+			if (Objects.nonNull(type) && Objects.nonNull(version)) {
+				container += ("/" + type + "/" + version);
+			} else {
+				container += "";
 			}
+			if (existsInObjectStore(container, fileName)) {
+				InputStream inputStream = getFromObjectStore(container, fileName);
+				if (Objects.nonNull(inputStream)) {
+					inputStream.reset();
+					InputStreamReader isr = new InputStreamReader(inputStream);
+					BufferedReader br = new BufferedReader(isr);
+					StringBuffer sb = new StringBuffer();
+					String str;
+					while ((str = br.readLine()) != null) {
+						sb.append(str);
+					}
+					schemaResponse = sb.toString();
+					inputStream.close();
+				}
+			}
+			return schemaResponse;
+		} catch (IOException e) {
+			log.debug("sessionId", "idType", "id", "In getSchema - " + e.getMessage());
+			throw e;
 		}
-		return schemaResponse;
 	}
 
 	@CacheEvict(cacheNames = "schemas", key = "{#type, #version #fileName}")
 	public boolean putSchema(String type, String version, String fileName, InputStream inputStream) {
 		String container = AppConstants.SCHEMAS.toLowerCase();
-		if(Objects.nonNull(type) && Objects.nonNull(version)){
+		if (Objects.nonNull(type) && Objects.nonNull(version)) {
 			container += ("/" + type + "/" + version);
-		}
-		else{
+		} else {
 			container += "";
 		}
 		return putInObjectStore(container, fileName, inputStream);
