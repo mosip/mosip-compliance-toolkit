@@ -31,8 +31,8 @@ public class ResourceCacheService {
 	private ObjectStoreAdapter objectStore;
 
 	@Cacheable(cacheNames = "schemas", key = "{#type, #version, #fileName}")
-	public String getSchema(String type, String version, String fileName) throws IOException {
-		log.debug("getSchema");
+	public String getSchema(String type, String version, String fileName) throws Exception {
+		System.out.println("getSchema");
 		try {
 			String schemaResponse = null;
 			String container = AppConstants.SCHEMAS.toLowerCase();
@@ -41,13 +41,13 @@ public class ResourceCacheService {
 			} else {
 				container += "";
 			}
-			log.debug("container: " + container);
-			log.debug("fileName: " + fileName);
+			System.out.println("container: " + container);
+			System.out.println("fileName: " + fileName);
 			if (existsInObjectStore(container, fileName)) {
-				log.debug("existsInObjectStore");
+				System.out.println("existsInObjectStore");
 				InputStream inputStream = getFromObjectStore(container, fileName);
 				if (Objects.nonNull(inputStream)) {
-					log.debug("getFromObjectStore");
+					System.out.println("getFromObjectStore");
 					inputStream.reset();
 					InputStreamReader isr = new InputStreamReader(inputStream);
 					BufferedReader br = new BufferedReader(isr);
@@ -57,12 +57,12 @@ public class ResourceCacheService {
 						sb.append(str);
 					}
 					schemaResponse = sb.toString();
-					log.debug("schemaResponse: " + schemaResponse);
+					System.out.println("schemaResponse: " + schemaResponse);
 					inputStream.close();
 				}
 			}
 			return schemaResponse;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error("sessionId", "idType", "id", e.getStackTrace());
 			log.error("sessionId", "idType", "id", "In getSchema - " + e.getMessage());
 			throw e;
