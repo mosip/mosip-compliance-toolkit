@@ -410,7 +410,7 @@ public class TestCasesService {
             responseWrapper.setResponse(resultDto);
             return responseWrapper;
         } catch (Exception ex) {
-            log.debug("sessionId", "idType", "id", ex.getStackTrace());
+            log.error("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In performRequestValidations method of TestCasesService - " + ex.getMessage());
             ValidationResultDto validationResponseDto = new ValidationResultDto();
