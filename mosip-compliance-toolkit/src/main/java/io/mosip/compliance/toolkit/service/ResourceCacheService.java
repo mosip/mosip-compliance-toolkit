@@ -32,7 +32,7 @@ public class ResourceCacheService {
 
 	@Cacheable(cacheNames = "schemas", key = "{#type, #version, #fileName}")
 	public String getSchema(String type, String version, String fileName) throws IOException {
-		log.info("sessionId", "getSchema");
+		log.debug("getSchema");
 		try {
 			String schemaResponse = null;
 			String container = AppConstants.SCHEMAS.toLowerCase();
@@ -41,13 +41,13 @@ public class ResourceCacheService {
 			} else {
 				container += "";
 			}
-			log.info("sessionId", "container: ", container);
-			log.info("sessionId", "fileName: ", fileName);
+			log.debug("container: " + container);
+			log.debug("fileName: " + fileName);
 			if (existsInObjectStore(container, fileName)) {
-				log.info("sessionId", "existsInObjectStore: ", true);
+				log.debug("existsInObjectStore");
 				InputStream inputStream = getFromObjectStore(container, fileName);
 				if (Objects.nonNull(inputStream)) {
-					log.info("sessionId", "getFromObjectStore: ", true);
+					log.debug("getFromObjectStore");
 					inputStream.reset();
 					InputStreamReader isr = new InputStreamReader(inputStream);
 					BufferedReader br = new BufferedReader(isr);
@@ -57,7 +57,7 @@ public class ResourceCacheService {
 						sb.append(str);
 					}
 					schemaResponse = sb.toString();
-					log.info("sessionId", "schemaResponse: ", schemaResponse);
+					log.debug("schemaResponse: " + schemaResponse);
 					inputStream.close();
 				}
 			}
