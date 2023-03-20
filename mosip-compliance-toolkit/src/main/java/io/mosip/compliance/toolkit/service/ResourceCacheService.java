@@ -43,7 +43,7 @@ public class ResourceCacheService {
 			}
 			System.out.println("container: " + container);
 			System.out.println("fileName: " + fileName);
-			if (existsInObjectStore(container, fileName)) {
+			//if (existsInObjectStore(container, fileName)) {
 				System.out.println("existsInObjectStore");
 				InputStream inputStream = getFromObjectStore(container, fileName);
 				if (Objects.nonNull(inputStream)) {
@@ -60,7 +60,7 @@ public class ResourceCacheService {
 					System.out.println("schemaResponse: " + schemaResponse);
 					inputStream.close();
 				}
-			}
+			//}
 			return schemaResponse;
 		} catch (Exception e) {
 			log.error("sessionId", "idType", "id", e.getStackTrace());
