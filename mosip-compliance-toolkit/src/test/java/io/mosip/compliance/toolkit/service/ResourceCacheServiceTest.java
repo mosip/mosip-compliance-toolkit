@@ -32,7 +32,7 @@ public class ResourceCacheServiceTest {
     private InputStream inputStream;
 
     @Test
-    public void getSchemaTest() throws IOException {
+    public void getSchemaTest() throws Exception {
         String type = ProjectTypes.SBI.getCode();
         String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
         String fileName = "testFile";
@@ -43,7 +43,7 @@ public class ResourceCacheServiceTest {
     }
 
     @Test(expected = Exception.class)
-    public void getSchemaTest1() throws IOException {
+    public void getSchemaTest1() throws Exception {
         String type = ProjectTypes.SBI.getCode();
         String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
         String fileName = "testFile";
@@ -54,7 +54,7 @@ public class ResourceCacheServiceTest {
     }
 
     @Test(expected = Exception.class)
-    public void getSchemaExceptionTest() throws IOException {
+    public void getSchemaExceptionTest() throws Exception {
         String type = ProjectTypes.SBI.getCode();
         String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
         String fileName = "testFile";
