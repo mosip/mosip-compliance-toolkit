@@ -41,13 +41,10 @@ public class ResourceCacheService {
 			} else {
 				container += "";
 			}
-			System.out.println("container: " + container);
-			System.out.println("fileName: " + fileName);
-			//if (existsInObjectStore(container, fileName)) {
-				System.out.println("existsInObjectStore");
+			log.debug("sessionId", "idType", "Trying to get file from object store {}{}", container, fileName);
+			if (existsInObjectStore(container, fileName)) {
 				InputStream inputStream = getFromObjectStore(container, fileName);
 				if (Objects.nonNull(inputStream)) {
-					System.out.println("getFromObjectStore");
 					inputStream.reset();
 					InputStreamReader isr = new InputStreamReader(inputStream);
 					BufferedReader br = new BufferedReader(isr);
@@ -57,10 +54,11 @@ public class ResourceCacheService {
 						sb.append(str);
 					}
 					schemaResponse = sb.toString();
-					System.out.println("schemaResponse: " + schemaResponse);
 					inputStream.close();
 				}
-			//}
+			} else {
+				log.debug("sessionId", "idType", "Unable to get file from object store {}{}", container, fileName);
+			}
 			return schemaResponse;
 		} catch (Exception e) {
 			log.error("sessionId", "idType", "id", e.getStackTrace());
