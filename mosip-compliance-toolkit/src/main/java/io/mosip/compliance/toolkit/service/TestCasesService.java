@@ -409,10 +409,13 @@ public class TestCasesService {
             resultDto.setValidatorDescription("Validates the method request against the schema.");
             responseWrapper.setResponse(resultDto);
             return responseWrapper;
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            log.debug("sessionId", "idType", "id", ex.getStackTrace());
+            log.error("sessionId", "idType", "id",
+                    "In performRequestValidations method of TestCasesService - " + ex.getMessage());
             ValidationResultDto validationResponseDto = new ValidationResultDto();
             validationResponseDto.setStatus(AppConstants.FAILURE);
-            validationResponseDto.setDescription(e.getLocalizedMessage());
+            validationResponseDto.setDescription(ex.getLocalizedMessage());
             responseWrapper.setResponse(validationResponseDto);
             return responseWrapper;
         }
