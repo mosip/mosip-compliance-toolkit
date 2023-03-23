@@ -22,10 +22,13 @@ public class TestCaseDto implements Serializable {
 	public String specVersion;
 	public String testName;
 	public String testDescription;
+	public String androidTestDescription;
 	@JsonProperty("isNegativeTestcase")
 	public boolean isNegativeTestcase;
 	@JsonProperty("inactive")
     public boolean inactive;
+	@JsonProperty("inactiveForAndroid")
+	public boolean inactiveForAndroid;
 	public List<String> methodName;
 	public List<String> requestSchema;
 	public List<String> responseSchema;
