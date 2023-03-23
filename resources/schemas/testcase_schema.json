@@ -31,10 +31,16 @@
 		"testDescription": {
 			"type": "string"
 		},
+		"androidTestDescription": {
+			"type": "string"
+		},
 		"isNegativeTestcase": {
 			"type": "boolean"
 		},
 		"inactive": {
+			"type": "boolean"
+		},
+		"inactiveForAndroid": {
 			"type": "boolean"
 		},
 		"methodName": {
