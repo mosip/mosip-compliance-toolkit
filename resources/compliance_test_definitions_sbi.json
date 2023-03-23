@@ -160,7 +160,7 @@
 		"testName": "Registration capture - Left Slap - One Exception",
 		"testId": "SBI1003",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for Left Slap Fingerprints with one missing finger<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your left slap on the device except the left index finger until the capture completes",
+		"testDescription": "Test to validate RCapture interface for Left Slap Fingerprints with one missing finger<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your left slap on the device except the left ring finger until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -269,7 +269,7 @@
 		"testName": "Registration capture - Right Slap - Two Exception",
 		"testId": "SBI1005",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate RCapture interface for Right Slap Fingerprints with two missing fingers<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your right slap on the device except the right ring and little finger until the capture completes",
+		"testDescription": "Test to validate RCapture interface for Right Slap Fingerprints with two missing fingers<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your right slap on the device except the right index and middle finger until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1627,7 +1627,7 @@
 		"testName": "Registration capture - Left Slap - Bio Count Mismatch",
 		"testId": "SBI1033",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for registration left slap<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your left slap on the slap scanner until the capture completes",
+		"testDescription": "Test to validate bio count mismatch for registration left slap<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your left slap and miss one or two fingers on the slap scanner until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1669,7 +1669,7 @@
 		"testName": "Registration capture - Right Slap - Bio Count Mismatch",
 		"testId": "SBI1034",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for registration right slap<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your right slap on the slap scanner until the capture completes",
+		"testDescription": "Test to validate bio count mismatch for registration right slap<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your right slap and miss one or two fingers on the slap scanner until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -1711,7 +1711,7 @@
 		"testName": "Registration capture - Two Thumbs - Bio Count Mismatch",
 		"testId": "SBI1035",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate bio count mismatch for registration thumbs<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your thumbs on the slap scanner until the capture completes",
+		"testDescription": "Test to validate bio count mismatch for registration thumbs<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your any one thumb on the slap scanner until the capture completes",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
