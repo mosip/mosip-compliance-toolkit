@@ -3542,7 +3542,7 @@
 		"testDescription": "Streaming Test to validate the RCapture interface for Left Slap Fingerprints<br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes",
 		"androidTestDescription": "Streaming Test to validate the RCapture interface for Left Slap Fingerprints<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes",
 		"isNegativeTestcase": false,
-		"inactiveForAndroid": true,
+		"inactiveForAndroid": "yes",
 		"methodName": [
 			"rcapture"
 		],
@@ -3598,7 +3598,7 @@
 		"testDescription": "Streaming Test to validate the RCapture interface for Right Slap Fingerprints<br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your Right slap on the device until the capture completes",
 		"androidTestDescription": "Streaming Test to validate the RCapture interface for Right Slap Fingerprints<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your Right slap on the device until the capture completes",
 		"isNegativeTestcase": false,
-		"inactiveForAndroid": true,
+		"inactiveForAndroid": "yes",
 		"methodName": [
 			"rcapture"
 		],
@@ -3654,7 +3654,7 @@
 		"testDescription": "Streaming Test to validate the RCapture interface for Two Thumbs<br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place both your thumbs on the device until the capture completes",
 		"androidTestDescription": "Streaming Test to validate the RCapture interface for Two Thumbs<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place both your thumbs on the device until the capture completes",
 		"isNegativeTestcase": false,
-		"inactiveForAndroid": true,
+		"inactiveForAndroid": "yes",
 		"methodName": [
 			"rcapture"
 		],
@@ -3708,7 +3708,7 @@
 		"testDescription": "Streaming Test to validate the RCapture interface for Two Iris<br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place both your iris on the device until the capture completes",
 		"androidTestDescription": "Streaming Test to validate the RCapture interface for Two Iris<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place both your iris on the device until the capture completes",
 		"isNegativeTestcase": false,
-		"inactiveForAndroid": true,
+		"inactiveForAndroid": "yes",
 		"methodName": [
 			"rcapture"
 		],
@@ -3762,7 +3762,7 @@
 		"testDescription": "Streaming Test to validate the RCapture interface for face<br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your face infront of the camera until the capture completes",
 		"androidTestDescription": "Streaming Test to validate the RCapture interface for face<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your face infront of the camera until the capture completes",
 		"isNegativeTestcase": false,
-		"inactiveForAndroid": true,
+		"inactiveForAndroid": "yes",
 		"methodName": [
 			"rcapture"
 		],
