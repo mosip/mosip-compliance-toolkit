@@ -41,7 +41,7 @@
 			"type": "boolean"
 		},
 		"inactiveForAndroid": {
-			"type": "boolean"
+			"type": "string"
 		},
 		"methodName": {
 			"type": "array",
