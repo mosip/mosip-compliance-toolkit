@@ -30,6 +30,9 @@ public class MainController {
 
 	@Value("${mosip.toolkit.sbi.keyrotation.iterations}")
 	private String keyRotationIterations;
+
+	@Value("${mosip.toolkit.languages.rtl}")
+	private String rtlLanguages;
 	
 	@ResponseFilter
 	@GetMapping("/configs")
@@ -42,6 +45,7 @@ public class MainController {
 		configMap.put("allowedFileNameLegth", allowedFileNameLegth);
 		configMap.put("allowedFileSize", allowedFileSize);
 		configMap.put("keyRotationIterations", keyRotationIterations);
+		configMap.put("rtlLanguages", rtlLanguages);
 		responseWrapper.setResponse(configMap);
 		return responseWrapper;
 	}
