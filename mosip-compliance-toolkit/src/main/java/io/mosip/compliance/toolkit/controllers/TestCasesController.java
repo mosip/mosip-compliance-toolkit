@@ -95,19 +95,7 @@ public class TestCasesController {
 		try {
 			return service.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType);
 		} catch (Exception ex) {
-			ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
-			responseWrapper.setId(getTestCasesId);
-			responseWrapper.setResponse(null);
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorCode());
-			serviceError.setMessage(
-					ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage() + " " + ex.getLocalizedMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
-			responseWrapper.setVersion(AppConstants.VERSION);
-			responseWrapper.setResponsetime(LocalDateTime.now());
-			return responseWrapper;
+			return handleFailureForGetTestcases(ex);
 		}
 	}
 
@@ -117,19 +105,33 @@ public class TestCasesController {
 		try {
 			return service.getSdkTestCases(specVersion, sdkPurpose);
 		} catch (Exception ex) {
-			ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
-			responseWrapper.setId(getTestCasesId);
-			responseWrapper.setResponse(null);
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorCode());
-			serviceError.setMessage(
-					ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage() + " " + ex.getLocalizedMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
-			responseWrapper.setVersion(AppConstants.VERSION);
-			responseWrapper.setResponsetime(LocalDateTime.now());
-			return responseWrapper;
+			return handleFailureForGetTestcases(ex);
+		}
+	}
+
+	private ResponseWrapper<List<TestCaseDto>> handleFailureForGetTestcases(Exception ex) {
+		ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
+		responseWrapper.setId(getTestCasesId);
+		responseWrapper.setResponse(null);
+		List<ServiceError> serviceErrorsList = new ArrayList<>();
+		ServiceError serviceError = new ServiceError();
+		serviceError.setErrorCode(ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorCode());
+		serviceError.setMessage(
+				ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage() + " " + ex.getLocalizedMessage());
+		serviceErrorsList.add(serviceError);
+		responseWrapper.setErrors(serviceErrorsList);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+	
+	@GetMapping(value = "/getAbisTestCases")
+	public ResponseWrapper<List<TestCaseDto>> getAbisTestCases(@RequestParam(required = true) String abisSpecVersion,
+			@RequestParam(required = true) String abisPurpose) {
+		try {
+			return service.getAbisTestCases(abisSpecVersion, abisPurpose);
+		} catch (Exception ex) {
+			return handleFailureForGetTestcases(ex);
 		}
 	}
 

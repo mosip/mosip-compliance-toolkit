@@ -261,6 +261,16 @@
 						"ISO19794_5_2011/PNG",
 						"ISO19794_6_2011/PNG"
 					]
+				},
+				"abisPurpose": {
+					"type": "array",
+					"items": {
+						"type": "string",
+						"enum": [
+							"Insert",
+							"Identify"
+						]
+					}
 				}
 			}
 		}
@@ -368,7 +378,7 @@
 				"properties": {
 					"otherAttributes": {
 						"required": [
-							"modalities"
+							"abisPurpose"
 						]
 					},
 					"specVersion": {

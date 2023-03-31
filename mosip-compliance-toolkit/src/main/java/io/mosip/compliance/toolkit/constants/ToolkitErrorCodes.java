@@ -96,8 +96,14 @@ public enum ToolkitErrorCodes {
 	ZIP_SIZE_TOO_LARGE_ERROR("TOOLKIT_ZIP_FILE_ERR_002", "The uncompressed data size is too much for the application resource capacity."),
 	ZIP_ENTRIES_TOO_MANY_ERROR("TOOLKIT_ZIP_FILE_ERR_003", "Too much entries in this archive, can lead to inodes exhaustion of the system."),
 
-	TECHNICAL_ERROR_EXCEPTION("TOOLKIT_REQ_ERR_500", "Technical Error");
-
+	TECHNICAL_ERROR_EXCEPTION("TOOLKIT_REQ_ERR_500", "Technical Error"),
+	
+	ABIS_QUEUE_SEND_EXCEPTION("ABIS_QUEUE_EXCEPTION_001", "Unable to send to queue"),
+	ABIS_QUEUE_READ_EXCEPTION("ABIS_QUEUE_EXCEPTION_001", "Unable to read the queue"),
+	ABIS_PROJECT_NOT_AVAILABLE("TOOLKIT_ABIS_PROJECTS_001", "No matching ABIS project available for the given id"),
+	INVALID_ABIS_PURPOSE("TOOLKIT_ABIS_PROJECTS_002", "Invalid ABIS Purpose"),
+	INVALID_ABIS_SPEC_VERSION("TOOLKIT_ABIS_PROJECTS_003", "Invalid ABIS Spec Version");
+	
 	private final String errorCode;
 	private final String errorMessage;
 

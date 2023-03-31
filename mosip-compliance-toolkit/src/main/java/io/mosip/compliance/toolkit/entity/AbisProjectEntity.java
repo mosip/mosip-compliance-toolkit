@@ -52,8 +52,8 @@ public class AbisProjectEntity implements Serializable {
 	@Column(name = "password")
 	private String password;
 	
-	@Column(name = "queue_name")
-	private String queueName;
+	@Column(name = "inbound_queue_name")
+	private String inboundQueueName;
 	
 	@Column(name = "partner_id")
 	private String partnerId;
@@ -75,5 +75,17 @@ public class AbisProjectEntity implements Serializable {
 
 	@Column(name = "del_dtimes")
 	private LocalDateTime delTime;
+	
+	@Column(name = "outbound_queue_name")
+	private String outboundQueueName;
+	
+	@Column(name = "bio_test_data_file_name")
+	private String bioTestDataFileName;
+	
+	@Column(name = "purpose")
+	private String purpose;
+	
+	@Column(name = "abis_version")
+	private String abisVersion;
 
 }

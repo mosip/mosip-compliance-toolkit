@@ -1,0 +1,32 @@
+[
+	{
+		"testCaseType": "ABIS",
+		"testName": "Insert Valid Biomterics Test",
+		"testId": "ABIS3000",
+		"specVersion": "0.9.0",
+		"testDescription": "Inserts valid biomterics in ABIS queue.",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"insert"
+		],
+		"requestSchema": [
+			"InsertABISRequestSchema"
+		],
+		"responseSchema": [
+			"InsertABISResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			]
+		],
+		"otherAttributes": {
+			"abisPurpose": [
+				"Insert"
+			]
+		}
+	}
+]

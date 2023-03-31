@@ -23,7 +23,7 @@ public class AbisProjectDto {
 	
 	private String password;
 	
-	private String queueName;
+	private String inboundQueueName;
 	
 	private String partnerId;
 	
@@ -34,5 +34,13 @@ public class AbisProjectDto {
 	private String upBy;
 
 	private LocalDateTime updDate;
+	
+	private String outboundQueueName;
+	
+	private String bioTestDataFileName;
+	
+	private String purpose;
+
+	private String abisVersion;
 
 }
