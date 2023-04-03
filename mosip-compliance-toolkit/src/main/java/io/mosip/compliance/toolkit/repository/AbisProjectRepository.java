@@ -1,6 +1,7 @@
 package io.mosip.compliance.toolkit.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -20,4 +21,7 @@ public interface AbisProjectRepository extends BaseRepository<AbisProjectEntity,
 
 	@Query("SELECT e FROM AbisProjectEntity e  WHERE e.partnerId= ?1 and e.projectType='ABIS' and e.isDeleted<>'true' order by e.crDate desc")
 	public List<AbisProjectEntity> findAllByPartnerId(String partnerId);
+	
+	@Query("SELECT e FROM AbisProjectEntity e  WHERE e.id= ?1 and e.partnerId= ?2 and e.projectType='ABIS' and e.isDeleted<>'true' order by e.crDate desc")
+	public Optional<AbisProjectEntity> findById(String id, String partnerId);
 }

@@ -38,6 +38,8 @@ import com.networknt.schema.ValidationMessage;
 
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
+import io.mosip.compliance.toolkit.constants.AbisPurpose;
+import io.mosip.compliance.toolkit.constants.AbisSpecVersions;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.DeviceSubTypes;
 import io.mosip.compliance.toolkit.constants.DeviceTypes;
@@ -267,6 +269,57 @@ public class TestCasesService {
         responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
     }
+    
+    public ResponseWrapper<List<TestCaseDto>> getAbisTestCases(String abisSpecVersion, String abisPurpose) {
+        ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
+        List<TestCaseDto> testCases = new ArrayList<>();
+        List<ServiceError> serviceErrorsList = new ArrayList<>();
+        ServiceError serviceError = null;
+        try {
+            String testCaseSchemaJson = this.getSchemaJson(null, null,  AppConstants.TESTCASE_SCHEMA_JSON);
+            if (isValidAbisTestCase(abisSpecVersion, abisPurpose)) {
+                List<TestCaseEntity> testCaseEntities = testCaseCacheService.getAbisTestCases(AppConstants.ABIS,
+                		abisSpecVersion);// testCasesRepository.findAllSdkTestCaseBySpecVersion(specVersion);
+                for (final TestCaseEntity testCaseEntity : testCaseEntities) {
+                    String testcaseJson = testCaseEntity.getTestcaseJson();
+                    if (AppConstants.SUCCESS
+                            .equals(this.validateJsonWithSchema(testcaseJson, testCaseSchemaJson).getStatus())) {
+                        TestCaseDto testCaseDto = objectMapper.readValue(testcaseJson, TestCaseDto.class);
+                        if (!testCaseDto.isInactive() && testCaseDto.getSpecVersion() != null
+                                && testCaseDto.getSpecVersion().equals(abisSpecVersion)
+                                && testCaseDto.getOtherAttributes().getAbisPurpose().contains(abisPurpose)) {
+                            testCases.add(testCaseDto);
+                        }
+                    }
+                }
+            }
+        } catch (ToolkitException ex) {
+            testCases = null;
+            log.debug("sessionId", "idType", "id", ex.getStackTrace());
+            log.error("sessionId", "idType", "id",
+                    "In getAbisTestCases method of TestCasesService - " + ex.getMessage());
+            serviceError = new ServiceError();
+            serviceError.setErrorCode(ex.getErrorCode());
+            serviceError.setMessage(ex.getMessage());
+            serviceErrorsList.add(serviceError);
+            responseWrapper.setErrors(serviceErrorsList);
+        } catch (Exception ex) {
+            testCases = null;
+            log.debug("sessionId", "idType", "id", ex.getStackTrace());
+            log.error("sessionId", "idType", "id",
+                    "In getAbisTestCases method of TestCasesService - " + ex.getMessage());
+            serviceError = new ServiceError();
+            serviceError.setErrorCode(ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorCode());
+            serviceError.setMessage(ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage() + " " + ex.getMessage());
+            serviceErrorsList.add(serviceError);
+            responseWrapper.setErrors(serviceErrorsList);
+        }
+        responseWrapper.setId(getTestCasesId);
+        responseWrapper.setResponse(testCases);
+        responseWrapper.setVersion(AppConstants.VERSION);
+        responseWrapper.setResponsetime(LocalDateTime.now());
+        return responseWrapper;
+    }
 
     /**
      * Verifies test case is valid. validates specVersion, purpose, deviceType,
@@ -278,6 +331,18 @@ public class TestCasesService {
     private boolean isValidSdkTestCase(String specVersion, String sdkPurpose) throws ToolkitException {
         SdkSpecVersions.fromCode(specVersion);
         SdkPurpose.fromCode(sdkPurpose);
+        return true;
+    }
+    
+    /**
+     * Verifies test case is valid. validates specVersion, purpose values
+     *
+     * @param specVersion, purpose
+     * @return boolean
+     */
+    private boolean isValidAbisTestCase(String specVersion, String sdkPurpose) throws ToolkitException {
+        AbisSpecVersions.fromCode(specVersion);
+        AbisPurpose.fromCode(sdkPurpose);
         return true;
     }
 

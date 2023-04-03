@@ -66,5 +66,6 @@ public class TestCaseDto implements Serializable {
 	    public boolean keyRotationTestCase;
 		public String transactionId;
 		public String invalidRequestAttribute;
+		public ArrayList<String> abisPurpose;
 	}
 }
