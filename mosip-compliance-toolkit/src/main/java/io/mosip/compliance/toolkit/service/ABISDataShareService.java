@@ -59,7 +59,6 @@ public class ABISDataShareService {
 	@Value("${mosip.toolkit.api.id.abis.datashare.url.get}")
 	private String getDataShareUrlId;
 
-	@Value("${mosip.service.datashare.create.url}")
 	private String createDataShareUrl;
 
 	@Value("${mosip.service.datashare.get.url}")
