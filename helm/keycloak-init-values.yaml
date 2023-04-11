@@ -4,6 +4,12 @@ keycloak:
       clients:   
         - name: mosip-toolkit-client
           saroles: []
+        - name: mosip-toolkit-android-client
+          public_client: True
+          redirect_urls: ["android://mosip-compliance-toolkit-ui","http://localhost"]
+          web_origins: ["android://mosip-compliance-toolkit-ui","http://localhost"]
+          direct_grant_flow_alias: 'direct grant'
+          browser_flow_alias: 'browser'
 
 ## These will be passed as environments variables to keycloak-init docker. Note the expected naming convention is
 ## <clientname>_<secret>.  If empty secret is passed, it shall be randomly generated
