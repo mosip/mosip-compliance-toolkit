@@ -2,7 +2,6 @@ package io.mosip.compliance.toolkit.service;
 
 import static io.restassured.RestAssured.given;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
@@ -12,9 +11,10 @@ import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
 
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AbisPurpose;
@@ -55,6 +55,9 @@ public class ABISDataShareService {
 
 	@Autowired
 	TestCasesService testCasesService;
+	
+	@Autowired
+	ResourceLoader resourceLoader;
 
 	@Value("${mosip.toolkit.api.id.abis.datashare.url.get}")
 	private String getDataShareUrlId;
@@ -107,10 +110,14 @@ public class ABISDataShareService {
 			String dataShareFullCreateUrl = createDataShareUrl + PATH_SEPARATOR + dataSharePolicyId + PATH_SEPARATOR
 					+ dataShareSubscriberId;
 			log.info("Calling dataShareFullCreateUrl: {}", dataShareFullCreateUrl);
-			File cbeffFile = ResourceUtils.getFile("classpath:abis/datashare.txt");
-			FileUtils.writeByteArrayToFile(cbeffFile, cbeffFileBytes);
+//			File cbeffFile = ResourceUtils.getFile("classpath:abis/datashare.txt");
+//			FileUtils.writeByteArrayToFile(cbeffFile, cbeffFileBytes);
+		
+			Resource resource = resourceLoader.getResource("classpath:abis/datashare.txt");
+			FileUtils.writeByteArrayToFile(resource.getFile(), cbeffFileBytes);
+
 			io.restassured.response.Response dataShareResp = given().cookie(builder.build()).relaxedHTTPSValidation()
-					.multiPart(FILE, cbeffFile, MULTIPART_FORM_DATA).contentType(MULTIPART_FORM_DATA).when()
+					.multiPart(FILE, resource.getFile(), MULTIPART_FORM_DATA).contentType(MULTIPART_FORM_DATA).when()
 					.post(dataShareFullCreateUrl).then().extract().response();
 
 			DataShareResponseDto dataShareResponseDto = objectMapperConfig.objectMapper()
