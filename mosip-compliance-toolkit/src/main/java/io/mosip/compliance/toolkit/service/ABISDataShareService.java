@@ -114,7 +114,9 @@ public class ABISDataShareService {
 //			FileUtils.writeByteArrayToFile(cbeffFile, cbeffFileBytes);
 		
 			Resource resource = resourceLoader.getResource("classpath:abis/datashare.txt");
+			log.info("resource name: {}", resource.getFilename());
 			FileUtils.writeByteArrayToFile(resource.getFile(), cbeffFileBytes);
+			log.info("resource content: {}", resource.contentLength());
 
 			io.restassured.response.Response dataShareResp = given().cookie(builder.build()).relaxedHTTPSValidation()
 					.multiPart(FILE, resource.getFile(), MULTIPART_FORM_DATA).contentType(MULTIPART_FORM_DATA).when()
@@ -122,7 +124,7 @@ public class ABISDataShareService {
 
 			DataShareResponseDto dataShareResponseDto = objectMapperConfig.objectMapper()
 					.readValue(dataShareResp.getBody().asString(), DataShareResponseDto.class);
-
+			log.info("dataShare Url: {}", dataShareResponseDto.getDataShare().getUrl());
 			// step 4: update the url to shareable url
 			String internalUrl = dataShareResponseDto.getDataShare().getUrl();
 			String[] splits = internalUrl.split("/");
