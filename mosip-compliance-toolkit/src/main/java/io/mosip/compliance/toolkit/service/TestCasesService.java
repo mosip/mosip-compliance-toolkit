@@ -365,6 +365,7 @@ public class TestCasesService {
             JsonSchema schema = schemaFactory.getSchema(schemaJson);
             // create set of validation message and store result in it
             Set<ValidationMessage> validationResult = schema.validate(json);
+            System.out.println(validationResult);
             ValidationResultDto validationResultDto = new ValidationResultDto();
             // show the validation errors
             if (validationResult.isEmpty()) {
@@ -374,12 +375,13 @@ public class TestCasesService {
                 validationResultDto.setDescription(
                         "JSON is as expected. All mandatory values are available and they all have valid expected values.");
                 validationResultDto.setStatus(AppConstants.SUCCESS);
-                validationResultDto.setDescriptionCode(AppConstants.DESCRIPTION_CODE);
+                validationResultDto.setDescriptionCode("SCHEMA_VALIDATOR_001");
                 return validationResultDto;
             } else {
                 List<String> errors = new ArrayList<>();
                 // show all the validation error
                 validationResult.forEach(vm -> errors.add(vm.getMessage()));
+                System.out.println(errors);
                 log.debug("Schema validations failed.");
                 validationResultDto.setDescription(errors.toString());
                 validationResultDto.setStatus(AppConstants.FAILURE);
