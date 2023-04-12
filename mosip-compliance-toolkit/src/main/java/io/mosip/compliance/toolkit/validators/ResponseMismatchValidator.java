@@ -113,6 +113,7 @@ public class ResponseMismatchValidator extends ToolkitValidator {
             if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
                 validationResultDto.setDescription(
                         "The bioCount, segments and exceptions in response match the request.");
+                validationResultDto.setDescriptionKey("RESPONSE_MISMATCH_VALIDATOR_001");
             }
         } catch (ToolkitException e) {
             validationResultDto.setStatus(AppConstants.FAILURE);
