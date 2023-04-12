@@ -23,7 +23,7 @@ public class KeyManagerHelper {
 
 	private static final String APPLICATION_JSON = "application/json";
 
-	private static final String AUTHORIZATION = "Authorization";
+	public static final String AUTHORIZATION = "Authorization";
 
 	@Value("${mosip.service.auth.appid}")
 	private String getAuthAppId;

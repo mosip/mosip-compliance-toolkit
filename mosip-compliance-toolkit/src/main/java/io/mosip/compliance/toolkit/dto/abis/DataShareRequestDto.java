@@ -7,8 +7,10 @@ import lombok.Setter;
 @Data
 @Getter
 @Setter
-public class QueueRequest {
+public class DataShareRequestDto {
 
+	private String testcaseId;
+	private String bioTestDataName;
+	private String purpose;
 	private String methodName;
-	private String requestJson;
 }

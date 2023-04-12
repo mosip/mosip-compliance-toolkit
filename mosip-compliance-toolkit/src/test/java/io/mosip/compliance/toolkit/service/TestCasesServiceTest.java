@@ -762,8 +762,8 @@ public class TestCasesServiceTest {
 		InputStream inputFile = new ByteArrayInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.zip".getBytes());
 		Mockito.when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(inputFile);
-		ReflectionTestUtils.invokeMethod(testCasesService, "getPartnerTestDataStream", requestDto, partnerId,
-				sdkPurpose);
+		ReflectionTestUtils.invokeMethod(testCasesService, "getPartnerTestDataStream", requestDto.getBioTestDataName(), partnerId,
+				sdkPurpose.getCode());
 	}
 
 	/*

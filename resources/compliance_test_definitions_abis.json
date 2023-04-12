@@ -10,10 +10,10 @@
 			"insert"
 		],
 		"requestSchema": [
-			"InsertABISRequestSchema"
+			"InsertRequestSchema"
 		],
 		"responseSchema": [
-			"InsertABISResponseSchema"
+			"InsertResponseSchema"
 		],
 		"validatorDefs": [
 			[
