@@ -381,9 +381,9 @@ public class TestCasesService {
                 // show all the validation error
                 validationResult.forEach(vm -> errors.add(vm.getMessage()));
                 log.debug("Schema validations failed.");
+                //no translation of schema validation errors is possible
                 validationResultDto.setDescription(errors.toString());
                 validationResultDto.setStatus(AppConstants.FAILURE);
-                validationResultDto.setDescriptionKey("SCHEMA_VALIDATOR_002");
                 return validationResultDto;
             }
         } catch (Exception e) {
