@@ -471,6 +471,10 @@ public class TestCasesService {
                 testCaseSchemaJson = this.getSchemaJson(AppConstants.SDK.toLowerCase(), requestDto.getSpecVersion(),
                         requestDto.getRequestSchema() + ".json");
             }
+            if (requestDto.getTestCaseType().equalsIgnoreCase(AppConstants.ABIS)) {
+                testCaseSchemaJson = this.getSchemaJson(AppConstants.ABIS.toLowerCase(), requestDto.getSpecVersion(),
+                        requestDto.getRequestSchema() + ".json");
+            }
             resultDto = this.validateJsonWithSchema(sourceJson, testCaseSchemaJson);
             resultDto.setValidatorName("SchemaValidator");
             resultDto.setValidatorDescription("Validates the method request against the schema.");
@@ -625,18 +629,19 @@ public class TestCasesService {
                     rootNode.set("initParams", childNode);
                     requestJson = gson.toJson(rootNode);
                 } else {
-                    String partnerId = getPartnerId();
-                    SdkPurpose sdkPurpose = getSdkPurpose(requestDto.getMethodName());
-                    objectStoreStream = getPartnerTestDataStream(requestDto, partnerId, sdkPurpose);
-                    probeFileBytes = getProbeData(requestDto, objectStoreStream, sdkPurpose,
-                            requestDto.getTestcaseId());
-                    generateSdkRequestResponseDto.setTestDataSource(requestDto.bioTestDataName);
-                    if (Objects.isNull(objectStoreStream) || Objects.isNull(probeFileBytes)) {
-                        objectStoreStream = getDefaultTestDataStream(requestDto.getMethodName(), sdkPurpose);
-                        probeFileBytes = getProbeData(requestDto, objectStoreStream, sdkPurpose,
-                                requestDto.getTestcaseId());
-                        generateSdkRequestResponseDto.setTestDataSource(AppConstants.MOSIP_DEFAULT);
-                    }
+					String partnerId = getPartnerId();
+					SdkPurpose sdkPurpose = getSdkPurpose(requestDto.getMethodName());
+					objectStoreStream = getPartnerTestDataStream(requestDto.getBioTestDataName(), partnerId,
+							sdkPurpose.getCode());
+					probeFileBytes = getProbeData(requestDto, objectStoreStream, sdkPurpose,
+							requestDto.getTestcaseId());
+					generateSdkRequestResponseDto.setTestDataSource(requestDto.bioTestDataName);
+					if (Objects.isNull(objectStoreStream) || Objects.isNull(probeFileBytes)) {
+						objectStoreStream = getDefaultTestDataStream(requestDto.getMethodName(), sdkPurpose.toString());
+						probeFileBytes = getProbeData(requestDto, objectStoreStream, sdkPurpose,
+								requestDto.getTestcaseId());
+						generateSdkRequestResponseDto.setTestDataSource(AppConstants.MOSIP_DEFAULT);
+					}
                     if (Objects.nonNull(objectStoreStream)) {
                         if (Objects.nonNull(probeFileBytes)) {
                             // get the BIRs from the XML
@@ -796,18 +801,18 @@ public class TestCasesService {
         return probeFileBytes;
     }
 
-    private InputStream getPartnerTestDataStream(SdkRequestDto requestDto,
-            String partnerId, SdkPurpose sdkPurpose)
+    public InputStream getPartnerTestDataStream(String bioTestDataName,
+            String partnerId, String purpose)
             throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
         InputStream objectStoreStream = null;
-        if (Objects.nonNull(requestDto.getBioTestDataName())
-                && !requestDto.getBioTestDataName().equals(AppConstants.MOSIP_DEFAULT)) {
+        if (Objects.nonNull(bioTestDataName)
+                && !bioTestDataName.equals(AppConstants.MOSIP_DEFAULT)) {
             BiometricTestDataEntity biometricTestData = biometricTestDataRepository
-                    .findByTestDataName(requestDto.getBioTestDataName(), partnerId);
+                    .findByTestDataName(bioTestDataName, partnerId);
             String zipFileName = biometricTestData.getFileId();
             String zipFileHash = biometricTestData.getFileHash();
             if (Objects.nonNull(zipFileName)) {
-                String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/" + sdkPurpose.getCode();
+                String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/" + purpose;
                 if (isObjectExistInObjectStore(container, zipFileName)) {
                     objectStoreStream = getFromObjectStore(container, zipFileName);
                     if (Objects.nonNull(objectStoreStream)) {
@@ -821,7 +826,7 @@ public class TestCasesService {
                         objectStoreStream.reset();
                         String encodedHash = CryptoUtil.getEncodedHash(bytes);
                         if (Objects.isNull(encodedHash) || !encodedHash.equals(zipFileHash)) {
-                            log.info("testdata " + requestDto.getBioTestDataName() + " encoded file hash mismatch."
+                            log.info("testdata " + bioTestDataName + " encoded file hash mismatch."
                                     + "\n"
                                     + "stored hash : " + zipFileHash + "\n" + "calculated hash : " + encodedHash);
                             objectStoreStream.close();
@@ -887,14 +892,14 @@ public class TestCasesService {
                 // get the probe from /testcaseId/match folder
                 String partnerId = getPartnerId();
                 SdkPurpose sdkPurpose = getSdkPurpose(methodName1);
-                InputStream objectStoreStream = getPartnerTestDataStream(sdkRequestDto, partnerId, sdkPurpose);
+                InputStream objectStoreStream = getPartnerTestDataStream(sdkRequestDto.getBioTestDataName(), partnerId, sdkPurpose.getCode());
 
                 // Here the probe is nested under "match" folder
                 String testcaseFolder = sdkRequestDto.getTestcaseId() + "/" + MethodName.MATCH.toString().toLowerCase();
                 byte[] probeFileBytes = getProbeData(sdkRequestDto, objectStoreStream, sdkPurpose, testcaseFolder);
                 generateSdkRequestResponseDto.setTestDataSource(sdkRequestDto.getBioTestDataName());
                 if (Objects.isNull(probeFileBytes)) {
-                    objectStoreStream = getDefaultTestDataStream(sdkRequestDto.getMethodName(), sdkPurpose);
+                    objectStoreStream = getDefaultTestDataStream(sdkRequestDto.getMethodName(), sdkPurpose.toString());
                     probeFileBytes = getProbeData(sdkRequestDto, objectStoreStream, sdkPurpose, testcaseFolder);
                     generateSdkRequestResponseDto.setTestDataSource(AppConstants.MOSIP_DEFAULT);
                 }
@@ -965,7 +970,7 @@ public class TestCasesService {
         return responseWrapper;
     }
 
-    private byte[] getXmlDataFromZipFile(InputStream zipFileIs, String purpose, String testcaseId, String name)
+    public byte[] getXmlDataFromZipFile(InputStream zipFileIs, String purpose, String testcaseId, String name)
             throws Exception {
         byte[] bytes = null;
         ZipInputStream zis = new ZipInputStream(zipFileIs);
@@ -1032,9 +1037,9 @@ public class TestCasesService {
         return bytes;
     }
 
-    private InputStream getDefaultTestDataStream(String method, SdkPurpose sdkPurpose) {
+    public InputStream getDefaultTestDataStream(String method, String purpose) {
         InputStream defaultTestDataStrem = null;
-        String objectName = AppConstants.MOSIP_DEFAULT + "_" + sdkPurpose.toString() + ".zip";
+        String objectName = AppConstants.MOSIP_DEFAULT + "_" + purpose + ".zip";
         if (isObjectExistInObjectStore(AppConstants.TESTDATA, objectName)) {
             defaultTestDataStrem = getFromObjectStore(AppConstants.TESTDATA, objectName);
         }
