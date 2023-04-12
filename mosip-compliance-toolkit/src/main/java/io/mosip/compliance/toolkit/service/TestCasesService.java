@@ -374,6 +374,7 @@ public class TestCasesService {
                 validationResultDto.setDescription(
                         "JSON is as expected. All mandatory values are available and they all have valid expected values.");
                 validationResultDto.setStatus(AppConstants.SUCCESS);
+                validationResultDto.setDescriptionCode(AppConstants.DESCRIPTION_CODE);
                 return validationResultDto;
             } else {
                 List<String> errors = new ArrayList<>();
@@ -382,6 +383,7 @@ public class TestCasesService {
                 log.debug("Schema validations failed.");
                 validationResultDto.setDescription(errors.toString());
                 validationResultDto.setStatus(AppConstants.FAILURE);
+                validationResultDto.setDescriptionCode("SCHEMA_VALIDATOR_002");
                 return validationResultDto;
             }
         } catch (Exception e) {

@@ -28,6 +28,7 @@ public class SchemaValidator extends ToolkitValidator {
 			ValidationResultDto validationResultDto = new ValidationResultDto();
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
+			validationResultDto.setDescriptionCode("SCHEMA_VALIDATOR_002");
 			return validationResultDto;
 		}
 	}
