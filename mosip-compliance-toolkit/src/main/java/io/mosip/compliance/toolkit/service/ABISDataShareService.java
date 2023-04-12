@@ -11,8 +11,6 @@ import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +28,6 @@ import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.kernel.core.util.FileUtils;
 import io.restassured.http.Cookie;
 
 @Component
@@ -56,8 +53,6 @@ public class ABISDataShareService {
 	@Autowired
 	TestCasesService testCasesService;
 	
-	@Autowired
-	ResourceLoader resourceLoader;
 
 	@Value("${mosip.toolkit.api.id.abis.datashare.url.get}")
 	private String getDataShareUrlId;
@@ -103,6 +98,7 @@ public class ABISDataShareService {
 						dataShareRequestDto.getTestcaseId());
 				wrapperResponseDto.setTestDataSource(AppConstants.MOSIP_DEFAULT);
 			}
+			log.info("cbeffFileBytes: {}", cbeffFileBytes);
 			// step 2 - get the auth token
 			Cookie.Builder builder = new Cookie.Builder(KeyManagerHelper.AUTHORIZATION,
 					keyManagerHelper.getAuthToken());
@@ -110,16 +106,9 @@ public class ABISDataShareService {
 			String dataShareFullCreateUrl = createDataShareUrl + PATH_SEPARATOR + dataSharePolicyId + PATH_SEPARATOR
 					+ dataShareSubscriberId;
 			log.info("Calling dataShareFullCreateUrl: {}", dataShareFullCreateUrl);
-//			File cbeffFile = ResourceUtils.getFile("classpath:abis/datashare.txt");
-//			FileUtils.writeByteArrayToFile(cbeffFile, cbeffFileBytes);
-		
-			Resource resource = resourceLoader.getResource("classpath:abis/datashare.txt");
-			log.info("resource name: {}", resource.getFilename());
-			FileUtils.writeByteArrayToFile(resource.getFile(), cbeffFileBytes);
-			log.info("resource content: {}", resource.contentLength());
-
+			
 			io.restassured.response.Response dataShareResp = given().cookie(builder.build()).relaxedHTTPSValidation()
-					.multiPart(FILE, resource.getFile(), MULTIPART_FORM_DATA).contentType(MULTIPART_FORM_DATA).when()
+					.multiPart(FILE, "cbeff.xml", cbeffFileBytes, MULTIPART_FORM_DATA).contentType(MULTIPART_FORM_DATA).when()
 					.post(dataShareFullCreateUrl).then().extract().response();
 
 			DataShareResponseDto dataShareResponseDto = objectMapperConfig.objectMapper()
@@ -169,5 +158,5 @@ public class ABISDataShareService {
 		}
 		return probeFileBytes;
 	}
-
+	
 }
