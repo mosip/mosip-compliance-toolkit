@@ -149,7 +149,7 @@ public class ResponseMismatchValidator extends ToolkitValidator {
             validationResultDto.setStatus(AppConstants.SUCCESS);
         } else {
             validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription("ResponseMismatchValidator failed due to " + " bioCount mismatch."
+            validationResultDto.setDescription("ResponseMismatchValidator failed due to " + " purpose mismatch."
                     + "In request, purpose = " + reqPurpose + " and in response, purpose = " + resPurpose);
             validationResultDto.setDescriptionKey("RESPONSE_MISMATCH_VALIDATOR_003" + ":" + reqPurpose + ","
                     + resPurpose);
