@@ -22,6 +22,5 @@ public class ValidationResultDto  implements Serializable{
 	public String description;
 
 	public String descriptionKey;
-	
-	String resultsMap;
+
 }
