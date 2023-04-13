@@ -134,8 +134,8 @@ public class ResponseMismatchValidator extends ToolkitValidator {
             validationResultDto.setStatus(AppConstants.SUCCESS);
         } else {
             validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription("ResponseMismatchValidator failure, " + "with Message, "
-                    + " mismatch request bio count = " + reqCount + " and response bio count = " + resCount);
+            validationResultDto.setDescription("ResponseMismatchValidator failed due to" + " biocount mismatch."
+                    + " In request, bioCount = " + reqCount + " and in response bioCount = " + resCount);
             validationResultDto.setDescriptionKey("RESPONSE_MISMATCH_VALIDATOR_002" + ":" + reqCount + ","
                     + resCount);
         }
@@ -149,8 +149,8 @@ public class ResponseMismatchValidator extends ToolkitValidator {
             validationResultDto.setStatus(AppConstants.SUCCESS);
         } else {
             validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription("ResponseMismatchValidator failure, " + "with Message, "
-                    + " mismatch request purpose = " + reqPurpose + " and response purpose = " + resPurpose);
+            validationResultDto.setDescription("ResponseMismatchValidator failed due to " + " purpose mismatch."
+                    + "In request, purpose = " + reqPurpose + " and in response, purpose = " + resPurpose);
             validationResultDto.setDescriptionKey("RESPONSE_MISMATCH_VALIDATOR_003" + ":" + reqPurpose + ","
                     + resPurpose);
         }
@@ -167,8 +167,8 @@ public class ResponseMismatchValidator extends ToolkitValidator {
         } else {
             validationResultDto.setStatus(AppConstants.FAILURE);
             validationResultDto.setDescription(
-                    "ResponseMismatchValidator failure, "
-                            + "with Message, invalid Response BioSubType for Response Type ");
+                    "ResponseMismatchValidator failed, "
+                            + "due to invalid Response BioSubType.");
             validationResultDto.setDescriptionKey("RESPONSE_MISMATCH_VALIDATOR_004");
         }
         return validationResultDto;
@@ -182,8 +182,8 @@ public class ResponseMismatchValidator extends ToolkitValidator {
                 if (resBioSubType.equals(exception)) {
                     validationResultDto.setStatus(AppConstants.FAILURE);
                     validationResultDto.setDescription(
-                            "ResponseMismatchValidator failure, " + "with Message, exception biosubtype = "
-                                    + resBioSubType + " not valid");
+                            "ResponseMismatchValidator failed " + "due to exception, biosubtype = "
+                                    + resBioSubType + " is not valid");
                     validationResultDto.setDescriptionKey("RESPONSE_MISMATCH_VALIDATOR_005" + ":" + resBioSubType);
                     break;
                 }
