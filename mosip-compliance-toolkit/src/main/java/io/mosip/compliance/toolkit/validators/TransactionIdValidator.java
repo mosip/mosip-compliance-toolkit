@@ -34,12 +34,14 @@ public class TransactionIdValidator extends SBIValidator {
                         result = false;
                         validationResultDto.setStatus(AppConstants.FAILURE);
                         validationResultDto.setDescription("Transaction Id validation failed.");
+                        validationResultDto.setDescriptionKey("TRANSACTIONID_VALIDATOR_002");
                         break;
                     }
                 }
                 if (result == true) {
                     validationResultDto.setStatus(AppConstants.SUCCESS);
                     validationResultDto.setDescription("Transaction Id validation is successful");
+                    validationResultDto.setDescriptionKey("TRANSACTIONID_VALIDATOR_001");
                 }
             }
         } catch (ToolkitException e) {
