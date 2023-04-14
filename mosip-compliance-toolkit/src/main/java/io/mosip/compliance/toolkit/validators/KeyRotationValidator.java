@@ -24,7 +24,7 @@ import io.mosip.kernel.core.logger.spi.Logger;
 public class KeyRotationValidator extends SignatureValidator {
 
 	private Logger log = LoggerConfiguration.logConfig(KeyRotationValidator.class);
-	
+
 	@Override
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
@@ -40,6 +40,7 @@ public class KeyRotationValidator extends SignatureValidator {
 			if (beforeKeyRotationResp == null) {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("Device Info before key rotation is not available");
+				validationResultDto.setDescriptionKey("KEY_ROTATION_VALIDATOR_002");
 				return validationResultDto;
 			}
 			ArrayNode afterKeyRotationRespArr = (ArrayNode) objectMapperConfig.objectMapper()
@@ -51,6 +52,7 @@ public class KeyRotationValidator extends SignatureValidator {
 			if (afterKeyRotationResp == null) {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("Device Info after key rotation is not available");
+				validationResultDto.setDescriptionKey("KEY_ROTATION_VALIDATOR_003");
 				return validationResultDto;
 			}
 			validationResultDto = performSignatureAndTrustValidations(afterKeyRotationResp);
@@ -58,7 +60,9 @@ public class KeyRotationValidator extends SignatureValidator {
 				String err = validationResultDto.getDescription();
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto
-						.setDescription("Signature validation failed for the Device Info after key rotation. " + err);
+						.setDescription(
+								"Signature validation failed for the Device Info after key rotation due to " + err);
+				validationResultDto.setDescriptionKey("KEY_ROTATION_VALIDATOR_004" + ":" + err);
 				return validationResultDto;
 			}
 			validationResultDto = compareCerificates(beforeKeyRotationResp, afterKeyRotationResp);
@@ -72,6 +76,8 @@ public class KeyRotationValidator extends SignatureValidator {
 			}
 			validationResultDto.setStatus(AppConstants.SUCCESS);
 			validationResultDto.setDescription("Key Rotation validations are successful.");
+			String a = "sample err msg";
+			validationResultDto.setDescriptionKey("KEY_ROTATION_VALIDATOR_004");
 		} catch (ToolkitException e) {
 			log.error("sessionId", "idType", "id", "In KeyRotationValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
@@ -88,13 +94,13 @@ public class KeyRotationValidator extends SignatureValidator {
 			throws JsonProcessingException, JsonMappingException {
 
 		ValidationResultDto validationResultDto = new ValidationResultDto();
-		ObjectNode deviceInfoDecoded = (ObjectNode)beforeKeyRotationResp.get(DEVICE_INFO_DECODED);
+		ObjectNode deviceInfoDecoded = (ObjectNode) beforeKeyRotationResp.get(DEVICE_INFO_DECODED);
 		ObjectNode digitalIdDecoded = (ObjectNode) deviceInfoDecoded.get(DIGITAL_ID_DECODED);
 		String make = digitalIdDecoded.get(MAKE).asText();
 		String model = digitalIdDecoded.get(MODEL).asText();
 		String serialNo = digitalIdDecoded.get(SERIAL_NO).asText();
-		
-		ObjectNode deviceInfoDecoded1 = (ObjectNode)afterKeyRotationResp.get(DEVICE_INFO_DECODED);
+
+		ObjectNode deviceInfoDecoded1 = (ObjectNode) afterKeyRotationResp.get(DEVICE_INFO_DECODED);
 		ObjectNode digitalIdDecoded1 = (ObjectNode) deviceInfoDecoded1.get(DIGITAL_ID_DECODED);
 		String make1 = digitalIdDecoded1.get(MAKE).asText();
 		String model1 = digitalIdDecoded1.get(MODEL).asText();
@@ -103,6 +109,7 @@ public class KeyRotationValidator extends SignatureValidator {
 		if (!(make.equals(make1) || model.equals(model1) || serialNo.equals(serialNo1))) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription("Make, model or serialNo of the device info is not matching. ");
+			validationResultDto.setDescriptionKey("KEY_ROTATION_VALIDATOR_005");
 			return validationResultDto;
 		}
 		validationResultDto.setStatus(AppConstants.SUCCESS);
@@ -137,6 +144,7 @@ public class KeyRotationValidator extends SignatureValidator {
 			if (certificate.equals(certificate1)) {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("Both device keys are same. Rotate the device key and try again!");
+				validationResultDto.setDescriptionKey("KEY_ROTATION_VALIDATOR_006");
 				return validationResultDto;
 			}
 			Date certificateStartDt = certificate.getNotBefore();
@@ -145,6 +153,7 @@ public class KeyRotationValidator extends SignatureValidator {
 			if (certificate1StartDt.before(certificateStartDt)) {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("Second device key must be created after the first device key");
+				validationResultDto.setDescriptionKey("KEY_ROTATION_VALIDATOR_007");
 				return validationResultDto;
 			}
 
