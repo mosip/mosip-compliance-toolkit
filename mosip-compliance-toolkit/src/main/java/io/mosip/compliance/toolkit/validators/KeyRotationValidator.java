@@ -61,7 +61,7 @@ public class KeyRotationValidator extends SignatureValidator {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto
 						.setDescription(
-								"Signature validation failed for the Device Info after key rotation due to " + err);
+								"Signature validation failed for the Device Info after key rotation since " + err);
 				validationResultDto.setDescriptionKey("KEY_ROTATION_VALIDATOR_004" + ":" + err);
 				return validationResultDto;
 			}
@@ -119,7 +119,8 @@ public class KeyRotationValidator extends SignatureValidator {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		if (isDeviceInfoUnSigned(afterKeyRotationResp)) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription("Device is not registered.");
+			validationResultDto.setDescription("device is not registered.");
+			validationResultDto.setDescriptionKey("KEY_ROTATION_VALIDATOR_004");
 		} else {
 			validationResultDto = validateSignedDeviceInfo(afterKeyRotationResp);
 		}
