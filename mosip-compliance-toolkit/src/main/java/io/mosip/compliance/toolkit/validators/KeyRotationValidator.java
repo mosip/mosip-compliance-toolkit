@@ -76,8 +76,7 @@ public class KeyRotationValidator extends SignatureValidator {
 			}
 			validationResultDto.setStatus(AppConstants.SUCCESS);
 			validationResultDto.setDescription("Key Rotation validations are successful.");
-			String a = "sample err msg";
-			validationResultDto.setDescriptionKey("KEY_ROTATION_VALIDATOR_004");
+			validationResultDto.setDescriptionKey("KEY_ROTATION_VALIDATOR_001");
 		} catch (ToolkitException e) {
 			log.error("sessionId", "idType", "id", "In KeyRotationValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
