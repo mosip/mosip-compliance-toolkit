@@ -117,10 +117,12 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription(
 						"BiometricsQualityCheckValidator validations are successful." + messages.toString());
+				validationResultDto.setDescriptionKey("BIOMETRICS_QUALITY_CHECK_001");
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription(
 						"BiometricsQualityCheckValidator validations are not successful." + messages.toString());
+				validationResultDto.setDescriptionKey("BIOMETRICS_QUALITY_CHECK_002");
 			}
 		} catch (ToolkitException e) {
 			log.error("sessionId", "idType", "id", "In BiometricsQualityCheckValidator - " + e.getMessage());
