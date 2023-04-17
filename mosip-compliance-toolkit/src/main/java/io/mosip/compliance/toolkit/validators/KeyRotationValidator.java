@@ -120,6 +120,7 @@ public class KeyRotationValidator extends SignatureValidator {
 		if (isDeviceInfoUnSigned(afterKeyRotationResp)) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription("Device is not registered.");
+			validationResultDto.setDescriptionKey("KEY_ROTATION_VALIDATOR_004");
 		} else {
 			validationResultDto = validateSignedDeviceInfo(afterKeyRotationResp);
 		}

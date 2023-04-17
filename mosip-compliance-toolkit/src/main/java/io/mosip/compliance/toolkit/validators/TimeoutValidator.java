@@ -28,9 +28,12 @@ public class TimeoutValidator extends SBIValidator {
             if (diff >= timeout) {
                 validationResultDto.setStatus(AppConstants.SUCCESS);
                 validationResultDto.setDescription("Timeout validation is successful");
+                validationResultDto.setDescriptionKey("TIMEOUT_VALIDATOR_001");
             } else {
                 validationResultDto.setStatus(AppConstants.FAILURE);
-                validationResultDto.setDescription("Timeout validation failed. Timeout given: " + timeout + "ms." + " Response received in: " + diff + "ms");
+                validationResultDto.setDescription("Timeout validation failed. Timeout given: " + timeout + "ms."
+                        + " Response received in: " + diff + "ms");
+                validationResultDto.setDescriptionKey("TIMEOUT_VALIDATOR_002" + ":" + timeout + "," + diff);
             }
         } catch (ToolkitException e) {
             validationResultDto.setStatus(AppConstants.FAILURE);
