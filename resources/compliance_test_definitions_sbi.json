@@ -4861,6 +4861,7 @@
 		"testDescription": "Test to validate invalid request json in RCapture method for Left Slap Fingerprints<br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes",
 		"androidTestDescription": "Test to validate invalid request json in RCapture method for Left Slap Fingerprints<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes",
 		"isNegativeTestcase": false,
+		"inactiveForAndroid": "yes",
 		"methodName": [
 			"rcapture"
 		],
@@ -4909,6 +4910,7 @@
 		"testDescription": "Test to validate invalid request json in RCapture method for Right Slap Fingerprints<br>Steps:<br>1. Click on Start Streaming button.<br>3. Once streaming is done, click on Inititate Capture button to start the capture <br>2. Place your right slap on the device until the capture completes",
 		"androidTestDescription": "Test to validate invalid request json in RCapture method for Right Slap Fingerprints<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your right slap on the device until the capture completes",
 		"isNegativeTestcase": false,
+		"inactiveForAndroid": "yes",
 		"methodName": [
 			"rcapture"
 		],
@@ -4957,6 +4959,7 @@
 		"testDescription": "Test to validate invalid request json in RCapture method for Two Thumbs<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place both your thumbs on the device until the capture completes",
 		"androidTestDescription": "Test to validate invalid request json in RCapture method for Two Thumbs<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place both your thumbs on the device until the capture completes",
 		"isNegativeTestcase": false,
+		"inactiveForAndroid": "yes",
 		"methodName": [
 			"rcapture"
 		],
@@ -5003,6 +5006,7 @@
 		"testDescription": "Test to validate invalid request json in RCapture method for Two Iris<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place both your iris on the device until the capture completes",
 		"androidTestDescription": "Test to validate invalid request json in RCapture method for Two Iris<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place both your iris on the device until the capture completes",
 		"isNegativeTestcase": false,
+		"inactiveForAndroid": "yes",
 		"methodName": [
 			"rcapture"
 		],
@@ -5049,6 +5053,7 @@
 		"testDescription": "Test to validate invalid request json in RCapture method for face<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes",
 		"androidTestDescription": "Test to validate invalid request json in RCapture method for face<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes",
 		"isNegativeTestcase": false,
+		"inactiveForAndroid": "yes",
 		"methodName": [
 			"rcapture"
 		],
@@ -5092,6 +5097,7 @@
 		"testDescription": "Test to validate invalid request json in RCapture method for iris with one missing iris<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place only the right iris on the device until the capture completes",
 		"androidTestDescription": "Test to validate invalid request json in RCapture method for iris with one missing iris<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place only the right iris on the device until the capture completes",
 		"isNegativeTestcase": false,
+		"inactiveForAndroid": "yes",
 		"methodName": [
 			"rcapture"
 		],
@@ -5139,6 +5145,7 @@
 		"testDescription": "Test to validate invalid request json in RCapture method for exception photo<br>Steps:<br><br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Raise your hands during capture",
 		"androidTestDescription": "Test to validate invalid request json in RCapture method for exception photo<br>Steps:<br><br>1. Click on Inititate Capture button to start the capture <br>2. Raise your hands during capture",
 		"isNegativeTestcase": false,
+		"inactiveForAndroid": "yes",
 		"methodName": [
 			"rcapture"
 		],
