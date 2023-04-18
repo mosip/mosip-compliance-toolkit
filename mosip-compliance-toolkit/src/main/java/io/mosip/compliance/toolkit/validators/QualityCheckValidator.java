@@ -65,15 +65,18 @@ public class QualityCheckValidator extends SDKValidator {
                         validationResultDto.setStatus(AppConstants.FAILURE);
                         validationResultDto
                                 .setDescription("Quality Check failed, invalid modality: " + biometricTypeStr);
+                        validationResultDto.setDescriptionKey("QUALITY_CHECK_003" + ":" + biometricTypeStr);
                     }
                 }
             } else {
                 if (inputDto.isNegativeTestCase() && (statusCode == 403 || statusCode == 406)) {
                     validationResultDto.setStatus(AppConstants.SUCCESS);
                     validationResultDto.setDescription("Positive Quality Check for is successful");
+                    validationResultDto.setDescriptionKey("QUALITY_CHECK_001");
                 } else {
                     validationResultDto.setStatus(AppConstants.FAILURE);
                     validationResultDto.setDescription("Quality Check status code failed, received: " + statusCode);
+                    validationResultDto.setDescriptionKey("QUALITY_CHECK_002" + ":" + statusCode);
                 }
             }
         } catch (Exception e) {
@@ -91,20 +94,24 @@ public class QualityCheckValidator extends SDKValidator {
             if (score >= thresholdValue) {
                 validationResultDto.setStatus(AppConstants.SUCCESS);
                 validationResultDto.setDescription("Positive Quality Check for " + biometricTypeStr + " is successful");
+                validationResultDto.setDescriptionKey("QUALITY_CHECK_004" + ":" + biometricTypeStr);
             } else {
                 validationResultDto.setStatus(AppConstants.FAILURE);
                 validationResultDto.setDescription("Positive Quality Check for " + biometricTypeStr
                         + " failed. Score is below the threshold value. Score received: " + score);
+                validationResultDto.setDescriptionKey(("QUALITY_CHECK_005" + ":" + biometricTypeStr + "," + score));
             }
         } else {
             // negative test case
             if (score < thresholdValue) {
                 validationResultDto.setStatus(AppConstants.SUCCESS);
                 validationResultDto.setDescription("Negative Quality Check for " + biometricTypeStr + " is successful");
+                validationResultDto.setDescriptionKey("QUALITY_CHECK_006" + ":" + biometricTypeStr);
             } else {
                 validationResultDto.setStatus(AppConstants.FAILURE);
                 validationResultDto.setDescription("Negative Quality Check for " + biometricTypeStr
                         + " failed. Score is above the threshold value. Score received: " + score);
+                validationResultDto.setDescriptionKey("QUALITY_CHECK_007" + ":" + biometricTypeStr + "," + score);
             }
         }
     }
