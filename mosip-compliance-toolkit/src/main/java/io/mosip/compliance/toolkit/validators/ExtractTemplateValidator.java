@@ -24,9 +24,11 @@ public class ExtractTemplateValidator extends ToolkitValidator {
 			if (statusCode >= 200 && statusCode <= 299) {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription("Extract Template validation is successful");
+				validationResultDto.setDescriptionKey("EXTRACT_TEMPLATE_VALIDATOR_001");
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("Extract Template status code failed, received: " + statusCode);
+				validationResultDto.setDescriptionKey("EXTRACT_TEMPLATE_VALIDATOR_002" + ":" + statusCode);
 			}
 		} catch (Exception e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
