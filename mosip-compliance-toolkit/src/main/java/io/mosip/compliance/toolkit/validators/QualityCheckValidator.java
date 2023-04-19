@@ -65,7 +65,6 @@ public class QualityCheckValidator extends SDKValidator {
                         validationResultDto.setStatus(AppConstants.FAILURE);
                         validationResultDto
                                 .setDescription("Quality Check failed, invalid modality: " + biometricTypeStr);
-                        validationResultDto.setDescriptionKey("QUALITY_CHECK_003" + ":" + biometricTypeStr);
                     }
                 }
             } else {
