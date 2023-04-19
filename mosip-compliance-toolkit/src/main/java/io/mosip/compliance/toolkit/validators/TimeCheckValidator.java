@@ -54,10 +54,13 @@ public class TimeCheckValidator extends SBIValidator{
                 }
                 if(result==false){
                     validationResultDto.setStatus(AppConstants.FAILURE);
-                    validationResultDto.setDescription("Time Check validation failed. Timestamp interval given: " + interval + "m." + " Response received in: " + diff + "m");
+                    validationResultDto.setDescription("Time Check validation failed. Timestamp interval given: "
+                            + interval + "m." + " Response received in: " + diff + "m");
+                    validationResultDto.setDescriptionKey("TIMECHECK_VALIDATOR_002" + ":" + interval + "," + diff);
                 }else{
                     validationResultDto.setStatus(AppConstants.SUCCESS);
                     validationResultDto.setDescription("Time Check validation is Successful");
+                    validationResultDto.setDescriptionKey("TIMECHECK_VALIDATOR_001");
                 }
 
             }
