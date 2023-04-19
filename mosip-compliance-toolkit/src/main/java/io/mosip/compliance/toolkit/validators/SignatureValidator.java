@@ -55,11 +55,13 @@ public class SignatureValidator extends SBIValidator {
 					default:
 						validationResultDto.setStatus(AppConstants.FAILURE);
 						validationResultDto.setDescription("Method not supported");
+						validationResultDto.setDescriptionKey("SIGNATURE_VALIDATOR_001");
 						break;
 					}
 				} else {
 					validationResultDto.setStatus(AppConstants.FAILURE);
 					validationResultDto.setDescription("Response is empty");
+					validationResultDto.setDescriptionKey("SIGNATURE_VALIDATOR_002");
 				}
 			}
 		} catch (ToolkitException e) {
@@ -99,9 +101,11 @@ public class SignatureValidator extends SBIValidator {
 				|| digitalIdDto.get(DEVICE_SUB_TYPE).isNull()) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription("Unsigned Digital ID validation failed");
+			validationResultDto.setDescriptionKey("SIGNATURE_VALIDATOR_003");
 		} else {
 			validationResultDto.setStatus(AppConstants.SUCCESS);
 			validationResultDto.setDescription("Unsigned Digital ID validation is successful");
+			validationResultDto.setDescriptionKey("SIGNATURE_VALIDATOR_004");
 		}
 		return validationResultDto;
 	}
@@ -139,9 +143,11 @@ public class SignatureValidator extends SBIValidator {
 			if (deviceStatus == DeviceStatus.NOT_REGISTERED) {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription("Device is not registered");
+				validationResultDto.setDescriptionKey("SIGNATURE_VALIDATOR_005");
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("Device is registered, so can not be unsigned");
+				validationResultDto.setDescriptionKey("SIGNATURE_VALIDATOR_006");
 			}
 		} catch (ToolkitException e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
@@ -170,6 +176,7 @@ public class SignatureValidator extends SBIValidator {
 					if (Objects.isNull(deviceInfoDecoded)) {
 						validationResultDto.setStatus(AppConstants.FAILURE);
 						validationResultDto.setDescription("Device info Decoded value is null");
+						validationResultDto.setDescriptionKey("SIGNATURE_VALIDATOR_007");
 					} else {
 						validationResultDto = validateSignedDigitalId(deviceInfoDecoded.get(DIGITAL_ID).asText(),
 								deviceInfoDecoded.get(CERTIFICATION).asText(), TRUST_FOR_DIGITAL_ID);
@@ -309,9 +316,12 @@ public class SignatureValidator extends SBIValidator {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("Trust Validation Failed for [" + trustFor + "] >> PartnerType["
 						+ partnerType + "] and CertificateData[" + certificateData + "]");
+				validationResultDto.setDescriptionKey("SIGNATURE_VALIDATOR_008" + ":" + trustFor + "," + partnerType +
+						"," + certificateData);
 			} else {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription("Trust Root Validation is Successful");
+				validationResultDto.setDescriptionKey("SIGNATURE_VALIDATOR_009");
 			}
 		} catch (Exception e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
