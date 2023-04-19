@@ -87,9 +87,11 @@ public abstract class SBIValidator extends ToolkitValidator {
 			if (verified) {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription("JWT Signature validation is successful");
+				validationResultDto.setDescriptionKey("JWT_SIGNATURE_001");
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("JWT Signature validation failed");
+				validationResultDto.setDescriptionKey("JWT_SIGNATURE_002");
 			}
 		} catch (CertificateExpiredException e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
