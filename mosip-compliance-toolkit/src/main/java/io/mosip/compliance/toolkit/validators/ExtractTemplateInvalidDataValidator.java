@@ -20,9 +20,11 @@ public class ExtractTemplateInvalidDataValidator extends SDKValidator {
 			if (statusCode == 401 || statusCode == 403) {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription("For invalid data, expected status code received:" + statusCode);
+				validationResultDto.setDescriptionKey("EXTRACT_TEMPLATE_INVALID_DATA_VALIDATOR_001" + ":" + statusCode);
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("For invalid data, unexpected status code received:" + statusCode);
+				validationResultDto.setDescriptionKey("EXTRACT_TEMPLATE_INVALID_DATA_VALIDATOR_002" + ":" + statusCode);
 			}
 		} catch (Exception e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);

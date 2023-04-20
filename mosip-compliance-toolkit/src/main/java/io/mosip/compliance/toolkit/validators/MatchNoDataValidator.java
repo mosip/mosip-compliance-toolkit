@@ -20,9 +20,11 @@ public class MatchNoDataValidator extends SDKValidator {
 			if (statusCode == 404) {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription("No data for Match, expected status code received:" + statusCode);
+				validationResultDto.setDescriptionKey("MATCH_NO_DATA_VALIDATOR_001" + ":" + statusCode);
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("No data for Match, unexpected status code received:" + statusCode);
+				validationResultDto.setDescriptionKey("MATCH_NO_DATA_VALIDATOR_002" + ":" + statusCode);
 			}
 		} catch (Exception e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
