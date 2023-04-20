@@ -316,7 +316,7 @@ public class SignatureValidator extends SBIValidator {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("Trust Validation Failed for [" + trustFor + "] >> PartnerType["
 						+ partnerType + "] and CertificateData[" + certificateData + "]");
-				validationResultDto.setDescriptionKey("SIGNATURE_VALIDATOR_008" + ":" + trustFor + "," + partnerType +
+				validationResultDto.setDescriptionKey("SIGNATURE_VALIDATOR_008" + AppConstants.NEW_DELIMITER + trustFor + "," + partnerType +
 						"," + certificateData);
 			} else {
 				validationResultDto.setStatus(AppConstants.SUCCESS);

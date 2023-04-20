@@ -20,11 +20,11 @@ public class MatchInvalidDataValidator extends SDKValidator {
 			if (statusCode == 401 || statusCode == 405) {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription("For invalid data, expected status code received:" + statusCode);
-				validationResultDto.setDescriptionKey("MATCH_INVALID_DATA_VALIDATOR_001" + ":" + statusCode);
+				validationResultDto.setDescriptionKey("MATCH_INVALID_DATA_VALIDATOR_001" + AppConstants.NEW_DELIMITER + statusCode);
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("For invalid data, unexpected status code received:" + statusCode);
-				validationResultDto.setDescriptionKey("MATCH_INVALID_DATA_VALIDATOR_002" + ":" + statusCode);
+				validationResultDto.setDescriptionKey("MATCH_INVALID_DATA_VALIDATOR_002" + AppConstants.NEW_DELIMITER + statusCode);
 			}
 		} catch (Exception e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);

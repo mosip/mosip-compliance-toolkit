@@ -25,7 +25,7 @@ public class SegmentValidator extends SDKValidator {
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("Segment status code failed, received: " + statusCode);
-				validationResultDto.setDescriptionKey("SEGMENT_VALIDATOR_002" + ":" + statusCode);
+				validationResultDto.setDescriptionKey("SEGMENT_VALIDATOR_002" + AppConstants.NEW_DELIMITER + statusCode);
 			}
 		} catch (
 

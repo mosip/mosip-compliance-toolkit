@@ -57,13 +57,13 @@ public class ConvertDataValidator extends SDKValidator {
 					{
 						validationResultDto.setStatus(AppConstants.FAILURE);
 						validationResultDto.setDescription("Convert validation failed for SourceCode [" + sourceCode + "] to TargetCode [" + targetCode + "]");
-						validationResultDto.setDescriptionKey("CONVERT_DATA_VALIDATOR_002" + ":" + sourceCode + "," + targetCode);
+						validationResultDto.setDescriptionKey("CONVERT_DATA_VALIDATOR_002" + AppConstants.NEW_DELIMITER + sourceCode + "," + targetCode);
 					}					
 				}
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("Convert status code failed, received: " + statusCode);
-				validationResultDto.setDescriptionKey("CONVERT_DATA_VALIDATOR_003" + ":" + statusCode);
+				validationResultDto.setDescriptionKey("CONVERT_DATA_VALIDATOR_003" + AppConstants.NEW_DELIMITER + statusCode);
 			}
 		} catch (Exception e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);

@@ -136,7 +136,7 @@ public class ResponseMismatchValidator extends ToolkitValidator {
             validationResultDto.setStatus(AppConstants.FAILURE);
             validationResultDto.setDescription("ResponseMismatchValidator failed due to" + " biocount mismatch."
                     + " In request, bioCount = " + reqCount + " and in response bioCount = " + resCount);
-            validationResultDto.setDescriptionKey("RESPONSE_MISMATCH_VALIDATOR_002" + ":" + reqCount + ","
+            validationResultDto.setDescriptionKey("RESPONSE_MISMATCH_VALIDATOR_002" + AppConstants.NEW_DELIMITER + reqCount + ","
                     + resCount);
         }
         return validationResultDto;
@@ -151,7 +151,7 @@ public class ResponseMismatchValidator extends ToolkitValidator {
             validationResultDto.setStatus(AppConstants.FAILURE);
             validationResultDto.setDescription("ResponseMismatchValidator failed due to " + " purpose mismatch."
                     + "In request, purpose = " + reqPurpose + " and in response, purpose = " + resPurpose);
-            validationResultDto.setDescriptionKey("RESPONSE_MISMATCH_VALIDATOR_003" + ":" + reqPurpose + ","
+            validationResultDto.setDescriptionKey("RESPONSE_MISMATCH_VALIDATOR_003" + AppConstants.NEW_DELIMITER + reqPurpose + ","
                     + resPurpose);
         }
 
@@ -184,7 +184,7 @@ public class ResponseMismatchValidator extends ToolkitValidator {
                     validationResultDto.setDescription(
                             "ResponseMismatchValidator failed " + "due to exception, biosubtype = "
                                     + resBioSubType + " is not valid");
-                    validationResultDto.setDescriptionKey("RESPONSE_MISMATCH_VALIDATOR_005" + ":" + resBioSubType);
+                    validationResultDto.setDescriptionKey("RESPONSE_MISMATCH_VALIDATOR_005" + AppConstants.NEW_DELIMITER + resBioSubType);
                     break;
                 }
             }

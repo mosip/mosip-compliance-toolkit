@@ -28,7 +28,7 @@ public class ExtractTemplateValidator extends ToolkitValidator {
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("Extract Template status code failed, received: " + statusCode);
-				validationResultDto.setDescriptionKey("EXTRACT_TEMPLATE_VALIDATOR_002" + ":" + statusCode);
+				validationResultDto.setDescriptionKey("EXTRACT_TEMPLATE_VALIDATOR_002" + AppConstants.NEW_DELIMITER + statusCode);
 			}
 		} catch (Exception e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);

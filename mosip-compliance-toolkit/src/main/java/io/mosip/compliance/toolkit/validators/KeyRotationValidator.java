@@ -62,7 +62,7 @@ public class KeyRotationValidator extends SignatureValidator {
 				validationResultDto
 						.setDescription(
 								"Signature validation failed for the Device Info after key rotation due to " + err);
-				validationResultDto.setDescriptionKey("KEY_ROTATION_VALIDATOR_004" + ":" + err);
+				validationResultDto.setDescriptionKey("KEY_ROTATION_VALIDATOR_004" + AppConstants.NEW_DELIMITER + err);
 				return validationResultDto;
 			}
 			validationResultDto = compareCerificates(beforeKeyRotationResp, afterKeyRotationResp);
