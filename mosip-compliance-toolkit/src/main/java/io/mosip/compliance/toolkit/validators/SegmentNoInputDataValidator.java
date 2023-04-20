@@ -20,9 +20,11 @@ public class SegmentNoInputDataValidator extends SDKValidator {
 			if (statusCode == 404) {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription("For invalid data, expected status code received:" + statusCode);
+				validationResultDto.setDescriptionKey("SEGMENT_NO_INPUT_DATA_VALIDATOR_001" + ":" + statusCode);
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("For invalid data, unexpected status code received:" + statusCode);
+				validationResultDto.setDescriptionKey("SEGMENT_NO_INPUT_DATA_VALIDATOR_002" + ":" + statusCode);
 			}
 		} catch (Exception e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);

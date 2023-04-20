@@ -21,9 +21,11 @@ public class SegmentValidator extends SDKValidator {
 			if (statusCode >= 200 && statusCode <= 299) {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription("Segment validation is successful");
+				validationResultDto.setDescriptionKey("SEGMENT_VALIDATOR_001");
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("Segment status code failed, received: " + statusCode);
+				validationResultDto.setDescriptionKey("SEGMENT_VALIDATOR_002" + ":" + statusCode);
 			}
 		} catch (
 
