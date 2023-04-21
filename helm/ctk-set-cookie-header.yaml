@@ -1,0 +1,41 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: compliance-toolkit-set-cookie-header
+  namespace: istio-system
+spec:
+  configPatches:
+  - applyTo: HTTP_FILTER
+    match:
+      context: GATEWAY
+      listener:
+        filterChain:
+          filter:
+            name: envoy.filters.network.http_connection_manager
+            subFilter:
+              name: envoy.filters.http.router
+    patch:
+      operation: INSERT_BEFORE
+      value:
+        name: envoy.lua
+        typed_config:
+          '@type': type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
+          inlineCode: |
+            function envoy_on_request(request_handle)
+              local access_token = request_handle:headers():get("accessToken")
+              local cookie = request_handle:headers():get("cookie")
+              local custom_cookie = ""
+
+              if access_token ~= nil then
+                custom_cookie = "Authorization=" .. access_token .. "; path=/;"
+              end
+
+              if cookie ~= nil then
+                custom_cookie = cookie
+              end
+
+              request_handle:headers():add("cookie", custom_cookie)
+            end
+  workloadSelector:
+    labels:
+      istio: ingressgateway-internal

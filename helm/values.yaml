@@ -53,7 +53,7 @@ service:
 image:
   registry: docker.io
   repository: mosipdev/compliance-toolkit-service
-  tag: latest
+  tag: develop
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -419,8 +419,8 @@ istio:
   prefix: /v1/toolkit
   corsPolicy:
     allowOrigins:
-      - exact: https://compliance.sandbox.xyz.net
-      - exact: http://localhost
+      - prefix: https://compliance.sandbox.xyz.net
+      - prefix: http://localhost
     allowCredentials: true
     allowHeaders:
       - Accept
