@@ -34,10 +34,13 @@ echo Copy configmaps
 API_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-api-internal-host})
 COMPLIANCE_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-compliance-host})
 
+echo "Applying EnvoyFilter to set cookie header for compliance toolkit service"
+kubectl -n istio-system apply -f ctk-set-cookie-header.yaml
+
 ./keycloak-init.sh
 
 echo Installing compliance-toolkit
-helm -n $NS install compliance-toolkit . --set istio.corsPolicy.allowOrigins\[0\].prefix=https://$COMPLIANCE_HOST
+helm -n $NS install compliance-toolkit . --set istio.corsPolicy.allowOrigins\[0\].prefix=https://$COMPLIANCE_HOST --set istio.corsPolicy.allowOrigins\[1\].prefix=http://localhost
 
 kubectl -n $NS  get deploy -o name |  xargs -n1 -t  kubectl -n $NS rollout status
 
