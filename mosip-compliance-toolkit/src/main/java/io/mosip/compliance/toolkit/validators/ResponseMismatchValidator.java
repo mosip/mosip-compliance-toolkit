@@ -136,7 +136,7 @@ public class ResponseMismatchValidator extends ToolkitValidator {
             validationResultDto.setStatus(AppConstants.FAILURE);
             validationResultDto.setDescription("ResponseMismatchValidator failed due to" + " biocount mismatch."
                     + " In request, bioCount = " + reqCount + " and in response bioCount = " + resCount);
-            validationResultDto.setDescriptionKey("RESPONSE_MISMATCH_VALIDATOR_002" + AppConstants.ARGUMENTS_DELIMITER + reqCount + ","
+            validationResultDto.setDescriptionKey("RESPONSE_MISMATCH_VALIDATOR_002" + AppConstants.ARGUMENTS_DELIMITER + reqCount + AppConstants.ARGUMENTS_SEPARATOR
                     + resCount);
         }
         return validationResultDto;
@@ -151,7 +151,7 @@ public class ResponseMismatchValidator extends ToolkitValidator {
             validationResultDto.setStatus(AppConstants.FAILURE);
             validationResultDto.setDescription("ResponseMismatchValidator failed due to " + " purpose mismatch."
                     + "In request, purpose = " + reqPurpose + " and in response, purpose = " + resPurpose);
-            validationResultDto.setDescriptionKey("RESPONSE_MISMATCH_VALIDATOR_003" + AppConstants.ARGUMENTS_DELIMITER + reqPurpose + ","
+            validationResultDto.setDescriptionKey("RESPONSE_MISMATCH_VALIDATOR_003" + AppConstants.ARGUMENTS_DELIMITER + reqPurpose + AppConstants.ARGUMENTS_SEPARATOR
                     + resPurpose);
         }
 

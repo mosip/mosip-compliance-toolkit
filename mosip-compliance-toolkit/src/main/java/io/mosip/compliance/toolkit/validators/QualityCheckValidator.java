@@ -99,7 +99,7 @@ public class QualityCheckValidator extends SDKValidator {
                 validationResultDto.setStatus(AppConstants.FAILURE);
                 validationResultDto.setDescription("Positive Quality Check for " + biometricTypeStr
                         + " failed. Score is below the threshold value. Score received: " + score);
-                validationResultDto.setDescriptionKey("QUALITY_CHECK_005" + AppConstants.ARGUMENTS_DELIMITER + biometricTypeStr + "," + score);
+                validationResultDto.setDescriptionKey("QUALITY_CHECK_005" + AppConstants.ARGUMENTS_DELIMITER + biometricTypeStr + AppConstants.ARGUMENTS_SEPARATOR + score);
             }
         } else {
             // negative test case
@@ -111,7 +111,7 @@ public class QualityCheckValidator extends SDKValidator {
                 validationResultDto.setStatus(AppConstants.FAILURE);
                 validationResultDto.setDescription("Negative Quality Check for " + biometricTypeStr
                         + " failed. Score is above the threshold value. Score received: " + score);
-                validationResultDto.setDescriptionKey("QUALITY_CHECK_007" + AppConstants.ARGUMENTS_DELIMITER + biometricTypeStr + ":" + score);
+                validationResultDto.setDescriptionKey("QUALITY_CHECK_007" + AppConstants.ARGUMENTS_DELIMITER + biometricTypeStr + AppConstants.ARGUMENTS_SEPARATOR + score);
             }
         }
     }
