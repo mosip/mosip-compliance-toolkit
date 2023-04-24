@@ -81,6 +81,7 @@ public class MatchValidator extends SDKValidator {
 				}
 
 				String results = "";
+				StringBuffer resultsKey = new StringBuffer();
 				for (Map.Entry<Integer, Map<BiometricType, Boolean>> rsEntry : resultsMap.entrySet()) {
 					Integer galleryIndex = rsEntry.getKey();
 					Map<BiometricType, Boolean> bioMap = rsEntry.getValue();
@@ -96,6 +97,11 @@ public class MatchValidator extends SDKValidator {
 								}
 								results += "Positive Match for " + entry2.getKey().toString()
 										+ " is successful for gallery" + (galleryIndex + 1) + ".xml";
+								resultsKey.append("MATCH_VALIDATOR_001,");
+								resultsKey.append(entry2.getKey().toString());
+								resultsKey.append(",MATCH_VALIDATOR_002,");
+								resultsKey.append(galleryIndex + 1);
+								resultsKey.append(",.xml,");
 							} else {
 								//if status is previously failed, then do not reset
 								if (validationResultDto.getStatus() != null
@@ -106,25 +112,43 @@ public class MatchValidator extends SDKValidator {
 								}
 								results += "Negative Match for " + entry2.getKey().toString()
 										+ " is successful for gallery" + (galleryIndex + 1) + ".xml";
+								resultsKey.append("MATCH_VALIDATOR_003,");
+								resultsKey.append(entry2.getKey().toString());
+								resultsKey.append(",MATCH_VALIDATOR_002,");
+								resultsKey.append(galleryIndex + 1);
+								resultsKey.append(",.xml,");
 							}
 						} else {
 							if (!inputDto.isNegativeTestCase()) {
 								validationResultDto.setStatus(AppConstants.FAILURE);
 								results += "Positive Match for " + entry2.getKey().toString()
 										+ " failed for gallery" + (galleryIndex + 1) + ".xml";
+								resultsKey.append("MATCH_VALIDATOR_001,");
+								resultsKey.append(entry2.getKey().toString());
+								resultsKey.append(",MATCH_VALIDATOR_004,");
+								resultsKey.append(galleryIndex + 1);
+								resultsKey.append(",.xml,");
 							} else {
 								validationResultDto.setStatus(AppConstants.FAILURE);
 								results += "Negative Match for " + entry2.getKey().toString()
 										+ " failed for gallery" + (galleryIndex + 1) + ".xml";
+								resultsKey.append("MATCH_VALIDATOR_003,");
+								resultsKey.append(entry2.getKey().toString());
+								resultsKey.append(",MATCH_VALIDATOR_004,");
+								resultsKey.append(galleryIndex + 1);
+								resultsKey.append(",.xml,");
 							}
 						}
 						results += "<br>";
+						resultsKey.append("BR_TAG,");
 					}
 				}
 				validationResultDto.setDescription(results);
+				validationResultDto.setDescriptionKey(resultsKey.toString());
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("Match status code failed, received: " + statusCode);
+				validationResultDto.setDescriptionKey("MATCH_VALIDATOR_005" + AppConstants.ARGUMENTS_DELIMITER + statusCode);
 			}
 		} catch (
 
