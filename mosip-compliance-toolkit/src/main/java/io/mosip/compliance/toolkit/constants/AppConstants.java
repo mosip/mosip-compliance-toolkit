@@ -39,4 +39,6 @@ public class AppConstants {
 	public static final String ARGUMENTS_DELIMITER = "::";
 
 	public static final String ARGUMENTS_SEPARATOR = ";";
+
+	public static final char COMMA_SEPARATOR = ',';
 }
