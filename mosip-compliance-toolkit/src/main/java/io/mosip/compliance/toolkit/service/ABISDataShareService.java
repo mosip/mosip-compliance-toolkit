@@ -15,8 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
-import io.mosip.compliance.toolkit.constants.AbisPurpose;
 import io.mosip.compliance.toolkit.constants.AppConstants;
+import io.mosip.compliance.toolkit.constants.ProjectTypes;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.abis.DataShareRequestDto;
 import io.mosip.compliance.toolkit.dto.abis.DataShareResponseDto;
@@ -52,7 +52,6 @@ public class ABISDataShareService {
 
 	@Autowired
 	TestCasesService testCasesService;
-	
 
 	@Value("${mosip.toolkit.api.id.abis.datashare.url.get}")
 	private String getDataShareUrlId;
@@ -82,20 +81,20 @@ public class ABISDataShareService {
 		ResponseWrapper<DataShareResponseWrapperDto> responseWrapper = new ResponseWrapper<>();
 		DataShareResponseWrapperDto wrapperResponseDto = new DataShareResponseWrapperDto();
 		try {
-			AbisPurpose abisPurpose = AbisPurpose.fromCode(dataShareRequestDto.getPurpose());
+			String purpose = ProjectTypes.ABIS.getCode();
 			// step 1 - for the given testcase Id, read the cbeff xml from selected testdata
 			// file
 			byte[] cbeffFileBytes = null;
 			InputStream objectStoreStream = testCasesService.getPartnerTestDataStream(
-					dataShareRequestDto.getBioTestDataName(), getPartnerId(), abisPurpose.getCode());
-			cbeffFileBytes = getCbeffData(objectStoreStream, abisPurpose.getCode(),
-					dataShareRequestDto.getTestcaseId());
+					dataShareRequestDto.getBioTestDataName(), getPartnerId(), purpose);
+			cbeffFileBytes = getCbeffData(objectStoreStream, purpose, dataShareRequestDto.getTestcaseId(),
+					dataShareRequestDto.getCbeffFileSuffix());
 			wrapperResponseDto.setTestDataSource(dataShareRequestDto.getBioTestDataName());
 			if (Objects.isNull(objectStoreStream) || Objects.isNull(cbeffFileBytes)) {
-				objectStoreStream = testCasesService.getDefaultTestDataStream(dataShareRequestDto.getMethodName(),
-						abisPurpose.toString());
-				cbeffFileBytes = getCbeffData(objectStoreStream, abisPurpose.getCode(),
-						dataShareRequestDto.getTestcaseId());
+				objectStoreStream = testCasesService.getDefaultTestDataStream(purpose,
+						purpose);
+				cbeffFileBytes = getCbeffData(objectStoreStream, purpose,
+						dataShareRequestDto.getTestcaseId(), dataShareRequestDto.getCbeffFileSuffix());
 				wrapperResponseDto.setTestDataSource(AppConstants.MOSIP_DEFAULT);
 			}
 			log.info("cbeffFileBytes: {}", cbeffFileBytes);
@@ -106,10 +105,10 @@ public class ABISDataShareService {
 			String dataShareFullCreateUrl = createDataShareUrl + PATH_SEPARATOR + dataSharePolicyId + PATH_SEPARATOR
 					+ dataShareSubscriberId;
 			log.info("Calling dataShareFullCreateUrl: {}", dataShareFullCreateUrl);
-			
+
 			io.restassured.response.Response dataShareResp = given().cookie(builder.build()).relaxedHTTPSValidation()
-					.multiPart(FILE, "cbeff.xml", cbeffFileBytes, MULTIPART_FORM_DATA).contentType(MULTIPART_FORM_DATA).when()
-					.post(dataShareFullCreateUrl).then().extract().response();
+					.multiPart(FILE, "cbeff.xml", cbeffFileBytes, MULTIPART_FORM_DATA).contentType(MULTIPART_FORM_DATA)
+					.when().post(dataShareFullCreateUrl).then().extract().response();
 
 			DataShareResponseDto dataShareResponseDto = objectMapperConfig.objectMapper()
 					.readValue(dataShareResp.getBody().asString(), DataShareResponseDto.class);
@@ -148,15 +147,19 @@ public class ABISDataShareService {
 		return responseWrapper;
 	}
 
-	private byte[] getCbeffData(InputStream objectStoreStream, String purpose, String testcaseId)
+	private byte[] getCbeffData(InputStream objectStoreStream, String purpose, String testcaseId, int cbeffFileSuffix)
 			throws IOException, Exception {
 		byte[] probeFileBytes = null;
+		String fileName = "cbeff.xml";
+		if (cbeffFileSuffix > 0) {
+			fileName = "cbeff" + cbeffFileSuffix + ".xml";
+		}
 		if (Objects.nonNull(objectStoreStream)) {
 			objectStoreStream.reset();
 			probeFileBytes = testCasesService.getXmlDataFromZipFile(objectStoreStream, purpose, testcaseId,
-					"cbeff.xml");
+					fileName);
 		}
 		return probeFileBytes;
 	}
-	
+
 }

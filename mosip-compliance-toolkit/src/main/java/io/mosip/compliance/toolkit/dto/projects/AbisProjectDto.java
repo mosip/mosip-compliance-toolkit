@@ -38,8 +38,6 @@ public class AbisProjectDto {
 	private String outboundQueueName;
 	
 	private String bioTestDataFileName;
-	
-	private String purpose;
 
 	private String abisVersion;
 

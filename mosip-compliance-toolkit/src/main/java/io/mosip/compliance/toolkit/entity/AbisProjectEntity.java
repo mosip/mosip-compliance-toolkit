@@ -82,9 +82,6 @@ public class AbisProjectEntity implements Serializable {
 	@Column(name = "bio_test_data_file_name")
 	private String bioTestDataFileName;
 	
-	@Column(name = "purpose")
-	private String purpose;
-	
 	@Column(name = "abis_version")
 	private String abisVersion;
 
