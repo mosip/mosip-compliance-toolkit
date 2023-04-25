@@ -1,6 +1,5 @@
 package io.mosip.compliance.toolkit.validators;
 
-import com.amazonaws.services.opsworks.model.App;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -198,7 +197,7 @@ public class ISOStandardsValidator extends SBIValidator {
 		try {
 			bdir = FingerDecoder.getFingerBDIR(requestDto);
 
-			if (!FingerISOStandardsValidator.getInstance().isValidFormatIdentifier(bdir.getFormatIdentifier())) {
+			if (FingerISOStandardsValidator.getInstance().isValidFormatIdentifier(bdir.getFormatIdentifier())) {
 				message.append(
 						"<BR>Invalid Format Identifier for Finger Modality, expected values[0x46495200], but received input value["
 								+ String.format("0x%08X", bdir.getFormatIdentifier()) + "]");
@@ -209,7 +208,7 @@ public class ISOStandardsValidator extends SBIValidator {
 				isValid = false;
 			}
 
-			if (!FingerISOStandardsValidator.getInstance().isValidVersionNumber(bdir.getVersionNumber())) {
+			if (FingerISOStandardsValidator.getInstance().isValidVersionNumber(bdir.getVersionNumber())) {
 				message.append(
 						"<BR>Invalid Version Number for Finger Modality, expected values[0x30323000], but received input value["
 								+ String.format("0x%08X", bdir.getVersionNumber()) + "]");
