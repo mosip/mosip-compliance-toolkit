@@ -1,10 +1,10 @@
 [
 	{
 		"testCaseType": "ABIS",
-		"testName": "Insert Valid Biomterics Test",
+		"testName": "Insert one person\"s biomterics in ABIS",
 		"testId": "ABIS3000",
 		"specVersion": "0.9.0",
-		"testDescription": "Inserts valid biomterics in ABIS queue.",
+		"testDescription": "Insert one person\"s biomterics in ABIS",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"insert"
@@ -26,7 +26,65 @@
 		"otherAttributes": {
 			"abisPurpose": [
 				"Insert"
+			],
+			"cbeffFilesCount": "1"
+		}
+	},
+	{
+		"testCaseType": "ABIS",
+		"testName": "Insert two person\"s biomterics in ABIS",
+		"testId": "ABIS3001",
+		"specVersion": "0.9.0",
+		"testDescription": "Insert two person\"s biomterics in ABIS",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"insert"
+		],
+		"requestSchema": [
+			"InsertRequestSchema"
+		],
+		"responseSchema": [
+			"InsertResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
 			]
+		],
+		"otherAttributes": {
+			"cbeffFilesCount": "2"
+		}
+	},
+	{
+		"testCaseType": "ABIS",
+		"testName": "Identify - successful in finding a duplicate match",
+		"testId": "ABIS3017",
+		"specVersion": "0.9.0",
+		"testDescription": "Identify - successful in finding a duplicate match",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"identify"
+		],
+		"requestSchema": [
+			"IdentifyRequestSchema"
+		],
+		"responseSchema": [
+			"IdentifyResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			]
+		],
+		"otherAttributes": {
+			"cbeffFilesCount": "1",
+			"referenceTestId": "ABIS3000"
 		}
 	}
 ]

@@ -215,10 +215,10 @@
 				"keyRotationTestCase": {
 					"type": "boolean"
 				},
-				"transactionId":{
+				"transactionId": {
 					"type": "string"
 				},
-				"invalidRequestAttribute":{
+				"invalidRequestAttribute": {
 					"type": "string"
 				},
 				"modalities": {
@@ -262,15 +262,11 @@
 						"ISO19794_6_2011/PNG"
 					]
 				},
-				"abisPurpose": {
-					"type": "array",
-					"items": {
-						"type": "string",
-						"enum": [
-							"Insert",
-							"Identify"
-						]
-					}
+				"cbeffFilesCount": {
+					"type": "string"
+				},
+				"referenceTestId": {
+					"type": "string"
 				}
 			}
 		}
@@ -378,7 +374,7 @@
 				"properties": {
 					"otherAttributes": {
 						"required": [
-							"abisPurpose"
+							"cbeffFilesCount"
 						]
 					},
 					"specVersion": {
