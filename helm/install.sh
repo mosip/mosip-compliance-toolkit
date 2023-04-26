@@ -7,9 +7,7 @@ if [ $# -ge 1 ] ; then
 fi
 
 NS=compliance-toolkit
-
-echo Updating Helm Dependencies
-helm dependency update
+CHART_VERSION=12.0.2
 
 echo Create $NS namespace
 kubectl create ns $NS
@@ -40,7 +38,7 @@ kubectl -n istio-system apply -f ctk-set-cookie-header.yaml
 ./keycloak-init.sh
 
 echo Installing compliance-toolkit
-helm -n $NS install compliance-toolkit . --set istio.corsPolicy.allowOrigins\[0\].prefix=https://$COMPLIANCE_HOST --set istio.corsPolicy.allowOrigins\[1\].prefix=http://localhost
+helm -n $NS install compliance-toolkit mosip/compliance-toolkit --set istio.corsPolicy.allowOrigins\[0\].prefix=https://$COMPLIANCE_HOST --set istio.corsPolicy.allowOrigins\[1\].prefix=http://localhost --version $CHART_VERSION
 
 kubectl -n $NS  get deploy -o name |  xargs -n1 -t  kubectl -n $NS rollout status
 
