@@ -76,6 +76,7 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			StringBuffer messages = new StringBuffer();
+			StringBuffer codes = new StringBuffer();
 			Map<String, Boolean> testCaseSuccessfulMap = new HashMap<String, Boolean>();
 			String sdkUrls = getSdkUrlsJsonString(inputDto);
 			ArrayNode sdkUrlsArr = (ArrayNode) objectMapperConfig.objectMapper().readValue(sdkUrls, ArrayNode.class);
@@ -94,17 +95,34 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 							testCaseSuccessfulMap.put(sdkUrl, Boolean.TRUE);
 						}
 						messages.append(BR + sdkName + COLON + validationResultDto.getDescription());
+						codes.append(AppConstants.COMMA_SEPARATOR);
+						codes.append(BR);
+						codes.append(sdkName);
+						codes.append(COLON);
+						codes.append(AppConstants.COMMA_SEPARATOR);
+						codes.append(validationResultDto.getDescriptionKey());
 					} else {
 						if (includeInResults) {
 							testCaseSuccessfulMap.put(sdkUrl, Boolean.FALSE);
 						}
 						messages.append(BR + sdkName + COLON + validationResultDto.getDescription());
+						codes.append(AppConstants.COMMA_SEPARATOR);
+						codes.append(BR);
+						codes.append(sdkName);
+						codes.append(COLON);
+						codes.append(AppConstants.COMMA_SEPARATOR);
+						codes.append(validationResultDto.getDescriptionKey());
 					}
 				} else {
 					if (includeInResults) {
 						testCaseSuccessfulMap.put(sdkUrl, Boolean.FALSE);
 					}
 					messages.append(BR + sdkName + COLON + "Unable to connect");
+					codes.append(AppConstants.COMMA_SEPARATOR);
+					codes.append(BR);
+					codes.append(sdkName);
+					codes.append(COLON);
+					codes.append("BIOMETRIC_QUALITY_CHECK_003");
 				}
 			}
 			Boolean areAllQualityChecksSuccessful = Boolean.TRUE;
@@ -117,10 +135,12 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription(
 						"BiometricsQualityCheckValidator validations are successful." + messages.toString());
+				validationResultDto.setDescriptionKey("BIOMETRIC_QUALITY_CHECK_002" + codes.toString());
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription(
 						"BiometricsQualityCheckValidator validations are not successful." + messages.toString());
+				validationResultDto.setDescriptionKey("BIOMETRIC_QUALITY_CHECK_001" + codes.toString());
 			}
 		} catch (ToolkitException e) {
 			log.error("sessionId", "idType", "id", "In BiometricsQualityCheckValidator - " + e.getMessage());

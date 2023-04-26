@@ -159,12 +159,14 @@ public class ISOStandardsValidator extends SBIValidator {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription(
 						"ISOStandardsValidator failed due to below issues: " + " invalid bioType = " + bioType);
+				validationResultDto.setDescriptionKey("ISO_VALIDATOR_001" + AppConstants.ARGUMENTS_SEPARATOR + bioType);
 				break;
 			}
 		} else {
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription("ISOStandardsValidator failed due to below issues: "
 					+ " isValidISOTemplate 'bioValue' is Empty or Null");
+			validationResultDto.setDescriptionKey("ISO_VALIDATOR_002");
 		}
 		return validationResultDto;
 	}
@@ -175,6 +177,7 @@ public class ISOStandardsValidator extends SBIValidator {
 		validationResultDto.setStatus(AppConstants.FAILURE);
 
 		StringBuilder message = new StringBuilder("ISOStandardsValidator[ISO19794-4:2011] failed due to below issues:");
+		StringBuilder code = new StringBuilder("ISO_VALIDATOR_003");
 		boolean isValid = true;
 
 		ConvertRequestDto requestDto = new ConvertRequestDto();
@@ -198,6 +201,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Format Identifier for Finger Modality, expected values[0x46495200], but received input value["
 								+ String.format("0x%08X", bdir.getFormatIdentifier()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_004");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%08X", bdir.getFormatIdentifier()));
 				isValid = false;
 			}
 
@@ -205,6 +212,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Version Number for Finger Modality, expected values[0x30323000], but received input value["
 								+ String.format("0x%08X", bdir.getVersionNumber()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_005");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%08X", bdir.getVersionNumber()));
 				isValid = false;
 			}
 
@@ -212,6 +223,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid No Of Representations for Finger Modality, expected values[0x0001], but received input value["
 								+ String.format("0x%04X", bdir.getNoOfRepresentations()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_006");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getNoOfRepresentations()));
 				isValid = false;
 			}
 
@@ -220,6 +235,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Record Length for Finger Modality, expected values between[0x00000039 and 0xFFFFFFFF], but received input value["
 								+ String.format("0x%08X", (bioData != null ? bioData.length : 0) + "]"));
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_007");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%08X", (bioData != null ? bioData.length : 0)));
 				isValid = false;
 			}
 
@@ -227,6 +246,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Certification Flag for Finger Modality, expected values[0x00, 0x01], but received input value["
 								+ String.format("0x%02X", bdir.getCertificationFlag()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_008");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getCertificationFlag()));
 				isValid = false;
 			}
 
@@ -234,6 +257,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid No Of Finger Present for Finger Modality, expected values[0x01], but received input value["
 								+ String.format("0x%02X", bdir.getNoOfFingerPresent()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_009");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getNoOfFingerPresent()));
 				isValid = false;
 			}
 
@@ -242,6 +269,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Representation Length for Finger Modality, expected values between[0x00000029 and 0xFFFFFFEF], but received input value["
 								+ String.format("0x%08X", bdir.getRecordLength()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_010");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%08X", bdir.getRecordLength()));
 				isValid = false;
 			}
 
@@ -252,8 +283,12 @@ public class ISOStandardsValidator extends SBIValidator {
 						"<BR>Invalid CaptureDateTime for Finger Modality, The capture date and time field shall \r\n"
 								+ "indicate when the capture of this \r\n" + "representation stated in Coordinated \r\n"
 								+ "Universal Time (UTC). The capture date \r\n"
-								+ "and time field shall consist of 9 bytes., but received input value["
+								+ "and time field shall consist of 9 bytes, but received input value["
 								+ bdir.getCaptureDateTime() + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_011");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(bdir.getCaptureDateTime());
 				isValid = false;
 			}
 
@@ -262,6 +297,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Capture Device Technology Identifier for Finger Modality, expected values between[0x00 and 0x14], but received input value["
 								+ String.format("0x%02X", bdir.getCaptureDeviceTechnologyIdentifier()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_012");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getCaptureDeviceTechnologyIdentifier()));
 				isValid = false;
 			}
 
@@ -270,6 +309,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Capture Device Vendor Identifier for Finger Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getCaptureDeviceVendorIdentifier()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_013");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getCaptureDeviceVendorIdentifier()));
 				isValid = false;
 			}
 
@@ -278,6 +321,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Capture Device Type Identifier for Finger Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getCaptureDeviceTypeIdentifier()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_014");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getCaptureDeviceTypeIdentifier()));
 				isValid = false;
 			}
 
@@ -285,6 +332,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid No Of Quality Blocks value for Finger Modality, expected values between[0x00 and 0xFF], but received input value["
 								+ String.format("0x%02X", bdir.getNoOfQualityBlocks()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_015");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getNoOfQualityBlocks()));
 				isValid = false;
 			}
 
@@ -295,6 +346,10 @@ public class ISOStandardsValidator extends SBIValidator {
 						message.append(
 								"<BR>Invalid Quality Score value for Finger Modality, expected values between[{0x00 and 0x64}, {0xFF}], but received input value["
 										+ String.format("0x%02X", qualityBlock.getQualityScore()) + "]");
+						code.append(AppConstants.COMMA_SEPARATOR);
+						code.append("ISO_VALIDATOR_016");
+						code.append(AppConstants.ARGUMENTS_DELIMITER);
+						code.append(String.format("0x%02X", qualityBlock.getQualityScore()));
 						isValid = false;
 					}
 
@@ -303,6 +358,10 @@ public class ISOStandardsValidator extends SBIValidator {
 						message.append(
 								"<BR>Invalid Quality Algorithm Identifier for Finger Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 										+ String.format("0x%04X", qualityBlock.getQualityAlgorithmIdentifier()) + "]");
+						code.append(AppConstants.COMMA_SEPARATOR);
+						code.append("ISO_VALIDATOR_017");
+						code.append(AppConstants.ARGUMENTS_DELIMITER);
+						code.append(String.format("0x%04X", qualityBlock.getQualityAlgorithmIdentifier()));
 						isValid = false;
 					}
 
@@ -312,6 +371,10 @@ public class ISOStandardsValidator extends SBIValidator {
 								"<BR>Invalid Quality Algorithm Vendor Identifier for Finger Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 										+ String.format("0x%04X", qualityBlock.getQualityAlgorithmVendorIdentifier())
 										+ "]");
+						code.append(AppConstants.COMMA_SEPARATOR);
+						code.append("ISO_VALIDATOR_018");
+						code.append(AppConstants.ARGUMENTS_DELIMITER);
+						code.append(String.format("0x%04X", qualityBlock.getQualityAlgorithmVendorIdentifier()));
 						isValid = false;
 					}
 				}
@@ -322,6 +385,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid No Of Certification Blocks for Finger Modality, expected values between[0x00 and 0xFF], but received input value["
 								+ String.format("0x%02X", bdir.getNoOfCertificationBlocks()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_019");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getNoOfCertificationBlocks()));
 				isValid = false;
 			}
 
@@ -334,6 +401,11 @@ public class ISOStandardsValidator extends SBIValidator {
 										+ String.format("0x%04X",
 												fingerCertificationBlock.getCertificationAuthorityID())
 										+ "]");
+						code.append(AppConstants.COMMA_SEPARATOR);
+						code.append("ISO_VALIDATOR_020");
+						code.append(AppConstants.ARGUMENTS_DELIMITER);
+						code.append(String.format("0x%04X",
+								fingerCertificationBlock.getCertificationAuthorityID()));
 						isValid = false;
 					}
 
@@ -344,6 +416,11 @@ public class ISOStandardsValidator extends SBIValidator {
 										+ String.format("0x%02X",
 												fingerCertificationBlock.getCertificationSchemeIdentifier())
 										+ "]");
+						code.append(AppConstants.COMMA_SEPARATOR);
+						code.append("ISO_VALIDATOR_021");
+						code.append(AppConstants.ARGUMENTS_DELIMITER);
+						code.append(String.format("0x%02X",
+								fingerCertificationBlock.getCertificationSchemeIdentifier()));
 						isValid = false;
 					}
 				}
@@ -351,8 +428,14 @@ public class ISOStandardsValidator extends SBIValidator {
 
 			if (!FingerISOStandardsValidator.getInstance().isValidFingerPosition(purpose, bdir.getFingerPosition())) {
 				message.append(
-						"<BR>Invalid Finger Position Value for Finger Modality, expected values between[Purpose(Auth){0x00 and 0x0A}, Purpose(Registration){0x01 And 0x0A}], but received input value[Purpose("+ purpose +"){"
+						"<BR>Invalid Finger Position Value for Finger Modality, expected values between[Purpose(Auth)[0x00 and 0x0A], Purpose(Registration)[0x01 And 0x0A]], but received input value[Purpose("+ purpose +"){"
 								+ String.format("0x%02X", bdir.getFingerPosition()) + "}]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_022");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(purpose);
+				code.append(AppConstants.ARGUMENTS_SEPARATOR);
+				code.append(String.format("0x%02X", bdir.getFingerPosition()));
 				isValid = false;
 			}
 
@@ -360,6 +443,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Representations No Value for Finger Modality, expected values between[0x00 and 0x0F], but received input value["
 								+ String.format("0x%02X", bdir.getRepresentationNo()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_023");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getRepresentationNo()));
 				isValid = false;
 			}
 
@@ -369,6 +456,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Scale Unit Type Value for Finger Modality, expected values[0x01, 0x02], but received input value["
 								+ String.format("0x%02X", scaleUnitsType) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_024");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", scaleUnitsType));
 				isValid = false;
 			}
 
@@ -378,6 +469,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Device Scan Spatial Sampling Rate Horizontal for Finger Modality, expected values between[0x01EA and 0x03F2], but received input value["
 								+ String.format("0x%04X", scanSpatialSamplingRateHorizontal) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_025");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", scanSpatialSamplingRateHorizontal));
 				isValid = false;
 			}
 
@@ -387,6 +482,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				validationResultDto.setDescription(
 						"<BR>Invalid Device Scan Spatial Sampling Rate Vertical for Finger Modality, expected values between[0x01EA and 0x03F2], but received input value["
 								+ String.format("0x%04X", scanSpatialSamplingRateVertical) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_026");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", scanSpatialSamplingRateVertical));
 				isValid = false;
 			}
 
@@ -397,6 +496,12 @@ public class ISOStandardsValidator extends SBIValidator {
 								+ String.format("0x%04X", scanSpatialSamplingRateHorizontal)
 								+ ", but received input value["
 								+ String.format("0x%04X", bdir.getImageSpatialSamplingRateHorizontal()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_027");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", scanSpatialSamplingRateHorizontal));
+				code.append(AppConstants.ARGUMENTS_SEPARATOR);
+				code.append(String.format("0x%04X", bdir.getImageSpatialSamplingRateHorizontal()));
 				isValid = false;
 			}
 
@@ -407,6 +512,12 @@ public class ISOStandardsValidator extends SBIValidator {
 								+ String.format("0x%04X", scanSpatialSamplingRateVertical)
 								+ ", but received input value["
 								+ String.format("0x%04X", bdir.getImageSpatialSamplingRateVertical()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_028");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", scanSpatialSamplingRateVertical));
+				code.append(AppConstants.ARGUMENTS_SEPARATOR);
+				code.append(String.format("0x%04X", bdir.getImageSpatialSamplingRateVertical()));
 				isValid = false;
 			}
 
@@ -415,6 +526,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Image Bit Depth Value for Finger Modality, expected values[0x08], but received input value["
 								+ String.format("0x%02X", bdir.getBitDepth()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_029");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getBitDepth()));
 				isValid = false;
 			}
 
@@ -423,6 +538,12 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Image Compression Type for Finger Modality, expected values[Purpose(Auth), ({JPEG_2000_LOSSY(0x04) or WSQ(0x02)}), Purpose(Registration), ({JPEG_2000_LOSS_LESS(0x05)})], but received input value[Purpose("
 								+ purpose + "), (" + String.format("0x%02X", compressionType) + ")]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_030");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(purpose);
+				code.append(AppConstants.ARGUMENTS_SEPARATOR);
+				code.append(String.format("0x%02X", compressionType));
 				isValid = false;
 			}
 
@@ -431,6 +552,10 @@ public class ISOStandardsValidator extends SBIValidator {
 						"<BR>Invalid Image Impression Type for Finger Modality, expected values between[{0x00 and 0x0F} or 0x18 or 0x1C or 0x1D], "
 								+ " but received input value[" + String.format("0x%02X", bdir.getImpressionType())
 								+ "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_031");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getImpressionType()));
 				isValid = false;
 			}
 
@@ -439,6 +564,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Image Horizontal Line Length for Finger Modality, expected values between[0x0001 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getLineLengthHorizontal()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_032");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getLineLengthHorizontal()));
 				isValid = false;
 			}
 
@@ -447,6 +576,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Image Vertical Line Length for Finger Modality, expected values[0x0001 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getLineLengthVertical()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_033");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getLineLengthVertical()));
 				isValid = false;
 			}
 
@@ -454,12 +587,18 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Image Data Length for Finger Modality, expected values[0x00000001 and 0xFFFFFFFF], but received input value["
 								+ String.format("0x%08X", bdir.getImageLength()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_034");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%08X", bdir.getImageLength()));
 				isValid = false;
 			}
 
 			if (!FingerISOStandardsValidator.getInstance().isValidImageData(purpose, Modality.Finger, inImageData)) {
 				message.append(
 						"<BR>Invalid Image Data for Finger Modality, expected values[Purpose(Auth){JPEG_2000_LOSSY/WSQ}, Purpose(Registration){JPEG_2000_LOSS_LESS}]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_035");
 				isValid = false;
 			}
 		} catch (Exception e) {
@@ -472,12 +611,15 @@ public class ISOStandardsValidator extends SBIValidator {
 
 		if (!isValid) {
 			validationResultDto.setDescription(message.toString());
+			validationResultDto.setDescriptionKey(code.toString());
 			message = null;
+			code=null;
 			return validationResultDto;
 		}
 
 		validationResultDto.setStatus(AppConstants.SUCCESS);
 		validationResultDto.setDescription("ISO Standards Validation is successful");
+		validationResultDto.setDescriptionKey("ISO_VALIDATOR_036");
 		return validationResultDto;
 	}
 
@@ -487,6 +629,7 @@ public class ISOStandardsValidator extends SBIValidator {
 		validationResultDto.setStatus(AppConstants.FAILURE);
 
 		StringBuilder message = new StringBuilder("ISOStandardsValidator[ISO19794-6:2011] failed due to below issues:");
+		StringBuilder code = new StringBuilder("ISO_VALIDATOR_037");
 		boolean isValid = true;
 
 		ConvertRequestDto requestDto = new ConvertRequestDto();
@@ -511,6 +654,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Format Identifier for Iris Modality, expected values[0x49495200], but received input value["
 								+ String.format("0x%08X", bdir.getFormatIdentifier()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_038");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%08X", bdir.getFormatIdentifier()));
 				isValid = false;
 			}
 
@@ -518,6 +665,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Version Number for Iris Modality, expected values[0x30323000], but received input value["
 								+ String.format("0x%08X", bdir.getVersionNumber()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_039");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%08X", bdir.getVersionNumber()));
 				isValid = false;
 			}
 
@@ -526,6 +677,11 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid No Of Representations for Iris Modality, expected values[0x0001], but received input value["
 								+ String.format("0x%04X", bdir.getNoOfRepresentations()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_040");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getNoOfRepresentations()));
+
 				isValid = false;
 			}
 
@@ -534,6 +690,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Record Length for Iris Modality, expected values between[0x00000045 and 0xFFFFFFFF], but received input value["
 								+ String.format("0x%08X", (bioData != null ? bioData.length : 0) + "]"));
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_041");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%08X", (bioData != null ? bioData.length : 0)));
 				isValid = false;
 			}
 
@@ -541,6 +701,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Certification Flag for Iris Modality, expected values[0x00], but received input value["
 								+ String.format("0x%02X", bdir.getCertificationFlag()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_042");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getCertificationFlag()));
 				isValid = false;
 			}
 
@@ -549,6 +713,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid No Of Eyes Present for Iris Modality, expected values[0x00, 0x01], but received input value["
 								+ String.format("0x%02X", bdir.getNoOfEyesPresent()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_043");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getNoOfEyesPresent()));
 				isValid = false;
 			}
 
@@ -556,6 +724,12 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append("<BR>Invalid No Of Eyes Present[" + String.format("0x%04X", noOfEyesPresent)
 						+ "] for Iris Modality, For given No Of Representations["
 						+ String.format("0x%04X", noOfRepresentations) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_044");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", noOfEyesPresent));
+				code.append(AppConstants.ARGUMENTS_SEPARATOR);
+				code.append(String.format("0x%04X", noOfRepresentations));
 				isValid = false;
 			}
 
@@ -563,6 +737,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Representation Length for Iris Modality, expected values between[0x00000035 And 0xFFFFFFEF], but received input value["
 								+ String.format("0x%08X", bdir.getRecordLength()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_045");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%08X", bdir.getRecordLength()));
 				isValid = false;
 			}
 
@@ -575,6 +753,10 @@ public class ISOStandardsValidator extends SBIValidator {
 								+ "Universal Time (UTC). The capture date \r\n"
 								+ "and time field shall consist of 9 bytes., but received input value["
 								+ bdir.getCaptureDateTime() + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_046");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(bdir.getCaptureDateTime());
 				isValid = false;
 			}
 
@@ -583,6 +765,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Capture Device Technology Identifier for Iris Modality, expected values[0x00, 0x01], but received input value["
 								+ String.format("0x%02X", bdir.getCaptureDeviceTechnologyIdentifier()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_047");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getCaptureDeviceTechnologyIdentifier()));
 				isValid = false;
 			}
 
@@ -591,6 +777,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Capture Device Vendor Identifier for Iris Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getCaptureDeviceVendorIdentifier()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_048");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", String.format("0x%04X", bdir.getCaptureDeviceVendorIdentifier())));
 				isValid = false;
 			}
 
@@ -599,6 +789,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Capture Device Type Identifier for Iris Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getCaptureDeviceTypeIdentifier()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_049");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getCaptureDeviceTypeIdentifier()));
 				isValid = false;
 			}
 
@@ -606,6 +800,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid No Of Quality Blocks value for Iris Modality, expected values between [0x00 and 0xFF], but received input value["
 								+ String.format("0x%02X", bdir.getNoOfQualityBlocks()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_050");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getNoOfQualityBlocks()));
 				isValid = false;
 			}
 
@@ -615,6 +813,10 @@ public class ISOStandardsValidator extends SBIValidator {
 						message.append(
 								"<BR>Invalid Quality Score value for Iris Modality, expected values between[0x00 and 0x64], but received input value["
 										+ String.format("0x%02X", qualityBlock.getQualityScore()) + "]");
+						code.append(AppConstants.COMMA_SEPARATOR);
+						code.append("ISO_VALIDATOR_051");
+						code.append(AppConstants.ARGUMENTS_DELIMITER);
+						code.append(String.format("0x%02X", qualityBlock.getQualityScore()));
 						isValid = false;
 					}
 
@@ -623,6 +825,10 @@ public class ISOStandardsValidator extends SBIValidator {
 						message.append(
 								"<BR>Invalid Quality Algorithm Identifier for Iris Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 										+ String.format("0x%04X", qualityBlock.getQualityAlgorithmIdentifier()) + "]");
+						code.append(AppConstants.COMMA_SEPARATOR);
+						code.append("ISO_VALIDATOR_052");
+						code.append(AppConstants.ARGUMENTS_DELIMITER);
+						code.append(String.format("0x%04X", qualityBlock.getQualityAlgorithmIdentifier()));
 						isValid = false;
 					}
 
@@ -632,6 +838,10 @@ public class ISOStandardsValidator extends SBIValidator {
 								"<BR>Invalid Quality Algorithm Vendor Identifier for Iris Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 										+ String.format("0x%04X", qualityBlock.getQualityAlgorithmVendorIdentifier())
 										+ "]");
+						code.append(AppConstants.COMMA_SEPARATOR);
+						code.append("ISO_VALIDATOR_053");
+						code.append(AppConstants.ARGUMENTS_DELIMITER);
+						code.append(String.format("0x%04X", qualityBlock.getQualityAlgorithmVendorIdentifier()));
 						isValid = false;
 					}
 				}
@@ -641,20 +851,36 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid No Of Representation for Iris Modality, expected values[0x01], but received input value["
 								+ String.format("0x%02X", bdir.getRepresentationNo()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_054");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getRepresentationNo()));
 				isValid = false;
 			}
 
 			if (!IrisISOStandardsValidator.getInstance().isValidEyeLabel(purpose, bdir.getEyeLabel())) {
 				message.append(
 						"<BR>Invalid Iris Eye Label Value for Iris Modality, expected values[Purpose(Registration){0x01, 0x02}, Purpose(Auth){0x00, 0x01, 0x02}], but received input value[Purpose("
-								+ purpose + "){" + String.format("0x%02X", bdir.getEyeLabel()) + "}]");
+								+ purpose + ")(" + String.format("0x%02X", bdir.getEyeLabel()) + ")]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_055");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(purpose);
+				code.append(AppConstants.ARGUMENTS_SEPARATOR);
+				code.append(String.format("0x%02X", bdir.getRepresentationNo()));
 				isValid = false;
 			}
 
 			if (!IrisISOStandardsValidator.getInstance().isValidImageType(purpose, bdir.getImageType())) {
 				message.append(
 						"<BR>Invalid Image Type No Value Irisnger Modality, expected values[Purpose(Registration){0x03}, Purpose(Auth){0x07}], but received input value[Purpose("
-								+ purpose + "){" + String.format("0x%02X", bdir.getImageType()) + "}]");
+								+ purpose + ")(" + String.format("0x%02X", bdir.getImageType()) + ")]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_056");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(purpose);
+				code.append(AppConstants.ARGUMENTS_SEPARATOR);
+				code.append(String.format("0x%02X", bdir.getImageType()));
 				isValid = false;
 			}
 
@@ -662,6 +888,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Image Format Value for Iris Modality, expected values[0x0A], but received input value["
 								+ String.format("0x%02X", bdir.getImageFormat()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_057");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getImageFormat()));
 				isValid = false;
 			}
 
@@ -670,6 +900,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Image Horizontal Orientation for Iris Modality, expected values[0x00, 0x01, 0x02], but received input value["
 								+ String.format("0x%02X", bdir.getHorizontalOrientation()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_058");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getHorizontalOrientation()));
 				isValid = false;
 			}
 
@@ -678,6 +912,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Image Vertical Orientation for Iris Modality, expected values[0x00, 0x01, 0x02], but received input value["
 								+ String.format("0x%02X", bdir.getVerticalOrientation()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_059");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getVerticalOrientation()));
 				isValid = false;
 			}
 
@@ -686,6 +924,12 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Image Compression Type for Iris Modality, expected values[Purpose(Auth), ({JPEG_2000_LOSSY(0x02)}), Purpose(Registration), ({JPEG_2000_LOSS_LESS(0x01)})], but received input value[Purpose("
 								+ purpose + "), (" + String.format("0x%02X", compressionType) + ")]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_060");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(purpose);
+				code.append(AppConstants.ARGUMENTS_SEPARATOR);
+				code.append(String.format("0x%02X", compressionType));
 				isValid = false;
 			}
 
@@ -695,6 +939,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Image Width Value for Iris Modality, expected values between[0x0001 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getWidth()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_061");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getWidth()));
 				isValid = false;
 			}
 
@@ -702,6 +950,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Image Height Value for Iris Modality, expected values between[0x0001 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getHeight()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_062");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getHeight()));
 				isValid = false;
 			}
 
@@ -709,6 +961,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Image Bit Depth Value for Iris Modality, expected values[0x08(Grayscale)], but received input value["
 								+ String.format("0x%02X", bdir.getBitDepth()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_063");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getBitDepth()));
 				isValid = false;
 			}
 
@@ -716,6 +972,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Range Value for Iris Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getRange()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_064");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getRange()));
 				isValid = false;
 			}
 
@@ -723,6 +983,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Roll Angle Of Eye Value for Iris Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getRollAngleOfEye()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_065");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getRollAngleOfEye()));
 				isValid = false;
 			}
 
@@ -730,6 +994,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Roll Angle Uncertainty Value for Iris Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getRollAngleUncertainty()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_066");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getRollAngleUncertainty()));
 				isValid = false;
 			}
 
@@ -737,6 +1005,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Iris Center Smallest X Value for Iris Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getIrisCenterSmallestX()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_067");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getIrisCenterSmallestX()));
 				isValid = false;
 			}
 
@@ -744,6 +1016,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Iris Center Largest X Value for Iris Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getIrisCenterLargestX()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_068");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getIrisCenterLargestX()));
 				isValid = false;
 			}
 
@@ -751,6 +1027,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Iris Center Smallest Y Value for Iris Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getIrisCenterSmallestY()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_069");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getIrisCenterSmallestY()));
 				isValid = false;
 			}
 
@@ -758,6 +1038,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Iris Center Largest Y Value for Iris Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getIrisCenterLargestY()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_070");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getIrisCenterLargestY()));
 				isValid = false;
 			}
 
@@ -765,6 +1049,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Iris Diameter Smallest Value for Iris Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getIrisDiameterSmallest()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_071");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getIrisDiameterSmallest()));
 				isValid = false;
 			}
 
@@ -772,6 +1060,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Iris Diameter Largest Value for Iris Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getIrisDiameterLargest()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_072");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getIrisDiameterLargest()));
 				isValid = false;
 			}
 
@@ -779,12 +1071,18 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Image Data Length for Iris Modality, expected values between[0x00000001 and 0xFFFFFFFF], but received input value["
 								+ String.format("0x%08X", bdir.getImageLength()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_073");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%08X", bdir.getImageLength()));
 				isValid = false;
 			}
 
 			if (!IrisISOStandardsValidator.getInstance().isValidImageData(purpose, Modality.Iris, inImageData)) {
 				message.append(
 						"<BR>Invalid Image Data for Iris Modality, expected values[Purpose(Auth){JPEG_2000_LOSSY}, Purpose(Registration){JPEG_2000_LOSS_LESS}]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_074");
 				isValid = false;
 			}
 		} catch (Exception e) {
@@ -797,12 +1095,15 @@ public class ISOStandardsValidator extends SBIValidator {
 
 		if (!isValid) {
 			validationResultDto.setDescription(message.toString());
+			validationResultDto.setDescriptionKey(code.toString());
 			message = null;
+			code = null;
 			return validationResultDto;
 		}
 
 		validationResultDto.setStatus(AppConstants.SUCCESS);
 		validationResultDto.setDescription("ISO Standards Validation is successful");
+		validationResultDto.setDescriptionKey("ISO_VALIDATOR_075");
 		return validationResultDto;
 	}
 
@@ -812,6 +1113,7 @@ public class ISOStandardsValidator extends SBIValidator {
 		validationResultDto.setStatus(AppConstants.FAILURE);
 
 		StringBuilder message = new StringBuilder("ISOStandardsValidator[ISO19794-5:2011] failed due to below issues:");
+		StringBuilder code = new StringBuilder("ISO_VALIDATOR_076");
 		boolean isValid = true;
 
 		ConvertRequestDto requestDto = new ConvertRequestDto();
@@ -835,6 +1137,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Format Identifier for Face Modality, expected values[0x46414300], but received input value["
 								+ String.format("0x%08X", bdir.getFormatIdentifier()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_077");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%08X", bdir.getFormatIdentifier()));
 				isValid = false;
 			}
 
@@ -842,6 +1148,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Version Number for Face Modality, expected values[0x30333000], but received input value["
 								+ String.format("0x%08X", bdir.getVersionNumber()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_078");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%08X", bdir.getVersionNumber()));
 				isValid = false;
 			}
 
@@ -849,6 +1159,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid No Of Representations for Face Modality, expected values[0x0001], but received input value["
 								+ String.format("0x%04X", bdir.getNoOfRepresentations()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_079");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getNoOfRepresentations()));
 				isValid = false;
 			}
 
@@ -857,6 +1171,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Record Length for Face Modality, expected values between[0x00000001 and 0xFFFFFFFF], but received input value["
 								+ String.format("0x%08X", (bioData != null ? bioData.length : 0) + "]"));
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_080");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%08X", (bioData != null ? bioData.length : 0)));
 				isValid = false;
 			}
 
@@ -864,6 +1182,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Certification Flag for Face Modality, expected values[0x00], but received input value["
 								+ String.format("0x%02X", bdir.getCertificationFlag()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_081");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getCertificationFlag()));
 				isValid = false;
 			}
 
@@ -871,6 +1193,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Certification Flag for Face Modality, expected values[0x0000], but received input value["
 								+ String.format("0x%04X", bdir.getTemporalSemantics()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_082");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getTemporalSemantics()));
 				isValid = false;
 			}
 
@@ -878,6 +1204,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Representation Length for Face Modality, expected values between[0x00000033 and 0xFFFFFFEF], but received input value["
 								+ String.format("0x%08X", bdir.getRecordLength()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_083");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%08X", bdir.getRecordLength()));
 				isValid = false;
 			}
 
@@ -890,6 +1220,10 @@ public class ISOStandardsValidator extends SBIValidator {
 								+ "Universal Time (UTC). The capture date \r\n"
 								+ "and time field shall consist of 9 bytes., but received input value["
 								+ bdir.getCaptureDateTime() + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_084");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(bdir.getCaptureDateTime());
 				isValid = false;
 			}
 
@@ -898,6 +1232,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Capture Device Technology Identifier for Face Modality, expected values between[{0x00 and 0x06}, {0x80 and 0xFF}], but received input value["
 								+ String.format("0x%02X", bdir.getCaptureDeviceTechnologyIdentifier()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_085");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getCaptureDeviceTechnologyIdentifier()));
 				isValid = false;
 			}
 
@@ -906,6 +1244,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Capture Device Vendor Identifier for Face Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getCaptureDeviceVendorIdentifier()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_086");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getCaptureDeviceVendorIdentifier()));
 				isValid = false;
 			}
 
@@ -914,6 +1256,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Capture Device Type Identifier for Face Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getCaptureDeviceTypeIdentifier()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_087");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getCaptureDeviceTypeIdentifier()));
 				isValid = false;
 			}
 
@@ -921,6 +1267,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid No Of Quality Blocks value for Face Modality, expected values between[0x00 and 0xFF], but received input value["
 								+ String.format("0x%02X", bdir.getNoOfQualityBlocks()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_088");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getNoOfQualityBlocks()));
 				isValid = false;
 			}
 
@@ -930,6 +1280,10 @@ public class ISOStandardsValidator extends SBIValidator {
 						message.append(
 								"<BR>Invalid Quality Score value for Face Modality, expected values between[{0x00 and 0x64}, {0xFF}], but received input value["
 										+ String.format("0x%02X", qualityBlock.getQualityScore()) + "]");
+						code.append(AppConstants.COMMA_SEPARATOR);
+						code.append("ISO_VALIDATOR_089");
+						code.append(AppConstants.ARGUMENTS_DELIMITER);
+						code.append(String.format("0x%02X", qualityBlock.getQualityScore()));
 						isValid = false;
 					}
 
@@ -939,6 +1293,10 @@ public class ISOStandardsValidator extends SBIValidator {
 								"<BR>Invalid Quality Algorithm Identifier for Face Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 										+ String.format("0x%04X", qualityBlock.getQualityAlgorithmIdentifier())
 										+ "]");
+						code.append(AppConstants.COMMA_SEPARATOR);
+						code.append("ISO_VALIDATOR_090");
+						code.append(AppConstants.ARGUMENTS_DELIMITER);
+						code.append(String.format("0x%04X", qualityBlock.getQualityAlgorithmIdentifier()));
 						isValid = false;
 					}
 
@@ -948,6 +1306,10 @@ public class ISOStandardsValidator extends SBIValidator {
 								"<BR>Invalid Quality Algorithm Vendor Identifier for Face Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 										+ String.format("0x%04X", qualityBlock.getQualityAlgorithmVendorIdentifier())
 										+ "]");
+						code.append(AppConstants.COMMA_SEPARATOR);
+						code.append("ISO_VALIDATOR_091");
+						code.append(AppConstants.ARGUMENTS_DELIMITER);
+						code.append(String.format("0x%04X", qualityBlock.getQualityAlgorithmIdentifier()));
 						isValid = false;
 					}
 				}
@@ -957,6 +1319,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid No Of Landmark Points for Face Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getNoOfLandMarkPoints()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_092");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getNoOfLandMarkPoints()));
 				isValid = false;
 			}
 
@@ -964,6 +1330,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Gender value for Face Modality, expected values[0x00, 0x01, 0x02, 0xFF], but received input value["
 								+ String.format("0x%02X", bdir.getGender()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_093");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getGender()));
 				isValid = false;
 			}
 
@@ -971,6 +1341,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Eye Colour value for Face Modality, expected values between[{0x00 and 0x07}, {0xFF}], but received input value["
 								+ String.format("0x%02X", bdir.getEyeColor()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_094");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getEyeColor()));
 				isValid = false;
 			}
 
@@ -978,6 +1352,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Hair Colour Value for Face Modality, expected values between[{0x00 and 0x07}, {0xFF}], but received input value["
 								+ String.format("0x%02X", bdir.getHairColor()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_095");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getHairColor()));
 				isValid = false;
 			}
 
@@ -985,6 +1363,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Subject Height Value for Face Modality, expected values between[0x00 and 0xFF], but received input value["
 								+ String.format("0x%02X", bdir.getSubjectHeight()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_096");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getSubjectHeight()));
 				isValid = false;
 			}
 
@@ -992,6 +1374,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Features Mask Value for Face Modality, expected values between[0x000000 and 0xFFFFFF], but received input value["
 								+ String.format("0x%06X", bdir.getFeaturesMask()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_097");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%06X", bdir.getFeaturesMask()));
 				isValid = false;
 			}
 
@@ -999,21 +1385,31 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Expression Mask Value for Face Modality, expected values between[0x000000 and 0xFFFFFF], but received input value["
 								+ String.format("0x%06X", bdir.getExpressionMask()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_098");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%06X", bdir.getExpressionMask()));
 				isValid = false;
 			}
 
 			if (!FaceISOStandardsValidator.getInstance().isValidPoseAngle(bdir.getPoseAngle())) {
 				message.append("<BR>Invalid Pose Angle Value for Face Modality");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_099");
 				isValid = false;
 			}
 
 			if (!FaceISOStandardsValidator.getInstance().isValidPoseAngleUncertainty(bdir.getPoseAngleUncertainty())) {
 				message.append("<BR>Invalid Pose Angle Uncertainty Value for Face Modality");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_100");
 				isValid = false;
 			}
 
 			if (!FaceISOStandardsValidator.getInstance().isValidPoseAngleUncertainty(bdir.getPoseAngleUncertainty())) {
 				message.append("<BR>Invalid Pose Angle Uncertainty Value for Face Modality");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_101");
 				isValid = false;
 			}
 
@@ -1025,6 +1421,10 @@ public class ISOStandardsValidator extends SBIValidator {
 						message.append(
 								"<BR>Invalid Landmark Point Type for Face Modality, expected values between[0x00 and 0xFF], but received input value["
 										+ String.format("0x%02X", landmarkPoints.getLandmarkPointType()) + "]");
+						code.append(AppConstants.COMMA_SEPARATOR);
+						code.append("ISO_VALIDATOR_102");
+						code.append(AppConstants.ARGUMENTS_DELIMITER);
+						code.append(String.format("0x%02X", landmarkPoints.getLandmarkPointType()));
 						isValid = false;
 					}
 
@@ -1033,6 +1433,10 @@ public class ISOStandardsValidator extends SBIValidator {
 						message.append(
 								"<BR>Invalid Landmark Point Code for Face Modality, expected values between[0x00 and 0xFF], but received input value["
 										+ String.format("0x%02X", landmarkPoints.getLandmarkPointCode()) + "]");
+						code.append(AppConstants.COMMA_SEPARATOR);
+						code.append("ISO_VALIDATOR_103");
+						code.append(AppConstants.ARGUMENTS_DELIMITER);
+						code.append(String.format("0x%02X", landmarkPoints.getLandmarkPointCode()));
 						isValid = false;
 					}
 
@@ -1042,6 +1446,10 @@ public class ISOStandardsValidator extends SBIValidator {
 						message.append(
 								"<BR>Invalid Landmark X Cooridinate for Face Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 										+ String.format("0x%04X", landmarkPoints.getXCoordinate()) + "]");
+						code.append(AppConstants.COMMA_SEPARATOR);
+						code.append("ISO_VALIDATOR_104");
+						code.append(AppConstants.ARGUMENTS_DELIMITER);
+						code.append(String.format("0x%04X", landmarkPoints.getXCoordinate()));
 						isValid = false;
 					}
 
@@ -1051,6 +1459,10 @@ public class ISOStandardsValidator extends SBIValidator {
 						message.append(
 								"<BR>Invalid Landmark Y Cooridinate for Face Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 										+ String.format("0x%04X", landmarkPoints.getYCoordinate()) + "]");
+						code.append(AppConstants.COMMA_SEPARATOR);
+						code.append("ISO_VALIDATOR_105");
+						code.append(AppConstants.ARGUMENTS_DELIMITER);
+						code.append(String.format("0x%04X", landmarkPoints.getYCoordinate()));
 						isValid = false;
 					}
 
@@ -1060,6 +1472,10 @@ public class ISOStandardsValidator extends SBIValidator {
 						message.append(
 								"<BR>Invalid Landmark Z Cooridinate for Face Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 										+ String.format("0x%04X", landmarkPoints.getZCoordinate()) + "]");
+						code.append(AppConstants.COMMA_SEPARATOR);
+						code.append("ISO_VALIDATOR_106");
+						code.append(AppConstants.ARGUMENTS_DELIMITER);
+						code.append(String.format("0x%04X", landmarkPoints.getZCoordinate()));
 						isValid = false;
 					}
 				}
@@ -1069,6 +1485,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Face Image Type Value for Face Modality, expected values between[{0x00 and 0x03}, {0x80 and 0x82}], but received input value["
 								+ String.format("0x%02X", bdir.getFaceImageType()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_107");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getFaceImageType()));
 				isValid = false;
 			}
 
@@ -1077,6 +1497,12 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Image Compression Type for Finger Modality, expected values[Purpose(Auth), ({JPEG_2000_LOSSY(0x01)}), Purpose(Registration), ({JPEG_2000_LOSS_LESS(0x02)})], but received input value[Purpose("
 								+ purpose + "), (" + String.format("0x%02X", compressionType) + ")]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_108");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(purpose);
+				code.append(AppConstants.ARGUMENTS_SEPARATOR);
+				code.append(String.format("0x%02X", compressionType));
 				isValid = false;
 			}
 
@@ -1086,6 +1512,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Image Width Value for Face Modality, expected values between[0x0001 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getWidth()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_109");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getWidth()));
 				isValid = false;
 			}
 
@@ -1093,6 +1523,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Image Height Value for Face Modality, expected values between[0x0001 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getHeight()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_110");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%04X", bdir.getHeight()));
 				isValid = false;
 			}
 
@@ -1101,6 +1535,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Spatial Sampling Rate Level Value for Face Modality, expected values between[0x00 and 0x07], but received input value["
 								+ String.format("0x%02X", bdir.getSpatialSamplingRateLevel()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_111");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getSpatialSamplingRateLevel()));
 				isValid = false;
 			}
 
@@ -1109,6 +1547,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Post Acquisition Processing Value for Face Modality, expected values between[0x0000 and 0xFFFF], but received input value["
 								+ String.format("0x%02X", bdir.getPostAcquistionProcessing()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_112");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getPostAcquistionProcessing()));
 				isValid = false;
 			}
 
@@ -1116,6 +1558,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Cross Reference  Value for Face Modality, expected values between[0x00 and 0xFF], but received input value["
 								+ String.format("0x%02X", bdir.getCrossReference()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_113");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getCrossReference()));
 				isValid = false;
 			}
 
@@ -1124,6 +1570,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Image Bit Depth Value for Face Modality, expected values[0x01], but received input value["
 								+ String.format("0x%02X", bdir.getImageColorSpace()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_114");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%02X", bdir.getImageColorSpace()));
 				isValid = false;
 			}
 
@@ -1131,12 +1581,18 @@ public class ISOStandardsValidator extends SBIValidator {
 				message.append(
 						"<BR>Invalid Image Data Length for Face Modality, expected values between[0x00000001 and 0xFFFFFFFF], but received input value["
 								+ String.format("0x%08X", bdir.getImageLength()) + "]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_115");
+				code.append(AppConstants.ARGUMENTS_DELIMITER);
+				code.append(String.format("0x%08X", bdir.getImageLength()));
 				isValid = false;
 			}
 
 			if (!FaceISOStandardsValidator.getInstance().isValidImageData(purpose, Modality.Face, inImageData)) {
 				message.append(
 						"<BR>Invalid Image Data for Face Modality, expected values[JPEG_2000_LOSSY(Auth), JPEG_2000_LOSS_LESS(Registration)]");
+				code.append(AppConstants.COMMA_SEPARATOR);
+				code.append("ISO_VALIDATOR_116");
 				isValid = false;
 			}
 		} catch (Exception e) {
@@ -1149,12 +1605,15 @@ public class ISOStandardsValidator extends SBIValidator {
 
 		if (!isValid) {
 			validationResultDto.setDescription(message.toString());
+			validationResultDto.setDescriptionKey(code.toString());
 			message = null;
+			code = null;
 			return validationResultDto;
 		}
 
 		validationResultDto.setStatus(AppConstants.SUCCESS);
 		validationResultDto.setDescription("ISO Standards Validation is successful");
+		validationResultDto.setDescriptionKey("ISO_VALIDATOR_117");
 		return validationResultDto;
 	}
 }

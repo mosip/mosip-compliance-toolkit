@@ -126,10 +126,9 @@ public class TestCasesController {
 	}
 	
 	@GetMapping(value = "/getAbisTestCases")
-	public ResponseWrapper<List<TestCaseDto>> getAbisTestCases(@RequestParam(required = true) String abisSpecVersion,
-			@RequestParam(required = true) String abisPurpose) {
+	public ResponseWrapper<List<TestCaseDto>> getAbisTestCases(@RequestParam(required = true) String abisSpecVersion) {
 		try {
-			return service.getAbisTestCases(abisSpecVersion, abisPurpose);
+			return service.getAbisTestCases(abisSpecVersion);
 		} catch (Exception ex) {
 			return handleFailureForGetTestcases(ex);
 		}

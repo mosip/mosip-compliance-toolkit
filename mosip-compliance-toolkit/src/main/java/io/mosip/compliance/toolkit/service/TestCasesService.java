@@ -38,7 +38,6 @@ import com.networknt.schema.ValidationMessage;
 
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
-import io.mosip.compliance.toolkit.constants.AbisPurpose;
 import io.mosip.compliance.toolkit.constants.AbisSpecVersions;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.DeviceSubTypes;
@@ -270,14 +269,14 @@ public class TestCasesService {
         return responseWrapper;
     }
     
-    public ResponseWrapper<List<TestCaseDto>> getAbisTestCases(String abisSpecVersion, String abisPurpose) {
+    public ResponseWrapper<List<TestCaseDto>> getAbisTestCases(String abisSpecVersion) {
         ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
         List<TestCaseDto> testCases = new ArrayList<>();
         List<ServiceError> serviceErrorsList = new ArrayList<>();
         ServiceError serviceError = null;
         try {
             String testCaseSchemaJson = this.getSchemaJson(null, null,  AppConstants.TESTCASE_SCHEMA_JSON);
-            if (isValidAbisTestCase(abisSpecVersion, abisPurpose)) {
+            if (isValidAbisTestCase(abisSpecVersion)) {
                 List<TestCaseEntity> testCaseEntities = testCaseCacheService.getAbisTestCases(AppConstants.ABIS,
                 		abisSpecVersion);// testCasesRepository.findAllSdkTestCaseBySpecVersion(specVersion);
                 for (final TestCaseEntity testCaseEntity : testCaseEntities) {
@@ -286,8 +285,7 @@ public class TestCasesService {
                             .equals(this.validateJsonWithSchema(testcaseJson, testCaseSchemaJson).getStatus())) {
                         TestCaseDto testCaseDto = objectMapper.readValue(testcaseJson, TestCaseDto.class);
                         if (!testCaseDto.isInactive() && testCaseDto.getSpecVersion() != null
-                                && testCaseDto.getSpecVersion().equals(abisSpecVersion)
-                                && testCaseDto.getOtherAttributes().getAbisPurpose().contains(abisPurpose)) {
+                                && testCaseDto.getSpecVersion().equals(abisSpecVersion)) {
                             testCases.add(testCaseDto);
                         }
                     }
@@ -335,14 +333,13 @@ public class TestCasesService {
     }
     
     /**
-     * Verifies test case is valid. validates specVersion, purpose values
+     * Verifies test case is valid. validates specVersion values
      *
-     * @param specVersion, purpose
+     * @param specVersion
      * @return boolean
      */
-    private boolean isValidAbisTestCase(String specVersion, String sdkPurpose) throws ToolkitException {
+    private boolean isValidAbisTestCase(String specVersion) throws ToolkitException {
         AbisSpecVersions.fromCode(specVersion);
-        AbisPurpose.fromCode(sdkPurpose);
         return true;
     }
 
@@ -574,12 +571,13 @@ public class TestCasesService {
 
     private boolean validateArrayLengths(TestCaseDto testCaseDto) {
         if (testCaseDto.getMethodName().size() > 1
-                && !ProjectTypes.SDK.getCode().equals(testCaseDto.getTestCaseType())) {
+                && ProjectTypes.SBI.getCode().equals(testCaseDto.getTestCaseType())) {
             ToolkitErrorCodes errorCode = ToolkitErrorCodes.INVALID_TEST_CASE_JSON;
             throw new ToolkitException(errorCode.getErrorCode(),
                     errorCode.getErrorMessage() + " - the 'methodName' array length should be only 1.");
         }
-        if (testCaseDto.getMethodName().size() > 2) {
+        if (testCaseDto.getMethodName().size() > 2 && (ProjectTypes.SDK.getCode().equals(testCaseDto.getTestCaseType())
+        		|| ProjectTypes.SBI.getCode().equals(testCaseDto.getTestCaseType()))) {
             ToolkitErrorCodes errorCode = ToolkitErrorCodes.INVALID_TEST_CASE_JSON;
             throw new ToolkitException(errorCode.getErrorCode(),
                     errorCode.getErrorMessage() + " - the 'methodName' array length should not be more than 2.");

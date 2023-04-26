@@ -20,9 +20,11 @@ public class QualityCheckInvalidDataValidator extends SDKValidator {
 			if (statusCode == 401 || statusCode == 403) {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription("No data for Quality Check, expected status code received:" + statusCode);
+				validationResultDto.setDescriptionKey("QUALITY_CHECK_INVALID_DATA_VALIDATOR_001" + AppConstants.ARGUMENTS_DELIMITER + statusCode);
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("No data for Quality Check, unexpected status code received:" + statusCode);
+				validationResultDto.setDescriptionKey("QUALITY_CHECK_INVALID_DATA_VALIDATOR_002" + AppConstants.ARGUMENTS_DELIMITER + statusCode);
 			}
 		} catch (Exception e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
