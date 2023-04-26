@@ -972,7 +972,7 @@
 		"testId": "SDK2026",
 		"testDescription": "Finger match fail when wrong subtype",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
+		"isNegativeTestcase": true,
 		"methodName": [
 			"match"
 		],
@@ -980,7 +980,7 @@
 			"MatchRequestSchema"
 		],
 		"responseSchema": [
-			"MatchNullResponseSchema"
+			"MatchResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -989,7 +989,7 @@
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
 				},
 				{
-					"name": "MatchInvalidDataValidator",
+					"name": "MatchValidator",
 					"description": "Validates if biomterics match for the modality"
 				}
 			]
@@ -1231,7 +1231,7 @@
 		"testId": "SDK2033",
 		"testDescription": "Iris match fail when wrong subtype",
 		"specVersion": "0.9.0",
-		"isNegativeTestcase": false,
+		"isNegativeTestcase": true,
 		"methodName": [
 			"match"
 		],
@@ -1239,7 +1239,7 @@
 			"MatchRequestSchema"
 		],
 		"responseSchema": [
-			"MatchNullResponseSchema"
+			"MatchResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -1248,7 +1248,7 @@
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
 				},
 				{
-					"name": "MatchInvalidDataValidator",
+					"name": "MatchValidator",
 					"description": "Validates if biomterics match for the modality"
 				}
 			]
