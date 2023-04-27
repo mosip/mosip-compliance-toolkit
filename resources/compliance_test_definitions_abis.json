@@ -60,10 +60,10 @@
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Identify - successful in finding a duplicate match",
+		"testName": "Identify - duplicate found for the referenceId - ABIS3000",
 		"testId": "ABIS3017",
 		"specVersion": "0.9.0",
-		"testDescription": "Identify - successful in finding a duplicate match",
+		"testDescription": "Identify - duplicate found for the referenceId",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"identify"
@@ -79,11 +79,47 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "IdentifyDuplicateFoundValidator",
+					"description": "Validates the count of duplicates found by ABIS for the given referenceId"
 				}
 			]
 		],
 		"otherAttributes": {
 			"referenceTestId": "ABIS3000"
+		}
+	},
+	{
+		"testCaseType": "ABIS",
+		"testName": "Identify - duplicate not found for the referenceId ABIS3001",
+		"testId": "ABIS3018",
+		"specVersion": "0.9.0",
+		"testDescription": "Identify - duplicate not found for the referenceId",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"identify"
+		],
+		"requestSchema": [
+			"IdentifyRequestSchema"
+		],
+		"responseSchema": [
+			"IdentifyResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "IdentifyDuplicateNotFoundValidator",
+					"description": "Validates that no duplicates are found by ABIS for the given referenceId"
+				}
+			]
+		],
+		"otherAttributes": {
+			"referenceTestId": "ABIS3001"
 		}
 	}
 ]

@@ -1,0 +1,124 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema#",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/IdentifyResponseSchema.json",
+	"type": "object",
+	"properties": {
+		"id": {
+			"type": "string"
+		},
+		"requestId": {
+			"type": "string"
+		},
+		"responsetime": {
+			"type": "string"
+		},
+		"returnValue": {
+			"type": "integer"
+		},
+		"candidateList": {
+			"type": "object",
+			"properties": {
+				"count": {
+					"type": "integer"
+				},
+				"candidates": {
+					"type": [
+						"null",
+						"array"
+					],
+					"items": [
+						{
+							"type": "object",
+							"properties": {
+								"referenceId": {
+									"type": "string"
+								},
+								"analytics": {
+									"type": "object",
+									"additionalProperties": true,
+									"properties": {
+										"confidence": {
+											"type": "integer"
+										},
+										"internalScore": {
+											"type": "integer"
+										}
+									},
+									"required": [
+										"confidence",
+										"internalScore"
+									]
+								},
+								"modalities": {
+									"type": "array",
+									"items": [
+										{
+											"type": "object",
+											"properties": {
+												"biometricType": {
+													"type": "string"
+												},
+												"analytics": {
+													"type": "object",
+													"additionalProperties": true,
+													"properties": {
+														"confidence": {
+															"type": "integer"
+														},
+														"internalScore": {
+															"type": "integer"
+														}
+													},
+													"required": [
+														"confidence",
+														"internalScore"
+													]
+												}
+											},
+											"required": [
+												"biometricType",
+												"analytics"
+											]
+										}
+									]
+								}
+							},
+							"required": [
+								"referenceId",
+								"analytics",
+								"modalities"
+							]
+						}
+					]
+				}
+			},
+			"required": [
+				"count"
+			]
+		},
+		"analytics": {
+			"type": "object",
+			"additionalProperties": true,
+			"properties": {
+				"confidence": {
+					"type": ["null", "integer"]
+				},
+				"internalScore": {
+					"type": ["null", "integer"]
+				}
+			},
+			"required": [
+				"confidence",
+				"internalScore"
+			]
+		}
+	},
+	"required": [
+		"id",
+		"requestId",
+		"responsetime",
+		"returnValue",
+		"candidateList",
+		"analytics"
+	]
+}
