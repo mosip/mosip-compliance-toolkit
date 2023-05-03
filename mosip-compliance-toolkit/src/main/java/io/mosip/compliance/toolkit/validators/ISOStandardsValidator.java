@@ -234,7 +234,7 @@ public class ISOStandardsValidator extends SBIValidator {
 					bdir.getRecordLength())) {
 				message.append(
 						"<BR>Invalid Record Length for Finger Modality, expected values between[0x00000039 and 0xFFFFFFFF], but received input value["
-								+ String.format("0x%08X", (bioData != null ? bioData.length : 0) + "]"));
+								+ String.format("0x%08X", (bioData != null ? bioData.length : 0)) + "]");
 				code.append(AppConstants.COMMA_SEPARATOR);
 				code.append("ISO_VALIDATOR_007");
 				code.append(AppConstants.ARGUMENTS_DELIMITER);
@@ -689,7 +689,7 @@ public class ISOStandardsValidator extends SBIValidator {
 					bdir.getRecordLength())) {
 				message.append(
 						"<BR>Invalid Record Length for Iris Modality, expected values between[0x00000045 and 0xFFFFFFFF], but received input value["
-								+ String.format("0x%08X", (bioData != null ? bioData.length : 0) + "]"));
+								+ String.format("0x%08X", (bioData != null ? bioData.length : 0)) + "]");
 				code.append(AppConstants.COMMA_SEPARATOR);
 				code.append("ISO_VALIDATOR_041");
 				code.append(AppConstants.ARGUMENTS_DELIMITER);
@@ -1170,7 +1170,7 @@ public class ISOStandardsValidator extends SBIValidator {
 					bdir.getRecordLength())) {
 				message.append(
 						"<BR>Invalid Record Length for Face Modality, expected values between[0x00000001 and 0xFFFFFFFF], but received input value["
-								+ String.format("0x%08X", (bioData != null ? bioData.length : 0) + "]"));
+								+ String.format("0x%08X", (bioData != null ? bioData.length : 0)) + "]");
 				code.append(AppConstants.COMMA_SEPARATOR);
 				code.append("ISO_VALIDATOR_080");
 				code.append(AppConstants.ARGUMENTS_DELIMITER);
