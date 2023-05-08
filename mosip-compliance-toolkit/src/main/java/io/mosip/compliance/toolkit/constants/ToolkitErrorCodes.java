@@ -103,7 +103,11 @@ public enum ToolkitErrorCodes {
 	ABIS_QUEUE_READ_EXCEPTION("ABIS_QUEUE_EXCEPTION_003", "Unable to read the queue"),
 	ABIS_PROJECT_NOT_AVAILABLE("TOOLKIT_ABIS_PROJECTS_001", "No matching ABIS project available for the given id"),
 	INVALID_ABIS_PURPOSE("TOOLKIT_ABIS_PROJECTS_002", "Invalid ABIS Purpose"),
-	INVALID_ABIS_SPEC_VERSION("TOOLKIT_ABIS_PROJECTS_003", "Invalid ABIS Spec Version");
+	INVALID_ABIS_SPEC_VERSION("TOOLKIT_ABIS_PROJECTS_003", "Invalid ABIS Spec Version"),
+
+	ABIS_PROJECT_UNABLE_TO_ADD("TOOLKIT_ABIS_PROJECTS_001","ABIS Project unable to add"),
+
+	INVALID_ABIS_URL("TOOLKIT_ABIS_PROJECTS_001","Invalid ABIS url");
 	
 	private final String errorCode;
 	private final String errorMessage;
