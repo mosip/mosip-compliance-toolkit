@@ -24,10 +24,8 @@
 			]
 		],
 		"otherAttributes": {
-			"abisPurpose": [
-				"Insert"
-			],
-			"cbeffFilesCount": "1"
+			"bulkInsert": false,
+			"insertCount": 1
 		}
 	},
 	{
@@ -55,26 +53,36 @@
 			]
 		],
 		"otherAttributes": {
-			"cbeffFilesCount": "2"
+			"bulkInsert": true,
+			"insertCount": 2
 		}
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Identify - duplicate found for the referenceId - ABIS3000",
-		"testId": "ABIS3017",
+		"testName": "Identify - duplicate found for the referenceId against gallery",
+		"testId": "ABIS3018",
 		"specVersion": "0.9.0",
-		"testDescription": "Identify - duplicate found for the referenceId",
+		"testDescription": "Insert same biometrics twice, then test if duplicate is found for the referenceId against gallery",
 		"isNegativeTestcase": false,
 		"methodName": [
+			"insert",
 			"identify"
 		],
 		"requestSchema": [
+			"InsertRequestSchema",
 			"IdentifyRequestSchema"
 		],
 		"responseSchema": [
+			"InsertResponseSchema",
 			"IdentifyResponseSchema"
 		],
 		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			],
 			[
 				{
 					"name": "SchemaValidator",
@@ -87,23 +95,36 @@
 			]
 		],
 		"otherAttributes": {
-			"referenceTestId": "ABIS3000"
+			"bulkInsert": true,
+			"insertCount": 5,
+			"expectedDuplicateCount": 4,
+			"identifyReferenceId": "ABIS3018_1",
+			"identifyGalleryIds": [
+				"ABIS3018_1",
+				"ABIS3018_2",
+				"ABIS3018_3",
+				"ABIS3018_4",
+				"ABIS3018_5"
+			]
 		}
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Identify - duplicate not found for the referenceId ABIS3001",
-		"testId": "ABIS3018",
+		"testName": "Identify - duplicate found for the referenceId",
+		"testId": "ABIS3026",
 		"specVersion": "0.9.0",
-		"testDescription": "Identify - duplicate not found for the referenceId",
+		"testDescription": "Insert same biometrics twice, then test if duplicate is found for the referenceId",
 		"isNegativeTestcase": false,
 		"methodName": [
+			"insert",
 			"identify"
 		],
 		"requestSchema": [
+			"InsertRequestSchema",
 			"IdentifyRequestSchema"
 		],
 		"responseSchema": [
+			"InsertResponseSchema",
 			"IdentifyResponseSchema"
 		],
 		"validatorDefs": [
@@ -111,15 +132,24 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			],
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
 				},
 				{
-					"name": "IdentifyDuplicateNotFoundValidator",
-					"description": "Validates that no duplicates are found by ABIS for the given referenceId"
+					"name": "IdentifyDuplicateFoundValidator",
+					"description": "Validates the count of duplicates found by ABIS for the given referenceId"
 				}
 			]
 		],
 		"otherAttributes": {
-			"referenceTestId": "ABIS3001"
+			"bulkInsert": true,
+			"insertCount": 2,
+			"expectedDuplicateCount": 1,
+			"identifyReferenceId": "ABIS3026_2"
 		}
 	}
 ]

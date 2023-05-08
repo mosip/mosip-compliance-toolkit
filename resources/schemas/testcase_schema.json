@@ -262,10 +262,27 @@
 						"ISO19794_6_2011/PNG"
 					]
 				},
-				"cbeffFilesCount": {
+				"bulkInsert": {
+					"type": "boolean"
+				},
+				"insertCount": {
 					"type": "string"
 				},
-				"referenceTestId": {
+				"identifyReferenceId": {
+					"type": "string"
+				},
+				"identifyGalleryIds": {
+					"type": "array",
+					"items": [
+						{
+							"type": "string"
+						}
+					]
+				},
+				"expectedDuplicateCount": {
+					"type": "string"
+				},
+				"expectedFailureReason": {
 					"type": "string"
 				}
 			}
