@@ -99,11 +99,10 @@ public enum ToolkitErrorCodes {
 	TECHNICAL_ERROR_EXCEPTION("TOOLKIT_REQ_ERR_500", "Technical Error"),
 	
 	ABIS_DATA_SHARE_URL_EXCEPTION("ABIS_DATA_SHARE_URL_EXCEPTION_001", "Unable to generate data share url"),
-	ABIS_QUEUE_SEND_EXCEPTION("ABIS_QUEUE_EXCEPTION_002", "Unable to send to queue"),
-	ABIS_QUEUE_READ_EXCEPTION("ABIS_QUEUE_EXCEPTION_003", "Unable to read the queue"),
 	ABIS_PROJECT_NOT_AVAILABLE("TOOLKIT_ABIS_PROJECTS_001", "No matching ABIS project available for the given id"),
-	INVALID_ABIS_PURPOSE("TOOLKIT_ABIS_PROJECTS_002", "Invalid ABIS Purpose"),
-	INVALID_ABIS_SPEC_VERSION("TOOLKIT_ABIS_PROJECTS_003", "Invalid ABIS Spec Version");
+	INVALID_ABIS_SPEC_VERSION("TOOLKIT_ABIS_PROJECTS_002", "Invalid ABIS Spec Version"),
+	ABIS_PROJECT_UNABLE_TO_ADD("TOOLKIT_ABIS_PROJECTS_003","ABIS Project unable to add"),
+	INVALID_ABIS_URL("TOOLKIT_ABIS_PROJECTS_004","Invalid ABIS url");
 	
 	private final String errorCode;
 	private final String errorMessage;
