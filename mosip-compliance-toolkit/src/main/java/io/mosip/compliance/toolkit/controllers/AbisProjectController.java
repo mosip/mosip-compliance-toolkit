@@ -1,6 +1,5 @@
 package io.mosip.compliance.toolkit.controllers;
 
-import io.mosip.compliance.toolkit.dto.projects.SdkProjectDto;
 import io.mosip.compliance.toolkit.util.DataValidationUtil;
 import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.kernel.core.http.RequestWrapper;
