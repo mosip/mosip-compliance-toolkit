@@ -24,7 +24,7 @@ import io.mosip.kernel.core.logger.spi.Logger;
 @Component
 public class BIRBuilder {
 
-	private static final String UNKNOWN_CamelCase = "Unknown";
+	private static final String UNKNOWN = "UNKNOWN";
 
 	private static final String UNKNOWN_SmallCase = "unknown";
 
@@ -63,7 +63,7 @@ public class BIRBuilder {
 		VersionType versionType = new VersionType(1, 1);
 
 		if (UNKNOWN_SmallCase.equalsIgnoreCase(bioSubType) || "".equals(bioSubType)) {
-			bioSubType = UNKNOWN_CamelCase;
+			bioSubType = UNKNOWN;
 		}
 
 		BIR probeBir = new BIR.BIRBuilder().withBdb(bdb).withVersion(versionType).withCbeffversion(versionType)
