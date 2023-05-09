@@ -213,6 +213,106 @@ public class AbisProjectService {
 		return responseWrapper;
 	}
 
+	public ResponseWrapper<AbisProjectDto> updateAbisProject(AbisProjectDto abisProjectDto) {
+		ResponseWrapper<AbisProjectDto> responseWrapper = new ResponseWrapper<>();
+		try {
+			if (Objects.nonNull(abisProjectDto)) {
+				String projectId = abisProjectDto.getId();
+				String partnerId = this.getPartnerId();
+				Optional<AbisProjectEntity> optionalAbisProjectEntity = abisProjectRepository.findById(projectId,
+						getPartnerId());
+				if (optionalAbisProjectEntity.isPresent()) {
+					AbisProjectEntity entity = optionalAbisProjectEntity.get();
+					LocalDateTime updDate = LocalDateTime.now();
+					String url = abisProjectDto.getUrl();
+					String userName = abisProjectDto.getUsername();
+					String password = abisProjectDto.getPassword();
+					String requestQueueName = abisProjectDto.getOutboundQueueName();
+					String responseQueueName = abisProjectDto.getInboundQueueName();
+					String bioTestDataName = abisProjectDto.getBioTestDataFileName();
+					//Updating ABIS project values
+					if (Objects.nonNull(url) && !url.isEmpty()) {
+						entity.setUrl(url);
+					}
+					if (Objects.nonNull(userName) && !userName.isEmpty()) {
+						entity.setUsername(userName);
+					}
+					if (Objects.nonNull(password) && !password.isEmpty()) {
+						entity.setPassword(password);
+					}
+					if (Objects.nonNull(requestQueueName) && !requestQueueName.isEmpty()) {
+						entity.setOutboundQueueName(requestQueueName);
+					}
+					if (Objects.nonNull(responseQueueName) && !responseQueueName.isEmpty()) {
+						entity.setInboundQueueName(responseQueueName);
+					}
+					if (Objects.nonNull(bioTestDataName) && !bioTestDataName.isEmpty()) {
+						if (bioTestDataName.equals(AppConstants.MOSIP_DEFAULT)) {
+							entity.setBioTestDataFileName(AppConstants.MOSIP_DEFAULT);
+						} else {
+							BiometricTestDataEntity biometricTestData = biometricTestDataRepository
+									.findByTestDataName(bioTestDataName, partnerId);
+							String fileName = biometricTestData.getFileId();
+							String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId;
+							if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
+								entity.setBioTestDataFileName(bioTestDataName);
+							} else {
+								List<ServiceError> serviceErrorsList = new ArrayList<>();
+								ServiceError serviceError = new ServiceError();
+								serviceError.setErrorCode(
+										ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode());
+								serviceError.setMessage(
+										ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage());
+								serviceErrorsList.add(serviceError);
+								responseWrapper.setErrors(serviceErrorsList);
+							}
+						}
+					}
+					entity.setUpBy(this.getUserBy());
+					entity.setUpdDate(updDate);
+					AbisProjectEntity outputEntity = abisProjectRepository.save(entity);
+					abisProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity,
+							AbisProjectDto.class);
+				} else {
+					List<ServiceError> serviceErrorsList = new ArrayList<>();
+					ServiceError serviceError = new ServiceError();
+					serviceError.setErrorCode(ToolkitErrorCodes.ABIS_PROJECT_NOT_AVAILABLE.getErrorCode());
+					serviceError.setMessage(ToolkitErrorCodes.ABIS_PROJECT_NOT_AVAILABLE.getErrorMessage());
+					serviceErrorsList.add(serviceError);
+					responseWrapper.setErrors(serviceErrorsList);
+				}
+			}
+		} catch (ToolkitException ex) {
+			abisProjectDto = null;
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In updateAbisProject method of AbisProjectService Service - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ex.getErrorCode());
+			serviceError.setMessage(ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		} catch (Exception ex) {
+			abisProjectDto = null;
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In updateAbisProject method of AbisProjectService Service - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.ABIS_PROJECT_UNABLE_TO_ADD.getErrorCode());
+			serviceError
+					.setMessage(ToolkitErrorCodes.ABIS_PROJECT_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		}
+		responseWrapper.setId(putAbisProjectId);
+		responseWrapper.setResponse(abisProjectDto);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+
 	/**
 	 * Verifies all values of AbisProjectDto. validates ProjectType, SpecVersion
 	 *
