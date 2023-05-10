@@ -18,8 +18,11 @@ import javax.validation.Valid;
 @RestController
 public class AbisProjectController {
 
-    /** The Constant SDK_PROJECT_POST_ID application. */
+    /** The Constant ABIS_PROJECT_POST_ID application. */
     private static final String ABIS_PROJECT_POST_ID = "abis.project.post";
+
+    /** The Constant ABIS_PROJECT_UPDATE_ID application. */
+    private static final String ABIS_PROJECT_UPDATE_ID = "abis.project.put";
     @Autowired
     private AbisProjectService abisProjectService;
 
@@ -59,5 +62,23 @@ public class AbisProjectController {
         DataValidationUtil.validate(errors, ABIS_PROJECT_POST_ID);
         return abisProjectService.addAbisProject(value.getRequest());
     }
-   
+
+    /**
+     * Update Abis Project details.
+     *
+     * @param AbisProjectDto
+     * @return AbisProjectDto added
+     * @throws Exception
+     */
+    @ResponseFilter
+    @PutMapping(value = "/updateAbisProject", produces = "application/json")
+    public ResponseWrapper<AbisProjectDto> updateAbisProject(
+            @RequestBody @Valid RequestWrapper<AbisProjectDto> value,
+            Errors errors) throws Exception {
+
+        requestValidator.validate(value, errors);
+        requestValidator.validateId(ABIS_PROJECT_UPDATE_ID, value.getId(), errors);
+        DataValidationUtil.validate(errors, ABIS_PROJECT_UPDATE_ID);
+        return abisProjectService.updateAbisProject(value.getRequest());
+    }
 }
