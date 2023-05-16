@@ -1,6 +1,8 @@
 {
 	"$schema": "https://json-schema.org/draft/2019-09/schema#",
 	"$id": "http://mosip-compliance-toolkit.com/schemas/IdentifyResponseSchema.json",
+	"title": "ABIS Identify Response Schema",
+	"description": "ABIS Identify Response Schema",
 	"type": "object",
 	"properties": {
 		"id": {
@@ -101,10 +103,16 @@
 			"additionalProperties": true,
 			"properties": {
 				"confidence": {
-					"type": ["null", "integer"]
+					"type": [
+						"null",
+						"integer"
+					]
 				},
 				"internalScore": {
-					"type": ["null", "integer"]
+					"type": [
+						"null",
+						"integer"
+					]
 				}
 			},
 			"required": [

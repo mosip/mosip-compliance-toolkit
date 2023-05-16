@@ -25,7 +25,7 @@
 		],
 		"otherAttributes": {
 			"bulkInsert": false,
-			"insertCount": 1
+			"insertCount": "1"
 		}
 	},
 	{
@@ -54,7 +54,37 @@
 		],
 		"otherAttributes": {
 			"bulkInsert": true,
-			"insertCount": 2
+			"insertCount": "2"
+		}
+	},
+	{
+		"testCaseType": "ABIS",
+		"testName": "Invalid insert request structure",
+		"testId": "ABIS3002",
+		"specVersion": "0.9.0",
+		"testDescription": "Invalid insert request - requestId attribute name is invalid",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"insert"
+		],
+		"requestSchema": [
+			"InsertInvalidRequestSchema"
+		],
+		"responseSchema": [
+			"InsertResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			]
+		],
+		"otherAttributes": {
+			"bulkInsert": false,
+			"insertCount": "1",
+			"invalidRequestAttribute": "referenceId"
 		}
 	},
 	{
@@ -96,8 +126,8 @@
 		],
 		"otherAttributes": {
 			"bulkInsert": true,
-			"insertCount": 5,
-			"expectedDuplicateCount": 4,
+			"insertCount": "5",
+			"expectedDuplicateCount": "4",
 			"identifyReferenceId": "ABIS3018_1",
 			"identifyGalleryIds": [
 				"ABIS3018_1",
@@ -147,8 +177,8 @@
 		],
 		"otherAttributes": {
 			"bulkInsert": true,
-			"insertCount": 2,
-			"expectedDuplicateCount": 1,
+			"insertCount": "2",
+			"expectedDuplicateCount": "1",
 			"identifyReferenceId": "ABIS3026_2"
 		}
 	}
