@@ -50,7 +50,7 @@
 		<swagger.version>2.9.2</swagger.version>
 		<squareup.okhttp.version>2.7.5</squareup.okhttp.version>
 		<io.rest-assured.version>4.0.0</io.rest-assured.version>
-		<jose4j.version>0.7.1</jose4j.version>
+		<jose4j.version>0.9.3</jose4j.version>
 		<io.micrometer.prometheus.version>1.4.2</io.micrometer.prometheus.version>
 		
 		<!-- Object Store -->
