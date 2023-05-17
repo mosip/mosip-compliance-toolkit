@@ -436,6 +436,7 @@ public class BiometricTestDataService {
                                     ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorMessage() + " " + entryName);
                         } else {
                             entryName = entryName.replace(purpose + "/", "");
+                            System.out.println(entryName);
                         }
                     }
                     if (!entryName.isBlank()) {
@@ -466,15 +467,15 @@ public class BiometricTestDataService {
                                                     + " in " + testcaseId);
                                 }
                             }
-                        }
-                    } else {
-                        if (zipEntry.isDirectory()) {
-                            String testcaseId = entryName.substring(0, entryName.length() - 1);
-                            if (testDataValidation.getFolders().contains(testcaseId)) {
-                                testDataValidation.getFolders().remove(testcaseId);
-                            } else {
-                                throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorCode(),
-                                        ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorMessage() + " " + testcaseId);
+                        } else {
+                            if (zipEntry.isDirectory()) {
+                                String testcaseId = entryName.substring(0, entryName.length() - 1);
+                                if (testDataValidation.getFolders().contains(testcaseId)) {
+                                    testDataValidation.getFolders().remove(testcaseId);
+                                } else {
+                                    throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorCode(),
+                                            ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorMessage() + " " + testcaseId);
+                                }
                             }
                         }
                     }
