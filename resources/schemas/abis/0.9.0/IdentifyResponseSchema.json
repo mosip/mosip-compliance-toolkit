@@ -17,6 +17,9 @@
 		"returnValue": {
 			"type": "integer"
 		},
+		"failureReason": {
+			"type": "integer"
+		},
 		"candidateList": {
 			"type": "object",
 			"properties": {
@@ -125,8 +128,6 @@
 		"id",
 		"requestId",
 		"responsetime",
-		"returnValue",
-		"candidateList",
-		"analytics"
+		"returnValue"
 	]
 }

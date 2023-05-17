@@ -24,7 +24,7 @@ public class TestCaseDto implements Serializable {
 	@JsonProperty("isNegativeTestcase")
 	public boolean isNegativeTestcase;
 	@JsonProperty("inactive")
-    public boolean inactive;
+	public boolean inactive;
 	public String inactiveForAndroid;
 	public List<String> methodName;
 	public List<String> requestSchema;
@@ -53,11 +53,11 @@ public class TestCaseDto implements Serializable {
 		public String deviceSubId;
 		public String timeout;
 		@JsonProperty("resumeBtn")
-	    public boolean resumeBtn;
+		public boolean resumeBtn;
 		@JsonProperty("resumeAgainBtn")
-	    public boolean resumeAgainBtn;
+		public boolean resumeAgainBtn;
 		@JsonProperty("keyRotationTestCase")
-	    public boolean keyRotationTestCase;
+		public boolean keyRotationTestCase;
 		public String transactionId;
 		public String invalidRequestAttribute;
 		public List<String> modalities;
