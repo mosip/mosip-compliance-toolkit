@@ -15,6 +15,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import io.mosip.compliance.toolkit.constants.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,10 +34,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.commons.khazana.dto.ObjectDto;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
-import io.mosip.compliance.toolkit.constants.AppConstants;
-import io.mosip.compliance.toolkit.constants.MethodName;
-import io.mosip.compliance.toolkit.constants.SdkPurpose;
-import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.AddBioTestDataResponseDto;
 import io.mosip.compliance.toolkit.dto.BiometricTestDataDto;
 import io.mosip.compliance.toolkit.dto.TestDataValidationDto;
@@ -190,9 +187,13 @@ public class BiometricTestDataService {
                     && file.getSize() > 0) {
 
                 String purpose = inputBiometricTestDataDto.getPurpose();
-                SdkPurpose sdkPurpose = SdkPurpose.fromCode(purpose);
-                TestDataValidationDto testDataValidation = validateTestData(sdkPurpose.getCode(), file);
-
+                TestDataValidationDto testDataValidation = null;
+                if(purpose != null){
+                    SdkPurpose sdkPurpose = SdkPurpose.fromCode(purpose);
+                    testDataValidation = validateTestData(sdkPurpose.getCode(), file);
+                } else {
+                    testDataValidation = validateTestData(purpose, file);
+                }
                 String encodedHash = CryptoUtil.getEncodedHash(file.getBytes());
 
                 ObjectMapper mapper = objectMapperConfig.objectMapper();
@@ -208,58 +209,60 @@ public class BiometricTestDataService {
                 inputEntity.setUpdDate(null);
                 inputEntity.setDeleted(false);
                 inputEntity.setDelTime(null);
-
-                String container = AppConstants.PARTNER_TESTDATA + "/" + inputEntity.getPartnerId() + "/"
-                        + inputEntity.getPurpose();
-                if (!objectStore.exists(objectStoreAccountName, container, null, null, inputEntity.getFileId())) {
-                    BiometricTestDataEntity entity = biometricTestDataRepository.save(inputEntity);
-
-                    boolean status = false;
-                    InputStream is = file.getInputStream();
-                    try {
-                        status = putInObjectStore(container, inputEntity.getFileId(), is);
-                    } catch (Exception ex) {
-                        log.debug("sessionId", "idType", "id", ex.getStackTrace());
-                        log.error("sessionId", "idType", "id",
-                                "In addBiometricTestdata method of BiometricTestDataService Service - "
-                                        + ex.getMessage());
+                    if(purpose == null) {
+                        inputEntity.setPurpose(AppConstants.ABIS);
                     }
-                    is.close();
-                    if (status) {
-                        BiometricTestDataDto biometricTestData = mapper.convertValue(entity,
-                                BiometricTestDataDto.class);
-                        addBioTestDataResponseDto = new AddBioTestDataResponseDto();
-                        addBioTestDataResponseDto.setBiometricTestDataDto(biometricTestData);
-                        if (Objects.nonNull(testDataValidation)) {
-                            Set<String> set = null;
-                            if (!testDataValidation.getFolders().isEmpty()) {
-                                set = new HashSet<>(testDataValidation.getFolders());
-                                set.addAll(testDataValidation.getProbeFolders());
-                                set.addAll(testDataValidation.getGalleryFolders());
-                                String msg = "For testcases " + set + " we will use data from MOSIP_DEFAULT";
-                                addBioTestDataResponseDto.setInfo(msg);
-                            }
+                    String container = AppConstants.PARTNER_TESTDATA + "/" + inputEntity.getPartnerId() + "/"
+                            + inputEntity.getPurpose();
+                    if (!objectStore.exists(objectStoreAccountName, container, null, null,
+                            inputEntity.getFileId())) {
+                        BiometricTestDataEntity entity = biometricTestDataRepository.save(inputEntity);
+
+                        boolean status = false;
+                        InputStream is = file.getInputStream();
+                        try {
+                            status = putInObjectStore(container, inputEntity.getFileId(), is);
+                        } catch (Exception ex) {
+                            log.debug("sessionId", "idType", "id", ex.getStackTrace());
+                            log.error("sessionId", "idType", "id",
+                                    "In addBiometricTestdata method of BiometricTestDataService Service - "
+                                            + ex.getMessage());
                         }
+                        is.close();
+                        if (status) {
+                            BiometricTestDataDto biometricTestData = mapper.convertValue(entity,
+                                    BiometricTestDataDto.class);
+                            addBioTestDataResponseDto = new AddBioTestDataResponseDto();
+                            addBioTestDataResponseDto.setBiometricTestDataDto(biometricTestData);
+                            if (Objects.nonNull(testDataValidation)) {
+                                Set<String> set = null;
+                                if (!testDataValidation.getFolders().isEmpty()) {
+                                    set = new HashSet<>(testDataValidation.getFolders());
+                                    set.addAll(testDataValidation.getProbeFolders());
+                                    set.addAll(testDataValidation.getGalleryFolders());
+                                    String msg = "For testcases " + set + " we will use data from MOSIP_DEFAULT";
+                                    addBioTestDataResponseDto.setInfo(msg);
+                                }
+                            }
+                        } else {
+                            biometricTestDataRepository.delete(entity);
+                            List<ServiceError> serviceErrorsList = new ArrayList<>();
+                            ServiceError serviceError = new ServiceError();
+                            serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorCode());
+                            serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorMessage());
+                            serviceErrorsList.add(serviceError);
+                            responseWrapper.setErrors(serviceErrorsList);
+                        }
+
                     } else {
-                        biometricTestDataRepository.delete(entity);
                         List<ServiceError> serviceErrorsList = new ArrayList<>();
                         ServiceError serviceError = new ServiceError();
-                        serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorCode());
-                        serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorMessage());
+                        serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorCode());
+                        serviceError.setMessage(
+                                ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorMessage() + inputEntity.getFileId());
                         serviceErrorsList.add(serviceError);
                         responseWrapper.setErrors(serviceErrorsList);
                     }
-
-                } else {
-                    List<ServiceError> serviceErrorsList = new ArrayList<>();
-                    ServiceError serviceError = new ServiceError();
-                    serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorCode());
-                    serviceError.setMessage(
-                            ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorMessage() + inputEntity.getFileId());
-                    serviceErrorsList.add(serviceError);
-                    responseWrapper.setErrors(serviceErrorsList);
-                }
-
             } else {
                 List<ServiceError> serviceErrorsList = new ArrayList<>();
                 ServiceError serviceError = new ServiceError();
@@ -309,6 +312,7 @@ public class BiometricTestDataService {
     }
 
     private TestDataValidationDto validateTestData(String purpose, MultipartFile file) throws IOException {
+
         TestDataValidationDto testDataValidation = new TestDataValidationDto();
         ZipInputStream zis = null;
         try {
@@ -317,9 +321,15 @@ public class BiometricTestDataService {
                 validGalleryXmls.add(GALLERY + i + DOT_XML);
             }
             List<String> ignoreTestcaseList = Arrays.asList(ignoreTestcases.split(","));
-            testDataValidation.setPurpose(purpose);
-            List<TestCaseEntity> testcases = testCaseCacheService.getSdkTestCases(AppConstants.SDK,
-                    sdkSampleTestdataSpecVer);
+            List<TestCaseEntity> testcases = null;
+            if(purpose != null) {
+                testDataValidation.setPurpose(purpose);
+                testcases = testCaseCacheService.getSdkTestCases(AppConstants.SDK,
+                        sdkSampleTestdataSpecVer);
+            }else{
+                testcases = testCaseCacheService.getAbisTestCases(AppConstants.ABIS,
+                        sdkSampleTestdataSpecVer);
+            }
             if (Objects.nonNull(testcases)) {
                 List<String> folders = new ArrayList<>();
                 List<String> probeFolders = new ArrayList<>();
@@ -328,25 +338,41 @@ public class BiometricTestDataService {
                     String testcaseJson = testcase.getTestcaseJson();
                     TestCaseDto testCaseDto = objectMapperConfig.objectMapper().readValue(testcaseJson,
                             TestCaseDto.class);
-                    if (!ignoreTestcaseList.contains(testCaseDto.getTestId())
-                            && testCaseDto.getOtherAttributes().getSdkPurpose().contains(purpose)) {
-                        String folderName = testCaseDto.getTestId();
-                        folders.add(folderName);
-                        probeFolders.add(folderName);
-                        if (testCaseDto.getOtherAttributes().getSdkPurpose().contains(SdkPurpose.MATCHER.getCode())) {
-                            galleryFolders.add(folderName);
-                        }
-                        if (testCaseDto.getMethodName().size() > 1
-                                && testCaseDto.getMethodName().get(1).equals(MethodName.MATCH.getCode())) {
-                            folderName += "/" + testCaseDto.getMethodName().get(1);
+                    if(purpose != null) {
+                        if (!ignoreTestcaseList.contains(testCaseDto.getTestId())
+                                && testCaseDto.getOtherAttributes().getSdkPurpose().contains(purpose)) {
+                            String folderName = testCaseDto.getTestId();
                             folders.add(folderName);
                             probeFolders.add(folderName);
+                            if (testCaseDto.getOtherAttributes().getSdkPurpose().contains(SdkPurpose.MATCHER.getCode())) {
+                                galleryFolders.add(folderName);
+                            }
+                            if (testCaseDto.getMethodName().size() > 1
+                                    && testCaseDto.getMethodName().get(1).equals(MethodName.MATCH.getCode())) {
+                                folderName += "/" + testCaseDto.getMethodName().get(1);
+                                folders.add(folderName);
+                                probeFolders.add(folderName);
+                            }
+                        }
+                    } else {
+                        if (!ignoreTestcaseList.contains(testCaseDto.getTestId())) {
+                            String folderName = testCaseDto.getTestId();
+                            folders.add(folderName);
+                            probeFolders.add(folderName);
+                            if (testCaseDto.getMethodName().size() > 1
+                                    && testCaseDto.getMethodName().get(1).equals(MethodName.MATCH.getCode())) {
+                                folderName += "/" + testCaseDto.getMethodName().get(1);
+                                folders.add(folderName);
+                                probeFolders.add(folderName);
+                            }
                         }
                     }
                 }
                 testDataValidation.setFolders(folders);
                 testDataValidation.setProbeFolders(probeFolders);
                 testDataValidation.setGalleryFolders(galleryFolders);
+                System.out.println(folders);
+                System.out.println(probeFolders);
             }
 
             if (testDataValidation.getFolders().size() == 0 || testDataValidation.getProbeFolders().size() == 0) {
@@ -397,34 +423,55 @@ public class BiometricTestDataService {
 					}
                     
                     String entryName = zipEntry.getName();
-                    if (!entryName.startsWith(purpose)) {
-                        throw new ToolkitException(ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode(),
-                                ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorMessage() + " " + entryName);
+                    if(purpose != null) {
+                        if (!entryName.startsWith(purpose)) {
+                            throw new ToolkitException(ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode(),
+                                    ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorMessage() + " " + entryName);
+                        } else {
+                            entryName = entryName.replace(purpose + "/", "");
+                        }
                     } else {
-                        entryName = entryName.replace(purpose + "/", "");
+                        if (!entryName.startsWith(AppConstants.ABIS)) {
+                            throw new ToolkitException(ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode(),
+                                    ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorMessage() + " " + entryName);
+                        } else {
+                            entryName = entryName.replace(AppConstants.ABIS + "/", "");
+                        }
                     }
                     if (!entryName.isBlank()) {
-                        if (zipEntry.isDirectory()) {
-                            String testcaseId = entryName.substring(0, entryName.length() - 1);
-                            if (testDataValidation.getFolders().contains(testcaseId)) {
-                                testDataValidation.getFolders().remove(testcaseId);
-                            } else {
-                                throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorCode(),
-                                        ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorMessage() + " " + testcaseId);
+                        if(purpose != null) {
+                            if (zipEntry.isDirectory()) {
+                                String testcaseId = entryName.substring(0, entryName.length() - 1);
+                                if (testDataValidation.getFolders().contains(testcaseId)) {
+                                    testDataValidation.getFolders().remove(testcaseId);
+                                } else {
+                                    throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorCode(),
+                                            ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorMessage() + " " + testcaseId);
+                                }
+                            } else if (entryName.endsWith(PROBE_XML)) {
+                                String testcaseId = entryName.substring(entryName.indexOf(AppConstants.SDK),
+                                        entryName.indexOf(PROBE_XML) - 1);
+                                testDataValidation.getProbeFolders().remove(testcaseId);
+                            } else if (entryName.contains(GALLERY) && purpose.equals(SdkPurpose.MATCHER.getCode())) {
+                                String testcaseId = entryName.substring(entryName.indexOf(AppConstants.SDK),
+                                        entryName.indexOf(GALLERY) - 1);
+                                testDataValidation.getGalleryFolders().remove(testcaseId);
+                                String galleryXml = entryName.substring(entryName.indexOf(GALLERY));
+                                if (!validGalleryXmls.contains(galleryXml)) {
+                                    throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_GALLERY.getErrorCode(),
+                                            ToolkitErrorCodes.TESTDATA_INVALID_GALLERY.getErrorMessage() + " " + galleryXml
+                                                    + " in " + testcaseId);
+                                }
                             }
-                        } else if (entryName.endsWith(PROBE_XML)) {
-                            String testcaseId = entryName.substring(entryName.indexOf(AppConstants.SDK),
-                                    entryName.indexOf(PROBE_XML) - 1);
-                            testDataValidation.getProbeFolders().remove(testcaseId);
-                        } else if (entryName.contains(GALLERY) && purpose.equals(SdkPurpose.MATCHER.getCode())) {
-                            String testcaseId = entryName.substring(entryName.indexOf(AppConstants.SDK),
-                                    entryName.indexOf(GALLERY) - 1);
-                            testDataValidation.getGalleryFolders().remove(testcaseId);
-                            String galleryXml = entryName.substring(entryName.indexOf(GALLERY));
-                            if (!validGalleryXmls.contains(galleryXml)) {
-                                throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_GALLERY.getErrorCode(),
-                                        ToolkitErrorCodes.TESTDATA_INVALID_GALLERY.getErrorMessage() + " " + galleryXml
-                                                + " in " + testcaseId);
+                        } else {
+                            if (zipEntry.isDirectory()) {
+                                String testcaseId = entryName.substring(0, entryName.length() - 1);
+                                if (testDataValidation.getFolders().contains(testcaseId)) {
+                                    testDataValidation.getFolders().remove(testcaseId);
+                                } else {
+                                    throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorCode(),
+                                            ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorMessage() + " " + testcaseId);
+                                }
                             }
                         }
                     }
