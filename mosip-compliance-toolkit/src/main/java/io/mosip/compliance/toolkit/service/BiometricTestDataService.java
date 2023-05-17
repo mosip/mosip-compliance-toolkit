@@ -188,7 +188,7 @@ public class BiometricTestDataService {
 
                 String purpose = inputBiometricTestDataDto.getPurpose();
                 TestDataValidationDto testDataValidation = null;
-                if(purpose != null){
+                if(!purpose.equals(AppConstants.ABIS)){
                     SdkPurpose sdkPurpose = SdkPurpose.fromCode(purpose);
                     testDataValidation = validateTestData(sdkPurpose.getCode(), file);
                 } else {
@@ -209,9 +209,6 @@ public class BiometricTestDataService {
                 inputEntity.setUpdDate(null);
                 inputEntity.setDeleted(false);
                 inputEntity.setDelTime(null);
-                    if(purpose == null) {
-                        inputEntity.setPurpose(AppConstants.ABIS);
-                    }
                     String container = AppConstants.PARTNER_TESTDATA + "/" + inputEntity.getPartnerId() + "/"
                             + inputEntity.getPurpose();
                     if (!objectStore.exists(objectStoreAccountName, container, null, null,
@@ -322,8 +319,8 @@ public class BiometricTestDataService {
             }
             List<String> ignoreTestcaseList = Arrays.asList(ignoreTestcases.split(","));
             List<TestCaseEntity> testcases = null;
-            if(purpose != null) {
-                testDataValidation.setPurpose(purpose);
+            testDataValidation.setPurpose(purpose);
+            if(!purpose.equals(AppConstants.ABIS)) {
                 testcases = testCaseCacheService.getSdkTestCases(AppConstants.SDK,
                         sdkSampleTestdataSpecVer);
             }else{
@@ -338,7 +335,7 @@ public class BiometricTestDataService {
                     String testcaseJson = testcase.getTestcaseJson();
                     TestCaseDto testCaseDto = objectMapperConfig.objectMapper().readValue(testcaseJson,
                             TestCaseDto.class);
-                    if(purpose != null) {
+                    if(!purpose.equals(AppConstants.ABIS)) {
                         if (!ignoreTestcaseList.contains(testCaseDto.getTestId())
                                 && testCaseDto.getOtherAttributes().getSdkPurpose().contains(purpose)) {
                             String folderName = testCaseDto.getTestId();
@@ -421,7 +418,7 @@ public class BiometricTestDataService {
 					}
                     
                     String entryName = zipEntry.getName();
-                    if(purpose != null) {
+                    if(!purpose.equals(AppConstants.ABIS)) {
                         if (!entryName.startsWith(purpose)) {
                             throw new ToolkitException(ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode(),
                                     ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorMessage() + " " + entryName);
@@ -437,7 +434,7 @@ public class BiometricTestDataService {
                         }
                     }
                     if (!entryName.isBlank()) {
-                        if(purpose != null) {
+                        if(!purpose.equals(AppConstants.ABIS)) {
                             if (zipEntry.isDirectory()) {
                                 String testcaseId = entryName.substring(0, entryName.length() - 1);
                                 if (testDataValidation.getFolders().contains(testcaseId)) {
