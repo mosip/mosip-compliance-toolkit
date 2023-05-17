@@ -191,7 +191,7 @@ public class BiometricTestDataService {
 
                 String purpose = inputBiometricTestDataDto.getPurpose();
                 TestDataValidationDto testDataValidation = null;
-                if(!purpose.equals(AppConstants.ABIS)){
+                if (!purpose.equals(AppConstants.ABIS)) {
                     SdkPurpose sdkPurpose = SdkPurpose.fromCode(purpose);
                     testDataValidation = validateTestData(sdkPurpose.getCode(), file);
                 } else {
@@ -318,7 +318,7 @@ public class BiometricTestDataService {
         ZipInputStream zis = null;
         try {
             List<String> validGalleryXmls = new ArrayList<>();
-            if(!purpose.equals(AppConstants.ABIS)) {
+            if (!purpose.equals(AppConstants.ABIS)) {
                 for (int i = 1; i <= Integer.valueOf(maxAllowedGalleryFiles); i++) {
                     validGalleryXmls.add(GALLERY + i + DOT_XML);
                 }
@@ -326,10 +326,10 @@ public class BiometricTestDataService {
             List<String> ignoreTestcaseList = Arrays.asList(ignoreTestcases.split(","));
             List<TestCaseEntity> testcases = null;
             testDataValidation.setPurpose(purpose);
-            if(!purpose.equals(AppConstants.ABIS)) {
+            if (!purpose.equals(AppConstants.ABIS)) {
                 testcases = testCaseCacheService.getSdkTestCases(AppConstants.SDK,
                         sdkSampleTestdataSpecVer);
-            }else{
+            } else {
                 testcases = testCaseCacheService.getAbisTestCases(AppConstants.ABIS,
                         sdkSampleTestdataSpecVer);
             }
@@ -341,13 +341,14 @@ public class BiometricTestDataService {
                     String testcaseJson = testcase.getTestcaseJson();
                     TestCaseDto testCaseDto = objectMapperConfig.objectMapper().readValue(testcaseJson,
                             TestCaseDto.class);
-                    if (!purpose.equals(AppConstants.ABIS)){
+                    if (!purpose.equals(AppConstants.ABIS)) {
                         if (!ignoreTestcaseList.contains(testCaseDto.getTestId())
                                 && testCaseDto.getOtherAttributes().getSdkPurpose().contains(purpose)) {
                             String folderName = testCaseDto.getTestId();
                             folders.add(folderName);
                             probeFolders.add(folderName);
-                            if (testCaseDto.getOtherAttributes().getSdkPurpose().contains(SdkPurpose.MATCHER.getCode())) {
+                            if (testCaseDto.getOtherAttributes().getSdkPurpose()
+                                    .contains(SdkPurpose.MATCHER.getCode())) {
                                 galleryFolders.add(folderName);
                             }
                             if (testCaseDto.getMethodName().size() > 1
@@ -367,13 +368,13 @@ public class BiometricTestDataService {
                 testDataValidation.setGalleryFolders(galleryFolders);
             }
 
-            if(!purpose.equals(AppConstants.ABIS)) {
+            if (!purpose.equals(AppConstants.ABIS)) {
                 if (testDataValidation.getFolders().size() == 0 || testDataValidation.getProbeFolders().size() == 0) {
                     throw new ToolkitException(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode(),
                             ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
                 }
             } else {
-                if (testDataValidation.getFolders().size() == 0){
+                if (testDataValidation.getFolders().size() == 0) {
                     throw new ToolkitException(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode(),
                             ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
                 }
@@ -422,7 +423,7 @@ public class BiometricTestDataService {
 					}
 
                     String entryName = zipEntry.getName();
-                    if(!purpose.equals(AppConstants.ABIS)) {
+                    if (!purpose.equals(AppConstants.ABIS)) {
                         if (!entryName.startsWith(purpose)) {
                             throw new ToolkitException(ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode(),
                                     ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorMessage() + " " + entryName);
@@ -445,7 +446,8 @@ public class BiometricTestDataService {
                                     testDataValidation.getFolders().remove(testcaseId);
                                 } else {
                                     throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorCode(),
-                                            ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorMessage() + " " + testcaseId);
+                                            ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorMessage() + " "
+                                                    + testcaseId);
                                 }
                             } else if (entryName.endsWith(PROBE_XML)) {
                                 String testcaseId = entryName.substring(entryName.indexOf(AppConstants.SDK),
@@ -457,8 +459,10 @@ public class BiometricTestDataService {
                                 testDataValidation.getGalleryFolders().remove(testcaseId);
                                 String galleryXml = entryName.substring(entryName.indexOf(GALLERY));
                                 if (!validGalleryXmls.contains(galleryXml)) {
-                                    throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_GALLERY.getErrorCode(),
-                                            ToolkitErrorCodes.TESTDATA_INVALID_GALLERY.getErrorMessage() + " " + galleryXml
+                                    throw new ToolkitException(
+                                            ToolkitErrorCodes.TESTDATA_INVALID_GALLERY.getErrorCode(),
+                                            ToolkitErrorCodes.TESTDATA_INVALID_GALLERY.getErrorMessage() + " "
+                                                    + galleryXml
                                                     + " in " + testcaseId);
                                 }
                             }
