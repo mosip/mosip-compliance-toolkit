@@ -371,8 +371,6 @@ public class BiometricTestDataService {
                 testDataValidation.setFolders(folders);
                 testDataValidation.setProbeFolders(probeFolders);
                 testDataValidation.setGalleryFolders(galleryFolders);
-                System.out.println(folders);
-                System.out.println(probeFolders);
             }
 
             if (testDataValidation.getFolders().size() == 0 || testDataValidation.getProbeFolders().size() == 0) {
