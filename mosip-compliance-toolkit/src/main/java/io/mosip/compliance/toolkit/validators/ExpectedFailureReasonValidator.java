@@ -1,0 +1,43 @@
+package io.mosip.compliance.toolkit.validators;
+
+import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import io.mosip.compliance.toolkit.constants.AppConstants;
+import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
+import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
+
+@Component
+public class ExpectedFailureReasonValidator extends ToolkitValidator {
+
+	@Override
+	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
+		ValidationResultDto validationResultDto = new ValidationResultDto();
+		try {
+			ObjectNode extraInfo = (ObjectNode) objectMapperConfig.objectMapper().readValue(inputDto.getExtraInfoJson(),
+					ObjectNode.class);
+			String expectedFailureReason = extraInfo.get("expectedFailureReason").asText();
+
+			ObjectNode methodResponse = (ObjectNode) objectMapperConfig.objectMapper()
+					.readValue(inputDto.getMethodResponse(), ObjectNode.class);
+
+			int failureReasonRecvd = Integer.parseInt(methodResponse.get("failureReason").asText());
+			int failureReasonExpected = Integer.parseInt(expectedFailureReason);
+			if (failureReasonRecvd == failureReasonExpected) {
+				validationResultDto.setStatus(AppConstants.SUCCESS);
+				validationResultDto.setDescription("Expected failure reason: " + failureReasonExpected + " successfully validated.");
+			} else {
+				validationResultDto.setStatus(AppConstants.FAILURE);
+				validationResultDto.setDescription("The failure reason expected was: " + failureReasonExpected
+						+ ", but received: " + failureReasonRecvd);
+			}
+		} catch (Exception e) {
+			validationResultDto.setStatus(AppConstants.FAILURE);
+			validationResultDto.setDescription(e.getLocalizedMessage());
+			return validationResultDto;
+		}
+		return validationResultDto;
+	}
+
+}
