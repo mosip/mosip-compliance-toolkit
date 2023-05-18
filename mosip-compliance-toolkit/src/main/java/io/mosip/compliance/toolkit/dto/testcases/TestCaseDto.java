@@ -67,6 +67,7 @@ public class TestCaseDto implements Serializable {
 		@JsonProperty("bulkInsert")
 		public boolean bulkInsert;
 		public String insertCount;
+		public String insertReferenceId;
 		public String identifyReferenceId;
 		public List<String> identifyGalleryIds;
 		public String expectedDuplicateCount;

@@ -71,7 +71,7 @@
 			"InsertInvalidRequestSchema"
 		],
 		"responseSchema": [
-			"InsertResponseSchema"
+			"InsertErrorResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -82,7 +82,7 @@
 				{
 					"name": "ExpectedFailureReasonValidator",
 					"description": "Validates the failure reason to match the expected value"
-				}	
+				}
 			]
 		],
 		"otherAttributes": {
@@ -106,7 +106,7 @@
 			"InsertInvalidRequestSchema"
 		],
 		"responseSchema": [
-			"InsertResponseSchema"
+			"InsertErrorResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -117,7 +117,7 @@
 				{
 					"name": "ExpectedFailureReasonValidator",
 					"description": "Validates the failure reason to match the expected value"
-				}	
+				}
 			]
 		],
 		"otherAttributes": {
@@ -142,7 +142,7 @@
 			"InsertInvalidRequestSchema"
 		],
 		"responseSchema": [
-			"InsertResponseSchema"
+			"InsertErrorResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -153,7 +153,7 @@
 				{
 					"name": "ExpectedFailureReasonValidator",
 					"description": "Validates the failure reason to match the expected value"
-				}	
+				}
 			]
 		],
 		"otherAttributes": {
@@ -178,7 +178,7 @@
 			"InsertInvalidRequestSchema"
 		],
 		"responseSchema": [
-			"InsertResponseSchema"
+			"InsertErrorResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -189,8 +189,7 @@
 				{
 					"name": "ExpectedFailureReasonValidator",
 					"description": "Validates the failure reason to match the expected value"
-				}			
-				
+				}
 			]
 		],
 		"otherAttributes": {
@@ -215,7 +214,7 @@
 			"InsertInvalidRequestSchema"
 		],
 		"responseSchema": [
-			"InsertResponseSchema"
+			"InsertErrorResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -226,8 +225,7 @@
 				{
 					"name": "ExpectedFailureReasonValidator",
 					"description": "Validates the failure reason to match the expected value"
-				}			
-				
+				}
 			]
 		],
 		"otherAttributes": {
@@ -235,6 +233,111 @@
 			"insertCount": "1",
 			"invalidRequestAttribute": "invalidReferenceURL",
 			"expectedFailureReason": "7"
+		}
+	},
+	{
+		"testCaseType": "ABIS",
+		"testName": "Invalid insert request - missing reference URL",
+		"testId": "ABIS3007",
+		"specVersion": "0.9.0",
+		"testDescription": "Invalid insert request - missing reference URL",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"insert"
+		],
+		"requestSchema": [
+			"InsertInvalidRequestSchema"
+		],
+		"responseSchema": [
+			"InsertErrorResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExpectedFailureReasonValidator",
+					"description": "Validates the failure reason to match the expected value"
+				}
+			]
+		],
+		"otherAttributes": {
+			"bulkInsert": false,
+			"insertCount": "1",
+			"invalidRequestAttribute": "referenceURL",
+			"expectedFailureReason": "8"
+		}
+	},
+	{
+		"testCaseType": "ABIS",
+		"testName": "Invalid insert request - missing request time",
+		"testId": "ABIS3008",
+		"specVersion": "0.9.0",
+		"testDescription": "Invalid insert request - missing request time",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"insert"
+		],
+		"requestSchema": [
+			"InsertInvalidRequestSchema"
+		],
+		"responseSchema": [
+			"InsertErrorResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExpectedFailureReasonValidator",
+					"description": "Validates the failure reason to match the expected value"
+				}
+			]
+		],
+		"otherAttributes": {
+			"bulkInsert": false,
+			"insertCount": "1",
+			"invalidRequestAttribute": "requesttime",
+			"expectedFailureReason": "9"
+		}
+	},
+	{
+		"testCaseType": "ABIS",
+		"testName": "Invalid insert request - referenceId already exists ",
+		"testId": "ABIS3009",
+		"specVersion": "0.9.0",
+		"testDescription": "Invalid insert request - referenceId already exists ",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"insert"
+		],
+		"requestSchema": [
+			"InsertInvalidRequestSchema"
+		],
+		"responseSchema": [
+			"InsertErrorResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExpectedFailureReasonValidator",
+					"description": "Validates the failure reason to match the expected value"
+				}
+			]
+		],
+		"otherAttributes": {
+			"bulkInsert": true,
+			"insertCount": "2",
+			"insertReferenceId": "ABIS3009",
+			"expectedFailureReason": "10"
 		}
 	},
 	{
