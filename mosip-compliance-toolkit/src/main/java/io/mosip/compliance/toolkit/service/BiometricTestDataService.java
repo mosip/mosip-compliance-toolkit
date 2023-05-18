@@ -240,8 +240,10 @@ public class BiometricTestDataService {
                             Set<String> set = null;
                             if (!testDataValidation.getFolders().isEmpty()) {
                                 set = new HashSet<>(testDataValidation.getFolders());
-                                set.addAll(testDataValidation.getProbeFolders());
-                                set.addAll(testDataValidation.getGalleryFolders());
+                                if (!requestPurpose.equals(AppConstants.ABIS)) {
+                                	set.addAll(testDataValidation.getProbeFolders());
+                                	set.addAll(testDataValidation.getGalleryFolders());
+                                }
                                 String msg = "For testcases " + set + " we will use data from MOSIP_DEFAULT";
                                 addBioTestDataResponseDto.setInfo(msg);
                             }
