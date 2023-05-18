@@ -191,7 +191,7 @@ public class BiometricTestDataService {
 
                 String requestPurpose = inputBiometricTestDataDto.getPurpose();
                 String purpose = "";
-                if (!purpose.equals(AppConstants.ABIS)) {
+                if (!requestPurpose.equals(AppConstants.ABIS)) {
                     SdkPurpose sdkPurpose = SdkPurpose.fromCode(requestPurpose);
                     purpose = sdkPurpose.getCode();
                 } else {
@@ -240,8 +240,10 @@ public class BiometricTestDataService {
                             Set<String> set = null;
                             if (!testDataValidation.getFolders().isEmpty()) {
                                 set = new HashSet<>(testDataValidation.getFolders());
-                                set.addAll(testDataValidation.getProbeFolders());
-                                set.addAll(testDataValidation.getGalleryFolders());
+                                if (!requestPurpose.equals(AppConstants.ABIS)) {
+                                	set.addAll(testDataValidation.getProbeFolders());
+                                	set.addAll(testDataValidation.getGalleryFolders());
+                                }
                                 String msg = "For testcases " + set + " we will use data from MOSIP_DEFAULT";
                                 addBioTestDataResponseDto.setInfo(msg);
                             }
