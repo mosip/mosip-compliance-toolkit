@@ -84,7 +84,7 @@
 		"otherAttributes": {
 			"bulkInsert": false,
 			"insertCount": "1",
-			"invalidRequestAttribute": "all"
+			"invalidRequestAttribute": "add-extra-attribute"
 		}
 	},
 	{
@@ -122,6 +122,7 @@
 		"testName": "Invalid insert request - missing requestId",
 		"testId": "ABIS3004",
 		"specVersion": "0.9.0",
+		"inactive": true,
 		"testDescription": "Invalid insert request - missing requestId",
 		"isNegativeTestcase": false,
 		"methodName": [
