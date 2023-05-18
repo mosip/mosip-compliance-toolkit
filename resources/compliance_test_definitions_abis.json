@@ -78,13 +78,18 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				}
+				},
+				{
+					"name": "ExpectedFailureReasonValidator",
+					"description": "Validates the failure reason to match the expected value"
+				}	
 			]
 		],
 		"otherAttributes": {
 			"bulkInsert": false,
 			"insertCount": "1",
-			"invalidRequestAttribute": "newUnknownValue"
+			"invalidRequestAttribute": "newUnknownValue",
+			"expectedFailureReason": "4"
 		}
 	},
 	{
@@ -108,13 +113,18 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				}
+				},
+				{
+					"name": "ExpectedFailureReasonValidator",
+					"description": "Validates the failure reason to match the expected value"
+				}	
 			]
 		],
 		"otherAttributes": {
 			"bulkInsert": false,
 			"insertCount": "1",
-			"invalidRequestAttribute": "referenceId"
+			"invalidRequestAttribute": "referenceId",
+			"expectedFailureReason": "5"
 		}
 	},
 	{
@@ -139,22 +149,27 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
-				}
+				},
+				{
+					"name": "ExpectedFailureReasonValidator",
+					"description": "Validates the failure reason to match the expected value"
+				}	
 			]
 		],
 		"otherAttributes": {
 			"bulkInsert": false,
 			"insertCount": "1",
-			"invalidRequestAttribute": "requestId"
+			"invalidRequestAttribute": "requestId",
+			"expectedFailureReason": "6"
 		}
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid insert request - invalid referenceURL",
+		"testName": "Unable to fetch biometric details using referenceURL",
 		"testId": "ABIS3005",
 		"specVersion": "0.9.0",
 		"inactive": false,
-		"testDescription": "Unable to fetch biometric details (using referenceURL)",
+		"testDescription": "Unable to fetch biometric details using referenceURL",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"insert"
@@ -182,6 +197,43 @@
 			"bulkInsert": false,
 			"insertCount": "1",
 			"invalidRequestAttribute": "incorrectReferenceURL",
+			"expectedFailureReason": "7"
+		}
+	},
+	{
+		"testCaseType": "ABIS",
+		"testName": "Invalid insert request - Invalid reference url",
+		"testId": "ABIS3006",
+		"specVersion": "0.9.0",
+		"inactive": false,
+		"testDescription": "Invalid insert request - Invalid reference url",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"insert"
+		],
+		"requestSchema": [
+			"InsertInvalidRequestSchema"
+		],
+		"responseSchema": [
+			"InsertResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExpectedFailureReasonValidator",
+					"description": "Validates the failure reason to match the expected value"
+				}			
+				
+			]
+		],
+		"otherAttributes": {
+			"bulkInsert": false,
+			"insertCount": "1",
+			"invalidRequestAttribute": "invalidReferenceURL",
 			"expectedFailureReason": "7"
 		}
 	},
