@@ -191,7 +191,7 @@ public class BiometricTestDataService {
 
                 String requestPurpose = inputBiometricTestDataDto.getPurpose();
                 String purpose = "";
-                if (!purpose.equals(AppConstants.ABIS)) {
+                if (!requestPurpose.equals(AppConstants.ABIS)) {
                     SdkPurpose sdkPurpose = SdkPurpose.fromCode(requestPurpose);
                     purpose = sdkPurpose.getCode();
                 } else {
