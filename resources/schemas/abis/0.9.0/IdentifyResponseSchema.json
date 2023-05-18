@@ -18,7 +18,7 @@
 			"type": "integer"
 		},
 		"failureReason": {
-			"type": "integer"
+			"type": "string"
 		},
 		"candidateList": {
 			"type": "object",
