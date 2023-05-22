@@ -196,7 +196,7 @@ public class BiometricTestDataService {
                     SdkPurpose sdkPurpose = SdkPurpose.fromCode(requestPurpose);
                     purpose = sdkPurpose.getCode();
                 } else {
-                	purpose = requestPurpose;
+                    purpose = requestPurpose;
                 }
                 TestDataValidationDto testDataValidation = validateTestData(purpose, file);
                 
@@ -363,9 +363,9 @@ public class BiometricTestDataService {
                     String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
                             + AppConstants.COMMA_SEPARATOR
                             + ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode();
-					throw new ToolkitException(errorCode,
-							ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
-				}
+                    throw new ToolkitException(errorCode,
+                            ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
+                }
 			} else {
 				testcases = testCaseCacheService.getAbisTestCases(AppConstants.ABIS, sdkSampleTestdataSpecVer);
 				if (Objects.nonNull(testcases)) {
@@ -384,9 +384,9 @@ public class BiometricTestDataService {
                     String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
                             + AppConstants.COMMA_SEPARATOR
                             + ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode();
-					throw new ToolkitException(errorCode,
-							ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
-				}
+                    throw new ToolkitException(errorCode,
+                            ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
+                }
 			}
 
 			if (Objects.nonNull(file)) {
@@ -422,8 +422,7 @@ public class BiometricTestDataService {
                             String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
                                     + AppConstants.COMMA_SEPARATOR
                                     + ToolkitErrorCodes.ZIP_HIGH_COMPRESSION_RATIO_ERROR.getErrorCode();
-							throw new ToolkitException(
-									errorCode,
+							throw new ToolkitException(errorCode,
 									ToolkitErrorCodes.ZIP_HIGH_COMPRESSION_RATIO_ERROR.getErrorMessage());
 						}
 					}
@@ -474,6 +473,7 @@ public class BiometricTestDataService {
 					}
 					if (!entryName.isBlank()) {
 						if (!purpose.equals(AppConstants.ABIS)) {
+                                                    
 							if (zipEntry.isDirectory()) {
 								String testcaseId = entryName.substring(0, entryName.length() - 1);
 								if (testDataValidation.getFolders().contains(testcaseId)) {
