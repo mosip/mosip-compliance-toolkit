@@ -81,7 +81,7 @@ public class BiometricTestDataService {
     @Value("$(mosip.toolkit.api.id.biometric.testdata.get)")
     private String getBiometricTestDataId;
 
-    @Value("$(mosip.toolkit.api.id.biometric.testdata.post)")
+    @Value("${mosip.toolkit.api.id.biometric.testdata.post}")
     private String postBiometricTestDataId;
 
     @Value("$(mosip.toolkit.api.id.biometric.testdata.filenames.get)")
@@ -195,7 +195,7 @@ public class BiometricTestDataService {
                     SdkPurpose sdkPurpose = SdkPurpose.fromCode(requestPurpose);
                     purpose = sdkPurpose.getCode();
                 } else {
-                	purpose = requestPurpose;
+                    purpose = requestPurpose;
                 }
                 TestDataValidationDto testDataValidation = validateTestData(purpose, file);
                 
@@ -359,9 +359,12 @@ public class BiometricTestDataService {
 					testDataValidation.setGalleryFolders(galleryFolders);
 				}
 				if (testDataValidation.getFolders().size() == 0 || testDataValidation.getProbeFolders().size() == 0) {
-					throw new ToolkitException(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode(),
-							ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
-				}
+                    String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                            + AppConstants.COMMA_SEPARATOR
+                            + ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode();
+                    throw new ToolkitException(errorCode,
+                            ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
+                }
 			} else {
 				testcases = testCaseCacheService.getAbisTestCases(AppConstants.ABIS, sdkSampleTestdataSpecVer);
 				if (Objects.nonNull(testcases)) {
@@ -377,9 +380,12 @@ public class BiometricTestDataService {
 					testDataValidation.setFolders(folders);
 				}
 				if (testDataValidation.getFolders().size() == 0) {
-					throw new ToolkitException(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode(),
-							ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
-				}
+                    String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                            + AppConstants.COMMA_SEPARATOR
+                            + ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode();
+                    throw new ToolkitException(errorCode,
+                            ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
+                }
 			}
 
 			if (Objects.nonNull(file)) {
@@ -388,7 +394,10 @@ public class BiometricTestDataService {
 				ZipEntry zipEntry = null;
 
 				if (!file.getOriginalFilename().endsWith(ZIP_EXT)) {
-					throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorCode(),
+                    String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                            + AppConstants.COMMA_SEPARATOR
+                            + ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorCode();
+					throw new ToolkitException(errorCode,
 							ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorMessage());
 				}
 
@@ -409,33 +418,53 @@ public class BiometricTestDataService {
 						if (compressionRatio > THRESHOLD_RATIO) {
 							// ratio between compressed and uncompressed data is highly suspicious, looks
 							// like a Zip Bomb Attack
-							throw new ToolkitException(
-									ToolkitErrorCodes.ZIP_HIGH_COMPRESSION_RATIO_ERROR.getErrorCode(),
+                            String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                                    + AppConstants.COMMA_SEPARATOR
+                                    + ToolkitErrorCodes.ZIP_HIGH_COMPRESSION_RATIO_ERROR.getErrorCode();
+							throw new ToolkitException(errorCode,
 									ToolkitErrorCodes.ZIP_HIGH_COMPRESSION_RATIO_ERROR.getErrorMessage());
 						}
 					}
 
 					if (totalSizeArchive > THRESHOLD_SIZE) {
-						throw new ToolkitException(ToolkitErrorCodes.ZIP_SIZE_TOO_LARGE_ERROR.getErrorCode(),
+                        String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                                + AppConstants.COMMA_SEPARATOR
+                                + ToolkitErrorCodes.ZIP_SIZE_TOO_LARGE_ERROR.getErrorCode();
+						throw new ToolkitException(errorCode,
 								ToolkitErrorCodes.ZIP_SIZE_TOO_LARGE_ERROR.getErrorMessage());
 					}
 
 					if (totalEntryArchive > THRESHOLD_ENTRIES) {
-						throw new ToolkitException(ToolkitErrorCodes.ZIP_ENTRIES_TOO_MANY_ERROR.getErrorCode(),
+                        String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                                + AppConstants.COMMA_SEPARATOR
+                                + ToolkitErrorCodes.ZIP_ENTRIES_TOO_MANY_ERROR.getErrorCode();
+						throw new ToolkitException(errorCode,
 								ToolkitErrorCodes.ZIP_ENTRIES_TOO_MANY_ERROR.getErrorMessage());
 					}
 
 					String entryName = zipEntry.getName();
 					if (!purpose.equals(AppConstants.ABIS)) {
 						if (!entryName.startsWith(purpose)) {
-							throw new ToolkitException(ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode(),
+                            entryName = entryName.substring(0, entryName.length()-1);
+                            String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                                    + AppConstants.COMMA_SEPARATOR
+                                    + ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode()
+                                    + AppConstants.COMMA_SEPARATOR
+                                    + entryName;
+							throw new ToolkitException(errorCode,
 									ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorMessage() + " " + entryName);
 						} else {
 							entryName = entryName.replace(purpose + "/", "");
 						}
 					} else {
 						if (!entryName.startsWith(AppConstants.ABIS)) {
-							throw new ToolkitException(ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode(),
+                            entryName = entryName.substring(0, entryName.length()-1);
+                            String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                                    + AppConstants.COMMA_SEPARATOR
+                                    + ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode()
+                                    + AppConstants.COMMA_SEPARATOR
+                                    + entryName;
+							throw new ToolkitException(errorCode,
 									ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorMessage() + " " + entryName);
 						} else {
 							entryName = entryName.replace(purpose + "/", "");
@@ -443,13 +472,20 @@ public class BiometricTestDataService {
 					}
 					if (!entryName.isBlank()) {
 						if (!purpose.equals(AppConstants.ABIS)) {
+                                                    
 							if (zipEntry.isDirectory()) {
 								String testcaseId = entryName.substring(0, entryName.length() - 1);
 								if (testDataValidation.getFolders().contains(testcaseId)) {
 									testDataValidation.getFolders().remove(testcaseId);
 								} else {
-									throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorCode(),
-											ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorMessage() + " "
+                                    String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                                            + AppConstants.COMMA_SEPARATOR
+                                            + ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorCode()
+                                            + AppConstants.COMMA_SEPARATOR
+                                            + testcaseId;
+									throw new ToolkitException(errorCode,
+											ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorMessage()
+                                                    + " "
 													+ testcaseId);
 								}
 							} else if (entryName.endsWith(PROBE_XML)) {
@@ -462,8 +498,15 @@ public class BiometricTestDataService {
 								testDataValidation.getGalleryFolders().remove(testcaseId);
 								String galleryXml = entryName.substring(entryName.indexOf(GALLERY));
 								if (!validGalleryXmls.contains(galleryXml)) {
+                                    String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                                            + AppConstants.COMMA_SEPARATOR
+                                            + ToolkitErrorCodes.TESTDATA_INVALID_GALLERY.getErrorCode()
+                                            + AppConstants.ARGUMENTS_DELIMITER
+                                            + galleryXml
+                                            + AppConstants.ARGUMENTS_SEPARATOR
+                                            + testcaseId;
 									throw new ToolkitException(
-											ToolkitErrorCodes.TESTDATA_INVALID_GALLERY.getErrorCode(),
+											errorCode,
 											ToolkitErrorCodes.TESTDATA_INVALID_GALLERY.getErrorMessage() + " "
 													+ galleryXml + " in " + testcaseId);
 								}
@@ -474,7 +517,12 @@ public class BiometricTestDataService {
 								if (testDataValidation.getFolders().contains(testcaseId)) {
 									testDataValidation.getFolders().remove(testcaseId);
 								} else {
-									throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorCode(),
+                                    String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                                            + AppConstants.COMMA_SEPARATOR
+                                            + ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorCode()
+                                            + AppConstants.COMMA_SEPARATOR
+                                            + testcaseId;
+									throw new ToolkitException(errorCode,
 											ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorMessage() + " "
 													+ testcaseId);
 								}
@@ -484,18 +532,23 @@ public class BiometricTestDataService {
 				}
 
 				if (0 == totalEntryArchive) {
-					throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorCode(),
+                    String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                            + AppConstants.COMMA_SEPARATOR
+                            + ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorCode();
+					throw new ToolkitException(errorCode,
 							ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorMessage());
 				}
 
 				testDataValidation.setValidated(true);
 			} else {
-				throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+                String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                        + AppConstants.COMMA_SEPARATOR
+                        + ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode();
+				throw new ToolkitException(errorCode,
 						ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
 			}
 		} catch (Exception ex) {
-			throw new ToolkitException(ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode(),
-					ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorMessage() + " " + ex.getMessage());
+			throw ex;
 		} finally {
 			if (zis != null) {
 				zis.closeEntry();
