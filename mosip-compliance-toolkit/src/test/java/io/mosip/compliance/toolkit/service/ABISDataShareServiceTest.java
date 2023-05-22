@@ -106,7 +106,7 @@ public class ABISDataShareServiceTest {
         dataShareRequestDto.setBioTestDataName("testdata");
         dataShareRequestDto.setCbeffFileSuffix(1);
 
-        ResponseWrapper<DataShareResponseWrapperDto> result = abisDataShareService.getDataShareUrl(dataShareRequestDto);
+        ResponseWrapper<DataShareResponseWrapperDto> result = abisDataShareService.createDataShareUrl(dataShareRequestDto);
 
         assertNotNull(result);
     }

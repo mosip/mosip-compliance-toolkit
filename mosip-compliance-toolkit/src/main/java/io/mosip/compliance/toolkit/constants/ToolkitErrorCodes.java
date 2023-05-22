@@ -99,6 +99,7 @@ public enum ToolkitErrorCodes {
 	TECHNICAL_ERROR_EXCEPTION("TOOLKIT_REQ_ERR_500", "Technical Error"),
 	
 	ABIS_DATA_SHARE_URL_EXCEPTION("ABIS_DATA_SHARE_URL_EXCEPTION_001", "Unable to generate data share url"),
+	ABIS_EXPIRE_DATA_SHARE_URL_EXCEPTION("ABIS_DATA_SHARE_URL_EXCEPTION_002", "Unable to expire data share url"),
 	ABIS_PROJECT_NOT_AVAILABLE("TOOLKIT_ABIS_PROJECTS_001", "No matching ABIS project available for the given id"),
 	INVALID_ABIS_SPEC_VERSION("TOOLKIT_ABIS_PROJECTS_002", "Invalid ABIS Spec Version"),
 	ABIS_PROJECT_UNABLE_TO_ADD("TOOLKIT_ABIS_PROJECTS_003","ABIS Project unable to add"),

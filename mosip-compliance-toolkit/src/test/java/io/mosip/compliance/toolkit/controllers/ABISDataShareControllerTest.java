@@ -54,7 +54,7 @@ public class ABISDataShareControllerTest {
         DataShareRequestDto dataShareRequestDto = new DataShareRequestDto();
         value.setRequest(dataShareRequestDto);
         ResponseWrapper<DataShareResponseWrapperDto> response = new ResponseWrapper<>();
-        Mockito.when(abisDataShareService.getDataShareUrl(dataShareRequestDto)).thenReturn(response);
-        abisDataShareController.getDataShareUrl(value, errors);
+        Mockito.when(abisDataShareService.createDataShareUrl(dataShareRequestDto)).thenReturn(response);
+        abisDataShareController.createDataShareUrl(value, errors);
     }
 }
