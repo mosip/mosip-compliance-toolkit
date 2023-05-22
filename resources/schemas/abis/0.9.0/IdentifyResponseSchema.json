@@ -15,7 +15,7 @@
 			"type": "string"
 		},
 		"returnValue": {
-			"type": "integer"
+			"type": "string"
 		},
 		"failureReason": {
 			"type": "string"
@@ -24,7 +24,7 @@
 			"type": "object",
 			"properties": {
 				"count": {
-					"type": "integer"
+					"type": "string"
 				},
 				"candidates": {
 					"type": [
@@ -43,10 +43,10 @@
 									"additionalProperties": true,
 									"properties": {
 										"confidence": {
-											"type": "integer"
+											"type": "string"
 										},
 										"internalScore": {
-											"type": "integer"
+											"type": "string"
 										}
 									},
 									"required": [
@@ -68,10 +68,10 @@
 													"additionalProperties": true,
 													"properties": {
 														"confidence": {
-															"type": "integer"
+															"type": "string"
 														},
 														"internalScore": {
-															"type": "integer"
+															"type": "string"
 														}
 													},
 													"required": [
@@ -108,13 +108,13 @@
 				"confidence": {
 					"type": [
 						"null",
-						"integer"
+						"string"
 					]
 				},
 				"internalScore": {
 					"type": [
 						"null",
-						"integer"
+						"string"
 					]
 				}
 			},

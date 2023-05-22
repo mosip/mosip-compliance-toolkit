@@ -15,9 +15,9 @@
 			"type": "string"
 		},
 		"returnValue": {
-			"type": "integer",
+			"type": "string",
 			"enum": [
-				1
+				"1"
 			]
 		}
 	},
