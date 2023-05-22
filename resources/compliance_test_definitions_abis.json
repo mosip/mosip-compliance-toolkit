@@ -408,7 +408,8 @@
 			"invalidRequestAttribute": "version",
 			"expectedFailureReason": "13"
 		}
-	},{
+	},
+	{
 		"testCaseType": "ABIS",
 		"testName": "Invalid insert request - invalid id",
 		"testId": "ABIS3012",
@@ -510,6 +511,109 @@
 			"bulkInsert": false,
 			"insertCount": "1",
 			"expectedFailureReason": "16"
+		}
+	},
+	{
+		"testCaseType": "ABIS",
+		"testName": "Invalid insert request - data share URL has expired",
+		"testId": "ABIS3015",
+		"specVersion": "0.9.0",
+		"testDescription": "Invalid insert request - data share URL has expired",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"insert"
+		],
+		"requestSchema": [
+			"InsertInvalidRequestSchema"
+		],
+		"responseSchema": [
+			"InsertErrorResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExpectedFailureReasonValidator",
+					"description": "Validates the failure reason to match the expected value"
+				}
+			]
+		],
+		"otherAttributes": {
+			"bulkInsert": false,
+			"insertCount": "1",
+			"invalidRequestAttribute": "expireDataShareUrl",
+			"expectedFailureReason": "17"
+		}
+	},
+	{
+		"testCaseType": "ABIS",
+		"testName": "Invalid insert request - invalid data",
+		"testId": "ABIS3016",
+		"specVersion": "0.9.0",
+		"testDescription": "Invalid insert request - invalid data",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"insert"
+		],
+		"requestSchema": [
+			"InsertInvalidRequestSchema"
+		],
+		"responseSchema": [
+			"InsertErrorResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExpectedFailureReasonValidator",
+					"description": "Validates the failure reason to match the expected value"
+				}
+			]
+		],
+		"otherAttributes": {
+			"bulkInsert": false,
+			"insertCount": "1",
+			"expectedFailureReason": "11"
+		}
+	},
+	{
+		"testCaseType": "ABIS",
+		"testName": "Invalid insert request - CBEFF data decryption failure",
+		"testId": "ABIS3017",
+		"specVersion": "0.9.0",
+		"testDescription": "Invalid insert request - CBEFF data decryption failure",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"insert"
+		],
+		"requestSchema": [
+			"InsertInvalidRequestSchema"
+		],
+		"responseSchema": [
+			"InsertErrorResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExpectedFailureReasonValidator",
+					"description": "Validates the failure reason to match the expected value"
+				}
+			]
+		],
+		"otherAttributes": {
+			"bulkInsert": false,
+			"insertCount": "1",
+			"expectedFailureReason": "11"
 		}
 	},
 	{
