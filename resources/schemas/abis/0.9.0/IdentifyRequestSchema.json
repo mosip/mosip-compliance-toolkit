@@ -51,10 +51,10 @@
 			"type": "object",
 			"properties": {
 				"maxResults": {
-					"type": "integer"
+					"type": "string"
 				},
 				"targetFPIR": {
-					"type": "integer"
+					"type": "string"
 				},
 				"flag1": {
 					"type": "string"

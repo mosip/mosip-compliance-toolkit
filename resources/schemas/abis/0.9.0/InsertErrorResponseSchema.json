@@ -15,9 +15,9 @@
 			"type": "string"
 		},
 		"returnValue": {
-			"type": "integer",
+			"type": "string",
 			"enum": [
-				2
+				"2"
 			]
 		},
 		"failureReason": {
