@@ -58,16 +58,13 @@ public class ABISDataShareService {
 	private String getDataShareUrlId;
 
 	@Value("${mosip.service.datashare.create.url}")
-	private String createDataShareUrl;
+	private String createDataShareUrlString;
 
 	@Value("${mosip.service.datashare.get.url}")
 	private String getDataShareUrl;
 
 	@Value("${mosip.service.datashare.policy.id}")
 	private String dataSharePolicyId;
-
-	@Value("${mosip.service.datashare.subscriber.id}")
-	private String dataShareSubscriberId;
 
 	private AuthUserDetails authUserDetails() {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -102,8 +99,8 @@ public class ABISDataShareService {
 			Cookie.Builder builder = new Cookie.Builder(KeyManagerHelper.AUTHORIZATION,
 					keyManagerHelper.getAuthToken());
 			// step 3 - get the data share url
-			String dataShareFullCreateUrl = createDataShareUrl + PATH_SEPARATOR + dataSharePolicyId + PATH_SEPARATOR
-					+ dataShareSubscriberId;
+			String dataShareFullCreateUrl = createDataShareUrlString + PATH_SEPARATOR + dataSharePolicyId + PATH_SEPARATOR
+					+ getPartnerId();
 			log.info("Calling dataShareFullCreateUrl: {}", dataShareFullCreateUrl);
 
 			io.restassured.response.Response dataShareResp = given().cookie(builder.build()).relaxedHTTPSValidation()
@@ -117,7 +114,7 @@ public class ABISDataShareService {
 			String internalUrl = dataShareResponseDto.getDataShare().getUrl();
 			String[] splits = internalUrl.split("/");
 			String dataShareFullGetUrl = getDataShareUrl + PATH_SEPARATOR + dataSharePolicyId + PATH_SEPARATOR
-					+ dataShareSubscriberId;
+					+ getPartnerId();
 			log.info("Setting dataShareFullGetUrl: {}", dataShareFullGetUrl);
 			String shareableUrl = dataShareFullGetUrl;
 			if (splits.length > 0) {
@@ -134,9 +131,9 @@ public class ABISDataShareService {
 					"In getDataShareUrl method of ABISQueueService Service - " + ex.getMessage());
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
 			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.ABIS_EXPIRE_DATA_SHARE_URL_EXCEPTION.getErrorCode());
+			serviceError.setErrorCode(ToolkitErrorCodes.ABIS_DATA_SHARE_URL_EXCEPTION.getErrorCode());
 			serviceError.setMessage(
-					ToolkitErrorCodes.ABIS_EXPIRE_DATA_SHARE_URL_EXCEPTION.getErrorMessage() + " " + ex.getMessage());
+					ToolkitErrorCodes.ABIS_DATA_SHARE_URL_EXCEPTION.getErrorMessage() + " " + ex.getMessage());
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		}
@@ -198,9 +195,9 @@ public class ABISDataShareService {
 					"In getDataShareUrl method of ABISQueueService Service - " + ex.getMessage());
 			List<ServiceError> serviceErrorsList = new ArrayList<>();
 			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.ABIS_DATA_SHARE_URL_EXCEPTION.getErrorCode());
+			serviceError.setErrorCode(ToolkitErrorCodes.ABIS_EXPIRE_DATA_SHARE_URL_EXCEPTION.getErrorCode());
 			serviceError.setMessage(
-					ToolkitErrorCodes.ABIS_DATA_SHARE_URL_EXCEPTION.getErrorMessage() + " " + ex.getMessage());
+					ToolkitErrorCodes.ABIS_EXPIRE_DATA_SHARE_URL_EXCEPTION.getErrorMessage() + " " + ex.getMessage());
 			serviceErrorsList.add(serviceError);
 			responseWrapper.setErrors(serviceErrorsList);
 		}
