@@ -669,6 +669,241 @@
 	},
 	{
 		"testCaseType": "ABIS",
+		"testName": "Invalid identify request structure",
+		"testId": "ABIS3019",
+		"specVersion": "0.9.0",
+		"testDescription": "Invalid identify request - request json structure is invalid",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"identify"
+		],
+		"requestSchema": [
+			"IdentifyInvalidRequestSchema"
+		],
+		"responseSchema": [
+			"IdentifyErrorResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExpectedFailureReasonValidator",
+					"description": "Validates the failure reason to match the expected value"
+				}
+			]
+		],
+		"otherAttributes": {
+			"invalidRequestAttribute": "newUnknownValue",
+			"expectedFailureReason": "4",
+			"identifyReferenceId": "ABIS3019_identify"
+		}
+	},
+	{
+		"testCaseType": "ABIS",
+		"testName": "Invalid identify request - missing referenceId",
+		"testId": "ABIS3020",
+		"specVersion": "0.9.0",
+		"testDescription": "Invalid identify request - missing referenceId",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"identify"
+		],
+		"requestSchema": [
+			"IdentifyInvalidRequestSchema"
+		],
+		"responseSchema": [
+			"IdentifyErrorResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExpectedFailureReasonValidator",
+					"description": "Validates the failure reason to match the expected value"
+				}
+			]
+		],
+		"otherAttributes": {
+			"invalidRequestAttribute": "referenceId",
+			"expectedFailureReason": "5",
+			"identifyReferenceId": "ABIS3020_identify"
+		}
+	},
+	{
+		"testCaseType": "ABIS",
+		"testName": "Invalid identify request - missing requestId",
+		"testId": "ABIS3021",
+		"specVersion": "0.9.0",
+		"testDescription": "Invalid identify request - missing requestId",
+		"isNegativeTestcase": false,
+		"inactive": true,
+		"methodName": [
+			"identify"
+		],
+		"requestSchema": [
+			"IdentifyInvalidRequestSchema"
+		],
+		"responseSchema": [
+			"IdentifyErrorResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExpectedFailureReasonValidator",
+					"description": "Validates the failure reason to match the expected value"
+				}
+			]
+		],
+		"otherAttributes": {
+			"invalidRequestAttribute": "requestId",
+			"expectedFailureReason": "6",
+			"identifyReferenceId": "ABIS3021_identify"
+		}
+	},{
+		"testCaseType": "ABIS",
+		"testName": "Invalid identify request - missing request time",
+		"testId": "ABIS3022",
+		"specVersion": "0.9.0",
+		"testDescription": "Invalid identify request - missing request time",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"identify"
+		],
+		"requestSchema": [
+			"IdentifyInvalidRequestSchema"
+		],
+		"responseSchema": [
+			"IdentifyErrorResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExpectedFailureReasonValidator",
+					"description": "Validates the failure reason to match the expected value"
+				}
+			]
+		],
+		"otherAttributes": {
+			"invalidRequestAttribute": "requesttime",
+			"expectedFailureReason": "9",
+			"identifyReferenceId": "ABIS3022_identify"
+		}
+	},{
+		"testCaseType": "ABIS",
+		"testName": "Invalid identify request - invalid version",
+		"testId": "ABIS3023",
+		"specVersion": "0.9.0",
+		"testDescription": "Invalid identify request - invalid version",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"identify"
+		],
+		"requestSchema": [
+			"IdentifyInvalidRequestSchema"
+		],
+		"responseSchema": [
+			"IdentifyErrorResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExpectedFailureReasonValidator",
+					"description": "Validates the failure reason to match the expected value"
+				}
+			]
+		],
+		"otherAttributes": {
+			"invalidRequestAttribute": "version",
+			"expectedFailureReason": "13",
+			"identifyReferenceId": "ABIS3023_identify"
+		}
+	},{
+		"testCaseType": "ABIS",
+		"testName": "Invalid identify request - invalid id",
+		"testId": "ABIS3024",
+		"specVersion": "0.9.0",
+		"testDescription": "Invalid identify request - invalid id",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"identify"
+		],
+		"requestSchema": [
+			"IdentifyInvalidRequestSchema"
+		],
+		"responseSchema": [
+			"IdentifyErrorResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExpectedFailureReasonValidator",
+					"description": "Validates the failure reason to match the expected value"
+				}
+			]
+		],
+		"otherAttributes": {
+			"invalidRequestAttribute": "invalidId",
+			"expectedFailureReason": "14",
+			"identifyReferenceId": "ABIS3024_identify"
+		}
+	},{
+		"testCaseType": "ABIS",
+		"testName": "Invalid identify request - invalid request time format",
+		"testId": "ABIS3025",
+		"specVersion": "0.9.0",
+		"testDescription": "Invalid identify request - invalid request time format",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"identify"
+		],
+		"requestSchema": [
+			"IdentifyInvalidRequestSchema"
+		],
+		"responseSchema": [
+			"IdentifyErrorResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExpectedFailureReasonValidator",
+					"description": "Validates the failure reason to match the expected value"
+				}
+			]
+		],
+		"otherAttributes": {
+			"invalidRequestAttribute": "invalidRequestTime",
+			"expectedFailureReason": "15",
+			"identifyReferenceId": "ABIS3025_identify"
+		}
+	},
+	{
+		"testCaseType": "ABIS",
 		"testName": "Identify - duplicate found for the referenceId",
 		"testId": "ABIS3026",
 		"specVersion": "0.9.0",

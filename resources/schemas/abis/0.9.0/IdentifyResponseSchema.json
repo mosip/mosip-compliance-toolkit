@@ -15,10 +15,10 @@
 			"type": "string"
 		},
 		"returnValue": {
-			"type": "string"
-		},
-		"failureReason": {
-			"type": "string"
+			"type": "string",
+			"enum": [
+				"1"
+			]
 		},
 		"candidateList": {
 			"type": "object",
