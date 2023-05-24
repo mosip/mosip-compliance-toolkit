@@ -59,10 +59,10 @@
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid insert request structure",
+		"testName": "Invalid Insert request structure",
 		"testId": "ABIS3002",
 		"specVersion": "0.9.0",
-		"testDescription": "Invalid insert request - request json structure is invalid",
+		"testDescription": "Invalid Insert request - request json structure is invalid",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"insert"
@@ -94,10 +94,10 @@
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid insert request - missing referenceId",
+		"testName": "Invalid Insert request - missing referenceId",
 		"testId": "ABIS3003",
 		"specVersion": "0.9.0",
-		"testDescription": "Invalid insert request - missing referenceId",
+		"testDescription": "Invalid Insert request - missing referenceId",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"insert"
@@ -129,11 +129,11 @@
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid insert request - missing requestId",
+		"testName": "Invalid Insert request - missing requestId",
 		"testId": "ABIS3004",
 		"specVersion": "0.9.0",
 		"inactive": true,
-		"testDescription": "Invalid insert request - missing requestId",
+		"testDescription": "Invalid Insert request - missing requestId",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"insert"
@@ -201,11 +201,11 @@
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid insert request - Invalid reference url",
+		"testName": "Invalid Insert request - Invalid reference url",
 		"testId": "ABIS3006",
 		"specVersion": "0.9.0",
 		"inactive": false,
-		"testDescription": "Invalid insert request - Invalid reference url",
+		"testDescription": "Invalid Insert request - Invalid reference url",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"insert"
@@ -237,10 +237,10 @@
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid insert request - missing reference URL",
+		"testName": "Invalid Insert request - missing reference URL",
 		"testId": "ABIS3007",
 		"specVersion": "0.9.0",
-		"testDescription": "Invalid insert request - missing reference URL",
+		"testDescription": "Invalid Insert request - missing reference URL",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"insert"
@@ -272,10 +272,10 @@
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid insert request - missing request time",
+		"testName": "Invalid Insert request - missing request time",
 		"testId": "ABIS3008",
 		"specVersion": "0.9.0",
-		"testDescription": "Invalid insert request - missing request time",
+		"testDescription": "Invalid Insert request - missing request time",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"insert"
@@ -307,10 +307,10 @@
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid insert request - referenceId already exists ",
+		"testName": "Invalid Insert request - referenceId already exists ",
 		"testId": "ABIS3009",
 		"specVersion": "0.9.0",
-		"testDescription": "Invalid insert request - referenceId already exists ",
+		"testDescription": "Invalid Insert request - referenceId already exists ",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"insert"
@@ -342,7 +342,7 @@
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid insert request - CBEFF has no data",
+		"testName": "Invalid Insert request - CBEFF has no data",
 		"testId": "ABIS3010",
 		"specVersion": "0.9.0",
 		"testDescription": "CBEFF has no data /No biometric available for deduplication",
@@ -376,10 +376,10 @@
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid insert request - invalid version",
+		"testName": "Invalid Insert request - invalid version",
 		"testId": "ABIS3011",
 		"specVersion": "0.9.0",
-		"testDescription": "Invalid insert request - invalid version",
+		"testDescription": "Invalid Insert request - invalid version",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"insert"
@@ -411,10 +411,10 @@
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid insert request - invalid id",
+		"testName": "Invalid Insert request - invalid id",
 		"testId": "ABIS3012",
 		"specVersion": "0.9.0",
-		"testDescription": "Invalid insert request - invalid id",
+		"testDescription": "Invalid Insert request - invalid id",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"insert"
@@ -446,10 +446,10 @@
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid insert request - invalid request time format",
+		"testName": "Invalid Insert request - invalid request time format",
 		"testId": "ABIS3013",
 		"specVersion": "0.9.0",
-		"testDescription": "Invalid insert request - invalid request time format",
+		"testDescription": "Invalid Insert request - invalid request time format",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"insert"
@@ -481,10 +481,10 @@
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid insert request - invalid CBEFF format",
+		"testName": "Invalid Insert request - invalid CBEFF format",
 		"testId": "ABIS3014",
 		"specVersion": "0.9.0",
-		"testDescription": "Invalid insert request - invalid CBEFF format",
+		"testDescription": "Invalid Insert request - invalid CBEFF format",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"insert"
@@ -515,10 +515,10 @@
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid insert request - data share URL has expired",
+		"testName": "Invalid Insert request - data share URL has expired",
 		"testId": "ABIS3015",
 		"specVersion": "0.9.0",
-		"testDescription": "Invalid insert request - data share URL has expired",
+		"testDescription": "Invalid Insert request - data share URL has expired",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"insert"
@@ -550,10 +550,10 @@
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid insert request - invalid data",
+		"testName": "Invalid Insert request - invalid data",
 		"testId": "ABIS3016",
 		"specVersion": "0.9.0",
-		"testDescription": "Invalid insert request - invalid data",
+		"testDescription": "Invalid Insert request - invalid data",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"insert"
@@ -584,10 +584,10 @@
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid insert request - CBEFF data decryption failure",
+		"testName": "Invalid Insert request - CBEFF data decryption failure",
 		"testId": "ABIS3017",
 		"specVersion": "0.9.0",
-		"testDescription": "Invalid insert request - CBEFF data decryption failure",
+		"testDescription": "Invalid Insert request - CBEFF data decryption failure",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"insert"
@@ -621,7 +621,7 @@
 		"testName": "Identify - duplicate found for the referenceId against gallery",
 		"testId": "ABIS3018",
 		"specVersion": "0.9.0",
-		"testDescription": "Insert same biometrics twice, then test if duplicate is found for the referenceId against gallery",
+		"testDescription": "Insert same biometrics multiple times, then test if duplicate is found for the referenceId against gallery",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"insert",
@@ -650,29 +650,31 @@
 				{
 					"name": "IdentifyDuplicateFoundValidator",
 					"description": "Validates the count of duplicates found by ABIS for the given referenceId"
+				},
+				{
+					"name": "ExpectedDuplicateCountValidator",
+					"description": "Validates the duplicates found to match the expected value"
 				}
 			]
 		],
 		"otherAttributes": {
 			"bulkInsert": true,
-			"insertCount": "5",
-			"expectedDuplicateCount": "4",
+			"insertCount": "3",
+			"expectedDuplicateCount": "1",
 			"identifyReferenceId": "ABIS3018_1",
 			"identifyGalleryIds": [
 				"ABIS3018_1",
 				"ABIS3018_2",
-				"ABIS3018_3",
-				"ABIS3018_4",
-				"ABIS3018_5"
+				"ABIS3018_3"
 			]
 		}
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid identify request structure",
+		"testName": "Invalid Identify request structure",
 		"testId": "ABIS3019",
 		"specVersion": "0.9.0",
-		"testDescription": "Invalid identify request - request json structure is invalid",
+		"testDescription": "Invalid Identify request - request json structure is invalid",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"identify"
@@ -703,10 +705,10 @@
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid identify request - missing referenceId",
+		"testName": "Invalid Identify request - missing referenceId",
 		"testId": "ABIS3020",
 		"specVersion": "0.9.0",
-		"testDescription": "Invalid identify request - missing referenceId",
+		"testDescription": "Invalid Identify request - missing referenceId",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"identify"
@@ -737,10 +739,10 @@
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid identify request - missing requestId",
+		"testName": "Invalid Identify request - missing requestId",
 		"testId": "ABIS3021",
 		"specVersion": "0.9.0",
-		"testDescription": "Invalid identify request - missing requestId",
+		"testDescription": "Invalid Identify request - missing requestId",
 		"isNegativeTestcase": false,
 		"inactive": true,
 		"methodName": [
@@ -769,12 +771,13 @@
 			"expectedFailureReason": "6",
 			"identifyReferenceId": "ABIS3021_identify"
 		}
-	},{
+	},
+	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid identify request - missing request time",
+		"testName": "Invalid Identify request - missing request time",
 		"testId": "ABIS3022",
 		"specVersion": "0.9.0",
-		"testDescription": "Invalid identify request - missing request time",
+		"testDescription": "Invalid Identify request - missing request time",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"identify"
@@ -802,12 +805,13 @@
 			"expectedFailureReason": "9",
 			"identifyReferenceId": "ABIS3022_identify"
 		}
-	},{
+	},
+	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid identify request - invalid version",
+		"testName": "Invalid Identify request - invalid version",
 		"testId": "ABIS3023",
 		"specVersion": "0.9.0",
-		"testDescription": "Invalid identify request - invalid version",
+		"testDescription": "Invalid Identify request - invalid version",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"identify"
@@ -835,12 +839,13 @@
 			"expectedFailureReason": "13",
 			"identifyReferenceId": "ABIS3023_identify"
 		}
-	},{
+	},
+	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid identify request - invalid id",
+		"testName": "Invalid Identify request - invalid id",
 		"testId": "ABIS3024",
 		"specVersion": "0.9.0",
-		"testDescription": "Invalid identify request - invalid id",
+		"testDescription": "Invalid Identify request - invalid id",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"identify"
@@ -868,12 +873,13 @@
 			"expectedFailureReason": "14",
 			"identifyReferenceId": "ABIS3024_identify"
 		}
-	},{
+	},
+	{
 		"testCaseType": "ABIS",
-		"testName": "Invalid identify request - invalid request time format",
+		"testName": "Invalid Identify request - invalid request time format",
 		"testId": "ABIS3025",
 		"specVersion": "0.9.0",
-		"testDescription": "Invalid identify request - invalid request time format",
+		"testDescription": "Invalid Identify request - invalid request time format",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"identify"
@@ -904,10 +910,10 @@
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Identify - duplicate found for the referenceId",
+		"testName": "Identify - duplicate found for the referenceId (gallery skipped)",
 		"testId": "ABIS3026",
 		"specVersion": "0.9.0",
-		"testDescription": "Insert same biometrics twice, then test if duplicate is found for the referenceId",
+		"testDescription": "Insert same biometrics twice, then test if duplicate is found for the referenceId, (gallery skipped)",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"insert",
@@ -936,6 +942,10 @@
 				{
 					"name": "IdentifyDuplicateFoundValidator",
 					"description": "Validates the count of duplicates found by ABIS for the given referenceId"
+				},
+				{
+					"name": "ExpectedDuplicateCountValidator",
+					"description": "Validates the duplicates found to match the expected value"
 				}
 			]
 		],
@@ -944,6 +954,160 @@
 			"insertCount": "2",
 			"expectedDuplicateCount": "1",
 			"identifyReferenceId": "ABIS3026_2"
+		}
+	},
+	{
+		"testCaseType": "ABIS",
+		"testName": "Identify - duplicate found for the referenceId against gallery - where referenceId's are inserted",
+		"testId": "ABIS3027",
+		"specVersion": "0.9.0",
+		"testDescription": "Insert same biometrics multiple times, then test if duplicate is found for the referenceId against gallery.",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"insert",
+			"identify"
+		],
+		"requestSchema": [
+			"InsertRequestSchema",
+			"IdentifyRequestSchema"
+		],
+		"responseSchema": [
+			"InsertResponseSchema",
+			"IdentifyResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			],
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "IdentifyDuplicateFoundValidator",
+					"description": "Validates the count of duplicates found by ABIS for the given referenceId"
+				},
+				{
+					"name": "ExpectedDuplicateCountValidator",
+					"description": "Validates the duplicates found to match the expected value"
+				}
+			]
+		],
+		"otherAttributes": {
+			"bulkInsert": true,
+			"insertCount": "6",
+			"expectedDuplicateCount": "4",
+			"identifyReferenceId": "ABIS3027_2",
+			"identifyGalleryIds": [
+				"ABIS3027_1",
+				"ABIS3027_2",
+				"ABIS3027_3",
+				"ABIS3027_4",
+				"ABIS3027_5",
+				"ABIS3027_6"
+			]
+		}
+	},
+	{
+		"testCaseType": "ABIS",
+		"testName": "Identify - duplicate found for the referenceId against gallery - but the referenceId's are not inserted.",
+		"testId": "ABIS3028",
+		"specVersion": "0.9.0",
+		"testDescription": "Insert biometrics once, then test if duplicate is found for the referenceId against gallery - but the referenceId's are not inserted.",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"insert",
+			"identify"
+		],
+		"requestSchema": [
+			"InsertRequestSchema",
+			"IdentifyRequestSchema"
+		],
+		"responseSchema": [
+			"InsertResponseSchema",
+			"IdentifyErrorResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			],
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExpectedFailureReasonValidator",
+					"description": "Validates the failure reason to match the expected value"
+				}
+			]
+		],
+		"otherAttributes": {
+			"bulkInsert": false,
+			"insertCount": "1",
+			"expectedFailureReason": "15",
+			"identifyReferenceId": "ABIS3028",
+			"identifyGalleryIds": [
+				"ABIS3028_1",
+				"ABIS3028_2",
+				"ABIS3028_3"
+			]
+		}
+	},
+	{
+		"testCaseType": "ABIS",
+		"testName": "Identify - duplicate not found for the referenceId against gallery",
+		"testId": "ABIS3029",
+		"specVersion": "0.9.0",
+		"testDescription": "Identify - duplicate not found for the referenceId against gallery",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"insert",
+			"identify"
+		],
+		"requestSchema": [
+			"InsertRequestSchema",
+			"IdentifyRequestSchema"
+		],
+		"responseSchema": [
+			"InsertResponseSchema",
+			"IdentifyResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			],
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},
+				{
+					"name": "ExpectedDuplicateCountValidator",
+					"description": "Validates the duplicates found to match the expected value"
+				}
+			]
+		],
+		"otherAttributes": {
+			"bulkInsert": true,
+			"insertCount": "3",
+			"expectedDuplicateCount": "0",
+			"identifyReferenceId": "ABIS3029_2",
+			"identifyGalleryIds": [
+				"ABIS3029_1",
+				"ABIS3029_2",
+				"ABIS3029_3"
+			]
 		}
 	}
 ]
