@@ -604,14 +604,14 @@ public class BiometricTestDataService {
         Resource resource = null;
         try {
             byte[] bytes;
-            if (purpose.equals(AppConstants.SDK)) {
+            if (!purpose.equals(AppConstants.ABIS)) {
                 bytes = generateSampleSdkTestData(purpose);
             } else {
                 bytes = generateSampleAbisTestData(purpose);
             }
             if (Objects.nonNull(bytes)) {
                 String defaultFileName;
-                if (purpose.equals(AppConstants.SDK)) {
+                if (!purpose.equals(AppConstants.ABIS)) {
                     SdkPurpose sdkPurpose = SdkPurpose.fromCode(purpose);
                     defaultFileName = AppConstants.SAMPLE + UNDERSCORE + sdkPurpose.toString().toUpperCase()
                             + ZIP_EXT;
