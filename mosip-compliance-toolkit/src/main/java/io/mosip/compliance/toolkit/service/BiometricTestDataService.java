@@ -112,6 +112,9 @@ public class BiometricTestDataService {
     @Value("${mosip.toolkit.sdk.testcases.ignore.list}")
     private String ignoreTestcases;
 
+    @Value("${mosip.toolkit.abis.testcases.ignore.list}")
+    private String ignoreAbisTestcases;
+
     @Value("${mosip.toolkit.max.allowed.gallery.files}")
     private String maxAllowedGalleryFiles;
 
@@ -445,7 +448,8 @@ public class BiometricTestDataService {
 					String entryName = zipEntry.getName();
 					if (!purpose.equals(AppConstants.ABIS)) {
 						if (!entryName.startsWith(purpose)) {
-                            entryName = entryName.substring(0, entryName.length()-1);
+                            entryName = entryName.charAt(entryName.length() - 1) != '/' ? entryName
+                                    : entryName.substring(0, entryName.length() - 1);
                             String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
                                     + AppConstants.COMMA_SEPARATOR
                                     + ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode()
@@ -458,7 +462,8 @@ public class BiometricTestDataService {
 						}
 					} else {
 						if (!entryName.startsWith(AppConstants.ABIS)) {
-                            entryName = entryName.substring(0, entryName.length()-1);
+                            entryName = entryName.charAt(entryName.length() - 1) != '/' ? entryName
+                                    : entryName.substring(0, entryName.length() - 1);
                             String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
                                     + AppConstants.COMMA_SEPARATOR
                                     + ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode()
@@ -748,6 +753,7 @@ public class BiometricTestDataService {
         ByteArrayOutputStream byteArrayOutputStream = null;
         BufferedOutputStream bufferedOutputStream = null;
         ZipOutputStream zipOutputStream = null;
+        List<String> ignoreTestcaseList = Arrays.asList(ignoreAbisTestcases.split(","));
         try {
             List<TestCaseEntity> testCaseEntities = testCaseCacheService.getAbisTestCases(AppConstants.ABIS,
                     sdkSampleTestdataSpecVer);
@@ -771,7 +777,8 @@ public class BiometricTestDataService {
                             TestCaseDto.class);
                     if (testCaseDto.getSpecVersion() != null
                             && testCaseDto.getSpecVersion().equals(sdkSampleTestdataSpecVer)
-                            && purpose.equals(AppConstants.ABIS)) {
+                            && purpose.equals(AppConstants.ABIS)
+                            && !ignoreTestcaseList.contains(testCaseDto.getTestId())) {
                         folderName = purpose + "/" + testCaseDto.testId;
                         String content = prepareReadme(testCaseDto);
 
