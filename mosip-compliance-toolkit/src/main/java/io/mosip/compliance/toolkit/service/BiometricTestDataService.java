@@ -603,11 +603,21 @@ public class BiometricTestDataService {
     public ResponseEntity<Resource> getSampleBioTestDataFile(String purpose) {
         Resource resource = null;
         try {
-            byte[] bytes = generateSampleSdkTestData(purpose);
+            byte[] bytes;
+            if (purpose.equals(AppConstants.SDK)) {
+                bytes = generateSampleSdkTestData(purpose);
+            } else {
+                bytes = generateSampleAbisTestData(purpose);
+            }
             if (Objects.nonNull(bytes)) {
-                SdkPurpose sdkPurpose = SdkPurpose.fromCode(purpose);
-                String defaultFileName = AppConstants.SAMPLE + UNDERSCORE + sdkPurpose.toString().toUpperCase()
-                        + ZIP_EXT;
+                String defaultFileName;
+                if (purpose.equals(AppConstants.SDK)) {
+                    SdkPurpose sdkPurpose = SdkPurpose.fromCode(purpose);
+                    defaultFileName = AppConstants.SAMPLE + UNDERSCORE + sdkPurpose.toString().toUpperCase()
+                            + ZIP_EXT;
+                } else {
+                    defaultFileName = AppConstants.SAMPLE + UNDERSCORE + purpose.toUpperCase() + ZIP_EXT;
+                }
 
                 resource = new ByteArrayResource(bytes);
 
@@ -733,6 +743,88 @@ public class BiometricTestDataService {
 		return response;
     }
 
+    private byte[] generateSampleAbisTestData(String purpose) {
+        byte[] response = null;
+        ByteArrayOutputStream byteArrayOutputStream = null;
+        BufferedOutputStream bufferedOutputStream = null;
+        ZipOutputStream zipOutputStream = null;
+        try {
+            List<TestCaseEntity> testCaseEntities = testCaseCacheService.getAbisTestCases(AppConstants.ABIS,
+                    sdkSampleTestdataSpecVer);
+            if (Objects.nonNull(testCaseEntities) && testCaseEntities.size() > 0) {
+                String folderName = purpose;
+                String fileName = "Readme.txt";
+
+                byteArrayOutputStream = new ByteArrayOutputStream();
+                bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
+                zipOutputStream = new ZipOutputStream(bufferedOutputStream);
+                StringBuilder builder = new StringBuilder();
+                builder.append(outerReadmeIntro + "\n\n");
+                builder.append("Method - " + purpose + "\n\n");
+                builder.append(outerReadmeBody);
+                zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
+                zipOutputStream.write(builder.toString().getBytes());
+                zipOutputStream.closeEntry();
+                for (final TestCaseEntity testCaseEntity : testCaseEntities) {
+                    String testcaseJson = testCaseEntity.getTestcaseJson();
+                    TestCaseDto testCaseDto = objectMapperConfig.objectMapper().readValue(testcaseJson,
+                            TestCaseDto.class);
+                    if (testCaseDto.getSpecVersion() != null
+                            && testCaseDto.getSpecVersion().equals(sdkSampleTestdataSpecVer)
+                            && purpose.equals(AppConstants.ABIS)) {
+                        folderName = purpose + "/" + testCaseDto.testId;
+                        String content = prepareReadme(testCaseDto);
+
+                        zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
+                        zipOutputStream.write(content.getBytes());
+                        zipOutputStream.closeEntry();
+                    }
+                }
+                if (null != zipOutputStream) {
+                    zipOutputStream.finish();
+                    zipOutputStream.flush();
+                    zipOutputStream.close();
+                    zipOutputStream = null;
+                }
+
+                response = byteArrayOutputStream.toByteArray();
+
+                if (Objects.nonNull(bufferedOutputStream)) {
+                    bufferedOutputStream.close();
+                    bufferedOutputStream = null;
+                }
+                if (Objects.nonNull(byteArrayOutputStream)) {
+                    byteArrayOutputStream.close();
+                    byteArrayOutputStream = null;
+                }
+
+            }
+        } catch (Exception ex) {
+            log.debug("sessionId", "idType", "id", ex.getStackTrace());
+            log.error("sessionId", "idType", "id",
+                    "In generateSampleAbisTestData method of BiometricTestDataService Service - " + ex.getMessage());
+        } finally {
+            try {
+                if (null != zipOutputStream) {
+                    zipOutputStream.finish();
+                    zipOutputStream.flush();
+                    zipOutputStream.close();
+                }
+                if (null != bufferedOutputStream) {
+                    bufferedOutputStream.close();
+                }
+                if (null != byteArrayOutputStream) {
+                    byteArrayOutputStream.close();
+                }
+            } catch (Exception e) {
+                log.debug("sessionId", "idType", "id", e.getStackTrace());
+                log.error("sessionId", "idType", "id",
+                        "In generateSampleAbisTestData method of BiometricTestDataService Service - " + e.getMessage());
+            }
+        }
+        return response;
+    }
+
     private String prepareReadme(TestCaseDto testCaseDto) {
         String readMeFileData = "";
         try {
@@ -743,8 +835,13 @@ public class BiometricTestDataService {
                 builder.append("ID - " + testCaseDto.testId + "\n");
                 builder.append("Description - " + testCaseDto.testDescription + "\n");
                 builder.append("Spec Version - " + testCaseDto.specVersion + "\n");
-                builder.append("Purpose - " + testCaseDto.getOtherAttributes().getSdkPurpose().toString() + "\n");
-                builder.append("Modality - " + testCaseDto.getOtherAttributes().getModalities().toString() + "\n\n");
+                if (testCaseDto.getTestCaseType().equals(AppConstants.SDK)) {
+                    builder.append("Purpose - " + testCaseDto.getOtherAttributes().getSdkPurpose().toString() + "\n");
+                    builder.append(
+                            "Modality - " + testCaseDto.getOtherAttributes().getModalities().toString() + "\n\n");
+                } else {
+                    builder.append("\n");
+                }
                 if (testCaseDto.isNegativeTestcase) {
                     builder.append("This is Negative Testcase\n\n");
                 }
