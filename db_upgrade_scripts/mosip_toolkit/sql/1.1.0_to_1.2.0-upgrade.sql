@@ -3,6 +3,7 @@
 
 -- \ir ../ddl/prereg-applications.sql
 
+ALTER TABLE toolkit.abis_projects DROP COLUMN purpose;
 ALTER TABLE toolkit.abis_projects RENAME COLUMN queue_name TO inbound_queue_name;
 ALTER TABLE toolkit.abis_projects Add column outbound_queue_name character varying(256) NOT NULL;
 ALTER TABLE toolkit.abis_projects Add column bio_test_data_file_name character varying(64) NOT NULL;
