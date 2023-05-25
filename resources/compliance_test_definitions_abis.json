@@ -910,7 +910,7 @@
 	},
 	{
 		"testCaseType": "ABIS",
-		"testName": "Identify - duplicate found for the referenceId (gallery skipped)",
+		"testName": "Identify - duplicate found for the referenceId (gallery skipped). Clear the ABIS cache before running this testcase.",
 		"testId": "ABIS3026",
 		"specVersion": "0.9.0",
 		"testDescription": "Insert same biometrics twice, then test if duplicate is found for the referenceId, (gallery skipped)",
@@ -1052,7 +1052,7 @@
 		"otherAttributes": {
 			"bulkInsert": false,
 			"insertCount": "1",
-			"expectedFailureReason": "15",
+			"expectedFailureReason": "12",
 			"identifyReferenceId": "ABIS3028",
 			"identifyGalleryIds": [
 				"ABIS3028_1",
