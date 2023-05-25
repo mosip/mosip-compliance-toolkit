@@ -8,6 +8,6 @@ ALTER TABLE toolkit.abis_projects DROP COLUMN abis_version;
 ALTER TABLE toolkit.abis_projects DROP COLUMN bio_test_data_file_name;
 ALTER TABLE toolkit.abis_projects DROP COLUMN outbound_queue_name;
 ALTER TABLE toolkit.abis_projects RENAME COLUMN inbound_queue_name TO queue_name;
-ALTER TABLE toolkit.abis_projects ADD COLUMN purpose;
+
 
 
