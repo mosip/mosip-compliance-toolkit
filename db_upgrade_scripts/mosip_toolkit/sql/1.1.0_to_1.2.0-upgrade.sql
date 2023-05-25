@@ -2,6 +2,7 @@
 
 
 -- \ir ../ddl/prereg-applications.sql
+COMMENT ON COLUMN toolkit.abis_projects.queue_name IS NULL;
 ALTER TABLE toolkit.abis_projects DROP COLUMN queue_name;
 ALTER TABLE toolkit.abis_projects Add COLUMN inbound_queue_name character varying(256) NOT NULL;
 ALTER TABLE toolkit.abis_projects Add column outbound_queue_name character varying(256) NOT NULL;
