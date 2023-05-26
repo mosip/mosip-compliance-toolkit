@@ -31,11 +31,19 @@ public class ExpectedDuplicateCountValidator extends ToolkitValidator {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription(
 						"Identify - found the expected duplicate count as: " + count + " for given the referenceId.");
+				validationResultDto.setDescriptionKey("EXPECTED_DUPLICATE_COUNT_VALIDATOR_001"
+						+ AppConstants.ARGUMENTS_DELIMITER
+						+ count);
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription(
 						"Identify - did not find the expected duplicate count. Expected duplicate count is: "
 								+ expectedDuplicateCount + ". But received duplicate count as: " + count);
+				validationResultDto.setDescriptionKey("EXPECTED_DUPLICATE_COUNT_VALIDATOR_002"
+						+ AppConstants.ARGUMENTS_DELIMITER
+						+ expectedDuplicateCount
+						+ AppConstants.ARGUMENTS_SEPARATOR
+						+ count);
 			}
 		} catch (Exception e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
