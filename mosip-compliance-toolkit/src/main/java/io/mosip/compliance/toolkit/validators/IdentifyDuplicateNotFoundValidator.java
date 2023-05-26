@@ -26,11 +26,15 @@ public class IdentifyDuplicateNotFoundValidator extends ToolkitValidator {
 			if (count == 0) {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription("Identify - no duplicate found for given the referenceId.");
+				validationResultDto.setDescriptionKey("DUPLICATE_NOT_FOUND_VALIDATOR_001");
 
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto
 						.setDescription("Identify - found " + count + " duplicate for given the referenceId.");
+				validationResultDto.setDescriptionKey("DUPLICATE_NOT_FOUND_VALIDATOR_002"
+				+ AppConstants.ARGUMENTS_DELIMITER
+				+ count);
 			}
 		} catch (Exception e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
