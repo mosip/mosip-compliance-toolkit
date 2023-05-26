@@ -1,6 +1,5 @@
 package io.mosip.compliance.toolkit.validators;
 
-import com.amazonaws.services.opsworks.model.App;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
