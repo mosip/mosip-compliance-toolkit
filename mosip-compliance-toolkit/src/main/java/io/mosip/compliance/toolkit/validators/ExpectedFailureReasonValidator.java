@@ -27,10 +27,18 @@ public class ExpectedFailureReasonValidator extends ToolkitValidator {
 			if (failureReasonRecvd == failureReasonExpected) {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription("Expected failure reason: " + failureReasonExpected + " successfully validated.");
+				validationResultDto.setDescriptionKey("EXPECTED_FAILURE_REASON_VALIDATOR_001"
+						+ AppConstants.ARGUMENTS_DELIMITER
+						+ failureReasonExpected);
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("The failure reason expected was: " + failureReasonExpected
 						+ ", but received: " + failureReasonRecvd);
+				validationResultDto.setDescriptionKey("EXPECTED_FAILURE_REASON_VALIDATOR_002"
+						+ AppConstants.ARGUMENTS_DELIMITER
+						+ failureReasonExpected
+						+ AppConstants.ARGUMENTS_SEPARATOR
+						+ failureReasonRecvd);
 			}
 		} catch (Exception e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
