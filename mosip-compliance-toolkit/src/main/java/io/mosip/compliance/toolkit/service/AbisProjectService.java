@@ -253,7 +253,7 @@ public class AbisProjectService {
 							BiometricTestDataEntity biometricTestData = biometricTestDataRepository
 									.findByTestDataName(bioTestDataName, partnerId);
 							String fileName = biometricTestData.getFileId();
-							String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId;
+							String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/" + AppConstants.ABIS;
 							if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
 								entity.setBioTestDataFileName(bioTestDataName);
 							} else {
