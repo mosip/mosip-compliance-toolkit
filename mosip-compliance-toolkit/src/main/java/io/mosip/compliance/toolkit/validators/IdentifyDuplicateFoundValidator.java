@@ -29,8 +29,8 @@ public class IdentifyDuplicateFoundValidator extends ToolkitValidator {
             	validationResultDto.setStatus(AppConstants.SUCCESS);
                 validationResultDto.setDescription("Identify - found " + count + " duplicate for given the referenceId.");
                 validationResultDto.setDescriptionKey("IDENTIFY_DUPLICATE_FOUND_VALIDATOR_001"
-                + AppConstants.ARGUMENTS_DELIMITER
-                + count);
+                        + AppConstants.ARGUMENTS_DELIMITER
+                        + count);
             } else {
             	validationResultDto.setStatus(AppConstants.FAILURE);
             	  validationResultDto.setDescription("Identify - no duplicate found for given the referenceId.");
