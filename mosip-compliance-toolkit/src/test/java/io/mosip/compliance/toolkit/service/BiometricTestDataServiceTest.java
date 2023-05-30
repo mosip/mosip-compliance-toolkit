@@ -165,7 +165,7 @@ public class BiometricTestDataServiceTest {
         BiometricTestDataDto biometricTestDataDto = new BiometricTestDataDto();
         biometricTestDataDto.setPurpose(purposeAbis);
 
-        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFileAbis.zip");
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.zip");
         MockMultipartFile file = new MockMultipartFile("file", "testFile.zip", "multipart/form-data", inputFile);
         Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(true);
         List<TestCaseEntity> testCases = new ArrayList<>();
