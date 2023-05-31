@@ -43,6 +43,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
@@ -83,6 +84,8 @@ public class BiometricTestDataServiceTest {
 
     private String purposeAbis = "ABIS";
 
+    private String ignoreAbisTestcases = "";
+
     @Before
     public void before(){
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -93,6 +96,7 @@ public class BiometricTestDataServiceTest {
         ReflectionTestUtils.setField(biometricTestDataService, "scanDocument", true);
         ReflectionTestUtils.setField(biometricTestDataService, "maxAllowedGalleryFiles", "5");
         ReflectionTestUtils.setField(biometricTestDataService, "ignoreTestcases", ignoreTestcases);
+        ReflectionTestUtils.setField(biometricTestDataService, "ignoreAbisTestcases", ignoreAbisTestcases);
         ReflectionTestUtils.setField(biometricTestDataService, "sdkSampleTestdataSpecVer", SdkSpecVersions.SPEC_VER_0_9_0.getCode());
     }
 
@@ -324,6 +328,10 @@ public class BiometricTestDataServiceTest {
         Mockito.when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
                 .thenReturn(inputStream);
         biometricTestDataService.getSampleBioTestDataFile(purpose);
+        Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+                .thenReturn(false);
+        ResponseEntity<Resource> response = biometricTestDataService.getSampleBioTestDataFile(purpose);
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
     }
     
     @Test
