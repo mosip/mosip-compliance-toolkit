@@ -461,6 +461,33 @@ public class BiometricTestDataService {
 							entryName = entryName.replace(purpose + "/", "");
 						}
 					} else {
+                        String[] folderNames = entryName.split("/");
+                        if (!folderNames[0].equals(AppConstants.ABIS)) {
+                            entryName = entryName.charAt(entryName.length() - 1) != '/' ? entryName
+                                    : entryName.substring(0, entryName.length() - 1);
+                            String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                                    + AppConstants.COMMA_SEPARATOR
+                                    + ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorCode()
+                                    + AppConstants.COMMA_SEPARATOR
+                                    + folderNames[0];
+                            throw new ToolkitException(errorCode,
+                                    ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorMessage() + " " + folderNames[0]);
+                        }
+                        for (int i = 0; i < folderNames.length; i++) {
+                            if (!folderNames[i].matches(AppConstants.ABIS + "\\d+$")
+                                    && i != 0 && !folderNames[i].endsWith(".xml")) {
+                                entryName = entryName.charAt(entryName.length() - 1) != '/' ? entryName
+                                        : entryName.substring(0, entryName.length() - 1);
+                                String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                                        + AppConstants.COMMA_SEPARATOR
+                                        + ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorCode()
+                                        + AppConstants.COMMA_SEPARATOR
+                                        + folderNames[i];
+                                throw new ToolkitException(errorCode,
+                                        ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorMessage() + " "
+                                                + folderNames[i]);
+                            }
+                        }
 						if (!entryName.startsWith(AppConstants.ABIS)) {
                             entryName = entryName.charAt(entryName.length() - 1) != '/' ? entryName
                                     : entryName.substring(0, entryName.length() - 1);
