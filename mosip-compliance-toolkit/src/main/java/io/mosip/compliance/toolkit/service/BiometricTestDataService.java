@@ -463,8 +463,6 @@ public class BiometricTestDataService {
 					} else {
                         String[] folderNames = entryName.split("/");
                         if (!folderNames[0].equals(AppConstants.ABIS)) {
-                            entryName = entryName.charAt(entryName.length() - 1) != '/' ? entryName
-                                    : entryName.substring(0, entryName.length() - 1);
                             String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
                                     + AppConstants.COMMA_SEPARATOR
                                     + ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorCode()
@@ -476,8 +474,6 @@ public class BiometricTestDataService {
                         for (int i = 0; i < folderNames.length; i++) {
                             if (!folderNames[i].matches(AppConstants.ABIS + "\\d+$")
                                     && i != 0 && !folderNames[i].endsWith(".xml")) {
-                                entryName = entryName.charAt(entryName.length() - 1) != '/' ? entryName
-                                        : entryName.substring(0, entryName.length() - 1);
                                 String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
                                         + AppConstants.COMMA_SEPARATOR
                                         + ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorCode()
