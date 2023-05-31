@@ -34,6 +34,9 @@ public class MainController {
 	@Value("${mosip.toolkit.languages.rtl}")
 	private String rtlLanguages;
 	
+	@Value("${mosip.service.datashare.incorrect.partner.id}")
+	private String incorrectPartnerId;
+	
 	@ResponseFilter
 	@GetMapping("/configs")
 	public ResponseWrapper<Map<String, String>> getConfigValues() {
@@ -46,6 +49,7 @@ public class MainController {
 		configMap.put("allowedFileSize", allowedFileSize);
 		configMap.put("keyRotationIterations", keyRotationIterations);
 		configMap.put("rtlLanguages", rtlLanguages);
+		configMap.put("incorrectPartnerId", incorrectPartnerId);
 		responseWrapper.setResponse(configMap);
 		return responseWrapper;
 	}
