@@ -461,7 +461,7 @@ public class BiometricTestDataService {
 							entryName = entryName.replace(purpose + "/", "");
 						}
 					} else {
-						if (!entryName.startsWith(AppConstants.ABIS)) {
+						if (!entryName.split("/")[0].equals(AppConstants.ABIS)) {
                             entryName = entryName.charAt(entryName.length() - 1) != '/' ? entryName
                                     : entryName.substring(0, entryName.length() - 1);
                             String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
