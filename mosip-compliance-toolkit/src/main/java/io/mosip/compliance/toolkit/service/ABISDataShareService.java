@@ -99,8 +99,13 @@ public class ABISDataShareService {
 			Cookie.Builder builder = new Cookie.Builder(KeyManagerHelper.AUTHORIZATION,
 					keyManagerHelper.getAuthToken());
 			// step 3 - get the data share url
+			// for ABIS3017, we need to send incorrect partner id to simulate decryption failure
+			String partnerIdForDataShare = dataShareRequestDto.getIncorrectPartnerId();
+			if (partnerIdForDataShare == null || partnerIdForDataShare.isBlank()) {
+				partnerIdForDataShare = getPartnerId();
+			}
 			String dataShareFullCreateUrl = createDataShareUrlString + PATH_SEPARATOR + dataSharePolicyId + PATH_SEPARATOR
-					+ getPartnerId();
+					+ partnerIdForDataShare;
 			log.info("Calling dataShareFullCreateUrl: {}", dataShareFullCreateUrl);
 
 			io.restassured.response.Response dataShareResp = given().cookie(builder.build()).relaxedHTTPSValidation()
@@ -114,7 +119,7 @@ public class ABISDataShareService {
 			String internalUrl = dataShareResponseDto.getDataShare().getUrl();
 			String[] splits = internalUrl.split("/");
 			String dataShareFullGetUrl = getDataShareUrl + PATH_SEPARATOR + dataSharePolicyId + PATH_SEPARATOR
-					+ getPartnerId();
+					+ partnerIdForDataShare;
 			log.info("Setting dataShareFullGetUrl: {}", dataShareFullGetUrl);
 			String shareableUrl = dataShareFullGetUrl;
 			if (splits.length > 0) {

@@ -613,6 +613,7 @@
 		"otherAttributes": {
 			"bulkInsert": false,
 			"insertCount": "1",
+			"invalidRequestAttribute": "incorrectPartnerId",
 			"expectedFailureReason": "11"
 		}
 	},
