@@ -328,7 +328,8 @@ public class BiometricTestDataServiceTest {
         Mockito.when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
                 .thenReturn(inputStream);
         biometricTestDataService.getSampleBioTestDataFile(purpose);
-        Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
+        Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+                .thenReturn(false);
         ResponseEntity<Resource> response = biometricTestDataService.getSampleBioTestDataFile(purpose);
         Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
     }
