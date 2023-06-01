@@ -11,6 +11,14 @@ keycloak:
           direct_grant_flow_alias: 'direct grant'
           browser_flow_alias: 'browser'
 
+      users:
+        - username: mpartner-default-abis
+          email: abis@gmail.com
+          firstName: mpartner-default-abis
+          lastName: 
+          password: abcd1234
+          temporary: true
+          realmRoles: []
 ## These will be passed as environments variables to keycloak-init docker. Note the expected naming convention is
 ## <clientname>_<secret>.  If empty secret is passed, it shall be randomly generated
 #clientSecrets:
