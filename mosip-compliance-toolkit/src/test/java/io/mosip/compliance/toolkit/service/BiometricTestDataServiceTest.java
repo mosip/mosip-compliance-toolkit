@@ -142,7 +142,7 @@ public class BiometricTestDataServiceTest {
         BiometricTestDataDto testDataDto = new BiometricTestDataDto();
         Mockito.when(mapper.convertValue(entity_1, BiometricTestDataDto.class)).thenReturn(testDataDto);
         response = biometricTestDataService.getListOfBiometricTestData();
-        assertNotNull(response.getResponse().get(0));
+        Assert.assertNotNull(response.getResponse().get(0));
     }
 
     /*
