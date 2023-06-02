@@ -46,6 +46,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertNotNull;
+
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
 @RunWith(SpringRunner.class)
 @WebMvcTest
@@ -140,7 +142,7 @@ public class BiometricTestDataServiceTest {
         BiometricTestDataDto testDataDto = new BiometricTestDataDto();
         Mockito.when(mapper.convertValue(entity_1, BiometricTestDataDto.class)).thenReturn(testDataDto);
         response = biometricTestDataService.getListOfBiometricTestData();
-        Assert.assertNotNull(response.getResponse().get(0));
+        assertNotNull(response.getResponse().get(0));
     }
 
     /*
@@ -189,6 +191,9 @@ public class BiometricTestDataServiceTest {
         Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(),
                 Mockito.any())).thenReturn(true);
         response = biometricTestDataService.addBiometricTestdata(biometricTestDataDto, file);
+        assertNotNull(response);
+        Assert.assertEquals(false, response.getErrors().isEmpty());
+        Assert.assertEquals(1, response.getErrors().size());
     }
 
     @Test
