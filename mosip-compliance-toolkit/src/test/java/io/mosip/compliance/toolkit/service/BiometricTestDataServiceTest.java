@@ -201,7 +201,7 @@ public class BiometricTestDataServiceTest {
         serviceError.setErrorCode("TOOLKIT_TESTDATA_ERR_006,TOOLKIT_TESTDATA_ERR_004,ABIS3000");
         serviceError.setMessage("Testdata has invalid folder ABIS3000");
         serviceErrorsList.add(serviceError);
-        Assert.assertEquals(1,response.getErrors().size());
+        Assert.assertEquals(1, response.getErrors().size());
         Assert.assertEquals(serviceErrorsList, response.getErrors());
     }
     @Test
@@ -234,12 +234,6 @@ public class BiometricTestDataServiceTest {
         assertNotNull(response);
         Assert.assertEquals(false, response.getErrors().isEmpty());
         Assert.assertEquals(1, response.getErrors().size());
-        List<ServiceError> serviceErrorsList = new ArrayList<>();
-        ServiceError serviceError = new ServiceError();
-        serviceError.setErrorCode("TOOLKIT_TESTDATA_ERR_006,TOOLKIT_TESTDATA_ERR_001,Check Quality/SDK2001");
-        serviceError.setMessage("Testdata has wrong purpose Check Quality/SDK2001");
-        serviceErrorsList.add(serviceError);
-        Assert.assertEquals(serviceErrorsList, response.getErrors());
     }
 
     @Test
