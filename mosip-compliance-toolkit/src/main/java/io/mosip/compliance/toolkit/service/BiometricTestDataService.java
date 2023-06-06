@@ -291,9 +291,12 @@ public class BiometricTestDataService {
             List<ServiceError> serviceErrorsList = new ArrayList<>();
             ServiceError serviceError = new ServiceError();
             serviceError.setErrorCode(ToolkitErrorCodes.BIO_TEST_DATA_FILE_EXISTS.getErrorCode());
-            Optional<String> bioTestName = Optional.ofNullable(inputBiometricTestDataDto.getName());
+            String bioTestName = BLANK_SPACE;
+            if (inputBiometricTestDataDto != null) {
+                bioTestName = inputBiometricTestDataDto.getName();
+            }
             serviceError.setMessage(ToolkitErrorCodes.BIO_TEST_DATA_FILE_EXISTS.getErrorMessage() + BLANK_SPACE
-                    + (bioTestName.isPresent()? bioTestName.get() : ""));
+                    + bioTestName);
             serviceErrorsList.add(serviceError);
             responseWrapper.setErrors(serviceErrorsList);
         } catch (Exception ex) {
