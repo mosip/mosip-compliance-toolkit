@@ -103,7 +103,8 @@ public enum ToolkitErrorCodes {
 	ABIS_PROJECT_NOT_AVAILABLE("TOOLKIT_ABIS_PROJECTS_001", "No matching ABIS project available for the given id"),
 	INVALID_ABIS_SPEC_VERSION("TOOLKIT_ABIS_PROJECTS_002", "Invalid ABIS Spec Version"),
 	ABIS_PROJECT_UNABLE_TO_ADD("TOOLKIT_ABIS_PROJECTS_003","ABIS Project unable to add"),
-	INVALID_ABIS_URL("TOOLKIT_ABIS_PROJECTS_004","Invalid ABIS url");
+	INVALID_ABIS_URL("TOOLKIT_ABIS_PROJECTS_004","Invalid ABIS url"),
+	UNABLE_TO_CREATE_ABIS_PROJECT("TOOLKIT_ABIS_PROJECTS_005","ABIS partner can only create an ABIS project");
 	
 	private final String errorCode;
 	private final String errorMessage;

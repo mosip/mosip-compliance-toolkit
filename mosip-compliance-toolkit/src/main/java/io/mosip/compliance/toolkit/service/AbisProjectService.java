@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.mosip.compliance.toolkit.constants.AbisSpecVersions;
-import io.mosip.compliance.toolkit.constants.ProjectTypes;
+import io.mosip.compliance.toolkit.constants.*;
 import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
@@ -26,8 +25,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
-import io.mosip.compliance.toolkit.constants.AppConstants;
-import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.projects.AbisProjectDto;
 import io.mosip.compliance.toolkit.entity.AbisProjectEntity;
 import io.mosip.compliance.toolkit.repository.AbisProjectRepository;
@@ -78,6 +75,16 @@ public class AbisProjectService {
 		return crBy;
 	}
 
+	private boolean isAbisPartner() {
+		boolean result = false;
+		String authorities = authUserDetails().getAuthorities().toString();
+		String partnerType = PartnerTypes.ABIS.getCode();
+		if (authorities.contains(partnerType)) {
+			result= true;
+		}
+		return  result;
+	}
+
 	public ResponseWrapper<AbisProjectDto> getAbisProject(String id) {
 		ResponseWrapper<AbisProjectDto> responseWrapper = new ResponseWrapper<>();
 		AbisProjectDto abisProjectDto = null;
@@ -121,56 +128,66 @@ public class AbisProjectService {
 	public ResponseWrapper<AbisProjectDto> addAbisProject(AbisProjectDto abisProjectDto) {
 		ResponseWrapper<AbisProjectDto> responseWrapper = new ResponseWrapper<>();
 		try {
-			if (isValidAbisProject(abisProjectDto)) {
-				boolean isValidTestFile = false;
-				String partnerId = this.getPartnerId();
-				if (Objects.isNull(abisProjectDto.getBioTestDataFileName())) {
-					isValidTestFile = false;
-				} else if (abisProjectDto.getBioTestDataFileName().equals(AppConstants.MOSIP_DEFAULT)) {
-					isValidTestFile = true;
-				} else {
-					BiometricTestDataEntity biometricTestData = biometricTestDataRepository
-							.findByTestDataName(abisProjectDto.getBioTestDataFileName(), partnerId);
-					String fileName = biometricTestData.getFileId();
-					String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId;
-					if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
+			boolean isAbisPartner = this.isAbisPartner();
+			if (isAbisPartner) {
+				if (isValidAbisProject(abisProjectDto)) {
+					boolean isValidTestFile = false;
+					String partnerId = this.getPartnerId();
+					if (Objects.isNull(abisProjectDto.getBioTestDataFileName())) {
+						isValidTestFile = false;
+					} else if (abisProjectDto.getBioTestDataFileName().equals(AppConstants.MOSIP_DEFAULT)) {
 						isValidTestFile = true;
+					} else {
+						BiometricTestDataEntity biometricTestData = biometricTestDataRepository
+								.findByTestDataName(abisProjectDto.getBioTestDataFileName(), partnerId);
+						String fileName = biometricTestData.getFileId();
+						String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId;
+						if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
+							isValidTestFile = true;
+						}
+					}
+
+					if (isValidTestFile) {
+						LocalDateTime crDate = LocalDateTime.now();
+						AbisProjectEntity entity = new AbisProjectEntity();
+						entity.setId(RandomIdGenerator.generateUUID(abisProjectDto.getProjectType().toLowerCase(), "", 36));
+						entity.setName(abisProjectDto.getName());
+						entity.setProjectType(abisProjectDto.getProjectType());
+						entity.setUrl(abisProjectDto.getUrl());
+						entity.setUsername(abisProjectDto.getUsername());
+						entity.setPassword(abisProjectDto.getPassword());
+						entity.setInboundQueueName(abisProjectDto.getInboundQueueName());
+						entity.setPartnerId(partnerId);
+						entity.setCrBy(this.getUserBy());
+						entity.setCrDate(crDate);
+						entity.setDeleted(false);
+						entity.setOutboundQueueName(abisProjectDto.getOutboundQueueName());
+						entity.setBioTestDataFileName(abisProjectDto.getBioTestDataFileName());
+						entity.setAbisVersion(abisProjectDto.getAbisVersion());
+
+						AbisProjectEntity outputEntity = abisProjectRepository.save(entity);
+
+						abisProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, AbisProjectDto.class);
+						abisProjectDto.setId(entity.getId());
+						abisProjectDto.setPartnerId(entity.getPartnerId());
+						abisProjectDto.setCrBy(entity.getCrBy());
+						abisProjectDto.setCrDate(entity.getCrDate());
+					} else {
+						List<ServiceError> serviceErrorsList = new ArrayList<>();
+						ServiceError serviceError = new ServiceError();
+						serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode());
+						serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage());
+						serviceErrorsList.add(serviceError);
+						responseWrapper.setErrors(serviceErrorsList);
 					}
 				}
-
-				if (isValidTestFile) {
-					LocalDateTime crDate = LocalDateTime.now();
-					AbisProjectEntity entity = new AbisProjectEntity();
-					entity.setId(RandomIdGenerator.generateUUID(abisProjectDto.getProjectType().toLowerCase(), "", 36));
-					entity.setName(abisProjectDto.getName());
-					entity.setProjectType(abisProjectDto.getProjectType());
-					entity.setUrl(abisProjectDto.getUrl());
-					entity.setUsername(abisProjectDto.getUsername());
-					entity.setPassword(abisProjectDto.getPassword());
-					entity.setInboundQueueName(abisProjectDto.getInboundQueueName());
-					entity.setPartnerId(partnerId);
-					entity.setCrBy(this.getUserBy());
-					entity.setCrDate(crDate);
-					entity.setDeleted(false);
-					entity.setOutboundQueueName(abisProjectDto.getOutboundQueueName());
-					entity.setBioTestDataFileName(abisProjectDto.getBioTestDataFileName());
-					entity.setAbisVersion(abisProjectDto.getAbisVersion());
-
-					AbisProjectEntity outputEntity = abisProjectRepository.save(entity);
-
-					abisProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, AbisProjectDto.class);
-					abisProjectDto.setId(entity.getId());
-					abisProjectDto.setPartnerId(entity.getPartnerId());
-					abisProjectDto.setCrBy(entity.getCrBy());
-					abisProjectDto.setCrDate(entity.getCrDate());
-				} else {
-					List<ServiceError> serviceErrorsList = new ArrayList<>();
-					ServiceError serviceError = new ServiceError();
-					serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode());
-					serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage());
-					serviceErrorsList.add(serviceError);
-					responseWrapper.setErrors(serviceErrorsList);
-				}
+			} else {
+				List<ServiceError> serviceErrorsList = new ArrayList<>();
+				ServiceError serviceError = new ServiceError();
+				serviceError.setErrorCode(ToolkitErrorCodes.UNABLE_TO_CREATE_ABIS_PROJECT.getErrorCode());
+				serviceError.setMessage(ToolkitErrorCodes.UNABLE_TO_CREATE_ABIS_PROJECT.getErrorMessage());
+				serviceErrorsList.add(serviceError);
+				responseWrapper.setErrors(serviceErrorsList);
 			}
 		} catch (ToolkitException ex) {
 			abisProjectDto = null;
