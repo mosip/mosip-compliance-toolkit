@@ -221,7 +221,7 @@ public class BiometricTestDataServiceTest {
         Mockito.when(testCaseCacheService.getAbisTestCases(Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(testCases);
         TestCaseDto testCaseDto = new TestCaseDto();
-        testCaseDto.setTestId("ABIS3000");
+        testCaseDto.setTestId("ABIS3001");
         TestCaseDto.OtherAttributes otherAttributes = new TestCaseDto.OtherAttributes();
         testCaseDto.setOtherAttributes(null);
         Mockito.when(mapper.readValue(testCaseEntity.getTestcaseJson(), TestCaseDto.class)).thenReturn(testCaseDto);
@@ -233,7 +233,7 @@ public class BiometricTestDataServiceTest {
         response = biometricTestDataService.addBiometricTestdata(biometricTestDataDto, file);
         assertNotNull(response);
         Assert.assertEquals(false, response.getErrors().isEmpty());
-        Assert.assertEquals(null, response.getResponse());
+        Assert.assertEquals(1, response.getErrors().size());
     }
 
     @Test
