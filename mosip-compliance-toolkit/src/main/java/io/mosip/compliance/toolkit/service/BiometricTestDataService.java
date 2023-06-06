@@ -297,7 +297,7 @@ public class BiometricTestDataService {
             ServiceError serviceError = new ServiceError();
             serviceError.setErrorCode(ToolkitErrorCodes.BIO_TEST_DATA_FILE_EXISTS.getErrorCode());
             serviceError.setMessage(ToolkitErrorCodes.BIO_TEST_DATA_FILE_EXISTS.getErrorMessage() + BLANK_SPACE
-                    + inputBiometricTestDataDto.getName());
+                    + inputBiometricTestDataDto != null ? inputBiometricTestDataDto.getName() : "");
             serviceErrorsList.add(serviceError);
             responseWrapper.setErrors(serviceErrorsList);
         } catch (Exception ex) {
