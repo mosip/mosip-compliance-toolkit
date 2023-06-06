@@ -5,12 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -296,8 +291,9 @@ public class BiometricTestDataService {
             List<ServiceError> serviceErrorsList = new ArrayList<>();
             ServiceError serviceError = new ServiceError();
             serviceError.setErrorCode(ToolkitErrorCodes.BIO_TEST_DATA_FILE_EXISTS.getErrorCode());
+            Optional<String> bioTestName = Optional.ofNullable(inputBiometricTestDataDto.getName());
             serviceError.setMessage(ToolkitErrorCodes.BIO_TEST_DATA_FILE_EXISTS.getErrorMessage() + BLANK_SPACE
-                    + inputBiometricTestDataDto != null ? inputBiometricTestDataDto.getName() : "");
+                    + (bioTestName.isPresent()? bioTestName.get() : ""));
             serviceErrorsList.add(serviceError);
             responseWrapper.setErrors(serviceErrorsList);
         } catch (Exception ex) {
