@@ -170,6 +170,7 @@ public class AbisProjectServiceTest {
         AbisProjectDto abisProjectDto = new AbisProjectDto();
         abisProjectDto.setProjectType(ProjectTypes.ABIS.getCode());
         abisProjectDto.setAbisVersion(AbisSpecVersions.SPEC_VER_0_9_0.getCode());
+        abisProjectService.addAbisProject(abisProjectDto);
         abisProjectDto.setUsername("admin");
         abisProjectDto.setPassword("admin123");
         abisProjectDto.setOutboundQueueName("ctk-to-abis");
@@ -231,11 +232,11 @@ public class AbisProjectServiceTest {
         abisProjectDto.setId(id);
         abisProjectDto.setProjectType(ProjectTypes.ABIS.getCode());
         abisProjectDto.setAbisVersion(AbisSpecVersions.SPEC_VER_0_9_0.getCode());
+        abisProjectService.updateAbisProject(abisProjectDto);
         abisProjectDto.setUsername("admin");
         abisProjectDto.setPassword("admin123");
         abisProjectDto.setOutboundQueueName("ctk-to-abis");
         abisProjectDto.setInboundQueueName("abis-to-ctk");
-        abisProjectService.updateAbisProject(abisProjectDto);
         abisProjectDto.setUrl("wss://activemq.dev.mosip.net/ws");
 
         AbisProjectEntity abisProjectEntity = new AbisProjectEntity();
