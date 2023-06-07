@@ -286,6 +286,63 @@ public class TestCasesServiceTest {
 	}
 
 	/*
+	 * This class tests the getAbisTestCases method
+	 */
+	@Test
+	public void getAbisTestCasesTest() throws Exception {
+		String specVersion = AbisSpecVersions.SPEC_VER_0_9_0.getCode();
+		String schemaResponse = "schemaResponse";
+		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
+				.thenReturn(schemaResponse);
+		List<TestCaseEntity> testCaseEntities = new ArrayList<>();
+		TestCaseEntity testCaseEntity = new TestCaseEntity();
+		testCaseEntity.setTestcaseJson("testCaseJson");
+		testCaseEntities.add(testCaseEntity);
+		Mockito.when(testCaseCacheService.getAbisTestCases(AppConstants.ABIS, specVersion)).thenReturn(testCaseEntities);
+		TestCasesService testCasesServiceSpy = Mockito.spy(testCasesService);
+		ValidationResultDto validationResultDto = new ValidationResultDto();
+		validationResultDto.setStatus(AppConstants.SUCCESS);
+		Mockito.doReturn(validationResultDto).when(testCasesServiceSpy)
+				.validateJsonWithSchema(testCaseEntity.getTestcaseJson(), schemaResponse);
+		TestCaseDto testCaseDto = new TestCaseDto();
+		testCaseDto.setInactive(false);
+		testCaseDto.setSpecVersion(AbisSpecVersions.SPEC_VER_0_9_0.getCode());
+		TestCaseDto.OtherAttributes otherAttributes = new TestCaseDto.OtherAttributes();
+		testCaseDto.setOtherAttributes(otherAttributes);
+		Mockito.when(objectMapper.readValue(testCaseEntity.getTestcaseJson(), TestCaseDto.class))
+				.thenReturn(testCaseDto);
+		testCasesServiceSpy.getAbisTestCases(specVersion);
+	}
+
+	/*
+	 * This class tests the getAbisTestCases method in case of exception
+	 */
+	@Test
+	public void getAbisTestCasesExceptionTest() throws Exception {
+		// toolkit exception
+		String specVersion = AbisSpecVersions.SPEC_VER_0_9_0.getCode();
+		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON)).thenReturn(null);
+		testCasesService.getAbisTestCases(specVersion);
+		// exception
+		String schemaResponse = "schemaResponse";
+		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
+				.thenReturn(schemaResponse);
+		List<TestCaseEntity> testCaseEntities = new ArrayList<>();
+		testCaseEntities.add(null);
+		Mockito.when(testCaseCacheService.getAbisTestCases(AppConstants.ABIS, specVersion)).thenReturn(testCaseEntities);
+		testCasesService.getAbisTestCases(specVersion);
+	}
+
+	/*
+	 *This class tests the isValidAbisTestCase method
+	 */
+	@Test
+	public void isValidAbisTestCaseTest(){
+		String specVersion = AbisSpecVersions.SPEC_VER_0_9_0.getCode();
+		ReflectionTestUtils.invokeMethod(testCasesService,"isValidAbisTestCase",specVersion);
+	}
+
+	/*
 	 *This class tests the validateJsonWithSchema method
 	 */
 	@Test(expected = Exception.class)
@@ -497,6 +554,13 @@ public class TestCasesServiceTest {
 		requestDto.setTestCaseType(AppConstants.SBI);
 		requestDto.setSpecVersion(SbiSpecVersions.SPEC_VER_0_9_5.getCode());
 		Mockito.when(resourceCacheService.getSchema(AppConstants.SBI.toLowerCase(), requestDto.getSpecVersion(),
+				requestDto.getRequestSchema() + ".json")).thenReturn(schemaResponse);
+		Assert.assertEquals(AppConstants.SUCCESS,
+				testCasesServiceSpy.performRequestValidations(requestDto).getResponse().getStatus());
+		// type ABIS
+		requestDto.setTestCaseType(AppConstants.ABIS);
+		requestDto.setSpecVersion(AbisSpecVersions.SPEC_VER_0_9_0.getCode());
+		Mockito.when(resourceCacheService.getSchema(AppConstants.ABIS.toLowerCase(), requestDto.getSpecVersion(),
 				requestDto.getRequestSchema() + ".json")).thenReturn(schemaResponse);
 		Assert.assertEquals(AppConstants.SUCCESS,
 				testCasesServiceSpy.performRequestValidations(requestDto).getResponse().getStatus());
