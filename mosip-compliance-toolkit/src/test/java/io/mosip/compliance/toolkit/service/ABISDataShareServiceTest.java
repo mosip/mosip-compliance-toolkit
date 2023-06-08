@@ -2,6 +2,7 @@ package io.mosip.compliance.toolkit.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
+import io.mosip.compliance.toolkit.dto.abis.DataShareExpireRequest;
 import io.mosip.compliance.toolkit.dto.abis.DataShareRequestDto;
 import io.mosip.compliance.toolkit.dto.abis.DataShareResponseWrapperDto;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
@@ -109,6 +110,17 @@ public class ABISDataShareServiceTest {
         ResponseWrapper<DataShareResponseWrapperDto> result = abisDataShareService.createDataShareUrl(dataShareRequestDto);
 
         assertNotNull(result);
+    }
+
+    /*
+     * This class tests the expireDataShareUrl method
+     */
+    @Test
+    public void expireDataShareUrlTest() {
+        DataShareExpireRequest dataShareExpireRequest = new DataShareExpireRequest();
+        dataShareExpireRequest.setUrl("wss://activemq.dev.mosip.net/ws");
+        dataShareExpireRequest.setTransactionsAllowed(1);
+        abisDataShareService.expireDataShareUrl(dataShareExpireRequest);
     }
 
     /*
