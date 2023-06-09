@@ -56,9 +56,11 @@
 		<!-- Object Store -->
 		<kernel.khazana.version>1.2.1-SNAPSHOT</kernel.khazana.version>
 
-		<biometrics-util.version>1.2.1-SNAPSHOT</biometrics-util.version>
+		<biometrics-util.version>1.2.0.1-B2-SNAPSHOT</biometrics-util.version>
 		<org.openpnp.opencv.version>4.5.3-4</org.openpnp.opencv.version>
 		<jnbis.version>2.0.2</jnbis.version>
+		<imagedecoder.version>0.0.1-SNAPSHOT</imagedecoder.version>
+
 
 		<sonar.coverage.exclusions>
 			**/config/**,
@@ -74,6 +76,11 @@
 		<sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>io.mosip.imagedecoder</groupId>
+			<artifactId>imagedecoder</artifactId>
+			<version>${imagedecoder.version}</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.github.mhshams/jnbis -->
 		<dependency>
 		    <groupId>com.github.mhshams</groupId>
