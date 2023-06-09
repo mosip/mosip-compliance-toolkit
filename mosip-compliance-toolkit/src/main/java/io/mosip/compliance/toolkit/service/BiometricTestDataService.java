@@ -296,8 +296,7 @@ public class BiometricTestDataService {
                     + (bioTestName.isPresent()? bioTestName.get() : ""));
             serviceErrorsList.add(serviceError);
             responseWrapper.setErrors(serviceErrorsList);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In addBiometricTestdata method of BiometricTestDataService Service - " + ex.getMessage());

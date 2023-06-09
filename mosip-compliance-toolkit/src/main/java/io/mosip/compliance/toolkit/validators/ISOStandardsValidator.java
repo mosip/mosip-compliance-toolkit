@@ -1239,14 +1239,14 @@ public class ISOStandardsValidator extends SBIValidator {
 				warningMsgCode.append("ISO_WARNING_007");
 				isValidWarnings = true;
 			}
-			if (IrisISOStandardsValidator.getInstance().isValidImageColorSpace(purpose, Modality.Iris, decoderRequestDto)) {
+			if (!IrisISOStandardsValidator.getInstance().isValidImageColorSpace(purpose, Modality.Iris, decoderRequestDto)) {
 				warningMessage.append(
 						"<BR>Invalid Image Color Space allowed values Up to GRAY[8 bit]");
 				warningMsgCode.append(AppConstants.COMMA_SEPARATOR);
 				warningMsgCode.append("ISO_WARNING_008");
 				isValidWarnings = true;
 			}
-			if (IrisISOStandardsValidator.getInstance().isValidImageDPI(purpose, Modality.Iris, decoderRequestDto)) {
+			if (!IrisISOStandardsValidator.getInstance().isValidImageDPI(purpose, Modality.Iris, decoderRequestDto)) {
 				warningMessage.append(
 						"<BR>Invalid Image Minimum resolution between 500 DPI and 1000 DPI");
 				warningMsgCode.append(AppConstants.COMMA_SEPARATOR);
