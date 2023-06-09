@@ -1,6 +1,5 @@
 package io.mosip.compliance.toolkit.validators;
 
-import com.amazonaws.services.opsworks.model.App;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
