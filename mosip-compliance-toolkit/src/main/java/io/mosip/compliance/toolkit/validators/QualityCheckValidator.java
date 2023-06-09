@@ -1,5 +1,7 @@
 package io.mosip.compliance.toolkit.validators;
 
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -20,100 +22,129 @@ import io.mosip.kernel.biometrics.model.QualityScore;
 @Component
 public class QualityCheckValidator extends SDKValidator {
 
-    @Value("${mosip.toolkit.sdk.finger.qualitycheck.threshold.value}")
-    private String fingerThresholdValue;
+	@Value("${mosip.toolkit.sdk.finger.qualitycheck.threshold.value}")
+	private String fingerThresholdValue;
 
-    @Value("${mosip.toolkit.sdk.face.qualitycheck.threshold.value}")
-    private String faceThresholdValue;
+	@Value("${mosip.toolkit.sdk.face.qualitycheck.threshold.value}")
+	private String faceThresholdValue;
 
-    @Value("${mosip.toolkit.sdk.iris.qualitycheck.threshold.value}")
-    private String irisThresholdValue;
+	@Value("${mosip.toolkit.sdk.iris.qualitycheck.threshold.value}")
+	private String irisThresholdValue;
 
-    @Override
-    public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
-        ValidationResultDto validationResultDto = new ValidationResultDto();
-        try {
-            ObjectNode methodResponse = (ObjectNode) objectMapperConfig.objectMapper().readValue(
-                    inputDto.getMethodResponse(),
-                    ObjectNode.class);
+	@Override
+	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
+		ValidationResultDto validationResultDto = new ValidationResultDto();
+		try {
+			ObjectNode methodResponse = (ObjectNode) objectMapperConfig.objectMapper()
+					.readValue(inputDto.getMethodResponse(), ObjectNode.class);
 
-            JsonNode mainResponse = (JsonNode) methodResponse.get("response");
+			JsonNode mainResponse = (JsonNode) methodResponse.get("response");
 
-            JsonNode qualityCheckResp = (JsonNode) mainResponse.get("response");
+			JsonNode qualityCheckResp = (JsonNode) mainResponse.get("response");
 
-            QualityCheck qualityCheck = (QualityCheck) objectMapperConfig.objectMapper()
-                    .convertValue(qualityCheckResp, QualityCheck.class);
+			QualityCheck qualityCheck = (QualityCheck) objectMapperConfig.objectMapper().convertValue(qualityCheckResp,
+					QualityCheck.class);
 
-            int statusCode = Integer.parseInt(mainResponse.get("statusCode").asText());
+			int statusCode = Integer.parseInt(mainResponse.get("statusCode").asText());
 
-            if (statusCode >= 200 && statusCode <= 299) {
-                Set<Entry<BiometricType, QualityScore>> entrySet = qualityCheck.getScores().entrySet();
-                for (Entry<BiometricType, QualityScore> entry : entrySet) {
-                    BiometricType biometricType = entry.getKey();
-                    String biometricTypeStr = biometricType.value().toLowerCase();
-                    float score = entry.getValue().getScore();
-                    if (Modalities.FINGER.getCode().equals(biometricTypeStr)) {
-                        checkScore(biometricTypeStr, inputDto, Float.parseFloat(fingerThresholdValue),
-                                validationResultDto, score);
-                    } else if (Modalities.FACE.getCode().equals(biometricTypeStr)) {
-                        checkScore(biometricTypeStr, inputDto, Float.parseFloat(faceThresholdValue),
-                                validationResultDto, score);
-                    } else if (Modalities.IRIS.getCode().equals(biometricTypeStr)) {
-                        checkScore(biometricTypeStr, inputDto, Float.parseFloat(irisThresholdValue),
-                                validationResultDto, score);
-                    } else {
-                        validationResultDto.setStatus(AppConstants.FAILURE);
-                        validationResultDto
-                                .setDescription("Quality Check failed, invalid modality: " + biometricTypeStr);
-                        validationResultDto.setDescriptionKey("QUALITY_CHECK_001" + AppConstants.ARGUMENTS_DELIMITER + biometricTypeStr);
-                    }
-                }
-            } else {
-                if (inputDto.isNegativeTestCase() && (statusCode == 403 || statusCode == 406)) {
-                    validationResultDto.setStatus(AppConstants.SUCCESS);
-                    validationResultDto.setDescription("Positive Quality Check for is successful");
-                    validationResultDto.setDescriptionKey("QUALITY_CHECK_002");
-                } else {
-                    validationResultDto.setStatus(AppConstants.FAILURE);
-                    validationResultDto.setDescription("Quality Check status code failed, received: " + statusCode);
-                    validationResultDto.setDescriptionKey("QUALITY_CHECK_003" + AppConstants.ARGUMENTS_DELIMITER + statusCode);
-                }
-            }
-        } catch (Exception e) {
-            validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription(e.getLocalizedMessage());
-            return validationResultDto;
-        }
-        return validationResultDto;
-    }
+			if (statusCode >= 200 && statusCode <= 299) {
+				Set<Entry<BiometricType, QualityScore>> entrySet = qualityCheck.getScores().entrySet();
+				for (Entry<BiometricType, QualityScore> entry : entrySet) {
+					BiometricType biometricType = entry.getKey();
+					String biometricTypeStr = biometricType.value().toLowerCase();
+					float score = entry.getValue().getScore();
+					Map<String, String> analyticsInfo = entry.getValue().getAnalyticsInfo();
+					if (Modalities.FINGER.getCode().equals(biometricTypeStr)) {
+						checkScore(biometricTypeStr, inputDto, Float.parseFloat(fingerThresholdValue),
+								validationResultDto, score, analyticsInfo);
+					} else if (Modalities.FACE.getCode().equals(biometricTypeStr)) {
+						checkScore(biometricTypeStr, inputDto, Float.parseFloat(faceThresholdValue),
+								validationResultDto, score, analyticsInfo);
+					} else if (Modalities.IRIS.getCode().equals(biometricTypeStr)) {
+						checkScore(biometricTypeStr, inputDto, Float.parseFloat(irisThresholdValue),
+								validationResultDto, score, analyticsInfo);
+					} else {
+						validationResultDto.setStatus(AppConstants.FAILURE);
+						validationResultDto
+								.setDescription("Quality Check failed, invalid modality: " + biometricTypeStr);
+						validationResultDto.setDescriptionKey(
+								"QUALITY_CHECK_001" + AppConstants.ARGUMENTS_DELIMITER + biometricTypeStr);
+					}
+				}
+			} else {
+				if (inputDto.isNegativeTestCase() && (statusCode == 403 || statusCode == 406)) {
+					validationResultDto.setStatus(AppConstants.SUCCESS);
+					validationResultDto.setDescription("Negative Quality Check is successful");
+					validationResultDto.setDescriptionKey("QUALITY_CHECK_002");
+				} else {
+					validationResultDto.setStatus(AppConstants.FAILURE);
+					validationResultDto.setDescription("Quality Check status code failed, received: " + statusCode);
+					validationResultDto
+							.setDescriptionKey("QUALITY_CHECK_003" + AppConstants.ARGUMENTS_DELIMITER + statusCode);
+				}
+			}
+		} catch (Exception e) {
+			validationResultDto.setStatus(AppConstants.FAILURE);
+			validationResultDto.setDescription(e.getLocalizedMessage());
+			return validationResultDto;
+		}
+		return validationResultDto;
+	}
 
-    private void checkScore(String biometricTypeStr, ValidationInputDto inputDto, float thresholdValue,
-            ValidationResultDto validationResultDto, float score) {
-        if (!inputDto.isNegativeTestCase()) {
-            // positive test case
-            if (score >= thresholdValue) {
-                validationResultDto.setStatus(AppConstants.SUCCESS);
-                validationResultDto.setDescription("Positive Quality Check for " + biometricTypeStr + " is successful");
-                validationResultDto.setDescriptionKey("QUALITY_CHECK_004" + AppConstants.ARGUMENTS_DELIMITER + biometricTypeStr);
-            } else {
-                validationResultDto.setStatus(AppConstants.FAILURE);
-                validationResultDto.setDescription("Positive Quality Check for " + biometricTypeStr
-                        + " failed. Score is below the threshold value. Score received: " + score);
-                validationResultDto.setDescriptionKey("QUALITY_CHECK_005" + AppConstants.ARGUMENTS_DELIMITER + biometricTypeStr + AppConstants.ARGUMENTS_SEPARATOR + score);
-            }
-        } else {
-            // negative test case
-            if (score < thresholdValue) {
-                validationResultDto.setStatus(AppConstants.SUCCESS);
-                validationResultDto.setDescription("Negative Quality Check for " + biometricTypeStr + " is successful");
-                validationResultDto.setDescriptionKey("QUALITY_CHECK_006" + AppConstants.ARGUMENTS_DELIMITER + biometricTypeStr);
-            } else {
-                validationResultDto.setStatus(AppConstants.FAILURE);
-                validationResultDto.setDescription("Negative Quality Check for " + biometricTypeStr
-                        + " failed. Score is above the threshold value. Score received: " + score);
-                validationResultDto.setDescriptionKey("QUALITY_CHECK_007" + AppConstants.ARGUMENTS_DELIMITER + biometricTypeStr + AppConstants.ARGUMENTS_SEPARATOR + score);
-            }
-        }
-    }
+	private void checkScore(String biometricTypeStr, ValidationInputDto inputDto, float thresholdValue,
+			ValidationResultDto validationResultDto, float score, Map<String, String> analyticsInfo) {
+		String resourceBundleKeyName = "";
+		if (!inputDto.isNegativeTestCase()) {
+			// positive test case
+			if (score >= thresholdValue) {
+				validationResultDto.setStatus(AppConstants.SUCCESS);
+				validationResultDto.setDescription(
+						"Positive Quality Check for " + biometricTypeStr + " is successful. Score received: " + score);
+				resourceBundleKeyName = "QUALITY_CHECK_004";
+
+			} else {
+				validationResultDto.setStatus(AppConstants.FAILURE);
+				validationResultDto.setDescription("Positive Quality Check for " + biometricTypeStr
+						+ " failed. Score is below the threshold value. Score received: " + score);
+				resourceBundleKeyName = "QUALITY_CHECK_005";
+			}
+		} else {
+			// negative test case
+			if (score < thresholdValue) {
+				validationResultDto.setStatus(AppConstants.SUCCESS);
+				validationResultDto.setDescription(
+						"Negative Quality Check for " + biometricTypeStr + " is successful. Score received: " + score);
+				resourceBundleKeyName = "QUALITY_CHECK_006";
+			} else {
+				validationResultDto.setStatus(AppConstants.FAILURE);
+				validationResultDto.setDescription("Negative Quality Check for " + biometricTypeStr
+						+ " failed. Score is above the threshold value. Score received: " + score);
+				resourceBundleKeyName = "QUALITY_CHECK_007";
+			}
+		}
+		StringBuffer analyticsInfoBuffer = new StringBuffer();
+
+		if (analyticsInfo != null) {
+			Iterator<Map.Entry<String, String>> itr = analyticsInfo.entrySet().iterator();
+			while (itr.hasNext()) {
+				Map.Entry<String, String> entry = itr.next();
+				analyticsInfoBuffer.append(AppConstants.BR);
+				analyticsInfoBuffer.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+				analyticsInfoBuffer.append(AppConstants.ITALICS_TAG_START);
+				analyticsInfoBuffer.append(entry.getKey());
+				analyticsInfoBuffer.append(AppConstants.COLON);
+				analyticsInfoBuffer.append(entry.getValue());
+				analyticsInfoBuffer.append(AppConstants.ITALICS_TAG_END);
+			}
+		}
+		StringBuffer resultsBuffer = new StringBuffer();
+		resultsBuffer.append(resourceBundleKeyName);
+		resultsBuffer.append(AppConstants.ARGUMENTS_DELIMITER);
+		resultsBuffer.append(biometricTypeStr);
+		resultsBuffer.append(AppConstants.ARGUMENTS_SEPARATOR);
+		resultsBuffer.append(score);
+		resultsBuffer.append(AppConstants.COMMA_SEPARATOR);
+		validationResultDto.setDescriptionKey(resultsBuffer.toString() + analyticsInfoBuffer.toString());
+	}
 
 }
