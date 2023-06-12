@@ -38,9 +38,11 @@ public class TimeoutValidator extends SBIValidator {
         } catch (ToolkitException e) {
             validationResultDto.setStatus(AppConstants.FAILURE);
             validationResultDto.setDescription(e.getLocalizedMessage());
+            validationResultDto.setDescriptionKey(e.getLocalizedMessage());
         } catch (Exception e) {
             validationResultDto.setStatus(AppConstants.FAILURE);
             validationResultDto.setDescription(e.getLocalizedMessage());
+            validationResultDto.setDescriptionKey(e.getLocalizedMessage());
         }
         return validationResultDto;
     }
