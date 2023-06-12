@@ -119,10 +119,12 @@ public class ResponseMismatchValidator extends ToolkitValidator {
             validationResultDto.setStatus(AppConstants.FAILURE);
             validationResultDto.setDescription(
                     "ResponseMismatchValidator failure, " + "with Message, " + e.getLocalizedMessage());
+            validationResultDto.setDescriptionKey(e.getLocalizedMessage());
         } catch (Exception e) {
             validationResultDto.setStatus(AppConstants.FAILURE);
             validationResultDto.setDescription(
                     "ResponseMismatchValidator failure, " + "with Message, " + e.getLocalizedMessage());
+            validationResultDto.setDescriptionKey(e.getLocalizedMessage());
         }
         return validationResultDto;
     }
