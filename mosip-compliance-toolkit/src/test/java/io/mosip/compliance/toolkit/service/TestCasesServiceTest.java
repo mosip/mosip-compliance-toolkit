@@ -24,6 +24,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.Authentication;
@@ -82,6 +83,7 @@ public class TestCasesServiceTest {
 
 	@Before
 	public void before() {
+		MockitoAnnotations.initMocks(this);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
 		mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
