@@ -24,6 +24,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.Authentication;
@@ -82,6 +83,7 @@ public class TestCasesServiceTest {
 
 	@Before
 	public void before() {
+		MockitoAnnotations.initMocks(this);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
 		mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
@@ -591,6 +593,24 @@ public class TestCasesServiceTest {
 		ValidatorDefDto validatorDefDto = new ValidatorDefDto();
 		validatorDefDto.setName("ResponseMismatchValidator");
 		validatorDefDto.setDescription("Description");
+		validatorDefs.add(validatorDefDto);
+		requestDto.setValidatorDefs(validatorDefs);
+		testCasesService.performValidations(requestDto);
+	}
+
+	@Test
+	public void performValidationsTestISO() {
+		ValidationInputDto requestDto = new ValidationInputDto();
+		requestDto.testCaseType = "SBI";
+		requestDto.testName = "Auth capture - Single Iris - Left Iris - ISO Standard Validations (ISO19794-6:2011)";
+		requestDto.specVersion = "0.9.5";
+		requestDto.isNegativeTestCase = false;
+		requestDto.responseSchema = "AuthCaptureResponseSchema";
+		requestDto.methodName = "capture";
+		List<ValidatorDefDto> validatorDefs = new ArrayList<>();
+		ValidatorDefDto validatorDefDto = new ValidatorDefDto();
+		validatorDefDto.setName("ISOStandardsValidator");
+		validatorDefDto.setDescription("Validates that the 'bioValue' is as per the defined ISO standards.");
 		validatorDefs.add(validatorDefDto);
 		requestDto.setValidatorDefs(validatorDefs);
 		testCasesService.performValidations(requestDto);
