@@ -24,7 +24,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.Authentication;
@@ -37,11 +36,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.any;
+import java.util.*;
 
 @ContextConfiguration(classes = { TestContext.class, WebApplicationContext.class })
 @RunWith(SpringRunner.class)
@@ -87,7 +82,6 @@ public class TestCasesServiceTest {
 
 	@Before
 	public void before() {
-		MockitoAnnotations.initMocks(this);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
 		mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
@@ -289,6 +283,63 @@ public class TestCasesServiceTest {
 		String specVersion = SdkSpecVersions.SPEC_VER_0_9_0.getCode();
 		String sdkPurpose = SdkPurpose.CHECK_QUALITY.getCode();
 		ReflectionTestUtils.invokeMethod(testCasesService,"isValidSdkTestCase",specVersion,sdkPurpose);
+	}
+
+	/*
+	 * This class tests the getAbisTestCases method
+	 */
+	@Test
+	public void getAbisTestCasesTest() throws Exception {
+		String specVersion = AbisSpecVersions.SPEC_VER_0_9_0.getCode();
+		String schemaResponse = "schemaResponse";
+		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
+				.thenReturn(schemaResponse);
+		List<TestCaseEntity> testCaseEntities = new ArrayList<>();
+		TestCaseEntity testCaseEntity = new TestCaseEntity();
+		testCaseEntity.setTestcaseJson("testCaseJson");
+		testCaseEntities.add(testCaseEntity);
+		Mockito.when(testCaseCacheService.getAbisTestCases(AppConstants.ABIS, specVersion)).thenReturn(testCaseEntities);
+		TestCasesService testCasesServiceSpy = Mockito.spy(testCasesService);
+		ValidationResultDto validationResultDto = new ValidationResultDto();
+		validationResultDto.setStatus(AppConstants.SUCCESS);
+		Mockito.doReturn(validationResultDto).when(testCasesServiceSpy)
+				.validateJsonWithSchema(testCaseEntity.getTestcaseJson(), schemaResponse);
+		TestCaseDto testCaseDto = new TestCaseDto();
+		testCaseDto.setInactive(false);
+		testCaseDto.setSpecVersion(AbisSpecVersions.SPEC_VER_0_9_0.getCode());
+		TestCaseDto.OtherAttributes otherAttributes = new TestCaseDto.OtherAttributes();
+		testCaseDto.setOtherAttributes(otherAttributes);
+		Mockito.when(objectMapper.readValue(testCaseEntity.getTestcaseJson(), TestCaseDto.class))
+				.thenReturn(testCaseDto);
+		testCasesServiceSpy.getAbisTestCases(specVersion);
+	}
+
+	/*
+	 * This class tests the getAbisTestCases method in case of exception
+	 */
+	@Test
+	public void getAbisTestCasesExceptionTest() throws Exception {
+		// toolkit exception
+		String specVersion = AbisSpecVersions.SPEC_VER_0_9_0.getCode();
+		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON)).thenReturn(null);
+		testCasesService.getAbisTestCases(specVersion);
+		// exception
+		String schemaResponse = "schemaResponse";
+		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
+				.thenReturn(schemaResponse);
+		List<TestCaseEntity> testCaseEntities = new ArrayList<>();
+		testCaseEntities.add(null);
+		Mockito.when(testCaseCacheService.getAbisTestCases(AppConstants.ABIS, specVersion)).thenReturn(testCaseEntities);
+		testCasesService.getAbisTestCases(specVersion);
+	}
+
+	/*
+	 *This class tests the isValidAbisTestCase method
+	 */
+	@Test
+	public void isValidAbisTestCaseTest(){
+		String specVersion = AbisSpecVersions.SPEC_VER_0_9_0.getCode();
+		ReflectionTestUtils.invokeMethod(testCasesService,"isValidAbisTestCase",specVersion);
 	}
 
 	/*
@@ -506,6 +557,13 @@ public class TestCasesServiceTest {
 				requestDto.getRequestSchema() + ".json")).thenReturn(schemaResponse);
 		Assert.assertEquals(AppConstants.SUCCESS,
 				testCasesServiceSpy.performRequestValidations(requestDto).getResponse().getStatus());
+		// type ABIS
+		requestDto.setTestCaseType(AppConstants.ABIS);
+		requestDto.setSpecVersion(AbisSpecVersions.SPEC_VER_0_9_0.getCode());
+		Mockito.when(resourceCacheService.getSchema(AppConstants.ABIS.toLowerCase(), requestDto.getSpecVersion(),
+				requestDto.getRequestSchema() + ".json")).thenReturn(schemaResponse);
+		Assert.assertEquals(AppConstants.SUCCESS,
+				testCasesServiceSpy.performRequestValidations(requestDto).getResponse().getStatus());
 	}
 
 	/*
@@ -537,6 +595,7 @@ public class TestCasesServiceTest {
 		requestDto.setValidatorDefs(validatorDefs);
 		testCasesService.performValidations(requestDto);
 	}
+
 	@Test
 	public void performValidationsTestISO() {
 		ValidationInputDto requestDto = new ValidationInputDto();
@@ -628,9 +687,9 @@ public class TestCasesServiceTest {
 		requestDto.setModalities(modalities);
 		requestDto.setBioTestDataName("bioTestData");
 		InputStream inputFile = new ByteArrayInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.zip".getBytes());
-		Mockito.when(objectStore.exists(any(), any(), any(), any(), any()))
+		Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(true);
-		Mockito.when(objectStore.getObject(any(), any(), any(), any(), any()))
+		Mockito.when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(inputFile);
 		testCasesService.generateRequestForSDKTestcase(requestDto);
 	}
@@ -646,13 +705,13 @@ public class TestCasesServiceTest {
 		String json = "{\n" + "\t\"name\": \"John\",\n" + "\t\"age\": 30,\n" + "\t\"car\": null\n" + "}";
 		ReflectionTestUtils.setField(testCasesService, "objectMapper", objectMapper);
 		InputStream inputFile = new ByteArrayInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.zip".getBytes());
-		Mockito.when(objectStore.exists(any(), any(), any(), any(), any()))
+		Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(true);
-		Mockito.when(objectStore.getObject(any(), any(), any(), any(), any()))
+		Mockito.when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(inputFile);
 		testCasesService.generateRequestForSDKTestcase(requestDto);
 
-		Mockito.when(objectStore.exists(any(), any(), any(), any(), any()))
+		Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(false);
 		testCasesService.generateRequestForSDKTestcase(requestDto);
 		// requestDto=null
@@ -780,10 +839,10 @@ public class TestCasesServiceTest {
 		biometricTestData.setFileHash("456");
 		Mockito.when(biometricTestDataRepository.findByTestDataName(requestDto.getBioTestDataName(),partnerId))
 				.thenReturn(biometricTestData);
-		Mockito.when(objectStore.exists(any(), any(), any(), any(), any()))
+		Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(true);
 		InputStream inputFile = new ByteArrayInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.zip".getBytes());
-		Mockito.when(objectStore.getObject(any(), any(), any(), any(), any()))
+		Mockito.when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(inputFile);
 		ReflectionTestUtils.invokeMethod(testCasesService, "getPartnerTestDataStream", requestDto.getBioTestDataName(), partnerId,
 				sdkPurpose.getCode());
@@ -803,10 +862,10 @@ public class TestCasesServiceTest {
 		biometricTestData.setFileHash("123");
 		Mockito.when(biometricTestDataRepository.findByTestDataName(requestDto.getBioTestDataName(), partnerId))
 				.thenReturn(biometricTestData);
-		Mockito.when(objectStore.exists(any(), any(), any(), any(), any()))
+		Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(true);
 		FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.zip");
-		Mockito.when(objectStore.getObject(any(), any(), any(), any(), any()))
+		Mockito.when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(inputFile);
 		ReflectionTestUtils.invokeMethod(testCasesService, "getPartnerTestDataStream", requestDto, partnerId,
 				sdkPurpose);
