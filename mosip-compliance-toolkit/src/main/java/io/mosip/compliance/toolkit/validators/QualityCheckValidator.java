@@ -3,6 +3,7 @@ package io.mosip.compliance.toolkit.validators;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -99,10 +100,17 @@ public class QualityCheckValidator extends SDKValidator {
 			// positive test case
 			if (score >= thresholdValue) {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
-				validationResultDto.setDescription(
-						"Positive Quality Check for " + biometricTypeStr + " is successful. Score received: " + score);
-				resourceBundleKeyName = "QUALITY_CHECK_004";
-
+				validationResultDto.setDescription("Positive Quality Check for " + biometricTypeStr + " is successful");
+				Optional<String> descKey = Optional.ofNullable(validationResultDto.getDescriptionKey());
+				if(descKey.isPresent()){
+					validationResultDto.setDescriptionKey(validationResultDto.getDescriptionKey()
+							+ AppConstants.COMMA_SEPARATOR
+							+ "<br>"
+							+ AppConstants.COMMA_SEPARATOR
+							+ "QUALITY_CHECK_004" + AppConstants.ARGUMENTS_DELIMITER + biometricTypeStr);
+				} else {
+					validationResultDto.setDescriptionKey("QUALITY_CHECK_004" + AppConstants.ARGUMENTS_DELIMITER + biometricTypeStr);
+				}
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("Positive Quality Check for " + biometricTypeStr
