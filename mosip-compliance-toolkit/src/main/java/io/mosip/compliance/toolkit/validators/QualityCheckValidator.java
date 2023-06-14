@@ -145,8 +145,7 @@ public class QualityCheckValidator extends SDKValidator {
 		resultsBuffer.append(AppConstants.ARGUMENTS_SEPARATOR);
 		resultsBuffer.append(score);
 		resultsBuffer.append(AppConstants.COMMA_SEPARATOR);
-		Optional<String> descKey = Optional.ofNullable(validationResultDto.getDescriptionKey());
-		if(descKey.isPresent()){
+		if(validationResultDto != null && validationResultDto.getDescriptionKey() != null){
 			validationResultDto.setDescriptionKey(validationResultDto.getDescriptionKey()
 					+ AppConstants.COMMA_SEPARATOR
 					+ "<br>"
