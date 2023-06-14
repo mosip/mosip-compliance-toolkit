@@ -100,18 +100,9 @@ public class QualityCheckValidator extends SDKValidator {
 			// positive test case
 			if (score >= thresholdValue) {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
-				validationResultDto.setDescription("Positive Quality Check for " + biometricTypeStr + " is successful");
-				Optional<String> descKey = Optional.ofNullable(validationResultDto.getDescriptionKey());
-				if (descKey.isPresent()) {
-					validationResultDto.setDescriptionKey(validationResultDto.getDescriptionKey()
-							+ AppConstants.COMMA_SEPARATOR
-							+ "<br>"
-							+ AppConstants.COMMA_SEPARATOR
-							+ "QUALITY_CHECK_004" + AppConstants.ARGUMENTS_DELIMITER + biometricTypeStr);
-				} else {
-					validationResultDto.setDescriptionKey(
-							"QUALITY_CHECK_004" + AppConstants.ARGUMENTS_DELIMITER + biometricTypeStr);
-				}
+				validationResultDto.setDescription(
+						"Positive Quality Check for " + biometricTypeStr + " is successful. Score received: " + score);
+				resourceBundleKeyName = "QUALITY_CHECK_004";
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("Positive Quality Check for " + biometricTypeStr
@@ -154,7 +145,18 @@ public class QualityCheckValidator extends SDKValidator {
 		resultsBuffer.append(AppConstants.ARGUMENTS_SEPARATOR);
 		resultsBuffer.append(score);
 		resultsBuffer.append(AppConstants.COMMA_SEPARATOR);
-		validationResultDto.setDescriptionKey(resultsBuffer.toString() + analyticsInfoBuffer.toString());
-	}
+		Optional<String> descKey = Optional.ofNullable(validationResultDto.getDescriptionKey());
+		if(descKey.isPresent()){
+			validationResultDto.setDescriptionKey(validationResultDto.getDescriptionKey()
+					+ AppConstants.COMMA_SEPARATOR
+					+ "<br>"
+					+ AppConstants.COMMA_SEPARATOR
+			+ resultsBuffer.toString()
+					+ analyticsInfoBuffer.toString());
+		} else {
+			validationResultDto.setDescriptionKey(resultsBuffer.toString() +
+					analyticsInfoBuffer.toString());
+		}
+		}
 
 }
