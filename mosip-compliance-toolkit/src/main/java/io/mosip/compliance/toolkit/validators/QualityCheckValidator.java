@@ -102,14 +102,15 @@ public class QualityCheckValidator extends SDKValidator {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription("Positive Quality Check for " + biometricTypeStr + " is successful");
 				Optional<String> descKey = Optional.ofNullable(validationResultDto.getDescriptionKey());
-				if(descKey.isPresent()){
+				if (descKey.isPresent()) {
 					validationResultDto.setDescriptionKey(validationResultDto.getDescriptionKey()
 							+ AppConstants.COMMA_SEPARATOR
 							+ "<br>"
 							+ AppConstants.COMMA_SEPARATOR
 							+ "QUALITY_CHECK_004" + AppConstants.ARGUMENTS_DELIMITER + biometricTypeStr);
 				} else {
-					validationResultDto.setDescriptionKey("QUALITY_CHECK_004" + AppConstants.ARGUMENTS_DELIMITER + biometricTypeStr);
+					validationResultDto.setDescriptionKey(
+							"QUALITY_CHECK_004" + AppConstants.ARGUMENTS_DELIMITER + biometricTypeStr);
 				}
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
