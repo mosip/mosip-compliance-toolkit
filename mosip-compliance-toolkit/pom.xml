@@ -61,7 +61,6 @@
 		<org.openpnp.opencv.version>4.5.3-4</org.openpnp.opencv.version>
 		<jnbis.version>2.0.2</jnbis.version>
 		<imagedecoder.version>0.0.1-SNAPSHOT</imagedecoder.version>
-		<swaggercore.version>2.2.8</swaggercore.version>
 
 
 		<sonar.coverage.exclusions>
@@ -78,16 +77,6 @@
 		<sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>io.swagger.core.v3</groupId>
-			<artifactId>swagger-models</artifactId>
-			<version>${swaggercore.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.swagger.core.v3</groupId>
-			<artifactId>swagger-annotations</artifactId>
-			<version>${swaggercore.version}</version>
-		</dependency>
 		<dependency>
 			<groupId>io.mosip.imagedecoder</groupId>
 			<artifactId>imagedecoder</artifactId>
