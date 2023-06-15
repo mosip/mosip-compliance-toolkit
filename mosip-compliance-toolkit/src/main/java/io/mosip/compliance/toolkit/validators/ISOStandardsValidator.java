@@ -94,9 +94,11 @@ public class ISOStandardsValidator extends SBIValidator {
 		} catch (ToolkitException e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
+			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		} catch (Exception e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
+			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		}
 		return validationResultDto;
 	}
@@ -707,13 +709,15 @@ public class ISOStandardsValidator extends SBIValidator {
 
 		validationResultDto.setStatus(AppConstants.SUCCESS);
 		validationResultDto.setDescription("ISO Standards Validation is successful");
-		if (isValidWarnings)
+		validationResultDto.setDescriptionKey("ISO_VALIDATOR_036");
+		if (isValidWarnings) {
 			validationResultDto.setDescription(validationResultDto.getDescription() + "<span style='color:yellow'>" + warningMessage.toString() + "</span>");
-		warningMsgCode.append(AppConstants.COMMA_SEPARATOR);
-		warningMsgCode.append("</b>");
-		validationResultDto.setDescriptionKey("ISO_VALIDATOR_036"
-				+ AppConstants.COMMA_SEPARATOR
-				+ warningMsgCode.toString());
+			warningMsgCode.append(AppConstants.COMMA_SEPARATOR);
+			warningMsgCode.append("</b>");
+			validationResultDto.setDescriptionKey("ISO_VALIDATOR_036"
+					+ AppConstants.COMMA_SEPARATOR
+					+ warningMsgCode.toString());
+		}
 		return validationResultDto;
 	}
 
@@ -1272,13 +1276,15 @@ public class ISOStandardsValidator extends SBIValidator {
 
 		validationResultDto.setStatus(AppConstants.SUCCESS);
 		validationResultDto.setDescription("ISO Standards Validation is successful");
-		if (isValidWarnings)
+		validationResultDto.setDescriptionKey("ISO_VALIDATOR_075");
+		if (isValidWarnings){
 			validationResultDto.setDescription(validationResultDto.getDescription() + "<span style='color:yellow'>" + warningMessage.toString() + "</span>");
 		warningMsgCode.append(AppConstants.COMMA_SEPARATOR);
 		warningMsgCode.append("</b>");
 		validationResultDto.setDescriptionKey("ISO_VALIDATOR_075"
 				+ AppConstants.COMMA_SEPARATOR
 				+ warningMsgCode.toString());
+		}
 		return validationResultDto;
 	}
 
@@ -1857,11 +1863,15 @@ public class ISOStandardsValidator extends SBIValidator {
 		
 		validationResultDto.setStatus(AppConstants.SUCCESS);
 		validationResultDto.setDescription("ISO Standards Validation is successful");
-		if (isValidWarnings)
-			validationResultDto.setDescription(validationResultDto.getDescription() + "<span style='color:yellow'>" + warningMessage.toString() + "</span>");
-		warningMsgCode.append(AppConstants.COMMA_SEPARATOR);
-		warningMsgCode.append("</b>");
 		validationResultDto.setDescriptionKey("ISO_VALIDATOR_117");
+		if (isValidWarnings) {
+			validationResultDto.setDescription(validationResultDto.getDescription() + "<span style='color:yellow'>" + warningMessage.toString() + "</span>");
+			warningMsgCode.append(AppConstants.COMMA_SEPARATOR);
+			warningMsgCode.append("</b>");
+			validationResultDto.setDescriptionKey("ISO_VALIDATOR_117"
+					+ AppConstants.COMMA_SEPARATOR
+					+ warningMsgCode.toString());
+		}
 		return validationResultDto;
 	}
 }
