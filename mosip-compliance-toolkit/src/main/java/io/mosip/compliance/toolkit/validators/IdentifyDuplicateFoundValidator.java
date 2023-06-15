@@ -38,6 +38,7 @@ public class IdentifyDuplicateFoundValidator extends ToolkitValidator {
         } catch (Exception e) {
             validationResultDto.setStatus(AppConstants.FAILURE);
             validationResultDto.setDescription(e.getLocalizedMessage());
+            validationResultDto.setDescriptionKey(e.getLocalizedMessage());
             return validationResultDto;
         }
         return validationResultDto;

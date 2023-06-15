@@ -97,13 +97,16 @@ public abstract class SBIValidator extends ToolkitValidator {
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto
 					.setDescription(" CertificateExpiredException - " + "with Message - " + e.getLocalizedMessage());
+			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		} catch (CertificateNotYetValidException e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(
 					" CertificateNotYetValidException - " + "with Message - " + e.getLocalizedMessage());
+			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		} catch (JoseException e) {
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(" JoseException - " + "with Message - " + e.getLocalizedMessage());
+			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		}
 		return validationResultDto;
 	}

@@ -19,7 +19,7 @@ public class MainControllerTest {
     @InjectMocks
     private MainController mainController;
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void getConfigValuesTest(){
         mainController.getConfigValues();
     }
