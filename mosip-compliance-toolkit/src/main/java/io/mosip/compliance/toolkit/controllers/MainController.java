@@ -3,7 +3,10 @@ package io.mosip.compliance.toolkit.controllers;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.mosip.compliance.toolkit.constants.PartnerTypes;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,6 +39,23 @@ public class MainController {
 	
 	@Value("${mosip.service.datashare.incorrect.partner.id}")
 	private String incorrectPartnerId;
+
+	@Value("${mosip.service.abis.partner.type}")
+	private String abisPartnerType;
+
+	private AuthUserDetails authUserDetails() {
+		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
+
+	private boolean isAbisPartner() {
+		boolean flag = false ;
+		String authorities = authUserDetails().getAuthorities().toString();
+		String partnerType = PartnerTypes.ABIS.getCode();
+		if (authorities.contains(partnerType)) {
+			flag = true;
+		}
+		return flag;
+	}
 	
 	@ResponseFilter
 	@GetMapping("/configs")
@@ -50,6 +70,11 @@ public class MainController {
 		configMap.put("keyRotationIterations", keyRotationIterations);
 		configMap.put("rtlLanguages", rtlLanguages);
 		configMap.put("incorrectPartnerId", incorrectPartnerId);
+		if (isAbisPartner()) {
+			configMap.put("abisPartnerType", abisPartnerType);
+		} else {
+			configMap.put("abisPartnerType", "");
+		}
 		responseWrapper.setResponse(configMap);
 		return responseWrapper;
 	}

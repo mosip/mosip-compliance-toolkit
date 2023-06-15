@@ -48,6 +48,7 @@
 
 		<lombok.version>1.18.8</lombok.version>
 		<swagger.version>2.9.2</swagger.version>
+		<swaggercore.version>2.2.8</swaggercore.version>
 		<squareup.okhttp.version>2.7.5</squareup.okhttp.version>
 		<io.rest-assured.version>4.0.0</io.rest-assured.version>
 		<jose4j.version>0.7.1</jose4j.version>
@@ -80,6 +81,14 @@
 			<groupId>io.mosip.imagedecoder</groupId>
 			<artifactId>imagedecoder</artifactId>
 			<version>${imagedecoder.version}</version>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-models</artifactId>
+			<version>${swaggercore.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>${swaggercore.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.github.mhshams/jnbis -->
 		<dependency>

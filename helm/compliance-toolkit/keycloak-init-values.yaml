@@ -10,6 +10,23 @@ keycloak:
           web_origins: ["android://mosip-compliance-toolkit-ui","http://localhost"]
           direct_grant_flow_alias: 'direct grant'
           browser_flow_alias: 'browser'
+    
+      users:
+        - username: mpartner-default-abis
+          email: abis@gmail.com
+          firstName: mpartner-default-abis
+          lastName: 
+          password: abcd1234
+          temporary: true
+          attributes: {
+            "address": "mpartner-default-auth",
+            "langCode": "eng",
+            "organizationName": "mpartner-default-auth",
+            "partnerType": "ABIS_PARTNER",
+            "phoneNumber": "9988776655"
+           }
+          realmRoles:
+            - ABIS_PARTNER
 
       users:
         - username: mpartner-default-abis

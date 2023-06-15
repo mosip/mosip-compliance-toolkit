@@ -45,10 +45,6 @@ import io.mosip.kernel.core.logger.spi.Logger;
 @Component
 public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 
-	private static final String COLON = ": ";
-
-	private static final String BR = "<br>";
-
 	private Logger log = LoggerConfiguration.logConfig(BiometricsQualityCheckValidator.class);
 
 	@Value("${mosip.toolkit.sbi.qualitycheck.finger.sdk.urls}")
@@ -88,43 +84,54 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 				boolean includeInResults = item.get("includeInResults").asBoolean();
 				boolean isSdkServiceAccessible = this.callSdkHealthUrl(healthUrl);
 				// if yes, then try calling quality check
+				String validatorMsg = "";
 				if (isSdkServiceAccessible) {
 					validationResultDto = this.performQualityCheck(sdkUrl, inputDto);
 					if (!validationResultDto.getStatus().equals(AppConstants.FAILURE)) {
 						if (includeInResults) {
 							testCaseSuccessfulMap.put(sdkUrl, Boolean.TRUE);
 						}
-						messages.append(BR + sdkName + COLON + validationResultDto.getDescription());
-						codes.append(AppConstants.COMMA_SEPARATOR);
-						codes.append(BR);
-						codes.append(sdkName);
-						codes.append(COLON);
-						codes.append(AppConstants.COMMA_SEPARATOR);
-						codes.append(validationResultDto.getDescriptionKey());
 					} else {
 						if (includeInResults) {
 							testCaseSuccessfulMap.put(sdkUrl, Boolean.FALSE);
 						}
-						messages.append(BR + sdkName + COLON + validationResultDto.getDescription());
-						codes.append(AppConstants.COMMA_SEPARATOR);
-						codes.append(BR);
-						codes.append(sdkName);
-						codes.append(COLON);
-						codes.append(AppConstants.COMMA_SEPARATOR);
-						codes.append(validationResultDto.getDescriptionKey());
 					}
+					messages.append(
+							AppConstants.BR + sdkName + AppConstants.COLON + validationResultDto.getDescription());
+					validatorMsg = validationResultDto.getDescriptionKey();
 				} else {
 					if (includeInResults) {
 						testCaseSuccessfulMap.put(sdkUrl, Boolean.FALSE);
 					}
-					messages.append(BR + sdkName + COLON + "Unable to connect");
-					codes.append(AppConstants.COMMA_SEPARATOR);
-					codes.append(BR);
-					codes.append(sdkName);
-					codes.append(COLON);
-					codes.append(AppConstants.COMMA_SEPARATOR);
-					codes.append("BIOMETRIC_QUALITY_CHECK_003");
+					messages.append(AppConstants.BR + sdkName + AppConstants.COLON + "Unable to connect");
+					validatorMsg = "<br>,BIOMETRIC_QUALITY_CHECK_003";
 				}
+				codes.append(AppConstants.BR);
+				codes.append(AppConstants.COMMA_SEPARATOR);
+				codes.append(AppConstants.BR);
+				codes.append(AppConstants.COMMA_SEPARATOR);
+				codes.append(AppConstants.BOLD_TAG_START);
+				codes.append(AppConstants.COMMA_SEPARATOR);
+				codes.append(sdkName);
+				if (!includeInResults) {
+					codes.append(AppConstants.COMMA_SEPARATOR);
+					codes.append("&nbsp;( ");
+					codes.append(AppConstants.COMMA_SEPARATOR);
+					codes.append("BIOMETRIC_QUALITY_CHECK_004");
+					codes.append(AppConstants.COMMA_SEPARATOR);
+					codes.append(" ) ");
+				}
+				codes.append(AppConstants.COMMA_SEPARATOR);
+				codes.append(AppConstants.COLON);
+				codes.append(AppConstants.COMMA_SEPARATOR);
+				codes.append(AppConstants.BOLD_TAG_END);
+				codes.append(AppConstants.COMMA_SEPARATOR);
+				codes.append(AppConstants.BR);
+				codes.append(AppConstants.COMMA_SEPARATOR);
+				codes.append("____________________________________________________________");
+				codes.append(AppConstants.COMMA_SEPARATOR);
+				codes.append(validatorMsg);
+				codes.append(AppConstants.COMMA_SEPARATOR);
 			}
 			Boolean areAllQualityChecksSuccessful = Boolean.TRUE;
 			for (Boolean status : testCaseSuccessfulMap.values()) {
@@ -136,21 +143,23 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription(
 						"BiometricsQualityCheckValidator validations are successful." + messages.toString());
-				validationResultDto.setDescriptionKey("BIOMETRIC_QUALITY_CHECK_002" + codes.toString());
+				validationResultDto.setDescriptionKey("BIOMETRIC_QUALITY_CHECK_002," + codes.toString());
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription(
 						"BiometricsQualityCheckValidator validations are not successful." + messages.toString());
-				validationResultDto.setDescriptionKey("BIOMETRIC_QUALITY_CHECK_001" + codes.toString());
+				validationResultDto.setDescriptionKey("BIOMETRIC_QUALITY_CHECK_001," + codes.toString());
 			}
 		} catch (ToolkitException e) {
 			log.error("sessionId", "idType", "id", "In BiometricsQualityCheckValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
+			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		} catch (Exception e) {
 			log.error("sessionId", "idType", "id", "In BiometricsQualityCheckValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
+			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		}
 		return validationResultDto;
 	}
@@ -204,8 +213,7 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 		ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper()
 				.readValue(inputDto.getMethodResponse(), ObjectNode.class);
 
-		ValidationResultDto validationResultDto = new ValidationResultDto();
-		List<io.mosip.kernel.biometrics.entities.BIR> birsForProbe = new ArrayList<>();
+		List<ValidationResultDto> validationResultDtoList = new ArrayList<>();
 
 		// STEP 1: extract "bioValue" from the "sbi" capture /racpture response
 		JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
@@ -247,13 +255,34 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 				// STEP 2: create BIR from the "bioValue"
 				byte[] bdb = CommonUtil.decodeURLSafeBase64(bioValue);
 				BIR probeBir = birBuilder.buildBIR(bdb, bioType, bioSubType, qualityScoreLong, isAuth, specVersion);
+				List<io.mosip.kernel.biometrics.entities.BIR> birsForProbe = new ArrayList<>();
 				birsForProbe.add(probeBir);
+				// STEP 3: call "check-quality" to get qualityScore for the probeBir
+				ValidationResultDto validationResult = this.callSdkCheckQualityUrl(sdkUrl, birsForProbe, biometricType);
+				validationResultDtoList.add(validationResult);
 			}
-			// STEP 3: call "check-quality" to get qualityScore for the probeBir
-			return this.callSdkCheckQualityUrl(sdkUrl, birsForProbe, biometricType);
+			// STEP 4: calculate aggregate score and messages;
+			ValidationResultDto finalResult = new ValidationResultDto();
+			finalResult.setStatus(AppConstants.SUCCESS);
+			StringBuffer keyBuffer = new StringBuffer();
+			List<String> descriptionList = new ArrayList<>();
+			for (ValidationResultDto item : validationResultDtoList) {
+				if (item.getStatus().equals(AppConstants.FAILURE)) {
+					finalResult.setStatus(AppConstants.FAILURE);
+				}
+				descriptionList.add(item.getDescription());
+				keyBuffer.append(AppConstants.BR);
+				keyBuffer.append(AppConstants.COMMA_SEPARATOR);
+				keyBuffer.append(item.getDescriptionKey());
+			}
+			finalResult.setDescription(descriptionList.toString());
+			finalResult.setDescriptionKey(keyBuffer.toString());
+
+			return finalResult;
 		}
-		validationResultDto.setStatus(AppConstants.FAILURE);
-		return validationResultDto;
+		ValidationResultDto failureResult = new ValidationResultDto();
+		failureResult.setStatus(AppConstants.FAILURE);
+		return failureResult;
 
 	}
 
@@ -276,13 +305,13 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 			// TODO: set flags
 			checkQualityRequestDto.setFlags(null);
 			String requestJson = gson.toJson(checkQualityRequestDto);
-			System.out.println(requestJson);
+			// System.out.println(requestJson);
 			RequestDto inputDto = new RequestDto();
 			inputDto.setVersion(AppConstants.VERSION);
 			inputDto.setRequest(StringUtil.base64Encode(requestJson));
 
 			String requestBody = gson.toJson(inputDto);
-			System.out.println(requestBody);
+			// System.out.println(requestBody);
 			MediaType mediaType = MediaType.parse(AppConstants.APPLICATION_JSON_CHARSET_UTF_8);
 			RequestBody body = RequestBody.create(mediaType, requestBody);
 
