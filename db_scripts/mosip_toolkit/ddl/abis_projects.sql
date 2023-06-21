@@ -10,6 +10,7 @@ CREATE TABLE toolkit.abis_projects(
 	password character varying(256) NOT NULL,
 	inbound_queue_name character varying(256) NOT NULL,
 	outbound_queue_name character varying(256) NOT NULL,
+	modality character varying(256) NOT NULL DEFAULT 'All',
 	bio_test_data_file_name character varying(64) NOT NULL,
 	partner_id character varying(36) NOT NULL,
 	cr_by character varying(256) NOT NULL,
@@ -33,6 +34,7 @@ COMMENT ON COLUMN toolkit.abis_projects.username IS 'username: the username for 
 COMMENT ON COLUMN toolkit.abis_projects.password IS 'password: the password for ABIS queue';
 COMMENT ON COLUMN toolkit.abis_projects.inbound_queue_name IS 'inbound_queue_name: the inbound queue name for ABIS queue';
 COMMENT ON COLUMN toolkit.abis_projects.outbound_queue_name IS 'outbound_queue_name: the outbound queue name for ABIS queue';
+COMMENT ON COLUMN toolkit.abis_projects.modality IS 'modality: different modalities combination';
 COMMENT ON COLUMN toolkit.abis_projects.bio_test_data_file_name IS 'Biometric Test Data File Name : Name of the biometric test data file to be used';
 COMMENT ON COLUMN toolkit.abis_projects.abis_version IS 'abis_version: the abis_version is the version of abis.';
 COMMENT ON COLUMN toolkit.abis_projects.partner_id IS 'Partner Id: partner id who has created this project.';
