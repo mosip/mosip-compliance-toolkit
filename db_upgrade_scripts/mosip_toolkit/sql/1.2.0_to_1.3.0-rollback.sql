@@ -15,3 +15,4 @@ CREATE TABLE toolkit.datashare_tokens(
     token character varying(256) NOT NULL,
     result character varying(256)
 )
+CREATE INDEX IF NOT EXISTS idx_datashare_tokens_partner_id_testCase_id_testRun_id ON toolkit.datashare_tokens USING btree (partner_id, testCase_id, testRun_id);
