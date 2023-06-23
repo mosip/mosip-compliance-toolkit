@@ -1,6 +1,5 @@
-\c mosip_toolkit sysadmin
+-- This table has all the data share tokens for a test run for a given collection in ABIS project.
 
-ALTER TABLE toolkit.abis_projects Add COLUMN modality character varying(256) NOT NULL DEFAULT 'All';
 CREATE TABLE toolkit.datashare_tokens(
     partner_id character varying(36) NOT NULL,
     testCase_id character varying(36) NOT NULL,
@@ -8,8 +7,8 @@ CREATE TABLE toolkit.datashare_tokens(
     token character varying(256) NOT NULL,
     result character varying(256)
 )
+
 CREATE INDEX IF NOT EXISTS idx_datashare_tokens_partner_id_testCase_id_testRun_id ON toolkit.datashare_tokens USING btree (partner_id, testCase_id, testRun_id);
-COMMENT ON COLUMN toolkit.abis_projects.modality IS 'modality: different modalities combination';
 COMMENT ON TABLE toolkit.datashare_tokens IS 'This table has all the data share tokens for a test run for a given collection in ABIS project.';
 COMMENT ON TABLE toolkit.datashare_tokens.partner_id IS 'Partner Id: partner id who has created this project.';
 COMMENT ON TABLE toolkit.datashare_tokens.testCase_id IS 'Testcase ID: Id of the corresponding testcase.';
