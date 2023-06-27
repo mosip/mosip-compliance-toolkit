@@ -13,10 +13,7 @@ public class QualityCheckInvalidDataValidator extends SDKValidator {
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
-			ObjectNode methodResponse = (ObjectNode) objectMapperConfig.objectMapper().readValue(inputDto.getMethodResponse(),
-					ObjectNode.class);
-			JsonNode mainResponse = (JsonNode) methodResponse.get("response");
-			int statusCode = Integer.parseInt(mainResponse.get("statusCode").asText());
+			int statusCode = getStatusCode(inputDto);
 			if (statusCode == 401 || statusCode == 403) {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription("No data for Quality Check, expected status code received:" + statusCode);
