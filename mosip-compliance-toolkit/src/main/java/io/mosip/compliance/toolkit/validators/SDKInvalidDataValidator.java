@@ -3,11 +3,10 @@ package io.mosip.compliance.toolkit.validators;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.mosip.compliance.toolkit.constants.AppConstants;
-import io.mosip.compliance.toolkit.constants.SdkPurpose;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 
-public abstract class InvalidDataValidator extends ToolkitValidator{
+public abstract class SDKInvalidDataValidator extends ToolkitValidator{
 
     public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
         ValidationResultDto validationResultDto = new ValidationResultDto();

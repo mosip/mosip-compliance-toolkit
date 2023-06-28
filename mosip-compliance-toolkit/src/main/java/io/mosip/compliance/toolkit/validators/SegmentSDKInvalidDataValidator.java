@@ -1,6 +1,6 @@
 package io.mosip.compliance.toolkit.validators;
 
-public class MatchInvalidDataValidator extends InvalidDataValidator {
+public class SegmentSDKInvalidDataValidator extends SDKInvalidDataValidator {
 
 	@Override
 	protected boolean isSuccessStatusCode(int statusCode) {
