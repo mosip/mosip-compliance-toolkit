@@ -59,6 +59,8 @@ public class BioHashValidator extends SBIValidator {
             }
         } catch (Exception ex) {
             validationResultDto.setStatus(AppConstants.FAILURE);
+            validationResultDto.setDescriptionKey("HASH_VALIDATOR_003" + AppConstants.ARGUMENTS_DELIMITER + ex);
+            validationResultDto.setDescription("Hash validation failure due to: " + ex);
             ex.printStackTrace();
         }
         return validationResultDto;
