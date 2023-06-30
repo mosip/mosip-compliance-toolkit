@@ -11,10 +11,8 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import io.mosip.kernel.core.util.HMACUtils;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.codec.digest.HmacUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -486,7 +484,6 @@ public class TestCasesService {
         }
     }
     public String generateHash(String previousHash, String bioValue) throws Exception {
-//        ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
         String hash = null;
         try {
             byte[] previousDataByteArr;
@@ -503,7 +500,6 @@ public class TestCasesService {
             System.arraycopy(previousBioDataHash, 0, finalBioDataHash, 0, previousBioDataHash.length);
             System.arraycopy(currentBioDataHash, 0, finalBioDataHash, previousBioDataHash.length, currentBioDataHash.length);
             hash = toHex(generateHash(finalBioDataHash));
-//            responseWrapper.setResponse(hash);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
