@@ -3,7 +3,7 @@ package io.mosip.compliance.toolkit.validators;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
-import io.mosip.compliance.toolkit.service.TestCasesService;
+import io.mosip.compliance.toolkit.util.HashUtil;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class BioHashValidator extends SBIValidator {
     @Autowired
-    TestCasesService service;
+    HashUtil hashUtil;
 
     @Override
     public ValidationResultDto validateResponse(ValidationInputDto responseDto) {
@@ -37,9 +37,9 @@ public class BioHashValidator extends SBIValidator {
                 String biovalue = dataDecodedJson.get("bioValue").asText();
                 String generatedHash = "";
                 if (i == 0) {
-                    generatedHash = service.generateHash(previousHash, biovalue);
+                    generatedHash = hashUtil.generateHash(previousHash, biovalue);
                 } else {
-                    generatedHash = service.generateHash(biometricArray.get(i - 1).get("hash").asText(),
+                    generatedHash = hashUtil.generateHash(biometricArray.get(i - 1).get("hash").asText(),
                             biovalue);
                 }
                 if (generatedHash.equals(responseHash)) {
