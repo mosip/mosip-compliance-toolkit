@@ -69,7 +69,7 @@ public class TestCasesController {
 	 */
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		binder.addValidators(requestValidator);
+//		binder.addValidators(requestValidator);
 	}
 
 	@PostMapping(value = "/validateRequest")
@@ -79,7 +79,7 @@ public class TestCasesController {
 		DataValidationUtil.validate(errors, VALIDATIONS_POST_ID);
 		return service.performRequestValidations(input.getRequest());
 	}
-
+	
 	@PostMapping(value = "/validateResponse")
 	public ResponseWrapper<ValidationResponseDto> validateResponse(
 			@RequestBody @Valid RequestWrapper<ValidationInputDto> input, Errors errors) throws Exception {

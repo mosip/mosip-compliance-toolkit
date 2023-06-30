@@ -1,23 +1,20 @@
 package io.mosip.compliance.toolkit.service;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import io.mosip.kernel.core.util.HMACUtils;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.HmacUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -487,6 +484,48 @@ public class TestCasesService {
             responseWrapper.setResponse(validationResponseDto);
             return responseWrapper;
         }
+    }
+    public String generateHash(String previousHash, String bioValue) throws Exception {
+//        ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
+        String hash = null;
+        try {
+            byte[] previousDataByteArr;
+            byte[] previousBioDataHash;
+            if (previousHash == null || previousHash.trim().length() == 0) {
+                previousDataByteArr = ("").getBytes();
+                previousBioDataHash = generateHash(previousDataByteArr);
+            } else {
+                previousBioDataHash = decodeHex(previousHash);
+            }
+            byte[] decodedBytes = base64Decode(bioValue);
+            byte[] currentBioDataHash = generateHash(decodedBytes);
+            byte[] finalBioDataHash = new byte[currentBioDataHash.length + previousBioDataHash.length];
+            System.arraycopy(previousBioDataHash, 0, finalBioDataHash, 0, previousBioDataHash.length);
+            System.arraycopy(currentBioDataHash, 0, finalBioDataHash, previousBioDataHash.length, currentBioDataHash.length);
+            hash = toHex(generateHash(finalBioDataHash));
+//            responseWrapper.setResponse(hash);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return hash;
+    }
+    public byte[] base64Decode(String bioValue){
+        String base64String = bioValue.replace('-', '+').replace('_', '/');
+        int paddingLength = 4 - (base64String.length() % 4);
+        base64String += "=".repeat(paddingLength);
+        byte[] decodedBytes = Base64.getDecoder().decode(base64String);
+        return decodedBytes;
+    }
+    public String toHex(byte[] bytes) {
+        return Hex.encodeHexString(bytes).toUpperCase();
+    }
+    private final String HASH_ALGORITHM_NAME = "SHA-256";
+    public byte[] generateHash(final byte[] bytes) throws NoSuchAlgorithmException{
+        MessageDigest messageDigest = MessageDigest.getInstance(HASH_ALGORITHM_NAME);
+        return messageDigest.digest(bytes);
+    }
+    public byte[] decodeHex(String hexData) throws DecoderException {
+        return Hex.decodeHex(hexData);
     }
 
     public ResponseWrapper<ValidationResponseDto> performValidations(ValidationInputDto validationInputDto) {
