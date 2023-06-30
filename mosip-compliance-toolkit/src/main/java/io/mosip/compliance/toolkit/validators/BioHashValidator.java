@@ -10,11 +10,11 @@ import org.codehaus.jackson.node.ArrayNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class BioHashValidator extends SBIValidator {
     @Autowired
     TestCasesService service;
+
     @Override
     public ValidationResultDto validateResponse(ValidationInputDto responseDto) {
         boolean validHash = false;
@@ -23,41 +23,40 @@ public class BioHashValidator extends SBIValidator {
         validationResultDto.setValidatorDescription("Validates the content of reponse hash");
         String methodResponse = responseDto.getMethodResponse();
         String extraInfoJson = responseDto.getExtraInfoJson();
-        try{
+        try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode methodResponseJson = objectMapper.readTree(methodResponse);
             ObjectMapper extraInfo = new ObjectMapper();
             JsonNode extraInfoJsonJson = extraInfo.readTree(extraInfoJson);
             String previousHash = extraInfoJsonJson.get("previousHash").asText();
-                ArrayNode biometricArray = (ArrayNode) methodResponseJson.get("biometrics");
-                for(int i=0; i < biometricArray.size(); i++){
-                    String responseHash = biometricArray.get(i).get("hash").asText();
-                    JsonNode dataDecodedJson = biometricArray.get(i).get("dataDecoded");
-                    ObjectMapper objectMapper1 = new ObjectMapper();
-                    String biovalue = dataDecodedJson.get("bioValue").asText();
-                    String generatedHash = "";
-                    if(i == 0) {
-                        generatedHash = service.generateHash(previousHash, biovalue);
-                    } else {
-                        generatedHash = service.generateHash(biometricArray.get(i-1).get("hash").asText(),
-                                biovalue);
-                    }
-                    if(generatedHash.equals(responseHash)){
-                        validHash = true;
-                    } else {
-                        validHash = false;
-                    }
-                }
-                if(validHash){
-                    validationResultDto.setDescription("Hash validation is successful");
-                    validationResultDto.setDescriptionKey("HASH_VALIDATOR_001");
-                    validationResultDto.setStatus(AppConstants.SUCCESS);
+            ArrayNode biometricArray = (ArrayNode) methodResponseJson.get("biometrics");
+            for (int i = 0; i < biometricArray.size(); i++) {
+                String responseHash = biometricArray.get(i).get("hash").asText();
+                JsonNode dataDecodedJson = biometricArray.get(i).get("dataDecoded");
+                ObjectMapper objectMapper1 = new ObjectMapper();
+                String biovalue = dataDecodedJson.get("bioValue").asText();
+                String generatedHash = "";
+                if (i == 0) {
+                    generatedHash = service.generateHash(previousHash, biovalue);
                 } else {
-                    validationResultDto.setValidatorDescription("Hash validation is unsuccessful");
-                    validationResultDto.setDescriptionKey("HASH_VALIDATOR_002");
-                    validationResultDto.setStatus(AppConstants.FAILURE);
+                    generatedHash = service.generateHash(biometricArray.get(i - 1).get("hash").asText(),
+                            biovalue);
                 }
-//            }
+                if (generatedHash.equals(responseHash)) {
+                    validHash = true;
+                } else {
+                    validHash = false;
+                }
+            }
+            if (validHash) {
+                validationResultDto.setDescription("Hash validation is successful");
+                validationResultDto.setDescriptionKey("HASH_VALIDATOR_001");
+                validationResultDto.setStatus(AppConstants.SUCCESS);
+            } else {
+                validationResultDto.setValidatorDescription("Hash validation is unsuccessful");
+                validationResultDto.setDescriptionKey("HASH_VALIDATOR_002");
+                validationResultDto.setStatus(AppConstants.FAILURE);
+            }
         } catch (Exception ex) {
             validationResultDto.setStatus(AppConstants.FAILURE);
             ex.printStackTrace();
