@@ -1,9 +1,11 @@
 package io.mosip.compliance.toolkit.validators;
 
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.util.HashUtil;
+import io.mosip.kernel.core.logger.spi.Logger;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BioHashValidator extends SBIValidator {
+    private Logger log = LoggerConfiguration.logConfig(ISOStandardsValidator.class);
     @Autowired
     HashUtil hashUtil;
 
@@ -59,7 +62,7 @@ public class BioHashValidator extends SBIValidator {
             }
         } catch (Exception ex) {
             validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescriptionKey("HASH_VALIDATOR_003" + AppConstants.ARGUMENTS_DELIMITER + ex);
+            validationResultDto.setDescriptionKey("HASH_VALIDATOR_003" + AppConstants.ARGUMENTS_DELIMITER + ex.getLocalizedMessage());
             validationResultDto.setDescription("Hash validation failure due to: " + ex.getLocalizedMessage());
         }
         return validationResultDto;
