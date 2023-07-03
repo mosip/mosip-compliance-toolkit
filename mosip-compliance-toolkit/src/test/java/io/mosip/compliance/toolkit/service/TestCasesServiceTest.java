@@ -597,6 +597,17 @@ public class TestCasesServiceTest {
 		requestDto.setValidatorDefs(validatorDefs);
 		testCasesService.performValidations(requestDto);
 	}
+    @Test
+    public void performValidationsTestHash() {
+        ValidationInputDto requestDto = new ValidationInputDto();
+        List<ValidatorDefDto> validatorDefs = new ArrayList<>();
+        ValidatorDefDto validatorDefDto = new ValidatorDefDto();
+        validatorDefDto.setName("BioHashValidator");
+        validatorDefDto.setDescription("Description");
+        validatorDefs.add(validatorDefDto);
+        requestDto.setValidatorDefs(validatorDefs);
+        testCasesService.performValidations(requestDto);
+    }
 
 	@Test
 	public void performValidationsTestISO() {
