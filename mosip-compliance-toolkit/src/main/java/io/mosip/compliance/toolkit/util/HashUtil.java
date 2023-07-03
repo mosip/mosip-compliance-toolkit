@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
-
+@Component
 public class HashUtil {
     private static Logger mosipLogger = LoggerConfiguration.logConfig(RequestValidator.class);
     public String generateHash(String previousHash, String bioValue) throws Exception {
