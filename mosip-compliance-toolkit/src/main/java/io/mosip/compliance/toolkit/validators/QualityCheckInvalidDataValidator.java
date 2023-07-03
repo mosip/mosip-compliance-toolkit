@@ -1,6 +1,6 @@
 package io.mosip.compliance.toolkit.validators;
 
-public class QualityCheckInvalidDataValidator extends SDKInvalidDataValidator {
+public class QualityCheckInvalidDataValidator extends SDKDataValidator {
 
 	@Override
 	protected boolean isSuccessStatusCode(int statusCode) {
