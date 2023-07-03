@@ -10,7 +10,7 @@ import io.mosip.compliance.toolkit.dto.testcases.ValidatorDefDto;
 
 import java.util.List;
 
-public abstract class SDKDataValidator extends ToolkitValidator{
+public abstract class SDKNoOrInvalidDataValidator extends ToolkitValidator{
 
     public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
         ValidationResultDto validationResultDto = new ValidationResultDto();
