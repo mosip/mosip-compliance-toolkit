@@ -32,7 +32,6 @@ public class ResourceCacheService {
 
 	@Cacheable(cacheNames = "schemas", key = "{#type, #version, #fileName}")
 	public String getSchema(String type, String version, String fileName) throws Exception {
-		System.out.println("getSchema");
 		try {
 			String schemaResponse = null;
 			String container = AppConstants.SCHEMAS.toLowerCase();
