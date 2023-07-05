@@ -40,6 +40,9 @@ public class ABISDataShareService {
 
 	private static final String MULTIPART_FORM_DATA = "multipart/form-data";
 
+	@Value("${mosip.toolkit.abis.datashare.token.testcaseIds:}")
+	private List<String> tokenTestCases;
+
 	private Logger log = LoggerConfiguration.logConfig(ABISDataShareService.class);
 
 	@Autowired
@@ -99,13 +102,14 @@ public class ABISDataShareService {
 			Cookie.Builder builder = new Cookie.Builder(KeyManagerHelper.AUTHORIZATION,
 					keyManagerHelper.getAuthToken());
 			// step 3 - get the data share url
-			// for ABIS3017, we need to send incorrect partner id to simulate decryption failure
+			// for ABIS3017, we need to send incorrect partner id to simulate decryption
+			// failure
 			String partnerIdForDataShare = dataShareRequestDto.getIncorrectPartnerId();
 			if (partnerIdForDataShare == null || partnerIdForDataShare.isBlank()) {
 				partnerIdForDataShare = getPartnerId();
 			}
-			String dataShareFullCreateUrl = createDataShareUrlString + PATH_SEPARATOR + dataSharePolicyId + PATH_SEPARATOR
-					+ partnerIdForDataShare;
+			String dataShareFullCreateUrl = createDataShareUrlString + PATH_SEPARATOR + dataSharePolicyId
+					+ PATH_SEPARATOR + partnerIdForDataShare;
 			log.info("Calling dataShareFullCreateUrl: {}", dataShareFullCreateUrl);
 
 			io.restassured.response.Response dataShareResp = given().cookie(builder.build()).relaxedHTTPSValidation()
@@ -125,6 +129,10 @@ public class ABISDataShareService {
 			if (splits.length > 0) {
 				String urlKey = splits[splits.length - 1];
 				shareableUrl = dataShareFullGetUrl + PATH_SEPARATOR + urlKey;
+			}
+			if (tokenTestCases != null && tokenTestCases.contains(dataShareRequestDto.getTestcaseId())) {
+				shareableUrl += "?ctkTestCaseId=" + dataShareRequestDto.getTestcaseId() + "&ctkTestRunId=" + dataShareRequestDto.getTestRunId();
+
 			}
 			log.info("shareableUrl: {}", shareableUrl);
 			dataShareResponseDto.getDataShare().setUrl(shareableUrl);
