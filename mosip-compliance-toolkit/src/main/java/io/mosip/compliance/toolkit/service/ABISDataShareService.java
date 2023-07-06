@@ -83,6 +83,7 @@ public class ABISDataShareService {
 		DataShareResponseWrapperDto wrapperResponseDto = new DataShareResponseWrapperDto();
 		try {
 			String purpose = ProjectTypes.ABIS.getCode();
+			String modality = purpose + "_" + dataShareRequestDto.getAbisProjectModality().toUpperCase().replaceAll(" ", "_");
 			// step 1 - for the given testcase Id, read the cbeff xml from selected testdata
 			// file
 			byte[] cbeffFileBytes = null;
@@ -92,7 +93,7 @@ public class ABISDataShareService {
 					dataShareRequestDto.getCbeffFileSuffix());
 			wrapperResponseDto.setTestDataSource(dataShareRequestDto.getBioTestDataName());
 			if (Objects.isNull(objectStoreStream) || Objects.isNull(cbeffFileBytes)) {
-				objectStoreStream = testCasesService.getDefaultTestDataStream(purpose, purpose);
+				objectStoreStream = testCasesService.getDefaultTestDataStream(purpose, modality);
 				cbeffFileBytes = getCbeffData(objectStoreStream, purpose, dataShareRequestDto.getTestcaseId(),
 						dataShareRequestDto.getCbeffFileSuffix());
 				wrapperResponseDto.setTestDataSource(AppConstants.MOSIP_DEFAULT);

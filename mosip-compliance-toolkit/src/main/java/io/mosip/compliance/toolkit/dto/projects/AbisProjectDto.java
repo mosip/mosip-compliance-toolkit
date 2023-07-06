@@ -36,6 +36,8 @@ public class AbisProjectDto {
 	private LocalDateTime updDate;
 	
 	private String outboundQueueName;
+
+	private String modality;
 	
 	private String bioTestDataFileName;
 
