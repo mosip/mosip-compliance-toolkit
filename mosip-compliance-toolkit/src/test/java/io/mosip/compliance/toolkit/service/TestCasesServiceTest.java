@@ -602,7 +602,7 @@ public class TestCasesServiceTest {
         ValidationInputDto requestDto = new ValidationInputDto();
         List<ValidatorDefDto> validatorDefs = new ArrayList<>();
         ValidatorDefDto validatorDefDto = new ValidatorDefDto();
-        validatorDefDto.setName("BioHashValidator");
+        validatorDefDto.setName("HashValidator");
         validatorDefDto.setDescription("Description");
         validatorDefs.add(validatorDefDto);
         requestDto.setValidatorDefs(validatorDefs);
