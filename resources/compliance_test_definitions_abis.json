@@ -1110,7 +1110,8 @@
 				"ABIS3029_3"
 			]
 		}
-	},{
+	},
+	{
 	"testCaseType": "ABIS",
 	"testName": "Verify if ABIS is not generating new tokens for every insert request",
 	"testId": "ABIS3030",
@@ -1138,7 +1139,8 @@
 		"bulkInsert": false,
 		"insertCount": "2"
 	}
-	},{
+	},
+	{
 	"testCaseType": "ABIS",
 	"testName": "Verify if ABIS is able to generate a new token when one has expired without sending an error response back in the queue",
 	"testId": "ABIS3031",
