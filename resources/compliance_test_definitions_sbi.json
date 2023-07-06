@@ -5185,7 +5185,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Left Slap - Hash Validator",
+		"testName": "Registration capture - Left Slap - Hash Validations",
 		"testId": "SBI1101",
 		"specVersion": "0.9.5",
 		"testDescription": "Test to validate the RCapture interface for Left Slap Fingerprints<br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes",
@@ -5216,7 +5216,7 @@
 				},
 				{
 					"name": "HashValidator",
-					"description": "Validates the 'hash value' received in the response signature"
+					"description": "Validates the 'hash value' received in the response matches 'previous hash' in request"
 				}
 			]
 		],
@@ -5240,6 +5240,60 @@
 			"requestedScore": "40",
 			"bioCount": "4",
 			"deviceSubId": "1",
+			"hashValidationTestCase": true
+		}
+	},{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Face - Hash Validations",
+		"testId": "SBI1102",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate RCapture interface for face<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes",
+		"androidTestDescription": "Test to validate RCapture interface for face<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "HashValidator",
+					"description": "Validates the 'hash value' received in the response matches 'previous hash' in request"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Face"
+			],
+			"deviceSubTypes": [
+				"Full face"
+			],
+			"segments": [],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0",
 			"hashValidationTestCase": true
 		}
 	}
