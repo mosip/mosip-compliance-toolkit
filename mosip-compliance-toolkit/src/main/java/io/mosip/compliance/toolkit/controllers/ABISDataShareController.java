@@ -48,7 +48,7 @@ public class ABISDataShareController {
 	 */
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-//		binder.addValidators(requestValidator);
+		binder.addValidators(requestValidator);
 	}
 
 	@PostMapping(value = "/createDataShareUrl")
