@@ -82,29 +82,34 @@ public class ABISDataShareService {
 		ResponseWrapper<DataShareResponseWrapperDto> responseWrapper = new ResponseWrapper<>();
 		DataShareResponseWrapperDto wrapperResponseDto = new DataShareResponseWrapperDto();
 		try {
-			String purpose = ProjectTypes.ABIS.getCode();
-			String zipFileName = purpose;
-			if (dataShareRequestDto.getAbisProjectModality() != null && dataShareRequestDto.getAbisProjectModality() != "" &&
-					!"All".equals(dataShareRequestDto.getAbisProjectModality())) {
-				zipFileName = purpose + "_" + dataShareRequestDto.getAbisProjectModality().toUpperCase().replaceAll(" ", "_");
+			String mainFolderName = ProjectTypes.ABIS.getCode();
+			String zipFileName = mainFolderName;
+			if (dataShareRequestDto.getAbisProjectModality() != null
+					&& !"".equals(dataShareRequestDto.getAbisProjectModality().trim())
+					&& !"All".equalsIgnoreCase(dataShareRequestDto.getAbisProjectModality())) {
+				zipFileName = mainFolderName + "_"
+						+ dataShareRequestDto.getAbisProjectModality().toUpperCase().replaceAll(" ", "_");
 			}
+			log.info("zipFileName: {}", zipFileName);
 			// step 1 - for the given testcase Id, read the cbeff xml from selected testdata
 			// file
 			byte[] cbeffFileBytes = null;
 			InputStream objectStoreStream = testCasesService
-					.getPartnerTestDataStream(dataShareRequestDto.getBioTestDataName(), getPartnerId(), purpose);
-			cbeffFileBytes = getCbeffData(objectStoreStream, purpose, dataShareRequestDto.getTestcaseId(),
+					.getPartnerTestDataStream(dataShareRequestDto.getBioTestDataName(), getPartnerId(), mainFolderName);
+			cbeffFileBytes = getCbeffData(objectStoreStream, mainFolderName, dataShareRequestDto.getTestcaseId(),
 					dataShareRequestDto.getCbeffFileSuffix());
 			wrapperResponseDto.setTestDataSource(dataShareRequestDto.getBioTestDataName());
+			//If no testdata is availble for the testcase, take from MOSIP_DEFAULT_ABIS_XXXX zip file
 			if (Objects.isNull(objectStoreStream) || Objects.isNull(cbeffFileBytes)) {
-				objectStoreStream = testCasesService.getDefaultTestDataStream(purpose, zipFileName);
-				cbeffFileBytes = getCbeffData(objectStoreStream, purpose, dataShareRequestDto.getTestcaseId(),
+				objectStoreStream = testCasesService.getDefaultTestDataStream(zipFileName);
+				cbeffFileBytes = getCbeffData(objectStoreStream, mainFolderName, dataShareRequestDto.getTestcaseId(),
 						dataShareRequestDto.getCbeffFileSuffix());
 				wrapperResponseDto.setTestDataSource(AppConstants.MOSIP_DEFAULT);
 			}
+			//If no testdata is availble for the testcase, take from MOSIP_DEFAULT_ABIS zip file
 			if (Objects.isNull(objectStoreStream) || Objects.isNull(cbeffFileBytes)) {
-				objectStoreStream = testCasesService.getDefaultTestDataStream(purpose, purpose);
-				cbeffFileBytes = getCbeffData(objectStoreStream, purpose, dataShareRequestDto.getTestcaseId(),
+				objectStoreStream = testCasesService.getDefaultTestDataStream(mainFolderName);
+				cbeffFileBytes = getCbeffData(objectStoreStream, mainFolderName, dataShareRequestDto.getTestcaseId(),
 						dataShareRequestDto.getCbeffFileSuffix());
 				wrapperResponseDto.setTestDataSource(AppConstants.MOSIP_DEFAULT);
 			}
@@ -142,7 +147,8 @@ public class ABISDataShareService {
 				shareableUrl = dataShareFullGetUrl + PATH_SEPARATOR + urlKey;
 			}
 			if (tokenTestCases != null && tokenTestCases.contains(dataShareRequestDto.getTestcaseId())) {
-				shareableUrl += "?ctkTestCaseId=" + dataShareRequestDto.getTestcaseId() + "&ctkTestRunId=" + dataShareRequestDto.getTestRunId();
+				shareableUrl += "?ctkTestCaseId=" + dataShareRequestDto.getTestcaseId() + "&ctkTestRunId="
+						+ dataShareRequestDto.getTestRunId();
 
 			}
 			log.info("shareableUrl: {}", shareableUrl);
@@ -168,7 +174,7 @@ public class ABISDataShareService {
 		return responseWrapper;
 	}
 
-	private byte[] getCbeffData(InputStream objectStoreStream, String purpose, String testcaseId, int cbeffFileSuffix)
+	private byte[] getCbeffData(InputStream objectStoreStream, String mainFolderName, String testcaseId, int cbeffFileSuffix)
 			throws IOException, Exception {
 		byte[] probeFileBytes = null;
 		String fileName = "cbeff.xml";
@@ -177,7 +183,7 @@ public class ABISDataShareService {
 		}
 		if (Objects.nonNull(objectStoreStream)) {
 			objectStoreStream.reset();
-			probeFileBytes = testCasesService.getXmlDataFromZipFile(objectStoreStream, purpose, testcaseId, fileName);
+			probeFileBytes = testCasesService.getXmlDataFromZipFile(objectStoreStream, mainFolderName, testcaseId, fileName);
 		}
 		return probeFileBytes;
 	}

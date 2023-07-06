@@ -30,7 +30,7 @@ public class HashValidator extends SBIValidator {
 
 			ObjectNode extraInfo = (ObjectNode) objectMapperConfig.objectMapper().readValue(inputDto.getExtraInfoJson(),
 					ObjectNode.class);
-			String previousHash = extraInfo.get("previousHash").asText();
+			JsonNode previousHashArr = extraInfo.get("previousHash");
 
 			String responseJson = inputDto.getMethodResponse();
 
@@ -38,20 +38,25 @@ public class HashValidator extends SBIValidator {
 					ObjectNode.class);
 
 			JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
-			if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
+			int index = 0;
+			if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()
+					&& !previousHashArr.isNull() && previousHashArr.isArray()
+					&& arrBiometricNodes.size() == previousHashArr.size()) {
 				for (final JsonNode biometricNode : arrBiometricNodes) {
 					String hashReceived = biometricNode.get("hash").asText();
 					log.info("hashReceived {}", hashReceived);
 					JsonNode dataNode = biometricNode.get(DECODED_DATA);
 					String biovalue = dataNode.get(BIO_VALUE).asText();
+					String previousHash = previousHashArr.get(index).asText();
 					log.info("previousHash {}", previousHash);
 					String generatedHash = hashUtil.generateHash(previousHash, biovalue);
 					log.info("generatedHash {}", generatedHash);
-					if (generatedHash.equals(hashReceived)) {
+					if (generatedHash != null && generatedHash.equals(hashReceived)) {
 						isHashValid = true;
 					} else {
 						isHashValid = false;
 					}
+					index++;
 				}
 			}
 			if (isHashValid) {

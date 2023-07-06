@@ -627,7 +627,7 @@ public class TestCasesService {
 							requestDto.getTestcaseId());
 					generateSdkRequestResponseDto.setTestDataSource(requestDto.bioTestDataName);
 					if (Objects.isNull(objectStoreStream) || Objects.isNull(probeFileBytes)) {
-						objectStoreStream = getDefaultTestDataStream(requestDto.getMethodName(), sdkPurpose.toString());
+						objectStoreStream = getDefaultTestDataStream(sdkPurpose.toString());
 						probeFileBytes = getProbeData(requestDto, objectStoreStream, sdkPurpose,
 								requestDto.getTestcaseId());
 						generateSdkRequestResponseDto.setTestDataSource(AppConstants.MOSIP_DEFAULT);
@@ -792,7 +792,7 @@ public class TestCasesService {
     }
 
     public InputStream getPartnerTestDataStream(String bioTestDataName,
-            String partnerId, String purpose)
+            String partnerId, String mainFolderName)
             throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
         InputStream objectStoreStream = null;
         if (Objects.nonNull(bioTestDataName)
@@ -802,7 +802,7 @@ public class TestCasesService {
             String zipFileName = biometricTestData.getFileId();
             String zipFileHash = biometricTestData.getFileHash();
             if (Objects.nonNull(zipFileName)) {
-                String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/" + purpose;
+                String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/" + mainFolderName;
                 if (isObjectExistInObjectStore(container, zipFileName)) {
                     objectStoreStream = getFromObjectStore(container, zipFileName);
                     if (Objects.nonNull(objectStoreStream)) {
@@ -889,7 +889,7 @@ public class TestCasesService {
                 byte[] probeFileBytes = getProbeData(sdkRequestDto, objectStoreStream, sdkPurpose, testcaseFolder);
                 generateSdkRequestResponseDto.setTestDataSource(sdkRequestDto.getBioTestDataName());
                 if (Objects.isNull(probeFileBytes)) {
-                    objectStoreStream = getDefaultTestDataStream(sdkRequestDto.getMethodName(), sdkPurpose.toString());
+                    objectStoreStream = getDefaultTestDataStream(sdkPurpose.toString());
                     probeFileBytes = getProbeData(sdkRequestDto, objectStoreStream, sdkPurpose, testcaseFolder);
                     generateSdkRequestResponseDto.setTestDataSource(AppConstants.MOSIP_DEFAULT);
                 }
@@ -960,13 +960,13 @@ public class TestCasesService {
         return responseWrapper;
     }
 
-    public byte[] getXmlDataFromZipFile(InputStream zipFileIs, String purpose, String testcaseId, String name)
+    public byte[] getXmlDataFromZipFile(InputStream zipFileIs, String mainFolderName, String testcaseId, String name)
             throws Exception {
         byte[] bytes = null;
         ZipInputStream zis = new ZipInputStream(zipFileIs);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
-            String xmlFileName = purpose + "/";
+            String xmlFileName = mainFolderName + "/";
             if (Objects.nonNull(testcaseId)) {
                 xmlFileName += testcaseId + "/";
             }
@@ -1027,7 +1027,7 @@ public class TestCasesService {
         return bytes;
     }
 
-    public InputStream getDefaultTestDataStream(String method, String purpose) {
+    public InputStream getDefaultTestDataStream(String purpose) {
         InputStream defaultTestDataStrem = null;
         String objectName = AppConstants.MOSIP_DEFAULT + "_" + purpose + ".zip";
         if (isObjectExistInObjectStore(AppConstants.TESTDATA, objectName)) {

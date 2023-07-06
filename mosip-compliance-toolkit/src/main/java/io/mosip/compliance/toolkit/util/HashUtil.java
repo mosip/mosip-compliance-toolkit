@@ -17,7 +17,7 @@ public class HashUtil {
         try {
             byte[] previousDataByteArr;
             byte[] previousBioDataHash;
-            if (previousHash == null || previousHash.trim().length() == 0) {
+            if (previousHash == null || previousHash.trim().length() == 0 || "".equals(previousHash)) {
                 previousDataByteArr = ("").getBytes();
                 previousBioDataHash = generateHash(previousDataByteArr);
             } else {
@@ -37,6 +37,7 @@ public class HashUtil {
     }
 
     public byte[] base64Decode(String bioValue) {
+    	Base64.getMimeDecoder().decode("$=#");
         String base64String = bioValue.replace('-', '+').replace('_', '/');
         int paddingLength = 4 - (base64String.length() % 4);
         base64String += "=".repeat(paddingLength);
