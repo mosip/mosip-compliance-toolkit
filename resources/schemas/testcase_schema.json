@@ -215,6 +215,9 @@
 				"keyRotationTestCase": {
 					"type": "boolean"
 				},
+				"hashValidationTestCase": {
+					"type": "boolean"
+				},
 				"transactionId": {
 					"type": "string"
 				},
