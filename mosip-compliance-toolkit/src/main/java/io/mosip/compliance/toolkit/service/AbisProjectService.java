@@ -153,6 +153,7 @@ public class AbisProjectService {
 					entity.setCrDate(crDate);
 					entity.setDeleted(false);
 					entity.setOutboundQueueName(abisProjectDto.getOutboundQueueName());
+					entity.setModality(abisProjectDto.getModality());
 					entity.setBioTestDataFileName(abisProjectDto.getBioTestDataFileName());
 					entity.setAbisVersion(abisProjectDto.getAbisVersion());
 

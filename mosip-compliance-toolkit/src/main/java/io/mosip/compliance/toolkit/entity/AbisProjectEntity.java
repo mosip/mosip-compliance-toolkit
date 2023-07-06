@@ -78,7 +78,10 @@ public class AbisProjectEntity implements Serializable {
 	
 	@Column(name = "outbound_queue_name")
 	private String outboundQueueName;
-	
+
+	@Column(name = "modality")
+	private String modality;
+
 	@Column(name = "bio_test_data_file_name")
 	private String bioTestDataFileName;
 	
