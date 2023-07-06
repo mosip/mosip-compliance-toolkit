@@ -6,9 +6,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import io.mosip.compliance.toolkit.dto.abis.*;
+import io.mosip.compliance.toolkit.entity.AbisDataShareTokenEntity;
+import io.mosip.compliance.toolkit.repository.AbisDataShareTokenRepository;
+import io.mosip.kernel.core.http.RequestWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,10 +23,6 @@ import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ProjectTypes;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
-import io.mosip.compliance.toolkit.dto.abis.DataShareExpireRequest;
-import io.mosip.compliance.toolkit.dto.abis.DataShareRequestDto;
-import io.mosip.compliance.toolkit.dto.abis.DataShareResponseDto;
-import io.mosip.compliance.toolkit.dto.abis.DataShareResponseWrapperDto;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
 import io.mosip.compliance.toolkit.util.KeyManagerHelper;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
@@ -53,6 +54,9 @@ public class ABISDataShareService {
 
 	@Autowired
 	BiometricTestDataRepository biometricTestDataRepository;
+
+	@Autowired
+	AbisDataShareTokenRepository abisDataShareTokenRepository;
 
 	@Autowired
 	TestCasesService testCasesService;
@@ -217,6 +221,25 @@ public class ABISDataShareService {
 		responseWrapper.setId(getDataShareUrlId);
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+
+	public ResponseWrapper<String> saveDataShareToken(RequestWrapper<DataShareSaveTokenRequest> requestWrapper) {
+		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
+		AbisDataShareTokenEntity abisDataShareTokenEntity = new AbisDataShareTokenEntity();
+		abisDataShareTokenEntity.setPartnerId(requestWrapper.getRequest().getPartnerId());
+		abisDataShareTokenEntity.setTestCaseId(requestWrapper.getRequest().getCtkTestCaseId());
+		abisDataShareTokenEntity.setTestRunId(requestWrapper.getRequest().getCtkTestRunId());
+		abisDataShareTokenEntity.setToken(requestWrapper.getRequest().getToken());
+		try {
+			AbisDataShareTokenEntity savedEntity = abisDataShareTokenRepository.save(abisDataShareTokenEntity);
+		} catch (Exception ex) {
+			responseWrapper.setResponse(AppConstants.FAILURE);
+			ServiceError serviceError = new ServiceError();
+			serviceError.setMessage(ex.getLocalizedMessage());
+			responseWrapper.setErrors(Collections.singletonList(serviceError));
+		}
+		responseWrapper.setResponse(AppConstants.SUCCESS);
 		return responseWrapper;
 	}
 

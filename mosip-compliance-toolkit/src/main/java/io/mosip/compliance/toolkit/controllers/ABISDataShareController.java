@@ -48,7 +48,7 @@ public class ABISDataShareController {
 	 */
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		binder.addValidators(requestValidator);
+//		binder.addValidators(requestValidator);
 	}
 
 	@PostMapping(value = "/createDataShareUrl")
@@ -69,9 +69,7 @@ public class ABISDataShareController {
 			@RequestBody RequestWrapper<DataShareSaveTokenRequest> requestWrapper, Errors errors) {
 		log.info("sessionId", "idType", "id", "In saveDataShareToken method of ABISDataShareController.");
 		log.info("Recvd request {}", requestWrapper);
-		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
-		responseWrapper.setResponse("OK");
-		return responseWrapper;
+		return abisDataShareService.saveDataShareToken(requestWrapper);
 	}
 	
 	@PostMapping(value = "/invalidateDataShareToken")
