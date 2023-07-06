@@ -1,25 +1,26 @@
 package io.mosip.compliance.toolkit.validators;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import io.mosip.biometrics.util.CommonUtil;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
+import io.mosip.compliance.toolkit.constants.Purposes;
+import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
+import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.util.HashUtil;
+import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.core.logger.spi.Logger;
 
 @Component
-public class HashValidator extends SBIValidator {
+public class HashValidator extends ISOStandardsValidator {
 
 	private Logger log = LoggerConfiguration.logConfig(HashValidator.class);
-
-	@Autowired
-	HashUtil hashUtil;
 
 	@Override
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
@@ -30,7 +31,7 @@ public class HashValidator extends SBIValidator {
 
 			ObjectNode extraInfo = (ObjectNode) objectMapperConfig.objectMapper().readValue(inputDto.getExtraInfoJson(),
 					ObjectNode.class);
-			JsonNode previousHashArr = extraInfo.get("previousHash");
+			String previousHash = extraInfo.get("previousHash").asText();
 
 			String responseJson = inputDto.getMethodResponse();
 
@@ -38,25 +39,21 @@ public class HashValidator extends SBIValidator {
 					ObjectNode.class);
 
 			JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
-			int index = 0;
-			if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()
-					&& !previousHashArr.isNull() && previousHashArr.isArray()
-					&& arrBiometricNodes.size() == previousHashArr.size()) {
+			
+			if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
 				for (final JsonNode biometricNode : arrBiometricNodes) {
-					String hashReceived = biometricNode.get("hash").asText();
-					log.info("hashReceived {}", hashReceived);
-					JsonNode dataNode = biometricNode.get(DECODED_DATA);
-					String biovalue = dataNode.get(BIO_VALUE).asText();
-					String previousHash = previousHashArr.get(index).asText();
 					log.info("previousHash {}", previousHash);
-					String generatedHash = hashUtil.generateHash(previousHash, biovalue);
+					String hashReceivedInResponse = biometricNode.get("hash").asText();
+					String bioValue = extractBioValue(biometricNode);
+					byte[] decodedBioValue = CommonUtil.decodeURLSafeBase64(bioValue);
+					String generatedHash = HashUtil.generateHash(previousHash, decodedBioValue);
 					log.info("generatedHash {}", generatedHash);
-					if (generatedHash != null && generatedHash.equals(hashReceived)) {
+					previousHash = generatedHash;
+					if (generatedHash != null && generatedHash.equals(hashReceivedInResponse)) {
 						isHashValid = true;
 					} else {
 						isHashValid = false;
 					}
-					index++;
 				}
 			}
 			if (isHashValid) {
@@ -64,7 +61,7 @@ public class HashValidator extends SBIValidator {
 				validationResultDto.setDescriptionKey("HASH_VALIDATOR_001");
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 			} else {
-				validationResultDto.setValidatorDescription("Hash validation is unsuccessful");
+				validationResultDto.setDescription("Hash validation is unsuccessful");
 				validationResultDto.setDescriptionKey("HASH_VALIDATOR_002");
 				validationResultDto.setStatus(AppConstants.FAILURE);
 			}
@@ -77,4 +74,6 @@ public class HashValidator extends SBIValidator {
 		}
 		return validationResultDto;
 	}
+
+	
 }

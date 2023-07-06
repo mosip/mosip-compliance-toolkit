@@ -221,12 +221,14 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 
 			BiometricType biometricType = null;
 			for (final JsonNode biometricNode : arrBiometricNodes) {
-
+				//STEP 1: get bioValue and other attributes
 				JsonNode dataNode = biometricNode.get(DECODED_DATA);
 				String specVersion = biometricNode.get("specVersion").asText();
-				String bioValue = null;
-
 				String purpose = dataNode.get(PURPOSE).asText();
+				boolean isAuth = false;
+				if ("Auth".equalsIgnoreCase(purpose)) {
+					isAuth = true;
+				}
 				String bioType = dataNode.get(BIO_TYPE).asText();
 				String bioSubType = "";
 				if (dataNode.get(BIO_SUBTYPE) != null) {
@@ -235,23 +237,7 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 				String qualityScore = dataNode.get("qualityScore").asText();
 				long qualityScoreLong = Long.parseLong(qualityScore);
 				biometricType = BiometricType.fromValue(bioType);
-				boolean isAuth = false;
-				switch (Purposes.fromCode(purpose)) {
-				case AUTH:
-					isAuth = true;
-					// for authentication, the "bioValue" is encrypted, so decrypt it first
-					bioValue = getDecryptedBioValue(biometricNode.get(THUMB_PRINT).asText(),
-							biometricNode.get(SESSION_KEY).asText(), KEY_SPLITTER, dataNode.get(TIME_STAMP).asText(),
-							dataNode.get(TRANSACTION_ID).asText(), dataNode.get(BIO_VALUE).asText());
-					break;
-				case REGISTRATION:
-					// for registration, the "bioValue" is encoded only
-					bioValue = dataNode.get(BIO_VALUE).asText();
-					break;
-				default:
-					throw new ToolkitException(ToolkitErrorCodes.INVALID_PURPOSE.getErrorCode(),
-							ToolkitErrorCodes.INVALID_PURPOSE.getErrorMessage());
-				}
+				String bioValue = extractBioValue(biometricNode);
 				// STEP 2: create BIR from the "bioValue"
 				byte[] bdb = CommonUtil.decodeURLSafeBase64(bioValue);
 				BIR probeBir = birBuilder.buildBIR(bdb, bioType, bioSubType, qualityScoreLong, isAuth, specVersion);

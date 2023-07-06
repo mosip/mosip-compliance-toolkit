@@ -65,26 +65,9 @@ public class ISOStandardsValidator extends SBIValidator {
 			if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
 				for (final JsonNode biometricNode : arrBiometricNodes) {
 					JsonNode dataNode = biometricNode.get(DECODED_DATA);
-
 					String purpose = dataNode.get(PURPOSE).asText();
 					String bioType = dataNode.get(BIO_TYPE).asText();
-					String bioValue = null;
-					switch (Purposes.fromCode(purpose)) {
-					case AUTH:
-						bioValue = getDecryptedBioValue(biometricNode.get(THUMB_PRINT).asText(),
-								biometricNode.get(SESSION_KEY).asText(), KEY_SPLITTER,
-								dataNode.get(TIME_STAMP).asText(), dataNode.get(TRANSACTION_ID).asText(),
-								dataNode.get(BIO_VALUE).asText());
-						log.info("sessionId", "idType", "id", "auth bioValue - " + bioValue);
-						log.debug("sessionId", "idType", "id", "auth bioValue - " + bioValue);
-						break;
-					case REGISTRATION:
-						bioValue = dataNode.get(BIO_VALUE).asText();
-						break;
-					default:
-						throw new ToolkitException(ToolkitErrorCodes.INVALID_PURPOSE.getErrorCode(),
-								ToolkitErrorCodes.INVALID_PURPOSE.getErrorMessage());
-					}
+					String bioValue = extractBioValue(biometricNode);
 					validationResultDto = doISOValidations(purpose, bioType, bioValue);
 					if (validationResultDto.getStatus().equals(AppConstants.FAILURE)) {
 						break;
@@ -103,6 +86,30 @@ public class ISOStandardsValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
+	public String extractBioValue(final JsonNode biometricNode) {
+		JsonNode dataNode = biometricNode.get(DECODED_DATA);
+		String purpose = dataNode.get(PURPOSE).asText();
+		String bioValue = null;
+		switch (Purposes.fromCode(purpose)) {
+		case AUTH:
+			// for authentication, the "bioValue" is encrypted, so decrypt it first
+			bioValue = getDecryptedBioValue(biometricNode.get(THUMB_PRINT).asText(),
+					biometricNode.get(SESSION_KEY).asText(), KEY_SPLITTER,
+					dataNode.get(TIME_STAMP).asText(), dataNode.get(TRANSACTION_ID).asText(),
+					dataNode.get(BIO_VALUE).asText());
+			break;
+		case REGISTRATION:
+			// for registration, the "bioValue" is encoded only
+			bioValue = dataNode.get(BIO_VALUE).asText();
+			break;
+		default:
+			throw new ToolkitException(ToolkitErrorCodes.INVALID_PURPOSE.getErrorCode(),
+					ToolkitErrorCodes.INVALID_PURPOSE.getErrorMessage());
+		}
+		
+		return bioValue;
+	}
+	
 	public String getDecryptedBioValue(String thumbprint, String sessionKey, String keySplitter, String timestamp,
 			String transactionId, String encryptedData) {
 

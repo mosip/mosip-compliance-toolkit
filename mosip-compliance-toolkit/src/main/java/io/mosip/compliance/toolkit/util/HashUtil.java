@@ -1,62 +1,74 @@
 package io.mosip.compliance.toolkit.util;
 
-import io.mosip.compliance.toolkit.config.LoggerConfiguration;
-import io.mosip.kernel.core.logger.spi.Logger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.Security;
+import java.util.Base64;
+
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
-import org.springframework.stereotype.Component;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-@Component
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
+import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.core.util.EmptyCheckUtils;
+
 public class HashUtil {
-    private static Logger mosipLogger = LoggerConfiguration.logConfig(RequestValidator.class);
-    public String generateHash(String previousHash, String bioValue) throws Exception {
-        String hash = null;
-        try {
-            byte[] previousDataByteArr;
-            byte[] previousBioDataHash;
-            if (previousHash == null || previousHash.trim().length() == 0 || "".equals(previousHash)) {
-                previousDataByteArr = ("").getBytes();
-                previousBioDataHash = generateHash(previousDataByteArr);
-            } else {
-                previousBioDataHash = decodeHex(previousHash);
-            }
-            byte[] decodedBytes = base64Decode(bioValue);
-            byte[] currentBioDataHash = generateHash(decodedBytes);
-            byte[] finalBioDataHash = new byte[currentBioDataHash.length + previousBioDataHash.length];
-            System.arraycopy(previousBioDataHash, 0, finalBioDataHash, 0, previousBioDataHash.length);
-            System.arraycopy(currentBioDataHash, 0, finalBioDataHash, previousBioDataHash.length,
-                    currentBioDataHash.length);
-            hash = toHex(generateHash(finalBioDataHash));
-        } catch (Exception ex) {
-            mosipLogger.error("Hash generation Error: "+ex.getLocalizedMessage());
-        }
-        return hash;
-    }
 
-    public byte[] base64Decode(String bioValue) {
-    	Base64.getMimeDecoder().decode("$=#");
-        String base64String = bioValue.replace('-', '+').replace('_', '/');
-        int paddingLength = 4 - (base64String.length() % 4);
-        base64String += "=".repeat(paddingLength);
-        byte[] decodedBytes = Base64.getDecoder().decode(base64String);
-        return decodedBytes;
-    }
+	private static Logger mosipLogger = LoggerConfiguration.logConfig(HashUtil.class);
 
-    public String toHex(byte[] bytes) {
-        return Hex.encodeHexString(bytes).toUpperCase();
-    }
+	private static final String HASH_ALGORITHM_NAME = "SHA-256";
 
-    private final String HASH_ALGORITHM_NAME = "SHA-256";
+	public static String generateHash(String previousHash, byte[] decodedBioValue) throws Exception {
+		String hash = null;
+		try {
+			byte[] previousBioDataHash = null;
+			if (previousHash == null || previousHash.trim().length() == 0 || "".equals(previousHash)) {
+				byte[] previousDataByteArr = "".getBytes(StandardCharsets.UTF_8);
+				previousBioDataHash = generateHash(previousDataByteArr);
+			} else {
+				previousBioDataHash = decodeHex(previousHash);
+			}
+			byte[] currentDataByteArr = decodedBioValue;
+			// Here Byte Array
+			byte[] currentBioDataHash = generateHash(currentDataByteArr);
+			byte[] finalBioDataHash = new byte[currentBioDataHash.length + previousBioDataHash.length];
+			System.arraycopy(previousBioDataHash, 0, finalBioDataHash, 0, previousBioDataHash.length);
+			System.arraycopy(currentBioDataHash, 0, finalBioDataHash, previousBioDataHash.length,
+					currentBioDataHash.length);
+			hash = toHex(generateHash(finalBioDataHash));
+		} catch (Exception ex) {
+			mosipLogger.error("Hash generation Error: " + ex.getLocalizedMessage());
+		}
+		return hash;
+	}
 
-    public byte[] generateHash(final byte[] bytes) throws NoSuchAlgorithmException {
-        MessageDigest messageDigest = MessageDigest.getInstance(HASH_ALGORITHM_NAME);
-        return messageDigest.digest(bytes);
-    }
+	public static byte[] base64UrlDecode(String data) {
+		if (EmptyCheckUtils.isNullEmpty(data)) {
+			return null;
+		}
+		return Base64.getUrlDecoder().decode(data);
+	}
 
-    public byte[] decodeHex(String hexData) throws DecoderException {
-        return Hex.decodeHex(hexData);
-    }
+	public static String toHex(byte[] bytes) {
+		return Hex.encodeHexString(bytes).toUpperCase();
+	}
+
+	public static byte[] generateHash(final byte[] bytes) throws Exception {
+//		MessageDigest messageDigest = MessageDigest.getInstance(HASH_ALGORITHM_NAME);
+//		return messageDigest.digest(bytes);
+		Security.addProvider(new BouncyCastleProvider());
+		String SECURITY_PROVIDER = "BC";
+
+		MessageDigest digest = MessageDigest.getInstance(HASH_ALGORITHM_NAME, SECURITY_PROVIDER);
+		digest.reset();
+		digest.update(bytes);
+		byte[] hash = digest.digest();
+		return hash;
+	}
+
+	public static byte[] decodeHex(String hexData) throws DecoderException {
+		return Hex.decodeHex(hexData);
+	}
+
 }
