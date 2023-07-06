@@ -1112,61 +1112,61 @@
 		}
 	},
 	{
-	"testCaseType": "ABIS",
-	"testName": "Verify if ABIS is not generating new tokens for every insert request",
-	"testId": "ABIS3030",
-	"specVersion": "0.9.0",
-	"testDescription": "Verify if ABIS is not generating new tokens for every insert request",
-	"isNegativeTestcase": false,
-	"methodName": [
-		"insert"
-	],
-	"requestSchema": [
-		"InsertRequestSchema"
-	],
-	"responseSchema": [
-		"InsertResponseSchema"
-	],
-	"validatorDefs": [
-		[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			}
-		]
-	],
-	"otherAttributes": {
-		"bulkInsert": false,
-		"insertCount": "2"
-	}
+		"testCaseType": "ABIS",
+		"testName": "Verify if ABIS is not generating new tokens for every insert request",
+		"testId": "ABIS3030",
+		"specVersion": "0.9.0",
+		"testDescription": "Verify if ABIS is not generating new tokens for every insert request",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"insert"
+		],
+		"requestSchema": [
+			"InsertRequestSchema"
+		],
+		"responseSchema": [
+			"InsertResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			]
+		],
+		"otherAttributes": {
+			"bulkInsert": false,
+			"insertCount": "2"
+		}
 	},
 	{
-	"testCaseType": "ABIS",
-	"testName": "Verify if ABIS is able to generate a new token when one has expired without sending an error response back in the queue",
-	"testId": "ABIS3031",
-	"specVersion": "0.9.0",
-	"testDescription": "Verify if ABIS is able to generate a new token when one has expired without sending an error response back in the queue",
-	"isNegativeTestcase": false,
-	"methodName": [
-		"insert"
-	],
-	"requestSchema": [
-		"InsertRequestSchema"
-	],
-	"responseSchema": [
-		"InsertResponseSchema"
-	],
-	"validatorDefs": [
-		[
-			{
-				"name": "SchemaValidator",
-				"description": "Validates if response has all mandatory attributes and they have allowed values"
-			}
-		]
-	],
-	"otherAttributes": {
-		"bulkInsert": false,
-		"insertCount": "2"
-	}
+		"testCaseType": "ABIS",
+		"testName": "Verify if ABIS is able to generate a new token when one has expired without sending an error response back in the queue",
+		"testId": "ABIS3031",
+		"specVersion": "0.9.0",
+		"testDescription": "Verify if ABIS is able to generate a new token when one has expired without sending an error response back in the queue",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"insert"
+		],
+		"requestSchema": [
+			"InsertRequestSchema"
+		],
+		"responseSchema": [
+			"InsertResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				}
+			]
+		],
+		"otherAttributes": {
+			"bulkInsert": false,
+			"insertCount": "2"
+		}
 	}
 ]
