@@ -35,14 +35,16 @@ public class HashValidator extends ISOStandardsValidator {
 					ObjectNode.class);
 
 			JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
-			
+
+			String hashReceivedInResponse = null;
+			String generatedHash = null;
 			if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
 				for (final JsonNode biometricNode : arrBiometricNodes) {
 					log.info("previousHash {}", previousHash);
-					String hashReceivedInResponse = biometricNode.get("hash").asText();
+					hashReceivedInResponse = biometricNode.get("hash").asText();
 					String bioValue = extractBioValue(biometricNode);
 					byte[] decodedBioValue = CommonUtil.decodeURLSafeBase64(bioValue);
-					String generatedHash = HashUtil.generateHash(previousHash, decodedBioValue);
+					generatedHash = HashUtil.generateHash(previousHash, decodedBioValue);
 					log.info("generatedHash {}", generatedHash);
 					previousHash = generatedHash;
 					if (generatedHash != null && generatedHash.equals(hashReceivedInResponse)) {
@@ -53,12 +55,20 @@ public class HashValidator extends ISOStandardsValidator {
 				}
 			}
 			if (isHashValid) {
-				validationResultDto.setDescription("Hash validation is successful");
+				validationResultDto.setDescription("Validation of hash chain is successful across multiple captures");
 				validationResultDto.setDescriptionKey("HASH_VALIDATOR_001");
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 			} else {
-				validationResultDto.setDescription("Hash validation is unsuccessful");
-				validationResultDto.setDescriptionKey("HASH_VALIDATOR_002");
+				validationResultDto.setDescription("Validation of hash chain failed across multiple captures." +
+						" Previous Hash for last request was {}," +
+						" hash generated  by validator is {} and hash received is {}");
+				validationResultDto.setDescriptionKey("HASH_VALIDATOR_002"
+				+ AppConstants.ARGUMENTS_DELIMITER
+				+ previousHash
+				+ AppConstants.ARGUMENTS_SEPARATOR
+				+ generatedHash
+				+ AppConstants.ARGUMENTS_SEPARATOR
+				+ hashReceivedInResponse);
 				validationResultDto.setStatus(AppConstants.FAILURE);
 			}
 		} catch (Exception ex) {
