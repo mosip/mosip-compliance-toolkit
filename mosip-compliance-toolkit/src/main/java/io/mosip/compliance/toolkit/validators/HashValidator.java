@@ -37,14 +37,14 @@ public class HashValidator extends ISOStandardsValidator {
 			JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
 
 			String hashReceived = null;
-			String generatedHash = null;
+			String generatedHashValue = null;
 			if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
 				for (final JsonNode biometricNode : arrBiometricNodes) {
 					log.info("previousHash {}", previousHash);
 					String hashReceivedInResponse = biometricNode.get("hash").asText();
 					String bioValue = extractBioValue(biometricNode);
 					byte[] decodedBioValue = CommonUtil.decodeURLSafeBase64(bioValue);
-					generatedHash = HashUtil.generateHash(previousHash, decodedBioValue);
+					String generatedHash = HashUtil.generateHash(previousHash, decodedBioValue);
 					log.info("generatedHash {}", generatedHash);
 					previousHash = generatedHash;
 					if (generatedHash != null && generatedHash.equals(hashReceivedInResponse)) {
@@ -52,7 +52,8 @@ public class HashValidator extends ISOStandardsValidator {
 					} else {
 						isHashValid = false;
 					}
-					hashReceived = biometricNode.get("hash").asText();
+					hashReceived = hashReceivedInResponse;
+					generatedHashValue = generatedHash;
 				}
 			}
 			if (isHashValid) {
@@ -67,7 +68,7 @@ public class HashValidator extends ISOStandardsValidator {
 				+ AppConstants.ARGUMENTS_DELIMITER
 				+ previousHash
 				+ AppConstants.ARGUMENTS_SEPARATOR
-				+ generatedHash
+				+ generatedHashValue
 				+ AppConstants.ARGUMENTS_SEPARATOR
 				+ hashReceived);
 				validationResultDto.setStatus(AppConstants.FAILURE);
