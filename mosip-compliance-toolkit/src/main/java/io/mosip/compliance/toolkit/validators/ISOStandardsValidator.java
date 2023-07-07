@@ -1029,7 +1029,7 @@ public class ISOStandardsValidator extends SBIValidator {
 			DecoderRequestInfo requestInfo = new DecoderRequestInfo();
 			requestInfo.setImageData(inImageData);
 
-			int bioDataType = FingerISOStandardsValidator.getInstance().getBioDataType(purpose, Modality.Iris,
+			int bioDataType = IrisISOStandardsValidator.getInstance().getBioDataType(purpose, Modality.Iris,
 					inImageData);
 			if (bioDataType == ImageType.JPEG2000.value()) {
 				decoder = new OpenJpegDecoder();
@@ -1060,7 +1060,7 @@ public class ISOStandardsValidator extends SBIValidator {
 			}
 
 			int compressionType = bdir.getCompressionType();
-			if (IrisISOStandardsValidator.getInstance().isValidImageCompressionType(purpose, compressionType,
+			if (!IrisISOStandardsValidator.getInstance().isValidImageCompressionType(purpose, compressionType,
 					decoderRequestDto)) {
 				message.append(
 						"<BR>Invalid Image Compression Type for Iris Modality, expected values[Purpose(Auth), ({JPEG_2000_LOSSY(0x02)}), Purpose(Registration), ({JPEG_2000_LOSS_LESS(0x01)})], but received input value[Purpose("
@@ -1684,7 +1684,7 @@ public class ISOStandardsValidator extends SBIValidator {
 			DecoderRequestInfo requestInfo = new DecoderRequestInfo();
 			requestInfo.setImageData(inImageData);
 
-			int bioDataType = FingerISOStandardsValidator.getInstance().getBioDataType(purpose, Modality.Face,
+			int bioDataType = FaceISOStandardsValidator.getInstance().getBioDataType(purpose, Modality.Face,
 					inImageData);
 			if (bioDataType == ImageType.JPEG2000.value()) {
 				decoder = new OpenJpegDecoder();
