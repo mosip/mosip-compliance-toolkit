@@ -13,7 +13,8 @@ import java.util.Optional;
 @Repository("AbisDataShareTokenRepository")
 public interface AbisDataShareTokenRepository extends BaseRepository<AbisDataShareTokenEntity, String> {
     @Query("SELECT t FROM AbisDataShareTokenEntity t WHERE t.partnerId = :partnerId AND t.testCaseId = :testCaseId AND t.testRunId = :testRunId")
-    Optional<AbisDataShareTokenEntity> findByAllIds(@Param("partnerId") String partnerId, @Param("testCaseId") String testCaseId, @Param("testRunId") String testRunId);
+    Optional<AbisDataShareTokenEntity> findByAllIds(@Param("partnerId") String partnerId,
+            @Param("testCaseId") String testCaseId, @Param("testRunId") String testRunId);
 
     @Modifying
     @Query("UPDATE AbisDataShareTokenEntity t SET t.result = :result WHERE t.token = :token")

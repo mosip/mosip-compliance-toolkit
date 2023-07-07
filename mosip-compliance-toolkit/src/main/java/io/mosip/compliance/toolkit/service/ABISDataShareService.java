@@ -250,15 +250,14 @@ public class ABISDataShareService {
 		abisDataShareTokenEntity.setTestCaseId(requestWrapper.getRequest().getCtkTestCaseId());
 		abisDataShareTokenEntity.setTestRunId(requestWrapper.getRequest().getCtkTestRunId());
 		abisDataShareTokenEntity.setToken(requestWrapper.getRequest().getToken());
-		try{
+		try {
 			Optional<AbisDataShareTokenEntity> savedEntity = abisDataShareTokenRepository.findByAllIds(
 					requestWrapper.getRequest().getPartnerId(),
 					requestWrapper.getRequest().getCtkTestCaseId(),
-					requestWrapper.getRequest().getCtkTestRunId()
-			);
-			if(savedEntity.isPresent()){
+					requestWrapper.getRequest().getCtkTestRunId());
+			if (savedEntity.isPresent()) {
 				int updatedRows = 0;
-				if(savedEntity.get().getToken().equals(requestWrapper.getRequest().getToken())){
+				if (savedEntity.get().getToken().equals(requestWrapper.getRequest().getToken())) {
 					updatedRows = abisDataShareTokenRepository.updateResultByToken(AppConstants.SUCCESS,
 							savedEntity.get().getToken());
 					responseWrapper.setResponse(AppConstants.SUCCESS);
@@ -268,9 +267,9 @@ public class ABISDataShareService {
 					responseWrapper.setResponse(AppConstants.SUCCESS);
 				}
 			} else {
-					responseWrapper = saveDataShareToken(requestWrapper);
+				responseWrapper = saveDataShareToken(requestWrapper);
 			}
-		} catch (Exception ex){
+		} catch (Exception ex) {
 			responseWrapper.setResponse(AppConstants.FAILURE);
 			ServiceError serviceError = new ServiceError();
 			serviceError.setMessage(ex.getLocalizedMessage());
