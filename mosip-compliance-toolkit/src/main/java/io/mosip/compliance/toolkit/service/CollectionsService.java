@@ -30,6 +30,7 @@ import io.mosip.compliance.toolkit.entity.CollectionTestCaseEntity;
 import io.mosip.compliance.toolkit.repository.CollectionTestCaseRepository;
 import io.mosip.compliance.toolkit.repository.CollectionsRepository;
 import io.mosip.compliance.toolkit.repository.CollectionsSummaryRepository;
+import io.mosip.compliance.toolkit.util.CommonUtil;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
@@ -320,12 +321,7 @@ public class CollectionsService {
 					responseWrapper.setErrors(serviceErrorsList);
 				}
 			} else {
-				List<ServiceError> serviceErrorsList = new ArrayList<>();
-				ServiceError serviceError = new ServiceError();
-				serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode());
-				serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
-				serviceErrorsList.add(serviceError);
-				responseWrapper.setErrors(serviceErrorsList);
+				responseWrapper.setErrors(CommonUtil.getInvalidRequestBodyErr());
 			}
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -367,12 +363,7 @@ public class CollectionsService {
 					responseList.add(respDto);
 				}
 			} else {
-				List<ServiceError> serviceErrorsList = new ArrayList<>();
-				ServiceError serviceError = new ServiceError();
-				serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode());
-				serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
-				serviceErrorsList.add(serviceError);
-				responseWrapper.setErrors(serviceErrorsList);
+				responseWrapper.setErrors(CommonUtil.getInvalidRequestBodyErr());
 			}
 
 		} catch (Exception ex) {

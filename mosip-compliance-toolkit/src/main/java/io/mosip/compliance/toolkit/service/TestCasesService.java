@@ -61,6 +61,7 @@ import io.mosip.compliance.toolkit.entity.TestCaseEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
 import io.mosip.compliance.toolkit.repository.TestCasesRepository;
+import io.mosip.compliance.toolkit.util.CommonUtil;
 import io.mosip.compliance.toolkit.util.CryptoUtil;
 import io.mosip.compliance.toolkit.util.StringUtil;
 import io.mosip.compliance.toolkit.validators.BaseValidator;
@@ -745,12 +746,7 @@ public class TestCasesService {
                     responseWrapper.setResponse(generateSdkRequestResponseDto);
                 }
             } else {
-                List<ServiceError> serviceErrorsList = new ArrayList<>();
-                ServiceError serviceError = new ServiceError();
-                serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode());
-                serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
-                serviceErrorsList.add(serviceError);
-                responseWrapper.setErrors(serviceErrorsList);
+                responseWrapper.setErrors(CommonUtil.getInvalidRequestBodyErr());
             }
         } catch (ToolkitException ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
