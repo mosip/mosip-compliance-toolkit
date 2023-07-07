@@ -77,7 +77,9 @@ public class ABISDataShareController {
 			@RequestBody RequestWrapper<DataShareSaveTokenRequest> requestWrapper, Errors errors) {
 		log.info("sessionId", "idType", "id", "In invalidateDataShareToken method of ABISDataShareController.");
 		log.info("Recvd request {}", requestWrapper);
-		return abisDataShareService.invalidateDataShareToken(requestWrapper);
+		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
+		responseWrapper.setResponse("OK");
+		return responseWrapper;
 	}
 
 }

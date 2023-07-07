@@ -232,25 +232,6 @@ public class ABISDataShareService {
 		abisDataShareTokenEntity.setTestRunId(requestWrapper.getRequest().getCtkTestRunId());
 		abisDataShareTokenEntity.setToken(requestWrapper.getRequest().getToken());
 		try {
-			abisDataShareTokenRepository.save(abisDataShareTokenEntity);
-		} catch (Exception ex) {
-			responseWrapper.setResponse(AppConstants.FAILURE);
-			ServiceError serviceError = new ServiceError();
-			serviceError.setMessage(ex.getLocalizedMessage());
-			responseWrapper.setErrors(Collections.singletonList(serviceError));
-		}
-		responseWrapper.setResponse(AppConstants.SUCCESS);
-		return responseWrapper;
-	}
-
-	public ResponseWrapper<String> invalidateDataShareToken(RequestWrapper<DataShareSaveTokenRequest> requestWrapper) {
-		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
-		AbisDataShareTokenEntity abisDataShareTokenEntity = new AbisDataShareTokenEntity();
-		abisDataShareTokenEntity.setPartnerId(requestWrapper.getRequest().getPartnerId());
-		abisDataShareTokenEntity.setTestCaseId(requestWrapper.getRequest().getCtkTestCaseId());
-		abisDataShareTokenEntity.setTestRunId(requestWrapper.getRequest().getCtkTestRunId());
-		abisDataShareTokenEntity.setToken(requestWrapper.getRequest().getToken());
-		try {
 			Optional<AbisDataShareTokenEntity> savedEntity = abisDataShareTokenRepository.findByAllIds(
 					requestWrapper.getRequest().getPartnerId(),
 					requestWrapper.getRequest().getCtkTestCaseId(),
@@ -267,7 +248,7 @@ public class ABISDataShareService {
 					responseWrapper.setResponse(AppConstants.SUCCESS);
 				}
 			} else {
-				responseWrapper = saveDataShareToken(requestWrapper);
+				abisDataShareTokenRepository.save(abisDataShareTokenEntity);
 			}
 		} catch (Exception ex) {
 			responseWrapper.setResponse(AppConstants.FAILURE);
