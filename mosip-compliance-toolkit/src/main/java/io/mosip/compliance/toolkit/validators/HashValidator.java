@@ -51,9 +51,10 @@ public class HashValidator extends ISOStandardsValidator {
 						isHashValid = true;
 					} else {
 						isHashValid = false;
+						hashReceived = hashReceivedInResponse;
+						generatedHashValue = generatedHash;
+						break;
 					}
-					hashReceived = hashReceivedInResponse;
-					generatedHashValue = generatedHash;
 				}
 			}
 			if (isHashValid) {
@@ -61,16 +62,12 @@ public class HashValidator extends ISOStandardsValidator {
 				validationResultDto.setDescriptionKey("HASH_VALIDATOR_001");
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 			} else {
-				validationResultDto.setDescription("Validation of hash chain failed across multiple captures." +
-						" Previous Hash for last request was {}," +
-						" hash generated  by validator is {} and hash received is {}");
-				validationResultDto.setDescriptionKey("HASH_VALIDATOR_002"
-				+ AppConstants.ARGUMENTS_DELIMITER
-				+ previousHash
-				+ AppConstants.ARGUMENTS_SEPARATOR
-				+ generatedHashValue
-				+ AppConstants.ARGUMENTS_SEPARATOR
-				+ hashReceived);
+				validationResultDto.setDescription("Validation of hash chain failed across multiple captures."
+						+ " Previous Hash for last request was {},"
+						+ " hash generated  by validator is {} and hash received is {}");
+				validationResultDto.setDescriptionKey("HASH_VALIDATOR_002" + AppConstants.ARGUMENTS_DELIMITER
+						+ previousHash + AppConstants.ARGUMENTS_SEPARATOR + generatedHashValue
+						+ AppConstants.ARGUMENTS_SEPARATOR + hashReceived);
 				validationResultDto.setStatus(AppConstants.FAILURE);
 			}
 		} catch (Exception ex) {
@@ -83,5 +80,4 @@ public class HashValidator extends ISOStandardsValidator {
 		return validationResultDto;
 	}
 
-	
 }
