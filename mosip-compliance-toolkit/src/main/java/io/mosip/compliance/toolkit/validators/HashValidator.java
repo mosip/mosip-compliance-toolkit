@@ -36,12 +36,12 @@ public class HashValidator extends ISOStandardsValidator {
 
 			JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
 
-			String hashReceivedInResponse = null;
+			String hashReceived = null;
 			String generatedHash = null;
 			if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
 				for (final JsonNode biometricNode : arrBiometricNodes) {
 					log.info("previousHash {}", previousHash);
-					hashReceivedInResponse = biometricNode.get("hash").asText();
+					String hashReceivedInResponse = biometricNode.get("hash").asText();
 					String bioValue = extractBioValue(biometricNode);
 					byte[] decodedBioValue = CommonUtil.decodeURLSafeBase64(bioValue);
 					generatedHash = HashUtil.generateHash(previousHash, decodedBioValue);
@@ -52,6 +52,7 @@ public class HashValidator extends ISOStandardsValidator {
 					} else {
 						isHashValid = false;
 					}
+					hashReceived = hashReceivedInResponse;
 				}
 			}
 			if (isHashValid) {
@@ -68,7 +69,7 @@ public class HashValidator extends ISOStandardsValidator {
 				+ AppConstants.ARGUMENTS_SEPARATOR
 				+ generatedHash
 				+ AppConstants.ARGUMENTS_SEPARATOR
-				+ hashReceivedInResponse);
+				+ hashReceived);
 				validationResultDto.setStatus(AppConstants.FAILURE);
 			}
 		} catch (Exception ex) {
