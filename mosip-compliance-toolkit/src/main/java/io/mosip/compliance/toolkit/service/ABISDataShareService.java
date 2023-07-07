@@ -5,10 +5,7 @@ import static io.restassured.RestAssured.given;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import io.mosip.compliance.toolkit.dto.abis.*;
 import io.mosip.compliance.toolkit.entity.AbisDataShareTokenEntity;
@@ -32,7 +29,10 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.restassured.http.Cookie;
 
+import javax.transaction.Transactional;
+
 @Component
+@Transactional
 public class ABISDataShareService {
 
 	private static final String PATH_SEPARATOR = "/";
@@ -232,7 +232,7 @@ public class ABISDataShareService {
 		abisDataShareTokenEntity.setTestRunId(requestWrapper.getRequest().getCtkTestRunId());
 		abisDataShareTokenEntity.setToken(requestWrapper.getRequest().getToken());
 		try {
-			AbisDataShareTokenEntity savedEntity = abisDataShareTokenRepository.save(abisDataShareTokenEntity);
+			abisDataShareTokenRepository.save(abisDataShareTokenEntity);
 		} catch (Exception ex) {
 			responseWrapper.setResponse(AppConstants.FAILURE);
 			ServiceError serviceError = new ServiceError();
@@ -240,6 +240,42 @@ public class ABISDataShareService {
 			responseWrapper.setErrors(Collections.singletonList(serviceError));
 		}
 		responseWrapper.setResponse(AppConstants.SUCCESS);
+		return responseWrapper;
+	}
+
+	public ResponseWrapper<String> invalidateDataShareToken(RequestWrapper<DataShareSaveTokenRequest> requestWrapper) {
+		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
+		AbisDataShareTokenEntity abisDataShareTokenEntity = new AbisDataShareTokenEntity();
+		abisDataShareTokenEntity.setPartnerId(requestWrapper.getRequest().getPartnerId());
+		abisDataShareTokenEntity.setTestCaseId(requestWrapper.getRequest().getCtkTestCaseId());
+		abisDataShareTokenEntity.setTestRunId(requestWrapper.getRequest().getCtkTestRunId());
+		abisDataShareTokenEntity.setToken(requestWrapper.getRequest().getToken());
+		try{
+			Optional<AbisDataShareTokenEntity> savedEntity = abisDataShareTokenRepository.findByAllIds(
+					requestWrapper.getRequest().getPartnerId(),
+					requestWrapper.getRequest().getCtkTestCaseId(),
+					requestWrapper.getRequest().getCtkTestRunId()
+			);
+			if(savedEntity.isPresent()){
+				int updatedRows = 0;
+				if(savedEntity.get().getToken().equals(requestWrapper.getRequest().getToken())){
+					updatedRows = abisDataShareTokenRepository.updateResultByToken(AppConstants.SUCCESS,
+							savedEntity.get().getToken());
+					responseWrapper.setResponse(AppConstants.SUCCESS);
+				} else {
+					updatedRows = abisDataShareTokenRepository.updateResultByToken(AppConstants.FAILURE,
+							savedEntity.get().getToken());
+					responseWrapper.setResponse(AppConstants.SUCCESS);
+				}
+			} else {
+					responseWrapper = saveDataShareToken(requestWrapper);
+			}
+		} catch (Exception ex){
+			responseWrapper.setResponse(AppConstants.FAILURE);
+			ServiceError serviceError = new ServiceError();
+			serviceError.setMessage(ex.getLocalizedMessage());
+			responseWrapper.setErrors(Collections.singletonList(serviceError));
+		}
 		return responseWrapper;
 	}
 
