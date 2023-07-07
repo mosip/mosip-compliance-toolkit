@@ -52,7 +52,7 @@ public class HashValidator extends ISOStandardsValidator {
 					} else {
 						isHashValid = false;
 					}
-					hashReceived = hashReceivedInResponse;
+					hashReceived = biometricNode.get("hash").asText();
 				}
 			}
 			if (isHashValid) {
