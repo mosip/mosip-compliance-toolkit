@@ -35,7 +35,9 @@ public class HashValidator extends ISOStandardsValidator {
 					ObjectNode.class);
 
 			JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
-			
+
+			String hashReceived = null;
+			String generatedHashValue = null;
 			if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
 				for (final JsonNode biometricNode : arrBiometricNodes) {
 					log.info("previousHash {}", previousHash);
@@ -50,15 +52,25 @@ public class HashValidator extends ISOStandardsValidator {
 					} else {
 						isHashValid = false;
 					}
+					hashReceived = hashReceivedInResponse;
+					generatedHashValue = generatedHash;
 				}
 			}
 			if (isHashValid) {
-				validationResultDto.setDescription("Hash validation is successful");
+				validationResultDto.setDescription("Validation of hash chain is successful across multiple captures");
 				validationResultDto.setDescriptionKey("HASH_VALIDATOR_001");
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 			} else {
-				validationResultDto.setDescription("Hash validation is unsuccessful");
-				validationResultDto.setDescriptionKey("HASH_VALIDATOR_002");
+				validationResultDto.setDescription("Validation of hash chain failed across multiple captures." +
+						" Previous Hash for last request was {}," +
+						" hash generated  by validator is {} and hash received is {}");
+				validationResultDto.setDescriptionKey("HASH_VALIDATOR_002"
+				+ AppConstants.ARGUMENTS_DELIMITER
+				+ previousHash
+				+ AppConstants.ARGUMENTS_SEPARATOR
+				+ generatedHashValue
+				+ AppConstants.ARGUMENTS_SEPARATOR
+				+ hashReceived);
 				validationResultDto.setStatus(AppConstants.FAILURE);
 			}
 		} catch (Exception ex) {
