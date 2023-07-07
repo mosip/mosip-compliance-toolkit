@@ -22,6 +22,7 @@ import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.AddBioTestDataResponseDto;
 import io.mosip.compliance.toolkit.dto.BiometricTestDataDto;
 import io.mosip.compliance.toolkit.service.BiometricTestDataService;
+import io.mosip.compliance.toolkit.util.CommonUtil;
 import io.mosip.compliance.toolkit.util.DataValidationUtil;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RequestValidator;
@@ -65,12 +66,7 @@ public class BiometricTestDataController {
 			return biometricTestDataService.addBiometricTestdata(requestWrapper.getRequest(), file);
 		} catch (Exception ex) {
 			ResponseWrapper<AddBioTestDataResponseDto> responseWrapper = new ResponseWrapper<>();
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode());
-			serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage() + " " + ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+			responseWrapper.setErrors(CommonUtil.getInvalidRequestBodyErr());
 			return responseWrapper;
 		}
 	}
