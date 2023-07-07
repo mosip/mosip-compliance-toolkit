@@ -1132,6 +1132,9 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},{
+					"name": "ABISTokenValidator",
+					"description": "Validates that ABIS is not generating a new token for every insert request, unless token has expired"
 				}
 			]
 		],
@@ -1161,6 +1164,9 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates if response has all mandatory attributes and they have allowed values"
+				},{
+					"name": "ABISTokenValidator",
+					"description": "Validates that ABIS is not generating a new token for every insert request, unless token has expired"
 				}
 			]
 		],

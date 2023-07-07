@@ -4,7 +4,7 @@ CREATE TABLE toolkit.datashare_tokens(
     partner_id character varying(36) NOT NULL,
     testcase_id character varying(36) NOT NULL,
     testrun_id character varying(36) NOT NULL,
-    token character varying(256) NOT NULL,
+    token character varying NOT NULL,
     result character varying(256),
     CONSTRAINT datashare_tokens_pk PRIMARY KEY (partner_id, testCase_id, testRun_id) 
 );
