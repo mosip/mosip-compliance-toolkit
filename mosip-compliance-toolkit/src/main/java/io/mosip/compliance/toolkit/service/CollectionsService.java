@@ -321,7 +321,9 @@ public class CollectionsService {
 					responseWrapper.setErrors(serviceErrorsList);
 				}
 			} else {
-				responseWrapper.setErrors(CommonUtil.getInvalidRequestBodyErr());
+				String errorCode = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode();
+				String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage();
+				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 			}
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -363,7 +365,9 @@ public class CollectionsService {
 					responseList.add(respDto);
 				}
 			} else {
-				responseWrapper.setErrors(CommonUtil.getInvalidRequestBodyErr());
+				String errorCode = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode();
+				String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage();
+				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 			}
 
 		} catch (Exception ex) {

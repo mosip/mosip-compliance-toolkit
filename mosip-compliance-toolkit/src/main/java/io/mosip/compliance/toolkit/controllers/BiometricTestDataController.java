@@ -1,6 +1,5 @@
 package io.mosip.compliance.toolkit.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +25,8 @@ import io.mosip.compliance.toolkit.util.CommonUtil;
 import io.mosip.compliance.toolkit.util.DataValidationUtil;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RequestValidator;
-import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 public class BiometricTestDataController {
@@ -66,7 +62,9 @@ public class BiometricTestDataController {
 			return biometricTestDataService.addBiometricTestdata(requestWrapper.getRequest(), file);
 		} catch (Exception ex) {
 			ResponseWrapper<AddBioTestDataResponseDto> responseWrapper = new ResponseWrapper<>();
-			responseWrapper.setErrors(CommonUtil.getInvalidRequestBodyErr());
+			String errorCode = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 			return responseWrapper;
 		}
 	}
