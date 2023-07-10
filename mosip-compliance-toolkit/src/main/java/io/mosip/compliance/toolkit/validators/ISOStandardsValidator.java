@@ -565,7 +565,8 @@ public class ISOStandardsValidator extends SBIValidator {
 						Integer.parseInt(decoderResponseInfo.getImageDepth()),
 						Integer.parseInt(decoderResponseInfo.getImageDpiHorizontal() == null ? "0" : decoderResponseInfo.getImageDpiHorizontal()),
 						Integer.parseInt(decoderResponseInfo.getImageDpiVertical() == null ? "0" : decoderResponseInfo.getImageDpiVertical()),
-						Integer.parseInt(decoderResponseInfo.getImageBitRate() == null ? "0" : decoderResponseInfo.getImageBitRate()),
+						Integer.parseInt(decoderResponseInfo.getImageBitRate() == null ? "0" : "0"),
+						//Integer.parseInt(decoderResponseInfo.getImageBitRate() == null ? "0" : decoderResponseInfo.getImageBitRate()),
 						Integer.parseInt(decoderResponseInfo.getImageSize()), decoderResponseInfo.getImageData(),
 						decoderResponseInfo.getImageColorSpace(), decoderResponseInfo.getImageAspectRatio(),
 						decoderResponseInfo.getImageCompressionRatio());
@@ -694,6 +695,8 @@ public class ISOStandardsValidator extends SBIValidator {
 		} catch (Exception e) {
 			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_FINGER_ISO_FORMAT_EXCEPTION;
 			message.append("<BR>" + errorCode.getErrorMessage() + "<BR>" + e.getLocalizedMessage());
+			code.append(AppConstants.COMMA_SEPARATOR);
+			code.append("<BR>" + errorCode.getErrorMessage() + "<BR>" + e.getLocalizedMessage());
 			isValid = false;
 		}
 
@@ -1046,7 +1049,8 @@ public class ISOStandardsValidator extends SBIValidator {
 						Integer.parseInt(decoderResponseInfo.getImageDepth()),
 						Integer.parseInt(decoderResponseInfo.getImageDpiHorizontal() == null ? "0" : decoderResponseInfo.getImageDpiHorizontal()),
 						Integer.parseInt(decoderResponseInfo.getImageDpiVertical() == null ? "0" : decoderResponseInfo.getImageDpiVertical()),
-						Integer.parseInt(decoderResponseInfo.getImageBitRate() == null ? "0" : decoderResponseInfo.getImageBitRate()),
+						Integer.parseInt(decoderResponseInfo.getImageBitRate() == null ? "0" : "0"),
+						//Integer.parseInt(decoderResponseInfo.getImageBitRate() == null ? "0" : decoderResponseInfo.getImageBitRate()),
 						Integer.parseInt(decoderResponseInfo.getImageSize()), decoderResponseInfo.getImageData(),
 						decoderResponseInfo.getImageColorSpace(), decoderResponseInfo.getImageAspectRatio(),
 						decoderResponseInfo.getImageCompressionRatio());
@@ -1261,6 +1265,8 @@ public class ISOStandardsValidator extends SBIValidator {
 		} catch (Exception e) {
 			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_IRIS_ISO_FORMAT_EXCEPTION;
 			message.append("<BR>" + errorCode.getErrorMessage() + "<BR>" + e.getLocalizedMessage());
+			code.append(AppConstants.COMMA_SEPARATOR);
+			code.append("<BR>" + errorCode.getErrorMessage() + "<BR>" + e.getLocalizedMessage());
 			isValid = false;
 		}
 
@@ -1701,7 +1707,8 @@ public class ISOStandardsValidator extends SBIValidator {
 						Integer.parseInt(decoderResponseInfo.getImageDepth()),
 						Integer.parseInt(decoderResponseInfo.getImageDpiHorizontal() == null ? "0" : decoderResponseInfo.getImageDpiHorizontal()),
 						Integer.parseInt(decoderResponseInfo.getImageDpiVertical() == null ? "0" : decoderResponseInfo.getImageDpiVertical()),
-						Integer.parseInt(decoderResponseInfo.getImageBitRate() == null ? "0" : decoderResponseInfo.getImageBitRate()),
+						Integer.parseInt(decoderResponseInfo.getImageBitRate() == null ? "0" : "0"),
+						//Integer.parseInt(decoderResponseInfo.getImageBitRate() == null ? "0" : decoderResponseInfo.getImageBitRate()),
 						Integer.parseInt(decoderResponseInfo.getImageSize()), decoderResponseInfo.getImageData(),
 						decoderResponseInfo.getImageColorSpace(), decoderResponseInfo.getImageAspectRatio(),
 						decoderResponseInfo.getImageCompressionRatio());
@@ -1848,6 +1855,8 @@ public class ISOStandardsValidator extends SBIValidator {
 		} catch (Exception e) {
 			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_FACE_ISO_FORMAT_EXCEPTION;
 			message.append("<BR>" + errorCode.getErrorMessage() + "<BR>" + e.getLocalizedMessage());
+			code.append(AppConstants.COMMA_SEPARATOR);
+			code.append("<BR>" + errorCode.getErrorMessage() + "<BR>" + e.getLocalizedMessage());
 			isValid = false;
 		}
 
