@@ -262,8 +262,8 @@ public class BiometricTestDataService {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In addBiometricTestdata method of BiometricTestDataService - " + ex.getMessage());
-            String errorCode = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode();
-            String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage();
+            String errorCode = ex.getErrorCode();
+            String errorMessage = ex.getMessage();
             responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
         } catch (DataIntegrityViolationException ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
