@@ -746,7 +746,9 @@ public class TestCasesService {
                     responseWrapper.setResponse(generateSdkRequestResponseDto);
                 }
             } else {
-                responseWrapper.setErrors(CommonUtil.getInvalidRequestBodyErr());
+                String errorCode = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode();
+                String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage();
+                responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
             }
         } catch (ToolkitException ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
