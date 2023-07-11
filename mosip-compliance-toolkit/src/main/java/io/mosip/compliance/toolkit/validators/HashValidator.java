@@ -38,7 +38,6 @@ public class HashValidator extends ISOStandardsValidator {
 
 			String errHashReceived = null;
 			String errGeneratedHashValue = null;
-			String errPreviousHashValue = null;
 			if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
 				for (final JsonNode biometricNode : arrBiometricNodes) {
 					log.info("previousHash {}", previousHash);
@@ -66,9 +65,12 @@ public class HashValidator extends ISOStandardsValidator {
 				validationResultDto.setDescription("Validation of hash chain failed across multiple captures."
 						+ " Previous Hash for last request was {},"
 						+ " hash generated  by validator is {} and hash received is {}");
-				validationResultDto.setDescriptionKey("HASH_VALIDATOR_002" + AppConstants.ARGUMENTS_DELIMITER
-						+ previousHash + AppConstants.ARGUMENTS_SEPARATOR + errGeneratedHashValue
-						+ AppConstants.ARGUMENTS_SEPARATOR + errHashReceived);
+				if ("".equals(previousHash)) {
+					previousHash = "''";
+				}
+				validationResultDto.setDescriptionKey(
+						"HASH_VALIDATOR_002" + AppConstants.ARGUMENTS_DELIMITER + previousHash + AppConstants.ARGUMENTS_SEPARATOR + errGeneratedHashValue
+										+ AppConstants.ARGUMENTS_SEPARATOR + errHashReceived);
 				validationResultDto.setStatus(AppConstants.FAILURE);
 			}
 		} catch (Exception ex) {
