@@ -34,7 +34,6 @@ import io.mosip.compliance.toolkit.util.CommonUtil;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
-import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 
@@ -108,24 +107,17 @@ public class CollectionsService {
 				collection.setProjectId(projectId);
 				collection.setCrDtimes(collectionEntity.getCrDate());
 			} else {
-				List<ServiceError> serviceErrorsList = new ArrayList<>();
-				ServiceError serviceError = new ServiceError();
-				serviceError.setErrorCode(ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorCode());
-				serviceError.setMessage(ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorMessage());
-				serviceErrorsList.add(serviceError);
-				responseWrapper.setErrors(serviceErrorsList);
+				String errorCode = ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorCode();
+				String errorMessage = ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorMessage();
+				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 			}
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In getCollectionByCollectionId method of CollectionsService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorCode());
-			serviceError
-					.setMessage(ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+			String errorCode = ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		}
 		responseWrapper.setId(getCollectionId);
 		responseWrapper.setVersion(AppConstants.VERSION);
@@ -157,25 +149,18 @@ public class CollectionsService {
 					collectionTestCasesResponseDto.setCollectionId(collectionId);
 					collectionTestCasesResponseDto.setTestcases(collectionTestCases);
 				} else {
-					List<ServiceError> serviceErrorsList = new ArrayList<>();
-					ServiceError serviceError = new ServiceError();
-					serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode());
-					serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
-					serviceErrorsList.add(serviceError);
-					responseWrapper.setErrors(serviceErrorsList);
+					String errorCode = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode();
+					String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage();
+					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 				}
 			}
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In getCollectionTestCases method of CollectionsService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.COLLECTION_TESTCASES_NOT_AVAILABLE.getErrorCode());
-			serviceError.setMessage(
-					ToolkitErrorCodes.COLLECTION_TESTCASES_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+			String errorCode = ToolkitErrorCodes.COLLECTION_TESTCASES_NOT_AVAILABLE.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.COLLECTION_TESTCASES_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		}
 		responseWrapper.setId(getTestCasesForCollectionId);
 		responseWrapper.setVersion(AppConstants.VERSION);
@@ -225,32 +210,22 @@ public class CollectionsService {
 					collectionsResponse = new CollectionsResponseDto();
 					collectionsResponse.setCollections(collectionsList);
 				} else {
-					List<ServiceError> serviceErrorsList = new ArrayList<>();
-					ServiceError serviceError = new ServiceError();
-					serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode());
-					serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
-					serviceErrorsList.add(serviceError);
-					responseWrapper.setErrors(serviceErrorsList);
+					String errorCode = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode();
+					String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage();
+					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 				}
 			} else {
-				List<ServiceError> serviceErrorsList = new ArrayList<>();
-				ServiceError serviceError = new ServiceError();
-				serviceError.setErrorCode(ToolkitErrorCodes.INVALID_PROJECT_TYPE.getErrorCode());
-				serviceError.setMessage(ToolkitErrorCodes.INVALID_PROJECT_TYPE.getErrorMessage());
-				serviceErrorsList.add(serviceError);
-				responseWrapper.setErrors(serviceErrorsList);
+				String errorCode = ToolkitErrorCodes.INVALID_PROJECT_TYPE.getErrorCode();
+				String errorMessage = ToolkitErrorCodes.INVALID_PROJECT_TYPE.getErrorMessage();
+				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 			}
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In getProjectCollectionTestrun method of CollectionsService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorCode());
-			serviceError
-					.setMessage(ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+			String errorCode = ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		}
 		responseWrapper.setId(getCollectionsId);
 		responseWrapper.setVersion(AppConstants.VERSION);
@@ -313,12 +288,9 @@ public class CollectionsService {
 					collection.setProjectId(collectionRequest.getProjectId());
 					collection.setCrDtimes(outputEntity.getCrDate());
 				} else {
-					List<ServiceError> serviceErrorsList = new ArrayList<>();
-					ServiceError serviceError = new ServiceError();
-					serviceError.setErrorCode(ToolkitErrorCodes.COLLECTION_NAME_EXISTS.getErrorCode());
-					serviceError.setMessage(ToolkitErrorCodes.COLLECTION_NAME_EXISTS.getErrorMessage() + duplicates.get(0).getName());
-					serviceErrorsList.add(serviceError);
-					responseWrapper.setErrors(serviceErrorsList);
+					String errorCode = ToolkitErrorCodes.COLLECTION_NAME_EXISTS.getErrorCode();
+					String errorMessage = ToolkitErrorCodes.COLLECTION_NAME_EXISTS.getErrorMessage() + duplicates.get(0).getName();
+					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 				}
 			} else {
 				String errorCode = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode();
@@ -329,13 +301,9 @@ public class CollectionsService {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In saveCollection method of CollectionsService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.COLLECTION_UNABLE_TO_ADD.getErrorCode());
-			serviceError
-					.setMessage(ToolkitErrorCodes.COLLECTION_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+			String errorCode = ToolkitErrorCodes.COLLECTION_UNABLE_TO_ADD.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.COLLECTION_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		}
 		responseWrapper.setId(postCollectionId);
 		responseWrapper.setVersion(AppConstants.VERSION);
@@ -375,13 +343,9 @@ public class CollectionsService {
 			log.error("sessionId", "idType", "id",
 					"In saveCollectionTestCaseMapping method of CollectionTestCaseService Service - "
 							+ ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.COLLECTION_TESTCASE_UNABLE_TO_ADD.getErrorCode());
-			serviceError.setMessage(
-					ToolkitErrorCodes.COLLECTION_TESTCASE_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+			String errorCode = ToolkitErrorCodes.COLLECTION_TESTCASE_UNABLE_TO_ADD.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.COLLECTION_TESTCASE_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		}
 		responseWrapper.setId(postCollectionTestCaseId);
 		responseWrapper.setVersion(AppConstants.VERSION);

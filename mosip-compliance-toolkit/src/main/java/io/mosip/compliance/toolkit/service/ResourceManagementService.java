@@ -2,10 +2,9 @@ package io.mosip.compliance.toolkit.service;
 
 import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
+import io.mosip.compliance.toolkit.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +18,6 @@ import io.mosip.compliance.toolkit.constants.SdkPurpose;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.kernel.core.exception.ExceptionUtils;
-import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.virusscanner.exception.VirusScannerException;
@@ -123,34 +121,24 @@ public class ResourceManagementService {
 				status = putInObjectStore(container, objectName, is);
 				is.close();
 			} else {
-				List<ServiceError> serviceErrorsList = new ArrayList<>();
-				ServiceError serviceError = new ServiceError();
-				serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode());
-				serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
-				serviceErrorsList.add(serviceError);
-				responseWrapper.setErrors(serviceErrorsList);
+				String errorCode = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode();
+				String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage();
+				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 			}
 		} catch (ToolkitException ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In uploadSampleBioTestDataFile method of ResourceManagementService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ex.getErrorCode());
-			serviceError.setMessage(ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+			String errorCode = ex.getErrorCode();
+			String errorMessage = ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In uploadSampleBioTestDataFile method of ResourceManagementService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorCode());
-			serviceError.setMessage(
-					ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorMessage() + BLANK_SPACE + ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+			String errorCode = ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorMessage() + BLANK_SPACE + ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		}
 		responseWrapper.setId(postResourceFileId);
 		responseWrapper.setResponse(status);

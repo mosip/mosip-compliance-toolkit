@@ -12,10 +12,10 @@ import io.mosip.compliance.toolkit.entity.SdkProjectEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
 import io.mosip.compliance.toolkit.repository.SdkProjectRepository;
+import io.mosip.compliance.toolkit.util.CommonUtil;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
-import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.compliance.toolkit.dto.projects.SdkProjectDto;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
@@ -27,8 +27,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -88,24 +86,17 @@ public class SdkProjectService {
 				sdkProjectDto = objectMapper.convertValue(sdkProjectEntity, SdkProjectDto.class);
 
 			} else {
-				List<ServiceError> serviceErrorsList = new ArrayList<>();
-				ServiceError serviceError = new ServiceError();
-				serviceError.setErrorCode(ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorCode());
-				serviceError.setMessage(ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorMessage());
-				serviceErrorsList.add(serviceError);
-				responseWrapper.setErrors(serviceErrorsList);
+				String errorCode = ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorCode();
+				String errorMessage = ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorMessage();
+				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 			}
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In getSdkProject method of SdkProjectService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorCode());
-			serviceError
-					.setMessage(ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+			String errorCode = ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		}
 		responseWrapper.setId(getSdkProjectId);
 		responseWrapper.setResponse(sdkProjectDto);
@@ -157,12 +148,9 @@ public class SdkProjectService {
 					sdkProjectDto.setCrBy(entity.getCrBy());
 					sdkProjectDto.setCrDate(entity.getCrDate());
 				} else {
-					List<ServiceError> serviceErrorsList = new ArrayList<>();
-					ServiceError serviceError = new ServiceError();
-					serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode());
-					serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage());
-					serviceErrorsList.add(serviceError);
-					responseWrapper.setErrors(serviceErrorsList);
+					String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode();
+					String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage();
+					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 				}
 			}
 		} catch (ToolkitException ex) {
@@ -170,34 +158,24 @@ public class SdkProjectService {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In addSdkProject method of SdkProjectService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ex.getErrorCode());
-			serviceError.setMessage(ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+			String errorCode = ex.getErrorCode();
+			String errorMessage = ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		} catch (DataIntegrityViolationException ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In addSdkProject method of SdkProjectService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorCode());
-			serviceError.setMessage(ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorMessage() + " " + sdkProjectDto.getName());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+			String errorCode = ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorMessage() + " " + sdkProjectDto.getName();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		} catch (Exception ex) {
 			sdkProjectDto = null;
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In addSdkProject method of SdkProjectService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.SDK_PROJECT_UNABLE_TO_ADD.getErrorCode());
-			serviceError
-					.setMessage(ToolkitErrorCodes.SDK_PROJECT_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+			String errorCode = ToolkitErrorCodes.SDK_PROJECT_UNABLE_TO_ADD.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.SDK_PROJECT_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		}
 		responseWrapper.setId(getSdkProjectPostId);
 		responseWrapper.setResponse(sdkProjectDto);
@@ -236,14 +214,9 @@ public class SdkProjectService {
 								if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
 									entity.setBioTestDataFileName(bioTestDataName);
 								} else {
-									List<ServiceError> serviceErrorsList = new ArrayList<>();
-									ServiceError serviceError = new ServiceError();
-									serviceError.setErrorCode(
-											ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode());
-									serviceError.setMessage(
-											ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage());
-									serviceErrorsList.add(serviceError);
-									responseWrapper.setErrors(serviceErrorsList);
+									String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode();
+									String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage();
+									responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 								}
 							}
 						}
@@ -254,12 +227,9 @@ public class SdkProjectService {
 								SdkProjectDto.class);
 					
 				} else {
-					List<ServiceError> serviceErrorsList = new ArrayList<>();
-					ServiceError serviceError = new ServiceError();
-					serviceError.setErrorCode(ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorCode());
-					serviceError.setMessage(ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorMessage());
-					serviceErrorsList.add(serviceError);
-					responseWrapper.setErrors(serviceErrorsList);
+					String errorCode = ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorCode();
+					String errorMessage = ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorMessage();
+					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 				}
 			}
 		} catch (ToolkitException ex) {
@@ -267,24 +237,17 @@ public class SdkProjectService {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In updateSdkProject method of SdkProjectService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ex.getErrorCode());
-			serviceError.setMessage(ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+			String errorCode = ex.getErrorCode();
+			String errorMessage = ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		} catch (Exception ex) {
 			sdkProjectDto = null;
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In updateSdkProject method of SdkProjectService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.SDK_PROJECT_UNABLE_TO_ADD.getErrorCode());
-			serviceError
-					.setMessage(ToolkitErrorCodes.SDK_PROJECT_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+			String errorCode = ToolkitErrorCodes.SDK_PROJECT_UNABLE_TO_ADD.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.SDK_PROJECT_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		}
 		responseWrapper.setId(putSdkProjectId);
 		responseWrapper.setResponse(sdkProjectDto);

@@ -1,10 +1,9 @@
 package io.mosip.compliance.toolkit.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
+import io.mosip.compliance.toolkit.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -32,7 +31,6 @@ import io.mosip.compliance.toolkit.util.KeyManagerHelper;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
-import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 
@@ -83,24 +81,17 @@ public class SbiProjectService {
 				sbiProjectDto = objectMapper.convertValue(sbiProjectEntity, SbiProjectDto.class);
 
 			} else {
-				List<ServiceError> serviceErrorsList = new ArrayList<>();
-				ServiceError serviceError = new ServiceError();
-				serviceError.setErrorCode(ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorCode());
-				serviceError.setMessage(ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorMessage());
-				serviceErrorsList.add(serviceError);
-				responseWrapper.setErrors(serviceErrorsList);
+				String errorCode = ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorCode();
+				String errorMessage = ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorMessage();
+				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 			}
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In getSbiProject method of SbiProjectService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorCode());
-			serviceError
-					.setMessage(ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+			String errorCode = ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		}
 		responseWrapper.setId(getSbiProjectId);
 		responseWrapper.setResponse(sbiProjectDto);
@@ -140,39 +131,29 @@ public class SbiProjectService {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In getSbiProject method of SbiProjectService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ex.getErrorCode());
-			serviceError.setMessage(ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+			String errorCode = ex.getErrorCode();
+			String errorMessage = ex.getErrorCode();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		} catch (DataIntegrityViolationException ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In getSbiProject method of SbiProjectService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorCode());
+			String errorCode = ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorCode();
+			String errorMessage = null;
 			if (sbiProjectDto != null) {
-				serviceError.setMessage(
-						ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorMessage() + " " + sbiProjectDto.getName());
+				errorMessage = ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorMessage() + " " + sbiProjectDto.getName();
 			} else {
-				serviceError.setMessage(ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorMessage());
+				errorMessage = ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorMessage();
 			}
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		} catch (Exception ex) {
 			sbiProjectDto = null;
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In getSbiProject method of SbiProjectService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.SBI_PROJECT_UNABLE_TO_ADD.getErrorCode());
-			serviceError
-					.setMessage(ToolkitErrorCodes.SBI_PROJECT_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+			String errorCode = ToolkitErrorCodes.SBI_PROJECT_UNABLE_TO_ADD.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.SBI_PROJECT_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		}
 		responseWrapper.setId(getSbiProjectPostId);
 		responseWrapper.setResponse(sbiProjectDto);
@@ -346,12 +327,9 @@ public class SbiProjectService {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In getEncryptionKey method of SbiProjectService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.ENCRYPTION_KEY_ERROR.getErrorCode());
-			serviceError.setMessage(ToolkitErrorCodes.ENCRYPTION_KEY_ERROR.getErrorMessage() + " " + ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+			String errorCode = ToolkitErrorCodes.ENCRYPTION_KEY_ERROR.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.ENCRYPTION_KEY_ERROR.getErrorMessage() + " " + ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		}
 		responseWrapper.setId(getSbiProjectId);
 		responseWrapper.setResponse(result);
