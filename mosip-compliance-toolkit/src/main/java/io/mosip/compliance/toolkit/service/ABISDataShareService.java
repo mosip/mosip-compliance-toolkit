@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ProjectTypes;
@@ -34,6 +36,7 @@ import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
 import io.mosip.compliance.toolkit.util.KeyManagerHelper;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.kernel.core.authmanager.model.AuthNResponse;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -81,6 +84,9 @@ public class ABISDataShareService {
 
 	@Value("${mosip.service.datashare.policy.id}")
 	private String dataSharePolicyId;
+
+	@Value("${mosip.service.authmanager.invalidate.url}")
+	private String invalidateTokenUrl;
 
 	private AuthUserDetails authUserDetails() {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -273,9 +279,11 @@ public class ABISDataShareService {
 				if (tokenInDb.equals(token)) {
 					abisDataShareTokenRepository.updateResultInRow(AppConstants.SUCCESS, partnerId, testcaseId,
 							testRunId);
+					log.info("token in db matches the token in request, hence saveDataShareToken passes");
 				} else {
 					abisDataShareTokenRepository.updateResultInRow(AppConstants.FAILURE, partnerId, testcaseId,
 							testRunId);
+					log.info("token in db matches the token in request, hence saveDataShareToken fails");
 				}
 			} else {
 				AbisDataShareTokenEntity abisDataShareTokenEntity = new AbisDataShareTokenEntity();
@@ -296,4 +304,76 @@ public class ABISDataShareService {
 		return responseWrapper;
 	}
 
+	public ResponseWrapper<String> invalidateDataShareToken(RequestWrapper<DataShareSaveTokenRequest> requestWrapper) {
+		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
+
+		String partnerId = requestWrapper.getRequest().getPartnerId();
+		String testcaseId = requestWrapper.getRequest().getCtkTestCaseId();
+		String testRunId = requestWrapper.getRequest().getCtkTestRunId();
+		String token = requestWrapper.getRequest().getToken();
+		log.info("invalidateDataShareToken started with testcaseId {},testRunId {}, partnerId {} and token {} ",
+				testcaseId, testRunId, partnerId, token);
+		try {
+			Optional<AbisDataShareTokenEntity> dbEntity = abisDataShareTokenRepository.findTokenForTestRun(partnerId,
+					testcaseId, testRunId);
+			if (!dbEntity.isPresent()) {
+				Cookie.Builder builder = new Cookie.Builder(KeyManagerHelper.AUTHORIZATION, token);
+				io.restassured.response.Response postResponse = given().cookie(builder.build()).relaxedHTTPSValidation()
+						.when().post(invalidateTokenUrl).then().extract().response();
+
+				String resp = postResponse.getBody().asString();
+
+				log.info("resp: {}", resp);
+				if (resp != null) {
+					try {
+						String result = null;
+						TypeReference<ResponseWrapper<AuthNResponse>> ref = new TypeReference<>() {
+						};
+						ResponseWrapper<AuthNResponse> invalidateTokenResponse = objectMapperConfig.objectMapper()
+								.readValue(resp, ref);
+						if (invalidateTokenResponse != null && invalidateTokenResponse.getResponse() != null) {
+							AuthNResponse authN = invalidateTokenResponse.getResponse();
+							result = authN.getStatus();
+							if (AppConstants.SUCCESS.equalsIgnoreCase(result)) {
+								log.info("token invalidated successfully");
+								AbisDataShareTokenEntity abisDataShareTokenEntity = new AbisDataShareTokenEntity();
+								abisDataShareTokenEntity.setPartnerId(partnerId);
+								abisDataShareTokenEntity.setTestCaseId(testcaseId);
+								abisDataShareTokenEntity.setTestRunId(testRunId);
+								abisDataShareTokenEntity.setToken(requestWrapper.getRequest().getToken());
+								abisDataShareTokenEntity.setResult(AppConstants.SUCCESS);
+								abisDataShareTokenRepository.save(abisDataShareTokenEntity);
+							} else {
+								log.info("token from datashare could not be invalidated, get result {}", result);
+							}
+						} else {
+							log.info("invalidateTokenResponse is null {}", invalidateTokenResponse);
+						}
+					} catch (Exception ex) {
+						log.info("token from datashare could not be invalidated, due to {}", ex.getLocalizedMessage());
+					}
+				}
+			} else {
+				String tokenInDb = dbEntity.get().getToken();
+				if (tokenInDb.equals(token)) {
+					abisDataShareTokenRepository.updateResultInRow(AppConstants.FAILURE, partnerId, testcaseId,
+							testRunId);
+					log.info("token in db matches the token in request, hence invalidateDataShareToken fails");
+				} else {
+					abisDataShareTokenRepository.updateResultInRow(AppConstants.SUCCESS, partnerId, testcaseId,
+							testRunId);
+					log.info("token in db matches the token in request, hence invalidateDataShareToken passes");
+				}
+			}
+			responseWrapper.setResponse(AppConstants.SUCCESS);
+		} catch (
+
+		Exception ex) {
+			responseWrapper.setResponse(AppConstants.FAILURE);
+			ServiceError serviceError = new ServiceError();
+			serviceError.setMessage(ex.getLocalizedMessage());
+			responseWrapper.setErrors(Collections.singletonList(serviceError));
+		}
+		return responseWrapper;
+	}
 }
