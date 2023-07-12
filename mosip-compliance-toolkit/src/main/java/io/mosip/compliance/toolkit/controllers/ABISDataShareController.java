@@ -83,9 +83,7 @@ public class ABISDataShareController {
 		requestValidator.validate(requestWrapper, errors);
 		requestValidator.validateId(ABIS_DATASHARE_TOKEN_POST_ID, requestWrapper.getId(), errors);
 		DataValidationUtil.validate(errors, ABIS_DATASHARE_TOKEN_POST_ID);
-		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
-		responseWrapper.setResponse("OK");
-		return responseWrapper;
+		return abisDataShareService.invalidateDataShareToken(requestWrapper);
 	}
 
 }
