@@ -47,10 +47,10 @@ public class SignatureValidator extends SBIValidator {
 						validationResultDto = validateDeviceSignature(inputDto);
 						break;
 					case CAPTURE:
-						validationResultDto = validateCaptureSignature(inputDto);
+						validationResultDto = validateCaptureOrRCaptureSignature(inputDto);
 						break;
 					case RCAPTURE:
-						validationResultDto = validateRCaptureSignature(inputDto);
+						validationResultDto = validateCaptureOrRCaptureSignature(inputDto);
 						break;
 					default:
 						validationResultDto.setStatus(AppConstants.FAILURE);
@@ -193,46 +193,7 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	protected ValidationResultDto validateCaptureSignature(ValidationInputDto inputDto) {
-		ValidationResultDto validationResultDto = new ValidationResultDto();
-		try {
-			ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper()
-					.readValue(inputDto.getMethodResponse(), ObjectNode.class);
-
-			final JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
-			if (arrBiometricNodes.isArray()) {
-				for (final JsonNode biometricNode : arrBiometricNodes) {
-					String dataInfo = biometricNode.get(DATA).asText();
-					validationResultDto = checkIfJWTSignatureIsValid(dataInfo);
-					if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
-						validationResultDto = trustRootValidation(getCertificate(dataInfo),
-								PartnerTypes.DEVICE.toString(), TRUST_FOR_BIOMETRIC_INFO);
-
-						if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
-							String biometricData = getPayload(dataInfo);
-							ObjectNode biometricDataNode = (ObjectNode) objectMapperConfig.objectMapper()
-									.readValue(biometricData, ObjectNode.class);
-
-							ObjectNode extraInfo = (ObjectNode) objectMapperConfig.objectMapper()
-									.readValue(inputDto.getExtraInfoJson(), ObjectNode.class);
-							String certificationType = extraInfo.get(CERTIFICATION_TYPE).asText();
-							validationResultDto = validateSignedDigitalId(biometricDataNode.get(DIGITAL_ID).asText(),
-									certificationType, TRUST_FOR_DIGITAL_ID);
-						}
-					}
-					if (validationResultDto.getStatus().equals(AppConstants.FAILURE))
-						break;
-				}
-			}
-		} catch (Exception e) {
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto
-					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
-		}
-		return validationResultDto;
-	}
-
-	protected ValidationResultDto validateRCaptureSignature(ValidationInputDto inputDto) {
+	protected ValidationResultDto validateCaptureOrRCaptureSignature(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper()
