@@ -1,11 +1,11 @@
 package io.mosip.compliance.toolkit.controllers;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import io.mosip.compliance.toolkit.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,7 +33,6 @@ import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.service.TestCasesService;
 import io.mosip.compliance.toolkit.util.DataValidationUtil;
 import io.mosip.compliance.toolkit.util.RequestValidator;
-import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
 
@@ -113,13 +112,9 @@ public class TestCasesController {
 		ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
 		responseWrapper.setId(getTestCasesId);
 		responseWrapper.setResponse(null);
-		List<ServiceError> serviceErrorsList = new ArrayList<>();
-		ServiceError serviceError = new ServiceError();
-		serviceError.setErrorCode(ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorCode());
-		serviceError.setMessage(
-				ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage() + " " + ex.getLocalizedMessage());
-		serviceErrorsList.add(serviceError);
-		responseWrapper.setErrors(serviceErrorsList);
+		String errorCode = ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorCode();
+		String errorMessage = ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage() + " " + ex.getLocalizedMessage();
+		responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
