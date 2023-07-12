@@ -76,8 +76,7 @@ public class ABISDataShareControllerTest {
         DataShareSaveTokenRequest dataShareSaveTokenRequest = new DataShareSaveTokenRequest();
         request.setRequest(dataShareSaveTokenRequest);
         ResponseWrapper<String> response = new ResponseWrapper<>();
-        Mockito.when(abisDataShareService.saveDataShareToken(request)).
-                thenReturn(response);
+        Mockito.when(abisDataShareService.saveDataShareToken(request)).thenReturn(response);
         abisDataShareController.saveDataShareToken(request, errors);
     }
 }

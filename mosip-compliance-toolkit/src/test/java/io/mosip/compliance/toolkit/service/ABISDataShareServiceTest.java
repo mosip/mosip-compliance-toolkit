@@ -67,6 +67,7 @@ public class ABISDataShareServiceTest {
 
     @Mock
     private ObjectMapperConfig objectMapperConfig;
+
     @Mock
     private AbisDataShareTokenRepository abisDataShareTokenRepository;
 
@@ -130,6 +131,7 @@ public class ABISDataShareServiceTest {
         dataShareExpireRequest.setTransactionsAllowed(1);
         abisDataShareService.expireDataShareUrl(dataShareExpireRequest);
     }
+    
     /*
      * These functions test the saveDataShareToken method
      */
@@ -150,19 +152,17 @@ public class ABISDataShareServiceTest {
         savedEntity.setTestCaseId("5678");
         savedEntity.setPartnerId("1234");
 
-
         Mockito.when(abisDataShareTokenRepository.findByAllIds(
-                        Mockito.any(), Mockito.any(), Mockito.any()))
+                Mockito.any(), Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.of(savedEntity));
 
-
         ResponseWrapper<String> responseWrapper = abisDataShareService.saveDataShareToken(requestWrapper);
-
 
         Mockito.verify(abisDataShareTokenRepository, Mockito.times(1)).updateResultByToken(
                 AppConstants.SUCCESS, savedEntity.getToken());
         Assert.assertEquals(AppConstants.SUCCESS, responseWrapper.getResponse());
     }
+
     @Test
     public void testSaveDataShareToken_newToken() {
         RequestWrapper<DataShareSaveTokenRequest> requestWrapper = new RequestWrapper<>();
@@ -173,9 +173,8 @@ public class ABISDataShareServiceTest {
         dataShareSaveTokenRequest.setToken("token");
         requestWrapper.setRequest(dataShareSaveTokenRequest);
 
-
         Mockito.when(abisDataShareTokenRepository.findByAllIds(
-                        Mockito.any(), Mockito.any(), Mockito.any()))
+                Mockito.any(), Mockito.any(), Mockito.any()))
                 .thenReturn(Optional.empty());
 
         ResponseWrapper<String> responseWrapper = abisDataShareService.saveDataShareToken(requestWrapper);
