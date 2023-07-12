@@ -263,6 +263,8 @@ public class ABISDataShareService {
 		String testcaseId = requestWrapper.getRequest().getCtkTestCaseId();
 		String testRunId = requestWrapper.getRequest().getCtkTestRunId();
 		String token = requestWrapper.getRequest().getToken();
+		log.info("saveDataShareToken started with testcaseId {},testRunId {}, partnerId {} and token {} ", testcaseId,
+				testRunId, partnerId, token);
 		try {
 			Optional<AbisDataShareTokenEntity> dbEntity = abisDataShareTokenRepository.findTokenForTestRun(partnerId,
 					testcaseId, testRunId);

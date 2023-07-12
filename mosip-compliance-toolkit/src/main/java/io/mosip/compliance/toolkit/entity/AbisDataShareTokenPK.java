@@ -12,7 +12,11 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder
 public class AbisDataShareTokenPK implements Serializable {
-    private String partnerId;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private String partnerId;
     private String testCaseId;
     private String testRunId;
 }

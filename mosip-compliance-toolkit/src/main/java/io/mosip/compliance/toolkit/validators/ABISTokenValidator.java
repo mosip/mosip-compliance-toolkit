@@ -43,9 +43,8 @@ public class ABISTokenValidator extends ToolkitValidator {
 			String testcaseId = extraInfo.get("testcaseId").asText();
 			String testRunId = extraInfo.get("testRunId").asText();
 			String partnerId = getPartnerId();
-			log.info("testcaseId {}", testcaseId);
-			log.info("testRunId {}", testRunId);
-			log.info("partnerId {}", partnerId);
+			log.info("ABISTokenValidator validateResponse() started with testcaseId {},testRunId {}, partnerId {}", testcaseId,
+					testRunId, partnerId);
 			Optional<AbisDataShareTokenEntity> dbEntity = abisDataShareTokenRepository.findTokenForTestRun(partnerId,
 					testcaseId, testRunId);
 			if (dbEntity.isPresent()) {
@@ -64,6 +63,8 @@ public class ABISTokenValidator extends ToolkitValidator {
 							"Token validation failed, ABIS is generating NEW tokens for every insert request.");
 					validationResultDto.setDescriptionKey("ABIS_TOKEN_VALIDATOR_002");
 				}
+				//delete the row
+				//abisDataShareTokenRepository.deleteById(dbEntity.get());
 			} else {
 
 				validationResultDto.setStatus(AppConstants.FAILURE);
