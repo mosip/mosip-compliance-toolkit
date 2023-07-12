@@ -1,4 +1,5 @@
 package io.mosip.compliance.toolkit.service;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -431,14 +432,9 @@ public class TestCasesService {
             log.debug("sessionId", "idType", "id", ExceptionUtils.getStackTrace(ex));
             log.error("sessionId", "idType", "id",
                     "In saveTestCases method of Test Cases Service - " + ex.getLocalizedMessage());
-
-            List<ServiceError> serviceErrorsList = new ArrayList<>();
-            ToolkitErrorCodes errorCode = ToolkitErrorCodes.SAVE_TEST_CASE_JSON_ERROR;
-            ServiceError serviceError = new ServiceError();
-            serviceError.setErrorCode(errorCode.getErrorCode());
-            serviceError.setMessage(errorCode.getErrorMessage() + " " + ex.getMessage());
-            serviceErrorsList.add(serviceError);
-            responseWrapper.setErrors(serviceErrorsList);
+            String errorCode = ToolkitErrorCodes.SAVE_TEST_CASE_JSON_ERROR.getErrorCode();
+            String errorMessage = ToolkitErrorCodes.SAVE_TEST_CASE_JSON_ERROR.getErrorMessage() + " " + ex.getMessage();
+            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
         }
         responseWrapper.setId(getProjectsId);
         responseWrapper.setVersion(AppConstants.VERSION);
@@ -515,14 +511,9 @@ public class TestCasesService {
             log.debug("sessionId", "idType", "id", ExceptionUtils.getStackTrace(ex));
             log.error("sessionId", "idType", "id",
                     "In performValidations method of Test Cases Service - " + ex.getLocalizedMessage());
-
-            List<ServiceError> serviceErrorsList = new ArrayList<>();
-            ToolkitErrorCodes errorCode = ToolkitErrorCodes.TESTCASE_VALIDATION_ERR;
-            ServiceError serviceError = new ServiceError();
-            serviceError.setErrorCode(errorCode.getErrorCode());
-            serviceError.setMessage(errorCode.getErrorMessage() + " " + ex.getMessage());
-            serviceErrorsList.add(serviceError);
-            responseWrapper.setErrors(serviceErrorsList);
+            String errorCode = ToolkitErrorCodes.TESTCASE_VALIDATION_ERR.getErrorCode();
+            String errorMessage = ToolkitErrorCodes.TESTCASE_VALIDATION_ERR.getErrorMessage() + " " + ex.getMessage();
+            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
         }
         responseWrapper.setId(validationsId);
         responseWrapper.setVersion(AppConstants.VERSION);
@@ -720,20 +711,14 @@ public class TestCasesService {
                                 requestJson = gson.toJson(convertFormatRequestDto);
                             }
                         } else {
-                            List<ServiceError> serviceErrorsList = new ArrayList<>();
-                            ServiceError serviceError = new ServiceError();
-                            serviceError.setErrorCode(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode());
-                            serviceError.setMessage(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
-                            serviceErrorsList.add(serviceError);
-                            responseWrapper.setErrors(serviceErrorsList);
+                            String errorCode = ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode();
+                            String errorMessage = ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage();
+                            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
                         }
                     } else {
-                        List<ServiceError> serviceErrorsList = new ArrayList<>();
-                        ServiceError serviceError = new ServiceError();
-                        serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode());
-                        serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage());
-                        serviceErrorsList.add(serviceError);
-                        responseWrapper.setErrors(serviceErrorsList);
+                        String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode();
+                        String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage();
+                        responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
                     }
 
                 }
@@ -754,23 +739,16 @@ public class TestCasesService {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In generateRequestForSDKTestcase method of TestCasesService - " + ex.getMessage());
-            List<ServiceError> serviceErrorsList = new ArrayList<>();
-            ServiceError serviceError = new ServiceError();
-            serviceError.setErrorCode(ex.getErrorCode());
-            serviceError.setMessage(ex.getErrorText());
-            serviceErrorsList.add(serviceError);
-            responseWrapper.setErrors(serviceErrorsList);
+            String errorCode = ex.getErrorCode();
+            String errorMessage = ex.getErrorText();
+            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
         } catch (Exception ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In generateRequestForSDKTestcase method of TestCasesService - " + ex.getMessage());
-            List<ServiceError> serviceErrorsList = new ArrayList<>();
-            ServiceError serviceError = new ServiceError();
-            serviceError.setErrorCode(ToolkitErrorCodes.GENERATE_SDK_REQUEST_ERROR.getErrorCode());
-            serviceError
-                    .setMessage(ToolkitErrorCodes.GENERATE_SDK_REQUEST_ERROR.getErrorMessage() + " " + ex.getMessage());
-            serviceErrorsList.add(serviceError);
-            responseWrapper.setErrors(serviceErrorsList);
+            String errorCode = ToolkitErrorCodes.GENERATE_SDK_REQUEST_ERROR.getErrorCode();
+            String errorMessage = ToolkitErrorCodes.GENERATE_SDK_REQUEST_ERROR.getErrorMessage() + " " + ex.getMessage();
+            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
         }
         responseWrapper.setId(generateSdkRequest);
         responseWrapper.setVersion(AppConstants.VERSION);
@@ -839,12 +817,9 @@ public class TestCasesService {
                 methodName1 = methods[0];
                 methodName2 = methods[1];
             } else {
-                List<ServiceError> serviceErrorsList = new ArrayList<>();
-                ServiceError serviceError = new ServiceError();
-                serviceError.setErrorCode(ToolkitErrorCodes.INVALID_METHOD_NAME.getErrorCode());
-                serviceError.setMessage(ToolkitErrorCodes.INVALID_METHOD_NAME.getErrorMessage());
-                serviceErrorsList.add(serviceError);
-                responseWrapper.setErrors(serviceErrorsList);
+                String errorCode = ToolkitErrorCodes.INVALID_METHOD_NAME.getErrorCode();
+                String errorMessage = ToolkitErrorCodes.INVALID_METHOD_NAME.getErrorMessage();
+                responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
             }
             List<String> modalities = sdkRequestDto.getModalities();
             String decodedVal = StringUtil.base64Decode(sdkRequestDto.getBirsForProbe());
@@ -907,20 +882,14 @@ public class TestCasesService {
                     matchRequestDto.setFlags(null);
                     requestJson = gson.toJson(matchRequestDto);
                 } else {
-                    List<ServiceError> serviceErrorsList = new ArrayList<>();
-                    ServiceError serviceError = new ServiceError();
-                    serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode());
-                    serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage());
-                    serviceErrorsList.add(serviceError);
-                    responseWrapper.setErrors(serviceErrorsList);
+                    String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode();
+                    String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage();
+                    responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
                 }
             } else {
-                List<ServiceError> serviceErrorsList = new ArrayList<>();
-                ServiceError serviceError = new ServiceError();
-                serviceError.setErrorCode(ToolkitErrorCodes.INVALID_METHOD_NAME.getErrorCode());
-                serviceError.setMessage(ToolkitErrorCodes.INVALID_METHOD_NAME.getErrorMessage());
-                serviceErrorsList.add(serviceError);
-                responseWrapper.setErrors(serviceErrorsList);
+                String errorCode = ToolkitErrorCodes.INVALID_METHOD_NAME.getErrorCode();
+                String errorMessage = ToolkitErrorCodes.INVALID_METHOD_NAME.getErrorMessage();
+                responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
             }
             // convert the request json to base64encoded string
             if (requestJson != null) {
@@ -934,23 +903,16 @@ public class TestCasesService {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In generateRequestForSDKTestcase method of TestCasesService - " + ex.getMessage());
-            List<ServiceError> serviceErrorsList = new ArrayList<>();
-            ServiceError serviceError = new ServiceError();
-            serviceError.setErrorCode(ex.getErrorCode());
-            serviceError.setMessage(ex.getErrorText());
-            serviceErrorsList.add(serviceError);
-            responseWrapper.setErrors(serviceErrorsList);
+            String errorCode = ex.getErrorCode();
+            String errorMessage = ex.getErrorText();
+            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
         } catch (Exception ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In generateRequestForSDKTestcase method of TestCasesService - " + ex.getMessage());
-            List<ServiceError> serviceErrorsList = new ArrayList<>();
-            ServiceError serviceError = new ServiceError();
-            serviceError.setErrorCode(ToolkitErrorCodes.GENERATE_SDK_REQUEST_ERROR.getErrorCode());
-            serviceError
-                    .setMessage(ToolkitErrorCodes.GENERATE_SDK_REQUEST_ERROR.getErrorMessage() + " " + ex.getMessage());
-            serviceErrorsList.add(serviceError);
-            responseWrapper.setErrors(serviceErrorsList);
+            String errorCode = ToolkitErrorCodes.GENERATE_SDK_REQUEST_ERROR.getErrorCode();
+            String errorMessage = ToolkitErrorCodes.GENERATE_SDK_REQUEST_ERROR.getErrorMessage() + " " + ex.getMessage();
+            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
         }
         responseWrapper.setId(generateSdkRequest);
         responseWrapper.setVersion(AppConstants.VERSION);
@@ -1074,23 +1036,17 @@ public class TestCasesService {
             if (Objects.nonNull(testCaseJson)) {
                 testcase = objectMapper.readValue(testCaseJson, TestCaseDto.class);
             } else {
-                List<ServiceError> serviceErrorsList = new ArrayList<>();
-                ServiceError serviceError = new ServiceError();
-                serviceError.setErrorCode(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode());
-                serviceError.setMessage(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
-                serviceErrorsList.add(serviceError);
-                responseWrapper.setErrors(serviceErrorsList);
+                String errorCode = ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode();
+                String errorMessage = ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage();
+                responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
             }
         } catch (Exception ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In getTestCaseById method of TestCasesService Service - " + ex.getMessage());
-            List<ServiceError> serviceErrorsList = new ArrayList<>();
-            ServiceError serviceError = new ServiceError();
-            serviceError.setErrorCode(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode());
-            serviceError.setMessage(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage());
-            serviceErrorsList.add(serviceError);
-            responseWrapper.setErrors(serviceErrorsList);
+            String errorCode = ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode();
+            String errorMessage = ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage();
+            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
         }
         responseWrapper.setId(getTestCaseId);
         responseWrapper.setVersion(AppConstants.VERSION);
