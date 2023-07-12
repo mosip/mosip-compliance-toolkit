@@ -47,10 +47,10 @@ public class SignatureValidator extends SBIValidator {
 						validationResultDto = validateDeviceSignature(inputDto);
 						break;
 					case CAPTURE:
-						validationResultDto = validateCaptureOrRCaptureSignature(inputDto);
+						validationResultDto = validateSignature(inputDto);
 						break;
 					case RCAPTURE:
-						validationResultDto = validateCaptureOrRCaptureSignature(inputDto);
+						validationResultDto = validateSignature(inputDto);
 						break;
 					default:
 						validationResultDto.setStatus(AppConstants.FAILURE);
@@ -193,7 +193,7 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	protected ValidationResultDto validateCaptureOrRCaptureSignature(ValidationInputDto inputDto) {
+	protected ValidationResultDto validateSignature(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper()
