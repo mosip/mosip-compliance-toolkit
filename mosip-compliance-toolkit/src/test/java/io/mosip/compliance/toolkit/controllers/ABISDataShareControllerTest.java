@@ -71,7 +71,7 @@ public class ABISDataShareControllerTest {
     }
 
     @Test
-    public void saveDataShareTokenTest() {
+    public void saveDataShareTokenTest() throws Exception {
         RequestWrapper<DataShareSaveTokenRequest> request = new RequestWrapper<>();
         DataShareSaveTokenRequest dataShareSaveTokenRequest = new DataShareSaveTokenRequest();
         request.setRequest(dataShareSaveTokenRequest);
