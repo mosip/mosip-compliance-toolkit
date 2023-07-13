@@ -202,7 +202,56 @@ public class ABISDataShareServiceTest {
 
         assertEquals(AppConstants.FAILURE, response.getResponse());
     }
+     
+    @Test
+    public void testInvalidateDataShareToken_failureResultCase() {
+        RequestWrapper<DataShareSaveTokenRequest> requestWrapper = new RequestWrapper<>();
+        DataShareSaveTokenRequest dataShareSaveTokenRequest = new DataShareSaveTokenRequest();
+        dataShareSaveTokenRequest.setPartnerId("1234");
+        dataShareSaveTokenRequest.setCtkTestCaseId("5678");
+        dataShareSaveTokenRequest.setCtkTestRunId("9012");
+        dataShareSaveTokenRequest.setToken("Token");
+        requestWrapper.setRequest(dataShareSaveTokenRequest);
+        AbisDataShareTokenEntity abisDataShareTokenEntity = new AbisDataShareTokenEntity();
+        abisDataShareTokenEntity.setPartnerId("1234");
+        abisDataShareTokenEntity.setTestCaseId("5678");
+        abisDataShareTokenEntity.setTestRunId("9012");
+        abisDataShareTokenEntity.setToken("Token");
 
+        Optional<AbisDataShareTokenEntity> dbEntity = Optional.of(abisDataShareTokenEntity);
+        when(abisDataShareTokenRepository.findTokenForTestRun(
+                Mockito.any(), Mockito.any(), Mockito.any()))
+                .thenReturn(dbEntity);
+
+        ResponseWrapper<String> response = abisDataShareService.invalidateDataShareToken(requestWrapper);
+
+        assertEquals(AppConstants.SUCCESS, response.getResponse());
+    }
+
+    @Test
+    public void testInvalidateDataShareToken_successResultCase() {
+        RequestWrapper<DataShareSaveTokenRequest> requestWrapper = new RequestWrapper<>();
+        DataShareSaveTokenRequest dataShareSaveTokenRequest = new DataShareSaveTokenRequest();
+        dataShareSaveTokenRequest.setPartnerId("1234");
+        dataShareSaveTokenRequest.setCtkTestCaseId("5678");
+        dataShareSaveTokenRequest.setCtkTestRunId("9012");
+        dataShareSaveTokenRequest.setToken("Token");
+        requestWrapper.setRequest(dataShareSaveTokenRequest);
+        AbisDataShareTokenEntity abisDataShareTokenEntity = new AbisDataShareTokenEntity();
+        abisDataShareTokenEntity.setPartnerId("1234");
+        abisDataShareTokenEntity.setTestCaseId("5678");
+        abisDataShareTokenEntity.setTestRunId("9012");
+        abisDataShareTokenEntity.setToken("Tokenn");
+
+        Optional<AbisDataShareTokenEntity> dbEntity = Optional.of(abisDataShareTokenEntity);
+        when(abisDataShareTokenRepository.findTokenForTestRun(
+                Mockito.any(), Mockito.any(), Mockito.any()))
+                .thenReturn(dbEntity);
+
+        ResponseWrapper<String> response = abisDataShareService.invalidateDataShareToken(requestWrapper);
+
+        assertEquals(AppConstants.SUCCESS, response.getResponse());
+    }
     /*
      * This method is used to get MosipUserDto in class
      */
