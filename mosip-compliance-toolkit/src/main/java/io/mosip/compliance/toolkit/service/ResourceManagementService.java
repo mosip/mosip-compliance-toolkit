@@ -38,7 +38,9 @@ public class ResourceManagementService {
 
 	private static final String SDK_SCHEMA = AppConstants.SCHEMAS + UNDERSCORE + AppConstants.SDK;
 
-    @Value("${mosip.toolkit.document.scan}")
+	private static final String ABIS_SCHEMA = AppConstants.SCHEMAS + UNDERSCORE + AppConstants.ABIS;
+
+	@Value("${mosip.toolkit.document.scan}")
     private Boolean scanDocument;
     
 	/**
@@ -85,9 +87,13 @@ public class ResourceManagementService {
 					container = AppConstants.TESTDATA;
 					String purposeDefault = fileName.replace(AppConstants.MOSIP_DEFAULT + UNDERSCORE, "")
 							.replace(ZIP_EXT, "");
-					SdkPurpose sdkPurposeDefault = SdkPurpose.valueOf(purposeDefault);
-					objectName = AppConstants.MOSIP_DEFAULT + UNDERSCORE + sdkPurposeDefault.toString().toUpperCase()
-							+ ZIP_EXT;
+					if(purposeDefault.contains(AppConstants.ABIS)) {
+						objectName = AppConstants.MOSIP_DEFAULT + UNDERSCORE + purposeDefault.toUpperCase() + ZIP_EXT;
+					} else {
+						SdkPurpose sdkPurposeDefault = SdkPurpose.valueOf(purposeDefault);
+						objectName = AppConstants.MOSIP_DEFAULT + UNDERSCORE + sdkPurposeDefault.toString().toUpperCase()
+								+ ZIP_EXT;
+					}
 					break;
 				case AppConstants.SCHEMAS:
 					if (Objects.isNull(fileName) || !fileName.equals(AppConstants.TESTCASE_SCHEMA_JSON)) {
@@ -111,6 +117,14 @@ public class ResourceManagementService {
 								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
 					}
 					container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.SDK.toLowerCase() + "/" + version;
+					objectName = fileName;
+					break;
+				case ABIS_SCHEMA:
+					if (Objects.isNull(fileName) || !fileName.endsWith(JSON_EXT)) {
+						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+					}
+					container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.ABIS.toLowerCase() + "/" + version;
 					objectName = fileName;
 					break;
 				default:
