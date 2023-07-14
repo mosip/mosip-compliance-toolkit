@@ -62,7 +62,8 @@
 		<jnbis.version>2.0.2</jnbis.version>
 		<imagedecoder.version>0.0.1-SNAPSHOT</imagedecoder.version>
 
-
+		<velocity.version>1.6.4</velocity.version>
+		
 		<sonar.coverage.exclusions>
 			**/config/**,
 			**/constants/**,
@@ -212,6 +213,16 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>${velocity.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.xhtmlrenderer</groupId>
+		    <artifactId>flying-saucer-pdf-openpdf</artifactId>
+		    <version>9.1.20</version>
+		</dependency>	
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
