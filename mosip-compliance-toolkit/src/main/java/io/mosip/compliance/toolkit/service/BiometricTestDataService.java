@@ -10,6 +10,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -577,10 +578,14 @@ public class BiometricTestDataService {
         Resource resource = null;
         try {
             byte[] bytes;
+            List<TestCaseEntity> sdkTestCaseEntities = testCaseCacheService.getSdkTestCases(AppConstants.SDK,
+                    sdkSampleTestdataSpecVer);
+            List<TestCaseEntity> abisTestCaseEntities = testCaseCacheService.getAbisTestCases(AppConstants.ABIS,
+                    sdkSampleTestdataSpecVer);
             if (!purpose.equals(AppConstants.ABIS)) {
-                bytes = generateSampleSdkTestData(purpose);
+                bytes = generateSampleTestData(purpose,sdkTestCaseEntities,ignoreTestcases);
             } else {
-                bytes = generateSampleAbisTestData(purpose);
+                bytes = generateSampleTestData(purpose,abisTestCaseEntities,ignoreAbisTestcases);
             }
             if (Objects.nonNull(bytes)) {
                 String defaultFileName;
@@ -612,119 +617,12 @@ public class BiometricTestDataService {
         return ResponseEntity.noContent().build();
     }
 
-    private byte[] generateSampleSdkTestData(String purpose) {
-        byte[] response = null;
-		ByteArrayOutputStream byteArrayOutputStream = null;
-		BufferedOutputStream bufferedOutputStream = null;
-		ZipOutputStream zipOutputStream = null;
-		try {
-			List<TestCaseEntity> testCaseEntities = testCaseCacheService.getSdkTestCases(AppConstants.SDK,
-					sdkSampleTestdataSpecVer);
-
-			if (Objects.nonNull(testCaseEntities) && testCaseEntities.size() > 0) {
-				String folderName = purpose;
-				String fileName = "Readme.txt";
-
-				byteArrayOutputStream = new ByteArrayOutputStream();
-				bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
-				zipOutputStream = new ZipOutputStream(bufferedOutputStream);
-
-				List<String> ignoreTestcaseList = Arrays.asList(ignoreTestcases.split(","));
-
-				// adding Readme file outside testcases
-				StringBuilder builder = new StringBuilder();
-				builder.append(outerReadmeIntro + "\n\n");
-				builder.append("Method - " + purpose + "\n\n");
-				builder.append(outerReadmeBody);
-
-				zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
-				zipOutputStream.write(builder.toString().getBytes());
-				zipOutputStream.closeEntry();
-
-				for (final TestCaseEntity testCaseEntity : testCaseEntities) {
-					String testcaseJson = testCaseEntity.getTestcaseJson();
-					TestCaseDto testCaseDto = objectMapperConfig.objectMapper().readValue(testcaseJson,
-							TestCaseDto.class);
-					if (testCaseDto.getSpecVersion() != null
-							&& testCaseDto.getSpecVersion().equals(sdkSampleTestdataSpecVer)
-							&& !ignoreTestcaseList.contains(testCaseDto.getTestId())
-							&& testCaseDto.getOtherAttributes().getSdkPurpose().contains(purpose)) {
-
-						folderName = purpose + "/" + testCaseDto.testId;
-
-						String content = prepareReadme(testCaseDto);
-
-						zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
-						zipOutputStream.write(content.getBytes());
-						zipOutputStream.closeEntry();
-
-						if (testCaseDto.getMethodName().size() > 1
-								&& testCaseDto.getMethodName().get(1).equals(MethodName.MATCH.getCode())) {
-							folderName = purpose + "/" + testCaseDto.testId + "/" + testCaseDto.getMethodName().get(1);
-							fileName = "Readme.txt";
-
-							content = prepareReadme(testCaseDto);
-
-							zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
-							zipOutputStream.write(content.getBytes());
-							zipOutputStream.closeEntry();
-						}
-
-					}
-				}
-				if (null != zipOutputStream) {
-					zipOutputStream.finish();
-					zipOutputStream.flush();
-					zipOutputStream.close();
-					zipOutputStream = null;
-				}
-
-				response = byteArrayOutputStream.toByteArray();
-
-				if (Objects.nonNull(bufferedOutputStream)) {
-					bufferedOutputStream.close();
-					bufferedOutputStream = null;
-				}
-				if (Objects.nonNull(byteArrayOutputStream)) {
-					byteArrayOutputStream.close();
-					byteArrayOutputStream = null;
-				}
-			}
-		} catch (Exception ex) {
-			log.debug("sessionId", "idType", "id", ex.getStackTrace());
-			log.error("sessionId", "idType", "id",
-					"In generateSampleSdkTestData method of BiometricTestDataService Service - " + ex.getMessage());
-		} finally {
-			try {
-				if (null != zipOutputStream) {
-					zipOutputStream.finish();
-					zipOutputStream.flush();
-					zipOutputStream.close();
-				}
-				if (null != bufferedOutputStream) {
-					bufferedOutputStream.close();
-				}
-				if (null != byteArrayOutputStream) {
-					byteArrayOutputStream.close();
-				}
-			} catch (Exception e) {
-				log.debug("sessionId", "idType", "id", e.getStackTrace());
-				log.error("sessionId", "idType", "id",
-						"In generateSampleSdkTestData method of BiometricTestDataService Service - " + e.getMessage());
-			}
-		}
-		return response;
-    }
-
-    private byte[] generateSampleAbisTestData(String purpose) {
+    private byte[] generateSampleTestData(String purpose,List<TestCaseEntity> testCaseEntities, String ignoretestcases) {
         byte[] response = null;
         ByteArrayOutputStream byteArrayOutputStream = null;
         BufferedOutputStream bufferedOutputStream = null;
         ZipOutputStream zipOutputStream = null;
-        List<String> ignoreTestcaseList = Arrays.asList(ignoreAbisTestcases.split(","));
         try {
-            List<TestCaseEntity> testCaseEntities = testCaseCacheService.getAbisTestCases(AppConstants.ABIS,
-                    sdkSampleTestdataSpecVer);
             if (Objects.nonNull(testCaseEntities) && testCaseEntities.size() > 0) {
                 String folderName = purpose;
                 String fileName = "Readme.txt";
@@ -732,28 +630,22 @@ public class BiometricTestDataService {
                 byteArrayOutputStream = new ByteArrayOutputStream();
                 bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
                 zipOutputStream = new ZipOutputStream(bufferedOutputStream);
+
+                List<String> ignoreTestcaseList = Arrays.asList(ignoretestcases.split(","));
+
+                // adding Readme file outside testcases
                 StringBuilder builder = new StringBuilder();
                 builder.append(outerReadmeIntro + "\n\n");
                 builder.append("Method - " + purpose + "\n\n");
                 builder.append(outerReadmeBody);
+
                 zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
                 zipOutputStream.write(builder.toString().getBytes());
                 zipOutputStream.closeEntry();
-                for (final TestCaseEntity testCaseEntity : testCaseEntities) {
-                    String testcaseJson = testCaseEntity.getTestcaseJson();
-                    TestCaseDto testCaseDto = objectMapperConfig.objectMapper().readValue(testcaseJson,
-                            TestCaseDto.class);
-                    if (testCaseDto.getSpecVersion() != null
-                            && testCaseDto.getSpecVersion().equals(sdkSampleTestdataSpecVer)
-                            && purpose.equals(AppConstants.ABIS)
-                            && !ignoreTestcaseList.contains(testCaseDto.getTestId())) {
-                        folderName = purpose + "/" + testCaseDto.testId;
-                        String content = prepareReadme(testCaseDto);
-
-                        zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
-                        zipOutputStream.write(content.getBytes());
-                        zipOutputStream.closeEntry();
-                    }
+                if (!purpose.equals(AppConstants.ABIS)) {
+                    generateSampleSdkTestData(purpose,testCaseEntities, ignoreTestcaseList,zipOutputStream,folderName,fileName);
+                } else {
+                    generateSampleAbisTestData(purpose,testCaseEntities, ignoreTestcaseList,zipOutputStream,folderName,fileName);
                 }
                 if (null != zipOutputStream) {
                     zipOutputStream.finish();
@@ -772,12 +664,11 @@ public class BiometricTestDataService {
                     byteArrayOutputStream.close();
                     byteArrayOutputStream = null;
                 }
-
             }
         } catch (Exception ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
-                    "In generateSampleAbisTestData method of BiometricTestDataService Service - " + ex.getMessage());
+                    "In generateSampleTestData method of BiometricTestDataService Service - " + ex.getMessage());
         } finally {
             try {
                 if (null != zipOutputStream) {
@@ -794,10 +685,64 @@ public class BiometricTestDataService {
             } catch (Exception e) {
                 log.debug("sessionId", "idType", "id", e.getStackTrace());
                 log.error("sessionId", "idType", "id",
-                        "In generateSampleAbisTestData method of BiometricTestDataService Service - " + e.getMessage());
+                        "In generateSampleTestData method of BiometricTestDataService Service - " + e.getMessage());
             }
         }
         return response;
+    }
+    private void generateSampleSdkTestData(String purpose, List<TestCaseEntity> testCaseEntities,List<String> ignoreTestcasesList,
+                                             ZipOutputStream zipOutputStream, String folderName, String fileName) throws IOException {
+
+        for (final TestCaseEntity testCaseEntity : testCaseEntities) {
+            String testcaseJson = testCaseEntity.getTestcaseJson();
+            TestCaseDto testCaseDto = objectMapperConfig.objectMapper().readValue(testcaseJson,
+                    TestCaseDto.class);
+            if (testCaseDto.getSpecVersion() != null
+                    && testCaseDto.getSpecVersion().equals(sdkSampleTestdataSpecVer)
+                    && !ignoreTestcasesList.contains(testCaseDto.getTestId())
+                    && testCaseDto.getOtherAttributes().getSdkPurpose().contains(purpose)) {
+
+                folderName = purpose + "/" + testCaseDto.testId;
+
+                String content = prepareReadme(testCaseDto);
+
+                zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
+                zipOutputStream.write(content.getBytes());
+                zipOutputStream.closeEntry();
+
+                if (testCaseDto.getMethodName().size() > 1
+                        && testCaseDto.getMethodName().get(1).equals(MethodName.MATCH.getCode())) {
+                    folderName = purpose + "/" + testCaseDto.testId + "/" + testCaseDto.getMethodName().get(1);
+                    fileName = "Readme.txt";
+
+                    content = prepareReadme(testCaseDto);
+
+                    zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
+                    zipOutputStream.write(content.getBytes());
+                    zipOutputStream.closeEntry();
+                }
+            }
+        }
+    }
+
+    private void generateSampleAbisTestData(String purpose, List<TestCaseEntity> testCaseEntities,List<String> ignoreTestcasesList,
+                                              ZipOutputStream zipOutputStream, String folderName, String fileName) throws IOException {
+        for (final TestCaseEntity testCaseEntity : testCaseEntities) {
+            String testcaseJson = testCaseEntity.getTestcaseJson();
+            TestCaseDto testCaseDto = objectMapperConfig.objectMapper().readValue(testcaseJson,
+                    TestCaseDto.class);
+            if (testCaseDto.getSpecVersion() != null
+                    && testCaseDto.getSpecVersion().equals(sdkSampleTestdataSpecVer)
+                    && purpose.equals(AppConstants.ABIS)
+                    && !ignoreTestcasesList.contains(testCaseDto.getTestId())) {
+                folderName = purpose + "/" + testCaseDto.testId;
+                String content = prepareReadme(testCaseDto);
+
+                zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
+                zipOutputStream.write(content.getBytes());
+                zipOutputStream.closeEntry();
+            }
+        }
     }
 
     private String prepareReadme(TestCaseDto testCaseDto) {
