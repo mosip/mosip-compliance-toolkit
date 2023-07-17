@@ -8,6 +8,11 @@ CREATE TABLE toolkit.sbi_projects(
 	purpose character varying(256) NOT NULL,
 	device_type character varying(64) NOT NULL,
 	device_sub_type character varying(64) NOT NULL,
+	device_images character varying(256) NOT NULL,
+	make character varying(256) NOT NULL,
+	model character varying(256) NOT NULL,
+	sbi_hash character varying(256) NOT NULL,
+	website_url character varying(256) NOT NULL,
 	partner_id character varying(36) NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
@@ -29,6 +34,11 @@ COMMENT ON COLUMN toolkit.sbi_projects.sbi_version IS 'sbi_version: the sbi_vers
 COMMENT ON COLUMN toolkit.sbi_projects.purpose IS 'Purpose: the purpose for testing';
 COMMENT ON COLUMN toolkit.sbi_projects.device_type IS 'device_type: the device type for testing';
 COMMENT ON COLUMN toolkit.sbi_projects.device_sub_type IS 'device_sub_type: the device sub type for testing';
+COMMENT ON COLUMN toolkit.sbi_projects.device_images IS 'device_images: Name of the device images';
+COMMENT ON COLUMN toolkit.sbi_projects.make IS 'make: Make information for creating test report';
+COMMENT ON COLUMN toolkit.sbi_projects.model IS 'model: Model information for creating test report';
+COMMENT ON COLUMN toolkit.sbi_projects.sbi_hash IS 'sbi_hash: Encoded hash of SBI installation file';
+COMMENT ON COLUMN toolkit.sbi_projects.website_url IS 'website_url: Partner website url';
 COMMENT ON COLUMN toolkit.sbi_projects.partner_id IS 'Partner Id: partner id who has created this project.';
 COMMENT ON COLUMN toolkit.sbi_projects.cr_by IS 'Created By : ID or name of the user who create / insert record.';
 COMMENT ON COLUMN toolkit.sbi_projects.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
