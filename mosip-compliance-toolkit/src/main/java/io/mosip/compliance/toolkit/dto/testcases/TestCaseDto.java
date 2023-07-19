@@ -1,17 +1,15 @@
 package io.mosip.compliance.toolkit.dto.testcases;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+
 import lombok.Getter;
 import lombok.Setter;
 
-@Data
 @Getter
 @Setter
 @JsonInclude(Include.NON_NULL)
@@ -26,7 +24,7 @@ public class TestCaseDto implements Serializable {
 	@JsonProperty("isNegativeTestcase")
 	public boolean isNegativeTestcase;
 	@JsonProperty("inactive")
-    public boolean inactive;
+	public boolean inactive;
 	public String inactiveForAndroid;
 	public List<String> methodName;
 	public List<String> requestSchema;
@@ -45,28 +43,34 @@ public class TestCaseDto implements Serializable {
 	@Setter
 	@JsonInclude(Include.NON_NULL)
 	public static class OtherAttributes {
-		public ArrayList<Object> purpose;
-		public ArrayList<Object> biometricTypes;
-		public ArrayList<Object> deviceSubTypes;
-		public ArrayList<Object> segments;
-		public ArrayList<Object> exceptions;
-		public Object requestedScore;
+		public List<String> purpose;
+		public List<String> biometricTypes;
+		public List<String> deviceSubTypes;
+		public List<String> segments;
+		public List<String> exceptions;
+		public String requestedScore;
 		public String bioCount;
 		public String deviceSubId;
-		public ArrayList<String> modalities;
-		public ArrayList<String> sdkPurpose;
-		public String convertSourceFormat;
-		public String convertTargetFormat;
 		public String timeout;
 		@JsonProperty("resumeBtn")
-	    public boolean resumeBtn;
+		public boolean resumeBtn;
 		@JsonProperty("resumeAgainBtn")
-	    public boolean resumeAgainBtn;
+		public boolean resumeAgainBtn;
 		@JsonProperty("keyRotationTestCase")
-	    public boolean keyRotationTestCase;
+		public boolean keyRotationTestCase;
 		public String transactionId;
 		public String invalidRequestAttribute;
-		public String cbeffFilesCount;
-		public String referenceTestId;
+		public List<String> modalities;
+		public List<String> sdkPurpose;
+		public String convertSourceFormat;
+		public String convertTargetFormat;
+		@JsonProperty("bulkInsert")
+		public boolean bulkInsert;
+		public String insertCount;
+		public String insertReferenceId;
+		public String identifyReferenceId;
+		public List<String> identifyGalleryIds;
+		public String expectedDuplicateCount;
+		public String expectedFailureReason;
 	}
 }

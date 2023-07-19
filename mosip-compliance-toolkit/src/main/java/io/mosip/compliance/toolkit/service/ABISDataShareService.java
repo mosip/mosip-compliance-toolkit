@@ -18,6 +18,7 @@ import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ProjectTypes;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
+import io.mosip.compliance.toolkit.dto.abis.DataShareExpireRequest;
 import io.mosip.compliance.toolkit.dto.abis.DataShareRequestDto;
 import io.mosip.compliance.toolkit.dto.abis.DataShareResponseDto;
 import io.mosip.compliance.toolkit.dto.abis.DataShareResponseWrapperDto;
@@ -57,16 +58,13 @@ public class ABISDataShareService {
 	private String getDataShareUrlId;
 
 	@Value("${mosip.service.datashare.create.url}")
-	private String createDataShareUrl;
+	private String createDataShareUrlString;
 
 	@Value("${mosip.service.datashare.get.url}")
 	private String getDataShareUrl;
 
 	@Value("${mosip.service.datashare.policy.id}")
 	private String dataSharePolicyId;
-
-	@Value("${mosip.service.datashare.subscriber.id}")
-	private String dataShareSubscriberId;
 
 	private AuthUserDetails authUserDetails() {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -77,7 +75,7 @@ public class ABISDataShareService {
 		return partnerId;
 	}
 
-	public ResponseWrapper<DataShareResponseWrapperDto> getDataShareUrl(DataShareRequestDto dataShareRequestDto) {
+	public ResponseWrapper<DataShareResponseWrapperDto> createDataShareUrl(DataShareRequestDto dataShareRequestDto) {
 		ResponseWrapper<DataShareResponseWrapperDto> responseWrapper = new ResponseWrapper<>();
 		DataShareResponseWrapperDto wrapperResponseDto = new DataShareResponseWrapperDto();
 		try {
@@ -85,16 +83,15 @@ public class ABISDataShareService {
 			// step 1 - for the given testcase Id, read the cbeff xml from selected testdata
 			// file
 			byte[] cbeffFileBytes = null;
-			InputStream objectStoreStream = testCasesService.getPartnerTestDataStream(
-					dataShareRequestDto.getBioTestDataName(), getPartnerId(), purpose);
+			InputStream objectStoreStream = testCasesService
+					.getPartnerTestDataStream(dataShareRequestDto.getBioTestDataName(), getPartnerId(), purpose);
 			cbeffFileBytes = getCbeffData(objectStoreStream, purpose, dataShareRequestDto.getTestcaseId(),
 					dataShareRequestDto.getCbeffFileSuffix());
 			wrapperResponseDto.setTestDataSource(dataShareRequestDto.getBioTestDataName());
 			if (Objects.isNull(objectStoreStream) || Objects.isNull(cbeffFileBytes)) {
-				objectStoreStream = testCasesService.getDefaultTestDataStream(purpose,
-						purpose);
-				cbeffFileBytes = getCbeffData(objectStoreStream, purpose,
-						dataShareRequestDto.getTestcaseId(), dataShareRequestDto.getCbeffFileSuffix());
+				objectStoreStream = testCasesService.getDefaultTestDataStream(purpose, purpose);
+				cbeffFileBytes = getCbeffData(objectStoreStream, purpose, dataShareRequestDto.getTestcaseId(),
+						dataShareRequestDto.getCbeffFileSuffix());
 				wrapperResponseDto.setTestDataSource(AppConstants.MOSIP_DEFAULT);
 			}
 			log.info("cbeffFileBytes: {}", cbeffFileBytes);
@@ -102,8 +99,13 @@ public class ABISDataShareService {
 			Cookie.Builder builder = new Cookie.Builder(KeyManagerHelper.AUTHORIZATION,
 					keyManagerHelper.getAuthToken());
 			// step 3 - get the data share url
-			String dataShareFullCreateUrl = createDataShareUrl + PATH_SEPARATOR + dataSharePolicyId + PATH_SEPARATOR
-					+ dataShareSubscriberId;
+			// for ABIS3017, we need to send incorrect partner id to simulate decryption failure
+			String partnerIdForDataShare = dataShareRequestDto.getIncorrectPartnerId();
+			if (partnerIdForDataShare == null || partnerIdForDataShare.isBlank()) {
+				partnerIdForDataShare = getPartnerId();
+			}
+			String dataShareFullCreateUrl = createDataShareUrlString + PATH_SEPARATOR + dataSharePolicyId + PATH_SEPARATOR
+					+ partnerIdForDataShare;
 			log.info("Calling dataShareFullCreateUrl: {}", dataShareFullCreateUrl);
 
 			io.restassured.response.Response dataShareResp = given().cookie(builder.build()).relaxedHTTPSValidation()
@@ -117,7 +119,7 @@ public class ABISDataShareService {
 			String internalUrl = dataShareResponseDto.getDataShare().getUrl();
 			String[] splits = internalUrl.split("/");
 			String dataShareFullGetUrl = getDataShareUrl + PATH_SEPARATOR + dataSharePolicyId + PATH_SEPARATOR
-					+ dataShareSubscriberId;
+					+ partnerIdForDataShare;
 			log.info("Setting dataShareFullGetUrl: {}", dataShareFullGetUrl);
 			String shareableUrl = dataShareFullGetUrl;
 			if (splits.length > 0) {
@@ -156,10 +158,58 @@ public class ABISDataShareService {
 		}
 		if (Objects.nonNull(objectStoreStream)) {
 			objectStoreStream.reset();
-			probeFileBytes = testCasesService.getXmlDataFromZipFile(objectStoreStream, purpose, testcaseId,
-					fileName);
+			probeFileBytes = testCasesService.getXmlDataFromZipFile(objectStoreStream, purpose, testcaseId, fileName);
 		}
 		return probeFileBytes;
+	}
+
+	public ResponseWrapper<Boolean> expireDataShareUrl(DataShareExpireRequest requestDto) {
+		ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
+		try {
+			// step 1 - get the auth token
+			Cookie.Builder builder = new Cookie.Builder(KeyManagerHelper.AUTHORIZATION,
+					keyManagerHelper.getAuthToken());
+			// step 2 - invoke the data share url
+			log.info("Calling dataShareUrl: {}", requestDto.getUrl());
+			log.info("getTransactionsAllowed: {}", requestDto.getTransactionsAllowed());
+			boolean urlExpired = false;
+			for (int i = 0; i < requestDto.getTransactionsAllowed() + 1; i++) {
+				if (!urlExpired) {
+					io.restassured.response.Response dataShareResp = given().cookie(builder.build())
+							.relaxedHTTPSValidation().when().get(requestDto.getUrl()).then().extract().response();
+
+					String resp = dataShareResp.getBody().asString();
+					log.info("resp: {}", resp);
+					if (resp != null) {
+						try {
+							DataShareResponseDto dataShareResponseDto = objectMapperConfig.objectMapper()
+									.readValue(resp, DataShareResponseDto.class);
+							if (dataShareResponseDto != null && dataShareResponseDto.getDataShare() == null) {
+								urlExpired = true;
+							}
+						} catch (Exception e) {
+							// ignore, it is a valid case
+						}
+					}
+				}
+			}
+			responseWrapper.setResponse(Boolean.valueOf(urlExpired));
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In getDataShareUrl method of ABISQueueService Service - " + ex.getMessage());
+			List<ServiceError> serviceErrorsList = new ArrayList<>();
+			ServiceError serviceError = new ServiceError();
+			serviceError.setErrorCode(ToolkitErrorCodes.ABIS_EXPIRE_DATA_SHARE_URL_EXCEPTION.getErrorCode());
+			serviceError.setMessage(
+					ToolkitErrorCodes.ABIS_EXPIRE_DATA_SHARE_URL_EXCEPTION.getErrorMessage() + " " + ex.getMessage());
+			serviceErrorsList.add(serviceError);
+			responseWrapper.setErrors(serviceErrorsList);
+		}
+		responseWrapper.setId(getDataShareUrlId);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
 	}
 
 }

@@ -1,5 +1,6 @@
 package io.mosip.compliance.toolkit.controllers;
 
+import io.mosip.compliance.toolkit.dto.abis.DataShareExpireRequest;
 import io.mosip.compliance.toolkit.dto.abis.DataShareRequestDto;
 import io.mosip.compliance.toolkit.dto.abis.DataShareResponseWrapperDto;
 import io.mosip.compliance.toolkit.service.ABISDataShareService;
@@ -54,7 +55,18 @@ public class ABISDataShareControllerTest {
         DataShareRequestDto dataShareRequestDto = new DataShareRequestDto();
         value.setRequest(dataShareRequestDto);
         ResponseWrapper<DataShareResponseWrapperDto> response = new ResponseWrapper<>();
-        Mockito.when(abisDataShareService.getDataShareUrl(dataShareRequestDto)).thenReturn(response);
-        abisDataShareController.getDataShareUrl(value, errors);
+        Mockito.when(abisDataShareService.createDataShareUrl(dataShareRequestDto)).thenReturn(response);
+        abisDataShareController.createDataShareUrl(value, errors);
+    }
+
+    @Test
+    public void expireDataShareUrlTest() {
+        RequestWrapper<DataShareExpireRequest> value = new RequestWrapper<>();
+        DataShareExpireRequest dataShareExpireRequest = new DataShareExpireRequest();
+        value.setRequest(dataShareExpireRequest);
+        ResponseWrapper<Boolean> response = new ResponseWrapper<>();
+        Mockito.when(abisDataShareService.expireDataShareUrl(dataShareExpireRequest)).thenReturn(response);
+        abisDataShareController.expireDataShareUrl(value, errors);
     }
 }
+

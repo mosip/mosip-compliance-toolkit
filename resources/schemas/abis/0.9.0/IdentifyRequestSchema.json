@@ -1,79 +1,81 @@
 {
-  "$schema": "https://json-schema.org/draft/2019-09/schema#",
-  "$id": "http://mosip-compliance-toolkit.com/schemas/IdentifyRequestSchema.json",
-  "type": "object",
-  "properties": {
-    "id": {
-      "type": "string"
-    },
-    "version": {
-      "type": "string"
-    },
-    "requestId": {
-      "type": "string"
-    },
-    "requesttime": {
-      "type": "string"
-    },
-    "referenceId": {
-      "type": "string"
-    },
-    "referenceUrl": {
-      "type": "string"
-    },
-    "gallery": {
-      "type": "object",
-      "properties": {
-        "referenceIds": {
-          "type": "array",
-          "items": [
-            {
-              "type": "object",
-              "properties": {
-                "referenceId": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "referenceId"
-              ]
-            }
-          ]
-        }
-      },
-      "required": [
-        "referenceIds"
-      ]
-    },
-    "flags": {
-      "type": "object",
-      "properties": {
-        "maxResults": {
-          "type": "integer"
-        },
-        "targetFPIR": {
-          "type": "integer"
-        },
-        "flag1": {
-          "type": "string"
-        },
-        "flag2": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "maxResults",
-        "targetFPIR",
-        "flag1",
-        "flag2"
-      ]
-    }
-  },
-  "required": [
-    "id",
-    "version",
-    "requestId",
-    "requesttime",
-    "referenceId"
-  ]
+	"$schema": "https://json-schema.org/draft/2019-09/schema#",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/IdentifyRequestSchema.json",
+	"title": "ABIS Identify Request Schema",
+	"description": "ABIS Identify Request Schema",
+	"type": "object",
+	"properties": {
+		"id": {
+			"type": "string"
+		},
+		"version": {
+			"type": "string"
+		},
+		"requestId": {
+			"type": "string"
+		},
+		"requesttime": {
+			"type": "string"
+		},
+		"referenceId": {
+			"type": "string"
+		},
+		"referenceUrl": {
+			"type": "string"
+		},
+		"gallery": {
+			"type": "object",
+			"properties": {
+				"referenceIds": {
+					"type": "array",
+					"items": [
+						{
+							"type": "object",
+							"properties": {
+								"referenceId": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"referenceId"
+							]
+						}
+					]
+				}
+			},
+			"required": [
+				"referenceIds"
+			]
+		},
+		"flags": {
+			"type": "object",
+			"properties": {
+				"maxResults": {
+					"type": "string"
+				},
+				"targetFPIR": {
+					"type": "string"
+				},
+				"flag1": {
+					"type": "string"
+				},
+				"flag2": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"maxResults",
+				"targetFPIR",
+				"flag1",
+				"flag2"
+			]
+		}
+	},
+	"required": [
+		"id",
+		"version",
+		"requestId",
+		"requesttime",
+		"referenceId"
+	]
 }

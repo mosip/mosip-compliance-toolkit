@@ -24,6 +24,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.Authentication;
@@ -82,6 +83,7 @@ public class TestCasesServiceTest {
 
 	@Before
 	public void before() {
+		MockitoAnnotations.initMocks(this);
 		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
 		mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
@@ -132,13 +134,13 @@ public class TestCasesServiceTest {
 		testCaseDto.setInactive(false);
 		testCaseDto.setSpecVersion(SbiSpecVersions.SPEC_VER_0_9_5.getCode());
 		TestCaseDto.OtherAttributes otherAttributes = new TestCaseDto.OtherAttributes();
-		ArrayList<Object> purposes = new ArrayList<>();
+		List<String> purposes = new ArrayList<>();
 		purposes.add(Purposes.REGISTRATION.getCode());
 		otherAttributes.setPurpose(purposes);
-		ArrayList<Object> biometricTypes = new ArrayList<>();
+		List<String> biometricTypes = new ArrayList<>();
 		biometricTypes.add(BiometricType.FINGER.value());
 		otherAttributes.setBiometricTypes(biometricTypes);
-		ArrayList<Object> deviceSubTypes = new ArrayList<>();
+		List<String> deviceSubTypes = new ArrayList<>();
 		deviceSubTypes.add(DeviceSubTypes.SLAP.getCode());
 		otherAttributes.setDeviceSubTypes(deviceSubTypes);
 		testCaseDto.setOtherAttributes(otherAttributes);
@@ -173,13 +175,13 @@ public class TestCasesServiceTest {
 		testCaseDto.setInactive(false);
 		testCaseDto.setSpecVersion(SbiSpecVersions.SPEC_VER_0_9_5.getCode());
 		TestCaseDto.OtherAttributes otherAttributes = new TestCaseDto.OtherAttributes();
-		ArrayList<Object> purposes = new ArrayList<>();
+		List<String> purposes = new ArrayList<>();
 		purposes.add(Purposes.REGISTRATION.getCode());
 		otherAttributes.setPurpose(purposes);
-		ArrayList<Object> biometricTypes = new ArrayList<>();
+		List<String> biometricTypes = new ArrayList<>();
 		biometricTypes.add(BiometricType.IRIS.value());
 		otherAttributes.setBiometricTypes(biometricTypes);
-		ArrayList<Object> deviceSubTypes = new ArrayList<>();
+		List<String> deviceSubTypes = new ArrayList<>();
 		deviceSubTypes.add(DeviceSubTypes.DOUBLE.getCode());
 		otherAttributes.setDeviceSubTypes(deviceSubTypes);
 		testCaseDto.setOtherAttributes(otherAttributes);
@@ -283,6 +285,63 @@ public class TestCasesServiceTest {
 		String specVersion = SdkSpecVersions.SPEC_VER_0_9_0.getCode();
 		String sdkPurpose = SdkPurpose.CHECK_QUALITY.getCode();
 		ReflectionTestUtils.invokeMethod(testCasesService,"isValidSdkTestCase",specVersion,sdkPurpose);
+	}
+
+	/*
+	 * This class tests the getAbisTestCases method
+	 */
+	@Test
+	public void getAbisTestCasesTest() throws Exception {
+		String specVersion = AbisSpecVersions.SPEC_VER_0_9_0.getCode();
+		String schemaResponse = "schemaResponse";
+		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
+				.thenReturn(schemaResponse);
+		List<TestCaseEntity> testCaseEntities = new ArrayList<>();
+		TestCaseEntity testCaseEntity = new TestCaseEntity();
+		testCaseEntity.setTestcaseJson("testCaseJson");
+		testCaseEntities.add(testCaseEntity);
+		Mockito.when(testCaseCacheService.getAbisTestCases(AppConstants.ABIS, specVersion)).thenReturn(testCaseEntities);
+		TestCasesService testCasesServiceSpy = Mockito.spy(testCasesService);
+		ValidationResultDto validationResultDto = new ValidationResultDto();
+		validationResultDto.setStatus(AppConstants.SUCCESS);
+		Mockito.doReturn(validationResultDto).when(testCasesServiceSpy)
+				.validateJsonWithSchema(testCaseEntity.getTestcaseJson(), schemaResponse);
+		TestCaseDto testCaseDto = new TestCaseDto();
+		testCaseDto.setInactive(false);
+		testCaseDto.setSpecVersion(AbisSpecVersions.SPEC_VER_0_9_0.getCode());
+		TestCaseDto.OtherAttributes otherAttributes = new TestCaseDto.OtherAttributes();
+		testCaseDto.setOtherAttributes(otherAttributes);
+		Mockito.when(objectMapper.readValue(testCaseEntity.getTestcaseJson(), TestCaseDto.class))
+				.thenReturn(testCaseDto);
+		testCasesServiceSpy.getAbisTestCases(specVersion);
+	}
+
+	/*
+	 * This class tests the getAbisTestCases method in case of exception
+	 */
+	@Test
+	public void getAbisTestCasesExceptionTest() throws Exception {
+		// toolkit exception
+		String specVersion = AbisSpecVersions.SPEC_VER_0_9_0.getCode();
+		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON)).thenReturn(null);
+		testCasesService.getAbisTestCases(specVersion);
+		// exception
+		String schemaResponse = "schemaResponse";
+		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
+				.thenReturn(schemaResponse);
+		List<TestCaseEntity> testCaseEntities = new ArrayList<>();
+		testCaseEntities.add(null);
+		Mockito.when(testCaseCacheService.getAbisTestCases(AppConstants.ABIS, specVersion)).thenReturn(testCaseEntities);
+		testCasesService.getAbisTestCases(specVersion);
+	}
+
+	/*
+	 *This class tests the isValidAbisTestCase method
+	 */
+	@Test
+	public void isValidAbisTestCaseTest(){
+		String specVersion = AbisSpecVersions.SPEC_VER_0_9_0.getCode();
+		ReflectionTestUtils.invokeMethod(testCasesService,"isValidAbisTestCase",specVersion);
 	}
 
 	/*
@@ -500,6 +559,13 @@ public class TestCasesServiceTest {
 				requestDto.getRequestSchema() + ".json")).thenReturn(schemaResponse);
 		Assert.assertEquals(AppConstants.SUCCESS,
 				testCasesServiceSpy.performRequestValidations(requestDto).getResponse().getStatus());
+		// type ABIS
+		requestDto.setTestCaseType(AppConstants.ABIS);
+		requestDto.setSpecVersion(AbisSpecVersions.SPEC_VER_0_9_0.getCode());
+		Mockito.when(resourceCacheService.getSchema(AppConstants.ABIS.toLowerCase(), requestDto.getSpecVersion(),
+				requestDto.getRequestSchema() + ".json")).thenReturn(schemaResponse);
+		Assert.assertEquals(AppConstants.SUCCESS,
+				testCasesServiceSpy.performRequestValidations(requestDto).getResponse().getStatus());
 	}
 
 	/*
@@ -527,6 +593,24 @@ public class TestCasesServiceTest {
 		ValidatorDefDto validatorDefDto = new ValidatorDefDto();
 		validatorDefDto.setName("ResponseMismatchValidator");
 		validatorDefDto.setDescription("Description");
+		validatorDefs.add(validatorDefDto);
+		requestDto.setValidatorDefs(validatorDefs);
+		testCasesService.performValidations(requestDto);
+	}
+
+	@Test
+	public void performValidationsTestISO() {
+		ValidationInputDto requestDto = new ValidationInputDto();
+		requestDto.testCaseType = "SBI";
+		requestDto.testName = "Auth capture - Single Iris - Left Iris - ISO Standard Validations (ISO19794-6:2011)";
+		requestDto.specVersion = "0.9.5";
+		requestDto.isNegativeTestCase = false;
+		requestDto.responseSchema = "AuthCaptureResponseSchema";
+		requestDto.methodName = "capture";
+		List<ValidatorDefDto> validatorDefs = new ArrayList<>();
+		ValidatorDefDto validatorDefDto = new ValidatorDefDto();
+		validatorDefDto.setName("ISOStandardsValidator");
+		validatorDefDto.setDescription("Validates that the 'bioValue' is as per the defined ISO standards.");
 		validatorDefs.add(validatorDefDto);
 		requestDto.setValidatorDefs(validatorDefs);
 		testCasesService.performValidations(requestDto);

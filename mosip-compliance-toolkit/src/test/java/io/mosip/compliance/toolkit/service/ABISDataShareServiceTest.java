@@ -1,8 +1,13 @@
 package io.mosip.compliance.toolkit.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
+import io.mosip.compliance.toolkit.dto.abis.DataShareExpireRequest;
 import io.mosip.compliance.toolkit.dto.abis.DataShareRequestDto;
 import io.mosip.compliance.toolkit.dto.abis.DataShareResponseWrapperDto;
+import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
 import io.mosip.compliance.toolkit.util.KeyManagerHelper;
+import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.authmanager.authadapter.model.MosipUserDto;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -48,6 +53,18 @@ public class ABISDataShareServiceTest {
     @Mock
     SecurityContext securityContext;
 
+    @Mock
+    private ObjectStoreAdapter objectStore;
+
+    @Mock
+    private BiometricTestDataRepository biometricTestDataRepository;
+
+    @Mock
+    private ObjectMapperConfig objectMapperConfig;
+
+    @Mock
+    private ObjectMapper mapper;
+
     private MosipUserDto mosipUserDto;
 
     @Before
@@ -90,7 +107,7 @@ public class ABISDataShareServiceTest {
         dataShareRequestDto.setBioTestDataName("testdata");
         dataShareRequestDto.setCbeffFileSuffix(1);
 
-        ResponseWrapper<DataShareResponseWrapperDto> result = abisDataShareService.getDataShareUrl(dataShareRequestDto);
+        ResponseWrapper<DataShareResponseWrapperDto> result = abisDataShareService.createDataShareUrl(dataShareRequestDto);
 
         assertNotNull(result);
     }

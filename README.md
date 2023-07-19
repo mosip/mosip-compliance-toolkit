@@ -1,5 +1,5 @@
-[![Maven Package upon a push](https://github.com/mosip/mosip-compliance-toolkit/actions/workflows/push_trigger.yml/badge.svg?branch=1.1.0)](https://github.com/mosip/mosip-compliance-toolkit/actions/workflows/push_trigger.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=develop&project=mosip_mosip-compliance-toolkit&metric=alert_status)](https://sonarcloud.io/dashboard?branch=1.1.0&id=mosip_mosip-compliance-toolkit)
+[![Maven Package upon a push](https://github.com/mosip/mosip-compliance-toolkit/actions/workflows/push_trigger.yml/badge.svg?branch=release-1.x.x)](https://github.com/mosip/mosip-compliance-toolkit/actions/workflows/push_trigger.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=release-1.x.x&project=mosip_mosip-compliance-toolkit&metric=alert_status)](https://sonarcloud.io/dashboard?branch=release-1.x.x&id=mosip_mosip-compliance-toolkit)
 
 # Mosip-compliance-toolkit 
 This repository contains the source code for MOSIP Compliance-toolkit services.  For an overview refer [here](https://docs.mosip.io/compliance-tool-kit).  The modules exposes API endpoints. For a reference front-end UI implementation refer to [Compliance-toolkit UI github repo](https://github.com/mosip/mosip-compliance-toolkit-ui/)
@@ -55,6 +55,7 @@ Prerequisites:
 
 * Install `kubectl` and `helm` utilities.
 * Run the `keycloak-init.sh` script to create the `mosip-toolkit-client` keycloak client. You can skip this step if you have already done it.
+* `Keycloak-init.sh` will create a user 'mpartner-default-abis' and its temporary password is 'abcd1234'.
   ```
   cd helm
   ./keycloak-init.sh

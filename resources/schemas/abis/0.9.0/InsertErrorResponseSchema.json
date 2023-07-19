@@ -1,0 +1,34 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema#",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/InsertErrorResponseSchema.json",
+	"title": "ABIS Insert Error Response Schema",
+	"description": "ABIS Insert Error Response Schema",
+	"type": "object",
+	"properties": {
+		"id": {
+			"type": "string"
+		},
+		"requestId": {
+			"type": "string"
+		},
+		"responsetime": {
+			"type": "string"
+		},
+		"returnValue": {
+			"type": "string",
+			"enum": [
+				"2"
+			]
+		},
+		"failureReason": {
+			"type": "string"
+		}
+	},
+	"required": [
+		"id",
+		"requestId",
+		"responsetime",
+		"returnValue",
+		"failureReason"
+	]
+}
