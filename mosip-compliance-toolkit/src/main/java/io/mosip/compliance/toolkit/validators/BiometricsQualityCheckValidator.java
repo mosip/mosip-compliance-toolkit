@@ -305,13 +305,11 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 			// TODO: set flags
 			checkQualityRequestDto.setFlags(null);
 			String requestJson = gson.toJson(checkQualityRequestDto);
-			// System.out.println(requestJson);
 			RequestDto inputDto = new RequestDto();
 			inputDto.setVersion(AppConstants.VERSION);
 			inputDto.setRequest(StringUtil.base64Encode(requestJson));
 
 			String requestBody = gson.toJson(inputDto);
-			// System.out.println(requestBody);
 			MediaType mediaType = MediaType.parse(AppConstants.APPLICATION_JSON_CHARSET_UTF_8);
 			RequestBody body = RequestBody.create(mediaType, requestBody);
 

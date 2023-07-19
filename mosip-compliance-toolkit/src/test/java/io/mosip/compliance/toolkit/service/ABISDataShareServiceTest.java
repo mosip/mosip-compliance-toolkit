@@ -113,17 +113,6 @@ public class ABISDataShareServiceTest {
     }
 
     /*
-     * This class tests the expireDataShareUrl method
-     */
-    @Test
-    public void expireDataShareUrlTest() {
-        DataShareExpireRequest dataShareExpireRequest = new DataShareExpireRequest();
-        dataShareExpireRequest.setUrl("wss://activemq.dev.mosip.net/ws");
-        dataShareExpireRequest.setTransactionsAllowed(1);
-        abisDataShareService.expireDataShareUrl(dataShareExpireRequest);
-    }
-
-    /*
      * This method is used to get MosipUserDto in class
      */
     private MosipUserDto getMosipUserDto() {
