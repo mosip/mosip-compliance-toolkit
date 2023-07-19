@@ -7,7 +7,7 @@ if [ $# -ge 1 ] ; then
 fi
 
 NS=compliance-toolkit
-CHART_VERSION=12.0.2
+CHART_VERSION=12.0.1
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo add mosip https://mosip.github.io/mosip-helm
 helm repo update
@@ -24,6 +24,7 @@ while true; do
         helm -n $NS install postgres-init-toolkit mosip/postgres-init \
         -f init_values.yaml \
         --version $CHART_VERSION \
+        --set image.tag=1.2.0-CTK \
         --set dbUserPasswords.dbuserPassword="$DB_USER_PASSWORD" \
         --wait --wait-for-jobs
         break
