@@ -110,7 +110,7 @@ public class TestRunService {
 					String collectionId = inputTestRun.getCollectionId();
 					entity.setId(RandomIdGenerator.generateUUID(
 							collectionId.substring(0, Math.min(5, collectionId.length())).toLowerCase(), "", 36));
-					entity.setRunDtimes(LocalDateTime.now());
+					entity.setRunDtimes(inputTestRun.getRunDtimes());
 					entity.setPartnerId(getPartnerId());
 					entity.setCrBy(getUserBy());
 					entity.setCrDtimes(LocalDateTime.now());
