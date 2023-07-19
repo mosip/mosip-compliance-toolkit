@@ -499,10 +499,9 @@ public class BiometricTestDataServiceTest {
         List<TestCaseEntity> testCaseEntities = new ArrayList<>();
         List<String> ignoreTestcasesList = new ArrayList<>();
         ZipOutputStream zipOutputStream = null;
-        String folderName = purpose;
         String fileName = "Readme.txt";
         ReflectionTestUtils.setField(biometricTestDataService, "testCaseCacheService", null);
-        ReflectionTestUtils.invokeMethod(biometricTestDataService, "generateSampleSdkTestData", purpose,testCaseEntities,ignoreTestcasesList,zipOutputStream,folderName,fileName);
+        ReflectionTestUtils.invokeMethod(biometricTestDataService, "generateSampleSdkTestData", purpose,testCaseEntities,ignoreTestcasesList,zipOutputStream,fileName);
     }
 
     /*
