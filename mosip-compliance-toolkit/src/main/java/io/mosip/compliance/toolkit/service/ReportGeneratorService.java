@@ -3,9 +3,13 @@ package io.mosip.compliance.toolkit.service;
 import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -60,9 +64,21 @@ public class ReportGeneratorService {
 					item.setResultStatus(testRunDetailsDto.getResultStatus());
 					testRunTable.add(item);
 				}
+				
+				LocalDateTime testRunEndDt = responseWrapper.getResponse().getExecutionDtimes();
+				LocalDateTime testRunStartDt = responseWrapper.getResponse().getRunDtimes();
+				long milliSeconds = testRunStartDt.until(testRunEndDt, ChronoUnit.MILLIS);
+				String timeDiffStr = String.format("%d minutes %d seconds", 
+						  TimeUnit.MILLISECONDS.toMinutes(milliSeconds),
+						  TimeUnit.MILLISECONDS.toSeconds(milliSeconds) - 
+						  TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliSeconds)));
+				 DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
+
 				// 1. Populate all attributes
 				VelocityContext velocityContext = new VelocityContext();
+				velocityContext.put("testRunStartTime", testRunStartDt.format(formatter));
 				velocityContext.put("testRunDetailsList", testRunTable);
+				velocityContext.put("timeTakenByTestRun", timeDiffStr);
 				// 2. Merge velocity HTML template with all attributes
 				VelocityEngine engine = VelocityEngineConfig.getVelocityEngine();
 				StringWriter stringWriter = new StringWriter();
@@ -72,13 +88,22 @@ public class ReportGeneratorService {
 				log.info("Merged Template {}", parsedHtml);
 
 				// 2. Covert the merged HTML to PDF
-				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 				ITextRenderer renderer = new ITextRenderer();
 				SharedContext sharedContext = renderer.getSharedContext();
 				sharedContext.setPrint(true);
 				sharedContext.setInteractive(false);
+//				LineBreakingStrategy strategy = new LineBreakingStrategy() {
+//					
+//					@Override
+//					public BreakPointsProvider getBreakPointsProvider(String text, String lang, CalculatedStyle style) {
+//						// TODO Auto-generated method stub
+//						return null;
+//					}
+//				};
+//				sharedContext.setLineBreakingStrategy(strategy);
 				renderer.setDocumentFromString(parsedHtml);
 				renderer.layout();
+				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 				renderer.createPDF(outputStream);
 				byte[] bytes = outputStream.toByteArray();
 				ByteArrayResource resource = new ByteArrayResource(bytes);
