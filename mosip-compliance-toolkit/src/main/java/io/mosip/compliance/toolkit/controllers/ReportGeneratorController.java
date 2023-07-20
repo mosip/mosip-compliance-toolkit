@@ -5,6 +5,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.mosip.compliance.toolkit.service.ReportGeneratorService;
@@ -23,7 +24,7 @@ public class ReportGeneratorController {
 	private ReportGeneratorService service;
 	
 	@GetMapping(value = "/createReport/{testRunId}")
-	public ResponseEntity<Resource> createReport(@PathVariable String testRunId) {
-		return service.createReport(testRunId);
+	public ResponseEntity<Resource> createReport(@PathVariable String testRunId, @RequestHeader String host) {
+		return service.createReport(testRunId, host);
 	}
 }
