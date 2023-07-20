@@ -43,7 +43,7 @@ public class ReportGeneratorService {
 	@Autowired
 	private TestCasesService testCaseService;
 
-	public ResponseEntity<Resource> createReport(String testRunId) {
+	public ResponseEntity<Resource> createReport(String testRunId, String host) {
 		try {
 			// Get the test run details
 			ResponseWrapper<TestRunDetailsResponseDto> responseWrapper = testRunService.getTestRunDetails(testRunId);
@@ -76,6 +76,7 @@ public class ReportGeneratorService {
 
 				// 1. Populate all attributes
 				VelocityContext velocityContext = new VelocityContext();
+				velocityContext.put("host", host);
 				velocityContext.put("testRunStartTime", testRunStartDt.format(formatter));
 				velocityContext.put("testRunDetailsList", testRunTable);
 				velocityContext.put("timeTakenByTestRun", timeDiffStr);
@@ -84,27 +85,20 @@ public class ReportGeneratorService {
 				StringWriter stringWriter = new StringWriter();
 				engine.mergeTemplate("templates/testRunReport.vm", StandardCharsets.UTF_8.name(), velocityContext,
 						stringWriter);
-				String parsedHtml = stringWriter.toString();
-				log.info("Merged Template {}", parsedHtml);
+				String mergedHtml = stringWriter.toString();
+				log.info("Merged Template {}", mergedHtml);
 
 				// 2. Covert the merged HTML to PDF
 				ITextRenderer renderer = new ITextRenderer();
+				
 				SharedContext sharedContext = renderer.getSharedContext();
 				sharedContext.setPrint(true);
 				sharedContext.setInteractive(false);
-//				LineBreakingStrategy strategy = new LineBreakingStrategy() {
-//					
-//					@Override
-//					public BreakPointsProvider getBreakPointsProvider(String text, String lang, CalculatedStyle style) {
-//						// TODO Auto-generated method stub
-//						return null;
-//					}
-//				};
-//				sharedContext.setLineBreakingStrategy(strategy);
-				renderer.setDocumentFromString(parsedHtml);
+				renderer.setDocumentFromString(mergedHtml);
 				renderer.layout();
 				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 				renderer.createPDF(outputStream);
+				
 				byte[] bytes = outputStream.toByteArray();
 				ByteArrayResource resource = new ByteArrayResource(bytes);
 				outputStream.close();
