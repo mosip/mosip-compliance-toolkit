@@ -55,7 +55,7 @@
 		<io.micrometer.prometheus.version>1.4.2</io.micrometer.prometheus.version>
 		
 		<!-- Object Store -->
-		<kernel.khazana.version>1.2.1-SNAPSHOT</kernel.khazana.version>
+		<kernel.khazana.version>1.2.0.1-SNAPSHOT</kernel.khazana.version>
 		
 		<biometrics-util.version>1.2.0.1-B2-SNAPSHOT</biometrics-util.version>
 		<org.openpnp.opencv.version>4.5.3-4</org.openpnp.opencv.version>
@@ -217,6 +217,12 @@
 			<groupId>org.apache.velocity</groupId>
 			<artifactId>velocity</artifactId>
 			<version>${velocity.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-lang</groupId>
+					<artifactId>commons-lang</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 		    <groupId>org.xhtmlrenderer</groupId>
