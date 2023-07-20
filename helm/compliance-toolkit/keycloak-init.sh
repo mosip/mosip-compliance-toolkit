@@ -11,6 +11,9 @@ IAMHOST_URL=$(kubectl get cm global -o jsonpath={.data.mosip-iam-external-host})
 TOOLKIT_CLIENT_SECRET_KEY="mosip_toolkit_client_secret"
 TOOLKIT_CLIENT_SECRET_VALUE=$( kubectl -n keycloak get secret keycloak-client-secrets -o jsonpath={.data.mosip_toolkit_client_secret} | base64 -d )
 
+TOOLKIT_ANDROID_CLIENT_SECRET_KEY="mosip_toolkit_android_client_secret"
+TOOLKIT_ANDROID_CLIENT_SECRET_VALUE=$( kubectl -n keycloak get secret keycloak-client-secrets -o jsonpath={.data.mosip_toolkit_android_client_secret} | base64 -d )
+
 echo Creating Toolkit keycloak client
 echo "Copy keycloak configmap and secrets"
 $COPY_UTIL configmap keycloak-host keycloak $NS
@@ -25,6 +28,8 @@ helm -n $NS install toolkit-keycloak-init mosip/keycloak-init \
 --set frontend="https://$IAMHOST_URL/auth" \
 --set clientSecrets[0].name="$TOOLKIT_CLIENT_SECRET_KEY" \
 --set clientSecrets[0].secret="$TOOLKIT_CLIENT_SECRET_VALUE" \
+--set clientSecrets[1].name="$TOOLKIT_ANDROID_CLIENT_SECRET_KEY" \
+--set clientSecrets[1].secret="$TOOLKIT_ANDROID_CLIENT_SECRET_VALUE" \
 --version $CHART_VERSION --wait
 
 TOOLKIT_CLIENT_SECRET_VALUE=$( kubectl -n $NS get secret keycloak-client-secrets -o json |  jq ".data.$TOOLKIT_CLIENT_SECRET_KEY" )
