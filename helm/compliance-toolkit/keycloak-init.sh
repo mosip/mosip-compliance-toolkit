@@ -10,7 +10,6 @@ echo checking if toolkit client is created already
 IAMHOST_URL=$(kubectl get cm global -o jsonpath={.data.mosip-iam-external-host})
 TOOLKIT_CLIENT_SECRET_KEY="mosip_toolkit_client_secret"
 TOOLKIT_CLIENT_SECRET_VALUE=$( kubectl -n keycloak get secret keycloak-client-secrets -o jsonpath={.data.mosip_toolkit_client_secret} | base64 -d )
-
 TOOLKIT_ANDROID_CLIENT_SECRET_KEY="mosip_toolkit_android_client_secret"
 TOOLKIT_ANDROID_CLIENT_SECRET_VALUE=$( kubectl -n keycloak get secret keycloak-client-secrets -o jsonpath={.data.mosip_toolkit_android_client_secret} | base64 -d )
 
