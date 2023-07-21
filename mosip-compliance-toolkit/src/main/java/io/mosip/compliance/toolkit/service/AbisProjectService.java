@@ -145,6 +145,8 @@ public class AbisProjectService {
 					entity.setDeleted(false);
 					entity.setOutboundQueueName(abisProjectDto.getOutboundQueueName());
 					entity.setModality(abisProjectDto.getModality());
+					entity.setAbisHash(abisProjectDto.getAbisHash());
+					entity.setWebsiteUrl(abisProjectDto.getWebsiteUrl());
 					entity.setBioTestDataFileName(abisProjectDto.getBioTestDataFileName());
 					entity.setAbisVersion(abisProjectDto.getAbisVersion());
 
@@ -208,6 +210,8 @@ public class AbisProjectService {
 					String password = abisProjectDto.getPassword();
 					String requestQueueName = abisProjectDto.getOutboundQueueName();
 					String responseQueueName = abisProjectDto.getInboundQueueName();
+					String abisHash = abisProjectDto.getAbisHash();
+					String websiteUrl = abisProjectDto.getWebsiteUrl();
 					String bioTestDataName = abisProjectDto.getBioTestDataFileName();
 					//Updating ABIS project values
 					if (Objects.nonNull(url) && !url.isEmpty()) {
@@ -224,6 +228,12 @@ public class AbisProjectService {
 					}
 					if (Objects.nonNull(responseQueueName) && !responseQueueName.isEmpty()) {
 						entity.setInboundQueueName(responseQueueName);
+					}
+					if (Objects.nonNull(abisHash) && !abisHash.isEmpty()) {
+						entity.setAbisHash(abisHash);
+					}
+					if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty()) {
+						entity.setWebsiteUrl(websiteUrl);
 					}
 					if (Objects.nonNull(bioTestDataName) && !bioTestDataName.isEmpty()) {
 						if (bioTestDataName.equals(AppConstants.MOSIP_DEFAULT)) {

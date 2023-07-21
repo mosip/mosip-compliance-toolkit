@@ -1,6 +1,7 @@
 package io.mosip.compliance.toolkit.service;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 import io.mosip.compliance.toolkit.util.CommonUtil;
@@ -41,6 +42,9 @@ public class SbiProjectService {
 
 	@Value("${mosip.toolkit.api.id.sbi.project.post}")
 	private String getSbiProjectPostId;
+
+	@Value("${mosip.toolkit.api.id.sbi.project.put}")
+	private String putSbiProjectId;
 
 	@Autowired
 	public ObjectMapperConfig objectMapperConfig;
@@ -114,6 +118,11 @@ public class SbiProjectService {
 				entity.setPurpose(sbiProjectDto.getPurpose());
 				entity.setDeviceType(sbiProjectDto.getDeviceType());
 				entity.setDeviceSubType(sbiProjectDto.getDeviceSubType());
+				entity.setDeviceImages(sbiProjectDto.getDeviceImages());
+				entity.setMake(sbiProjectDto.getMake());
+				entity.setModel(sbiProjectDto.getModel());
+				entity.setSbiHash(sbiProjectDto.getSbiHash());
+				entity.setWebsiteUrl(sbiProjectDto.getWebsiteUrl());
 				entity.setPartnerId(this.getPartnerId());
 				entity.setCrBy(this.getUserBy());
 				entity.setCrDate(crDate);
@@ -156,6 +165,71 @@ public class SbiProjectService {
 			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		}
 		responseWrapper.setId(getSbiProjectPostId);
+		responseWrapper.setResponse(sbiProjectDto);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+
+	public ResponseWrapper<SbiProjectDto> updateSbiProject(SbiProjectDto sbiProjectDto) {
+		ResponseWrapper<SbiProjectDto> responseWrapper = new ResponseWrapper<>();
+		try {
+			if (Objects.nonNull(sbiProjectDto)) {
+				String projectId = sbiProjectDto.getId();
+				Optional<SbiProjectEntity> optionalSbiProjectEntity = sbiProjectRepository.findById(projectId,
+						getPartnerId());
+				if (optionalSbiProjectEntity.isPresent()) {
+					SbiProjectEntity entity = optionalSbiProjectEntity.get();
+					LocalDateTime updDate = LocalDateTime.now();
+					String deviceImages = sbiProjectDto.getDeviceImages();
+					String make = sbiProjectDto.getMake();
+					String model = sbiProjectDto.getModel();
+					String sbiHash = sbiProjectDto.getSbiHash();
+					String websiteUrl = sbiProjectDto.getWebsiteUrl();
+					if (Objects.nonNull(deviceImages) && !deviceImages.isEmpty()) {
+						entity.setDeviceImages(deviceImages);
+					}
+					if (Objects.nonNull(make) && !make.isEmpty()) {
+						entity.setMake(make);
+					}
+					if (Objects.nonNull(model) && !model.isEmpty()) {
+						entity.setModel(model);
+					}
+					if (Objects.nonNull(sbiHash) && !sbiHash.isEmpty()) {
+						entity.setSbiHash(sbiHash);
+					}
+					if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty()) {
+						entity.setWebsiteUrl(websiteUrl);
+					}
+					entity.setUpBy(this.getUserBy());
+					entity.setUpdDate(updDate);
+					SbiProjectEntity outputEntity = sbiProjectRepository.save(entity);
+					sbiProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity,
+							SbiProjectDto.class);
+				} else {
+					String errorCode = ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorCode();
+					String errorMessage = ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorMessage();
+					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+				}
+			}
+		} catch (ToolkitException ex) {
+			sbiProjectDto = null;
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In updateSbiProject method of SbiProjectService Service - " + ex.getMessage());
+			String errorCode = ex.getErrorCode();
+			String errorMessage = ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+		} catch (Exception ex) {
+			sbiProjectDto = null;
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In updateSbiProject method of SbiProjectService Service - " + ex.getMessage());
+			String errorCode = ToolkitErrorCodes.SBI_PROJECT_UNABLE_TO_ADD.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.SBI_PROJECT_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+		}
+		responseWrapper.setId(putSbiProjectId);
 		responseWrapper.setResponse(sbiProjectDto);
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
