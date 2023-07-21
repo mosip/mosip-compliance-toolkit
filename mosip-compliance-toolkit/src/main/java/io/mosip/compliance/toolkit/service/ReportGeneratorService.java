@@ -1,11 +1,6 @@
 package io.mosip.compliance.toolkit.service;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -16,9 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import javax.imageio.ImageIO;
-
-import org.apache.commons.codec.binary.Base64;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +21,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
 import org.xhtmlrenderer.layout.SharedContext;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
@@ -65,7 +56,6 @@ public class ReportGeneratorService {
 				// 1. Populate all attributes
 				VelocityContext velocityContext = new VelocityContext();
 				velocityContext.put("host", host);
-				velocityContext.put("logoText", getLogoBase64Img());
 				velocityContext.put("testRunStartTime", getTestRunStartDt(testRunDetailsResponse));
 				velocityContext.put("testRunDetailsList", populateTestRubTable(testRunDetailsResponse));
 				velocityContext.put("timeTakenByTestRun", getTestRunExecutionTime(testRunDetailsResponse));
@@ -113,36 +103,29 @@ public class ReportGeneratorService {
 		return testRunDetailsResponse;
 	}
 
-	private String getLogoBase64Img() throws IOException {
-		String logoFilePath = "classpath:templates/logo.png";
-		//Resource resource = resourceLoader.getResource(logoFilePath);
-		File logoFile = ResourceUtils.getFile(logoFilePath);
-		InputStream in = new FileInputStream(logoFile);
-//		BufferedImage logoImage = ImageIO.read(in);
-//		ByteArrayOutputStream outputStreamForLogo = new ByteArrayOutputStream();
-//		ImageIO.write(logoImage, "png", outputStreamForLogo);
-//		byte[] imageBytes = outputStreamForLogo.toByteArray();
-		String logoText = Base64.encodeBase64String(in.readAllBytes());
-		in.close();
+	/*
+	private String getLogoBase64Img() throws Exception {
+		String logoText = null;
+		InputStream inputStream = null;
+		try {
+			String logoFilePath = "classpath:templates/logo.png";
+			File logoFile = ResourceUtils.getFile(logoFilePath);
+			inputStream = new FileInputStream(logoFile);
+			logoText = Base64.encodeBase64String(inputStream.readAllBytes());
+			log.info("logoText {}", logoText);
+		} catch(Exception e) {
+			throw e;
+		} finally {
+			if (inputStream != null) {
+				inputStream.close();	
+			}
+		}
 		return logoText;
-	}
+	}*/
 
 	private List<TestRunTable> populateTestRubTable(ResponseWrapper<TestRunDetailsResponseDto> testRunDetailsResponse) {
 		List<TestRunTable> testRunTable = new ArrayList<>();
 		List<TestRunDetailsDto> testRunDetailsList = testRunDetailsResponse.getResponse().getTestRunDetailsList();
-		for (TestRunDetailsDto testRunDetailsDto : testRunDetailsList) {
-			TestRunTable item = new TestRunTable();
-			String testCaseId = testRunDetailsDto.getTestcaseId();
-			ResponseWrapper<TestCaseDto> testCaseDto = testCaseService.getTestCaseById(testCaseId);
-			String testCaseName = testCaseDto.getResponse().getTestName();
-			item.setTestCaseId(testCaseId);
-			if (testCaseName.contains("&")) {
-				testCaseName = testCaseName.replace("&", "and");
-			}
-			item.setTestCaseName(testCaseName);
-			item.setResultStatus(testRunDetailsDto.getResultStatus());
-			testRunTable.add(item);
-		}
 		for (TestRunDetailsDto testRunDetailsDto : testRunDetailsList) {
 			TestRunTable item = new TestRunTable();
 			String testCaseId = testRunDetailsDto.getTestcaseId();
