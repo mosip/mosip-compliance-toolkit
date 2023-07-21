@@ -24,7 +24,7 @@ public class ReportGeneratorController {
 	private ReportGeneratorService service;
 	
 	@GetMapping(value = "/createReport/{testRunId}")
-	public ResponseEntity<Resource> createReport(@PathVariable String testRunId, @RequestHeader String host) {
-		return service.createReport(testRunId, host);
+	public ResponseEntity<Resource> createReport(@PathVariable String testRunId, @RequestHeader String origin) {
+		return service.createReport(testRunId, origin);
 	}
 }
