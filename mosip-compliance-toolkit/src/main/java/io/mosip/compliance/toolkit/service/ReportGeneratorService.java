@@ -47,7 +47,7 @@ public class ReportGeneratorService {
 	@Autowired
 	private ResourceLoader resourceLoader;
 
-	public ResponseEntity<Resource> createReport(String testRunId, String host) {
+	public ResponseEntity<Resource> createReport(String testRunId, String origin) {
 		try {
 			// Get the test run details
 			ResponseWrapper<TestRunDetailsResponseDto> testRunDetailsResponse = getTestRunDetails(testRunId);
@@ -55,7 +55,9 @@ public class ReportGeneratorService {
 
 				// 1. Populate all attributes
 				VelocityContext velocityContext = new VelocityContext();
-				velocityContext.put("host", host);
+				origin = origin.replace("https://", "");
+				origin = origin.replace("http://", "");
+				velocityContext.put("origin", origin);
 				velocityContext.put("testRunStartTime", getTestRunStartDt(testRunDetailsResponse));
 				velocityContext.put("testRunDetailsList", populateTestRubTable(testRunDetailsResponse));
 				velocityContext.put("timeTakenByTestRun", getTestRunExecutionTime(testRunDetailsResponse));
