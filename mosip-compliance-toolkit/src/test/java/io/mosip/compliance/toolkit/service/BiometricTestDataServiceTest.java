@@ -46,6 +46,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.zip.ZipOutputStream;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -495,8 +496,12 @@ public class BiometricTestDataServiceTest {
     @Test
     public void generateSampleSdkTestDataExceptionTest(){
         String purpose = SdkPurpose.CHECK_QUALITY.getCode();
+        List<TestCaseEntity> testCaseEntities = new ArrayList<>();
+        List<String> ignoreTestcasesList = new ArrayList<>();
+        ZipOutputStream zipOutputStream = null;
+        String fileName = "Readme.txt";
         ReflectionTestUtils.setField(biometricTestDataService, "testCaseCacheService", null);
-        ReflectionTestUtils.invokeMethod(biometricTestDataService, "generateSampleSdkTestData", purpose);
+        ReflectionTestUtils.invokeMethod(biometricTestDataService, "generateSampleSdkTestData", purpose,testCaseEntities,ignoreTestcasesList,zipOutputStream,fileName);
     }
 
     /*

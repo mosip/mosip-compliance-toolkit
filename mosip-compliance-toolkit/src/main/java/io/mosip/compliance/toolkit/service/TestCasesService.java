@@ -73,7 +73,6 @@ import io.mosip.kernel.cbeffutil.impl.CbeffImpl;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.exception.BaseUncheckedException;
 import io.mosip.kernel.core.exception.ExceptionUtils;
-import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 
@@ -146,8 +145,6 @@ public class TestCasesService {
             String deviceSubType) {
         ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
         List<TestCaseDto> testCases = new ArrayList<>();
-        List<ServiceError> serviceErrorsList = new ArrayList<>();
-        ServiceError serviceError = null;
         try {
             String testCaseSchemaJson = this.getSchemaJson(null, null,  AppConstants.TESTCASE_SCHEMA_JSON);
             if (isValidSbiTestCase(specVersion, purpose, deviceType, deviceSubType)) {
@@ -173,21 +170,17 @@ public class TestCasesService {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In getSbiTestCases method of TestCasesService - " + ex.getMessage());
-            serviceError = new ServiceError();
-            serviceError.setErrorCode(ex.getErrorCode());
-            serviceError.setMessage(ex.getMessage());
-            serviceErrorsList.add(serviceError);
-            responseWrapper.setErrors(serviceErrorsList);
+            String errorCode = ex.getErrorCode();
+            String errorMessage = ex.getMessage();
+            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
         } catch (Exception ex) {
             testCases = null;
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In getSbiTestCases method of TestCasesService - " + ex.getMessage());
-            serviceError = new ServiceError();
-            serviceError.setErrorCode(ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorCode());
-            serviceError.setMessage(ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage() + " " + ex.getMessage());
-            serviceErrorsList.add(serviceError);
-            responseWrapper.setErrors(serviceErrorsList);
+            String errorCode = ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorCode();
+            String errorMessage = ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage() + " " + ex.getMessage();
+            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
         }
         responseWrapper.setId(getTestCasesId);
         responseWrapper.setResponse(testCases);
@@ -215,8 +208,6 @@ public class TestCasesService {
     public ResponseWrapper<List<TestCaseDto>> getSdkTestCases(String specVersion, String sdkPurpose) {
         ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
         List<TestCaseDto> testCases = new ArrayList<>();
-        List<ServiceError> serviceErrorsList = new ArrayList<>();
-        ServiceError serviceError = null;
         try {
             String testCaseSchemaJson = this.getSchemaJson(null, null,  AppConstants.TESTCASE_SCHEMA_JSON);
             if (isValidSdkTestCase(specVersion, sdkPurpose)) {
@@ -240,21 +231,17 @@ public class TestCasesService {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In getSdkTestCases method of TestCasesService - " + ex.getMessage());
-            serviceError = new ServiceError();
-            serviceError.setErrorCode(ex.getErrorCode());
-            serviceError.setMessage(ex.getMessage());
-            serviceErrorsList.add(serviceError);
-            responseWrapper.setErrors(serviceErrorsList);
+            String errorCode = ex.getErrorCode();
+            String errorMessage = ex.getMessage();
+            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
         } catch (Exception ex) {
             testCases = null;
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In getSdkTestCases method of TestCasesService - " + ex.getMessage());
-            serviceError = new ServiceError();
-            serviceError.setErrorCode(ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorCode());
-            serviceError.setMessage(ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage() + " " + ex.getMessage());
-            serviceErrorsList.add(serviceError);
-            responseWrapper.setErrors(serviceErrorsList);
+            String errorCode = ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorCode();
+            String errorMessage = ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage() + " " + ex.getMessage();
+            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
         }
         responseWrapper.setId(getTestCasesId);
         responseWrapper.setResponse(testCases);
@@ -266,8 +253,6 @@ public class TestCasesService {
     public ResponseWrapper<List<TestCaseDto>> getAbisTestCases(String abisSpecVersion) {
         ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
         List<TestCaseDto> testCases = new ArrayList<>();
-        List<ServiceError> serviceErrorsList = new ArrayList<>();
-        ServiceError serviceError = null;
         try {
             String testCaseSchemaJson = this.getSchemaJson(null, null,  AppConstants.TESTCASE_SCHEMA_JSON);
             if (isValidAbisTestCase(abisSpecVersion)) {
@@ -290,21 +275,17 @@ public class TestCasesService {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In getAbisTestCases method of TestCasesService - " + ex.getMessage());
-            serviceError = new ServiceError();
-            serviceError.setErrorCode(ex.getErrorCode());
-            serviceError.setMessage(ex.getMessage());
-            serviceErrorsList.add(serviceError);
-            responseWrapper.setErrors(serviceErrorsList);
+            String errorCode = ex.getErrorCode();
+            String errorMessage = ex.getMessage();
+            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
         } catch (Exception ex) {
             testCases = null;
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In getAbisTestCases method of TestCasesService - " + ex.getMessage());
-            serviceError = new ServiceError();
-            serviceError.setErrorCode(ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorCode());
-            serviceError.setMessage(ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage() + " " + ex.getMessage());
-            serviceErrorsList.add(serviceError);
-            responseWrapper.setErrors(serviceErrorsList);
+            String errorCode = ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorCode();
+            String errorMessage = ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage() + " " + ex.getMessage();
+            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
         }
         responseWrapper.setId(getTestCasesId);
         responseWrapper.setResponse(testCases);
