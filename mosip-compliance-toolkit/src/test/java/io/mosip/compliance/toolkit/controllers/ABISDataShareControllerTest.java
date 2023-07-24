@@ -1,19 +1,15 @@
 package io.mosip.compliance.toolkit.controllers;
 
-import io.mosip.compliance.toolkit.dto.abis.DataShareExpireRequest;
-import io.mosip.compliance.toolkit.dto.abis.DataShareRequestDto;
-import io.mosip.compliance.toolkit.dto.abis.DataShareResponseWrapperDto;
-import io.mosip.compliance.toolkit.dto.abis.DataShareSaveTokenRequest;
-import io.mosip.compliance.toolkit.service.ABISDataShareService;
-import io.mosip.compliance.toolkit.util.RequestValidator;
-import io.mosip.kernel.core.http.RequestWrapper;
-import io.mosip.kernel.core.http.ResponseWrapper;
+import static junit.framework.TestCase.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContext;
@@ -22,8 +18,14 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.context.WebApplicationContext;
 
-import static junit.framework.TestCase.assertEquals;
-import static org.mockito.Mockito.*;
+import io.mosip.compliance.toolkit.dto.abis.DataShareExpireRequest;
+import io.mosip.compliance.toolkit.dto.abis.DataShareRequestDto;
+import io.mosip.compliance.toolkit.dto.abis.DataShareResponseWrapperDto;
+import io.mosip.compliance.toolkit.dto.abis.DataShareSaveTokenRequest;
+import io.mosip.compliance.toolkit.service.ABISDataShareService;
+import io.mosip.compliance.toolkit.util.RequestValidator;
+import io.mosip.kernel.core.http.RequestWrapper;
+import io.mosip.kernel.core.http.ResponseWrapper;
 
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
 @RunWith(SpringRunner.class)
