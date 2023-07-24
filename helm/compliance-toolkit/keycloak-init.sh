@@ -1,7 +1,7 @@
 #!/bin/bash
 COPY_UTIL=./copy_cm_func.sh
 NS=compliance-toolkit
-CHART_VERSION=12.0.1
+CHART_VERSION=12.0.1-B3
 
 helm repo add mosip https://mosip.github.io/mosip-helm
 helm repo update
@@ -29,6 +29,7 @@ helm -n $NS install toolkit-keycloak-init mosip/keycloak-init \
 --set clientSecrets[0].secret="$TOOLKIT_CLIENT_SECRET_VALUE" \
 --set clientSecrets[1].name="$TOOLKIT_ANDROID_CLIENT_SECRET_KEY" \
 --set clientSecrets[1].secret="$TOOLKIT_ANDROID_CLIENT_SECRET_VALUE" \
+--set image.tag=1.2.0-CTK \
 --version $CHART_VERSION --wait
 
 TOOLKIT_CLIENT_SECRET_VALUE=$( kubectl -n $NS get secret keycloak-client-secrets -o json |  jq ".data.$TOOLKIT_CLIENT_SECRET_KEY" )
