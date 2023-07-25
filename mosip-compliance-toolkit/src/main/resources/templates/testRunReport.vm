@@ -106,32 +106,31 @@
 			<h1>MOSIP Compliance ToolKit</h1>
 			<div class="green-box">
 				<p style="font-size: 20px; color: #fff; margin: 0;">
-            		As per the test run results dated ${testRunStartTime} in ${origin} - SyncByte Ltd. is MOSIP Compliant for SBI Specification*
+            		As per the test run results dated ${testRunStartTime} in <b>${origin} - ${partnerDetails.orgName}</b> is MOSIP Compliant for ${projectType} Specification*
             	</p>
 			</div>
-			<p class="note">* This certificate is valid for the next six months (up to 6th November 2023).</p>
+			<p class="note">* This certificate is valid for the next six months (up to ${reportValidityDate}).</p>
 			<h2>Partner Details</h2>
 			<table>
 				<tr>
 					<td>Organization Name</td>
-					<td>SyncByte Ltd.</td>
+					<td>${partnerDetails.orgName}</td>
 				</tr>
 				<tr>
 					<td>Website</td>
-					<td>www.syncbyte.in</td>
+					<td>${partnerDetails.website}</td>
 				</tr>
 				<tr>
 					<td>Address</td>
-					<td>Syncbyte Innovations Private Limited, F. NO 05-04, B-3 Block, Elita Promenade Appt, 18th Main J.P Nagar, 7TH Phase, Bangalore, Karnataka, India, 560078
-               </td>
+					<td>${partnerDetails.address}</td>
 				</tr>
 				<tr>
 					<td>Phone Number</td>
-					<td>+91 9394002392</td>
+					<td>${partnerDetails.phoneNumber}</td>
 				</tr>
 				<tr>
 					<td>Email Address</td>
-					<td>info@syncbyte.com</td>
+					<td>${partnerDetails.email}</td>
 				</tr>
 			</table>
 		</div>
@@ -242,11 +241,9 @@
 		#if($projectType == 'SBI')	
 			<div class="page-break-after">
 				<h2>Device Images</h2>
-				<div class="image-container">
-					#foreach ($image in $sbiProjectTable.deviceImages)
-					<img height="200" width="200" src="${image}"/>
-					#end
-				</div>
+				#foreach ($image in $sbiProjectDetailsTable.deviceImages)
+					<img height="250" width="250" src="${image}"/>
+				#end
 			</div>
 		#end
 		<div class="page-break-after">
