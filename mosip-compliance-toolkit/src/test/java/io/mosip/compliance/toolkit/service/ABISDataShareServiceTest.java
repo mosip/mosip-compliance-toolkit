@@ -10,6 +10,7 @@ import io.mosip.compliance.toolkit.dto.abis.DataShareSaveTokenRequest;
 import io.mosip.compliance.toolkit.entity.AbisDataShareTokenEntity;
 import io.mosip.compliance.toolkit.repository.AbisDataShareTokenRepository;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
+import io.mosip.compliance.toolkit.util.AuthManagerHelper;
 import io.mosip.compliance.toolkit.util.KeyManagerHelper;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
@@ -43,44 +44,47 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
+@ContextConfiguration(classes = { TestContext.class, WebApplicationContext.class })
 @RunWith(SpringRunner.class)
 @WebMvcTest
 public class ABISDataShareServiceTest {
 
-    @InjectMocks
-    private ABISDataShareService abisDataShareService;
+	@InjectMocks
+	private ABISDataShareService abisDataShareService;
 
-    @Mock
-    private TestCasesService testCasesService;
+	@Mock
+	private TestCasesService testCasesService;
 
-    @Mock
-    private KeyManagerHelper keyManagerHelper;
+	@Mock
+	private KeyManagerHelper keyManagerHelper;
 
-    @Mock
-    private Authentication authentication;
+	@Mock
+	private AuthManagerHelper authManagerHelper;
 
-    @Mock
-    SecurityContext securityContext;
+	@Mock
+	private Authentication authentication;
 
-    @Mock
-    private ObjectStoreAdapter objectStore;
+	@Mock
+	SecurityContext securityContext;
 
-    @Mock
-    private BiometricTestDataRepository biometricTestDataRepository;
+	@Mock
+	private ObjectStoreAdapter objectStore;
 
-    @Mock
-    private ObjectMapperConfig objectMapperConfig;
+	@Mock
+	private BiometricTestDataRepository biometricTestDataRepository;
 
-    @Mock
-    private AbisDataShareTokenRepository abisDataShareTokenRepository;
+	@Mock
+	private ObjectMapperConfig objectMapperConfig;
 
-    @Mock
-    private ObjectMapper mapper;
+	@Mock
+	private AbisDataShareTokenRepository abisDataShareTokenRepository;
 
-    private MosipUserDto mosipUserDto;
+	@Mock
+	private ObjectMapper mapper;
 
-    @Before
+	private MosipUserDto mosipUserDto;
+
+	@Before
     public void before() {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         mosipUserDto = getMosipUserDto();
@@ -89,176 +93,173 @@ public class ABISDataShareServiceTest {
         SecurityContextHolder.setContext(securityContext);
     }
 
-    /*
-     * This class tests the authUserDetails method
-     */
-    @Test
-    public void authUserDetailsTest() {
-        ReflectionTestUtils.invokeMethod(abisDataShareService, "authUserDetails");
-    }
+	/*
+	 * This class tests the authUserDetails method
+	 */
+	@Test
+	public void authUserDetailsTest() {
+		ReflectionTestUtils.invokeMethod(abisDataShareService, "authUserDetails");
+	}
 
-    /*
-     * This class tests the getPartnerId method
-     */
-    @Test
-    public void getPartnerIdTest() {
-        String result = ReflectionTestUtils.invokeMethod(abisDataShareService, "getPartnerId");
-        Assert.assertEquals(mosipUserDto.getUserId(), result);
-    }
+	/*
+	 * This class tests the getPartnerId method
+	 */
+	@Test
+	public void getPartnerIdTest() {
+		String result = ReflectionTestUtils.invokeMethod(abisDataShareService, "getPartnerId");
+		Assert.assertEquals(mosipUserDto.getUserId(), result);
+	}
 
-    /*
-     * This class tests the getDataShareUrl method
-     */
-    @Test
-    public void getDataShareUrlTest() throws Exception {
-        InputStream inputStream = mock(InputStream.class);
-        when(testCasesService.getPartnerTestDataStream(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(inputStream);
-        when(keyManagerHelper.getAuthToken()).thenReturn("authToken");
+	/*
+	 * This class tests the getDataShareUrl method
+	 */
+	@Test
+	public void getDataShareUrlTest() throws Exception {
+		InputStream inputStream = mock(InputStream.class);
+		when(testCasesService.getPartnerTestDataStream(Mockito.any(), Mockito.any(), Mockito.any()))
+				.thenReturn(inputStream);
+		when(authManagerHelper.getAuthToken()).thenReturn("authToken");
 
-        DataShareRequestDto dataShareRequestDto = new DataShareRequestDto();
-        dataShareRequestDto.setTestcaseId("ABIS3000");
-        dataShareRequestDto.setBioTestDataName("testdata");
-        dataShareRequestDto.setCbeffFileSuffix(1);
+		DataShareRequestDto dataShareRequestDto = new DataShareRequestDto();
+		dataShareRequestDto.setTestcaseId("ABIS3000");
+		dataShareRequestDto.setBioTestDataName("testdata");
+		dataShareRequestDto.setCbeffFileSuffix(1);
 
-        ResponseWrapper<DataShareResponseWrapperDto> result = abisDataShareService.createDataShareUrl(dataShareRequestDto);
+		ResponseWrapper<DataShareResponseWrapperDto> result = abisDataShareService
+				.createDataShareUrl(dataShareRequestDto);
 
-        assertNotNull(result);
-    }
+		assertNotNull(result);
+	}
 
-    /*
-     * This class tests the expireDataShareUrl method
-     */
-    @Test
-    public void expireDataShareUrlTest() {
-        DataShareExpireRequest dataShareExpireRequest = new DataShareExpireRequest();
-        dataShareExpireRequest.setUrl("wss://activemq.dev.mosip.net/ws");
-        dataShareExpireRequest.setTransactionsAllowed(1);
-        abisDataShareService.expireDataShareUrl(dataShareExpireRequest);
-    }
+	/*
+	 * This class tests the expireDataShareUrl method
+	 */
+	@Test
+	public void expireDataShareUrlTest() {
+		DataShareExpireRequest dataShareExpireRequest = new DataShareExpireRequest();
+		dataShareExpireRequest.setUrl("wss://activemq.dev.mosip.net/ws");
+		dataShareExpireRequest.setTransactionsAllowed(1);
+		abisDataShareService.expireDataShareUrl(dataShareExpireRequest);
+	}
 
-    /*
-     * These functions test the saveDataShareToken method
-     */
-    @Test
-    public void testSaveDataShareToken_existingToken() {
+	/*
+	 * These functions test the saveDataShareToken method
+	 */
+	@Test
+	public void testSaveDataShareToken_existingToken() {
 
-        RequestWrapper<DataShareSaveTokenRequest> requestWrapper = new RequestWrapper<>();
-        DataShareSaveTokenRequest dataShareSaveTokenRequest = new DataShareSaveTokenRequest();
-        dataShareSaveTokenRequest.setPartnerId("1234");
-        dataShareSaveTokenRequest.setCtkTestCaseId("5678");
-        dataShareSaveTokenRequest.setCtkTestRunId("9012");
-        dataShareSaveTokenRequest.setToken("token");
-        requestWrapper.setRequest(dataShareSaveTokenRequest);
+		RequestWrapper<DataShareSaveTokenRequest> requestWrapper = new RequestWrapper<>();
+		DataShareSaveTokenRequest dataShareSaveTokenRequest = new DataShareSaveTokenRequest();
+		dataShareSaveTokenRequest.setPartnerId("1234");
+		dataShareSaveTokenRequest.setCtkTestCaseId("5678");
+		dataShareSaveTokenRequest.setCtkTestRunId("9012");
+		dataShareSaveTokenRequest.setToken("token");
+		requestWrapper.setRequest(dataShareSaveTokenRequest);
 
-        AbisDataShareTokenEntity savedEntity = new AbisDataShareTokenEntity();
-        savedEntity.setToken("token");
-        savedEntity.setTestRunId("9012");
-        savedEntity.setTestCaseId("5678");
-        savedEntity.setPartnerId("1234");
+		AbisDataShareTokenEntity savedEntity = new AbisDataShareTokenEntity();
+		savedEntity.setToken("token");
+		savedEntity.setTestRunId("9012");
+		savedEntity.setTestCaseId("5678");
+		savedEntity.setPartnerId("1234");
 
-        when(abisDataShareTokenRepository.findTokenForTestRun(
-                Mockito.any(), Mockito.any(), Mockito.any()))
-                .thenReturn(Optional.of(savedEntity));
+		when(abisDataShareTokenRepository.findTokenForTestRun(Mockito.any(), Mockito.any(), Mockito.any()))
+				.thenReturn(Optional.of(savedEntity));
 
-        ResponseWrapper<String> responseWrapper = abisDataShareService.saveDataShareToken(requestWrapper);
+		ResponseWrapper<String> responseWrapper = abisDataShareService.saveDataShareToken(requestWrapper);
 
-        verify(abisDataShareTokenRepository, Mockito.times(1)).updateResultInRow(
-                AppConstants.SUCCESS, savedEntity.getPartnerId(), savedEntity.getTestCaseId(),
-                savedEntity.getTestRunId());
-        Assert.assertEquals(AppConstants.SUCCESS, responseWrapper.getResponse());
-    }
+		verify(abisDataShareTokenRepository, Mockito.times(1)).updateResultInRow(AppConstants.SUCCESS,
+				savedEntity.getPartnerId(), savedEntity.getTestCaseId(), savedEntity.getTestRunId());
+		Assert.assertEquals(AppConstants.SUCCESS, responseWrapper.getResponse());
+	}
 
-    @Test
-    public void testSaveDataShareToken_newToken() {
-        RequestWrapper<DataShareSaveTokenRequest> requestWrapper = new RequestWrapper<>();
-        DataShareSaveTokenRequest dataShareSaveTokenRequest = new DataShareSaveTokenRequest();
-        dataShareSaveTokenRequest.setPartnerId("1234");
-        dataShareSaveTokenRequest.setCtkTestCaseId("5678");
-        dataShareSaveTokenRequest.setCtkTestRunId("9012");
-        dataShareSaveTokenRequest.setToken("token");
-        requestWrapper.setRequest(dataShareSaveTokenRequest);
+	@Test
+	public void testSaveDataShareToken_newToken() {
+		RequestWrapper<DataShareSaveTokenRequest> requestWrapper = new RequestWrapper<>();
+		DataShareSaveTokenRequest dataShareSaveTokenRequest = new DataShareSaveTokenRequest();
+		dataShareSaveTokenRequest.setPartnerId("1234");
+		dataShareSaveTokenRequest.setCtkTestCaseId("5678");
+		dataShareSaveTokenRequest.setCtkTestRunId("9012");
+		dataShareSaveTokenRequest.setToken("token");
+		requestWrapper.setRequest(dataShareSaveTokenRequest);
 
-        when(abisDataShareTokenRepository.findTokenForTestRun(
-                Mockito.any(), Mockito.any(), Mockito.any()))
-                .thenReturn(Optional.empty());
+		when(abisDataShareTokenRepository.findTokenForTestRun(Mockito.any(), Mockito.any(), Mockito.any()))
+				.thenReturn(Optional.empty());
 
-        ResponseWrapper<String> responseWrapper = abisDataShareService.saveDataShareToken(requestWrapper);
+		ResponseWrapper<String> responseWrapper = abisDataShareService.saveDataShareToken(requestWrapper);
 
-        verify(abisDataShareTokenRepository, Mockito.times(1)).save(
-                Mockito.any(AbisDataShareTokenEntity.class));
-    }
+		verify(abisDataShareTokenRepository, Mockito.times(1)).save(Mockito.any(AbisDataShareTokenEntity.class));
+	}
 
-    @Test
-    public void testInvalidateDataShareToken() {
-        RequestWrapper<DataShareSaveTokenRequest> requestWrapper = new RequestWrapper<>();
-        DataShareSaveTokenRequest dataShareSaveTokenRequest = new DataShareSaveTokenRequest();
-        dataShareSaveTokenRequest.setPartnerId("1234");
-        dataShareSaveTokenRequest.setCtkTestCaseId("5678");
-        dataShareSaveTokenRequest.setCtkTestRunId("9012");
-        dataShareSaveTokenRequest.setToken("Token");
-        requestWrapper.setRequest(dataShareSaveTokenRequest);
+	@Test
+	public void testInvalidateDataShareToken() {
+		RequestWrapper<DataShareSaveTokenRequest> requestWrapper = new RequestWrapper<>();
+		DataShareSaveTokenRequest dataShareSaveTokenRequest = new DataShareSaveTokenRequest();
+		dataShareSaveTokenRequest.setPartnerId("1234");
+		dataShareSaveTokenRequest.setCtkTestCaseId("5678");
+		dataShareSaveTokenRequest.setCtkTestRunId("9012");
+		dataShareSaveTokenRequest.setToken("Token");
+		requestWrapper.setRequest(dataShareSaveTokenRequest);
 
-        ResponseWrapper<String> response = abisDataShareService.invalidateDataShareToken(requestWrapper);
+		ResponseWrapper<String> response = abisDataShareService.invalidateDataShareToken(requestWrapper);
 
-        assertEquals(AppConstants.FAILURE, response.getResponse());
-    }
-     
-    @Test
-    public void testInvalidateDataShareToken_failureResultCase() {
-        RequestWrapper<DataShareSaveTokenRequest> requestWrapper = new RequestWrapper<>();
-        DataShareSaveTokenRequest dataShareSaveTokenRequest = new DataShareSaveTokenRequest();
-        dataShareSaveTokenRequest.setPartnerId("1234");
-        dataShareSaveTokenRequest.setCtkTestCaseId("5678");
-        dataShareSaveTokenRequest.setCtkTestRunId("9012");
-        dataShareSaveTokenRequest.setToken("Token");
-        requestWrapper.setRequest(dataShareSaveTokenRequest);
-        AbisDataShareTokenEntity abisDataShareTokenEntity = new AbisDataShareTokenEntity();
-        abisDataShareTokenEntity.setPartnerId("1234");
-        abisDataShareTokenEntity.setTestCaseId("5678");
-        abisDataShareTokenEntity.setTestRunId("9012");
-        abisDataShareTokenEntity.setToken("Token");
+		assertEquals(AppConstants.FAILURE, response.getResponse());
+	}
 
-        Optional<AbisDataShareTokenEntity> dbEntity = Optional.of(abisDataShareTokenEntity);
-        when(abisDataShareTokenRepository.findTokenForTestRun(
-                Mockito.any(), Mockito.any(), Mockito.any()))
-                .thenReturn(dbEntity);
+	@Test
+	public void testInvalidateDataShareToken_failureResultCase() {
+		RequestWrapper<DataShareSaveTokenRequest> requestWrapper = new RequestWrapper<>();
+		DataShareSaveTokenRequest dataShareSaveTokenRequest = new DataShareSaveTokenRequest();
+		dataShareSaveTokenRequest.setPartnerId("1234");
+		dataShareSaveTokenRequest.setCtkTestCaseId("5678");
+		dataShareSaveTokenRequest.setCtkTestRunId("9012");
+		dataShareSaveTokenRequest.setToken("Token");
+		requestWrapper.setRequest(dataShareSaveTokenRequest);
+		AbisDataShareTokenEntity abisDataShareTokenEntity = new AbisDataShareTokenEntity();
+		abisDataShareTokenEntity.setPartnerId("1234");
+		abisDataShareTokenEntity.setTestCaseId("5678");
+		abisDataShareTokenEntity.setTestRunId("9012");
+		abisDataShareTokenEntity.setToken("Token");
 
-        ResponseWrapper<String> response = abisDataShareService.invalidateDataShareToken(requestWrapper);
+		Optional<AbisDataShareTokenEntity> dbEntity = Optional.of(abisDataShareTokenEntity);
+		when(abisDataShareTokenRepository.findTokenForTestRun(Mockito.any(), Mockito.any(), Mockito.any()))
+				.thenReturn(dbEntity);
 
-        assertEquals(AppConstants.SUCCESS, response.getResponse());
-    }
+		ResponseWrapper<String> response = abisDataShareService.invalidateDataShareToken(requestWrapper);
 
-    @Test
-    public void testInvalidateDataShareToken_successResultCase() {
-        RequestWrapper<DataShareSaveTokenRequest> requestWrapper = new RequestWrapper<>();
-        DataShareSaveTokenRequest dataShareSaveTokenRequest = new DataShareSaveTokenRequest();
-        dataShareSaveTokenRequest.setPartnerId("1234");
-        dataShareSaveTokenRequest.setCtkTestCaseId("5678");
-        dataShareSaveTokenRequest.setCtkTestRunId("9012");
-        dataShareSaveTokenRequest.setToken("Token");
-        requestWrapper.setRequest(dataShareSaveTokenRequest);
-        AbisDataShareTokenEntity abisDataShareTokenEntity = new AbisDataShareTokenEntity();
-        abisDataShareTokenEntity.setPartnerId("1234");
-        abisDataShareTokenEntity.setTestCaseId("5678");
-        abisDataShareTokenEntity.setTestRunId("9012");
-        abisDataShareTokenEntity.setToken("Tokenn");
+		assertEquals(AppConstants.SUCCESS, response.getResponse());
+	}
 
-        Optional<AbisDataShareTokenEntity> dbEntity = Optional.of(abisDataShareTokenEntity);
-        when(abisDataShareTokenRepository.findTokenForTestRun(
-                Mockito.any(), Mockito.any(), Mockito.any()))
-                .thenReturn(dbEntity);
+	@Test
+	public void testInvalidateDataShareToken_successResultCase() {
+		RequestWrapper<DataShareSaveTokenRequest> requestWrapper = new RequestWrapper<>();
+		DataShareSaveTokenRequest dataShareSaveTokenRequest = new DataShareSaveTokenRequest();
+		dataShareSaveTokenRequest.setPartnerId("1234");
+		dataShareSaveTokenRequest.setCtkTestCaseId("5678");
+		dataShareSaveTokenRequest.setCtkTestRunId("9012");
+		dataShareSaveTokenRequest.setToken("Token");
+		requestWrapper.setRequest(dataShareSaveTokenRequest);
+		AbisDataShareTokenEntity abisDataShareTokenEntity = new AbisDataShareTokenEntity();
+		abisDataShareTokenEntity.setPartnerId("1234");
+		abisDataShareTokenEntity.setTestCaseId("5678");
+		abisDataShareTokenEntity.setTestRunId("9012");
+		abisDataShareTokenEntity.setToken("Tokenn");
 
-        ResponseWrapper<String> response = abisDataShareService.invalidateDataShareToken(requestWrapper);
+		Optional<AbisDataShareTokenEntity> dbEntity = Optional.of(abisDataShareTokenEntity);
+		when(abisDataShareTokenRepository.findTokenForTestRun(Mockito.any(), Mockito.any(), Mockito.any()))
+				.thenReturn(dbEntity);
 
-        assertEquals(AppConstants.SUCCESS, response.getResponse());
-    }
-    /*
-     * This method is used to get MosipUserDto in class
-     */
-    private MosipUserDto getMosipUserDto() {
-        MosipUserDto mosipUserDto = new MosipUserDto();
-        mosipUserDto.setUserId("123");
-        mosipUserDto.setMail("abc@gmail.com");
-        return mosipUserDto;
-    }
+		ResponseWrapper<String> response = abisDataShareService.invalidateDataShareToken(requestWrapper);
+
+		assertEquals(AppConstants.SUCCESS, response.getResponse());
+	}
+
+	/*
+	 * This method is used to get MosipUserDto in class
+	 */
+	private MosipUserDto getMosipUserDto() {
+		MosipUserDto mosipUserDto = new MosipUserDto();
+		mosipUserDto.setUserId("123");
+		mosipUserDto.setMail("abc@gmail.com");
+		return mosipUserDto;
+	}
 }
