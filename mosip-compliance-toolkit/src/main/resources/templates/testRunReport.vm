@@ -113,7 +113,7 @@
 			<h2>Partner Details</h2>
 			<table>
 				<tr>
-					<td>Organization Name</td>
+					<td style="width:30%">Organization Name</td>
 					<td>${partnerDetails.orgName}</td>
 				</tr>
 				<tr>
@@ -139,7 +139,7 @@
 			#if($projectType == 'SBI')
 			<table>
 				<tr>
-					<td>Project Name</td>
+					<td style="width:30%">Project Name</td>
 					<td>${sbiProjectDetailsTable.projectName}</td>
 				</tr>
 				<tr>
@@ -165,6 +165,29 @@
 				<tr style="word-wrap: break-word;">
 					<td>SBI Hash</td>
 					<td>${sbiProjectDetailsTable.sbiHash}</td>
+				</tr>
+			</table>
+			<h2>Device Details</h2>
+			<table>
+				<tr>
+					<td style="width:30%">Make</td>
+					<td>${sbiProjectDetailsTable.deviceMake}</td>
+				</tr>
+				<tr>
+					<td>Model</td>
+					<td>${sbiProjectDetailsTable.deviceModel}</td>
+				</tr>
+				<tr>
+					<td>Serial Number</td>
+					<td>${sbiProjectDetailsTable.deviceSerialNo}</td>
+				</tr>
+				<tr>
+					<td>Device Provider</td>
+					<td>${sbiProjectDetailsTable.deviceProvider}</td>
+				</tr>
+				<tr>
+					<td>Device Provider ID</td>
+					<td>${sbiProjectDetailsTable.deviceProviderId}</td>
 				</tr>
 			</table>
 			#end
@@ -210,31 +233,6 @@
 					<td>ABIS Hash</td>
 					<td>${abisProjectDetailsTable.abisHash}</td>
 				</tr>
-				</table>
-			#end
-			#if($projectType == 'SBI')	
-				<h2>Device Details</h2>
-				<table>
-					<tr>
-						<td>Make</td>
-						<td>${sbiProjectDetailsTable.deviceMake}</td>
-					</tr>
-					<tr>
-						<td>Model</td>
-						<td>${sbiProjectDetailsTable.deviceModel}</td>
-					</tr>
-					<tr>
-						<td>Serial Number</td>
-						<td>${sbiProjectDetailsTable.deviceSerialNo}</td>
-					</tr>
-					<tr>
-						<td>Device Provider</td>
-						<td>${sbiProjectDetailsTable.deviceProvider}</td>
-					</tr>
-					<tr>
-						<td>Device Provider ID</td>
-						<td>${sbiProjectDetailsTable.deviceProviderId}</td>
-					</tr>
 				</table>
 			#end	
 		</div>
