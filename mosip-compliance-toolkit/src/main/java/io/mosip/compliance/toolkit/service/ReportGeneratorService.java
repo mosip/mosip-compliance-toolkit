@@ -106,6 +106,7 @@ public class ReportGeneratorService {
 		ResponseWrapper<TestRunDetailsResponseDto> testRunDetailsResponse = getTestRunDetails(
 				requestDto.getTestRunId());
 		VelocityContext velocityContext = new VelocityContext();
+		
 		velocityContext.put("projectType", projectType);
 		velocityContext.put("origin", getOrigin(origin));
 		if (ProjectTypes.SBI.getCode().equals(projectType)) {
@@ -117,8 +118,8 @@ public class ReportGeneratorService {
 		if (ProjectTypes.ABIS.getCode().equals(projectType)) {
 			velocityContext.put("abisProjectDetailsTable", getAbisProjectDetails(projectId));
 		}
-
 		velocityContext.put("testRunStartTime", getTestRunStartDt(testRunDetailsResponse));
+		velocityContext.put("reportValidityDate", getReportValidityDt(testRunDetailsResponse));
 		velocityContext.put("testRunDetailsList", populateTestRubTable(testRunDetailsResponse));
 		velocityContext.put("timeTakenByTestRun", getTestRunExecutionTime(testRunDetailsResponse));
 		log.info("Added all attributes in velocity template successfully");
@@ -278,6 +279,16 @@ public class ReportGeneratorService {
 			LocalDateTime testRunStartDt = testRunDetailsResponse.getResponse().getRunDtimes();
 			DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
 			return formatter.format(testRunStartDt);
+		}
+		return "";
+	}
+	
+	private String getReportValidityDt(ResponseWrapper<TestRunDetailsResponseDto> testRunDetailsResponse) {
+		if (testRunDetailsResponse.getErrors().size() == 0) {
+			LocalDateTime testRunStartDt = testRunDetailsResponse.getResponse().getRunDtimes();
+			LocalDateTime reportValidityDt = testRunStartDt.plusMonths(6);
+			DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
+			return formatter.format(reportValidityDt);
 		}
 		return "";
 	}
