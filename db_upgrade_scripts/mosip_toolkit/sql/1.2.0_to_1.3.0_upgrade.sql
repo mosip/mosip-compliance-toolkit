@@ -39,3 +39,8 @@ ALTER TABLE toolkit.abis_projects Add COLUMN abis_hash character varying(256) NO
 ALTER TABLE toolkit.abis_projects Add COLUMN website_url character varying(256) NOT NULL DEFAULT 'To_Be_Added';
 COMMENT ON COLUMN toolkit.abis_projects.abis_hash IS 'abis_hash: Encoded hash of ABIS installation file';
 COMMENT ON COLUMN toolkit.abis_projects.website_url IS 'website_url: Partner website url';
+
+ALTER TABLE toolkit.sbi_projects DROP COLUMN make;
+ALTER TABLE toolkit.sbi_projects DROP COLUMN model;
+COMMENT ON COLUMN toolkit.sbi_projects.make IS NULL;
+COMMENT ON COLUMN toolkit.sbi_projects.model IS NULL;

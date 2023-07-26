@@ -27,10 +27,6 @@ public class SbiProjectDto {
 
 	private String deviceImages;
 
-	private String make;
-
-	private String model;
-
 	private String sbiHash;
 
 	private String websiteUrl;

@@ -119,8 +119,6 @@ public class SbiProjectService {
 				entity.setDeviceType(sbiProjectDto.getDeviceType());
 				entity.setDeviceSubType(sbiProjectDto.getDeviceSubType());
 				entity.setDeviceImages(sbiProjectDto.getDeviceImages());
-				entity.setMake(sbiProjectDto.getMake());
-				entity.setModel(sbiProjectDto.getModel());
 				entity.setSbiHash(sbiProjectDto.getSbiHash());
 				entity.setWebsiteUrl(sbiProjectDto.getWebsiteUrl());
 				entity.setPartnerId(this.getPartnerId());
@@ -182,18 +180,10 @@ public class SbiProjectService {
 					SbiProjectEntity entity = optionalSbiProjectEntity.get();
 					LocalDateTime updDate = LocalDateTime.now();
 					String deviceImages = sbiProjectDto.getDeviceImages();
-					String make = sbiProjectDto.getMake();
-					String model = sbiProjectDto.getModel();
 					String sbiHash = sbiProjectDto.getSbiHash();
 					String websiteUrl = sbiProjectDto.getWebsiteUrl();
 					if (Objects.nonNull(deviceImages) && !deviceImages.isEmpty()) {
 						entity.setDeviceImages(deviceImages);
-					}
-					if (Objects.nonNull(make) && !make.isEmpty()) {
-						entity.setMake(make);
-					}
-					if (Objects.nonNull(model) && !model.isEmpty()) {
-						entity.setModel(model);
 					}
 					if (Objects.nonNull(sbiHash) && !sbiHash.isEmpty()) {
 						entity.setSbiHash(sbiHash);

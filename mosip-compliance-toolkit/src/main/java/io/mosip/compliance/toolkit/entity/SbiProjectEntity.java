@@ -58,12 +58,6 @@ public class SbiProjectEntity implements Serializable {
 	@Column(name = "device_images")
 	private String deviceImages;
 
-	@Column(name = "make")
-	private String make;
-
-	@Column(name = "model")
-	private String model;
-
 	@Column(name = "sbi_hash")
 	private String sbiHash;
 
