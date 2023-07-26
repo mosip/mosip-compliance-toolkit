@@ -24,4 +24,5 @@ public class SbiProjectTable {
 	private String deviceProvider;
 	private String deviceProviderId;
 	private List<String> deviceImages;
+	private String website;
 }

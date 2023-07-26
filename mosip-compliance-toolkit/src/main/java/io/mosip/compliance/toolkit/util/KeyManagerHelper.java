@@ -22,18 +22,6 @@ public class KeyManagerHelper {
 	@Autowired
 	private AuthManagerHelper authManagerHelper;
 	
-	@Value("${mosip.service.auth.appid}")
-	private String getAuthAppId;
-
-	@Value("${mosip.service.auth.clientid}")
-	private String getAuthClientId;
-
-	@Value("${mosip.service.auth.secretkey}")
-	private String getAuthSecretKey;
-
-	@Value("${mosip.service.authmanager.url}")
-	private String getAuthManagerUrl;
-
 	@Value("${mosip.service.keymanager.decrypt.appid}")
 	private String appId;
 

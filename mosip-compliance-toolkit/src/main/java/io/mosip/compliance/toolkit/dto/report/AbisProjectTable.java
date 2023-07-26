@@ -13,4 +13,5 @@ public class AbisProjectTable {
 	private String projectType;
 	private String specVersion;
 	private String abisHash;
+	private String website;
 }
