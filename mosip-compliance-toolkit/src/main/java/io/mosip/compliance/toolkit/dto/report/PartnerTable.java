@@ -7,6 +7,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Data
-public class PartnerDetails {
+public class PartnerTable {
 
+	private String orgName;
+	private String address;
+	private String phoneNumber;
+	private String email;
 }

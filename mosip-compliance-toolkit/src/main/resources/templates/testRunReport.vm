@@ -109,7 +109,7 @@
             		As per the test run results dated ${testRunStartTime} in <b>${origin} - ${partnerDetails.orgName}</b> is MOSIP Compliant for ${projectType} Specification*
             	</p>
 			</div>
-			<p class="note">* This certificate is valid for the next six months (up to ${reportValidityDate}).</p>
+			<p class="note">* This certificate is valid for the next ${reportExpiryPeriod} months (up to ${reportValidityDate}).</p>
 			<h2>Partner Details</h2>
 			<table>
 				<tr>
@@ -118,7 +118,15 @@
 				</tr>
 				<tr>
 					<td>Website</td>
-					<td>${partnerDetails.website}</td>
+					#if($projectType == 'SBI')
+						<td>${sbiProjectDetailsTable.website}</td>
+					#end
+					#if($projectType == 'SDK')
+						<td>${sdkProjectDetailsTable.website}</td>
+					#end
+					#if($projectType == 'ABIS')
+						<td>${abisProjectDetailsTable.website}</td>
+					#end
 				</tr>
 				<tr>
 					<td>Address</td>
