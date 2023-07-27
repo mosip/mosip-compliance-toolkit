@@ -82,6 +82,12 @@ public class AbisProjectEntity implements Serializable {
 	@Column(name = "modality")
 	private String modality;
 
+	@Column(name = "abis_hash")
+	private String abisHash;
+
+	@Column(name = "website_url")
+	private String websiteUrl;
+
 	@Column(name = "bio_test_data_file_name")
 	private String bioTestDataFileName;
 	

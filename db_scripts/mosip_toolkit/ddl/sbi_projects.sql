@@ -9,8 +9,6 @@ CREATE TABLE toolkit.sbi_projects(
 	device_type character varying(64) NOT NULL,
 	device_sub_type character varying(64) NOT NULL,
 	device_images character varying(256) NOT NULL DEFAULT 'To_Be_Added',
-	make character varying(256) NOT NULL DEFAULT 'To_Be_Added',
-	model character varying(256) NOT NULL DEFAULT 'To_Be_Added',
 	sbi_hash character varying(256) NOT NULL DEFAULT 'To_Be_Added',
 	website_url character varying(256) NOT NULL DEFAULT 'To_Be_Added',
 	partner_id character varying(36) NOT NULL,
@@ -35,8 +33,6 @@ COMMENT ON COLUMN toolkit.sbi_projects.purpose IS 'Purpose: the purpose for test
 COMMENT ON COLUMN toolkit.sbi_projects.device_type IS 'device_type: the device type for testing';
 COMMENT ON COLUMN toolkit.sbi_projects.device_sub_type IS 'device_sub_type: the device sub type for testing';
 COMMENT ON COLUMN toolkit.sbi_projects.device_images IS 'device_images: Name of the device images';
-COMMENT ON COLUMN toolkit.sbi_projects.make IS 'make: Make information for creating test report';
-COMMENT ON COLUMN toolkit.sbi_projects.model IS 'model: Model information for creating test report';
 COMMENT ON COLUMN toolkit.sbi_projects.sbi_hash IS 'sbi_hash: Encoded hash of SBI installation file';
 COMMENT ON COLUMN toolkit.sbi_projects.website_url IS 'website_url: Partner website url';
 COMMENT ON COLUMN toolkit.sbi_projects.partner_id IS 'Partner Id: partner id who has created this project.';
