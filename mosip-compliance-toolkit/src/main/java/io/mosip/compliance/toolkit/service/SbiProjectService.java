@@ -1,9 +1,17 @@
 package io.mosip.compliance.toolkit.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionRequestDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionTestCaseDto;
+import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
+import io.mosip.compliance.toolkit.entity.TestCaseEntity;
 import io.mosip.compliance.toolkit.util.CommonUtil;
+import io.mosip.kernel.core.exception.ServiceError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -41,6 +49,8 @@ public class SbiProjectService {
 
 	@Value("${mosip.toolkit.api.id.sbi.project.post}")
 	private String getSbiProjectPostId;
+	@Value("${mosip.toolkit.api.id.sbi.project.testcases}")
+	private String allTestCases;
 
 	@Autowired
 	public ObjectMapperConfig objectMapperConfig;
@@ -50,6 +60,11 @@ public class SbiProjectService {
 
 	@Autowired
 	private KeyManagerHelper keyManagerHelper;
+	@Autowired
+	private TestCasesService testCasesService;
+
+	@Autowired
+	private CollectionsService collectionsService;
 
 	private Logger log = LoggerConfiguration.logConfig(SbiProjectService.class);
 
@@ -103,6 +118,10 @@ public class SbiProjectService {
 	public ResponseWrapper<SbiProjectDto> addSbiProject(SbiProjectDto sbiProjectDto) {
 		ResponseWrapper<SbiProjectDto> responseWrapper = new ResponseWrapper<>();
 
+		ResponseWrapper<List<TestCaseDto>> testCaseWrapper = new ResponseWrapper<List<TestCaseDto>>();
+		ResponseWrapper<CollectionDto> addCollectionWrapper = new ResponseWrapper<CollectionDto>();
+		List<CollectionTestCaseDto> addTestCasesForCollection = new ArrayList<>();
+
 		try {
 			if (isValidSbiProject(sbiProjectDto)) {
 				LocalDateTime crDate = LocalDateTime.now();
@@ -120,6 +139,10 @@ public class SbiProjectService {
 				entity.setDeleted(false);
 
 				sbiProjectRepository.save(entity);
+				ResponseWrapper<List<CollectionTestCaseDto>> defaultTestCase = addDefaultTestCase(sbiProjectDto, entity);
+				if(!defaultTestCase.getErrors().isEmpty()){
+					throw new Exception(defaultTestCase.getErrors().get(0).getMessage());
+				}
 
 				sbiProjectDto.setId(entity.getId());
 				sbiProjectDto.setPartnerId(entity.getPartnerId());
@@ -160,6 +183,35 @@ public class SbiProjectService {
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
+	}
+	public ResponseWrapper<List<CollectionTestCaseDto>> addDefaultTestCase(SbiProjectDto sbiProjectDto, SbiProjectEntity entity){
+		ResponseWrapper<List<TestCaseDto>> testCaseWrapper = new ResponseWrapper<List<TestCaseDto>>();
+		ResponseWrapper<CollectionDto> addCollectionWrapper = new ResponseWrapper<CollectionDto>();
+		ResponseWrapper<List<CollectionTestCaseDto>> addTestCasesForCollection = new ResponseWrapper<>();
+		try {
+			testCaseWrapper = testCasesService.getSbiTestCases(
+					sbiProjectDto.getSbiVersion(), sbiProjectDto.getPurpose()
+					, sbiProjectDto.getDeviceType(), sbiProjectDto.getDeviceSubType());
+			CollectionRequestDto collectionRequestDto = new CollectionRequestDto();
+			collectionRequestDto.setProjectId(entity.getId());
+			collectionRequestDto.setProjectType(sbiProjectDto.getProjectType());
+			collectionRequestDto.setCollectionName(allTestCases);
+			addCollectionWrapper = collectionsService.addCollection(collectionRequestDto);
+			List<CollectionTestCaseDto> inputList = new ArrayList<>();
+			for (TestCaseDto testCase : testCaseWrapper.getResponse()) {
+				CollectionTestCaseDto collectionTestCaseDto = new CollectionTestCaseDto();
+				collectionTestCaseDto.setCollectionId(addCollectionWrapper.getResponse().getCollectionId());
+				collectionTestCaseDto.setTestCaseId(testCase.getTestId());
+				inputList.add(collectionTestCaseDto);
+			}
+			addTestCasesForCollection = collectionsService.addTestCasesForCollection(inputList);
+		} catch (Exception ex){
+			ServiceError serviceError = new ServiceError("Default_Testcase_001",ex.getLocalizedMessage());
+			List<ServiceError> errorList = new ArrayList<>();
+			errorList.add(serviceError);
+			addTestCasesForCollection.setErrors(errorList);
+		}
+		return addTestCasesForCollection;
 	}
 
 	/**
