@@ -664,7 +664,6 @@
 			"expectedDuplicateCount": "1",
 			"identifyReferenceId": "ABIS3018_1",
 			"identifyGalleryIds": [
-				"ABIS3018_1",
 				"ABIS3018_2",
 				"ABIS3018_3"
 			]
@@ -1005,7 +1004,6 @@
 			"identifyReferenceId": "ABIS3027_2",
 			"identifyGalleryIds": [
 				"ABIS3027_1",
-				"ABIS3027_2",
 				"ABIS3027_3",
 				"ABIS3027_4",
 				"ABIS3027_5",
@@ -1106,7 +1104,6 @@
 			"identifyReferenceId": "ABIS3029_2",
 			"identifyGalleryIds": [
 				"ABIS3029_1",
-				"ABIS3029_2",
 				"ABIS3029_3"
 			]
 		}
