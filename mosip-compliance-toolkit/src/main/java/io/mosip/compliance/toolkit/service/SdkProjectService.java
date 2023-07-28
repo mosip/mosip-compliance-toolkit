@@ -135,6 +135,8 @@ public class SdkProjectService {
 					entity.setProjectType(sdkProjectDto.getProjectType());
 					entity.setPurpose(sdkProjectDto.getPurpose());
 					entity.setUrl(sdkProjectDto.getUrl());
+					entity.setSdkHash(sdkProjectDto.getSdkHash());
+					entity.setWebsiteUrl(sdkProjectDto.getWebsiteUrl());
 					entity.setSdkVersion(sdkProjectDto.getSdkVersion());
 					entity.setBioTestDataFileName(sdkProjectDto.getBioTestDataFileName());
 					entity.setPartnerId(partnerId);
@@ -201,10 +203,18 @@ public class SdkProjectService {
 						SdkProjectEntity entity = optionalSdkProjectEntity.get();
 						LocalDateTime updDate = LocalDateTime.now();
 						String url = sdkProjectDto.getUrl();
+						String sdkHash = sdkProjectDto.getSdkHash();
+						String websiteUrl = sdkProjectDto.getWebsiteUrl();
 						String bioTestDataName = sdkProjectDto.getBioTestDataFileName();
 //					Updating SDK project values
 						if (Objects.nonNull(url) && !url.isEmpty()) {
 							entity.setUrl(url);
+						}
+						if (Objects.nonNull(sdkHash) && !sdkHash.isEmpty()) {
+							entity.setSdkHash(sdkHash);
+						}
+						if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty()) {
+							entity.setWebsiteUrl(websiteUrl);
 						}
 						if (Objects.nonNull(bioTestDataName) && !bioTestDataName.isEmpty()) {
 							if (bioTestDataName.equals(AppConstants.MOSIP_DEFAULT)) {

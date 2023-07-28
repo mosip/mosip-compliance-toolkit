@@ -14,4 +14,5 @@ public class SdkProjectTable {
 	private String purpose;
 	private String specVersion;
 	private String sdkHash;
+	private String website;
 }
