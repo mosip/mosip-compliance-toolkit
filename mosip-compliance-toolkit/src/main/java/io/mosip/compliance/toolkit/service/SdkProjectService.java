@@ -55,6 +55,8 @@ public class SdkProjectService {
 	@Qualifier("S3Adapter")
 	@Autowired
 	private ObjectStoreAdapter objectStore;
+	@Autowired
+	private CollectionsService collectionsService;
 
 	private Logger log = LoggerConfiguration.logConfig(SdkProjectService.class);
 
@@ -141,6 +143,8 @@ public class SdkProjectService {
 					entity.setDeleted(false);
 
 					SdkProjectEntity outputEntity = sdkProjectRepository.save(entity);
+					collectionsService.addAllTestcasesCollection(sdkProjectDto,
+							entity);
 
 					sdkProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, SdkProjectDto.class);
 					sdkProjectDto.setId(entity.getId());
