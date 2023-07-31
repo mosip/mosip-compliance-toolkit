@@ -8,7 +8,7 @@ CREATE TABLE toolkit.sdk_projects(
 	url character varying(256) NOT NULL,
 	bio_test_data_file_name character varying(64) NOT NULL,
 	purpose character varying(256) NOT NULL,
-	sdk_hash character varying(256) NOT NULL DEFAULT 'To_Be_Added',
+	sdk_hash character varying NOT NULL DEFAULT 'To_Be_Added',
 	website_url character varying(256) NOT NULL DEFAULT 'To_Be_Added',
 	partner_id character varying(36) NOT NULL,
 	cr_by character varying(256) NOT NULL,

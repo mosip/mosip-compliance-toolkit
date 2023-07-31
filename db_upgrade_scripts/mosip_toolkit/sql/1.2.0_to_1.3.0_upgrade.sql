@@ -24,7 +24,7 @@ ALTER TABLE toolkit.sbi_projects Add COLUMN device_image2 character varying;
 ALTER TABLE toolkit.sbi_projects Add COLUMN device_image3 character varying;
 ALTER TABLE toolkit.sbi_projects Add COLUMN device_image4 character varying;
 ALTER TABLE toolkit.sbi_projects Add COLUMN device_image5 character varying;
-ALTER TABLE toolkit.sbi_projects Add COLUMN sbi_hash character varying(256) NOT NULL DEFAULT 'To_Be_Added';
+ALTER TABLE toolkit.sbi_projects Add COLUMN sbi_hash character varying NOT NULL DEFAULT 'To_Be_Added';
 ALTER TABLE toolkit.sbi_projects Add COLUMN website_url character varying(256) NOT NULL DEFAULT 'To_Be_Added';
 COMMENT ON COLUMN toolkit.sbi_projects.device_image1 IS 'device_image1: Base64 value of device image';
 COMMENT ON COLUMN toolkit.sbi_projects.device_image2 IS 'device_image2: Base64 value of device image';
@@ -34,12 +34,12 @@ COMMENT ON COLUMN toolkit.sbi_projects.device_image5 IS 'device_image5: Base64 v
 COMMENT ON COLUMN toolkit.sbi_projects.sbi_hash IS 'sbi_hash: Encoded hash of SBI installation file';
 COMMENT ON COLUMN toolkit.sbi_projects.website_url IS 'website_url: Partner website url';
 
-ALTER TABLE toolkit.sdk_projects Add COLUMN sdk_hash character varying(256) NOT NULL DEFAULT 'To_Be_Added';
+ALTER TABLE toolkit.sdk_projects Add COLUMN sdk_hash character varying NOT NULL DEFAULT 'To_Be_Added';
 ALTER TABLE toolkit.sdk_projects Add COLUMN website_url character varying(256) NOT NULL DEFAULT 'To_Be_Added';
 COMMENT ON COLUMN toolkit.sdk_projects.sdk_hash IS 'sdk_hash: Encoded hash of SDK installation file';
 COMMENT ON COLUMN toolkit.sdk_projects.website_url IS 'website_url: Partner website url';
 
-ALTER TABLE toolkit.abis_projects Add COLUMN abis_hash character varying(256) NOT NULL DEFAULT 'To_Be_Added';
+ALTER TABLE toolkit.abis_projects Add COLUMN abis_hash character varying NOT NULL DEFAULT 'To_Be_Added';
 ALTER TABLE toolkit.abis_projects Add COLUMN website_url character varying(256) NOT NULL DEFAULT 'To_Be_Added';
 COMMENT ON COLUMN toolkit.abis_projects.abis_hash IS 'abis_hash: Encoded hash of ABIS installation file';
 COMMENT ON COLUMN toolkit.abis_projects.website_url IS 'website_url: Partner website url';
