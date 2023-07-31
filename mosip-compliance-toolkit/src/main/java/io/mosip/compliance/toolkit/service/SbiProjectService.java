@@ -68,8 +68,8 @@ public class SbiProjectService {
 	@Autowired
 	private CollectionsService collectionsService;
 
-	@Value("${mosip.toolkit.api.id.sbi.project.testcases}")
-	private String allTestCases;
+	@Value("${mosip.toolkit.default.collection.name}")
+	private String defaultCollectionName;
 
 	private Logger log = LoggerConfiguration.logConfig(SbiProjectService.class);
 
@@ -147,13 +147,9 @@ public class SbiProjectService {
 				entity.setDeleted(false);
 
 				sbiProjectRepository.save(entity);
-				ResponseWrapper<List<CollectionTestCaseDto>> addDefaultTestcaseResponse = addAllTestcasesCollection(
-						sbiProjectDto.getSbiVersion(),
-						sbiProjectDto.getPurpose(),
-						sbiProjectDto.getDeviceType(),
-						sbiProjectDto.getDeviceSubType(),
-						sbiProjectDto.getProjectType(),
-						entity);
+				//Add a default "ALL" collection for the newly created project
+				addDefaultCollection(sbiProjectDto, entity.getId());
+				//send response
 				sbiProjectDto.setId(entity.getId());
 				sbiProjectDto.setPartnerId(entity.getPartnerId());
 				sbiProjectDto.setCrBy(entity.getCrBy());
@@ -195,39 +191,46 @@ public class SbiProjectService {
 		return responseWrapper;
 	}
 
-	public ResponseWrapper<List<CollectionTestCaseDto>> addAllTestcasesCollection(String sbiVersion,
-			String purpose,
-			String deviceType,
-			String deviceSubType,
-			String projectType,
-			SbiProjectEntity entity) {
-		ResponseWrapper<List<TestCaseDto>> testCaseWrapper = new ResponseWrapper<List<TestCaseDto>>();
-		ResponseWrapper<CollectionDto> addCollectionWrapper = new ResponseWrapper<CollectionDto>();
-		ResponseWrapper<List<CollectionTestCaseDto>> addTestCasesForCollection = new ResponseWrapper<>();
+	public void addDefaultCollection(SbiProjectDto sbiProjectDto,
+			String projectId) {
+		log.debug("Started addDefaultCollection for SBI project: " + projectId);
 		try {
-			testCaseWrapper = testCasesService.getSbiTestCases(
-					sbiVersion, purpose, deviceType,
-					deviceSubType);
+			//1. Add a new default collection 
 			CollectionRequestDto collectionRequestDto = new CollectionRequestDto();
-			collectionRequestDto.setProjectId(entity.getId());
-			collectionRequestDto.setProjectType(projectType);
-			collectionRequestDto.setCollectionName(allTestCases);
-			addCollectionWrapper = collectionsService.addCollection(collectionRequestDto);
-			List<CollectionTestCaseDto> inputList = new ArrayList<>();
-			for (TestCaseDto testCase : testCaseWrapper.getResponse()) {
-				CollectionTestCaseDto collectionTestCaseDto = new CollectionTestCaseDto();
-				collectionTestCaseDto.setCollectionId(addCollectionWrapper.getResponse().getCollectionId());
-				collectionTestCaseDto.setTestCaseId(testCase.getTestId());
-				inputList.add(collectionTestCaseDto);
+			collectionRequestDto.setProjectId(projectId);
+			collectionRequestDto.setProjectType(sbiProjectDto.getProjectType());
+			collectionRequestDto.setCollectionName(defaultCollectionName);
+			ResponseWrapper<CollectionDto> addCollectionWrapper = collectionsService.addCollection(collectionRequestDto);
+			String defaultCollectionId = null;
+			if (addCollectionWrapper.getResponse() != null) {
+				defaultCollectionId = addCollectionWrapper.getResponse().getCollectionId();
+				log.debug("Default collection added: " + defaultCollectionId);
+			} else {
+				log.debug("Default collection could not be added");
 			}
-			addTestCasesForCollection = collectionsService.addTestCasesForCollection(inputList);
+			if (defaultCollectionId != null) {
+				//2. Get the testcases
+				ResponseWrapper<List<TestCaseDto>> testCaseWrapper = testCasesService.getSbiTestCases(
+						sbiProjectDto.getSbiVersion(), sbiProjectDto.getPurpose(), sbiProjectDto.getDeviceType(),
+						sbiProjectDto.getDeviceSubType());
+				List<CollectionTestCaseDto> inputList = new ArrayList<>();
+				if (testCaseWrapper.getResponse() != null && testCaseWrapper.getResponse().size() > 0) {
+					for (TestCaseDto testCase : testCaseWrapper.getResponse()) {
+						CollectionTestCaseDto collectionTestCaseDto = new CollectionTestCaseDto();
+						collectionTestCaseDto.setCollectionId(defaultCollectionId);
+						collectionTestCaseDto.setTestCaseId(testCase.getTestId());
+						inputList.add(collectionTestCaseDto);
+					}
+				}
+				//3. add the testcases for the default collection
+				if (inputList.size() > 0 ) {
+					collectionsService.addTestCasesForCollection(inputList);
+				}
+			}
 		} catch (Exception ex) {
-			ServiceError serviceError = new ServiceError("Default_Testcase_001", ex.getLocalizedMessage());
-			List<ServiceError> errorList = new ArrayList<>();
-			errorList.add(serviceError);
-			addTestCasesForCollection.setErrors(errorList);
+			//This is a fail safe operation, so exception can be ignored
+			log.debug("Error in adding default collection" + ex.getLocalizedMessage());
 		}
-		return addTestCasesForCollection;
 	}
 
 	public ResponseWrapper<SbiProjectDto> updateSbiProject(SbiProjectDto sbiProjectDto) {
