@@ -49,7 +49,7 @@ public class ReportGeneratorController {
 	}
 	
 	@PostMapping(value = "/createReport")
-	public ResponseEntity<Resource> createReport(@RequestBody @Valid RequestWrapper<ReportRequestDto> value,
+	public ResponseEntity<?> createReport(@RequestBody @Valid RequestWrapper<ReportRequestDto> value,
 			@RequestHeader String origin, Errors errors) throws Exception {
 		requestValidator.validate(value, errors);
 		requestValidator.validateId(CREATE_REPORT_ID, value.getId(), errors);

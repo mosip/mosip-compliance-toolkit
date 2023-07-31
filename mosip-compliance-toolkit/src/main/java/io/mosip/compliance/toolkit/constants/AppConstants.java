@@ -59,7 +59,9 @@ public class AppConstants {
 	public static final String DECODED_DATA = "dataDecoded";
 
 	public static final String DIGITAL_ID_DECODED_DATA = "digitalIdDecoded";
-
+	
+	public static final String DEVICE_INFO_DECODED = "deviceInfoDecoded";
+	
 	public static final String MAKE = "make";
 
 	public static final String MODEL = "model";
