@@ -60,9 +60,11 @@ import io.mosip.kernel.core.logger.spi.Logger;
 @Component
 public class ReportGeneratorService {
 
-	private static final String VALIDATION_ERR_TEST_DATA = "Only MOSIP_DEFAULT test data should be used with the Test Run to generate the report.";
+	private static final String BLANK_STRING = "";
 
-	private static final String VALIDATION_ERR_DEVICE_INFO = "Make, model and serial number of the device should be same in all the testcases.";
+	private static final String VALIDATION_ERR_TEST_DATA = "Only MOSIP_DEFAULT test data should be used with the Test Run to generate the report. It is failing for testcase :";
+
+	private static final String VALIDATION_ERR_DEVICE_INFO = "Make, model and serial number of the device should be same in all the testcases. It is failing for testcase :";
 
 	private Logger log = LoggerConfiguration.logConfig(ReportGeneratorService.class);
 
@@ -127,15 +129,15 @@ public class ReportGeneratorService {
 			// 2. Validate that report can be generated
 			SbiProjectTable sbiProjectTable = new SbiProjectTable();
 			if (ProjectTypes.SBI.getCode().equals(projectType)) {
-				boolean validationResult = this.validateDeviceInfo(testRunDetailsResponseDto, sbiProjectTable);
-				if (!validationResult) {
-					return handleValidationErrors(requestDto, VALIDATION_ERR_DEVICE_INFO);
+				String invalidTestCaseId = this.validateDeviceInfo(testRunDetailsResponseDto, sbiProjectTable);
+				if (!BLANK_STRING.equals(invalidTestCaseId)) {
+					return handleValidationErrors(requestDto, VALIDATION_ERR_DEVICE_INFO + invalidTestCaseId);
 				}
 			}
 			if (ProjectTypes.ABIS.getCode().equals(projectType) || ProjectTypes.SDK.getCode().equals(projectType)) {
-				boolean validationResult = this.validateTestDataSource(testRunDetailsResponseDto, projectType);
-				if (!validationResult) {
-					return handleValidationErrors(requestDto, VALIDATION_ERR_TEST_DATA);
+				String invalidTestCaseId = this.validateTestDataSource(testRunDetailsResponseDto, projectType);
+				if (!BLANK_STRING.equals(invalidTestCaseId)) {
+					return handleValidationErrors(requestDto, VALIDATION_ERR_TEST_DATA + invalidTestCaseId);
 				}
 			}
 			// 3. Get the Project details
@@ -246,7 +248,9 @@ public class ReportGeneratorService {
 		return velocityContext;
 	}
 
-	private boolean validateTestDataSource(TestRunDetailsResponseDto testRunDetailsResponseDto, String projectType) {
+	private String validateTestDataSource(TestRunDetailsResponseDto testRunDetailsResponseDto, String projectType) {
+		
+		String invalidTestCaseId = BLANK_STRING;
 		List<TestRunDetailsDto> testRunDetailsList = testRunDetailsResponseDto.getTestRunDetailsList();
 		boolean validationResult = true;
 		List<String> ignoreSdkTestcaseList = Arrays.asList(ignoreSdkTestcases.split(","));
@@ -257,22 +261,26 @@ public class ReportGeneratorService {
 					&& !AppConstants.MOSIP_DEFAULT.equals(testRunDetailsDto.getTestDataSource())) {
 				log.info("testdata validation failed for {}", testRunDetailsDto.getTestcaseId());
 				validationResult = false;
-				break;
 			}
 			if (ProjectTypes.ABIS.getCode().equals(projectType)
 					&& !ignoreAbisTestcaseList.contains(testRunDetailsDto.getTestcaseId())
 					&& !AppConstants.MOSIP_DEFAULT.equals(testRunDetailsDto.getTestDataSource())) {
 				log.info("testdata validation failed for {}", testRunDetailsDto.getTestcaseId());
 				validationResult = false;
+			}
+			if (!validationResult) {
+				invalidTestCaseId = testRunDetailsDto.getTestcaseId();
 				break;
 			}
 		}
-		return validationResult;
+		
+		return invalidTestCaseId;
 	}
 
-	private boolean validateDeviceInfo(TestRunDetailsResponseDto testRunDetailsResponseDto,
+	private String validateDeviceInfo(TestRunDetailsResponseDto testRunDetailsResponseDto,
 			SbiProjectTable sbiProjectTable) {
 		List<TestRunDetailsDto> testRunDetailsList = testRunDetailsResponseDto.getTestRunDetailsList();
+		String invalidTestCaseId = BLANK_STRING;
 		boolean validationResult = true;
 		for (TestRunDetailsDto testRunDetailsDto : testRunDetailsList) {
 			if (validationResult) {
@@ -325,11 +333,12 @@ public class ReportGeneratorService {
 				}
 			}
 			if (!validationResult) {
+				invalidTestCaseId = testRunDetailsDto.getTestcaseId();
 				break;
 			}
 		}
 		log.info("validateDeviceInfo, validationResult: {}", validationResult);
-		return validationResult;
+		return invalidTestCaseId;
 	}
 
 	private boolean validateDeviceMakeModelSerialNo(SbiProjectTable sbiProjectTable, boolean validationResult,
@@ -430,8 +439,8 @@ public class ReportGeneratorService {
 	}
 
 	private String getOrigin(String origin) {
-		origin = origin.replace("https://", "");
-		origin = origin.replace("http://", "");
+		origin = origin.replace("https://", BLANK_STRING);
+		origin = origin.replace("http://", BLANK_STRING);
 		return origin;
 	}
 
