@@ -1,10 +1,17 @@
 package io.mosip.compliance.toolkit.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionRequestDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionTestCaseDto;
+import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.util.CommonUtil;
+import io.mosip.kernel.core.exception.ServiceError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -54,6 +61,15 @@ public class SbiProjectService {
 
 	@Autowired
 	private KeyManagerHelper keyManagerHelper;
+
+	@Autowired
+	private TestCasesService testCasesService;
+
+	@Autowired
+	private CollectionsService collectionsService;
+
+	@Value("${mosip.toolkit.api.id.sbi.project.testcases}")
+	private String allTestCases;
 
 	private Logger log = LoggerConfiguration.logConfig(SbiProjectService.class);
 
@@ -131,7 +147,13 @@ public class SbiProjectService {
 				entity.setDeleted(false);
 
 				sbiProjectRepository.save(entity);
-
+				ResponseWrapper<List<CollectionTestCaseDto>> addDefaultTestcaseResponse = addAllTestcasesCollection(
+						sbiProjectDto.getSbiVersion(),
+						sbiProjectDto.getPurpose(),
+						sbiProjectDto.getDeviceType(),
+						sbiProjectDto.getDeviceSubType(),
+						sbiProjectDto.getProjectType(),
+						entity);
 				sbiProjectDto.setId(entity.getId());
 				sbiProjectDto.setPartnerId(entity.getPartnerId());
 				sbiProjectDto.setCrBy(entity.getCrBy());
@@ -171,6 +193,41 @@ public class SbiProjectService {
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
+	}
+
+	public ResponseWrapper<List<CollectionTestCaseDto>> addAllTestcasesCollection(String sbiVersion,
+			String purpose,
+			String deviceType,
+			String deviceSubType,
+			String projectType,
+			SbiProjectEntity entity) {
+		ResponseWrapper<List<TestCaseDto>> testCaseWrapper = new ResponseWrapper<List<TestCaseDto>>();
+		ResponseWrapper<CollectionDto> addCollectionWrapper = new ResponseWrapper<CollectionDto>();
+		ResponseWrapper<List<CollectionTestCaseDto>> addTestCasesForCollection = new ResponseWrapper<>();
+		try {
+			testCaseWrapper = testCasesService.getSbiTestCases(
+					sbiVersion, purpose, deviceType,
+					deviceSubType);
+			CollectionRequestDto collectionRequestDto = new CollectionRequestDto();
+			collectionRequestDto.setProjectId(entity.getId());
+			collectionRequestDto.setProjectType(projectType);
+			collectionRequestDto.setCollectionName(allTestCases);
+			addCollectionWrapper = collectionsService.addCollection(collectionRequestDto);
+			List<CollectionTestCaseDto> inputList = new ArrayList<>();
+			for (TestCaseDto testCase : testCaseWrapper.getResponse()) {
+				CollectionTestCaseDto collectionTestCaseDto = new CollectionTestCaseDto();
+				collectionTestCaseDto.setCollectionId(addCollectionWrapper.getResponse().getCollectionId());
+				collectionTestCaseDto.setTestCaseId(testCase.getTestId());
+				inputList.add(collectionTestCaseDto);
+			}
+			addTestCasesForCollection = collectionsService.addTestCasesForCollection(inputList);
+		} catch (Exception ex) {
+			ServiceError serviceError = new ServiceError("Default_Testcase_001", ex.getLocalizedMessage());
+			List<ServiceError> errorList = new ArrayList<>();
+			errorList.add(serviceError);
+			addTestCasesForCollection.setErrors(errorList);
+		}
+		return addTestCasesForCollection;
 	}
 
 	public ResponseWrapper<SbiProjectDto> updateSbiProject(SbiProjectDto sbiProjectDto) {
