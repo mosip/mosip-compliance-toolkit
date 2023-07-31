@@ -213,7 +213,7 @@ public class AbisProjectService {
 
 	public void addDefaultCollection(AbisProjectDto abisProjectDto,
 									 String projectId) {
-		log.debug("Started addDefaultCollection for SBI project: " + projectId);
+		log.debug("Started addDefaultCollection for ABIS project: " + projectId);
 		try {
 			//1. Add a new default collection
 			CollectionRequestDto collectionRequestDto = new CollectionRequestDto();

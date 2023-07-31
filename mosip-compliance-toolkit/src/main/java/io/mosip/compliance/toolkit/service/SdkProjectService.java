@@ -205,7 +205,7 @@ public class SdkProjectService {
 
 	public void addDefaultCollection(SdkProjectDto sdkProjectDto,
 									 String projectId) {
-		log.debug("Started addDefaultCollection for SBI project: " + projectId);
+		log.debug("Started addDefaultCollection for SDK project: " + projectId);
 		try {
 			//1. Add a new default collection
 			CollectionRequestDto collectionRequestDto = new CollectionRequestDto();
