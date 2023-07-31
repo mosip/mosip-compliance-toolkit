@@ -19,10 +19,18 @@ COMMENT ON COLUMN toolkit.datashare_tokens.testrun_id IS 'testRun_id: Unique run
 COMMENT ON COLUMN toolkit.datashare_tokens.token IS 'token: Data share token test run';
 COMMENT ON COLUMN toolkit.datashare_tokens.result IS 'result: result of data share tokens.';
 
-ALTER TABLE toolkit.sbi_projects Add COLUMN device_images character varying(256) NOT NULL DEFAULT 'To_Be_Added';
+ALTER TABLE toolkit.sbi_projects Add COLUMN device_image1 character varying;
+ALTER TABLE toolkit.sbi_projects Add COLUMN device_image2 character varying;
+ALTER TABLE toolkit.sbi_projects Add COLUMN device_image3 character varying;
+ALTER TABLE toolkit.sbi_projects Add COLUMN device_image4 character varying;
+ALTER TABLE toolkit.sbi_projects Add COLUMN device_image5 character varying;
 ALTER TABLE toolkit.sbi_projects Add COLUMN sbi_hash character varying(256) NOT NULL DEFAULT 'To_Be_Added';
 ALTER TABLE toolkit.sbi_projects Add COLUMN website_url character varying(256) NOT NULL DEFAULT 'To_Be_Added';
-COMMENT ON COLUMN toolkit.sbi_projects.device_images IS 'device_images: Name of the device images';
+COMMENT ON COLUMN toolkit.sbi_projects.device_image1 IS 'device_image1: Base64 value of device image';
+COMMENT ON COLUMN toolkit.sbi_projects.device_image2 IS 'device_image2: Base64 value of device image';
+COMMENT ON COLUMN toolkit.sbi_projects.device_image3 IS 'device_image3: Base64 value of device image';
+COMMENT ON COLUMN toolkit.sbi_projects.device_image4 IS 'device_image4: Base64 value of device image';
+COMMENT ON COLUMN toolkit.sbi_projects.device_image5 IS 'device_image5: Base64 value of device image';
 COMMENT ON COLUMN toolkit.sbi_projects.sbi_hash IS 'sbi_hash: Encoded hash of SBI installation file';
 COMMENT ON COLUMN toolkit.sbi_projects.website_url IS 'website_url: Partner website url';
 

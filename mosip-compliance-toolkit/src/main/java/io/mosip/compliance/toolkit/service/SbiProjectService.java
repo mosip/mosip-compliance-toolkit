@@ -118,7 +118,11 @@ public class SbiProjectService {
 				entity.setPurpose(sbiProjectDto.getPurpose());
 				entity.setDeviceType(sbiProjectDto.getDeviceType());
 				entity.setDeviceSubType(sbiProjectDto.getDeviceSubType());
-				entity.setDeviceImages(sbiProjectDto.getDeviceImages());
+				entity.setDeviceImage1(sbiProjectDto.getDeviceImage1());
+				entity.setDeviceImage2(sbiProjectDto.getDeviceImage2());
+				entity.setDeviceImage3(sbiProjectDto.getDeviceImage3());
+				entity.setDeviceImage4(sbiProjectDto.getDeviceImage4());
+				entity.setDeviceImage5(sbiProjectDto.getDeviceImage5());
 				entity.setSbiHash(sbiProjectDto.getSbiHash());
 				entity.setWebsiteUrl(sbiProjectDto.getWebsiteUrl());
 				entity.setPartnerId(this.getPartnerId());
@@ -179,11 +183,27 @@ public class SbiProjectService {
 				if (optionalSbiProjectEntity.isPresent()) {
 					SbiProjectEntity entity = optionalSbiProjectEntity.get();
 					LocalDateTime updDate = LocalDateTime.now();
-					String deviceImages = sbiProjectDto.getDeviceImages();
+					String deviceImage1 = sbiProjectDto.getDeviceImage1();
+					String deviceImage2 = sbiProjectDto.getDeviceImage2();
+					String deviceImage3 = sbiProjectDto.getDeviceImage3();
+					String deviceImage4 = sbiProjectDto.getDeviceImage4();
+					String deviceImage5 = sbiProjectDto.getDeviceImage5();
 					String sbiHash = sbiProjectDto.getSbiHash();
 					String websiteUrl = sbiProjectDto.getWebsiteUrl();
-					if (Objects.nonNull(deviceImages) && !deviceImages.isEmpty()) {
-						entity.setDeviceImages(deviceImages);
+					if (Objects.nonNull(deviceImage1) && !deviceImage1.isEmpty()) {
+						entity.setDeviceImage1(deviceImage1);
+					}
+					if (Objects.nonNull(deviceImage2) && !deviceImage2.isEmpty()) {
+						entity.setDeviceImage2(deviceImage2);
+					}
+					if (Objects.nonNull(deviceImage3) && !deviceImage3.isEmpty()) {
+						entity.setDeviceImage3(deviceImage3);
+					}
+					if (Objects.nonNull(deviceImage4) && !deviceImage4.isEmpty()) {
+						entity.setDeviceImage4(deviceImage4);
+					}
+					if (Objects.nonNull(deviceImage5) && !deviceImage5.isEmpty()) {
+						entity.setDeviceImage5(deviceImage5);
 					}
 					if (Objects.nonNull(sbiHash) && !sbiHash.isEmpty()) {
 						entity.setSbiHash(sbiHash);
