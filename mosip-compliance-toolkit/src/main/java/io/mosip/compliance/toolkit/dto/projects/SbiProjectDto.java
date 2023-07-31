@@ -25,7 +25,15 @@ public class SbiProjectDto {
 	
 	private String deviceSubType;
 
-	private String deviceImages;
+	private String deviceImage1;
+
+	private String deviceImage2;
+
+	private String deviceImage3;
+
+	private String deviceImage4;
+
+	private String deviceImage5;
 
 	private String sbiHash;
 
