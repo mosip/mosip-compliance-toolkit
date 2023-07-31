@@ -1,11 +1,18 @@
 package io.mosip.compliance.toolkit.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import io.mosip.compliance.toolkit.constants.AbisSpecVersions;
 import io.mosip.compliance.toolkit.constants.ProjectTypes;
+import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionRequestDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionTestCaseDto;
+import io.mosip.compliance.toolkit.dto.projects.SdkProjectDto;
+import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
@@ -43,6 +50,8 @@ public class AbisProjectService {
 	private String getAbisProjectPostId;
 	@Value("${mosip.toolkit.api.id.abis.project.put}")
 	private String putAbisProjectId;
+	@Value("${mosip.toolkit.default.collection.name}")
+	private String defaultCollectionName;
 
 	@Autowired
 	private AbisProjectRepository abisProjectRepository;
@@ -52,6 +61,12 @@ public class AbisProjectService {
 
 	@Value("${mosip.kernel.objectstore.account-name}")
 	private String objectStoreAccountName;
+
+	@Autowired
+	private TestCasesService testCasesService;
+
+	@Autowired
+	private CollectionsService collectionsService;
 
 	@Autowired
 	private ObjectMapperConfig objectMapperConfig;
@@ -151,6 +166,8 @@ public class AbisProjectService {
 					entity.setAbisVersion(abisProjectDto.getAbisVersion());
 
 					AbisProjectEntity outputEntity = abisProjectRepository.save(entity);
+					//Add a default "ALL" collection for the newly created project
+					addDefaultCollection(abisProjectDto, entity.getId());
 
 					abisProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, AbisProjectDto.class);
 					abisProjectDto.setId(entity.getId());
@@ -193,6 +210,49 @@ public class AbisProjectService {
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
+
+	public void addDefaultCollection(AbisProjectDto abisProjectDto,
+									 String projectId) {
+		log.debug("Started addDefaultCollection for SBI project: " + projectId);
+		try {
+			//1. Add a new default collection
+			CollectionRequestDto collectionRequestDto = new CollectionRequestDto();
+			collectionRequestDto.setProjectId(projectId);
+			collectionRequestDto.setProjectType(abisProjectDto.getProjectType());
+			collectionRequestDto.setCollectionName(defaultCollectionName);
+			ResponseWrapper<CollectionDto> addCollectionWrapper = collectionsService.addCollection(collectionRequestDto);
+			String defaultCollectionId = null;
+			if (addCollectionWrapper.getResponse() != null) {
+				defaultCollectionId = addCollectionWrapper.getResponse().getCollectionId();
+				log.debug("Default collection added: " + defaultCollectionId);
+			} else {
+				log.debug("Default collection could not be added");
+			}
+			if (defaultCollectionId != null) {
+				//2. Get the testcases
+				ResponseWrapper<List<TestCaseDto>> testCaseWrapper = testCasesService.getAbisTestCases(
+						abisProjectDto.getAbisVersion()
+				);
+				List<CollectionTestCaseDto> inputList = new ArrayList<>();
+				if (testCaseWrapper.getResponse() != null && testCaseWrapper.getResponse().size() > 0) {
+					for (TestCaseDto testCase : testCaseWrapper.getResponse()) {
+						CollectionTestCaseDto collectionTestCaseDto = new CollectionTestCaseDto();
+						collectionTestCaseDto.setCollectionId(defaultCollectionId);
+						collectionTestCaseDto.setTestCaseId(testCase.getTestId());
+						inputList.add(collectionTestCaseDto);
+					}
+				}
+				//3. add the testcases for the default collection
+				if (inputList.size() > 0 ) {
+					collectionsService.addTestCasesForCollection(inputList);
+				}
+			}
+		} catch (Exception ex) {
+			//This is a fail safe operation, so exception can be ignored
+			log.debug("Error in adding default collection" + ex.getLocalizedMessage());
+		}
+	}
+
 
 	public ResponseWrapper<AbisProjectDto> updateAbisProject(AbisProjectDto abisProjectDto) {
 		ResponseWrapper<AbisProjectDto> responseWrapper = new ResponseWrapper<>();

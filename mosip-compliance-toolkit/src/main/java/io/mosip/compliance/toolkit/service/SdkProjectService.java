@@ -7,6 +7,11 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.*;
+import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionRequestDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionTestCaseDto;
+import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
+import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
 import io.mosip.compliance.toolkit.entity.SdkProjectEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
@@ -27,6 +32,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -40,6 +47,8 @@ public class SdkProjectService {
 	@Value("${mosip.toolkit.api.id.sdk.project.put}")
 	private String putSdkProjectId;
 
+	@Value("${mosip.toolkit.default.collection.name}")
+	private String defaultCollectionName;
 	@Autowired
 	private SdkProjectRepository sdkProjectRepository;
 	
@@ -48,6 +57,12 @@ public class SdkProjectService {
 
 	@Autowired
 	private ObjectMapperConfig objectMapperConfig;
+
+	@Autowired
+	private TestCasesService testCasesService;
+
+	@Autowired
+	private CollectionsService collectionsService;
 	
 	@Value("${mosip.kernel.objectstore.account-name}")
 	private String objectStoreAccountName;
@@ -143,6 +158,8 @@ public class SdkProjectService {
 					entity.setDeleted(false);
 
 					SdkProjectEntity outputEntity = sdkProjectRepository.save(entity);
+					//Add a default "ALL" collection for the newly created project
+					addDefaultCollection(sdkProjectDto, entity.getId());
 
 					sdkProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, SdkProjectDto.class);
 					sdkProjectDto.setId(entity.getId());
@@ -184,6 +201,48 @@ public class SdkProjectService {
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
+	}
+
+	public void addDefaultCollection(SdkProjectDto sdkProjectDto,
+									 String projectId) {
+		log.debug("Started addDefaultCollection for SBI project: " + projectId);
+		try {
+			//1. Add a new default collection
+			CollectionRequestDto collectionRequestDto = new CollectionRequestDto();
+			collectionRequestDto.setProjectId(projectId);
+			collectionRequestDto.setProjectType(sdkProjectDto.getProjectType());
+			collectionRequestDto.setCollectionName(defaultCollectionName);
+			ResponseWrapper<CollectionDto> addCollectionWrapper = collectionsService.addCollection(collectionRequestDto);
+			String defaultCollectionId = null;
+			if (addCollectionWrapper.getResponse() != null) {
+				defaultCollectionId = addCollectionWrapper.getResponse().getCollectionId();
+				log.debug("Default collection added: " + defaultCollectionId);
+			} else {
+				log.debug("Default collection could not be added");
+			}
+			if (defaultCollectionId != null) {
+				//2. Get the testcases
+				ResponseWrapper<List<TestCaseDto>> testCaseWrapper = testCasesService.getSdkTestCases(
+						sdkProjectDto.getSdkVersion(),
+						sdkProjectDto.getPurpose());
+				List<CollectionTestCaseDto> inputList = new ArrayList<>();
+				if (testCaseWrapper.getResponse() != null && testCaseWrapper.getResponse().size() > 0) {
+					for (TestCaseDto testCase : testCaseWrapper.getResponse()) {
+						CollectionTestCaseDto collectionTestCaseDto = new CollectionTestCaseDto();
+						collectionTestCaseDto.setCollectionId(defaultCollectionId);
+						collectionTestCaseDto.setTestCaseId(testCase.getTestId());
+						inputList.add(collectionTestCaseDto);
+					}
+				}
+				//3. add the testcases for the default collection
+				if (inputList.size() > 0 ) {
+					collectionsService.addTestCasesForCollection(inputList);
+				}
+			}
+		} catch (Exception ex) {
+			//This is a fail safe operation, so exception can be ignored
+			log.debug("Error in adding default collection" + ex.getLocalizedMessage());
+		}
 	}
 
 	public ResponseWrapper<SdkProjectDto> updateSdkProject(SdkProjectDto sdkProjectDto) {
