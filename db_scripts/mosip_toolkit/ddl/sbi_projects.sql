@@ -13,7 +13,7 @@ CREATE TABLE toolkit.sbi_projects(
 	device_image3 character varying,
 	device_image4 character varying,
 	device_image5 character varying,
-	sbi_hash character varying(256) NOT NULL DEFAULT 'To_Be_Added',
+	sbi_hash character varying NOT NULL DEFAULT 'To_Be_Added',
 	website_url character varying(256) NOT NULL DEFAULT 'To_Be_Added',
 	partner_id character varying(36) NOT NULL,
 	cr_by character varying(256) NOT NULL,
