@@ -33,8 +33,6 @@ public class SbiProjectDto {
 
 	private String deviceImage4;
 
-	private String deviceImage5;
-
 	private String sbiHash;
 
 	private String websiteUrl;

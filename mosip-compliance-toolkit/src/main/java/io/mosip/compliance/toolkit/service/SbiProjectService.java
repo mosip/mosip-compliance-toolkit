@@ -138,7 +138,6 @@ public class SbiProjectService {
 				entity.setDeviceImage2(sbiProjectDto.getDeviceImage2());
 				entity.setDeviceImage3(sbiProjectDto.getDeviceImage3());
 				entity.setDeviceImage4(sbiProjectDto.getDeviceImage4());
-				entity.setDeviceImage5(sbiProjectDto.getDeviceImage5());
 				entity.setSbiHash(sbiProjectDto.getSbiHash());
 				entity.setWebsiteUrl(sbiProjectDto.getWebsiteUrl());
 				entity.setPartnerId(this.getPartnerId());
@@ -247,7 +246,6 @@ public class SbiProjectService {
 					String deviceImage2 = sbiProjectDto.getDeviceImage2();
 					String deviceImage3 = sbiProjectDto.getDeviceImage3();
 					String deviceImage4 = sbiProjectDto.getDeviceImage4();
-					String deviceImage5 = sbiProjectDto.getDeviceImage5();
 					String sbiHash = sbiProjectDto.getSbiHash();
 					String websiteUrl = sbiProjectDto.getWebsiteUrl();
 					if (Objects.nonNull(deviceImage1) && !deviceImage1.isEmpty()) {
@@ -261,9 +259,6 @@ public class SbiProjectService {
 					}
 					if (Objects.nonNull(deviceImage4) && !deviceImage4.isEmpty()) {
 						entity.setDeviceImage4(deviceImage4);
-					}
-					if (Objects.nonNull(deviceImage5) && !deviceImage5.isEmpty()) {
-						entity.setDeviceImage5(deviceImage5);
 					}
 					if (Objects.nonNull(sbiHash) && !sbiHash.isEmpty()) {
 						entity.setSbiHash(sbiHash);
