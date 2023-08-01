@@ -2,7 +2,9 @@ package io.mosip.compliance.toolkit.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.compliance.toolkit.dto.EncryptionKeyResponseDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
 import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
+import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.entity.SbiProjectEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.SbiProjectRepository;
@@ -28,6 +30,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
@@ -52,6 +56,12 @@ public class SbiProjectServiceTest {
 
     @Mock
     private ObjectMapperConfig objectMapperConfig;
+
+    @Mock
+    private CollectionsService collectionsService;
+
+    @Mock
+    private TestCasesService testCasesService;
 
     @Mock
     private ObjectMapper mapper;
@@ -164,6 +174,57 @@ public class SbiProjectServiceTest {
         sbiProjectDtoResponseWrapper = sbiProjectService.addSbiProject(sbiProjectDto);
         Assert.assertEquals(sbiProjectDto, sbiProjectDtoResponseWrapper.getResponse());
     }
+
+    @Test
+    public void addSbiProjectDefaultCollectionTest(){
+        SbiProjectDto sbiProjectDto = new SbiProjectDto();
+        sbiProjectDto.setProjectType("SBI");
+        sbiProjectDto.setSbiVersion("0.9.5");
+        sbiProjectDto.setPurpose("Registration");
+        sbiProjectDto.setDeviceType("Finger");
+        sbiProjectDto.setDeviceSubType("Slap");
+
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
+        Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        SecurityContextHolder.setContext(securityContext);
+        ResponseWrapper<CollectionDto> addCollectionWrapper = new ResponseWrapper<CollectionDto>();
+        CollectionDto collectionDto = new CollectionDto();
+        collectionDto.setCollectionId("12345678");
+        collectionDto.setProjectId("abcdefgh");
+        collectionDto.setName("MyCollection");
+        collectionDto.setTestCaseCount(8);
+        addCollectionWrapper.setResponse(collectionDto);
+        Mockito.when(collectionsService.addCollection(Mockito.any())).thenReturn(addCollectionWrapper);
+        ResponseWrapper<List<TestCaseDto>> testCaseWrapper = new ResponseWrapper<List<TestCaseDto>>();
+        List<TestCaseDto> testCaseDtoList = new ArrayList<TestCaseDto>();
+        TestCaseDto testCaseDto = new TestCaseDto();
+        testCaseDto.setTestCaseType("SBI");
+        testCaseDto.setTestId("SBI1000");
+        testCaseDto.setSpecVersion("0.9.5");
+        testCaseDto.setTestName("Discover Device");
+        testCaseDto.setTestDescription("Test to perform validation for the device discovery interface");
+        testCaseDto.setAndroidTestDescription(null);
+        testCaseDto.setNegativeTestcase(false);
+        testCaseDto.setInactive(false);
+        testCaseDto.setInactiveForAndroid(null);
+        testCaseDto.setMethodName(null);
+        testCaseDto.setRequestSchema(null);
+        testCaseDto.setResponseSchema(null);
+        testCaseDto.setValidatorDefs(null);
+        testCaseDto.setOtherAttributes(null);
+        testCaseDtoList.add(testCaseDto);
+        testCaseWrapper.setResponse(testCaseDtoList);
+        Mockito.when(testCasesService.getSbiTestCases(Mockito.any(),Mockito.any(),Mockito.any()
+        ,Mockito.any())).thenReturn(testCaseWrapper);
+
+
+        ResponseWrapper<SbiProjectDto> sbiProjectDtoResponseWrapper = new ResponseWrapper<>();
+        sbiProjectDtoResponseWrapper = sbiProjectService.addSbiProject(sbiProjectDto);
+        Assert.assertEquals(sbiProjectDto, sbiProjectDtoResponseWrapper.getResponse());
+    }
+
 
     /*
      * This class tests the addSbiProject method in case of Exception
