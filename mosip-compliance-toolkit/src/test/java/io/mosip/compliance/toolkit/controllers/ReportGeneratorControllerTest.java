@@ -14,7 +14,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.context.WebApplicationContext;
 
-@ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
+@ContextConfiguration(classes = { TestContext.class, WebApplicationContext.class })
 @RunWith(SpringRunner.class)
 @WebMvcTest
 public class ReportGeneratorControllerTest {
@@ -29,7 +29,7 @@ public class ReportGeneratorControllerTest {
     private Errors errors;
 
     @Test
-    public void initBinderTest(){
+    public void initBinderTest() {
         WebDataBinder binder = new WebDataBinder(null);
         reportGeneratorController.initBinder(binder);
     }
