@@ -23,7 +23,10 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+
+import static org.mockito.Mockito.mock;
 
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
 @RunWith(SpringRunner.class)
@@ -63,6 +66,39 @@ public class SbiProjectControllerTest {
         Mockito.when(sbiProjectService.addSbiProject(sbiProjectDto)).thenReturn(sbiProjectDtoResponseWrapper);
         sbiProjectController.addSbiProject(value, errors);
     }
+    
+    @Test
+    public void updateSbiProject_ValidInput_Success() throws Exception {
+        RequestWrapper<SbiProjectDto> requestWrapper = createMockRequestWrapper();
+        Errors errors = mock(Errors.class);
+        SbiProjectDto sbiProjectDto = new SbiProjectDto();
+        ResponseWrapper<SbiProjectDto> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setResponse(sbiProjectDto);
+        Mockito.when(sbiProjectService.updateSbiProject(requestWrapper.getRequest())).thenReturn(responseWrapper);
+
+        ResponseWrapper<SbiProjectDto> responseWrapper1 = sbiProjectController.updateSbiProject(requestWrapper, errors);
+    }
+
+    private RequestWrapper<SbiProjectDto> createMockRequestWrapper() {
+        SbiProjectDto sbiProjectDto = new SbiProjectDto();
+        RequestWrapper<SbiProjectDto> requestWrapper = new RequestWrapper<>();
+        requestWrapper.setRequest(sbiProjectDto);
+        return requestWrapper;
+    }
+
+    @Test
+    public void getEncryptionKey_Success() throws Exception {
+        ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
+        String encryptionKey = "your_encryption_key_here";
+        responseWrapper.setResponse(encryptionKey);
+        Mockito.when(sbiProjectService.getEncryptionKey()).thenReturn(responseWrapper);
+
+        Method getEncryptionKeyMethod = SbiProjectController.class.getDeclaredMethod("getEncryptionKey");
+        getEncryptionKeyMethod.setAccessible(true); // Allow invoking private method
+        ResponseWrapper<String> result = (ResponseWrapper<String>) getEncryptionKeyMethod.invoke(sbiProjectController);
+
+    }
+
 
     /*
      * This class tests the getProjectById method
