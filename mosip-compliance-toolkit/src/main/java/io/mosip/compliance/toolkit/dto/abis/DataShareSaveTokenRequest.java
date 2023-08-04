@@ -12,5 +12,4 @@ public class DataShareSaveTokenRequest {
 	private String partnerId;
 	private String ctkTestCaseId;
 	private String ctkTestRunId;
-	private String token;
 }

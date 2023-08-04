@@ -153,7 +153,6 @@ public class ABISDataShareServiceTest {
 		dataShareSaveTokenRequest.setPartnerId("1234");
 		dataShareSaveTokenRequest.setCtkTestCaseId("5678");
 		dataShareSaveTokenRequest.setCtkTestRunId("9012");
-		dataShareSaveTokenRequest.setToken("token");
 		requestWrapper.setRequest(dataShareSaveTokenRequest);
 
 		AbisDataShareTokenEntity savedEntity = new AbisDataShareTokenEntity();
@@ -179,7 +178,6 @@ public class ABISDataShareServiceTest {
 		dataShareSaveTokenRequest.setPartnerId("1234");
 		dataShareSaveTokenRequest.setCtkTestCaseId("5678");
 		dataShareSaveTokenRequest.setCtkTestRunId("9012");
-		dataShareSaveTokenRequest.setToken("token");
 		requestWrapper.setRequest(dataShareSaveTokenRequest);
 
 		when(abisDataShareTokenRepository.findTokenForTestRun(Mockito.any(), Mockito.any(), Mockito.any()))
@@ -197,7 +195,6 @@ public class ABISDataShareServiceTest {
 		dataShareSaveTokenRequest.setPartnerId("1234");
 		dataShareSaveTokenRequest.setCtkTestCaseId("5678");
 		dataShareSaveTokenRequest.setCtkTestRunId("9012");
-		dataShareSaveTokenRequest.setToken("Token");
 		requestWrapper.setRequest(dataShareSaveTokenRequest);
 
 		ResponseWrapper<String> response = abisDataShareService.invalidateDataShareToken(requestWrapper);
@@ -212,7 +209,6 @@ public class ABISDataShareServiceTest {
 		dataShareSaveTokenRequest.setPartnerId("1234");
 		dataShareSaveTokenRequest.setCtkTestCaseId("5678");
 		dataShareSaveTokenRequest.setCtkTestRunId("9012");
-		dataShareSaveTokenRequest.setToken("Token");
 		requestWrapper.setRequest(dataShareSaveTokenRequest);
 		AbisDataShareTokenEntity abisDataShareTokenEntity = new AbisDataShareTokenEntity();
 		abisDataShareTokenEntity.setPartnerId("1234");
@@ -236,7 +232,6 @@ public class ABISDataShareServiceTest {
 		dataShareSaveTokenRequest.setPartnerId("1234");
 		dataShareSaveTokenRequest.setCtkTestCaseId("5678");
 		dataShareSaveTokenRequest.setCtkTestRunId("9012");
-		dataShareSaveTokenRequest.setToken("Token");
 		requestWrapper.setRequest(dataShareSaveTokenRequest);
 		AbisDataShareTokenEntity abisDataShareTokenEntity = new AbisDataShareTokenEntity();
 		abisDataShareTokenEntity.setPartnerId("1234");
