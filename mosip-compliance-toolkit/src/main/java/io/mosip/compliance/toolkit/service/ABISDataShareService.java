@@ -252,7 +252,7 @@ public class ABISDataShareService {
 		String partnerId = requestWrapper.getRequest().getPartnerId();
 		String testcaseId = requestWrapper.getRequest().getCtkTestCaseId();
 		String testRunId = requestWrapper.getRequest().getCtkTestRunId();
-		String token = requestWrapper.getRequest().getToken();
+		String token = authUserDetails().getToken();
 		log.info("saveDataShareToken started with testcaseId {},testRunId {}, partnerId {} and token {} ", testcaseId,
 				testRunId, partnerId, token);
 		try {
@@ -260,6 +260,7 @@ public class ABISDataShareService {
 					testcaseId, testRunId);
 			if (dbEntity.isPresent()) {
 				String tokenInDb = dbEntity.get().getToken();
+				
 				if (tokenInDb.equals(token)) {
 					abisDataShareTokenRepository.updateResultInRow(AppConstants.SUCCESS, partnerId, testcaseId,
 							testRunId);
@@ -274,7 +275,7 @@ public class ABISDataShareService {
 				abisDataShareTokenEntity.setPartnerId(partnerId);
 				abisDataShareTokenEntity.setTestCaseId(testcaseId);
 				abisDataShareTokenEntity.setTestRunId(testRunId);
-				abisDataShareTokenEntity.setToken(requestWrapper.getRequest().getToken());
+				abisDataShareTokenEntity.setToken(token);
 				abisDataShareTokenEntity.setResult(AppConstants.SUCCESS);
 				abisDataShareTokenRepository.save(abisDataShareTokenEntity);
 			}
@@ -294,7 +295,7 @@ public class ABISDataShareService {
 		String partnerId = requestWrapper.getRequest().getPartnerId();
 		String testcaseId = requestWrapper.getRequest().getCtkTestCaseId();
 		String testRunId = requestWrapper.getRequest().getCtkTestRunId();
-		String token = requestWrapper.getRequest().getToken();
+		String token = authUserDetails().getToken();
 		log.info("invalidateDataShareToken started with testcaseId {},testRunId {}, partnerId {} and token {} ",
 				testcaseId, testRunId, partnerId, token);
 		try {
@@ -324,7 +325,7 @@ public class ABISDataShareService {
 								abisDataShareTokenEntity.setPartnerId(partnerId);
 								abisDataShareTokenEntity.setTestCaseId(testcaseId);
 								abisDataShareTokenEntity.setTestRunId(testRunId);
-								abisDataShareTokenEntity.setToken(requestWrapper.getRequest().getToken());
+								abisDataShareTokenEntity.setToken(token);
 								abisDataShareTokenEntity.setResult(AppConstants.SUCCESS);
 								abisDataShareTokenRepository.save(abisDataShareTokenEntity);
 							} else {
