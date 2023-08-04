@@ -396,6 +396,7 @@ public class SbiProjectServiceTest {
         sbiProjectService.getEncryptionKey();
 
     }
+   
     @Test
     public void testGetEncryptionKey_Success() throws Exception {
         io.restassured.response.Response mockResponse = Mockito.mock(io.restassured.response.Response.class);
@@ -419,7 +420,6 @@ public class SbiProjectServiceTest {
 
     }
 
-
 /*
      * This method is used to get MosipUserDto in class
      */
@@ -431,7 +431,7 @@ public class SbiProjectServiceTest {
     }
 
     @Test
-    public void updateSbiProjectTest(){
+    public void updateSbiProjectTest() {
         ResponseWrapper<SbiProjectDto> responseWrapper = new ResponseWrapper<SbiProjectDto>();
         SbiProjectDto sbiProjectDto = new SbiProjectDto();
         SbiProjectEntity sbiProjectEntity = new SbiProjectEntity();
@@ -473,8 +473,8 @@ public class SbiProjectServiceTest {
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
         Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
         SecurityContextHolder.setContext(securityContext);
-        Mockito.when(sbiProjectRepository.findById(sbiProjectDto.getId(), mosipUserDto.getUserId())).
-                thenReturn(optionalSbiProjectEntity);
+        Mockito.when(sbiProjectRepository.findById(sbiProjectDto.getId(), mosipUserDto.getUserId()))
+                .thenReturn(optionalSbiProjectEntity);
         sbiProjectService.updateSbiProject(sbiProjectDto);
     }
 }
