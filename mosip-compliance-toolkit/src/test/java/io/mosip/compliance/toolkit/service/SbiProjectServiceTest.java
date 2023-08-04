@@ -13,6 +13,7 @@ import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.authmanager.authadapter.model.MosipUserDto;
 import io.mosip.kernel.core.http.ResponseWrapper;
+import io.restassured.response.ResponseBody;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +31,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -394,8 +396,31 @@ public class SbiProjectServiceTest {
         sbiProjectService.getEncryptionKey();
 
     }
+    @Test
+    public void testGetEncryptionKey_Success() throws Exception {
+        io.restassured.response.Response mockResponse = Mockito.mock(io.restassured.response.Response.class);
+        String responseJson = "{ \"response\": { \"certificate\": \"sample-certificate\" } }";
+        Mockito.when(mockResponse.getBody()).thenReturn(Mockito.mock(ResponseBody.class));
+        Mockito.when(mockResponse.getBody().asString()).thenReturn(responseJson);
+        Mockito.when(keyManagerHelper.encryptionKeyResponse()).thenReturn(mockResponse);
+        ResponseWrapper<String> responseWrapper = sbiProjectService.getEncryptionKey();
 
-    /*
+    }
+
+    @Test
+    public void testGetEncryptionKey_Error() throws Exception {
+        io.restassured.response.Response mockResponse = Mockito.mock(io.restassured.response.Response.class);
+        String errorResponseJson = "{ \"errors\": [ { \"message\": \"Error message\" } ] }";
+        Mockito.when(mockResponse.getBody()).thenReturn(Mockito.mock(ResponseBody.class));
+        Mockito.when(mockResponse.getBody().asString()).thenReturn(errorResponseJson);
+        Mockito.when(keyManagerHelper.encryptionKeyResponse()).thenReturn(mockResponse);
+
+        ResponseWrapper<String> responseWrapper = sbiProjectService.getEncryptionKey();
+
+    }
+
+
+/*
      * This method is used to get MosipUserDto in class
      */
     private MosipUserDto getMosipUserDto(){
@@ -403,5 +428,53 @@ public class SbiProjectServiceTest {
         mosipUserDto.setUserId("123");
         mosipUserDto.setMail("abc@gmail.com");
         return mosipUserDto;
+    }
+
+    @Test
+    public void updateSbiProjectTest(){
+        ResponseWrapper<SbiProjectDto> responseWrapper = new ResponseWrapper<SbiProjectDto>();
+        SbiProjectDto sbiProjectDto = new SbiProjectDto();
+        SbiProjectEntity sbiProjectEntity = new SbiProjectEntity();
+        sbiProjectEntity.setSbiHash("adsadsadsad");
+        sbiProjectEntity.setSbiVersion("0.9.5");
+        sbiProjectEntity.setDeleted(false);
+        sbiProjectEntity.setProjectType("SBI");
+        sbiProjectEntity.setCrBy(null);
+        sbiProjectEntity.setId("SBI1000");
+        sbiProjectEntity.setCrDate(LocalDateTime.now());
+        sbiProjectEntity.setDelTime(null);
+        sbiProjectEntity.setDeviceImage1("sdadsadsad");
+        sbiProjectEntity.setDeviceImage2("wqewqewqe");
+        sbiProjectEntity.setDeviceImage3("cxvxcvcxv");
+        sbiProjectEntity.setDeviceImage4("jhjhgjhgjhgj");
+        sbiProjectEntity.setDeviceType("Finger");
+        sbiProjectEntity.setDeviceSubType("Slap");
+        sbiProjectEntity.setName("project name");
+        sbiProjectEntity.setWebsiteUrl("https://");
+
+        sbiProjectDto.setSbiHash("adsadsadsad");
+        sbiProjectDto.setSbiVersion("0.9.5");
+        sbiProjectDto.setProjectType("SBI");
+        sbiProjectDto.setCrBy(null);
+        sbiProjectDto.setId("SBI1000");
+        sbiProjectDto.setCrDate(LocalDateTime.now());
+        sbiProjectDto.setDeviceImage1("sdadsadsad");
+        sbiProjectDto.setDeviceImage2("wqewqewqe");
+        sbiProjectDto.setDeviceImage3("cxvxcvcxv");
+        sbiProjectDto.setDeviceImage4("jhjhgjhgjhgj");
+        sbiProjectDto.setDeviceType("Finger");
+        sbiProjectDto.setDeviceSubType("Slap");
+        sbiProjectDto.setName("project name");
+        sbiProjectDto.setWebsiteUrl("https://");
+        responseWrapper.setResponse(sbiProjectDto);
+        Optional<SbiProjectEntity> optionalSbiProjectEntity = Optional.of(sbiProjectEntity);
+
+        MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
+        Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        SecurityContextHolder.setContext(securityContext);
+        Mockito.when(sbiProjectRepository.findById(sbiProjectDto.getId(), mosipUserDto.getUserId())).
+                thenReturn(optionalSbiProjectEntity);
+        sbiProjectService.updateSbiProject(sbiProjectDto);
     }
 }
