@@ -253,8 +253,14 @@ public class ReportGeneratorService {
 		String invalidTestCaseId = BLANK_STRING;
 		List<TestRunDetailsDto> testRunDetailsList = testRunDetailsResponseDto.getTestRunDetailsList();
 		boolean validationResult = true;
-		List<String> ignoreSdkTestcaseList = Arrays.asList(ignoreSdkTestcases.split(","));
-		List<String> ignoreAbisTestcaseList = Arrays.asList(ignoreAbisTestcases.split(","));
+		List<String> ignoreSdkTestcaseList = new ArrayList<>();
+		List<String> ignoreAbisTestcaseList = new ArrayList<>();
+		if(ignoreSdkTestcases != null){
+			ignoreSdkTestcaseList = Arrays.asList(ignoreSdkTestcases.split(","));
+		}
+		if(ignoreAbisTestcases != null) {
+			ignoreAbisTestcaseList = Arrays.asList(ignoreAbisTestcases.split(","));
+		}
 		for (TestRunDetailsDto testRunDetailsDto : testRunDetailsList) {
 			if (ProjectTypes.SDK.getCode().equals(projectType)
 					&& !ignoreSdkTestcaseList.contains(testRunDetailsDto.getTestcaseId())
