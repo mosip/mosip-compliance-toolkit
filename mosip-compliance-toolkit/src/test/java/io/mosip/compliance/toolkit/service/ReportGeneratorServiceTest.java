@@ -221,27 +221,6 @@ public class ReportGeneratorServiceTest {
                 privateMethod.setAccessible(true);
                 return (ResponseEntity<Resource>) privateMethod.invoke(reportGeneratorService, arguments);
         }
-
-//        @Test
-//        public void testCreateReportForSbiProject() throws Exception {
-//                ReportRequestDto requestDto = new ReportRequestDto();
-//                requestDto.setProjectType("ABIS");
-//                requestDto.setProjectId("kdshfksjd");
-//                requestDto.setCollectionId("sajdnsaldk");
-//                requestDto.setTestRunId("12345678");
-//
-//                ResponseWrapper<TestRunDetailsResponseDto> testRunDetailsResponse = new ResponseWrapper<>();
-//                TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
-//                testRunDetailsResponse.setResponse(testRunDetailsResponseDto);
-//                Mockito.when(testRunService.getTestRunDetails(Mockito.anyString())).thenReturn(testRunDetailsResponse);
-//
-//                ResponseWrapper<SbiProjectDto> sbiProjectResponse = new ResponseWrapper<>();
-//                SbiProjectDto sbiProjectDto = new SbiProjectDto();
-//                sbiProjectResponse.setResponse(sbiProjectDto);
-//                Mockito.when(sbiProjectService.getSbiProject(Mockito.anyString())).thenReturn(sbiProjectResponse);
-//
-//                ResponseEntity<?> response = reportGeneratorService.createReport(requestDto, "origin");
-//
-//        }
+        
 
 }
