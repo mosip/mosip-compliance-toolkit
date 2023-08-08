@@ -37,7 +37,6 @@ import io.mosip.compliance.toolkit.dto.abis.DataShareSaveTokenRequest;
 import io.mosip.compliance.toolkit.entity.AbisDataShareTokenEntity;
 import io.mosip.compliance.toolkit.repository.AbisDataShareTokenRepository;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
-import io.mosip.compliance.toolkit.util.AuthManagerHelper;
 import io.mosip.compliance.toolkit.util.KeyManagerHelper;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
@@ -58,9 +57,6 @@ public class ABISDataShareServiceTest {
 
 	@Mock
 	private KeyManagerHelper keyManagerHelper;
-
-	@Mock
-	private AuthManagerHelper authManagerHelper;
 
 	@Mock
 	private Authentication authentication;
