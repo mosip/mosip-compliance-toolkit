@@ -1,33 +1,8 @@
 package io.mosip.compliance.toolkit.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import io.mosip.compliance.toolkit.constants.AppConstants;
-import io.mosip.compliance.toolkit.constants.ProjectTypes;
-import io.mosip.compliance.toolkit.dto.projects.AbisProjectDto;
-import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
-import io.mosip.compliance.toolkit.dto.projects.SdkProjectDto;
-import io.mosip.compliance.toolkit.dto.report.ReportRequestDto;
-import io.mosip.compliance.toolkit.dto.report.SbiProjectTable;
-import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
-import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
-import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
-import io.mosip.kernel.core.exception.ServiceError;
-import io.mosip.kernel.core.http.ResponseWrapper;
-import org.apache.velocity.VelocityContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +13,16 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import io.mosip.compliance.toolkit.dto.projects.AbisProjectDto;
+import io.mosip.compliance.toolkit.dto.report.ReportRequestDto;
+import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
+import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
+import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
+import io.mosip.kernel.core.exception.ServiceError;
+import io.mosip.kernel.core.http.ResponseWrapper;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ReportGeneratorServiceTest {
@@ -198,7 +183,7 @@ public class ReportGeneratorServiceTest {
                 abisProjectDto.setWebsiteUrl("https://");
                 abisProjectResponse.setResponse(abisProjectDto);
                 abisProjectResponse.setErrors(null);
-                Mockito.when(abisProjectService.getAbisProject(Mockito.any())).thenReturn(abisProjectResponse);
+                //Mockito.when(abisProjectService.getAbisProject(Mockito.any())).thenReturn(abisProjectResponse);
                 reportGeneratorService.createReport(requestDto, "abcdefgh");
         }
         @Test
