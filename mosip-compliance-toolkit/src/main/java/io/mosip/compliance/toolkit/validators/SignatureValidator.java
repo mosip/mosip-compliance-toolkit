@@ -268,11 +268,8 @@ public class SignatureValidator extends SBIValidator {
 		deviceValidatorDto.setRequest(trustRequest);
 
 		try {
-			io.restassured.response.Response postResponse = keyManagerHelper
+			DeviceValidatorResponseDto deviceValidatorResponseDto = keyManagerHelper
 					.trustValidationResponse(deviceValidatorDto);
-
-			DeviceValidatorResponseDto deviceValidatorResponseDto = objectMapperConfig.objectMapper()
-					.readValue(postResponse.getBody().asString(), DeviceValidatorResponseDto.class);
 
 			if ((deviceValidatorResponseDto.getErrors() != null && deviceValidatorResponseDto.getErrors().size() > 0)
 					|| (deviceValidatorResponseDto.getResponse().getStatus().equals("false"))) {

@@ -1,32 +1,40 @@
 package io.mosip.compliance.toolkit.util;
 
-import static io.restassured.RestAssured.given;
-
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
-import io.restassured.http.Cookie;
+import io.mosip.compliance.toolkit.dto.report.PartnerDetailsDto;
 
 @Component
 public class PartnerManagerHelper {
 
-	public static final String AUTHORIZATION = "Authorization";
-
-	private static final String APPLICATION_JSON = "application/json";
-
 	@Value("${mosip.service.partnermanager.getparnter.url}")
 	private String getPartnerUrl;
 
+	@Qualifier("selfTokenRestTemplate")
 	@Autowired
-	private AuthManagerHelper authManagerHelper;
+	private RestTemplate restTemplate;
 
-	public io.restassured.response.Response getPartnerDetails(String partnerId) throws IOException {
-		Cookie.Builder builder = new Cookie.Builder(AUTHORIZATION, authManagerHelper.getAuthToken());
+	public PartnerDetailsDto getPartnerDetails(String partnerId) throws IOException {
 
-		return given().cookie(builder.build()).relaxedHTTPSValidation().contentType(APPLICATION_JSON).when()
-				.get(getPartnerUrl + "/" + partnerId).then().extract().response();
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<Object> requestEntity = new HttpEntity<>(null, headers);
+		ResponseEntity<PartnerDetailsDto> responseEntity = restTemplate.exchange(getPartnerUrl + "/" + partnerId,
+				HttpMethod.GET, requestEntity, new ParameterizedTypeReference<PartnerDetailsDto>() {
+				});
+		PartnerDetailsDto body = responseEntity.getBody();
+		return body;
 	}
 }

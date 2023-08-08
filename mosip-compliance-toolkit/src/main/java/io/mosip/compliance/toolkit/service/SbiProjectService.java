@@ -6,12 +6,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
-import io.mosip.compliance.toolkit.dto.collections.CollectionRequestDto;
-import io.mosip.compliance.toolkit.dto.collections.CollectionTestCaseDto;
-import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
-import io.mosip.compliance.toolkit.util.CommonUtil;
-import io.mosip.kernel.core.exception.ServiceError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -31,10 +25,15 @@ import io.mosip.compliance.toolkit.constants.Purposes;
 import io.mosip.compliance.toolkit.constants.SbiSpecVersions;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.EncryptionKeyResponseDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionRequestDto;
+import io.mosip.compliance.toolkit.dto.collections.CollectionTestCaseDto;
 import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
+import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.entity.SbiProjectEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.SbiProjectRepository;
+import io.mosip.compliance.toolkit.util.CommonUtil;
 import io.mosip.compliance.toolkit.util.KeyManagerHelper;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
@@ -448,10 +447,7 @@ public class SbiProjectService {
 		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
 		String result = null;
 		try {
-			io.restassured.response.Response postResponse = keyManagerHelper.encryptionKeyResponse();
-			result = postResponse.getBody().asString();
-			EncryptionKeyResponseDto keyManagerResponseDto = objectMapperConfig.objectMapper()
-					.readValue(postResponse.getBody().asString(), EncryptionKeyResponseDto.class);
+			EncryptionKeyResponseDto keyManagerResponseDto = keyManagerHelper.encryptionKeyResponse();
 
 			if ((keyManagerResponseDto.getErrors() != null && keyManagerResponseDto.getErrors().size() > 0)) {
 				keyManagerResponseDto.getErrors().get(0).getMessage();

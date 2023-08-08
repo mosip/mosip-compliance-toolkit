@@ -253,14 +253,8 @@ public class ReportGeneratorService {
 		String invalidTestCaseId = BLANK_STRING;
 		List<TestRunDetailsDto> testRunDetailsList = testRunDetailsResponseDto.getTestRunDetailsList();
 		boolean validationResult = true;
-		List<String> ignoreSdkTestcaseList = new ArrayList<>();
-		List<String> ignoreAbisTestcaseList = new ArrayList<>();
-		if(ignoreSdkTestcases != null){
-			ignoreSdkTestcaseList = Arrays.asList(ignoreSdkTestcases.split(","));
-		}
-		if(ignoreAbisTestcases != null) {
-			ignoreAbisTestcaseList = Arrays.asList(ignoreAbisTestcases.split(","));
-		}
+		List<String> ignoreSdkTestcaseList = Arrays.asList(ignoreSdkTestcases.split(","));
+		List<String> ignoreAbisTestcaseList = Arrays.asList(ignoreAbisTestcases.split(","));
 		for (TestRunDetailsDto testRunDetailsDto : testRunDetailsList) {
 			if (ProjectTypes.SDK.getCode().equals(projectType)
 					&& !ignoreSdkTestcaseList.contains(testRunDetailsDto.getTestcaseId())
@@ -389,10 +383,8 @@ public class ReportGeneratorService {
 
 	private PartnerTable getPartnerDetails(String projectId) throws Exception {
 		PartnerTable partnerTable = new PartnerTable();
-		io.restassured.response.Response partnerResp = partnerManagerHelper.getPartnerDetails(projectId);
-		PartnerDetailsDto partnerDetailsDto = objectMapperConfig.objectMapper()
-				.readValue(partnerResp.getBody().asString(), PartnerDetailsDto.class);
-		if (partnerDetailsDto.getErrors().size() == 0) {
+		PartnerDetailsDto partnerDetailsDto = partnerManagerHelper.getPartnerDetails(projectId);
+		if (partnerDetailsDto != null && partnerDetailsDto.getErrors().size() == 0) {
 			Partner partner = partnerDetailsDto.getResponse();
 			partnerTable.setOrgName(partner.getOrganizationName());
 			partnerTable.setAddress(partner.getAddress());

@@ -383,42 +383,21 @@ public class SbiProjectServiceTest {
     }
 
     /*
-     * This class tests the getEncryptionKey method
-     */
-    @Test(expected = Exception.class)
-    public void getEncryptionKeyTest() throws IOException {
-        io.restassured.response.Response response=keyManagerHelper.encryptionKeyResponse();
-        EncryptionKeyResponseDto keyResponseDto=new EncryptionKeyResponseDto();
-        EncryptionKeyResponseDto.EncryptionKeyResponse encryptionKeyResponse=null;
-        encryptionKeyResponse.setCertificate("abc");
-        keyResponseDto.setResponse(encryptionKeyResponse);
-        Mockito.when(objectMapperConfig.objectMapper().readValue(response.getBody().asString(),EncryptionKeyResponseDto.class)).thenReturn(keyResponseDto);
-        sbiProjectService.getEncryptionKey();
+	 * This class tests the getEncryptionKey method
+	 */
+	@Test
+	public void getEncryptionKeyTest() throws IOException {
 
-    }
+		EncryptionKeyResponseDto keyResponseDto = new EncryptionKeyResponseDto();
+		EncryptionKeyResponseDto.EncryptionKeyResponse encryptionKeyResponse = new EncryptionKeyResponseDto.EncryptionKeyResponse();
+		encryptionKeyResponse.setCertificate("abc");
+		keyResponseDto.setResponse(encryptionKeyResponse);
+		Mockito.when(keyManagerHelper.encryptionKeyResponse()).thenReturn(keyResponseDto);
+		ResponseWrapper<String> result = ReflectionTestUtils.invokeMethod(sbiProjectService, "getEncryptionKey");
+		Assert.assertEquals(keyResponseDto.getResponse().getCertificate(), result.getResponse());
+
+	}
    
-    @Test
-    public void testGetEncryptionKey_Success() throws Exception {
-        io.restassured.response.Response mockResponse = Mockito.mock(io.restassured.response.Response.class);
-        String responseJson = "{ \"response\": { \"certificate\": \"sample-certificate\" } }";
-        Mockito.when(mockResponse.getBody()).thenReturn(Mockito.mock(ResponseBody.class));
-        Mockito.when(mockResponse.getBody().asString()).thenReturn(responseJson);
-        Mockito.when(keyManagerHelper.encryptionKeyResponse()).thenReturn(mockResponse);
-        ResponseWrapper<String> responseWrapper = sbiProjectService.getEncryptionKey();
-
-    }
-
-    @Test
-    public void testGetEncryptionKey_Error() throws Exception {
-        io.restassured.response.Response mockResponse = Mockito.mock(io.restassured.response.Response.class);
-        String errorResponseJson = "{ \"errors\": [ { \"message\": \"Error message\" } ] }";
-        Mockito.when(mockResponse.getBody()).thenReturn(Mockito.mock(ResponseBody.class));
-        Mockito.when(mockResponse.getBody().asString()).thenReturn(errorResponseJson);
-        Mockito.when(keyManagerHelper.encryptionKeyResponse()).thenReturn(mockResponse);
-
-        ResponseWrapper<String> responseWrapper = sbiProjectService.getEncryptionKey();
-
-    }
 
 /*
      * This method is used to get MosipUserDto in class
