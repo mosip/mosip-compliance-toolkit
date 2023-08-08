@@ -25,7 +25,6 @@ import io.mosip.biometrics.util.iris.IrisBDIR;
 import io.mosip.biometrics.util.iris.IrisDecoder;
 import io.mosip.biometrics.util.iris.IrisISOStandardsValidator;
 import io.mosip.biometrics.util.iris.IrisQualityBlock;
-import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.DeviceTypes;
 import io.mosip.compliance.toolkit.constants.Purposes;
@@ -42,15 +41,13 @@ import io.mosip.imagedecoder.model.Response;
 import io.mosip.imagedecoder.openjpeg.OpenJpegDecoder;
 import io.mosip.imagedecoder.spi.IImageDecoderApi;
 import io.mosip.imagedecoder.wsq.WsqDecoder;
-import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.core.http.ResponseWrapper;
 
 @Component
 public class ISOStandardsValidator extends SBIValidator {
 
 	@Autowired
 	private KeyManagerHelper keyManagerHelper;
-
-	private Logger log = LoggerConfiguration.logConfig(ISOStandardsValidator.class);
 
 	@Override
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
@@ -139,10 +136,13 @@ public class ISOStandardsValidator extends SBIValidator {
 		decryptValidatorDto.setRequest(decryptRequest);
 
 		try {
-			io.restassured.response.Response postResponse = keyManagerHelper.decryptionResponse(decryptValidatorDto);
+			DecryptValidatorResponseDto decryptValidatorResponseDto = keyManagerHelper.decryptionResponse(decryptValidatorDto);
+			
 
-			DecryptValidatorResponseDto decryptValidatorResponseDto = objectMapperConfig.objectMapper()
-					.readValue(postResponse.getBody().asString(), DecryptValidatorResponseDto.class);
+//			io.restassured.response.Response postResponse = keyManagerHelper.decryptionResponse(decryptValidatorDto);
+//
+//			DecryptValidatorResponseDto decryptValidatorResponseDto = objectMapperConfig.objectMapper()
+//					.readValue(postResponse.getBody().asString(), DecryptValidatorResponseDto.class);
 
 			if ((decryptValidatorResponseDto.getErrors() != null && decryptValidatorResponseDto.getErrors().size() > 0)
 					|| (decryptValidatorResponseDto.getResponse().getData() == null)) {

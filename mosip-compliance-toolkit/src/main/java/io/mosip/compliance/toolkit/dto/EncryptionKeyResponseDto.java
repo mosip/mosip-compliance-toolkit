@@ -19,13 +19,13 @@ public class EncryptionKeyResponseDto {
 	List<ErrorDto> errors;
 
 	@Data
-	public class ErrorDto {
+	public static class ErrorDto {
 		String errorCode;
 		String message;
 	}
 
 	@Data
-	public class EncryptionKeyResponse {
+	public static class EncryptionKeyResponse {
 		String certificate;
 		String issuedAt;
 		String expiryAt;
