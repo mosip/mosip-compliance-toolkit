@@ -247,18 +247,10 @@ public class SbiProjectService {
 					String deviceImage4 = sbiProjectDto.getDeviceImage4();
 					String sbiHash = sbiProjectDto.getSbiHash();
 					String websiteUrl = sbiProjectDto.getWebsiteUrl();
-					if (Objects.nonNull(deviceImage1) && !deviceImage1.isEmpty()) {
-						entity.setDeviceImage1(deviceImage1);
-					}
-					if (Objects.nonNull(deviceImage2) && !deviceImage2.isEmpty()) {
-						entity.setDeviceImage2(deviceImage2);
-					}
-					if (Objects.nonNull(deviceImage3) && !deviceImage3.isEmpty()) {
-						entity.setDeviceImage3(deviceImage3);
-					}
-					if (Objects.nonNull(deviceImage4) && !deviceImage4.isEmpty()) {
-						entity.setDeviceImage4(deviceImage4);
-					}
+					entity.setDeviceImage1(deviceImage1);
+					entity.setDeviceImage2(deviceImage2);
+					entity.setDeviceImage3(deviceImage3);
+					entity.setDeviceImage4(deviceImage4);
 					if (Objects.nonNull(sbiHash) && !sbiHash.isEmpty()) {
 						entity.setSbiHash(sbiHash);
 					}
