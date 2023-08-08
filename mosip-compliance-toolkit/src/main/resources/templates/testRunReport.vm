@@ -68,6 +68,16 @@
 			justify-content: center;
 			margin-left: -48%;
 		}
+		.deviceImg {
+		 	border: 3px solid grey;  
+  			outline: 3px solid grey;  
+  			border-radius: 12px;  
+  			font-size: 20px;  
+  			font-weight: bold;  
+  			margin: 10px;  
+  			padding: 10px;
+  			outline-offset: 0.5em;  
+  		}
 		@page{
 			size: A4;
 			margin-top: 70px;
@@ -248,7 +258,7 @@
 			<div class="page-break-after">
 				<h2>Device Images</h2>
 				#foreach ($image in $sbiProjectDetailsTable.deviceImages)
-					<img height="250" width="250" src="${image}"/>
+					<img class="deviceImg" height="250" width="250" src="${image}"/>
 				#end
 			</div>
 		#end
@@ -278,9 +288,11 @@
             	</tbody>
 			</table>
 		</div>
+		<!--
 		<div>
 			<h2>QR Code</h2>
 			<img src="" alt="QR Code" style="display: block;width: 400px; height: 400px;"/>
 		</div>
+		-->
 	</body>
 </html>
