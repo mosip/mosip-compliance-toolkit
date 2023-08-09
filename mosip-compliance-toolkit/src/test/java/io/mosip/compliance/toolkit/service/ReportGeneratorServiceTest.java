@@ -6,7 +6,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import io.mosip.compliance.toolkit.constants.AppConstants;
+import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
+import io.mosip.compliance.toolkit.dto.projects.SdkProjectDto;
 import io.mosip.compliance.toolkit.dto.report.PartnerDetailsDto;
+import io.mosip.compliance.toolkit.dto.report.SbiProjectTable;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.util.PartnerManagerHelper;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
@@ -34,6 +40,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ReportGeneratorServiceTest {
@@ -67,7 +77,6 @@ public class ReportGeneratorServiceTest {
         @Mock
         private TestCasesService testCasesService;
 
-        @Autowired
         private ObjectMapperConfig objectMapperConfig1;
 
 
@@ -79,7 +88,9 @@ public class ReportGeneratorServiceTest {
                 requestDto.setCollectionId("sajdnsaldk");
                 requestDto.setTestRunId("12345678");
 
-                SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+                objectMapperConfig1 = new ObjectMapperConfig();
+
+                SecurityContext securityContext = mock(SecurityContext.class);
                 SecurityContextHolder.setContext(securityContext);
                 Mockito.when(securityContext.getAuthentication()).thenReturn(mockAuthentication);
 
@@ -110,12 +121,13 @@ public class ReportGeneratorServiceTest {
                 testRunDetailsDto.setTestDataSource("sjadskajddk");
                 testRunDetailsDto.setMethodUrl("https://");
                 testRunDetailsDto.setMethodRequest(null);
-                testRunDetailsDto.setMethodResponse(null);
+                testRunDetailsDto.setMethodResponse("method response");
                 testRunDetailsDto.setResultDescription("Test Run successful");
                 testRunDetailsDto.setTestcaseId("SBI1000");
                 testRunDetailsDtoList.add(testRunDetailsDto);
                 testRunDetailsResponseDto1.setTestRunDetailsList(testRunDetailsDtoList);
                 testRunDetailsResponse.setResponse(testRunDetailsResponseDto1);
+
                 Mockito.when(testRunService.getTestRunDetails(Mockito.any()))
                                 .thenReturn(testRunDetailsResponse);
                 reportGeneratorService.createReport(requestDto, "abcdefgh");
@@ -147,6 +159,50 @@ public class ReportGeneratorServiceTest {
                 testRunDetailsResponse.setResponse(testRunDetailsResponseDto1);
                 Mockito.when(testRunService.getTestRunDetails(Mockito.any()))
                                 .thenReturn(testRunDetailsResponse);
+                reportGeneratorService.createReport(requestDto, "abcdefgh");
+        }
+
+        @Test
+        public void testCreateReportSDKDefault() throws JsonProcessingException {
+                ReportRequestDto requestDto = new ReportRequestDto();
+                requestDto.setProjectType("SDK");
+                requestDto.setProjectId("kdshfksjd");
+                requestDto.setCollectionId("sajdnsaldk");
+                requestDto.setTestRunId("12345678");
+                ResponseWrapper<TestRunDetailsResponseDto> testRunDetailsResponse = new ResponseWrapper<TestRunDetailsResponseDto>();
+                TestRunDetailsResponseDto testRunDetailsResponseDto1 = new TestRunDetailsResponseDto();
+                testRunDetailsResponseDto1.setCollectionId("lkdjskdjsaldks");
+                testRunDetailsResponseDto1.setRunId("ksjdkjdhaskj");
+                List<TestRunDetailsDto> testRunDetailsDtoList = new ArrayList<>();
+                TestRunDetailsDto testRunDetailsDto = new TestRunDetailsDto();
+                testRunDetailsDto.setResultStatus("Success");
+                testRunDetailsDto.setRunId("kjdfhkfdjhskjd");
+                testRunDetailsDto.setTestDataSource("MOSIP_DEFAULT");
+                testRunDetailsDto.setMethodUrl("https://");
+                testRunDetailsDto.setMethodRequest(null);
+                testRunDetailsDto.setMethodResponse(null);
+                testRunDetailsDto.setResultDescription("Test Run successful");
+                testRunDetailsDto.setTestcaseId("SDK2000");
+                testRunDetailsDtoList.add(testRunDetailsDto);
+                testRunDetailsResponseDto1.setTestRunDetailsList(testRunDetailsDtoList);
+                testRunDetailsResponse.setResponse(testRunDetailsResponseDto1);
+
+                ResponseWrapper<SdkProjectDto> sdkProjectResponse = new ResponseWrapper<>();
+                SdkProjectDto sdkProjectDto = new SdkProjectDto();
+                sdkProjectDto.setName("SDK Project");
+                sdkProjectDto.setProjectType("SDK");
+                sdkProjectDto.setId("qwwqwqwqw");
+                sdkProjectDto.setPurpose("Reg");
+                sdkProjectDto.setSdkVersion("0.9.5");
+                sdkProjectDto.setWebsiteUrl("https://");
+                sdkProjectResponse.setResponse(sdkProjectDto);
+
+
+
+                Mockito.when(sdkProjectService.getSdkProject(Mockito.any())).thenReturn(sdkProjectResponse);
+                Mockito.when(mockAuthentication.getPrincipal()).thenReturn(mockAuthUserDetails);
+                Mockito.when(testRunService.getTestRunDetails(Mockito.any()))
+                        .thenReturn(testRunDetailsResponse);
                 reportGeneratorService.createReport(requestDto, "abcdefgh");
         }
 
@@ -266,6 +322,76 @@ public class ReportGeneratorServiceTest {
                 java.lang.reflect.Method privateMethod = ReportGeneratorService.class.getDeclaredMethod("handleServiceErrors", parameterTypes);
                 privateMethod.setAccessible(true);
                 return (ResponseEntity<Resource>) privateMethod.invoke(reportGeneratorService, arguments);
+        }
+
+        @Test
+        public void testGetSbiProjectDetails() throws Exception {
+                SbiProjectDto sbiProjectDto = new SbiProjectDto();
+                sbiProjectDto.setName("SBI Project");
+                sbiProjectDto.setProjectType("SBI");
+                sbiProjectDto.setPurpose("Registration");
+                sbiProjectDto.setSbiVersion("0.9.5");
+                sbiProjectDto.setSbiHash("wqeweqeqeewqewqewq");
+                sbiProjectDto.setDeviceType("Finger");
+                sbiProjectDto.setDeviceSubType("Slap");
+                sbiProjectDto.setWebsiteUrl("https://");
+
+                List<TestRunDetailsDto> testRunDetailsList = new ArrayList<>();
+
+                SbiProjectTable sbiProjectTable = new SbiProjectTable();
+                SbiProjectTable sbiProjectTable1 = new SbiProjectTable();
+
+                sbiProjectTable1 = invokeGetSbiProjectDetails(sbiProjectDto, testRunDetailsList, sbiProjectTable);
+        }
+
+        private SbiProjectTable invokeGetSbiProjectDetails(SbiProjectDto projectDto, List<TestRunDetailsDto> testRunDetailsList,
+        SbiProjectTable sbiProjectTable)
+                throws Exception {
+                ReportGeneratorService reportGeneratorService = new ReportGeneratorService();
+                Class<?>[] parameterTypes = { SbiProjectDto.class, List.class, SbiProjectTable.class };
+                Object[] arguments = { projectDto, testRunDetailsList, sbiProjectTable };
+                java.lang.reflect.Method privateMethod = ReportGeneratorService.class.getDeclaredMethod("getSbiProjectDetails", parameterTypes);
+                privateMethod.setAccessible(true);
+                return (SbiProjectTable) privateMethod.invoke(reportGeneratorService, arguments);
+        }
+
+        @Test
+        public void testValidateDeviceMakeModelSerialNo() throws Exception {
+                SbiProjectTable sbiProjectTable = new SbiProjectTable();
+                JsonNode dataNode = mock(JsonNode.class);
+                JsonNode makeNode = Mockito.mock(JsonNode.class);
+                JsonNode modelNode = Mockito.mock(JsonNode.class);
+                JsonNode serialNoNode = Mockito.mock(JsonNode.class);
+
+                Mockito.when(dataNode.get(AppConstants.DIGITAL_ID_DECODED_DATA)).thenReturn(dataNode);
+                Mockito.when(dataNode.get(AppConstants.MAKE)).thenReturn(makeNode);
+                Mockito.when(dataNode.get(AppConstants.MODEL)).thenReturn(modelNode);
+                Mockito.when(dataNode.get(AppConstants.SERIAL_NO)).thenReturn(serialNoNode);
+                Mockito.when(dataNode.get(AppConstants.DEVICE_PROVIDER)).thenReturn(dataNode);
+                Mockito.when(dataNode.get(AppConstants.DEVICE_PROVIDER_ID)).thenReturn(dataNode);
+
+                String makeInResp = "MakeInResp";
+                String modelInResp = "ModelInResp";
+                String serialNoInResp = "SerialNoInResp";
+
+                Mockito.when(makeNode.asText()).thenReturn(makeInResp);
+                Mockito.when(modelNode.asText()).thenReturn(modelInResp);
+                Mockito.when(serialNoNode.asText()).thenReturn(serialNoInResp);
+
+                boolean bool = true;
+                boolean bool1 = invokeValidateDeviceMakeModelSerialNo(sbiProjectTable, bool,
+                        dataNode);
+        }
+
+        private boolean invokeValidateDeviceMakeModelSerialNo(SbiProjectTable sbiProjectTable, boolean validationResult,
+                                                                      JsonNode dataNode)
+                throws Exception {
+                ReportGeneratorService reportGeneratorService = new ReportGeneratorService();
+                Class<?>[] parameterTypes = { SbiProjectTable.class, boolean.class, JsonNode.class };
+                Object[] arguments = { sbiProjectTable, validationResult, dataNode };
+                java.lang.reflect.Method privateMethod = ReportGeneratorService.class.getDeclaredMethod("validateDeviceMakeModelSerialNo", parameterTypes);
+                privateMethod.setAccessible(true);
+                return (boolean) privateMethod.invoke(reportGeneratorService, arguments);
         }
 
 
