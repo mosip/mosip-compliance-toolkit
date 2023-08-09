@@ -15,12 +15,14 @@ import io.mosip.kernel.core.authmanager.authadapter.model.MosipUserDto;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.restassured.response.ResponseBody;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,6 +37,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
 @RunWith(SpringRunner.class)
@@ -67,6 +72,19 @@ public class SbiProjectServiceTest {
 
     @Mock
     private ObjectMapper mapper;
+
+    @Mock
+    private Authentication mockAuthentication;
+
+    @Mock
+    private AuthUserDetails mockAuthUserDetails;
+
+    @Before
+    public void setUp(){
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(mockAuthentication);
+    }
 
     /*
      * This class tests the authUserDetails method
@@ -313,6 +331,25 @@ public class SbiProjectServiceTest {
         sbiProjectDtoResponseWrapper = sbiProjectService.addSbiProject(sbiProjectDto);
     }
 
+    @Test
+    public void addSbiProjectTestException2(){
+        SbiProjectDto sbiProjectDto = new SbiProjectDto();
+        sbiProjectDto.setProjectType("SBI");
+        sbiProjectDto.setSbiVersion("0.9.5");
+        sbiProjectDto.setPurpose("Registration");
+        sbiProjectDto.setDeviceType("Finger");
+        sbiProjectDto.setDeviceSubType("Slap");
+
+        Mockito.when(securityContext.getAuthentication()).thenThrow(new DataIntegrityViolationException("Exception"));
+        MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
+        Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        SecurityContextHolder.setContext(securityContext);
+
+        ResponseWrapper<SbiProjectDto> sbiProjectDtoResponseWrapper = new ResponseWrapper<>();
+        sbiProjectDtoResponseWrapper = sbiProjectService.addSbiProject(sbiProjectDto);
+    }
+
     /*
      * This class tests the isValidSbiProject method
      */
@@ -397,7 +434,19 @@ public class SbiProjectServiceTest {
 		Assert.assertEquals(keyResponseDto.getResponse().getCertificate(), result.getResponse());
 
 	}
-   
+
+    @Test
+    public void getEncryptionKeyTestException() throws IOException {
+
+        EncryptionKeyResponseDto keyResponseDto = new EncryptionKeyResponseDto();
+        EncryptionKeyResponseDto.EncryptionKeyResponse encryptionKeyResponse = new EncryptionKeyResponseDto.EncryptionKeyResponse();
+        encryptionKeyResponse.setCertificate("abc");
+        keyResponseDto.setResponse(encryptionKeyResponse);
+        Mockito.when(keyManagerHelper.encryptionKeyResponse()).thenThrow(new IOException());
+        ResponseWrapper<String> result = ReflectionTestUtils.invokeMethod(sbiProjectService, "getEncryptionKey");
+
+    }
+
 
 /*
      * This method is used to get MosipUserDto in class
@@ -448,12 +497,60 @@ public class SbiProjectServiceTest {
         responseWrapper.setResponse(sbiProjectDto);
         Optional<SbiProjectEntity> optionalSbiProjectEntity = Optional.of(sbiProjectEntity);
 
-        MosipUserDto mosipUserDto = getMosipUserDto();
-        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
-        Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
-        SecurityContextHolder.setContext(securityContext);
-        Mockito.when(sbiProjectRepository.findById(sbiProjectDto.getId(), mosipUserDto.getUserId()))
+
+        Mockito.when(mockAuthentication.getPrincipal()).thenReturn(mockAuthUserDetails);
+        Mockito.when(sbiProjectRepository.findById(Mockito.anyString(), Mockito.any()))
                 .thenReturn(optionalSbiProjectEntity);
+        sbiProjectService.updateSbiProject(sbiProjectDto);
+    }
+
+    @Test
+    public void updateSbiProjectTestElse() {
+        SbiProjectDto sbiProjectDto = new SbiProjectDto();
+
+        sbiProjectDto.setSbiHash("adsadsadsad");
+        sbiProjectDto.setSbiVersion("0.9.5");
+        sbiProjectDto.setProjectType("SBI");
+        sbiProjectDto.setCrBy(null);
+        sbiProjectDto.setId("SBI1000");
+        sbiProjectDto.setCrDate(LocalDateTime.now());
+        sbiProjectDto.setDeviceImage1("sdadsadsad");
+        sbiProjectDto.setDeviceImage2("wqewqewqe");
+        sbiProjectDto.setDeviceImage3("cxvxcvcxv");
+        sbiProjectDto.setDeviceImage4("jhjhgjhgjhgj");
+        sbiProjectDto.setDeviceType("Finger");
+        sbiProjectDto.setDeviceSubType("Slap");
+        sbiProjectDto.setName("project name");
+        sbiProjectDto.setWebsiteUrl("https://");
+
+        Mockito.when(mockAuthentication.getPrincipal()).thenReturn(mockAuthUserDetails);
+        Mockito.when(sbiProjectRepository.findById(Mockito.anyString(), Mockito.any()))
+                .thenReturn(Optional.empty());
+        sbiProjectService.updateSbiProject(sbiProjectDto);
+    }
+
+    @Test
+    public void updateSbiProjectTestException() {
+        SbiProjectDto sbiProjectDto = new SbiProjectDto();
+
+        sbiProjectDto.setSbiHash("adsadsadsad");
+        sbiProjectDto.setSbiVersion("0.9.5");
+        sbiProjectDto.setProjectType("SBI");
+        sbiProjectDto.setCrBy(null);
+        sbiProjectDto.setId("SBI1000");
+        sbiProjectDto.setCrDate(LocalDateTime.now());
+        sbiProjectDto.setDeviceImage1("sdadsadsad");
+        sbiProjectDto.setDeviceImage2("wqewqewqe");
+        sbiProjectDto.setDeviceImage3("cxvxcvcxv");
+        sbiProjectDto.setDeviceImage4("jhjhgjhgjhgj");
+        sbiProjectDto.setDeviceType("Finger");
+        sbiProjectDto.setDeviceSubType("Slap");
+        sbiProjectDto.setName("project name");
+        sbiProjectDto.setWebsiteUrl("https://");
+
+        Mockito.when(mockAuthentication.getPrincipal()).thenReturn(mockAuthUserDetails);
+        Mockito.when(sbiProjectRepository.findById(Mockito.anyString(), Mockito.any()))
+                .thenThrow(new ToolkitException("TOOLKIT_EXCEPTION_001","Exception"));
         sbiProjectService.updateSbiProject(sbiProjectDto);
     }
 }
