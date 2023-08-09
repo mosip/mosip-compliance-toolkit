@@ -371,6 +371,64 @@ public class ReportGeneratorServiceTest {
                         dataNode);
         }
 
+        @Test
+        public void testValidateDeviceMakeModelSerialNoException() throws Exception {
+                SbiProjectTable sbiProjectTable = new SbiProjectTable();
+                sbiProjectTable.setDeviceMake("BioDevices");
+                sbiProjectTable.setDeviceModel("FINGER1212");
+                sbiProjectTable.setDeviceSerialNo("1212121");
+                JsonNode dataNode = mock(JsonNode.class);
+                JsonNode makeNode = Mockito.mock(JsonNode.class);
+                JsonNode modelNode = Mockito.mock(JsonNode.class);
+                JsonNode serialNoNode = Mockito.mock(JsonNode.class);
+
+                Mockito.when(dataNode.get(AppConstants.DIGITAL_ID_DECODED_DATA)).thenReturn(dataNode);
+                Mockito.when(dataNode.get(AppConstants.MAKE)).thenReturn(makeNode);
+                Mockito.when(dataNode.get(AppConstants.MODEL)).thenReturn(modelNode);
+                Mockito.when(dataNode.get(AppConstants.SERIAL_NO)).thenReturn(serialNoNode);
+                Mockito.when(dataNode.get(AppConstants.DEVICE_PROVIDER)).thenReturn(dataNode);
+                Mockito.when(dataNode.get(AppConstants.DEVICE_PROVIDER_ID)).thenReturn(dataNode);
+
+                Mockito.when(makeNode.asText()).thenReturn(null);
+                Mockito.when(modelNode.asText()).thenReturn(null);
+                Mockito.when(serialNoNode.asText()).thenReturn(null);
+
+                boolean bool = true;
+                boolean bool1 = invokeValidateDeviceMakeModelSerialNo(sbiProjectTable, bool,
+                        dataNode);
+        }
+
+        @Test
+        public void testValidateDeviceMakeModelSerialNoException2() throws Exception {
+                SbiProjectTable sbiProjectTable = new SbiProjectTable();
+                sbiProjectTable.setDeviceMake("BioDevices");
+                sbiProjectTable.setDeviceModel("FINGER1212");
+                sbiProjectTable.setDeviceSerialNo("1212121");
+                JsonNode dataNode = mock(JsonNode.class);
+                JsonNode makeNode = Mockito.mock(JsonNode.class);
+                JsonNode modelNode = Mockito.mock(JsonNode.class);
+                JsonNode serialNoNode = Mockito.mock(JsonNode.class);
+
+                Mockito.when(dataNode.get(AppConstants.DIGITAL_ID_DECODED_DATA)).thenReturn(dataNode);
+                Mockito.when(dataNode.get(AppConstants.MAKE)).thenReturn(makeNode);
+                Mockito.when(dataNode.get(AppConstants.MODEL)).thenReturn(modelNode);
+                Mockito.when(dataNode.get(AppConstants.SERIAL_NO)).thenReturn(serialNoNode);
+                Mockito.when(dataNode.get(AppConstants.DEVICE_PROVIDER)).thenReturn(dataNode);
+                Mockito.when(dataNode.get(AppConstants.DEVICE_PROVIDER_ID)).thenReturn(dataNode);
+
+                String makeInResp = "MakeInResp";
+                String modelInResp = "ModelInResp";
+                String serialNoInResp = "SerialNoInResp";
+
+                Mockito.when(makeNode.asText()).thenReturn(makeInResp);
+                Mockito.when(modelNode.asText()).thenReturn(modelInResp);
+                Mockito.when(serialNoNode.asText()).thenReturn(serialNoInResp);
+
+                boolean bool = true;
+                boolean bool1 = invokeValidateDeviceMakeModelSerialNo(sbiProjectTable, bool,
+                        dataNode);
+        }
+
         private boolean invokeValidateDeviceMakeModelSerialNo(SbiProjectTable sbiProjectTable, boolean validationResult,
                                                                       JsonNode dataNode)
                 throws Exception {
