@@ -3,11 +3,9 @@ package io.mosip.compliance.toolkit.service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
 import io.mosip.compliance.toolkit.dto.projects.SdkProjectDto;
@@ -23,7 +21,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 
@@ -33,7 +30,6 @@ import io.mosip.compliance.toolkit.dto.projects.AbisProjectDto;
 import io.mosip.compliance.toolkit.dto.report.ReportRequestDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
-import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import org.springframework.security.core.Authentication;
@@ -41,9 +37,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.ArgumentMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ReportGeneratorServiceTest {
@@ -63,9 +57,6 @@ public class ReportGeneratorServiceTest {
         private AbisProjectService abisProjectService;
 
         @Mock
-        private ObjectMapperConfig objectMapperConfig;
-
-        @Mock
         private Authentication mockAuthentication;
 
         @Mock
@@ -77,7 +68,6 @@ public class ReportGeneratorServiceTest {
         @Mock
         private TestCasesService testCasesService;
 
-        private ObjectMapperConfig objectMapperConfig1;
 
 
         @Before
@@ -87,8 +77,6 @@ public class ReportGeneratorServiceTest {
                 requestDto.setProjectId("kdshfksjd");
                 requestDto.setCollectionId("sajdnsaldk");
                 requestDto.setTestRunId("12345678");
-
-                objectMapperConfig1 = new ObjectMapperConfig();
 
                 SecurityContext securityContext = mock(SecurityContext.class);
                 SecurityContextHolder.setContext(securityContext);
