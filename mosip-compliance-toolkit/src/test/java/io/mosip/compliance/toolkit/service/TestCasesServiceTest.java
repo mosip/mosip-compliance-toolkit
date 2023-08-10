@@ -11,6 +11,7 @@ import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
 import io.mosip.compliance.toolkit.entity.TestCaseEntity;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
 import io.mosip.compliance.toolkit.repository.TestCasesRepository;
+import io.mosip.compliance.toolkit.util.CryptoUtil;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
@@ -37,6 +38,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @ContextConfiguration(classes = { TestContext.class, WebApplicationContext.class })
@@ -700,6 +702,23 @@ public class TestCasesServiceTest {
 		requestDto.setModalities(modalities);
 		requestDto.setBioTestDataName("bioTestData");
 		InputStream inputFile = new ByteArrayInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.zip".getBytes());
+
+		BiometricTestDataEntity biometricTestData = new BiometricTestDataEntity();
+		biometricTestData.setPurpose("CHECK_QUALITY");
+		biometricTestData.setId("kdjaskdjlsa");
+		biometricTestData.setName("SDK testcase");
+		biometricTestData.setDeleted(false);
+		biometricTestData.setFileId("sakjdakdas");
+		biometricTestData.setCrBy("MOSIP");
+		biometricTestData.setFileHash("AKLJSLaksLKA");
+		biometricTestData.setType("SDK");
+		biometricTestData.setUpBy("MOSIP_DEV");
+		biometricTestData.setCrDate(LocalDateTime.now());
+		biometricTestData.setDelTime(LocalDateTime.now().plusMinutes(4));
+
+
+		Mockito.when(biometricTestDataRepository.findByTestDataName(Mockito.any(),Mockito.any()))
+						.thenReturn(biometricTestData);
 		Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(true);
 		Mockito.when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))

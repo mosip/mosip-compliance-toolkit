@@ -28,6 +28,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.core.io.Resource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
@@ -204,6 +205,36 @@ public class BiometricTestDataServiceTest {
         serviceErrorsList.add(serviceError);
         Assert.assertEquals(1, response.getErrors().size());
         Assert.assertEquals(serviceErrorsList, response.getErrors());
+    }
+
+    @Test
+    public void addBiometricTestdataAbisTypeException() throws IOException {
+        ResponseWrapper<AddBioTestDataResponseDto> response = new ResponseWrapper<>();
+        BiometricTestDataDto biometricTestDataDto = new BiometricTestDataDto();
+        biometricTestDataDto.setPurpose(purposeAbis);
+
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFileABIS.zip");
+        MockMultipartFile file = new MockMultipartFile("file", "testFileABIS.zip", "multipart/form-data", inputFile);
+        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(true);
+        List<TestCaseEntity> testCases = new ArrayList<>();
+        TestCaseEntity testCaseEntity = new TestCaseEntity();
+        testCaseEntity.setTestcaseType(purposeAbis);
+        testCaseEntity.setTestcaseJson("");
+        testCases.add(testCaseEntity);
+        TestCaseDto testCaseDto = new TestCaseDto();
+        testCaseDto.setTestId("ABIS3001");
+        TestCaseDto.OtherAttributes otherAttributes = new TestCaseDto.OtherAttributes();
+        testCaseDto.setOtherAttributes(null);
+        Mockito.when(mapper.readValue(testCaseEntity.getTestcaseJson(), TestCaseDto.class)).thenThrow(new DataIntegrityViolationException("Exception"));
+        Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
+        Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
+        BiometricTestDataEntity inputEntity = new BiometricTestDataEntity();
+        Mockito.when(testCaseCacheService.getAbisTestCases(Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(testCases);
+        Mockito.when(mapper.convertValue(biometricTestDataDto, BiometricTestDataEntity.class)).thenReturn(inputEntity);
+        Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(),
+                Mockito.any())).thenReturn(true);
+        response = biometricTestDataService.addBiometricTestdata(biometricTestDataDto, file);
     }
     @Test
     public void addBiometricTestdataABIS() throws IOException {
@@ -387,6 +418,10 @@ public class BiometricTestDataServiceTest {
         InputStream inputStream = IOUtils.toInputStream("some test data for my input stream", "UTF-8");
         List<TestCaseEntity> testCaseEntities = new ArrayList<>();
         TestCaseEntity testCaseEntity = new TestCaseEntity();
+        testCaseEntity.setId("Testcase001");
+        testCaseEntity.setSpecVersion("0.9.5");
+        testCaseEntity.setTestcaseType("SDK");
+        testCaseEntity.setTestcaseJson("{sadsadd:sadsadasd}");
         testCaseEntities.add(testCaseEntity);
         Mockito.when(testCaseCacheService.getSdkTestCases(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
         //when testCaseEntities = null
@@ -401,6 +436,7 @@ public class BiometricTestDataServiceTest {
         testCaseDto.setOtherAttributes(otherAttributes);
         testCaseDto.setTestId(testId);
         testCaseDto.setSpecVersion(SdkSpecVersions.SPEC_VER_0_9_0.getCode());
+        testCaseDto.setTestCaseType("SDK");
         List<String> methodName = new ArrayList<>();
         methodName.add(MethodName.CHECK_QUALITY.getCode());
         methodName.add(MethodName.MATCH.getCode());
@@ -495,6 +531,17 @@ public class BiometricTestDataServiceTest {
      */
     @Test
     public void generateSampleSdkTestDataExceptionTest(){
+        String purpose = SdkPurpose.CHECK_QUALITY.getCode();
+        List<TestCaseEntity> testCaseEntities = new ArrayList<>();
+        List<String> ignoreTestcasesList = new ArrayList<>();
+        ZipOutputStream zipOutputStream = null;
+        String fileName = "Readme.txt";
+        ReflectionTestUtils.setField(biometricTestDataService, "testCaseCacheService", null);
+        ReflectionTestUtils.invokeMethod(biometricTestDataService, "generateSampleSdkTestData", purpose,testCaseEntities,ignoreTestcasesList,zipOutputStream,fileName);
+    }
+
+    @Test
+    public void generateSampleTestDataTest(){
         String purpose = SdkPurpose.CHECK_QUALITY.getCode();
         List<TestCaseEntity> testCaseEntities = new ArrayList<>();
         List<String> ignoreTestcasesList = new ArrayList<>();
