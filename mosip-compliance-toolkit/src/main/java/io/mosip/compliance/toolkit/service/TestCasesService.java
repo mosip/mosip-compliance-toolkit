@@ -141,26 +141,49 @@ public class TestCasesService {
         return partnerId;
     }
 
-    public ResponseWrapper<List<TestCaseDto>> getSbiTestCases(String specVersion, String purpose, String deviceType,
-            String deviceSubType) {
+    public ResponseWrapper<List<TestCaseDto>> getTestCases(String specVersion, String purpose, String deviceType,
+                                                           String deviceSubType, String testCaseType) {
         ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
         List<TestCaseDto> testCases = new ArrayList<>();
+
         try {
-            String testCaseSchemaJson = this.getSchemaJson(null, null,  AppConstants.TESTCASE_SCHEMA_JSON);
-            if (isValidSbiTestCase(specVersion, purpose, deviceType, deviceSubType)) {
-                List<TestCaseEntity> testCaseEntities = testCaseCacheService.getSbiTestCases(AppConstants.SBI,
-                        specVersion);// testCasesRepository.findAllSbiTestCaseBySpecVersion(specVersion);
+            String testCaseSchemaJson = this.getSchemaJson(null, null, AppConstants.TESTCASE_SCHEMA_JSON);
+            List<TestCaseEntity> testCaseEntities = null;
+
+            if (testCaseType.equals(AppConstants.SBI)) {
+                if (isValidSbiTestCase(specVersion, purpose, deviceType, deviceSubType)) {
+                    testCaseEntities = testCaseCacheService.getSbiTestCases(AppConstants.SBI, specVersion);
+                }
+            } else if (testCaseType.equals(AppConstants.SDK)) {
+                if (isValidSdkTestCase(specVersion, purpose)) {
+                    testCaseEntities = testCaseCacheService.getSdkTestCases(AppConstants.SDK, specVersion);
+                }
+            } else if (testCaseType.equals(AppConstants.ABIS)) {
+                if (isValidAbisTestCase(specVersion)) {
+                    testCaseEntities = testCaseCacheService.getAbisTestCases(AppConstants.ABIS, specVersion);
+                }
+            }
+
+            if (testCaseEntities != null) {
                 for (final TestCaseEntity testCaseEntity : testCaseEntities) {
                     String testcaseJson = testCaseEntity.getTestcaseJson();
-                    if (AppConstants.SUCCESS
-                            .equals(this.validateJsonWithSchema(testcaseJson, testCaseSchemaJson).getStatus())) {
+                    if (AppConstants.SUCCESS.equals(this.validateJsonWithSchema(testcaseJson, testCaseSchemaJson).getStatus())) {
                         TestCaseDto testCaseDto = objectMapper.readValue(testcaseJson, TestCaseDto.class);
-                        if (!testCaseDto.isInactive() && testCaseDto.getSpecVersion() != null
-                                && testCaseDto.getSpecVersion().equals(specVersion)
-                                && testCaseDto.getOtherAttributes().getPurpose().contains(purpose)
-                                && testCaseDto.getOtherAttributes().getBiometricTypes().contains(deviceType)
-                                && testCaseDto.getOtherAttributes().getDeviceSubTypes().contains(deviceSubType)) {
-                            testCases.add(testCaseDto);
+                        if (!testCaseDto.isInactive() && testCaseDto.getSpecVersion() != null &&
+                                testCaseDto.getSpecVersion().equals(specVersion)) {
+                            if (testCaseType.equals(AppConstants.SBI)) {
+                                if (testCaseDto.getOtherAttributes().getPurpose().contains(purpose) &&
+                                        testCaseDto.getOtherAttributes().getBiometricTypes().contains(deviceType) &&
+                                        testCaseDto.getOtherAttributes().getDeviceSubTypes().contains(deviceSubType)) {
+                                    testCases.add(testCaseDto);
+                                }
+                            } else if (testCaseType.equals(AppConstants.SDK)) {
+                                if (testCaseDto.getOtherAttributes().getSdkPurpose().contains(purpose)) {
+                                    testCases.add(testCaseDto);
+                                }
+                            } else if (testCaseType.equals(AppConstants.ABIS)) {
+                                testCases.add(testCaseDto);
+                            }
                         }
                     }
                 }
@@ -169,7 +192,7 @@ public class TestCasesService {
             testCases = null;
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
-                    "In getSbiTestCases method of TestCasesService - " + ex.getMessage());
+                    "In getTestCases method of TestCasesService - " + ex.getMessage());
             String errorCode = ex.getErrorCode();
             String errorMessage = ex.getMessage();
             responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
@@ -177,16 +200,22 @@ public class TestCasesService {
             testCases = null;
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
-                    "In getSbiTestCases method of TestCasesService - " + ex.getMessage());
+                    "In getTestCases method of TestCasesService - " + ex.getMessage());
             String errorCode = ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorCode();
             String errorMessage = ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage() + " " + ex.getMessage();
             responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
         }
+
         responseWrapper.setId(getTestCasesId);
         responseWrapper.setResponse(testCases);
         responseWrapper.setVersion(AppConstants.VERSION);
         responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
+    }
+
+    public ResponseWrapper<List<TestCaseDto>> getSbiTestCases(String specVersion, String purpose, String deviceType,
+            String deviceSubType) {
+        return getTestCases(specVersion, purpose, deviceType, deviceSubType, AppConstants.SBI);
     }
 
     /**
@@ -206,92 +235,11 @@ public class TestCasesService {
     }
 
     public ResponseWrapper<List<TestCaseDto>> getSdkTestCases(String specVersion, String sdkPurpose) {
-        ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
-        List<TestCaseDto> testCases = new ArrayList<>();
-        try {
-            String testCaseSchemaJson = this.getSchemaJson(null, null,  AppConstants.TESTCASE_SCHEMA_JSON);
-            if (isValidSdkTestCase(specVersion, sdkPurpose)) {
-                List<TestCaseEntity> testCaseEntities = testCaseCacheService.getSdkTestCases(AppConstants.SDK,
-                        specVersion);// testCasesRepository.findAllSdkTestCaseBySpecVersion(specVersion);
-                for (final TestCaseEntity testCaseEntity : testCaseEntities) {
-                    String testcaseJson = testCaseEntity.getTestcaseJson();
-                    if (AppConstants.SUCCESS
-                            .equals(this.validateJsonWithSchema(testcaseJson, testCaseSchemaJson).getStatus())) {
-                        TestCaseDto testCaseDto = objectMapper.readValue(testcaseJson, TestCaseDto.class);
-                        if (!testCaseDto.isInactive() && testCaseDto.getSpecVersion() != null
-                                && testCaseDto.getSpecVersion().equals(specVersion)
-                                && testCaseDto.getOtherAttributes().getSdkPurpose().contains(sdkPurpose)) {
-                            testCases.add(testCaseDto);
-                        }
-                    }
-                }
-            }
-        } catch (ToolkitException ex) {
-            testCases = null;
-            log.debug("sessionId", "idType", "id", ex.getStackTrace());
-            log.error("sessionId", "idType", "id",
-                    "In getSdkTestCases method of TestCasesService - " + ex.getMessage());
-            String errorCode = ex.getErrorCode();
-            String errorMessage = ex.getMessage();
-            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
-        } catch (Exception ex) {
-            testCases = null;
-            log.debug("sessionId", "idType", "id", ex.getStackTrace());
-            log.error("sessionId", "idType", "id",
-                    "In getSdkTestCases method of TestCasesService - " + ex.getMessage());
-            String errorCode = ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorCode();
-            String errorMessage = ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage() + " " + ex.getMessage();
-            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
-        }
-        responseWrapper.setId(getTestCasesId);
-        responseWrapper.setResponse(testCases);
-        responseWrapper.setVersion(AppConstants.VERSION);
-        responseWrapper.setResponsetime(LocalDateTime.now());
-        return responseWrapper;
+        return getTestCases(specVersion, sdkPurpose, null, null, AppConstants.SDK);
     }
     
     public ResponseWrapper<List<TestCaseDto>> getAbisTestCases(String abisSpecVersion) {
-        ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
-        List<TestCaseDto> testCases = new ArrayList<>();
-        try {
-            String testCaseSchemaJson = this.getSchemaJson(null, null,  AppConstants.TESTCASE_SCHEMA_JSON);
-            if (isValidAbisTestCase(abisSpecVersion)) {
-                List<TestCaseEntity> testCaseEntities = testCaseCacheService.getAbisTestCases(AppConstants.ABIS,
-                		abisSpecVersion);// testCasesRepository.findAllSdkTestCaseBySpecVersion(specVersion);
-                for (final TestCaseEntity testCaseEntity : testCaseEntities) {
-                    String testcaseJson = testCaseEntity.getTestcaseJson();
-                    if (AppConstants.SUCCESS
-                            .equals(this.validateJsonWithSchema(testcaseJson, testCaseSchemaJson).getStatus())) {
-                        TestCaseDto testCaseDto = objectMapper.readValue(testcaseJson, TestCaseDto.class);
-                        if (!testCaseDto.isInactive() && testCaseDto.getSpecVersion() != null
-                                && testCaseDto.getSpecVersion().equals(abisSpecVersion)) {
-                            testCases.add(testCaseDto);
-                        }
-                    }
-                }
-            }
-        } catch (ToolkitException ex) {
-            testCases = null;
-            log.debug("sessionId", "idType", "id", ex.getStackTrace());
-            log.error("sessionId", "idType", "id",
-                    "In getAbisTestCases method of TestCasesService - " + ex.getMessage());
-            String errorCode = ex.getErrorCode();
-            String errorMessage = ex.getMessage();
-            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
-        } catch (Exception ex) {
-            testCases = null;
-            log.debug("sessionId", "idType", "id", ex.getStackTrace());
-            log.error("sessionId", "idType", "id",
-                    "In getAbisTestCases method of TestCasesService - " + ex.getMessage());
-            String errorCode = ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorCode();
-            String errorMessage = ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage() + " " + ex.getMessage();
-            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
-        }
-        responseWrapper.setId(getTestCasesId);
-        responseWrapper.setResponse(testCases);
-        responseWrapper.setVersion(AppConstants.VERSION);
-        responseWrapper.setResponsetime(LocalDateTime.now());
-        return responseWrapper;
+        return getTestCases(abisSpecVersion, null, null, null, AppConstants.ABIS);
     }
 
     /**
