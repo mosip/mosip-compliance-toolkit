@@ -1,5 +1,7 @@
 package io.mosip.compliance.toolkit.validators;
 
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
+import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,6 +13,8 @@ import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 
 @Component
 public class ExpectedDuplicateCountValidator extends ToolkitValidator {
+
+	private Logger log = LoggerConfiguration.logConfig(ExpectedDuplicateCountValidator.class);
 
 	@Override
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
@@ -46,6 +50,9 @@ public class ExpectedDuplicateCountValidator extends ToolkitValidator {
 						+ count);
 			}
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In ExpectedDuplicateCountValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
 			validationResultDto.setDescriptionKey(e.getLocalizedMessage());

@@ -2,15 +2,19 @@ package io.mosip.compliance.toolkit.validators;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.MethodName;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidatorDefDto;
+import io.mosip.kernel.core.logger.spi.Logger;
 
 import java.util.List;
 
 public abstract class SDKNoOrInvalidDataValidator extends ToolkitValidator{
+
+    private Logger log = LoggerConfiguration.logConfig(SDKNoOrInvalidDataValidator.class);
 
     protected String successDescription;
     protected String successDescriptionKey;
@@ -34,6 +38,8 @@ public abstract class SDKNoOrInvalidDataValidator extends ToolkitValidator{
                 validationResultDto.setDescriptionKey(failureDescriptionKey);
             }
         } catch (Exception e) {
+            log.debug("sessionId", "idType", "id", e.getStackTrace());
+            log.error("sessionId", "idType", "id", "In SDKNoOrInvalidDataValidator - " + e.getMessage());
             validationResultDto.setStatus(AppConstants.FAILURE);
             validationResultDto.setDescription(e.getLocalizedMessage());
             validationResultDto.setDescriptionKey(e.getLocalizedMessage());

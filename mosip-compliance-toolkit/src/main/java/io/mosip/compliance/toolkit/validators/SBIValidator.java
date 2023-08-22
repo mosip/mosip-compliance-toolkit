@@ -12,6 +12,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
+import io.mosip.kernel.core.logger.spi.Logger;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.lang.JoseException;
 
@@ -67,6 +69,8 @@ public abstract class SBIValidator extends ToolkitValidator {
 	private final String END_CERTIFICATE = "\n-----END CERTIFICATE-----\n";
 	private final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----\n";
 
+	private Logger log = LoggerConfiguration.logConfig(SBIValidator.class);
+
 	protected boolean validateMethodName(String methodName) throws Exception {
 		MethodName.fromCode(methodName);
 		return true;
@@ -94,16 +98,22 @@ public abstract class SBIValidator extends ToolkitValidator {
 				validationResultDto.setDescriptionKey("JWT_SIGNATURE_002");
 			}
 		} catch (CertificateExpiredException e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SBIValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto
 					.setDescription(" CertificateExpiredException - " + "with Message - " + e.getLocalizedMessage());
 			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		} catch (CertificateNotYetValidException e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SBIValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(
 					" CertificateNotYetValidException - " + "with Message - " + e.getLocalizedMessage());
 			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		} catch (JoseException e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SBIValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(" JoseException - " + "with Message - " + e.getLocalizedMessage());
 			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
@@ -140,6 +150,8 @@ public abstract class SBIValidator extends ToolkitValidator {
 				return true;
 			}
 		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SBIValidator - " + ex.getMessage());
 			// ex.printStackTrace();
 		}
 		return false;

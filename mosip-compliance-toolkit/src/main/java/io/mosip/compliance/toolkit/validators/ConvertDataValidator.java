@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.sdk.ConvertFormatRequestDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
@@ -14,9 +15,12 @@ import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.util.ConverterDataUtil;
 import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
+import io.mosip.kernel.core.logger.spi.Logger;
 
 public class ConvertDataValidator extends SDKValidator {
 	private Gson gson = new GsonBuilder().serializeNulls().create();
+
+	private Logger log = LoggerConfiguration.logConfig(ConvertDataValidator.class);
 	
 	@Override
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
@@ -66,6 +70,9 @@ public class ConvertDataValidator extends SDKValidator {
 				validationResultDto.setDescriptionKey("CONVERT_DATA_VALIDATOR_003" + AppConstants.ARGUMENTS_DELIMITER + statusCode);
 			}
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In convertDataValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
 			validationResultDto.setDescriptionKey(e.getLocalizedMessage());

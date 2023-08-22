@@ -157,14 +157,14 @@ public class SbiProjectService {
 			sbiProjectDto = null;
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
-					"In getSbiProject method of SbiProjectService Service - " + ex.getMessage());
+					"In addSbiProject method of SbiProjectService Service - " + ex.getMessage());
 			String errorCode = ex.getErrorCode();
 			String errorMessage = ex.getErrorCode();
 			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		} catch (DataIntegrityViolationException ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
-					"In getSbiProject method of SbiProjectService Service - " + ex.getMessage());
+					"In addSbiProject method of SbiProjectService Service - " + ex.getMessage());
 			String errorCode = ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorCode();
 			String errorMessage = null;
 			if (sbiProjectDto != null) {
@@ -177,7 +177,7 @@ public class SbiProjectService {
 			sbiProjectDto = null;
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
-					"In getSbiProject method of SbiProjectService Service - " + ex.getMessage());
+					"In addSbiProject method of SbiProjectService Service - " + ex.getMessage());
 			String errorCode = ToolkitErrorCodes.SBI_PROJECT_UNABLE_TO_ADD.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.SBI_PROJECT_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage();
 			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));

@@ -307,6 +307,9 @@ public class TestCasesService {
                 return validationResultDto;
             }
         } catch (Exception e) {
+            log.debug("sessionId", "idType", "id", e.getStackTrace());
+            log.error("sessionId", "idType", "id",
+                    "In validateJsonWithSchema method of TestCasesService - " + e.getMessage());
             throw e;
         }
     }
@@ -396,7 +399,7 @@ public class TestCasesService {
             responseWrapper.setResponse(resultDto);
             return responseWrapper;
         } catch (Exception ex) {
-            log.error("sessionId", "idType", "id", ex.getStackTrace());
+            log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In performRequestValidations method of TestCasesService - " + ex.getMessage());
             ValidationResultDto validationResponseDto = new ValidationResultDto();
@@ -427,6 +430,9 @@ public class TestCasesService {
                     resultDto.setValidatorName(v.getName());
                     resultDto.setValidatorDescription(v.getDescription());
                 } catch (Exception ex) {
+                    log.debug("sessionId", "idType", "id", ex.getStackTrace());
+                    log.error("sessionId", "idType", "id",
+                            "In performValidations method of TestCasesService - " + ex.getMessage());
                     resultDto.setValidatorName(v.getName());
                     resultDto.setValidatorDescription(v.getDescription());
                     resultDto.setStatus(AppConstants.FAILURE);
@@ -901,6 +907,7 @@ public class TestCasesService {
                 }
             }
         } catch (Exception ex) {
+            log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In getXmlDataFromZipFile method of TestCasesService - " + ex.getMessage());
             throw ex;

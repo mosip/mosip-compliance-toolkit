@@ -74,6 +74,7 @@ public class HashValidator extends ISOStandardsValidator {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 			}
 		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id", "In HashValidator - " + ex.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescriptionKey(

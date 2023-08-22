@@ -60,7 +60,7 @@ public class ResourceCacheService {
 			}
 			return schemaResponse;
 		} catch (Exception e) {
-			log.error("sessionId", "idType", "id", e.getStackTrace());
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
 			log.error("sessionId", "idType", "id", "In getSchema - " + e.getMessage());
 			throw e;
 		}
