@@ -2,6 +2,8 @@ package io.mosip.compliance.toolkit.controllers;
 
 import java.util.List;
 
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
+import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -43,6 +45,8 @@ public class BiometricTestDataController {
 	@Autowired
 	private ObjectMapperConfig objectMapperConfig;
 
+	private Logger log = LoggerConfiguration.logConfig(BiometricTestDataController.class);
+
 	@GetMapping(value = "/getListOfBiometricTestData")
 	public ResponseWrapper<List<BiometricTestDataDto>> getListOfBiometricTestData() {
 		return biometricTestDataService.getListOfBiometricTestData();
@@ -61,6 +65,9 @@ public class BiometricTestDataController {
 			DataValidationUtil.validate(errors, BIOMETRIC_TESTDATA_POST_ID);
 			return biometricTestDataService.addBiometricTestdata(requestWrapper.getRequest(), file);
 		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In addBiometricTestData method of BiometricTestDataController - " + ex.getMessage());
 			ResponseWrapper<AddBioTestDataResponseDto> responseWrapper = new ResponseWrapper<>();
 			String errorCode = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage();

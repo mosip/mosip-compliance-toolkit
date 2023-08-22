@@ -4,12 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.model.Decision;
 import io.mosip.kernel.biometrics.model.MatchDecision;
+import io.mosip.kernel.core.logger.spi.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +21,8 @@ import java.util.stream.Collectors;
 
 public abstract class MatchBaseValidator extends SDKValidator {
     private Gson gson = new GsonBuilder().serializeNulls().create();
+
+    private Logger log = LoggerConfiguration.logConfig(MatchBaseValidator.class);
 
     @Override
     public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
@@ -147,9 +151,9 @@ public abstract class MatchBaseValidator extends SDKValidator {
                 validationResultDto.setDescription("Match status code failed, received: " + statusCode);
                 validationResultDto.setDescriptionKey("MATCH_VALIDATOR_005" + AppConstants.ARGUMENTS_DELIMITER + statusCode);
             }
-        } catch (
-
-                Exception e) {
+        } catch (Exception e) {
+            log.debug("sessionId", "idType", "id", e.getStackTrace());
+            log.error("sessionId", "idType", "id", "In MatchBaseValidator - " + e.getMessage());
             validationResultDto.setStatus(AppConstants.FAILURE);
             validationResultDto.setDescription(e.getLocalizedMessage());
             validationResultDto.setDescriptionKey(e.getLocalizedMessage());

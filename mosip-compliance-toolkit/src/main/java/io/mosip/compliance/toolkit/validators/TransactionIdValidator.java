@@ -3,15 +3,19 @@ package io.mosip.compliance.toolkit.validators;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 
+import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TransactionIdValidator extends SBIValidator {
+
+    private Logger log = LoggerConfiguration.logConfig(TransactionIdValidator.class);
 
     @Override
     public ValidationResultDto validateResponse(ValidationInputDto responseDto) {
@@ -45,10 +49,14 @@ public class TransactionIdValidator extends SBIValidator {
                 }
             }
         } catch (ToolkitException e) {
+            log.debug("sessionId", "idType", "id", e.getStackTrace());
+            log.error("sessionId", "idType", "id", "In TransactionIdValidator - " + e.getMessage());
             validationResultDto.setStatus(AppConstants.FAILURE);
             validationResultDto.setDescription(e.getLocalizedMessage());
             validationResultDto.setDescriptionKey(e.getLocalizedMessage());
         } catch (Exception e) {
+            log.debug("sessionId", "idType", "id", e.getStackTrace());
+            log.error("sessionId", "idType", "id", "In TransactionIdValidator - " + e.getMessage());
             validationResultDto.setStatus(AppConstants.FAILURE);
             validationResultDto.setDescription(e.getLocalizedMessage());
             validationResultDto.setDescriptionKey(e.getLocalizedMessage());

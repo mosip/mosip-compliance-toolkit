@@ -65,11 +65,13 @@ public class SignatureValidator extends SBIValidator {
 				}
 			}
 		} catch (ToolkitException e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
 			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
 			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
 			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
@@ -89,6 +91,8 @@ public class SignatureValidator extends SBIValidator {
 					.toUtf8String(StringUtil.base64UrlDecode(discoveryInfoNode.get(DIGITAL_ID).asText()));
 			validationResultDto = validateUnsignedDigitalID(digitalId);
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto
 					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
@@ -129,6 +133,8 @@ public class SignatureValidator extends SBIValidator {
 					break;
 			}
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto
 					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
@@ -152,10 +158,14 @@ public class SignatureValidator extends SBIValidator {
 				validationResultDto.setDescriptionKey("SIGNATURE_VALIDATOR_006");
 			}
 		} catch (ToolkitException e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto
 					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto
 					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
@@ -186,6 +196,8 @@ public class SignatureValidator extends SBIValidator {
 				}
 			}
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto
 					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
@@ -225,6 +237,8 @@ public class SignatureValidator extends SBIValidator {
 				}
 			}
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto
 					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
@@ -247,9 +261,13 @@ public class SignatureValidator extends SBIValidator {
 				}
 			}
 		} catch (ToolkitException e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
 		}
@@ -284,6 +302,8 @@ public class SignatureValidator extends SBIValidator {
 				validationResultDto.setDescriptionKey("SIGNATURE_VALIDATOR_009");
 			}
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(
 					"Exception in Trust root Validation - " + "with Message - " + e.getLocalizedMessage());

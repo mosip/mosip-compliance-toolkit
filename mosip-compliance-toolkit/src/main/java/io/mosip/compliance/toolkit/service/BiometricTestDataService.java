@@ -532,6 +532,9 @@ public class BiometricTestDataService {
 						ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
 			}
 		} catch (Exception ex) {
+            log.debug("sessionId", "idType", "id", ex.getStackTrace());
+            log.error("sessionId", "idType", "id",
+                    "In validateTestData method of BiometricTestDataService Service - " + ex.getMessage());
 			throw ex;
 		} finally {
 			if (zis != null) {
@@ -844,8 +847,9 @@ public class BiometricTestDataService {
             log.info("sessionId", "idType", "id", "In isVirusScanSuccess method of BiometricTestDataService");
             return virusScan.scanDocument(file.getBytes());
         } catch (Exception e) {
-            log.error("sessionId", "idType", "id", ExceptionUtils.getStackTrace(e));
-            log.error("sessionId", "idType", "id", e.getMessage());
+            log.debug("sessionId", "idType", "id", ExceptionUtils.getStackTrace(e));
+            log.error("sessionId", "idType", "id",
+                    "In isVirusScanSuccess method of BiometricTestDataService Service - " + e.getMessage());
             throw new VirusScannerException(ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorCode(),
                     ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorMessage() + e.getMessage());
         }

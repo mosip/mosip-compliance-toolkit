@@ -420,6 +420,9 @@ public class TestRunService {
 				}
 			}
 		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In validateRunId method of TestRunService Service - " + ex.getMessage());
 			errorCode = ToolkitErrorCodes.PARTNERID_VALIDATION_ERR;
 		}
 		return errorCode;
@@ -437,6 +440,9 @@ public class TestRunService {
 				}
 			}
 		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In validatePartnerId method of TestRunService Service - " + ex.getMessage());
 			errorCode = ToolkitErrorCodes.PARTNERID_VALIDATION_ERR;
 		}
 		return errorCode;

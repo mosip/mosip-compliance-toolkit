@@ -1,5 +1,7 @@
 package io.mosip.compliance.toolkit.validators;
 
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
+import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -49,6 +51,8 @@ public class ISOStandardsValidator extends SBIValidator {
 	@Autowired
 	private KeyManagerHelper keyManagerHelper;
 
+	private Logger log = LoggerConfiguration.logConfig(ISOStandardsValidator.class);
+
 	@Override
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
@@ -72,10 +76,14 @@ public class ISOStandardsValidator extends SBIValidator {
 				}
 			}
 		} catch (ToolkitException e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
 			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
 			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
@@ -152,6 +160,8 @@ public class ISOStandardsValidator extends SBIValidator {
 				return decryptValidatorResponseDto.getResponse().getData();
 			}
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			throw new ToolkitException(ToolkitErrorCodes.AUTH_BIO_VALUE_DECRYPT_ERROR.getErrorCode(),
 					ToolkitErrorCodes.AUTH_BIO_VALUE_DECRYPT_ERROR.getErrorMessage() + e.getLocalizedMessage());
 		}
@@ -210,6 +220,8 @@ public class ISOStandardsValidator extends SBIValidator {
 			bioData = CommonUtil.decodeURLSafeBase64(bioValue);
 			requestDto.setInputBytes(bioData);
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_BASE64URLENCODED_EXCEPTION;
 			throw new ToolkitException(errorCode.getErrorCode(), e.getLocalizedMessage());
 		}
@@ -700,6 +712,8 @@ public class ISOStandardsValidator extends SBIValidator {
 			}
 			/* Image Validation Ends*/
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_FINGER_ISO_FORMAT_EXCEPTION;
 			message.append("<BR>" + errorCode.getErrorMessage() + "<BR>" + e.getLocalizedMessage());
 			code.append(AppConstants.COMMA_SEPARATOR);
@@ -753,6 +767,8 @@ public class ISOStandardsValidator extends SBIValidator {
 			bioData = CommonUtil.decodeURLSafeBase64(bioValue);
 			requestDto.setInputBytes(bioData);
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_BASE64URLENCODED_EXCEPTION;
 			throw new ToolkitException(errorCode.getErrorCode(), e.getLocalizedMessage());
 		}
@@ -1270,6 +1286,8 @@ public class ISOStandardsValidator extends SBIValidator {
 			}
 			/* Image Validation Ends*/
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_IRIS_ISO_FORMAT_EXCEPTION;
 			message.append("<BR>" + errorCode.getErrorMessage() + "<BR>" + e.getLocalizedMessage());
 			code.append(AppConstants.COMMA_SEPARATOR);
@@ -1323,6 +1341,8 @@ public class ISOStandardsValidator extends SBIValidator {
 			bioData = CommonUtil.decodeURLSafeBase64(bioValue);
 			requestDto.setInputBytes(bioData);
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_BASE64URLENCODED_EXCEPTION;
 			throw new ToolkitException(errorCode.getErrorCode(), e.getLocalizedMessage());
 		}
@@ -1860,6 +1880,8 @@ public class ISOStandardsValidator extends SBIValidator {
 			}
 			/* Image Validation Ends*/
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_FACE_ISO_FORMAT_EXCEPTION;
 			message.append("<BR>" + errorCode.getErrorMessage() + "<BR>" + e.getLocalizedMessage());
 			code.append(AppConstants.COMMA_SEPARATOR);

@@ -142,14 +142,14 @@ public class ResourceManagementService {
 		} catch (ToolkitException ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
-					"In uploadSampleBioTestDataFile method of ResourceManagementService Service - " + ex.getMessage());
+					"In uploadResourceFile method of ResourceManagementService Service - " + ex.getMessage());
 			String errorCode = ex.getErrorCode();
 			String errorMessage = ex.getMessage();
 			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
-					"In uploadSampleBioTestDataFile method of ResourceManagementService Service - " + ex.getMessage());
+					"In uploadResourceFile method of ResourceManagementService Service - " + ex.getMessage());
 			String errorCode = ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorMessage() + BLANK_SPACE + ex.getMessage();
 			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
@@ -170,8 +170,9 @@ public class ResourceManagementService {
             log.info("sessionId", "idType", "id", "In isVirusScanSuccess method of ResourceManagementService");
             return virusScan.scanDocument(file.getBytes());
         } catch (Exception e) {
-            log.error("sessionId", "idType", "id", ExceptionUtils.getStackTrace(e));
-            log.error("sessionId", "idType", "id", e.getMessage());
+            log.debug("sessionId", "idType", "id", ExceptionUtils.getStackTrace(e));
+            log.error("sessionId", "idType", "id",
+					"In isVirusScanSuccess method of ResourceManagementService Service - " + e.getMessage());
             throw new VirusScannerException(ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorCode(),
                     ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorMessage() + e.getMessage());
         }

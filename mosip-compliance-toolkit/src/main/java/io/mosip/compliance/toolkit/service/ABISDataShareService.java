@@ -269,6 +269,9 @@ public class ABISDataShareService {
 			responseWrapper.setResponse(AppConstants.SUCCESS);
 		} catch (Exception ex) {
 			responseWrapper.setResponse(AppConstants.FAILURE);
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In saveDataShareToken method of ABISDataShareService Service - " + ex.getMessage());
 			ServiceError serviceError = new ServiceError();
 			serviceError.setMessage(ex.getLocalizedMessage());
 			responseWrapper.setErrors(Collections.singletonList(serviceError));
@@ -333,10 +336,11 @@ public class ABISDataShareService {
 				}
 			}
 			responseWrapper.setResponse(AppConstants.SUCCESS);
-		} catch (
-
-		Exception ex) {
+		} catch (Exception ex) {
 			responseWrapper.setResponse(AppConstants.FAILURE);
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In invalidateDataShareToken method of ABISDataShareService Service - " + ex.getMessage());
 			ServiceError serviceError = new ServiceError();
 			serviceError.setMessage(ex.getLocalizedMessage());
 			responseWrapper.setErrors(Collections.singletonList(serviceError));
