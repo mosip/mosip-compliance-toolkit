@@ -43,13 +43,13 @@ public class ABISTokenValidator extends ToolkitValidator {
 			String testcaseId = extraInfo.get("testcaseId").asText();
 			String testRunId = extraInfo.get("testRunId").asText();
 			String partnerId = getPartnerId();
-			log.info("ABISTokenValidator validateResponse() started with testcaseId {},testRunId {}, partnerId {}", testcaseId,
+			log.info("sessionId", "idType", "id", "ABISTokenValidator validateResponse() started with testcaseId {},testRunId {}, partnerId {}", testcaseId,
 					testRunId, partnerId);
 			Optional<AbisDataShareTokenEntity> dbEntity = abisDataShareTokenRepository.findTokenForTestRun(partnerId,
 					testcaseId, testRunId);
 			if (dbEntity.isPresent()) {
 				String resultInDb = dbEntity.get().getResult();
-				log.info("resultInDb {}", resultInDb);
+				log.info("sessionId", "idType", "id", "resultInDb {}", resultInDb);
 				if (AppConstants.SUCCESS.equals(resultInDb)) {
 					validationResultDto.setStatus(AppConstants.SUCCESS);
 					validationResultDto.setDescription(

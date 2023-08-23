@@ -40,12 +40,12 @@ public class HashValidator extends ISOStandardsValidator {
 			String errGeneratedHashValue = null;
 			if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
 				for (final JsonNode biometricNode : arrBiometricNodes) {
-					log.info("previousHash {}", previousHash);
+					log.info("sessionId", "idType", "id", "previousHash {}", previousHash);
 					String hashReceivedInResponse = biometricNode.get("hash").asText();
 					String bioValue = extractBioValue(biometricNode);
 					byte[] decodedBioValue = CommonUtil.decodeURLSafeBase64(bioValue);
 					String generatedHash = HashUtil.generateHash(previousHash, decodedBioValue);
-					log.info("generatedHash {}", generatedHash);
+					log.info("sessionId", "idType", "id", "generatedHash {}", generatedHash);
 					if (generatedHash != null && generatedHash.equals(hashReceivedInResponse)) {
 						previousHash = generatedHash;
 						isHashValid = true;

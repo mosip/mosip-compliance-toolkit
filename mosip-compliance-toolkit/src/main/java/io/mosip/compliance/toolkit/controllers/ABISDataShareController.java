@@ -68,7 +68,7 @@ public class ABISDataShareController {
 	public ResponseWrapper<String> saveDataShareToken(
 			@RequestBody RequestWrapper<DataShareSaveTokenRequest> requestWrapper, Errors errors) throws Exception {
 		log.info("sessionId", "idType", "id", "In saveDataShareToken method of ABISDataShareController.");
-		log.info("Recvd request {}", requestWrapper);
+		log.info("sessionId", "idType", "id", "Recvd request {}", requestWrapper);
 		requestValidator.validate(requestWrapper, errors);
 		requestValidator.validateId(ABIS_DATASHARE_TOKEN_POST_ID, requestWrapper.getId(), errors);
 		DataValidationUtil.validate(errors, ABIS_DATASHARE_TOKEN_POST_ID);
@@ -79,7 +79,7 @@ public class ABISDataShareController {
 	public ResponseWrapper<String> invalidateDataShareToken(
 			@RequestBody RequestWrapper<DataShareSaveTokenRequest> requestWrapper, Errors errors) throws Exception {
 		log.info("sessionId", "idType", "id", "In invalidateDataShareToken method of ABISDataShareController.");
-		log.info("Recvd request {}", requestWrapper);
+		log.info("sessionId", "idType", "id", "Recvd request {}", requestWrapper);
 		requestValidator.validate(requestWrapper, errors);
 		requestValidator.validateId(ABIS_DATASHARE_TOKEN_POST_ID, requestWrapper.getId(), errors);
 		DataValidationUtil.validate(errors, ABIS_DATASHARE_TOKEN_POST_ID);

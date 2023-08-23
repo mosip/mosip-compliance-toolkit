@@ -112,12 +112,12 @@ public class ReportGeneratorService {
 
 	public ResponseEntity<?> createReport(ReportRequestDto requestDto, String origin) {
 		try {
-			log.info("Started createReport processing");
+			log.info("sessionId", "idType", "id", "Started createReport processing");
 			String projectType = requestDto.getProjectType();
 			String projectId = requestDto.getProjectId();
-			log.info("projectType {}", projectType);
-			log.info("projectId {}", projectId);
-			log.info("testRunId {}", requestDto.getTestRunId());
+			log.info("sessionId", "idType", "id", "projectType {}", projectType);
+			log.info("sessionId", "idType", "id", "projectId {}", projectId);
+			log.info("sessionId", "idType", "id", "testRunId {}", requestDto.getTestRunId());
 			// 1. get the test run details
 			ResponseWrapper<TestRunDetailsResponseDto> testRunDetailsResponse = getTestRunDetails(
 					requestDto.getTestRunId());
@@ -182,7 +182,7 @@ public class ReportGeneratorService {
 			return sendPdfResponse(requestDto, resource);
 
 		} catch (Exception e) {
-			log.info("Exception in createReport {}", e.getLocalizedMessage());
+			log.info("sessionId", "idType", "id", "Exception in createReport {}", e.getLocalizedMessage());
 			try {
 				return handleValidationErrors(requestDto, e.getLocalizedMessage());
 			} catch (Exception e1) {
@@ -244,7 +244,7 @@ public class ReportGeneratorService {
 		velocityContext.put("reportValidityDate", getReportValidityDt(testRunDetailsResponseDto));
 		velocityContext.put("testRunDetailsList", populateTestRunTable(testRunDetailsResponseDto));
 		velocityContext.put("timeTakenByTestRun", getTestRunExecutionTime(testRunDetailsResponseDto));
-		log.info("Added all attributes in velocity template successfully");
+		log.info("sessionId", "idType", "id", "Added all attributes in velocity template successfully");
 		return velocityContext;
 	}
 
@@ -259,13 +259,13 @@ public class ReportGeneratorService {
 			if (ProjectTypes.SDK.getCode().equals(projectType)
 					&& !ignoreSdkTestcaseList.contains(testRunDetailsDto.getTestcaseId())
 					&& !AppConstants.MOSIP_DEFAULT.equals(testRunDetailsDto.getTestDataSource())) {
-				log.info("testdata validation failed for {}", testRunDetailsDto.getTestcaseId());
+				log.info("sessionId", "idType", "id", "testdata validation failed for {}", testRunDetailsDto.getTestcaseId());
 				validationResult = false;
 			}
 			if (ProjectTypes.ABIS.getCode().equals(projectType)
 					&& !ignoreAbisTestcaseList.contains(testRunDetailsDto.getTestcaseId())
 					&& !AppConstants.MOSIP_DEFAULT.equals(testRunDetailsDto.getTestDataSource())) {
-				log.info("testdata validation failed for {}", testRunDetailsDto.getTestcaseId());
+				log.info("sessionId", "idType", "id", "testdata validation failed for {}", testRunDetailsDto.getTestcaseId());
 				validationResult = false;
 			}
 			if (!validationResult) {
@@ -337,7 +337,7 @@ public class ReportGeneratorService {
 				break;
 			}
 		}
-		log.info("validateDeviceInfo, validationResult: {}", validationResult);
+		log.info("sessionId", "idType", "id", "validateDeviceInfo, validationResult: {}", validationResult);
 		return invalidTestCaseId;
 	}
 
@@ -504,7 +504,7 @@ public class ReportGeneratorService {
 		StringWriter stringWriter = new StringWriter();
 		engine.mergeTemplate("templates/" + templateName, StandardCharsets.UTF_8.name(), velocityContext, stringWriter);
 		String mergedHtml = stringWriter.toString();
-		log.info("Merged Template successfully");
+		log.info("sessionId", "idType", "id", "Merged Template successfully");
 		return mergedHtml;
 	}
 
@@ -520,7 +520,7 @@ public class ReportGeneratorService {
 		byte[] bytes = outputStream.toByteArray();
 		ByteArrayResource resource = new ByteArrayResource(bytes);
 		outputStream.close();
-		log.info("Converted html to pdf successfully");
+		log.info("sessionId", "idType", "id", "Converted html to pdf successfully");
 		return resource;
 	}
 

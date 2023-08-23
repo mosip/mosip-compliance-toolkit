@@ -289,7 +289,7 @@ public class TestCasesService {
             // show the validation errors
             if (validationResult.isEmpty()) {
                 // show custom message if there is no validation error
-                log.info(
+                log.info("sessionId", "idType", "id",
                         "JSON is as expected. All mandatory values are available and they all have valid expected values.");
                 validationResultDto.setDescription(
                         "JSON is as expected. All mandatory values are available and they all have valid expected values.");
@@ -727,9 +727,8 @@ public class TestCasesService {
                         objectStoreStream.reset();
                         String encodedHash = CryptoUtil.getEncodedHash(bytes);
                         if (Objects.isNull(encodedHash) || !encodedHash.equals(zipFileHash)) {
-                            log.info("testdata " + bioTestDataName + " encoded file hash mismatch."
-                                    + "\n"
-                                    + "stored hash : " + zipFileHash + "\n" + "calculated hash : " + encodedHash);
+                            log.info("sessionId", "idType", "id", "testdata " + bioTestDataName + " encoded file hash mismatch."
+                                    + "\n" + "stored hash : " + zipFileHash + "\n" + "calculated hash : " + encodedHash);
                             objectStoreStream.close();
                             objectStoreStream = null;
                         }
