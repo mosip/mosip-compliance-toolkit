@@ -205,7 +205,7 @@ public class SdkProjectService {
 
 	public void addDefaultCollection(SdkProjectDto sdkProjectDto,
 									 String projectId) {
-		log.debug("Started addDefaultCollection for SDK project: " + projectId);
+		log.debug("sessionId", "idType", "id", "Started addDefaultCollection for SDK project: {}",projectId);
 		try {
 			//1. Add a new default collection
 			CollectionRequestDto collectionRequestDto = new CollectionRequestDto();
@@ -216,9 +216,9 @@ public class SdkProjectService {
 			String defaultCollectionId = null;
 			if (addCollectionWrapper.getResponse() != null) {
 				defaultCollectionId = addCollectionWrapper.getResponse().getCollectionId();
-				log.debug("Default collection added: " + defaultCollectionId);
+				log.debug("sessionId", "idType", "id", "Default collection added: {}", defaultCollectionId);
 			} else {
-				log.debug("Default collection could not be added");
+				log.debug("sessionId", "idType", "id", "Default collection could not be added for this project: {}", projectId);
 			}
 			if (defaultCollectionId != null) {
 				//2. Get the testcases
@@ -241,7 +241,7 @@ public class SdkProjectService {
 			}
 		} catch (Exception ex) {
 			//This is a fail safe operation, so exception can be ignored
-			log.debug("Error in adding default collection" + ex.getLocalizedMessage());
+			log.debug("sessionId", "idType", "id", "Error in adding default collection: {}", ex.getLocalizedMessage());
 		}
 	}
 

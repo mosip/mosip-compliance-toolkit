@@ -170,7 +170,7 @@ public class ResourceManagementService {
             log.info("sessionId", "idType", "id", "In isVirusScanSuccess method of ResourceManagementService");
             return virusScan.scanDocument(file.getBytes());
         } catch (Exception e) {
-            log.debug("sessionId", "idType", "id", ExceptionUtils.getStackTrace(e));
+            log.debug("sessionId", "idType", "id", e.getStackTrace());
             log.error("sessionId", "idType", "id",
 					"In isVirusScanSuccess method of ResourceManagementService Service - " + e.getMessage());
             throw new VirusScannerException(ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorCode(),

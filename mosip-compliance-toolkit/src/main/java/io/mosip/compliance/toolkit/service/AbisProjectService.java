@@ -213,7 +213,7 @@ public class AbisProjectService {
 
 	public void addDefaultCollection(AbisProjectDto abisProjectDto,
 									 String projectId) {
-		log.debug("Started addDefaultCollection for ABIS project: " + projectId);
+		log.debug("sessionId", "idType", "id", "Started addDefaultCollection for ABIS project: {}", projectId);
 		try {
 			//1. Add a new default collection
 			CollectionRequestDto collectionRequestDto = new CollectionRequestDto();
@@ -224,9 +224,9 @@ public class AbisProjectService {
 			String defaultCollectionId = null;
 			if (addCollectionWrapper.getResponse() != null) {
 				defaultCollectionId = addCollectionWrapper.getResponse().getCollectionId();
-				log.debug("Default collection added: " + defaultCollectionId);
+				log.debug("sessionId", "idType", "id", "Default collection added: {}", defaultCollectionId);
 			} else {
-				log.debug("Default collection could not be added");
+				log.debug("sessionId", "idType", "id", "Default collection could not be added for this project: {}", projectId);
 			}
 			if (defaultCollectionId != null) {
 				//2. Get the testcases
@@ -249,7 +249,7 @@ public class AbisProjectService {
 			}
 		} catch (Exception ex) {
 			//This is a fail safe operation, so exception can be ignored
-			log.debug("Error in adding default collection" + ex.getLocalizedMessage());
+			log.debug("sessionId", "idType", "id", "Error in adding default collection: {}", ex.getLocalizedMessage());
 		}
 	}
 

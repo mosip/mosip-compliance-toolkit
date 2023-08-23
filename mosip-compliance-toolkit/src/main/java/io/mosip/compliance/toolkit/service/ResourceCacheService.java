@@ -40,7 +40,7 @@ public class ResourceCacheService {
 			} else {
 				container += "";
 			}
-			log.debug("sessionId", "idType", "Trying to get file from object store {}{}", container, fileName);
+			log.debug("sessionId", "idType", "id", "Trying to get file from object store {}{}", container, fileName);
 			if (existsInObjectStore(container, fileName)) {
 				InputStream inputStream = getFromObjectStore(container, fileName);
 				if (Objects.nonNull(inputStream)) {
@@ -56,7 +56,7 @@ public class ResourceCacheService {
 					inputStream.close();
 				}
 			} else {
-				log.debug("sessionId", "idType", "Unable to get file from object store {}{}", container, fileName);
+				log.debug("sessionId", "idType", "id", "Unable to get file from object store {}{}", container, fileName);
 			}
 			return schemaResponse;
 		} catch (Exception e) {

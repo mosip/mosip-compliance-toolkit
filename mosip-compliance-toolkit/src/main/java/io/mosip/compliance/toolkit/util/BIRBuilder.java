@@ -38,7 +38,7 @@ public class BIRBuilder {
 	public BIR buildBIR(byte[] bdb, String bioType, String bioSubType, long qualityScore, boolean forAuth,
 			String specVersion) {
 
-		log.debug("started building BIR for for bioAttribute : {}", bioType);
+		log.debug("sessionId", "idType", "id", "started building BIR for for bioAttribute : {}", bioType);
 		BiometricType biometricType = BiometricType.fromValue(bioType);
 
 		// Format
@@ -46,14 +46,14 @@ public class BIRBuilder {
 		birFormat.setOrganization(CBEFF_DEFAULT_FORMAT_ORG);
 		birFormat.setType(String.valueOf(getFormatType(biometricType)));
 
-		log.debug("started building BIR algorithm for for bioAttribute : {}", bioType);
+		log.debug("sessionId", "idType", "id", "started building BIR algorithm for for bioAttribute : {}", bioType);
 
 		// Algorithm
 		RegistryIDType birAlgorithm = new RegistryIDType();
 		birAlgorithm.setOrganization(CBEFF_DEFAULT_ALG_ORG);
 		birAlgorithm.setType(CBEFF_DEFAULT_ALG_TYPE);
 
-		log.debug("started building Quality type for for bioAttribute : {}", bioType);
+		log.debug("sessionId", "idType", "id", "started building Quality type for for bioAttribute : {}", bioType);
 
 		// Quality Type
 		QualityType qualityType = new QualityType();
@@ -77,7 +77,7 @@ public class BIRBuilder {
 				.withOthers(OtherKey.SDK_SCORE, EMPTY).withOthers(OtherKey.FORCE_CAPTURED, EMPTY)
 				.withOthers(OtherKey.PAYLOAD, EMPTY).withOthers(OtherKey.SPEC_VERSION, specVersion).build();
 
-		log.debug("probe created (without bdb) : {}", probeBir);
+		log.debug("sessionId", "idType", "id", "probe created (without bdb) : {}", probeBir);
 
 		probeBir.setBdb(bdb);
 
