@@ -15,7 +15,7 @@ import io.mosip.kernel.core.util.EmptyCheckUtils;
 
 public class HashUtil {
 
-	private static Logger mosipLogger = LoggerConfiguration.logConfig(HashUtil.class);
+	private static Logger log = LoggerConfiguration.logConfig(HashUtil.class);
 
 	private static final String HASH_ALGORITHM_NAME = "SHA-256";
 
@@ -38,7 +38,8 @@ public class HashUtil {
 					currentBioDataHash.length);
 			hash = toHex(generateHash(finalBioDataHash));
 		} catch (Exception ex) {
-			mosipLogger.error("Hash generation Error: " + ex.getLocalizedMessage());
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id", "Hash generation Error: " + ex.getLocalizedMessage());
 		}
 		return hash;
 	}

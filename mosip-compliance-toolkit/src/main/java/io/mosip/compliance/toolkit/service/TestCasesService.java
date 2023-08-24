@@ -289,7 +289,7 @@ public class TestCasesService {
             // show the validation errors
             if (validationResult.isEmpty()) {
                 // show custom message if there is no validation error
-                log.info(
+                log.info("sessionId", "idType", "id",
                         "JSON is as expected. All mandatory values are available and they all have valid expected values.");
                 validationResultDto.setDescription(
                         "JSON is as expected. All mandatory values are available and they all have valid expected values.");
@@ -300,7 +300,7 @@ public class TestCasesService {
                 List<String> errors = new ArrayList<>();
                 // show all the validation error
                 validationResult.forEach(vm -> errors.add(vm.getMessage()));
-                log.debug("Schema validations failed.");
+                log.debug("sessionId", "idType", "id", "Schema validations failed: {}", errors.toString());
                 //no translation of schema validation errors is possible
                 validationResultDto.setDescription(errors.toString());
                 validationResultDto.setStatus(AppConstants.FAILURE);
@@ -361,7 +361,7 @@ public class TestCasesService {
             }
             testCaseResponseDto.setTestCases(savedValues);
         } catch (Exception ex) {
-            log.debug("sessionId", "idType", "id", ExceptionUtils.getStackTrace(ex));
+            log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In saveTestCases method of Test Cases Service - " + ex.getLocalizedMessage());
             String errorCode = ToolkitErrorCodes.SAVE_TEST_CASE_JSON_ERROR.getErrorCode();
@@ -423,7 +423,7 @@ public class TestCasesService {
                 ValidationResultDto resultDto = new ValidationResultDto();
                 try {
                     Class<?> className = Class.forName("io.mosip.compliance.toolkit.validators." + v.getName());
-                    log.debug("invloking validator: {}", className);
+                    log.debug("sessionId", "idType", "id", "invloking validator: {}", className);
                     validator = (BaseValidator) className.getDeclaredConstructor().newInstance();
                     context.getAutowireCapableBeanFactory().autowireBean(validator);
                     resultDto = validator.validateResponse(validationInputDto);
@@ -443,7 +443,7 @@ public class TestCasesService {
             });
             validationResponseDto.setValidationsList(validationResults);
         } catch (Exception ex) {
-            log.debug("sessionId", "idType", "id", ExceptionUtils.getStackTrace(ex));
+            log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In performValidations method of Test Cases Service - " + ex.getLocalizedMessage());
             String errorCode = ToolkitErrorCodes.TESTCASE_VALIDATION_ERR.getErrorCode();
@@ -727,9 +727,8 @@ public class TestCasesService {
                         objectStoreStream.reset();
                         String encodedHash = CryptoUtil.getEncodedHash(bytes);
                         if (Objects.isNull(encodedHash) || !encodedHash.equals(zipFileHash)) {
-                            log.info("testdata " + bioTestDataName + " encoded file hash mismatch."
-                                    + "\n"
-                                    + "stored hash : " + zipFileHash + "\n" + "calculated hash : " + encodedHash);
+                            log.info("sessionId", "idType", "id", "testdata " + bioTestDataName + " encoded file hash mismatch."
+                                    + "\n" + "stored hash : " + zipFileHash + "\n" + "calculated hash : " + encodedHash);
                             objectStoreStream.close();
                             objectStoreStream = null;
                         }

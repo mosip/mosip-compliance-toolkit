@@ -307,7 +307,7 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 			} else {
 				sdkUrl = sdkUrl + "/" + MethodName.CHECK_QUALITY.getCode();
 			}
-			log.info(sdkUrl);
+			log.info("sessionId", "idType", "id", "SdkCheckQualityUrl " + sdkUrl);
 			Request request = new Request.Builder().url(sdkUrl).post(body).build();
 
 			restCallResponse = client.newCall(request).execute();

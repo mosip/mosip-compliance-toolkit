@@ -101,7 +101,7 @@ public class TestRunService {
 		TestRunDto testRun = null;
 		try {
 			if (Objects.nonNull(inputTestRun)) {
-				log.info("addTestRun" + inputTestRun);
+				log.info("sessionId", "idType", "id", "addTestRun" + inputTestRun);
 				ToolkitErrorCodes toolkitError = validatePartnerId(inputTestRun.getCollectionId(), getPartnerId());
 				if (ToolkitErrorCodes.SUCCESS.equals(toolkitError)) {
 
@@ -121,7 +121,7 @@ public class TestRunService {
 					TestRunEntity outputEntity = testRunRepository.save(entity);
 
 					testRun = mapper.convertValue(outputEntity, TestRunDto.class);
-					log.info("outputEntity" + outputEntity);
+					log.info("sessionId", "idType", "id", "outputEntity" + outputEntity);
 				} else {
 					String errorCode = toolkitError.getErrorCode();
 					String errorMessage = toolkitError.getErrorMessage();
