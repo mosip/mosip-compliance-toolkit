@@ -1,6 +1,8 @@
 keycloak:
   realms: |-
     mosip: # realm
+      roles:
+       - CTK_ADMIN
       clients:   
         - name: mosip-toolkit-client
           saroles: []
@@ -27,7 +29,6 @@ keycloak:
            }
           realmRoles:
             - ABIS_PARTNER
-            - CTK_ADMIN
 
 ## These will be passed as environments variables to keycloak-init docker. Note the expected naming convention is
 ## <clientname>_<secret>.  If empty secret is passed, it shall be randomly generated
