@@ -43,6 +43,9 @@ public class MainController {
 	@Value("${mosip.service.abis.partner.type}")
 	private String abisPartnerType;
 
+	@Value("${mosip.toolkit.default.collection.name}")
+	private String complianceCollectionName;
+	
 	private AuthUserDetails authUserDetails() {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
@@ -70,6 +73,7 @@ public class MainController {
 		configMap.put("keyRotationIterations", keyRotationIterations);
 		configMap.put("rtlLanguages", rtlLanguages);
 		configMap.put("incorrectPartnerId", incorrectPartnerId);
+		configMap.put("complianceCollectionName", complianceCollectionName);
 		if (isAbisPartner()) {
 			configMap.put("abisPartnerType", abisPartnerType);
 		} else {
