@@ -11,7 +11,8 @@ databases:
       secret:
         name: postgres-postgresql
         key: postgresql-password
-    dml: 0    
+    dml: 0   
+    branch: develop
 
   mosip_master:
     enabled: false
