@@ -19,6 +19,7 @@
 						"env": {
 							"type": "string",
 							"enum": [
+								"None",
 								"Staging",
 								"Developer",
 								"Pre-Production",
