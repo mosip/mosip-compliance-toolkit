@@ -69,12 +69,24 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 	@Override
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
+		List<Map<String, Object>> sdkUrlScores = new ArrayList<>();
+		String sbiScore = null;
 		try {
+			ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper()
+					.readValue(inputDto.getMethodResponse(), ObjectNode.class);
+			JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
+			if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
+				for (final JsonNode biometricNode : arrBiometricNodes) {
+					JsonNode dataNode = biometricNode.get(DECODED_DATA);
+					sbiScore = dataNode.get("qualityScore").asText();
+				}
+			}
 			StringBuffer messages = new StringBuffer();
 			StringBuffer codes = new StringBuffer();
 			Map<String, Boolean> testCaseSuccessfulMap = new HashMap<String, Boolean>();
 			String sdkUrls = getSdkUrlsJsonString(inputDto);
 			ArrayNode sdkUrlsArr = (ArrayNode) objectMapperConfig.objectMapper().readValue(sdkUrls, ArrayNode.class);
+			Map<String, Object> sdkScoreAndName = new HashMap<>();
 			for (JsonNode item : sdkUrlsArr) {
 				// first check if init is successful
 				String sdkUrl = item.get("url").asText();
@@ -86,6 +98,9 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 				String validatorMsg = "";
 				if (isSdkServiceAccessible) {
 					validationResultDto = this.performQualityCheck(sdkUrl, inputDto);
+					sdkScoreAndName.put("name", sdkName);
+					sdkScoreAndName.put("score", Float.parseFloat(validationResultDto.getBiometricScores()));
+					sdkUrlScores.add(sdkScoreAndName);
 					if (!validationResultDto.getStatus().equals(AppConstants.FAILURE)) {
 						if (includeInResults) {
 							testCaseSuccessfulMap.put(sdkUrl, Boolean.TRUE);
@@ -149,6 +164,12 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 						"BiometricsQualityCheckValidator validations are not successful." + messages.toString());
 				validationResultDto.setDescriptionKey("BIOMETRIC_QUALITY_CHECK_001," + codes.toString());
 			}
+			Map<String, Object> sbiAndSdkScores = new HashMap<>();
+			sbiAndSdkScores.put("SBI", Integer.parseInt(sbiScore));
+			sbiAndSdkScores.put("SDK", sdkUrlScores);
+			Map<String, Object> biometricScores = new HashMap<>();
+			biometricScores.put("biometricScores", sbiAndSdkScores);
+			validationResultDto.setBiometricScores(objectMapper.writeValueAsString(biometricScores));
 		} catch (ToolkitException e) {
 			log.debug("sessionId", "idType", "id", e.getStackTrace());
 			log.error("sessionId", "idType", "id", "In BiometricsQualityCheckValidator - " + e.getMessage());
@@ -254,6 +275,7 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 			StringBuffer keyBuffer = new StringBuffer();
 			List<String> descriptionList = new ArrayList<>();
 			for (ValidationResultDto item : validationResultDtoList) {
+				finalResult.setBiometricScores(item.getBiometricScores());
 				if (item.getStatus().equals(AppConstants.FAILURE)) {
 					finalResult.setStatus(AppConstants.FAILURE);
 				}
