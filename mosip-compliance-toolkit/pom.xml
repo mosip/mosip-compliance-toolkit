@@ -15,6 +15,28 @@
 	<name>mosip-compliance-toolkit-service</name>
 	<description>mosip compliance toolkit</description>
 
+	<licenses>
+		<license>
+			<name>MPL 2.0</name>
+			<url>https://www.mozilla.org/en-US/MPL/2.0/</url>
+		</license>
+	</licenses>
+	<scm>
+		<connection>scm:git:git://github.com/mosip/mosip-compliance-toolkit.git</connection>
+		<developerConnection>scm:git:ssh://github.com:mosip/mosip-compliance-toolkit.git</developerConnection>
+		<url>https://github.com/mosip/mosip-compliance-toolkit</url>
+		<tag>HEAD</tag>
+	</scm>
+
+	<developers>
+		<developer>
+			<name>Mosip</name>
+			<email>mosip.emailnotifier@gmail.com</email>
+			<organization>io.mosip</organization>
+			<organizationUrl>https://github.com/mosip/mosip-compliance-toolkit</organizationUrl>
+		</developer>
+	</developers>
+
 	<properties>
 		<java.version>11</java.version>
 		<kernel.version>1.2.0.1-B1</kernel.version>
