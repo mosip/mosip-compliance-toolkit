@@ -245,7 +245,7 @@ public class ReportGeneratorService {
 		velocityContext.put("reportValidityDate", getReportValidityDt(testRunDetailsResponseDto));
 		velocityContext.put("testRunDetailsList", populateTestRunTable(testRunDetailsResponseDto));
 		velocityContext.put("timeTakenByTestRun", getTestRunExecutionTime(testRunDetailsResponseDto));
-		velocityContext.put("totalTestCasesCount", getTotalTestCasesCount(testRunDetailsResponseDto));
+		velocityContext.put("totalTestCasesCount", testRunDetailsResponseDto.getTestRunDetailsList().size());
 		velocityContext.put("countOfPassedTestCases", getCountOfPassedTestCases(testRunDetailsResponseDto));
 		velocityContext.put("countOfFailedTestCases", getCountOfFailedTestCases(testRunDetailsResponseDto));
 		log.info("sessionId", "idType", "id", "Added all attributes in velocity template successfully");
@@ -490,16 +490,7 @@ public class ReportGeneratorService {
 
 	}
 
-	private String getTotalTestCasesCount(TestRunDetailsResponseDto testRunDetailsResponseDto) {
-		int totalCount = testRunDetailsResponseDto.getTestRunDetailsList().size();
-		if (totalCount <= 1){
-			return totalCount + " testcase was";
-		} else {
-			return totalCount + " testcases were";
-		}
-	}
-
-	private String getCountOfPassedTestCases(TestRunDetailsResponseDto testRunDetailsResponseDto) {
+	private int getCountOfPassedTestCases(TestRunDetailsResponseDto testRunDetailsResponseDto) {
 		int passCount = 0;
 		List<TestRunDetailsDto> testRunDetailsList = testRunDetailsResponseDto.getTestRunDetailsList();
 		for(TestRunDetailsDto item: testRunDetailsList) {
@@ -507,14 +498,10 @@ public class ReportGeneratorService {
 				passCount++;
 			}
 		}
-		if (passCount <= 1) {
-			return passCount + " has";
-		} else {
-			return passCount + " have";
-		}
+		return passCount;
 	}
 
-	private String getCountOfFailedTestCases(TestRunDetailsResponseDto testRunDetailsResponseDto) {
+	private int getCountOfFailedTestCases(TestRunDetailsResponseDto testRunDetailsResponseDto) {
 		int failCount = 0;
 		List<TestRunDetailsDto> testRunDetailsList = testRunDetailsResponseDto.getTestRunDetailsList();
 		for(TestRunDetailsDto item: testRunDetailsList) {
@@ -522,11 +509,7 @@ public class ReportGeneratorService {
 				failCount++;
 			}
 		}
-		if (failCount <= 1) {
-			return failCount + " has";
-		} else {
-			return failCount + " have";
-		}
+		return failCount;
 	}
 
 	private String getTestRunStartDt(TestRunDetailsResponseDto testRunDetailsResponseDto) {

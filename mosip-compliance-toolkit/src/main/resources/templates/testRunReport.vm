@@ -266,10 +266,10 @@
 			<h2>Test Cases</h2>
 			<div style="border: 1.5px solid black; padding: 10px; background-color: #fff; border-radius: 5px; margin-bottom: 20px;">
                 <h3 style="text-align: left;">Time Taken for Run: ${timeTakenByTestRun}</h3>
-                <h3 style="text-align: left;">Total ${totalTestCasesCount} executed in the test run.</h3>
+                <h3 style="text-align: left;">Total ${totalTestCasesCount} testcases were executed in the test run.</h3>
                 <h3 style="text-align: left;">Overall result for testcases:</h3>
-                <h3 style="text-align: left;"><img style='vertical-align: middle' width="30" height="30" src="https://img.icons8.com/color/48/ok--v1.png" alt="Success"/> ${countOfPassedTestCases} passed.</h3>
-                <h3 style="text-align: left;"><img style='vertical-align: middle' width="30" height="30" src="https://img.icons8.com/color/48/cancel--v1.png" alt="Failure"/> ${countOfFailedTestCases} failed.</h3>
+                <h3 style="text-align: left;"><img style='vertical-align: middle' width="30" height="30" src="https://img.icons8.com/color/48/ok--v1.png" alt="Success"/> ${countOfPassedTestCases} have passed.</h3>
+                <h3 style="text-align: left;"><img style='vertical-align: middle' width="30" height="30" src="https://img.icons8.com/color/48/cancel--v1.png" alt="Failure"/> ${countOfFailedTestCases} have failed.</h3>
 			</div>
 			<table id="test-cases-table">
 				<thead>
