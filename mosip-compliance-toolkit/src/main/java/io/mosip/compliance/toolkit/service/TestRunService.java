@@ -112,6 +112,8 @@ public class TestRunService {
 							collectionId.substring(0, Math.min(5, collectionId.length())).toLowerCase(), "", 36));
 					entity.setRunDtimes(inputTestRun.getRunDtimes());
 					entity.setPartnerId(getPartnerId());
+					entity.setExecutionStatus(AppConstants.INCOMPLETE);
+					entity.setRunStatus(AppConstants.FAILURE);
 					entity.setCrBy(getUserBy());
 					entity.setCrDtimes(LocalDateTime.now());
 					entity.setUpdBy(null);
@@ -152,7 +154,8 @@ public class TestRunService {
 		TestRunDto testRun = null;
 		try {
 			if (Objects.nonNull(inputTestRun)) {
-				int updateRowCount = testRunRepository.updateExecutionDateById(inputTestRun.getExecutionDtimes(),
+				int updateRowCount = testRunRepository.updateTestRunById(inputTestRun.getExecutionDtimes(),
+						inputTestRun.getExecutionStatus(), inputTestRun.getRunStatus(),
 						getUserBy(), LocalDateTime.now(), inputTestRun.getId(), getPartnerId());
 				if (updateRowCount > 0) {
 					testRun = inputTestRun;

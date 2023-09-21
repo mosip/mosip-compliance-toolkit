@@ -6,7 +6,9 @@ CREATE TABLE toolkit.test_run(
 	run_dtimes timestamp NOT NULL,
     execution_dtimes timestamp, 
     run_configuration_json character varying(256), 
-	partner_id character varying(36) NOT NULL,    
+	partner_id character varying(36) NOT NULL, 
+	execution_status character varying(36) NOT NULL DEFAULT 'incomplete';
+	run_status character varying(36) NOT NULL DEFAULT 'failure';
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
@@ -19,6 +21,10 @@ CREATE TABLE toolkit.test_run(
 CREATE INDEX IF NOT EXISTS idx_test_run_id ON toolkit.test_run USING btree (id);
 CREATE INDEX IF NOT EXISTS idx_test_run_collection_id ON toolkit.test_run USING btree (id, collection_id);
 CREATE INDEX IF NOT EXISTS idx_test_run_id_partner_id ON toolkit.test_run USING btree (id, partner_id);
+ALTER TABLE toolkit.test_run
+    ADD CONSTRAINT test_run_execution_status_values CHECK (execution_status IN ('incomplete','complete'));
+ALTER TABLE toolkit.test_run
+    ADD CONSTRAINT test_run_run_status_values CHECK (run_status IN ('success','failure'));
 COMMENT ON TABLE toolkit.test_run IS 'This table has all the details for a test run for a given collection in compliance toolkit project.';
 COMMENT ON COLUMN toolkit.test_run.id IS 'ID: Unique Id generated for an test run.';
 COMMENT ON COLUMN toolkit.test_run.collection_id IS 'Collection ID: Collection Id of the corresponding collection.';
@@ -26,6 +32,8 @@ COMMENT ON COLUMN toolkit.test_run.run_dtimes IS 'Run Dt Time: Timestamp when ru
 COMMENT ON COLUMN toolkit.test_run.execution_dtimes IS 'Execution Dt Time: Timestamp when run has completed execution.';
 COMMENT ON COLUMN toolkit.test_run.run_configuration_json IS 'Run configuration json: Configuration details for a test run.';
 COMMENT ON COLUMN toolkit.test_run.partner_id IS 'Partner Id: partner id who has created this project.';
+COMMENT ON COLUMN toolkit.test_run.execution_status IS 'Execution Status: test run execution status Incomplete or Complete.';
+COMMENT ON COLUMN toolkit.test_run.run_status IS 'Test Run Status: test run status as Failure/Success';
 COMMENT ON COLUMN toolkit.test_run.cr_by IS 'Created By : ID or name of the user who create / insert record.';
 COMMENT ON COLUMN toolkit.test_run.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
 COMMENT ON COLUMN toolkit.test_run.upd_by IS 'Updated By : ID or name of the user who update the record with new values';

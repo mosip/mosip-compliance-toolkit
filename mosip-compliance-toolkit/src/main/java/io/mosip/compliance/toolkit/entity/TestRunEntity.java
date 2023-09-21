@@ -47,6 +47,12 @@ public class TestRunEntity implements Serializable {
 	@Column(name = "partner_id")
 	private String partnerId;
 	
+	@Column(name = "execution_status")
+	private String executionStatus;
+	
+	@Column(name = "run_status")
+	private String runStatus;
+	
 	@Column(name = "cr_by")
 	private String crBy;
 
