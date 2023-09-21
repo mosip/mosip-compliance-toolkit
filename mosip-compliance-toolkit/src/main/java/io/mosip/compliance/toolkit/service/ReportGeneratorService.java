@@ -10,6 +10,7 @@ import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -244,6 +245,9 @@ public class ReportGeneratorService {
 		velocityContext.put("reportValidityDate", getReportValidityDt(testRunDetailsResponseDto));
 		velocityContext.put("testRunDetailsList", populateTestRunTable(testRunDetailsResponseDto));
 		velocityContext.put("timeTakenByTestRun", getTestRunExecutionTime(testRunDetailsResponseDto));
+		velocityContext.put("totalTestCasesCount", getTotalTestCasesCount(testRunDetailsResponseDto));
+		velocityContext.put("countOfPassedTestCases", getCountOfPassedTestCases(testRunDetailsResponseDto));
+		velocityContext.put("countOfFailedTestCases", getCountOfFailedTestCases(testRunDetailsResponseDto));
 		log.info("sessionId", "idType", "id", "Added all attributes in velocity template successfully");
 		return velocityContext;
 	}
@@ -470,6 +474,8 @@ public class ReportGeneratorService {
 			item.setResultStatus(testRunDetailsDto.getResultStatus());
 			testRunTable.add(item);
 		}
+		// Sort the testRunTable by testCaseId
+		testRunTable.sort(Comparator.comparing(TestRunTable::getTestCaseId));
 		return testRunTable;
 	}
 
@@ -482,6 +488,45 @@ public class ReportGeneratorService {
 						- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliSeconds)));
 		return timeDiffStr;
 
+	}
+
+	private String getTotalTestCasesCount(TestRunDetailsResponseDto testRunDetailsResponseDto) {
+		int totalCount = testRunDetailsResponseDto.getTestRunDetailsList().size();
+		if (totalCount <= 1){
+			return totalCount + " testcase was";
+		} else {
+			return totalCount + " testcases were";
+		}
+	}
+
+	private String getCountOfPassedTestCases(TestRunDetailsResponseDto testRunDetailsResponseDto) {
+		int passCount = 0;
+		List<TestRunDetailsDto> testRunDetailsList = testRunDetailsResponseDto.getTestRunDetailsList();
+		for(TestRunDetailsDto item: testRunDetailsList) {
+			if(item.getResultStatus().equalsIgnoreCase("success")) {
+				passCount++;
+			}
+		}
+		if (passCount <= 1) {
+			return passCount + " has";
+		} else {
+			return passCount + " have";
+		}
+	}
+
+	private String getCountOfFailedTestCases(TestRunDetailsResponseDto testRunDetailsResponseDto) {
+		int failCount = 0;
+		List<TestRunDetailsDto> testRunDetailsList = testRunDetailsResponseDto.getTestRunDetailsList();
+		for(TestRunDetailsDto item: testRunDetailsList) {
+			if(item.getResultStatus().equalsIgnoreCase("failure")) {
+				failCount++;
+			}
+		}
+		if (failCount <= 1) {
+			return failCount + " has";
+		} else {
+			return failCount + " have";
+		}
 	}
 
 	private String getTestRunStartDt(TestRunDetailsResponseDto testRunDetailsResponseDto) {
