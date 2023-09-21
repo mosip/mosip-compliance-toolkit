@@ -31,6 +31,10 @@ public class AppConstants {
 	public static final String SUCCESS = "success";
 
 	public static final String FAILURE = "failure";
+	
+	public static final String COMPLETE = "complete";
+	
+	public static final String INCOMPLETE = "incomplete";
 
 	public static final String RS256_ALGORITHM_TYPE = "RS256";
 

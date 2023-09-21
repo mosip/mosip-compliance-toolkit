@@ -20,5 +20,6 @@ public class TestRunDto {
 	private LocalDateTime executionDtimes;
 
 	private String runConfigurationJson;
-
+	private String executionStatus;
+	private String runStatus;
 }

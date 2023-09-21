@@ -41,3 +41,13 @@ ALTER TABLE toolkit.abis_projects Add COLUMN abis_hash character varying NOT NUL
 ALTER TABLE toolkit.abis_projects Add COLUMN website_url character varying(256) NOT NULL DEFAULT 'To_Be_Added';
 COMMENT ON COLUMN toolkit.abis_projects.abis_hash IS 'abis_hash: Encoded hash of ABIS installation file';
 COMMENT ON COLUMN toolkit.abis_projects.website_url IS 'website_url: Partner website url';
+
+ALTER TABLE toolkit.test_run Add COLUMN execution_status character varying(36) NOT NULL DEFAULT 'incomplete';
+ALTER TABLE toolkit.test_run Add COLUMN run_status character varying(36) DEFAULT 'failure';
+COMMENT ON COLUMN toolkit.test_run.execution_status IS 'Execution Status: test run execution status incomplete or complete.';
+COMMENT ON COLUMN toolkit.test_run.run_status IS 'Test Run Status: test run status as failure/success';
+
+ALTER TABLE toolkit.test_run
+    ADD CONSTRAINT test_run_execution_status_values CHECK (execution_status IN ('incomplete','complete'));
+ALTER TABLE toolkit.test_run
+    ADD CONSTRAINT test_run_run_status_values CHECK (run_status IN ('success','failure'));

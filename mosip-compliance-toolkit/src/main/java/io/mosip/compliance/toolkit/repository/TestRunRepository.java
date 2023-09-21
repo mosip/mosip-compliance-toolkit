@@ -23,8 +23,8 @@ public interface TestRunRepository extends BaseRepository<TestRunEntity, String>
 
 	@Modifying
 	@Transactional
-	@Query("UPDATE TestRunEntity e SET e.executionDtimes= ?1, e.updBy= ?2, e.updDtimes= ?3 WHERE e.id = ?4 and e.partnerId= ?5 AND e.isDeleted<>'true'")
-	public int updateExecutionDateById(LocalDateTime excutionDtimes, String upBy, LocalDateTime updDtimes, String id,
+	@Query("UPDATE TestRunEntity e SET e.executionDtimes= ?1,e.executionStatus= ?2, e.runStatus= ?3, e.updBy= ?4, e.updDtimes= ?5 WHERE e.id = ?6 and e.partnerId= ?7 AND e.isDeleted<>'true'")
+	public int updateTestRunById(LocalDateTime excutionDtimes, String executionStatus, String runStatus, String upBy, LocalDateTime updDtimes, String id,
 			String partnerId);
 
 	@Query("SELECT e.partnerId FROM TestRunEntity e WHERE e.id = ?1 AND e.isDeleted<>'true' and e.partnerId= ?2")
