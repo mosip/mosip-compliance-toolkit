@@ -10,9 +10,11 @@ import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.mosip.compliance.toolkit.dto.collections.CollectionTestCasesResponseDto;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +84,9 @@ public class ReportGeneratorService {
 
 	@Autowired
 	private TestCasesService testCaseService;
+
+	@Autowired
+	private CollectionsService collectionsService;
 
 	@Autowired
 	private ObjectMapperConfig objectMapperConfig;
@@ -244,6 +249,9 @@ public class ReportGeneratorService {
 		velocityContext.put("reportValidityDate", getReportValidityDt(testRunDetailsResponseDto));
 		velocityContext.put("testRunDetailsList", populateTestRunTable(testRunDetailsResponseDto));
 		velocityContext.put("timeTakenByTestRun", getTestRunExecutionTime(testRunDetailsResponseDto));
+		velocityContext.put("totalTestCasesCount", getTotalTestcases(testRunDetailsResponseDto).size());
+		velocityContext.put("countOfPassedTestCases", getCountOfPassedTestCases(testRunDetailsResponseDto));
+		velocityContext.put("countOfFailedTestCases", getCountOfFailedTestCases(testRunDetailsResponseDto));
 		log.info("sessionId", "idType", "id", "Added all attributes in velocity template successfully");
 		return velocityContext;
 	}
@@ -457,18 +465,45 @@ public class ReportGeneratorService {
 	private List<TestRunTable> populateTestRunTable(TestRunDetailsResponseDto testRunDetailsResponseDto) {
 		List<TestRunTable> testRunTable = new ArrayList<>();
 		List<TestRunDetailsDto> testRunDetailsList = testRunDetailsResponseDto.getTestRunDetailsList();
-		for (TestRunDetailsDto testRunDetailsDto : testRunDetailsList) {
+		List<TestCaseDto> testcasesList = getTotalTestcases(testRunDetailsResponseDto);
+		for(TestCaseDto testcase: testcasesList) {
 			TestRunTable item = new TestRunTable();
-			String testCaseId = testRunDetailsDto.getTestcaseId();
-			ResponseWrapper<TestCaseDto> testCaseDto = testCaseService.getTestCaseById(testCaseId);
-			String testCaseName = testCaseDto.getResponse().getTestName();
-			item.setTestCaseId(testCaseId);
+			String testCaseId = testcase.getTestId();
+			String testCaseName = testcase.getTestName();
 			if (testCaseName.contains("&")) {
 				testCaseName = testCaseName.replace("&", "and");
 			}
+			item.setTestCaseId(testCaseId);
 			item.setTestCaseName(testCaseName);
-			item.setResultStatus(testRunDetailsDto.getResultStatus());
+			String result = "";
+			for(TestRunDetailsDto testRunDetailsDto: testRunDetailsList) {
+				if (testCaseId.equals(testRunDetailsDto.getTestcaseId())) {
+					result = testRunDetailsDto.getResultStatus();
+					break;
+				}
+			}
+			if (result == "") {
+				item.setResultStatus(AppConstants.FAILURE);
+			} else {
+				item.setResultStatus(result);
+			}
 			testRunTable.add(item);
+		}
+//		for (TestRunDetailsDto testRunDetailsDto : testRunDetailsList) {
+//			TestRunTable item = new TestRunTable();
+//			String testCaseId = testRunDetailsDto.getTestcaseId();
+//			ResponseWrapper<TestCaseDto> testCaseDto = testCaseService.getTestCaseById(testCaseId);
+//			String testCaseName = testCaseDto.getResponse().getTestName();
+//			item.setTestCaseId(testCaseId);
+//			if (testCaseName.contains("&")) {
+//				testCaseName = testCaseName.replace("&", "and");
+//			}
+//			item.setTestCaseName(testCaseName);
+//			item.setResultStatus(testRunDetailsDto.getResultStatus());
+//			testRunTable.add(item);
+//		}
+		if (testRunTable.size() > 0) {
+			testRunTable.sort(Comparator.comparing(TestRunTable::getTestCaseId));
 		}
 		return testRunTable;
 	}
@@ -482,6 +517,30 @@ public class ReportGeneratorService {
 						- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliSeconds)));
 		return timeDiffStr;
 
+	}
+
+	private List<TestCaseDto> getTotalTestcases(TestRunDetailsResponseDto testRunDetailsResponseDto) {
+		ResponseWrapper<CollectionTestCasesResponseDto> testcasesForCollection = collectionsService.getTestCasesForCollection(
+				testRunDetailsResponseDto.getCollectionId());
+		List<TestCaseDto> testcasesList = testcasesForCollection.getResponse().getTestcases();
+		return testcasesList;
+	}
+
+	private int getCountOfPassedTestCases(TestRunDetailsResponseDto testRunDetailsResponseDto) {
+		int passCount = 0;
+		List<TestRunDetailsDto> testRunDetailsList = testRunDetailsResponseDto.getTestRunDetailsList();
+		for(TestRunDetailsDto item: testRunDetailsList) {
+			if(item.getResultStatus().equalsIgnoreCase("success")) {
+				passCount++;
+			}
+		}
+		return passCount;
+	}
+
+	private int getCountOfFailedTestCases(TestRunDetailsResponseDto testRunDetailsResponseDto) {
+		int passCount = getCountOfPassedTestCases(testRunDetailsResponseDto);
+		int totalTestcaseCount = getTotalTestcases(testRunDetailsResponseDto).size();
+		return totalTestcaseCount-passCount;
 	}
 
 	private String getTestRunStartDt(TestRunDetailsResponseDto testRunDetailsResponseDto) {
