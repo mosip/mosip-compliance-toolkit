@@ -102,7 +102,7 @@ public class SbiProjectService {
 			} else {
 				String errorCode = ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorCode();
 				String errorMessage = ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorMessage();
-				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 			}
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -110,7 +110,7 @@ public class SbiProjectService {
 					"In getSbiProject method of SbiProjectService Service - " + ex.getMessage());
 			String errorCode = ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getSbiProjectId);
 		responseWrapper.setResponse(sbiProjectDto);
@@ -145,9 +145,9 @@ public class SbiProjectService {
 				entity.setDeleted(false);
 
 				sbiProjectRepository.save(entity);
-				//Add a default "ALL" collection for the newly created project
+				// Add a default "ALL" collection for the newly created project
 				addDefaultCollection(sbiProjectDto, entity.getId());
-				//send response
+				// send response
 				sbiProjectDto.setId(entity.getId());
 				sbiProjectDto.setPartnerId(entity.getPartnerId());
 				sbiProjectDto.setCrBy(entity.getCrBy());
@@ -160,7 +160,7 @@ public class SbiProjectService {
 					"In addSbiProject method of SbiProjectService Service - " + ex.getMessage());
 			String errorCode = ex.getErrorCode();
 			String errorMessage = ex.getErrorCode();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 		} catch (DataIntegrityViolationException ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
@@ -172,7 +172,7 @@ public class SbiProjectService {
 			} else {
 				errorMessage = ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorMessage();
 			}
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 		} catch (Exception ex) {
 			sbiProjectDto = null;
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -180,7 +180,7 @@ public class SbiProjectService {
 					"In addSbiProject method of SbiProjectService Service - " + ex.getMessage());
 			String errorCode = ToolkitErrorCodes.SBI_PROJECT_UNABLE_TO_ADD.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.SBI_PROJECT_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getSbiProjectPostId);
 		responseWrapper.setResponse(sbiProjectDto);
@@ -189,25 +189,26 @@ public class SbiProjectService {
 		return responseWrapper;
 	}
 
-	public void addDefaultCollection(SbiProjectDto sbiProjectDto,
-			String projectId) {
+	public void addDefaultCollection(SbiProjectDto sbiProjectDto, String projectId) {
 		log.debug("sessionId", "idType", "id", "Started addDefaultCollection for SBI project: {}", projectId);
 		try {
-			//1. Add a new default collection 
+			// 1. Add a new default collection
 			CollectionRequestDto collectionRequestDto = new CollectionRequestDto();
 			collectionRequestDto.setProjectId(projectId);
 			collectionRequestDto.setProjectType(sbiProjectDto.getProjectType());
 			collectionRequestDto.setCollectionName(defaultCollectionName);
-			ResponseWrapper<CollectionDto> addCollectionWrapper = collectionsService.addCollection(collectionRequestDto);
+			ResponseWrapper<CollectionDto> addCollectionWrapper = collectionsService.addCollection(collectionRequestDto,
+					AppConstants.DEFAULT_COMPLIANCE_COLLECTION);
 			String defaultCollectionId = null;
 			if (addCollectionWrapper.getResponse() != null) {
 				defaultCollectionId = addCollectionWrapper.getResponse().getCollectionId();
 				log.debug("sessionId", "idType", "id", "Default collection added: {}", defaultCollectionId);
 			} else {
-				log.debug("sessionId", "idType", "id", "Default collection could not be added for this project: {}", projectId);
+				log.debug("sessionId", "idType", "id", "Default collection could not be added for this project: {}",
+						projectId);
 			}
 			if (defaultCollectionId != null) {
-				//2. Get the testcases
+				// 2. Get the testcases
 				ResponseWrapper<List<TestCaseDto>> testCaseWrapper = testCasesService.getSbiTestCases(
 						sbiProjectDto.getSbiVersion(), sbiProjectDto.getPurpose(), sbiProjectDto.getDeviceType(),
 						sbiProjectDto.getDeviceSubType());
@@ -220,13 +221,13 @@ public class SbiProjectService {
 						inputList.add(collectionTestCaseDto);
 					}
 				}
-				//3. add the testcases for the default collection
-				if (inputList.size() > 0 ) {
+				// 3. add the testcases for the default collection
+				if (inputList.size() > 0) {
 					collectionsService.addTestCasesForCollection(inputList);
 				}
 			}
 		} catch (Exception ex) {
-			//This is a fail safe operation, so exception can be ignored
+			// This is a fail safe operation, so exception can be ignored
 			log.debug("sessionId", "idType", "id", "Error in adding default collection: {}", ex.getLocalizedMessage());
 		}
 	}
@@ -260,12 +261,11 @@ public class SbiProjectService {
 					entity.setUpBy(this.getUserBy());
 					entity.setUpdDate(updDate);
 					SbiProjectEntity outputEntity = sbiProjectRepository.save(entity);
-					sbiProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity,
-							SbiProjectDto.class);
+					sbiProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, SbiProjectDto.class);
 				} else {
 					String errorCode = ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorCode();
 					String errorMessage = ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorMessage();
-					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 				}
 			}
 		} catch (ToolkitException ex) {
@@ -275,7 +275,7 @@ public class SbiProjectService {
 					"In updateSbiProject method of SbiProjectService Service - " + ex.getMessage());
 			String errorCode = ex.getErrorCode();
 			String errorMessage = ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 		} catch (Exception ex) {
 			sbiProjectDto = null;
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -283,7 +283,7 @@ public class SbiProjectService {
 					"In updateSbiProject method of SbiProjectService Service - " + ex.getMessage());
 			String errorCode = ToolkitErrorCodes.SBI_PROJECT_UNABLE_TO_ADD.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.SBI_PROJECT_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 		}
 		responseWrapper.setId(putSbiProjectId);
 		responseWrapper.setResponse(sbiProjectDto);
@@ -456,7 +456,7 @@ public class SbiProjectService {
 					"In getEncryptionKey method of SbiProjectService Service - " + ex.getMessage());
 			String errorCode = ToolkitErrorCodes.ENCRYPTION_KEY_ERROR.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.ENCRYPTION_KEY_ERROR.getErrorMessage() + " " + ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getSbiProjectId);
 		responseWrapper.setResponse(result);

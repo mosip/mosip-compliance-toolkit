@@ -1,6 +1,8 @@
 package io.mosip.compliance.toolkit.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.*;
 import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
 import io.mosip.compliance.toolkit.dto.collections.CollectionRequestDto;
@@ -257,7 +259,7 @@ public class CollectionsServiceTest {
     @Test
     public void addCollectionTest(){
         CollectionRequestDto requestDto = new CollectionRequestDto();
-        collectionsService.addCollection(requestDto);
+        collectionsService.addCollection(requestDto, AppConstants.BLANK);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
@@ -276,17 +278,17 @@ public class CollectionsServiceTest {
         Mockito.when(collectionsRepository.save(Mockito.any())).thenReturn(outputEntity);
         Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
         Mockito.when(mapper.convertValue(outputEntity, CollectionDto.class)).thenReturn(collectionDto);
-        collectionsService.addCollection(requestDto);
+        collectionsService.addCollection(requestDto, AppConstants.BLANK);
 //        type = ABIS
         collectionDto.setCollectionId("ABIS");
         requestDto.setProjectType("ABIS");
         requestDto.setCollectionName(String.valueOf(collectionDto));
-        collectionsService.addCollection(requestDto);
+        collectionsService.addCollection(requestDto, AppConstants.BLANK);
 //        type = SDK
         collectionDto.setCollectionId("SDK");
         requestDto.setProjectType("SDK");
         requestDto.setCollectionName(String.valueOf(collectionDto));
-        ResponseWrapper<CollectionDto> response = collectionsService.addCollection(requestDto);
+        ResponseWrapper<CollectionDto> response = collectionsService.addCollection(requestDto, AppConstants.BLANK);
         CollectionDto result = new CollectionDto();
         Assert.assertEquals(result, response.getResponse());
     }
@@ -301,7 +303,7 @@ public class CollectionsServiceTest {
         collectionDto.setProjectId("SBI");
         requestDto.setProjectType("SBI");
         requestDto.setCollectionName(String.valueOf(collectionDto));
-        collectionsService.addCollection(requestDto);
+        collectionsService.addCollection(requestDto, AppConstants.BLANK);
     }
 
 

@@ -1,5 +1,6 @@
 package io.mosip.compliance.toolkit.controllers;
 
+import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.*;
 import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
 import io.mosip.compliance.toolkit.dto.collections.CollectionRequestDto;
@@ -94,7 +95,7 @@ public class CollectionsControllerTest {
     public void addCollectionTest() throws Exception {
         ResponseWrapper<CollectionDto> response = new ResponseWrapper<>();
         RequestWrapper<CollectionRequestDto> request = new RequestWrapper<>();
-        Mockito.when(collectionsService.addCollection(request.getRequest())).thenReturn(response);
+        Mockito.when(collectionsService.addCollection(request.getRequest(),AppConstants.BLANK)).thenReturn(response);
         collectionsController.addCollection(request, errors);
     }
 

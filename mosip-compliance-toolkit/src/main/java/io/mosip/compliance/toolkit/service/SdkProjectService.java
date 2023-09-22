@@ -51,7 +51,7 @@ public class SdkProjectService {
 	private String defaultCollectionName;
 	@Autowired
 	private SdkProjectRepository sdkProjectRepository;
-	
+
 	@Autowired
 	private BiometricTestDataRepository biometricTestDataRepository;
 
@@ -63,7 +63,7 @@ public class SdkProjectService {
 
 	@Autowired
 	private CollectionsService collectionsService;
-	
+
 	@Value("${mosip.kernel.objectstore.account-name}")
 	private String objectStoreAccountName;
 
@@ -103,7 +103,7 @@ public class SdkProjectService {
 			} else {
 				String errorCode = ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorCode();
 				String errorMessage = ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorMessage();
-				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 			}
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -111,7 +111,7 @@ public class SdkProjectService {
 					"In getSdkProject method of SdkProjectService Service - " + ex.getMessage());
 			String errorCode = ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getSdkProjectId);
 		responseWrapper.setResponse(sdkProjectDto);
@@ -126,15 +126,16 @@ public class SdkProjectService {
 			if (isValidSdkProject(sdkProjectDto)) {
 				boolean isValidTestFile = false;
 				String partnerId = this.getPartnerId();
-				if(Objects.isNull(sdkProjectDto.getBioTestDataFileName())) {
+				if (Objects.isNull(sdkProjectDto.getBioTestDataFileName())) {
 					isValidTestFile = false;
-				} else if(sdkProjectDto.getBioTestDataFileName().equals(AppConstants.MOSIP_DEFAULT)) {
+				} else if (sdkProjectDto.getBioTestDataFileName().equals(AppConstants.MOSIP_DEFAULT)) {
 					isValidTestFile = true;
 				} else {
 					BiometricTestDataEntity biometricTestData = biometricTestDataRepository
 							.findByTestDataName(sdkProjectDto.getBioTestDataFileName(), partnerId);
 					String fileName = biometricTestData.getFileId();
-					String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/" + sdkProjectDto.getPurpose();
+					String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/"
+							+ sdkProjectDto.getPurpose();
 					if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
 						isValidTestFile = true;
 					}
@@ -158,7 +159,7 @@ public class SdkProjectService {
 					entity.setDeleted(false);
 
 					SdkProjectEntity outputEntity = sdkProjectRepository.save(entity);
-					//Add a default "ALL" collection for the newly created project
+					// Add a default "ALL" collection for the newly created project
 					addDefaultCollection(sdkProjectDto, entity.getId());
 
 					sdkProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, SdkProjectDto.class);
@@ -169,7 +170,7 @@ public class SdkProjectService {
 				} else {
 					String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode();
 					String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage();
-					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 				}
 			}
 		} catch (ToolkitException ex) {
@@ -179,14 +180,15 @@ public class SdkProjectService {
 					"In addSdkProject method of SdkProjectService Service - " + ex.getMessage());
 			String errorCode = ex.getErrorCode();
 			String errorMessage = ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 		} catch (DataIntegrityViolationException ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In addSdkProject method of SdkProjectService Service - " + ex.getMessage());
 			String errorCode = ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorCode();
-			String errorMessage = ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorMessage() + " " + sdkProjectDto.getName();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			String errorMessage = ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorMessage() + " "
+					+ sdkProjectDto.getName();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 		} catch (Exception ex) {
 			sdkProjectDto = null;
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -194,7 +196,7 @@ public class SdkProjectService {
 					"In addSdkProject method of SdkProjectService Service - " + ex.getMessage());
 			String errorCode = ToolkitErrorCodes.SDK_PROJECT_UNABLE_TO_ADD.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.SDK_PROJECT_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getSdkProjectPostId);
 		responseWrapper.setResponse(sdkProjectDto);
@@ -203,28 +205,28 @@ public class SdkProjectService {
 		return responseWrapper;
 	}
 
-	public void addDefaultCollection(SdkProjectDto sdkProjectDto,
-									 String projectId) {
-		log.debug("sessionId", "idType", "id", "Started addDefaultCollection for SDK project: {}",projectId);
+	public void addDefaultCollection(SdkProjectDto sdkProjectDto, String projectId) {
+		log.debug("sessionId", "idType", "id", "Started addDefaultCollection for SDK project: {}", projectId);
 		try {
-			//1. Add a new default collection
+			// 1. Add a new default collection
 			CollectionRequestDto collectionRequestDto = new CollectionRequestDto();
 			collectionRequestDto.setProjectId(projectId);
 			collectionRequestDto.setProjectType(sdkProjectDto.getProjectType());
 			collectionRequestDto.setCollectionName(defaultCollectionName);
-			ResponseWrapper<CollectionDto> addCollectionWrapper = collectionsService.addCollection(collectionRequestDto);
+			ResponseWrapper<CollectionDto> addCollectionWrapper = collectionsService.addCollection(collectionRequestDto,
+					AppConstants.DEFAULT_COMPLIANCE_COLLECTION);
 			String defaultCollectionId = null;
 			if (addCollectionWrapper.getResponse() != null) {
 				defaultCollectionId = addCollectionWrapper.getResponse().getCollectionId();
 				log.debug("sessionId", "idType", "id", "Default collection added: {}", defaultCollectionId);
 			} else {
-				log.debug("sessionId", "idType", "id", "Default collection could not be added for this project: {}", projectId);
+				log.debug("sessionId", "idType", "id", "Default collection could not be added for this project: {}",
+						projectId);
 			}
 			if (defaultCollectionId != null) {
-				//2. Get the testcases
-				ResponseWrapper<List<TestCaseDto>> testCaseWrapper = testCasesService.getSdkTestCases(
-						sdkProjectDto.getSdkVersion(),
-						sdkProjectDto.getPurpose());
+				// 2. Get the testcases
+				ResponseWrapper<List<TestCaseDto>> testCaseWrapper = testCasesService
+						.getSdkTestCases(sdkProjectDto.getSdkVersion(), sdkProjectDto.getPurpose());
 				List<CollectionTestCaseDto> inputList = new ArrayList<>();
 				if (testCaseWrapper.getResponse() != null && testCaseWrapper.getResponse().size() > 0) {
 					for (TestCaseDto testCase : testCaseWrapper.getResponse()) {
@@ -234,13 +236,13 @@ public class SdkProjectService {
 						inputList.add(collectionTestCaseDto);
 					}
 				}
-				//3. add the testcases for the default collection
-				if (inputList.size() > 0 ) {
+				// 3. add the testcases for the default collection
+				if (inputList.size() > 0) {
 					collectionsService.addTestCasesForCollection(inputList);
 				}
 			}
 		} catch (Exception ex) {
-			//This is a fail safe operation, so exception can be ignored
+			// This is a fail safe operation, so exception can be ignored
 			log.debug("sessionId", "idType", "id", "Error in adding default collection: {}", ex.getLocalizedMessage());
 		}
 	}
@@ -254,51 +256,51 @@ public class SdkProjectService {
 				Optional<SdkProjectEntity> optionalSdkProjectEntity = sdkProjectRepository.findById(projectId,
 						getPartnerId());
 				if (optionalSdkProjectEntity.isPresent()) {
-					
-						SdkProjectEntity entity = optionalSdkProjectEntity.get();
-						LocalDateTime updDate = LocalDateTime.now();
-						String url = sdkProjectDto.getUrl();
-						String sdkHash = sdkProjectDto.getSdkHash();
-						String websiteUrl = sdkProjectDto.getWebsiteUrl();
-						String bioTestDataName = sdkProjectDto.getBioTestDataFileName();
+
+					SdkProjectEntity entity = optionalSdkProjectEntity.get();
+					LocalDateTime updDate = LocalDateTime.now();
+					String url = sdkProjectDto.getUrl();
+					String sdkHash = sdkProjectDto.getSdkHash();
+					String websiteUrl = sdkProjectDto.getWebsiteUrl();
+					String bioTestDataName = sdkProjectDto.getBioTestDataFileName();
 //					Updating SDK project values
-						if (Objects.nonNull(url) && !url.isEmpty()) {
-							entity.setUrl(url);
-						}
-						if (Objects.nonNull(sdkHash) && !sdkHash.isEmpty()) {
-							entity.setSdkHash(sdkHash);
-						}
-						if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty()) {
-							entity.setWebsiteUrl(websiteUrl);
-						}
-						if (Objects.nonNull(bioTestDataName) && !bioTestDataName.isEmpty()) {
-							if (bioTestDataName.equals(AppConstants.MOSIP_DEFAULT)) {
-								entity.setBioTestDataFileName(AppConstants.MOSIP_DEFAULT);
+					if (Objects.nonNull(url) && !url.isEmpty()) {
+						entity.setUrl(url);
+					}
+					if (Objects.nonNull(sdkHash) && !sdkHash.isEmpty()) {
+						entity.setSdkHash(sdkHash);
+					}
+					if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty()) {
+						entity.setWebsiteUrl(websiteUrl);
+					}
+					if (Objects.nonNull(bioTestDataName) && !bioTestDataName.isEmpty()) {
+						if (bioTestDataName.equals(AppConstants.MOSIP_DEFAULT)) {
+							entity.setBioTestDataFileName(AppConstants.MOSIP_DEFAULT);
+						} else {
+							BiometricTestDataEntity biometricTestData = biometricTestDataRepository
+									.findByTestDataName(bioTestDataName, partnerId);
+							String fileName = biometricTestData.getFileId();
+							String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/"
+									+ entity.getPurpose();
+							if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
+								entity.setBioTestDataFileName(bioTestDataName);
 							} else {
-								BiometricTestDataEntity biometricTestData = biometricTestDataRepository
-										.findByTestDataName(bioTestDataName, partnerId);
-								String fileName = biometricTestData.getFileId();
-								String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/"
-										+ entity.getPurpose();
-								if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
-									entity.setBioTestDataFileName(bioTestDataName);
-								} else {
-									String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode();
-									String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage();
-									responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
-								}
+								String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode();
+								String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE
+										.getErrorMessage();
+								responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 							}
 						}
-						entity.setUpBy(this.getUserBy());
-						entity.setUpdDate(updDate);
-						SdkProjectEntity outputEntity = sdkProjectRepository.save(entity);
-						sdkProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity,
-								SdkProjectDto.class);
-					
+					}
+					entity.setUpBy(this.getUserBy());
+					entity.setUpdDate(updDate);
+					SdkProjectEntity outputEntity = sdkProjectRepository.save(entity);
+					sdkProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, SdkProjectDto.class);
+
 				} else {
 					String errorCode = ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorCode();
 					String errorMessage = ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorMessage();
-					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 				}
 			}
 		} catch (ToolkitException ex) {
@@ -308,7 +310,7 @@ public class SdkProjectService {
 					"In updateSdkProject method of SdkProjectService Service - " + ex.getMessage());
 			String errorCode = ex.getErrorCode();
 			String errorMessage = ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 		} catch (Exception ex) {
 			sdkProjectDto = null;
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -316,7 +318,7 @@ public class SdkProjectService {
 					"In updateSdkProject method of SdkProjectService Service - " + ex.getMessage());
 			String errorCode = ToolkitErrorCodes.SDK_PROJECT_UNABLE_TO_ADD.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.SDK_PROJECT_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 		}
 		responseWrapper.setId(putSdkProjectId);
 		responseWrapper.setResponse(sdkProjectDto);
