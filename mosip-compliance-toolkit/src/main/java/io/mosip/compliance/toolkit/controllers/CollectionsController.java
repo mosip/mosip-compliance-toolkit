@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
 import io.mosip.compliance.toolkit.dto.collections.CollectionRequestDto;
 import io.mosip.compliance.toolkit.dto.collections.CollectionTestCaseDto;
@@ -71,7 +72,7 @@ public class CollectionsController {
 		requestValidator.validate(requestWrapper, errors);
 		requestValidator.validateId(COLLECTION_POST_ID, requestWrapper.getId(), errors);
 		DataValidationUtil.validate(errors, COLLECTION_POST_ID);
-		return collectionsService.addCollection(requestWrapper.getRequest());
+		return collectionsService.addCollection(requestWrapper.getRequest(), AppConstants.BLANK);
 	}
 
 	@PostMapping(value = "/addTestCasesForCollection")
