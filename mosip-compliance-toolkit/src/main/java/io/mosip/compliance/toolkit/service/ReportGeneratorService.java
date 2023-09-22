@@ -489,19 +489,6 @@ public class ReportGeneratorService {
 			}
 			testRunTable.add(item);
 		}
-//		for (TestRunDetailsDto testRunDetailsDto : testRunDetailsList) {
-//			TestRunTable item = new TestRunTable();
-//			String testCaseId = testRunDetailsDto.getTestcaseId();
-//			ResponseWrapper<TestCaseDto> testCaseDto = testCaseService.getTestCaseById(testCaseId);
-//			String testCaseName = testCaseDto.getResponse().getTestName();
-//			item.setTestCaseId(testCaseId);
-//			if (testCaseName.contains("&")) {
-//				testCaseName = testCaseName.replace("&", "and");
-//			}
-//			item.setTestCaseName(testCaseName);
-//			item.setResultStatus(testRunDetailsDto.getResultStatus());
-//			testRunTable.add(item);
-//		}
 		if (testRunTable.size() > 0) {
 			testRunTable.sort(Comparator.comparing(TestRunTable::getTestCaseId));
 		}
