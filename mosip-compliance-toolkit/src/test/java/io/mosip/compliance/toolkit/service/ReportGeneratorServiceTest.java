@@ -285,7 +285,6 @@ public class ReportGeneratorServiceTest {
                 caseDto.setTestCaseType("ABIS");
                 testCaseDto.setResponse(caseDto);
 
-                Mockito.when(testCasesService.getTestCaseById(Mockito.any())).thenReturn(testCaseDto);
                 Mockito.when(partnerManagerHelper.getPartnerDetails(Mockito.any())).thenReturn(partnerDetailsDto);
                 Mockito.when(mockAuthentication.getPrincipal()).thenReturn(mockAuthUserDetails);
                 Mockito.when(abisProjectService.getAbisProject(Mockito.any())).thenReturn(abisProjectResponse);
