@@ -51,3 +51,68 @@ ALTER TABLE toolkit.test_run
     ADD CONSTRAINT test_run_execution_status_values CHECK (execution_status IN ('incomplete','complete'));
 ALTER TABLE toolkit.test_run
     ADD CONSTRAINT test_run_run_status_values CHECK (run_status IN ('success','failure'));
+
+--Script to populate the newly added columns 'execution_status', 'run_status'
+--for existing test runs 
+UPDATE 
+  toolkit.test_run 
+SET 
+  run_status = 'success', 
+  execution_status = 'complete' 
+WHERE 
+  id IN (
+    SELECT 
+      test_run_summary.run_id 
+    FROM 
+      (
+        SELECT 
+          collection_id, 
+          Count(testcase_id) AS total_testcases 
+        FROM 
+          toolkit.collection_testcase_mapping 
+        GROUP BY 
+          collection_id 
+        ORDER BY 
+          collection_id
+      ) collection_summary 
+      INNER JOIN (
+        SELECT 
+          b.collection_id AS collection_id, 
+          b.id AS run_id, 
+          a.success_count 
+        FROM 
+          (
+            SELECT 
+              run_id, 
+              Count(
+                CASE WHEN Lower(result_status)= 'success' THEN 1 ELSE NULL END
+              ) AS success_count 
+            FROM 
+              test_run_details 
+            WHERE 
+              run_id IN (
+                SELECT 
+                  id 
+                FROM 
+                  toolkit.test_run 
+                WHERE 
+                  collection_id IN (
+                    SELECT 
+                      id 
+                    FROM 
+                      toolkit.collections
+                  )
+              ) 
+            GROUP BY 
+              run_id
+          ) a, 
+          toolkit.test_run b 
+        WHERE 
+          a.success_count > 0 
+          AND a.run_id = b.id 
+        ORDER BY 
+          b.collection_id
+      ) test_run_summary ON collection_summary.collection_id = test_run_summary.collection_id 
+    WHERE 
+      collection_summary.total_testcases = test_run_summary.success_count
+   
