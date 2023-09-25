@@ -270,7 +270,8 @@ public class CollectionsService {
 					CollectionEntity inputEntity = new CollectionEntity();
 					if (!AppConstants.BLANK.equals(collectionType)) {
 						inputEntity.setId(RandomIdGenerator.generateUUID(
-								collectionRequest.getProjectType().toLowerCase() + "_" + collectionType, "", 36));	
+								collectionRequest.getProjectType().toLowerCase() + "_" + collectionType, "", 36));
+						inputEntity.setCollectionType(AppConstants.COMPLIANCE_COLLECTION);
 					} else {
 						inputEntity.setId(RandomIdGenerator.generateUUID(
 								collectionRequest.getProjectType().toLowerCase(), "", 36));

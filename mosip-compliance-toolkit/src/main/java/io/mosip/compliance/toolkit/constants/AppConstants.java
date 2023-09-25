@@ -79,4 +79,6 @@ public class AppConstants {
 	public static final String DEFAULT_COMPLIANCE_COLLECTION = "compliance";
 	
 	public static final String BLANK = "";
+
+	public static final String COMPLIANCE_COLLECTION = "compliance_collection";
 }
