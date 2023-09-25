@@ -48,6 +48,9 @@ public class CollectionEntity {
 	@Column(name = "partner_id")
 	private String partnerId;
 
+	@Column(name = "collection_type")
+	private String collectionType;
+
 	@Column(name = "cr_by")
 	private String crBy;
 
