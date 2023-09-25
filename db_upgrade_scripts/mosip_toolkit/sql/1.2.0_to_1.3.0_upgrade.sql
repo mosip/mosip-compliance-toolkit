@@ -52,6 +52,9 @@ ALTER TABLE toolkit.test_run
 ALTER TABLE toolkit.test_run
     ADD CONSTRAINT test_run_run_status_values CHECK (run_status IN ('success','failure'));
 
+ALTER TABLE toolkit.collections Add COLUMN collection_type character varying(256);
+COMMENT ON COLUMN toolkit.collections.collection_type IS 'collection_type: Collection type for quality assessment collections';
+
 --Script to populate the newly added columns 'execution_status', 'run_status'
 --for existing test runs 
 UPDATE 
@@ -115,4 +118,4 @@ WHERE
       ) test_run_summary ON collection_summary.collection_id = test_run_summary.collection_id 
     WHERE 
       collection_summary.total_testcases = test_run_summary.success_count
-   
+  

@@ -37,3 +37,5 @@ COMMENT ON COLUMN toolkit.test_run.run_status IS NULL;
 ALTER TABLE toolkit.test_run DROP COLUMN execution_status;
 ALTER TABLE toolkit.test_run DROP COLUMN run_status;
 
+COMMENT ON COLUMN toolkit.collections.collection_type IS NULL;
+ALTER TABLE toolkit.collections DROP COLUMN collection_type;
