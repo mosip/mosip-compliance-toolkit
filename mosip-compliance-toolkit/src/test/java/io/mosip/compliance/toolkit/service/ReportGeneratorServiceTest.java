@@ -68,6 +68,9 @@ public class ReportGeneratorServiceTest {
         @Mock
         private TestCasesService testCasesService;
 
+        @Mock
+        private CollectionsService collectionsService;
+
 
 
         @Before
@@ -439,5 +442,45 @@ public class ReportGeneratorServiceTest {
                 return (boolean) privateMethod.invoke(reportGeneratorService, arguments);
         }
 
+        @Test
+        public void getTestRunExecutionTimeTest() {
+                TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
+                testRunDetailsResponseDto.setRunId("abc");
+                testRunDetailsResponseDto.setRunDtimes(LocalDateTime.now());
+                testRunDetailsResponseDto.setExecutionDtimes(LocalDateTime.now());
+                ReflectionTestUtils.invokeMethod(reportGeneratorService, "getTestRunExecutionTime", testRunDetailsResponseDto);
+        }
+
+        @Test(expected = Exception.class)
+        public void getTotalTestcasesTest() {
+              TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
+              testRunDetailsResponseDto.setRunId("abc");
+              testRunDetailsResponseDto.setCollectionId("123");
+              collectionsService.getTestCasesForCollection(testRunDetailsResponseDto.getCollectionId());
+              ReflectionTestUtils.invokeMethod(reportGeneratorService, "getTotalTestcases", testRunDetailsResponseDto);
+        }
+
+        @Test(expected = Exception.class)
+        public void getCountOfPassedTestCasesTest() {
+                TestRunDetailsResponseDto testRunDetailsResponseDto1 = new TestRunDetailsResponseDto();
+                testRunDetailsResponseDto1.setCollectionId("lkdjskdjsaldks");
+                testRunDetailsResponseDto1.setRunId("ksjdkjdhaskj");
+                List<TestRunDetailsDto> testRunDetailsDtoList = new ArrayList<>();
+                TestRunDetailsDto testRunDetailsDto = new TestRunDetailsDto();
+                testRunDetailsDto.setResultStatus("Success");
+                testRunDetailsDto.setRunId("kjdfhkfdjhskjd");
+                testRunDetailsDto.setTestDataSource("MOSIP_DEFAULT");
+                testRunDetailsDto.setMethodUrl("https://");
+                testRunDetailsDto.setMethodRequest(null);
+                testRunDetailsDto.setMethodResponse(null);
+                testRunDetailsDto.setResultDescription("Test Run successful");
+                testRunDetailsDto.setTestcaseId("ABIS3000");
+                testRunDetailsDtoList.add(testRunDetailsDto);
+                testRunDetailsResponseDto1.setTestRunDetailsList(testRunDetailsDtoList);
+                testRunDetailsResponseDto1.setRunDtimes(LocalDateTime.now());
+                testRunDetailsResponseDto1.setExecutionDtimes(LocalDateTime.now().plusMinutes(4));
+                ReflectionTestUtils.invokeMethod(reportGeneratorService, "getCountOfPassedTestCases", testRunDetailsResponseDto);
+                ReflectionTestUtils.invokeMethod(reportGeneratorService, "getCountOfFailedTestCases", testRunDetailsResponseDto);
+        }
 
 }

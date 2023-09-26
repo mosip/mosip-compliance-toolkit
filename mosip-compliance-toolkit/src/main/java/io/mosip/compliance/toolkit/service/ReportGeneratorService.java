@@ -482,7 +482,7 @@ public class ReportGeneratorService {
 					break;
 				}
 			}
-			if (result == "") {
+			if (result.equals("")) {
 				item.setResultStatus(AppConstants.FAILURE);
 			} else {
 				item.setResultStatus(result);
