@@ -83,13 +83,13 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 				String sdkUrl = item.get("url").asText();
 				String healthUrl = item.get("healthUrl").asText();
 				String sdkName = item.get("name").asText();
+				bioSdkNames.add(sdkName);
 				boolean includeInResults = item.get("includeInResults").asBoolean();
 				boolean isSdkServiceAccessible = this.callSdkHealthUrl(healthUrl);
 				// if yes, then try calling quality check
 				String validatorMsg = "";
 				if (isSdkServiceAccessible) {
 					validationResultDto = this.performQualityCheck(sdkUrl, inputDto);
-					bioSdkNames.add(sdkName);
 					bioScores.add(validationResultDto.getBiometricScores());
 					if (!validationResultDto.getStatus().equals(AppConstants.FAILURE)) {
 						if (includeInResults) {
@@ -103,7 +103,8 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 					messages.append(
 							AppConstants.BR + sdkName + AppConstants.COLON + validationResultDto.getDescription());
 					validatorMsg = validationResultDto.getDescriptionKey();
-				} else {
+				} else {				
+					bioScores.add(this.sdkUrlIsDown( inputDto).toString());
 					if (includeInResults) {
 						testCaseSuccessfulMap.put(sdkUrl, Boolean.FALSE);
 					}
@@ -166,15 +167,15 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 				for (int j = 0; j < sdkNamesArray.size(); j++) {
 					ObjectNode bioScoreObject = objectMapper.createObjectNode();
 					String sdkName = sdkNamesArray.get(j).asText();
-					double score = biometricScoresArray.get(j).get(i).get("sdkScore").asDouble();
-
+					String score = biometricScoresArray.get(j).get(i).get("sdkScore").asText();
 					bioScoreObject.put("name", sdkName);
 					bioScoreObject.put("score", score);
 					bioScoresArray.add(bioScoreObject);
 				}
 				modalityObject.put("biometricType", biometricType);
 				modalityObject.put("deviceSubType", deviceSubType);
-				bioScoresArray.add(objectMapper.createObjectNode().put("name", "SBI").put("score", 44)); // Adding the SBI score
+				String sbiScore=biometricScoresArray.get(0).get(i).get("sbiScore").asText();
+				bioScoresArray.add(objectMapper.createObjectNode().put("name", "SBI").put("score",sbiScore )); // Adding the SBI score
 				modalityObject.set("bioScores", bioScoresArray);
 				finalOutput.add(modalityObject);
 			}
@@ -239,6 +240,32 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 		return isHealthCheckSuccessful;
 
 	}
+	private List<String> sdkUrlIsDown( ValidationInputDto inputDto) throws Exception {
+		ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper()
+				.readValue(inputDto.getMethodResponse(), ObjectNode.class);
+        List<String> scores= new ArrayList<>();
+
+		// STEP 1: extract "bioValue" from the "sbi" capture /racpture response
+		JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
+		if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
+
+			BiometricType biometricType = null;
+			for (final JsonNode biometricNode : arrBiometricNodes) {
+				//STEP 1: get bioValue and other attributes
+				JsonNode dataNode = biometricNode.get(DECODED_DATA);
+				String bioType = dataNode.get(BIO_TYPE).asText();
+				String bioSubType = "";
+				if (dataNode.get(BIO_SUBTYPE) != null) {
+					bioSubType = dataNode.get(BIO_SUBTYPE).asText();
+				}
+				String qualityScore = dataNode.get("qualityScore").asText();
+				String scoresInJson = "{\"biometricType\":\""+bioType+"\",\"deviceSubType\":\"" +bioSubType+"\",\"sbiScore\":"+qualityScore+",\"sdkScore\":"
+						+null+"}";
+				scores.add(scoresInJson);
+			}
+		}
+		return scores;
+	}
 
 	private ValidationResultDto performQualityCheck(String sdkUrl, ValidationInputDto inputDto) throws Exception {
 		ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper()
@@ -276,8 +303,8 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 				birsForProbe.add(probeBir);
 				// STEP 3: call "check-quality" to get qualityScore for the probeBir
 				ValidationResultDto validationResult = this.callSdkCheckQualityUrl(sdkUrl, birsForProbe, biometricType);
-				String scoresInJson = "{\"biometricType\":\""+bioType+"\",\"deviceSubType\":\"" +bioSubType+"\",\"sbiScore\":"+qualityScoreLong+",\"sdkScore\":"
-						+Float.parseFloat(validationResult.getBiometricScores())+"}";
+				String scoresInJson = "{\"biometricType\":\""+bioType+"\",\"deviceSubType\":\"" +bioSubType+"\",\"sbiScore\":"+qualityScore+",\"sdkScore\":"
+						+validationResult.getBiometricScores()+"}";
 				validationResult.setBiometricScores(scoresInJson);
 				validationResultDtoList.add(validationResult);
 			}
