@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -66,6 +69,9 @@ public class CollectionsService {
 
 	@Autowired
 	private ObjectMapperConfig objectMapperConfig;
+
+	@Autowired
+	private SbiProjectService sbiProjectService;
 
 	private Logger log = LoggerConfiguration.logConfig(ProjectsService.class);
 
@@ -317,6 +323,104 @@ public class CollectionsService {
 		responseWrapper.setResponse(collection);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
+	}
+
+	public ResponseWrapper<List<CollectionDto>> addQualityAssessmentCollection(CollectionRequestDto collectionRequest, String collectionType) {
+		ResponseWrapper<List<CollectionDto>> responseWrapper = new ResponseWrapper<>();
+		List<CollectionDto> collection = new ArrayList<>();
+		try {
+			if (Objects.nonNull(collectionRequest) && Objects.nonNull(collectionRequest.getProjectType())
+					&& (AppConstants.SBI.equalsIgnoreCase(collectionRequest.getProjectType()))) {
+
+				String sbiProjectId = collectionRequest.getProjectId();
+				List<CollectionEntity> duplicates = null;
+				ArrayNode collectionDetails = (ArrayNode) objectMapperConfig.objectMapper().readValue(collectionType, ArrayNode.class);
+				for (JsonNode item : collectionDetails) {
+					String purpose = item.get("purpose").get(0).asText();
+					String deviceType = item.get("biometricTypes").get(0).asText();
+					String deviceSubType = item.get("deviceSubTypes").get(0).asText();
+					ArrayNode testcasesList = (ArrayNode) item.get("testCases");
+					boolean isCollectionDetailsValid = validateCollectionDetails(sbiProjectId, purpose, deviceType, deviceSubType);
+					if (isCollectionDetailsValid) {
+						duplicates = collectionsRepository.getQualityAssessmentCollectionByType(item.get("collectionType").asText(),
+								sbiProjectId, getPartnerId());
+						if (Objects.isNull(duplicates) || duplicates.size() <= 0) {
+							CollectionEntity inputEntity = new CollectionEntity();
+							inputEntity.setId(RandomIdGenerator.generateUUID(
+									collectionRequest.getProjectType().toLowerCase() + "_" + AppConstants.QUALITY_ASSESSMENT_COLLECTION, "", 36));
+							inputEntity.setCollectionType(item.get("collectionType").asText());
+							inputEntity.setName(item.get("collectionName").asText());
+							inputEntity.setSbiProjectId(sbiProjectId);
+							inputEntity.setSdkProjectId(null);
+							inputEntity.setAbisProjectId(null);
+							inputEntity.setPartnerId(getPartnerId());
+							inputEntity.setCrBy(getUserBy());
+							inputEntity.setCrDate(LocalDateTime.now());
+							inputEntity.setUpBy(null);
+							inputEntity.setUpdDate(null);
+							inputEntity.setDeleted(false);
+							inputEntity.setDelTime(null);
+							CollectionEntity outputEntity = collectionsRepository.save(inputEntity);
+
+							CollectionDto collectionDto = null;
+							collectionDto = objectMapperConfig.objectMapper().convertValue(outputEntity, CollectionDto.class);
+							collectionDto.setCollectionId(outputEntity.getId());
+							collectionDto.setProjectId(collectionRequest.getProjectId());
+							collectionDto.setCrDtimes(outputEntity.getCrDate());
+							collection.add(collectionDto);
+
+							List<CollectionTestCaseDto> inputList = new ArrayList<>();
+							for (JsonNode testcase : testcasesList) {
+								CollectionTestCaseDto collectionTestCaseDto = new CollectionTestCaseDto();
+								collectionTestCaseDto.setCollectionId(outputEntity.getId());
+								collectionTestCaseDto.setTestCaseId(testcase.get("testId").asText());
+								inputList.add(collectionTestCaseDto);
+							}
+							addTestCasesForCollection(inputList);
+						} else {
+							String errorCode = ToolkitErrorCodes.COLLECTION_TYPE_EXISTS.getErrorCode();
+							String errorMessage = ToolkitErrorCodes.COLLECTION_TYPE_EXISTS.getErrorMessage()
+									+ duplicates.get(0).getCollectionType();
+							responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+						}
+					} else {
+						String errorCode = ToolkitErrorCodes.INVALID_COLLECTION_DETAILS.getErrorCode();
+						String errorMessage = ToolkitErrorCodes.INVALID_COLLECTION_DETAILS.getErrorMessage();
+						responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+					}
+				}
+			} else {
+				String errorCode = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode();
+				String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage();
+				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+			}
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In addQualityAssessmentCollection method of CollectionsService Service - " + ex.getMessage());
+			String errorCode = ToolkitErrorCodes.COLLECTION_UNABLE_TO_ADD.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.COLLECTION_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+		}
+		responseWrapper.setId(postCollectionId);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponse(collection);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+
+	private boolean validateCollectionDetails(String projectId, String purpose, String deviceType,
+											  String deviceSubType) {
+		ResponseWrapper<SbiProjectDto> sbiProjectDetails = sbiProjectService.getSbiProject(projectId);
+		boolean result= false;
+		if(sbiProjectDetails.getResponse() != null) {
+			SbiProjectDto data = sbiProjectDetails.getResponse();
+			if (data.getPurpose().equals(purpose) && data.getDeviceType().equals(deviceType)
+					&& data.getDeviceSubType().equals(deviceSubType)) {
+				result = true;
+			}
+		}
+		return result;
 	}
 
 	public ResponseWrapper<List<CollectionTestCaseDto>> addTestCasesForCollection(

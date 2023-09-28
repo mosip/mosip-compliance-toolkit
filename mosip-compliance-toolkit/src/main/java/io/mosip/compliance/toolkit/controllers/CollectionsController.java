@@ -3,6 +3,7 @@ package io.mosip.compliance.toolkit.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,9 @@ public class CollectionsController {
 
 	/** The Constant COLLECTION_TESTCASE_POST_ID application. */
 	private static final String COLLECTION_TESTCASE_POST_ID = "collection.testcase.post";
+
+	@Value("${mosip.toolkit.quality.assessment.collection}")
+	private String qualityAssessmentCollection;
 
 	@Autowired
 	private CollectionsService collectionsService;
@@ -73,6 +77,15 @@ public class CollectionsController {
 		requestValidator.validateId(COLLECTION_POST_ID, requestWrapper.getId(), errors);
 		DataValidationUtil.validate(errors, COLLECTION_POST_ID);
 		return collectionsService.addCollection(requestWrapper.getRequest(), AppConstants.BLANK);
+	}
+
+	@PostMapping(value = "/addQualityAssessmentCollection")
+	public ResponseWrapper<List<CollectionDto>> addQualityAssessmentCollection(
+			@RequestBody RequestWrapper<CollectionRequestDto> requestWrapper, Errors errors) throws Exception {
+		requestValidator.validate(requestWrapper, errors);
+		requestValidator.validateId(COLLECTION_POST_ID, requestWrapper.getId(), errors);
+		DataValidationUtil.validate(errors, COLLECTION_POST_ID);
+		return collectionsService.addQualityAssessmentCollection(requestWrapper.getRequest(), qualityAssessmentCollection);
 	}
 
 	@PostMapping(value = "/addTestCasesForCollection")

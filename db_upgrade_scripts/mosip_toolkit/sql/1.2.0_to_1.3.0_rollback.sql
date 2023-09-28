@@ -39,3 +39,5 @@ ALTER TABLE toolkit.test_run DROP COLUMN run_status;
 
 COMMENT ON COLUMN toolkit.collections.collection_type IS NULL;
 ALTER TABLE toolkit.collections DROP COLUMN collection_type;
+
+ALTER TABLE toolkit.collections ALTER COLUMN name TYPE character varying(64);

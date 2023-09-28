@@ -81,4 +81,6 @@ public class AppConstants {
 	public static final String BLANK = "";
 
 	public static final String COMPLIANCE_COLLECTION = "compliance_collection";
+
+	public static final String QUALITY_ASSESSMENT_COLLECTION = "qualityAssessment";
 }

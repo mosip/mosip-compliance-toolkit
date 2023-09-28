@@ -55,6 +55,8 @@ ALTER TABLE toolkit.test_run
 ALTER TABLE toolkit.collections Add COLUMN collection_type character varying(256) NOT NULL DEFAULT 'custom_collection';
 COMMENT ON COLUMN toolkit.collections.collection_type IS 'collection_type: Collection type for quality assessment collections';
 
+ALTER TABLE toolkit.collections ALTER COLUMN name TYPE character varying;
+
 --Script to populate the newly added columns 'execution_status', 'run_status'
 --for existing test runs 
 UPDATE 

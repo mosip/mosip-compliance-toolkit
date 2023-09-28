@@ -100,6 +100,17 @@ public class CollectionsControllerTest {
     }
 
     /*
+     * This class tests the addQualityAssessmentCollection method
+     */
+     @Test
+     public void addQualityAssessmentCollectionTest() throws Exception {
+         ResponseWrapper<List<CollectionDto>> response = new ResponseWrapper<>();
+         RequestWrapper<CollectionRequestDto> request = new RequestWrapper<>();
+         Mockito.when(collectionsService.addQualityAssessmentCollection(request.getRequest(), "")).thenReturn(response);
+         collectionsController.addQualityAssessmentCollection(request, errors);
+     }
+
+    /*
      * This class tests the addTestCasesForCollection method
      */
     @Test

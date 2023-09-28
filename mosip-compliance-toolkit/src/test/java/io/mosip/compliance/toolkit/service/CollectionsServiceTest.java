@@ -3,12 +3,12 @@ package io.mosip.compliance.toolkit.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.mosip.compliance.toolkit.constants.AppConstants;
-import io.mosip.compliance.toolkit.dto.*;
 import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
 import io.mosip.compliance.toolkit.dto.collections.CollectionRequestDto;
 import io.mosip.compliance.toolkit.dto.collections.CollectionTestCaseDto;
 import io.mosip.compliance.toolkit.dto.collections.CollectionTestCasesResponseDto;
 import io.mosip.compliance.toolkit.dto.collections.CollectionsResponseDto;
+import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
 import io.mosip.compliance.toolkit.entity.CollectionEntity;
 import io.mosip.compliance.toolkit.entity.CollectionSummaryEntity;
 import io.mosip.compliance.toolkit.entity.CollectionTestCaseEntity;
@@ -19,6 +19,7 @@ import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.authmanager.authadapter.model.MosipUserDto;
 import io.mosip.kernel.core.http.ResponseWrapper;
+import org.codehaus.jackson.node.ArrayNode;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,6 +55,9 @@ public class CollectionsServiceTest {
 
     @Mock
     private CollectionsRepository collectionsRepository;
+
+    @Mock
+    private SbiProjectService sbiProjectService;
 
     @Mock
     private CollectionTestCaseRepository collectionTestcaseRepository;
@@ -306,6 +310,36 @@ public class CollectionsServiceTest {
         collectionsService.addCollection(requestDto, AppConstants.BLANK);
     }
 
+    /*
+     * This class tests the addQualityAssessmentCollection method
+     */
+    @Test
+    public void addQualityAssessmentCollectionTest() throws Exception {
+        CollectionRequestDto collectionRequestDto = new CollectionRequestDto();
+        ResponseWrapper<List<CollectionDto>> response = new ResponseWrapper<>();
+        collectionsService.addQualityAssessmentCollection(collectionRequestDto, null);
+        collectionRequestDto.setProjectId("sbi123");
+        collectionRequestDto.setProjectType("SBI");
+        String collectionType = "[{\"collectionName\":\"Quality Analysis\",\"collectionType\":\"quality_assessment_1\",\"purpose\":[\"Registration\"],\"biometricTypes\":[\"Finger\"],\"deviceSubTypes\":[\"Slap\"],\"testCases\":[{\"testId\":\"SBI1075\",\"repeatCount\":10}]}]";
+        Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
+        ArrayNode details = null;
+        Mockito.when(mapper.readValue(collectionType, ArrayNode.class)).thenReturn(details);
+        ResponseWrapper<SbiProjectDto> responseWrapper = new ResponseWrapper<>();
+        Mockito.when(sbiProjectService.getSbiProject(Mockito.any())).thenReturn(responseWrapper);
+        Mockito.when(collectionsRepository.getQualityAssessmentCollectionByType(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(null);
+        CollectionEntity collectionEntity = new CollectionEntity();
+        Mockito.when(collectionsRepository.save(Mockito.any())).thenReturn(collectionEntity);
+        CollectionDto collectionDto = new CollectionDto();
+        collectionDto.setProjectId("sbi123");
+        Mockito.when(mapper.convertValue(collectionEntity, CollectionDto.class)).thenReturn(collectionDto);
+        collectionsService.addQualityAssessmentCollection(collectionRequestDto, collectionType);
+
+    }
+
+    @Test(expected = Exception.class)
+    public void validateCollectionDetailsTest() {
+        ReflectionTestUtils.invokeMethod(collectionsService, "validateCollectionDetails", "sbi123", "Registration", "Finger", "Slap");
+    }
 
     /*
      * This class tests the addTestCasesForCollection method
