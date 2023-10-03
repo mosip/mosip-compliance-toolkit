@@ -224,6 +224,21 @@
 				"invalidRequestAttribute": {
 					"type": "string"
 				},
+				"qualityAssessmentTestCase": {
+					"type": "boolean"
+				},
+				"ageGroup": {
+					"type": "string"
+				},
+				"gender": {
+					"type": "string"
+				},
+				"occupation": {
+					"type": "string"
+				},
+				"testCaseRepeatCount": {
+					"type": "string"
+				},
 				"modalities": {
 					"type": "array",
 					"items": [
