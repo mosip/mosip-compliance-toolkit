@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -55,6 +58,9 @@ public class CollectionsService {
 	@Value("${mosip.toolkit.api.id.collection.post}")
 	private String postCollectionId;
 
+	@Value("${mosip.toolkit.quality.assessment.collection}")
+	private String qualityAssessmentCollection;
+
 	@Autowired
 	private CollectionsSummaryRepository collectionsSummaryRepository;
 
@@ -63,6 +69,9 @@ public class CollectionsService {
 
 	@Autowired
 	private CollectionsRepository collectionsRepository;
+
+	@Autowired
+	private SbiProjectService sbiProjectService;
 
 	@Autowired
 	private ObjectMapperConfig objectMapperConfig;
@@ -271,7 +280,7 @@ public class CollectionsService {
 					if (!AppConstants.BLANK.equals(collectionType)) {
 						inputEntity.setId(RandomIdGenerator.generateUUID(
 								collectionRequest.getProjectType().toLowerCase() + "_" + collectionType, "", 36));
-						inputEntity.setCollectionType(AppConstants.COMPLIANCE_COLLECTION);
+						inputEntity.setCollectionType(collectionType);
 					} else {
 						inputEntity.setId(RandomIdGenerator.generateUUID(
 								collectionRequest.getProjectType().toLowerCase(), "", 36));
@@ -315,6 +324,84 @@ public class CollectionsService {
 		responseWrapper.setId(postCollectionId);
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponse(collection);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+
+	public ResponseWrapper<List<CollectionDto>> addQualityAssessmentCollection(CollectionRequestDto collectionRequest) {
+		ResponseWrapper<List<CollectionDto>> responseWrapper = new ResponseWrapper<>();
+		List<CollectionDto> collectionsList = new ArrayList<>();
+		try {
+			if (Objects.nonNull(collectionRequest) && Objects.nonNull(collectionRequest.getProjectType())
+					&& (AppConstants.SBI.equalsIgnoreCase(collectionRequest.getProjectType()))) {
+				ResponseWrapper<SbiProjectDto> sbiProjectDetails = sbiProjectService.getSbiProject(collectionRequest.getProjectId());
+				if (sbiProjectDetails.getResponse() != null) {
+					SbiProjectDto sbiProjectDto = sbiProjectDetails.getResponse();
+					ArrayNode qualityCollectionDetails = (ArrayNode) objectMapperConfig.objectMapper().readValue(qualityAssessmentCollection, ArrayNode.class);
+					for (JsonNode item : qualityCollectionDetails) {
+						List<CollectionEntity> duplicates = null;
+						if (item.get("purpose").toString().contains(sbiProjectDto.getPurpose()) && item.get("biometricTypes").toString().contains(sbiProjectDto.getDeviceType())
+								&& item.get("deviceSubTypes").toString().contains(sbiProjectDto.getDeviceSubType())) {
+							duplicates = collectionsRepository.getQualityAssessmentCollectionByType(item.get("collectionType").asText(), collectionRequest.getProjectId(), getPartnerId());
+							if (Objects.isNull(duplicates) || duplicates.size() <= 0) {
+								CollectionRequestDto data = new CollectionRequestDto();
+								data.setProjectId(collectionRequest.getProjectId());
+								data.setProjectType(collectionRequest.getProjectType());
+								data.setCollectionName(item.get("collectionName").asText());
+								ResponseWrapper<CollectionDto> addCollectionWrapper = addCollection(data, item.get("collectionType").asText());
+								String collectionId = null;
+								if (addCollectionWrapper.getResponse() != null) {
+									collectionId = addCollectionWrapper.getResponse().getCollectionId();
+								} else {
+									log.debug("sessionId", "idType", "id", "Quality assessment collection could not be added for this project: {}",
+											collectionRequest.getProjectId());
+								}
+								if (collectionId != null) {
+									List<CollectionTestCaseDto> inputList = new ArrayList<>();
+									ArrayNode testcasesList = (ArrayNode) item.get("testCases");
+									for (JsonNode testcase : testcasesList) {
+										CollectionTestCaseDto collectionTestCaseDto = new CollectionTestCaseDto();
+										collectionTestCaseDto.setCollectionId(collectionId);
+										collectionTestCaseDto.setTestCaseId(testcase.get("testId").asText());
+										inputList.add(collectionTestCaseDto);
+									}
+									if (inputList.size() > 0) {
+										addTestCasesForCollection(inputList);
+									}
+								}
+								addCollectionWrapper.getResponse().setTestCaseCount(item.get("testCases").size());
+								collectionsList.add(addCollectionWrapper.getResponse());
+							} else {
+								String errorCode = ToolkitErrorCodes.COLLECTION_TYPE_EXISTS.getErrorCode();
+								String errorMessage = ToolkitErrorCodes.COLLECTION_TYPE_EXISTS.getErrorMessage()
+										+ duplicates.get(0).getCollectionType();
+								responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+							}
+						} else {
+							String errorCode = ToolkitErrorCodes.QUALITY_ASSESSMENT_COLLECTION_UNABLE_TO_ADD.getErrorCode();
+							String errorMessage = ToolkitErrorCodes.QUALITY_ASSESSMENT_COLLECTION_UNABLE_TO_ADD.getErrorMessage();
+							responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+						}
+					}
+				}
+
+			} else {
+				String errorCode = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode();
+				String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage();
+				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+			}
+
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In addQualityAssessmentCollection method of CollectionsService Service - " + ex.getMessage());
+			String errorCode = ToolkitErrorCodes.QUALITY_ASSESSMENT_COLLECTION_UNABLE_TO_ADD.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.QUALITY_ASSESSMENT_COLLECTION_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+		}
+		responseWrapper.setId(postCollectionId);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponse(collectionsList);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}

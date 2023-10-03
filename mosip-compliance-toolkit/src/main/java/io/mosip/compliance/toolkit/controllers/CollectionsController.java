@@ -75,6 +75,15 @@ public class CollectionsController {
 		return collectionsService.addCollection(requestWrapper.getRequest(), AppConstants.BLANK);
 	}
 
+	@PostMapping(value = "/addQualityAssessmentCollection")
+	public ResponseWrapper<List<CollectionDto>> addQualityAssessmentCollection(
+			@RequestBody RequestWrapper<CollectionRequestDto> requestWrapper, Errors errors) throws Exception {
+		requestValidator.validate(requestWrapper, errors);
+		requestValidator.validateId(COLLECTION_POST_ID, requestWrapper.getId(), errors);
+		DataValidationUtil.validate(errors, COLLECTION_POST_ID);
+		return collectionsService.addQualityAssessmentCollection(requestWrapper.getRequest());
+	}
+
 	@PostMapping(value = "/addTestCasesForCollection")
 	public ResponseWrapper<List<CollectionTestCaseDto>> addTestCasesForCollection(
 			@RequestBody RequestWrapper<List<CollectionTestCaseDto>> requestWrapper, Errors errors) throws Exception {

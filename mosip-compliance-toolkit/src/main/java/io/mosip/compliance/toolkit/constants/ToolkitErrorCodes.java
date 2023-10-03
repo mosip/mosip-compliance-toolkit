@@ -11,7 +11,8 @@ public enum ToolkitErrorCodes {
 	COLLECTION_TESTCASES_NOT_AVAILABLE("TOOLKIT_COLLECTIONS_002",
 			"No matching Testcases available for the given collection id"),
 	COLLECTION_TESTCASE_UNABLE_TO_ADD("TOOLKIT_COLLECTIONS_003", "Unable to add collection testcase mapping"),
-	
+	QUALITY_ASSESSMENT_COLLECTION_UNABLE_TO_ADD("TOOLKIT_COLLECTIONS_005", "Unable to add Quality Assessment Collection"),
+
 	TESTRUN_UNABLE_TO_ADD("TOOLKIT_TESTRUN_001", "Unable to add testrun"),
 	TESTRUN_NOT_AVAILABLE("TOOLKIT_TESTRUN_002", "No matching testrun available for the given id"),
 	TESTRUN_UNABLE_TO_UPDATE("TOOLKIT_TESTRUN_003", "Unable to update testrun"),
@@ -68,7 +69,8 @@ public enum ToolkitErrorCodes {
 	PROJECT_NAME_EXISTS("TOOLKIT_DB_ERR_001", "You have previously created a project with name: "),
 	BIO_TEST_DATA_FILE_EXISTS("TOOLKIT_DB_ERR_002", "You have previously added biometric test data with name: "),
 	COLLECTION_NAME_EXISTS("TOOLKIT_DB_ERR_003", "You have previously created a collection with name: "),
-	
+	COLLECTION_TYPE_EXISTS("TOOLKIT_DB_ERR_004", "You have previously created a collection with same type: "),
+
 	RESOURCE_UPLOAD_ERROR("TOOLKIT_RESOURCE_UPLOAD_ERR_001", "Unable to upload resource"),
 	
 	OBJECT_STORE_ERROR("TOOLKIT_OBJECT_STORE_ERR_001", "Object store error"),

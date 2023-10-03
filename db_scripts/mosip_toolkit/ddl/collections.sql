@@ -5,7 +5,7 @@ CREATE TABLE toolkit.collections(
     sbi_project_id character varying(36),
 	sdk_project_id character varying(36),
 	abis_project_id character varying(36),
-	name character varying(64) NOT NULL,
+	name character varying(256) NOT NULL,
     partner_id character varying(36) NOT NULL,
 	collection_type character varying(256) NOT NULL DEFAULT 'custom_collection',
 	cr_by character varying(256) NOT NULL,
