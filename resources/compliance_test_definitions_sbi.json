@@ -5592,5 +5592,69 @@
 			"deviceSubId": "0",
 			"hashValidationTestCase": true
 		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Quality Assessment for Registration capture - Left Slap - Males - 30 to 40 - labourer",
+		"testId": "SBI1108",
+		"specVersion": "0.9.5",
+		"testDescription": "Quality Check Test to validate the biometrics captured by RCapture interface for left slap fingerprints<br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes",
+		"androidTestDescription": "Quality Check Test to validate the biometrics captured by RCapture interface for left slap fingerprints<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "BiometricsQualityCheckValidator",
+					"description": "Checks the quality of biometrics using all configured SDK services"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+				"LeftIndex",
+				"LeftMiddle",
+				"LeftRing",
+				"LeftLittle"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "4",
+			"deviceSubId": "1",
+			"qualityAssessmentTestCase": true,
+			"ageGroup": "30-40",
+			"gender": "male",
+			"occupation": "labourer",
+			"testCaseRepeatCount": 5
+		}
 	}
 ]
