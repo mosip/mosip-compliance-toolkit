@@ -218,7 +218,7 @@ public class SbiProjectServiceTest {
         collectionDto.setName("MyCollection");
         collectionDto.setTestCaseCount(8);
         addCollectionWrapper.setResponse(collectionDto);
-        Mockito.when(collectionsService.addCollection(Mockito.any(), Mockito.any())).thenReturn(addCollectionWrapper);
+        Mockito.when(collectionsService.addCollection(Mockito.any())).thenReturn(addCollectionWrapper);
         ResponseWrapper<List<TestCaseDto>> testCaseWrapper = new ResponseWrapper<List<TestCaseDto>>();
         List<TestCaseDto> testCaseDtoList = new ArrayList<TestCaseDto>();
         TestCaseDto testCaseDto = new TestCaseDto();

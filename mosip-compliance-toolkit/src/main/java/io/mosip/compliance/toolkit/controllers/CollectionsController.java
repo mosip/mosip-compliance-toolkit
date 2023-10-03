@@ -72,7 +72,7 @@ public class CollectionsController {
 		requestValidator.validate(requestWrapper, errors);
 		requestValidator.validateId(COLLECTION_POST_ID, requestWrapper.getId(), errors);
 		DataValidationUtil.validate(errors, COLLECTION_POST_ID);
-		return collectionsService.addCollection(requestWrapper.getRequest(), AppConstants.BLANK);
+		return collectionsService.addCollection(requestWrapper.getRequest());
 	}
 
 	@PostMapping(value = "/addTestCasesForCollection")

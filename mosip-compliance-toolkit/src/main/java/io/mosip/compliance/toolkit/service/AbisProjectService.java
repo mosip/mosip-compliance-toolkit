@@ -220,8 +220,8 @@ public class AbisProjectService {
 			collectionRequestDto.setProjectId(projectId);
 			collectionRequestDto.setProjectType(abisProjectDto.getProjectType());
 			collectionRequestDto.setCollectionName(defaultCollectionName);
-			ResponseWrapper<CollectionDto> addCollectionWrapper = collectionsService.addCollection(collectionRequestDto,
-					AppConstants.DEFAULT_COMPLIANCE_COLLECTION);
+			collectionRequestDto.setCollectionType(AppConstants.COMPLIANCE_COLLECTION);
+			ResponseWrapper<CollectionDto> addCollectionWrapper = collectionsService.addCollection(collectionRequestDto);
 			String defaultCollectionId = null;
 			if (addCollectionWrapper.getResponse() != null) {
 				defaultCollectionId = addCollectionWrapper.getResponse().getCollectionId();
