@@ -23,5 +23,4 @@ public class ValidationResultDto  implements Serializable{
 
 	public String descriptionKey;
 
-	public String biometricScores;
 }

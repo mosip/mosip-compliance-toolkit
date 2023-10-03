@@ -28,7 +28,7 @@ COMMENT ON COLUMN toolkit.collections.sdk_project_id IS 'Project ID: Id of the c
 COMMENT ON COLUMN toolkit.collections.abis_project_id IS 'Project ID: Id of the corresponding ABIS project.';
 COMMENT ON COLUMN toolkit.collections.name IS 'Name: name of the collection.';
 COMMENT ON COLUMN toolkit.collections.partner_id IS 'Partner Id: partner id who has created this project.';
-COMMENT ON COLUMN toolkit.collections.collection_type IS 'Collection Type: Collection Type for quality assessment collection';
+COMMENT ON COLUMN toolkit.collections.collection_type IS 'Collection Type: this can be custom_collection or compliance_collection';
 COMMENT ON COLUMN toolkit.collections.cr_by IS 'Created By : ID or name of the user who create / insert record.';
 COMMENT ON COLUMN toolkit.collections.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
 COMMENT ON COLUMN toolkit.collections.upd_by IS 'Updated By : ID or name of the user who update the record with new values';

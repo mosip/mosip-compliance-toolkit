@@ -259,7 +259,7 @@ public class CollectionsServiceTest {
     @Test
     public void addCollectionTest(){
         CollectionRequestDto requestDto = new CollectionRequestDto();
-        collectionsService.addCollection(requestDto, AppConstants.BLANK);
+        collectionsService.addCollection(requestDto);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
@@ -278,17 +278,17 @@ public class CollectionsServiceTest {
         Mockito.when(collectionsRepository.save(Mockito.any())).thenReturn(outputEntity);
         Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
         Mockito.when(mapper.convertValue(outputEntity, CollectionDto.class)).thenReturn(collectionDto);
-        collectionsService.addCollection(requestDto, AppConstants.BLANK);
+        collectionsService.addCollection(requestDto);
 //        type = ABIS
         collectionDto.setCollectionId("ABIS");
         requestDto.setProjectType("ABIS");
         requestDto.setCollectionName(String.valueOf(collectionDto));
-        collectionsService.addCollection(requestDto, AppConstants.BLANK);
+        collectionsService.addCollection(requestDto);
 //        type = SDK
         collectionDto.setCollectionId("SDK");
         requestDto.setProjectType("SDK");
         requestDto.setCollectionName(String.valueOf(collectionDto));
-        ResponseWrapper<CollectionDto> response = collectionsService.addCollection(requestDto, AppConstants.BLANK);
+        ResponseWrapper<CollectionDto> response = collectionsService.addCollection(requestDto);
         CollectionDto result = new CollectionDto();
         Assert.assertEquals(result, response.getResponse());
     }
@@ -303,7 +303,7 @@ public class CollectionsServiceTest {
         collectionDto.setProjectId("SBI");
         requestDto.setProjectType("SBI");
         requestDto.setCollectionName(String.valueOf(collectionDto));
-        collectionsService.addCollection(requestDto, AppConstants.BLANK);
+        collectionsService.addCollection(requestDto);
     }
 
 
