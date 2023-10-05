@@ -234,7 +234,7 @@ public class CollectionsService {
 		return responseWrapper;
 	}
 
-	public ResponseWrapper<CollectionDto> addCollection(CollectionRequestDto collectionRequest, String collectionType) {
+	public ResponseWrapper<CollectionDto> addCollection(CollectionRequestDto collectionRequest) {
 		ResponseWrapper<CollectionDto> responseWrapper = new ResponseWrapper<>();
 		CollectionDto collection = null;
 		try {
@@ -267,19 +267,19 @@ public class CollectionsService {
 				}
 
 				if (Objects.isNull(duplicates) || duplicates.size() <= 0) {
-					CollectionEntity inputEntity = new CollectionEntity();
-					if (!AppConstants.BLANK.equals(collectionType)) {
-						inputEntity.setId(RandomIdGenerator.generateUUID(
-								collectionRequest.getProjectType().toLowerCase() + "_" + collectionType, "", 36));	
-					} else {
-						inputEntity.setId(RandomIdGenerator.generateUUID(
-								collectionRequest.getProjectType().toLowerCase(), "", 36));
+					String collectionType = collectionRequest.getCollectionType();
+					if (collectionType == null || "".equals(collectionType)) {
+						collectionType = AppConstants.CUSTOM_COLLECTION;
 					}
+					CollectionEntity inputEntity = new CollectionEntity();
+					inputEntity.setId(RandomIdGenerator.generateUUID(
+					collectionRequest.getProjectType().toLowerCase() + "_" + collectionType, "", 36));
 					inputEntity.setName(collectionRequest.getCollectionName());
 					inputEntity.setSbiProjectId(sbiProjectId);
 					inputEntity.setSdkProjectId(sdkProjectId);
 					inputEntity.setAbisProjectId(abisProjectId);
 					inputEntity.setPartnerId(getPartnerId());
+					inputEntity.setCollectionType(collectionType);
 					inputEntity.setCrBy(getUserBy());
 					inputEntity.setCrDate(LocalDateTime.now());
 					inputEntity.setUpBy(null);

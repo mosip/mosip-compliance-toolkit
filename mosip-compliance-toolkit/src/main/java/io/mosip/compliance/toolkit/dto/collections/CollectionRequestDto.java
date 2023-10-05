@@ -11,4 +11,5 @@ public class CollectionRequestDto {
 	private String projectId;
 	private String projectType;
 	private String collectionName;
+	private String collectionType;
 }

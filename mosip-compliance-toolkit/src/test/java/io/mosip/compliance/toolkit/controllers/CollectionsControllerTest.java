@@ -95,7 +95,7 @@ public class CollectionsControllerTest {
     public void addCollectionTest() throws Exception {
         ResponseWrapper<CollectionDto> response = new ResponseWrapper<>();
         RequestWrapper<CollectionRequestDto> request = new RequestWrapper<>();
-        Mockito.when(collectionsService.addCollection(request.getRequest(),AppConstants.BLANK)).thenReturn(response);
+        Mockito.when(collectionsService.addCollection(request.getRequest())).thenReturn(response);
         collectionsController.addCollection(request, errors);
     }
 

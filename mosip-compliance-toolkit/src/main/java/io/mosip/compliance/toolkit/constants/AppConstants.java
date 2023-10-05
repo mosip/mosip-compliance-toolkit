@@ -75,8 +75,8 @@ public class AppConstants {
 	public static final String DEVICE_PROVIDER = "deviceProvider";
 
 	public static final String DEVICE_PROVIDER_ID = "deviceProviderId";
+
+	public static final String COMPLIANCE_COLLECTION = "compliance_collection";
 	
-	public static final String DEFAULT_COMPLIANCE_COLLECTION = "compliance";
-	
-	public static final String BLANK = "";
+	public static final String CUSTOM_COLLECTION = "custom_collection";
 }

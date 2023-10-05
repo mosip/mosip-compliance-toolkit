@@ -24,4 +24,6 @@ public class CollectionDto {
 	private LocalDateTime runDtimes;
 
 	private String runId;
+	
+	private String collectionType;
 }

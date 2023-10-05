@@ -102,7 +102,6 @@ public class QualityCheckValidator extends SDKValidator {
 	private void checkScore(String biometricTypeStr, ValidationInputDto inputDto, float thresholdValue,
 			ValidationResultDto validationResultDto, float score, Map<String, String> analyticsInfo) {
 		String resourceBundleKeyName = "";
-		validationResultDto.setBiometricScores(String.valueOf(score));
 		if (!inputDto.isNegativeTestCase()) {
 			// positive test case
 			if (score >= thresholdValue) {
