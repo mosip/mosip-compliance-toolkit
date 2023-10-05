@@ -22,7 +22,7 @@ public class ValidationInputDto  implements Serializable {
 
 	public String specVersion;
 
-	public String testDescription;
+	public String testId;
 	
 	@JsonProperty("isNegativeTestcase")
 	public boolean isNegativeTestCase;
