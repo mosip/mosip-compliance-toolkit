@@ -145,10 +145,7 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 				codes.append(validatorMsg);
 				codes.append(AppConstants.COMMA_SEPARATOR);
 			}
-			TestCaseDto testCase = getTestCaseDetails(inputDto.getTestId());
-			if (testCase.getOtherAttributes().qualityAssessmentTestCase) {
-				saveSbiScores(inputDto);
-			}
+			saveSbiScores(inputDto);
 			Boolean areAllQualityChecksSuccessful = Boolean.TRUE;
 			for (Boolean status : testCaseSuccessfulMap.values()) {
 				if (status == Boolean.FALSE) {
@@ -260,10 +257,7 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 				birsForProbe.add(probeBir);
 				// STEP 3: call "check-quality" to get qualityScore for the probeBir
 				ValidationResultDto validationResult = this.callSdkCheckQualityUrl(sdkUrl, birsForProbe, biometricType);
-				TestCaseDto testCase = getTestCaseDetails(inputDto.getTestId());
-				if (testCase.getOtherAttributes().qualityAssessmentTestCase) {
-					saveBiometricScores(deviceAttributes, inputDto, sdkName, validationResult.getExtraInfoJson());
-				}
+				saveBiometricScores(deviceAttributes, inputDto, sdkName, validationResult.getExtraInfoJson());
 				validationResultDtoList.add(validationResult);
 			}
 			// STEP 4: calculate aggregate score and messages;
@@ -314,26 +308,28 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 		return testCaseResponseWrapper.getResponse();
 	}
 	private void saveBiometricScores(DeviceAttributes bioAttributes, ValidationInputDto inputDto, String sdkName, String score) throws JsonProcessingException {
-		// get testRunId and projectId from inputDto
-		ObjectNode extraInfoJson = (ObjectNode) objectMapperConfig.objectMapper().readValue(inputDto.getExtraInfoJson(),
-				ObjectNode.class);
-		String testRunId = extraInfoJson.get("testRunId").asText();
-		String projectId = extraInfoJson.get("projectId").asText();
 		// get testcase details
 		String testId = inputDto.getTestId();
 		TestCaseDto testCase = getTestCaseDetails(testId);
-		// populate biometric scores json
-		ObjectNode biometricScoresItem = objectMapper.createObjectNode();
-		biometricScoresItem.put("ageGroup", testCase.getOtherAttributes().getAgeGroup());
-		biometricScoresItem.put("occupation", testCase.getOtherAttributes().getOccupation());
-		biometricScoresItem.put("gender", testCase.getOtherAttributes().getGender());
-		biometricScoresItem.put("biometricType", bioAttributes.getBioType());
-		biometricScoresItem.put("deviceSubType", bioAttributes.getBioSubType());
-		biometricScoresItem.put("name", sdkName);
-		ObjectNode bioScore = (ObjectNode) objectMapper.readValue(score, ObjectNode.class);
-		biometricScoresItem.put("biometricScore", bioScore.get("score").asText());
-		// save biometric scores in database
-		biometricScoresService.addBiometricScores(projectId, testRunId, testId, biometricScoresItem.toString());
+		if (testCase.getOtherAttributes().qualityAssessmentTestCase) {
+			// get testRunId and projectId from inputDto
+			ObjectNode extraInfoJson = (ObjectNode) objectMapperConfig.objectMapper().readValue(inputDto.getExtraInfoJson(),
+					ObjectNode.class);
+			String testRunId = extraInfoJson.get("testRunId").asText();
+			String projectId = extraInfoJson.get("projectId").asText();
+			// populate biometric scores json
+			ObjectNode biometricScoresItem = objectMapper.createObjectNode();
+			biometricScoresItem.put("ageGroup", testCase.getOtherAttributes().getAgeGroup());
+			biometricScoresItem.put("occupation", testCase.getOtherAttributes().getOccupation());
+			biometricScoresItem.put("gender", testCase.getOtherAttributes().getGender());
+			biometricScoresItem.put("biometricType", bioAttributes.getBioType());
+			biometricScoresItem.put("deviceSubType", bioAttributes.getBioSubType());
+			biometricScoresItem.put("name", sdkName);
+			ObjectNode bioScore = (ObjectNode) objectMapper.readValue(score, ObjectNode.class);
+			biometricScoresItem.put("biometricScore", bioScore.get("score").asText());
+			// save biometric scores in database
+			biometricScoresService.addBiometricScores(projectId, testRunId, testId, biometricScoresItem.toString());
+		}
 	}
 
 	private ValidationResultDto callSdkCheckQualityUrl(String sdkUrl,
