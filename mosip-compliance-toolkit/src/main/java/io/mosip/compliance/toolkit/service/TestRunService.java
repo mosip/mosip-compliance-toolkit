@@ -139,11 +139,13 @@ public class TestRunService {
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
+
 	private void handleToolkitError(ToolkitErrorCodes toolkitError, ResponseWrapper<?> responseWrapper) {
 		String errorCode = toolkitError.getErrorCode();
 		String errorMessage = toolkitError.getErrorMessage();
 		responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 	}
+
 	private void logAndSetError(Exception ex, ResponseWrapper<?> responseWrapper, ToolkitErrorCodes toolkitErrorCodes, String logMessage) {
 		log.debug("sessionId", "idType", "id", ex.getStackTrace());
 		log.error("sessionId", "idType", "id", logMessage + ex.getMessage());
@@ -391,10 +393,10 @@ public class TestRunService {
 		}
 		return errorCode;
 	}
+
 	private void handleValidateToolkitError(Exception ex, String logMessage) {
 		log.debug("sessionId", "idType", "id", ex.getStackTrace());
 		log.error("sessionId", "idType", "id",
 				logMessage + ex.getMessage());
-
 	}
 }
