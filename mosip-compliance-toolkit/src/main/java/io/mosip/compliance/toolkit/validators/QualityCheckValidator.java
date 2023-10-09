@@ -103,7 +103,7 @@ public class QualityCheckValidator extends SDKValidator {
 			ValidationResultDto validationResultDto, float score, Map<String, String> analyticsInfo) {
 		String resourceBundleKeyName = "";
 		ObjectNode sdkScoreObj = objectMapperConfig.objectMapper().createObjectNode();
-		int sdkScore = (int) score;
+		int sdkScore = Math.round(score);
 		sdkScoreObj.put("score", String.valueOf(sdkScore));
 		validationResultDto.setExtraInfoJson(sdkScoreObj.toString());
 		if (!inputDto.isNegativeTestCase()) {

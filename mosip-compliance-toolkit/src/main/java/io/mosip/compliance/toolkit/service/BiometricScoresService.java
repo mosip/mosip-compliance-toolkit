@@ -50,10 +50,12 @@ public class BiometricScoresService {
                 entity.setTestCaseId(testId);
                 biometricScoresRepository.save(entity);
             } else {
+            	// only log the exception since this is a fail safe situation
                 log.error("sessionId", "idType", "id",
                         "Biometric scores could not be added for this quality assessment testcase: {}", testId);
             }
         } catch (Exception ex) {
+        	// only log the exception since this is a fail safe situation
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In addBiometricScores method of BiometricScoresService Service - " + ex.getMessage());
