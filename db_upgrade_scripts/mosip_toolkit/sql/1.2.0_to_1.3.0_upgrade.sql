@@ -76,6 +76,28 @@ COMMENT ON COLUMN toolkit.biometric_scores.cr_by IS 'Created By : ID or name of 
 COMMENT ON COLUMN toolkit.biometric_scores.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
 COMMENT ON COLUMN toolkit.biometric_scores.scores_json IS 'Scores Json: Biometric scores of quality check testcases';
 
+-- add new column method-id in test_run_details table
+ALTER TABLE toolkit.test_run_details
+ADD COLUMN method_id character varying(150) NOT NULL DEFAULT 'Not_Available';
+COMMENT ON COLUMN toolkit.test_run_details.method_id IS 'Method ID: Unique method Id created for each method response';
+
+ALTER TABLE toolkit.test_run_details
+DROP CONSTRAINT test_run_details_id_pk;
+
+ALTER TABLE toolkit.test_run_details
+ADD CONSTRAINT test_run_details_id_pk PRIMARY KEY (run_id, testcase_id, method_id);
+
+-- add new column method-id in test_run_details_archive table
+ALTER TABLE toolkit.test_run_details_archive
+ADD COLUMN method_id character varying(150) NOT NULL DEFAULT 'Not_Available';
+COMMENT ON COLUMN toolkit.test_run_details_archive.method_id IS 'Method ID: Unique method Id created for each method response';
+
+ALTER TABLE toolkit.test_run_details_archive
+DROP CONSTRAINT test_run_details_archive_id_pk;
+
+ALTER TABLE toolkit.test_run_details_archive
+ADD CONSTRAINT test_run_details_archive_id_pk PRIMARY KEY (run_id, testcase_id, method_id);
+
 --Script to populate the newly added columns 'execution_status', 'run_status'
 --for existing test runs 
 UPDATE 

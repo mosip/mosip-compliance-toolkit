@@ -21,4 +21,6 @@ public class TestRunDetailsPK implements Serializable{
 	private String runId;
 	
 	private String testcaseId;
+
+	private String methodId;
 }

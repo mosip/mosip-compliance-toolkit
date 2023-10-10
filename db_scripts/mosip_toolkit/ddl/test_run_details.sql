@@ -3,6 +3,7 @@
 CREATE TABLE toolkit.test_run_details(
 	run_id character varying(36) NOT NULL,
     testcase_id character varying(36) NOT NULL,
+	method_id character varying(150) NOT NULL DEFAULT 'Not_Available',
 	method_url character varying NOT NULL,
 	method_request character varying NOT NULL,
     method_response character varying NOT NULL, 
@@ -16,7 +17,7 @@ CREATE TABLE toolkit.test_run_details(
 	upd_dtimes timestamp,
 	is_deleted boolean,
 	del_dtimes timestamp,
-	CONSTRAINT test_run_details_id_pk PRIMARY KEY (run_id, testcase_id) 
+	CONSTRAINT test_run_details_id_pk PRIMARY KEY (run_id, testcase_id, method_id) 
 );
 
 CREATE INDEX IF NOT EXISTS idx_test_run_details_id ON toolkit.test_run_details USING btree (run_id);
@@ -24,6 +25,7 @@ CREATE INDEX IF NOT EXISTS idx_test_run_details_id_partner_id ON toolkit.test_ru
 COMMENT ON TABLE toolkit.test_run_details IS 'This table has all the execution details for a test run for a given collection in compliance toolkit project.';
 COMMENT ON COLUMN toolkit.test_run_details.run_id IS 'run_id: Unique run Id generated for an test run.';
 COMMENT ON COLUMN toolkit.test_run_details.testcase_id IS 'Testcase ID: Id of the corresponding testcase.';
+COMMENT ON COLUMN toolkit.test_run_details.method_id IS 'Method ID: Unique method Id created for each method response';
 COMMENT ON COLUMN toolkit.test_run_details.method_url IS 'Method URL: URL used for method execution.';
 COMMENT ON COLUMN toolkit.test_run_details.method_request IS 'Method Request: request used for method execution.';
 COMMENT ON COLUMN toolkit.test_run_details.method_response IS 'Method Response: response received on method execution.';

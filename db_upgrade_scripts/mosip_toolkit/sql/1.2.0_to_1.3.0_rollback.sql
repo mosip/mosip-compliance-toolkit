@@ -41,3 +41,21 @@ COMMENT ON COLUMN toolkit.collections.collection_type IS NULL;
 ALTER TABLE toolkit.collections DROP COLUMN collection_type;
 
 DROP TABLE IF EXISTS toolkit.biometric_scores;
+
+ALTER TABLE toolkit.test_run_details DROP COLUMN method_id;
+COMMENT ON COLUMN toolkit.test_run_details.method_id IS NULL;
+
+ALTER TABLE toolkit.test_run_details
+DROP CONSTRAINT test_run_details_id_pk;
+
+ALTER TABLE toolkit.test_run_details
+ADD CONSTRAINT test_run_details_id_pk PRIMARY KEY (run_id, testcase_id);
+
+ALTER TABLE toolkit.test_run_details_archive DROP COLUMN method_id;
+COMMENT ON COLUMN toolkit.test_run_details_archive.method_id IS NULL;
+
+ALTER TABLE toolkit.test_run_details_archive
+DROP CONSTRAINT test_run_details_archive_id_pk;
+
+ALTER TABLE toolkit.test_run_details_archive
+ADD CONSTRAINT test_run_details_archive_id_pk PRIMARY KEY (run_id, testcase_id);
