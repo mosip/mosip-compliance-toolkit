@@ -6,12 +6,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Objects;
 
+import io.mosip.compliance.toolkit.dto.report.PartnerDetailsDto;
+import io.mosip.compliance.toolkit.util.PartnerManagerHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import io.mosip.compliance.toolkit.dto.report.PartnerDetailsDto.Partner;
 
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
@@ -24,11 +27,24 @@ public class ResourceCacheService {
 	@Value("${mosip.kernel.objectstore.account-name}")
 	private String objectStoreAccountName;
 
+	@Autowired
+	PartnerManagerHelper partnerManagerHelper;
+
 	private Logger log = LoggerConfiguration.logConfig(ResourceCacheService.class);
 
 	@Qualifier("S3Adapter")
 	@Autowired
 	private ObjectStoreAdapter objectStore;
+
+	public String getOrgName(String partnerId) throws Exception
+	{
+		PartnerDetailsDto partnerDetailsDto = partnerManagerHelper.getPartnerDetails(partnerId);
+		Partner partner = partnerDetailsDto.getResponse();
+		if (partnerDetailsDto != null && partnerDetailsDto.getErrors().size() == 0) {
+			return partner.getOrganizationName();
+		}
+		return null;
+	}
 
 	@Cacheable(cacheNames = "schemas", key = "{#type, #version, #fileName}")
 	public String getSchema(String type, String version, String fileName) throws Exception {
