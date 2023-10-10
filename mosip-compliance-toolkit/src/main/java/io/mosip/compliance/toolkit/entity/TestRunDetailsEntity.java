@@ -32,6 +32,10 @@ public class TestRunDetailsEntity {
 	@Id
 	@Column(name = "testcase_id")
 	private String testcaseId;
+
+	@Id
+	@Column(name = "method_id")
+	private String methodId;
 	
 	@Column(name = "method_url")
 	private String methodUrl;
