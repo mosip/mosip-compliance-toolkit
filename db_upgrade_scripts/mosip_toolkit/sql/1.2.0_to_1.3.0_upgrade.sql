@@ -98,6 +98,12 @@ DROP CONSTRAINT test_run_details_archive_id_pk;
 ALTER TABLE toolkit.test_run_details_archive
 ADD CONSTRAINT test_run_details_archive_id_pk PRIMARY KEY (run_id, testcase_id, method_id);
 
+-- add execution_status and run_status columns in test_run_archive
+ALTER TABLE toolkit.test_run_archive ADD COLUMN execution_status character varying(36) NOT NULL DEFAULT 'incomplete';
+ALTER TABLE toolkit.test_run_archive ADD COLUMN result_status character varying(36) NOT NULL DEFAULT 'failure';
+COMMENT ON COLUMN toolkit.test_run_archive.execution_status IS 'Execution Status: test run execution status Incomplete or Complete.';
+COMMENT ON COLUMN toolkit.test_run_archive.run_status IS 'Test Run Status: test run status as Failure/Success';
+
 --Script to populate the newly added columns 'execution_status', 'run_status'
 --for existing test runs 
 UPDATE 
