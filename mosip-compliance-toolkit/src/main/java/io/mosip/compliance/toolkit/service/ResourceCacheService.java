@@ -45,7 +45,7 @@ public class ResourceCacheService {
 					return orgName;
 				}
 			}
-		return "Not_Available";
+		return "orgName";
 	}
 	
 	@Cacheable(cacheNames = "schemas", key = "{#type, #version, #fileName}")
