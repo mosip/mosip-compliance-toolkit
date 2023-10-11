@@ -38,6 +38,8 @@ public class SbiProjectDto {
 	private String websiteUrl;
 	
 	private String partnerId;
+
+	private String orgName;
 	
 	private String crBy;
 
