@@ -65,6 +65,9 @@ public class SbiProjectService {
 	private TestCasesService testCasesService;
 
 	@Autowired
+	ResourceCacheService resourceCacheService;
+
+	@Autowired
 	private CollectionsService collectionsService;
 
 	@Value("${mosip.toolkit.default.collection.name}")
@@ -140,6 +143,7 @@ public class SbiProjectService {
 				entity.setSbiHash(sbiProjectDto.getSbiHash());
 				entity.setWebsiteUrl(sbiProjectDto.getWebsiteUrl());
 				entity.setPartnerId(this.getPartnerId());
+				entity.setOrgName(resourceCacheService.getOrgName(this.getPartnerId()));
 				entity.setCrBy(this.getUserBy());
 				entity.setCrDate(crDate);
 				entity.setDeleted(false);
@@ -150,6 +154,7 @@ public class SbiProjectService {
 				// send response
 				sbiProjectDto.setId(entity.getId());
 				sbiProjectDto.setPartnerId(entity.getPartnerId());
+				sbiProjectDto.setOrgName(entity.getOrgName());
 				sbiProjectDto.setCrBy(entity.getCrBy());
 				sbiProjectDto.setCrDate(entity.getCrDate());
 			}

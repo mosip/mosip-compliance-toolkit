@@ -25,12 +25,14 @@ ALTER TABLE toolkit.sbi_projects Add COLUMN device_image3 character varying;
 ALTER TABLE toolkit.sbi_projects Add COLUMN device_image4 character varying;
 ALTER TABLE toolkit.sbi_projects Add COLUMN sbi_hash character varying NOT NULL DEFAULT 'To_Be_Added';
 ALTER TABLE toolkit.sbi_projects Add COLUMN website_url character varying(256) NOT NULL DEFAULT 'To_Be_Added';
+ALTER TABLE toolkit.sbi_projects Add COLUMN org_name character varying(64) NOT NULL DEFAULT 'Not_Available';
 COMMENT ON COLUMN toolkit.sbi_projects.device_image1 IS 'device_image1: Base64 value of device image';
 COMMENT ON COLUMN toolkit.sbi_projects.device_image2 IS 'device_image2: Base64 value of device image';
 COMMENT ON COLUMN toolkit.sbi_projects.device_image3 IS 'device_image3: Base64 value of device image';
 COMMENT ON COLUMN toolkit.sbi_projects.device_image4 IS 'device_image4: Base64 value of device image';
 COMMENT ON COLUMN toolkit.sbi_projects.sbi_hash IS 'sbi_hash: Encoded hash of SBI installation file';
 COMMENT ON COLUMN toolkit.sbi_projects.website_url IS 'website_url: Partner website url';
+COMMENT ON COLUMN toolkit.sbi_projects.org_name IS 'orgname: organization name to which partner belongs to.';
 
 ALTER TABLE toolkit.sdk_projects Add COLUMN sdk_hash character varying NOT NULL DEFAULT 'To_Be_Added';
 ALTER TABLE toolkit.sdk_projects Add COLUMN website_url character varying(256) NOT NULL DEFAULT 'To_Be_Added';

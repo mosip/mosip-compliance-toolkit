@@ -11,12 +11,15 @@ COMMENT ON COLUMN toolkit.sbi_projects.device_image3 IS NULL;
 COMMENT ON COLUMN toolkit.sbi_projects.device_image4 IS NULL;
 COMMENT ON COLUMN toolkit.sbi_projects.sbi_hash IS NULL;
 COMMENT ON COLUMN toolkit.sbi_projects.website_url IS NULL;
+COMMENT ON COLUMN toolkit.sbi_projects.org_name IS NULL;
 ALTER TABLE toolkit.sbi_projects DROP COLUMN device_image1;
 ALTER TABLE toolkit.sbi_projects DROP COLUMN device_image2;
 ALTER TABLE toolkit.sbi_projects DROP COLUMN device_image3;
 ALTER TABLE toolkit.sbi_projects DROP COLUMN device_image4;
 ALTER TABLE toolkit.sbi_projects DROP COLUMN sbi_hash;
 ALTER TABLE toolkit.sbi_projects DROP COLUMN website_url;
+ALTER TABLE toolkit.sbi_projects DROP COLUMN org_name;
+
 
 COMMENT ON COLUMN toolkit.sdk_projects.sdk_hash IS NULL;
 COMMENT ON COLUMN toolkit.sdk_projects.website_url IS NULL;

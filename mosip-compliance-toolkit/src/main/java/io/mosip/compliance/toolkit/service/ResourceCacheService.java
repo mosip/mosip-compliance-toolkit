@@ -6,12 +6,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Objects;
 
+import io.mosip.compliance.toolkit.dto.report.PartnerDetailsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import io.mosip.compliance.toolkit.util.PartnerManagerHelper;
 
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
@@ -24,11 +26,30 @@ public class ResourceCacheService {
 	@Value("${mosip.kernel.objectstore.account-name}")
 	private String objectStoreAccountName;
 
+	@Autowired
+	PartnerManagerHelper partnerManagerHelper;
 	private Logger log = LoggerConfiguration.logConfig(ResourceCacheService.class);
 
 	@Qualifier("S3Adapter")
 	@Autowired
 	private ObjectStoreAdapter objectStore;
+
+	@Cacheable(cacheNames = "orgName", key = "{#partnerId}")
+	public String getOrgName(String partnerId) {
+		try {
+			PartnerDetailsDto partnerDetailsDto = partnerManagerHelper.getPartnerDetails(partnerId);
+			PartnerDetailsDto.Partner partner = partnerDetailsDto.getResponse();
+			if (partner != null) {
+				String orgName = partner.getOrganizationName();
+				if (orgName != null) {
+					return orgName;
+				}
+			}
+		} catch (Exception ex) {
+			log.error("sessionId", "idType", "id", "In getOrgName method of ResourceCacheService" + ex.getMessage());
+		}
+		return "Not_Available";
+	}
 
 	@Cacheable(cacheNames = "schemas", key = "{#type, #version, #fileName}")
 	public String getSchema(String type, String version, String fileName) throws Exception {
