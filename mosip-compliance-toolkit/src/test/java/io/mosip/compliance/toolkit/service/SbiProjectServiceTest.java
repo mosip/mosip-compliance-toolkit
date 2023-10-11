@@ -61,6 +61,9 @@ public class SbiProjectServiceTest {
     SecurityContext securityContext;
 
     @Mock
+    private ResourceCacheService resourceCacheService;
+
+    @Mock
     KeyManagerHelper keyManagerHelper;
 
     @Mock
@@ -185,11 +188,13 @@ public class SbiProjectServiceTest {
         sbiProjectDto.setPurpose("Registration");
         sbiProjectDto.setDeviceType("Finger");
         sbiProjectDto.setDeviceSubType("Slap");
+        sbiProjectDto.setOrgName("abc");
 
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
         Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        Mockito.when(resourceCacheService.getOrgName("abc")).thenReturn("abc");
         SecurityContextHolder.setContext(securityContext);
 
         ResponseWrapper<SbiProjectDto> sbiProjectDtoResponseWrapper = new ResponseWrapper<>();
@@ -205,6 +210,7 @@ public class SbiProjectServiceTest {
         sbiProjectDto.setPurpose("Registration");
         sbiProjectDto.setDeviceType("Finger");
         sbiProjectDto.setDeviceSubType("Slap");
+        sbiProjectDto.setOrgName("abc");
 
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         MosipUserDto mosipUserDto = getMosipUserDto();
