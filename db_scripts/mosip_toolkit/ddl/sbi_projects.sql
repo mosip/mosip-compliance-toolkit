@@ -15,7 +15,7 @@ CREATE TABLE toolkit.sbi_projects(
 	sbi_hash character varying NOT NULL DEFAULT 'To_Be_Added',
 	website_url character varying(256) NOT NULL DEFAULT 'To_Be_Added',
 	partner_id character varying(36) NOT NULL,
-	org_name character varying(64),
+	org_name character varying(64) NOT NULL DEFAULT 'Not_Available',
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),

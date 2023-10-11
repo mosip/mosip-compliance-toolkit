@@ -35,14 +35,18 @@ public class ResourceCacheService {
 	@Autowired
 	private ObjectStoreAdapter objectStore;
 
-	public String getOrgName(String partnerId) throws Exception
-	{
-		PartnerDetailsDto partnerDetailsDto = partnerManagerHelper.getPartnerDetails(partnerId);
-		PartnerDetailsDto.Partner partner = partnerDetailsDto.getResponse();
-		if (partnerDetailsDto != null && partnerDetailsDto.getErrors().size() == 0) {
-			return partner.getOrganizationName();
-		}
-		return null;
+
+	@Cacheable(cacheNames = "orgName", key = "{#partnerId}")
+	public String getOrgName(String partnerId) throws IOException{
+			PartnerDetailsDto partnerDetailsDto = partnerManagerHelper.getPartnerDetails(partnerId);
+			PartnerDetailsDto.Partner partner = partnerDetailsDto.getResponse();
+			if (partner != null) {
+				String orgName = partner.getOrganizationName();
+				if (orgName != null) {
+					return orgName;
+				}
+			}
+		return "Not_Available";
 	}
 
 	@Cacheable(cacheNames = "schemas", key = "{#type, #version, #fileName}")
