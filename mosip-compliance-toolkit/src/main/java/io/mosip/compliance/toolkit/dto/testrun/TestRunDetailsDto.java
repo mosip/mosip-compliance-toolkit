@@ -21,6 +21,8 @@ public class TestRunDetailsDto {
 
 	private String methodResponse;
 
+	private String executionStatus;
+
 	private String resultStatus;
 
 	private String resultDescription;

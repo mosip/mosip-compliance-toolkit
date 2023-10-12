@@ -7,8 +7,8 @@ CREATE TABLE toolkit.test_run_archive(
     execution_dtimes timestamp, 
     run_configuration_json character varying(256), 
 	partner_id character varying(36) NOT NULL,
-	execution_status character varying(36) NOT NULL DEFAULT 'incomplete';
-	run_status character varying(36) NOT NULL DEFAULT 'failure';    
+	execution_status character varying(36) NOT NULL,
+	run_status character varying(36) NOT NULL,    
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
