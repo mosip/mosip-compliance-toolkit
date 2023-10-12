@@ -243,21 +243,24 @@ public class ReportGeneratorService {
 		if (ProjectTypes.ABIS.getCode().equals(projectType)) {
 			velocityContext.put("abisProjectDetailsTable", getAbisProjectDetails(abisProjectDto));
 		}
-
+		List<TestCaseDto> allTestCases = getAllTestcases(testRunDetailsResponseDto);
+		int countOfAllTestCases = allTestCases.size();
+		int countOfSuccessTestCases = countOfSuccessTestCases(allTestCases, testRunDetailsResponseDto);
+		int countOfFailedTestCases = countOfAllTestCases - countOfSuccessTestCases;
 		velocityContext.put("testRunStartTime", getTestRunStartDt(testRunDetailsResponseDto));
 		velocityContext.put("reportExpiryPeriod", reportExpiryPeriod);
 		velocityContext.put("reportValidityDate", getReportValidityDt(testRunDetailsResponseDto));
-		velocityContext.put("testRunDetailsList", populateTestRunTable(testRunDetailsResponseDto));
+		velocityContext.put("testRunDetailsList", populateTestRunTable(allTestCases, testRunDetailsResponseDto));
 		velocityContext.put("timeTakenByTestRun", getTestRunExecutionTime(testRunDetailsResponseDto));
-		velocityContext.put("totalTestCasesCount", getTotalTestcases(testRunDetailsResponseDto).size());
-		velocityContext.put("countOfPassedTestCases", getCountOfPassedTestCases(testRunDetailsResponseDto));
-		velocityContext.put("countOfFailedTestCases", getCountOfFailedTestCases(testRunDetailsResponseDto));
+		velocityContext.put("totalTestCasesCount", countOfAllTestCases);
+		velocityContext.put("countOfPassedTestCases", countOfSuccessTestCases);
+		velocityContext.put("countOfFailedTestCases", countOfFailedTestCases);
 		log.info("sessionId", "idType", "id", "Added all attributes in velocity template successfully");
 		return velocityContext;
 	}
 
 	private String validateTestDataSource(TestRunDetailsResponseDto testRunDetailsResponseDto, String projectType) {
-		
+
 		String invalidTestCaseId = BLANK_STRING;
 		List<TestRunDetailsDto> testRunDetailsList = testRunDetailsResponseDto.getTestRunDetailsList();
 		boolean validationResult = true;
@@ -267,13 +270,15 @@ public class ReportGeneratorService {
 			if (ProjectTypes.SDK.getCode().equals(projectType)
 					&& !ignoreSdkTestcaseList.contains(testRunDetailsDto.getTestcaseId())
 					&& !AppConstants.MOSIP_DEFAULT.equals(testRunDetailsDto.getTestDataSource())) {
-				log.info("sessionId", "idType", "id", "testdata validation failed for {}", testRunDetailsDto.getTestcaseId());
+				log.info("sessionId", "idType", "id", "testdata validation failed for {}",
+						testRunDetailsDto.getTestcaseId());
 				validationResult = false;
 			}
 			if (ProjectTypes.ABIS.getCode().equals(projectType)
 					&& !ignoreAbisTestcaseList.contains(testRunDetailsDto.getTestcaseId())
 					&& !AppConstants.MOSIP_DEFAULT.equals(testRunDetailsDto.getTestDataSource())) {
-				log.info("sessionId", "idType", "id", "testdata validation failed for {}", testRunDetailsDto.getTestcaseId());
+				log.info("sessionId", "idType", "id", "testdata validation failed for {}",
+						testRunDetailsDto.getTestcaseId());
 				validationResult = false;
 			}
 			if (!validationResult) {
@@ -281,7 +286,7 @@ public class ReportGeneratorService {
 				break;
 			}
 		}
-		
+
 		return invalidTestCaseId;
 	}
 
@@ -414,16 +419,16 @@ public class ReportGeneratorService {
 		sbiProjectTable.setWebsite(sbiProjectDto.getWebsiteUrl());
 		List<String> deviceImages = new ArrayList<>();
 		if (sbiProjectDto.getDeviceImage1() != null) {
-			deviceImages.add(sbiProjectDto.getDeviceImage1());	
+			deviceImages.add(sbiProjectDto.getDeviceImage1());
 		}
 		if (sbiProjectDto.getDeviceImage2() != null) {
-			deviceImages.add(sbiProjectDto.getDeviceImage2());	
+			deviceImages.add(sbiProjectDto.getDeviceImage2());
 		}
 		if (sbiProjectDto.getDeviceImage3() != null) {
-			deviceImages.add(sbiProjectDto.getDeviceImage3());	
+			deviceImages.add(sbiProjectDto.getDeviceImage3());
 		}
 		if (sbiProjectDto.getDeviceImage4() != null) {
-			deviceImages.add(sbiProjectDto.getDeviceImage4());	
+			deviceImages.add(sbiProjectDto.getDeviceImage4());
 		}
 		sbiProjectTable.setDeviceImages(deviceImages);
 		return sbiProjectTable;
@@ -462,11 +467,10 @@ public class ReportGeneratorService {
 		return testRunDetailsResponseDto;
 	}
 
-	private List<TestRunTable> populateTestRunTable(TestRunDetailsResponseDto testRunDetailsResponseDto) {
+	private List<TestRunTable> populateTestRunTable(List<TestCaseDto> testcasesList, TestRunDetailsResponseDto testRunDetailsResponseDto) {
 		List<TestRunTable> testRunTable = new ArrayList<>();
 		List<TestRunDetailsDto> testRunDetailsList = testRunDetailsResponseDto.getTestRunDetailsList();
-		List<TestCaseDto> testcasesList = getTotalTestcases(testRunDetailsResponseDto);
-		for(TestCaseDto testcase: testcasesList) {
+		for (TestCaseDto testcase : testcasesList) {
 			TestRunTable item = new TestRunTable();
 			String testCaseId = testcase.getTestId();
 			String testCaseName = testcase.getTestName();
@@ -475,18 +479,25 @@ public class ReportGeneratorService {
 			}
 			item.setTestCaseId(testCaseId);
 			item.setTestCaseName(testCaseName);
+			boolean matchingTestCaseFound = false;
 			String result = "";
-			for(TestRunDetailsDto testRunDetailsDto: testRunDetailsList) {
+			for (TestRunDetailsDto testRunDetailsDto : testRunDetailsList) {
 				if (testCaseId.equals(testRunDetailsDto.getTestcaseId())) {
-					result = testRunDetailsDto.getResultStatus();
-					break;
+					matchingTestCaseFound = true;
+					// for each method in a testcase, check the result
+					if (AppConstants.SUCCESS.equals(testRunDetailsDto.getResultStatus())) {
+						if (!AppConstants.FAILURE.equals(result)) {
+							result = AppConstants.SUCCESS;
+						}
+					} else {
+						result = AppConstants.FAILURE;
+					}
 				}
 			}
-			if (result.equals("")) {
+			if (!matchingTestCaseFound) {
 				item.setResultStatus(AppConstants.FAILURE);
-			} else {
-				item.setResultStatus(result);
 			}
+			item.setResultStatus(result);
 			testRunTable.add(item);
 		}
 		if (testRunTable.size() > 0) {
@@ -506,28 +517,37 @@ public class ReportGeneratorService {
 
 	}
 
-	private List<TestCaseDto> getTotalTestcases(TestRunDetailsResponseDto testRunDetailsResponseDto) {
-		ResponseWrapper<CollectionTestCasesResponseDto> testcasesForCollection = collectionsService.getTestCasesForCollection(
-				testRunDetailsResponseDto.getCollectionId());
+	private List<TestCaseDto> getAllTestcases(TestRunDetailsResponseDto testRunDetailsResponseDto) {
+		ResponseWrapper<CollectionTestCasesResponseDto> testcasesForCollection = collectionsService
+				.getTestCasesForCollection(testRunDetailsResponseDto.getCollectionId());
 		List<TestCaseDto> testcasesList = testcasesForCollection.getResponse().getTestcases();
 		return testcasesList;
 	}
 
-	private int getCountOfPassedTestCases(TestRunDetailsResponseDto testRunDetailsResponseDto) {
+	private int countOfSuccessTestCases(List<TestCaseDto> testcasesList, TestRunDetailsResponseDto testRunDetailsResponseDto) {
 		int passCount = 0;
-		List<TestRunDetailsDto> testRunDetailsList = testRunDetailsResponseDto.getTestRunDetailsList();
-		for(TestRunDetailsDto item: testRunDetailsList) {
-			if(item.getResultStatus().equalsIgnoreCase("success")) {
+		for (TestCaseDto testcase : testcasesList) {
+			String testCaseId = testcase.getTestId();
+			boolean matchingTestCaseFound = false;
+			String result = "";
+			for (TestRunDetailsDto testRunDetailsDto : testRunDetailsResponseDto.getTestRunDetailsList()) {
+				if (testCaseId.equals(testRunDetailsDto.getTestcaseId())) {
+					matchingTestCaseFound = true;
+					// for each method in a testcase, check the result
+					if (AppConstants.SUCCESS.equals(testRunDetailsDto.getResultStatus())) {
+						if (!AppConstants.FAILURE.equals(result)) {
+							result = AppConstants.SUCCESS;
+						}
+					} else {
+						result = AppConstants.FAILURE;
+					}
+				}
+			}
+			if (matchingTestCaseFound && AppConstants.SUCCESS.equals(result)) {
 				passCount++;
 			}
 		}
 		return passCount;
-	}
-
-	private int getCountOfFailedTestCases(TestRunDetailsResponseDto testRunDetailsResponseDto) {
-		int passCount = getCountOfPassedTestCases(testRunDetailsResponseDto);
-		int totalTestcaseCount = getTotalTestcases(testRunDetailsResponseDto).size();
-		return totalTestcaseCount-passCount;
 	}
 
 	private String getTestRunStartDt(TestRunDetailsResponseDto testRunDetailsResponseDto) {
