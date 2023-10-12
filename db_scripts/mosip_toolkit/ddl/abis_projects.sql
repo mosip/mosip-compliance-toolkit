@@ -15,6 +15,7 @@ CREATE TABLE toolkit.abis_projects(
 	abis_hash character varying NOT NULL DEFAULT 'To_Be_Added',
 	website_url character varying(256) NOT NULL DEFAULT 'To_Be_Added',
 	partner_id character varying(36) NOT NULL,
+	org_name character varying(64) NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
@@ -42,6 +43,7 @@ COMMENT ON COLUMN toolkit.abis_projects.abis_hash IS 'abis_hash: Encoded hash of
 COMMENT ON COLUMN toolkit.abis_projects.website_url IS 'website_url: Partner website url';
 COMMENT ON COLUMN toolkit.abis_projects.abis_version IS 'abis_version: the abis_version is the version of abis.';
 COMMENT ON COLUMN toolkit.abis_projects.partner_id IS 'Partner Id: partner id who has created this project.';
+COMMENT ON COLUMN toolkit.abis_projects.org_name IS 'orgname: organization name to which partner belongs to.';
 COMMENT ON COLUMN toolkit.abis_projects.cr_by IS 'Created By : ID or name of the user who create / insert record.';
 COMMENT ON COLUMN toolkit.abis_projects.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
 COMMENT ON COLUMN toolkit.abis_projects.upd_by IS 'Updated By : ID or name of the user who update the record with new values';
