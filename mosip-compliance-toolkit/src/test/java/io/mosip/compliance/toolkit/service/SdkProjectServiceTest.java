@@ -57,6 +57,9 @@ public class SdkProjectServiceTest {
     private ObjectStoreAdapter objectStore;
 
     @Mock
+    ResourceCacheService resourceCacheService;
+
+    @Mock
     private BiometricTestDataRepository biometricTestDataRepository;
 
     @Mock
@@ -155,12 +158,14 @@ public class SdkProjectServiceTest {
         sdkProjectDto.setPurpose(SdkPurpose.CHECK_QUALITY.getCode());
         sdkProjectDto.setUrl("http://localhost:9099/biosdk-service");
         sdkProjectDto.setBioTestDataFileName("testFile");
+        sdkProjectDto.setOrgName("Not_Available");
 
         BiometricTestDataEntity biometricTestData = new BiometricTestDataEntity();
         biometricTestData.setFileId("1234");
         Mockito.when(biometricTestDataRepository.findByTestDataName(Mockito.any(), Mockito.any())).thenReturn(biometricTestData);
         Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
         Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
+        Mockito.when(resourceCacheService.getOrgName("abc")).thenReturn("abc");
         SdkProjectDto sdkProjectDtoResponse = new SdkProjectDto();
         Mockito.when(mapper.convertValue(null, SdkProjectDto.class)).thenReturn(sdkProjectDtoResponse);
 
@@ -177,6 +182,7 @@ public class SdkProjectServiceTest {
         sdkProjectDto.setPurpose(SdkPurpose.CHECK_QUALITY.getCode());
         sdkProjectDto.setUrl("http://localhost:9099/biosdk-service");
         sdkProjectDto.setBioTestDataFileName("testFile");
+        sdkProjectDto.setOrgName("Not_Available");
 
         BiometricTestDataEntity biometricTestData = new BiometricTestDataEntity();
         biometricTestData.setFileId("1234");
