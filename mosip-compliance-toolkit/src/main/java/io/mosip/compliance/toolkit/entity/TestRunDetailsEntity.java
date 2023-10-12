@@ -45,6 +45,9 @@ public class TestRunDetailsEntity {
 	
 	@Column(name = "method_response")
 	private String methodResponse;
+
+	@Column(name = "execution_status")
+	private String executionStatus;
 	
 	@Column(name = "result_status")
 	private String resultStatus;

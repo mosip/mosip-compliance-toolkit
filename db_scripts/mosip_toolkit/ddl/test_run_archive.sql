@@ -7,8 +7,8 @@ CREATE TABLE toolkit.test_run_archive(
     execution_dtimes timestamp, 
     run_configuration_json character varying(256), 
 	partner_id character varying(36) NOT NULL,
-	execution_status character varying(36) NOT NULL DEFAULT 'incomplete';
-	run_status character varying(36) NOT NULL DEFAULT 'failure';    
+	execution_status character varying(36) NOT NULL,
+	run_status character varying(36) NOT NULL,    
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
@@ -21,6 +21,10 @@ CREATE TABLE toolkit.test_run_archive(
 CREATE INDEX IF NOT EXISTS idx_test_run_archive_id ON toolkit.test_run_archive USING btree (id);
 CREATE INDEX IF NOT EXISTS idx_test_run_archive_collection_id ON toolkit.test_run_archive USING btree (id, collection_id);
 CREATE INDEX IF NOT EXISTS idx_test_run_archive_id_partner_id ON toolkit.test_run_archive USING btree (id, partner_id);
+ALTER TABLE toolkit.test_run_archive
+    ADD CONSTRAINT test_run_archive_execution_status_values CHECK (execution_status IN ('incomplete','complete'));
+ALTER TABLE toolkit.test_run_archive
+    ADD CONSTRAINT test_run_archive_run_status_values CHECK (run_status IN ('success','failure'));
 COMMENT ON TABLE toolkit.test_run_archive IS 'This table has all the details for a test run archives for a given collection in compliance toolkit project.';
 COMMENT ON COLUMN toolkit.test_run_archive.id IS 'ID: Unique Id generated for an test run.';
 COMMENT ON COLUMN toolkit.test_run_archive.collection_id IS 'Collection ID: Collection Id of the corresponding collection.';
