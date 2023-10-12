@@ -77,11 +77,8 @@ ALTER TABLE toolkit.test_run Add COLUMN execution_status character varying(36) N
 ALTER TABLE toolkit.test_run Add COLUMN run_status character varying(36) DEFAULT 'failure';
 COMMENT ON COLUMN toolkit.test_run.execution_status IS 'Execution Status: test run execution status incomplete or complete.';
 COMMENT ON COLUMN toolkit.test_run.run_status IS 'Test Run Status: test run status as failure/success';
-
-ALTER TABLE toolkit.test_run
-    ADD CONSTRAINT test_run_execution_status_values CHECK (execution_status IN ('incomplete','complete'));
-ALTER TABLE toolkit.test_run
-    ADD CONSTRAINT test_run_run_status_values CHECK (run_status IN ('success','failure'));
+ALTER TABLE toolkit.test_run ADD CONSTRAINT test_run_execution_status_values CHECK (execution_status IN ('incomplete','complete'));
+ALTER TABLE toolkit.test_run ADD CONSTRAINT test_run_run_status_values CHECK (run_status IN ('success','failure'));
 	
 -- add new columns in test_run_archive table
 ALTER TABLE toolkit.test_run_archive ADD COLUMN execution_status character varying(36) NOT NULL DEFAULT 'incomplete';
@@ -94,33 +91,22 @@ ALTER TABLE toolkit.test_run_details ADD COLUMN method_id character varying(150)
 ALTER TABLE toolkit.test_run_details ADD COLUMN execution_status character varying(36) NOT NULL DEFAULT 'Not_Available';
 COMMENT ON COLUMN toolkit.test_run_details.method_id IS 'Method ID: Unique method Id created for each method response';
 COMMENT ON COLUMN toolkit.test_run_details.execution_status IS 'Execution Status: test case execution status Incomplete or Complete.';
-
-UPDATE toolkit.test_run_details SET execution_status = 'complete';
-
-ALTER TABLE toolkit.test_run_details
-DROP CONSTRAINT test_run_details_id_pk;
-
-ALTER TABLE toolkit.test_run_details
-ADD CONSTRAINT test_run_details_id_pk PRIMARY KEY (run_id, testcase_id, method_id);
-
-ALTER TABLE toolkit.test_run_details
-  ADD CONSTRAINT test_run_details_execution_status_values CHECK (execution_status IN ('incomplete','complete'));
-ALTER TABLE toolkit.test_run_details
-  ADD CONSTRAINT test_run_details_result_status_values CHECK (result_status IN ('success','failure'));
+ALTER TABLE toolkit.test_run_details DROP CONSTRAINT test_run_details_id_pk;
+ALTER TABLE toolkit.test_run_details ADD CONSTRAINT test_run_details_id_pk PRIMARY KEY (run_id, testcase_id, method_id);
+ALTER TABLE toolkit.test_run_details ADD CONSTRAINT test_run_details_execution_status_values CHECK (execution_status IN ('incomplete','complete'));
+ALTER TABLE toolkit.test_run_details ADD CONSTRAINT test_run_details_result_status_values CHECK (result_status IN ('success','failure'));
 
 -- add new columns in test_run_details_archive table
 ALTER TABLE toolkit.test_run_details_archive ADD COLUMN method_id character varying(150) NOT NULL DEFAULT 'Not_Available';
 ALTER TABLE toolkit.test_run_details_archive ADD COLUMN execution_status character varying(36) NOT NULL DEFAULT 'Not_Available';
 COMMENT ON COLUMN toolkit.test_run_details_archive.method_id IS 'Method ID: Unique method Id created for each method response';
 COMMENT ON COLUMN toolkit.test_run_details_archive.execution_status IS 'Execution Status: test case execution status Incomplete or Complete.';
+ALTER TABLE toolkit.test_run_details_archive DROP CONSTRAINT test_run_details_archive_id_pk;
+ALTER TABLE toolkit.test_run_details_archive ADD CONSTRAINT test_run_details_archive_id_pk PRIMARY KEY (run_id, testcase_id, method_id);
 
-UPDATE toolkit.test_run_details_archive SET execution_status = 'complete';
-
-ALTER TABLE toolkit.test_run_details_archive
-DROP CONSTRAINT test_run_details_archive_id_pk;
-
-ALTER TABLE toolkit.test_run_details_archive
-ADD CONSTRAINT test_run_details_archive_id_pk PRIMARY KEY (run_id, testcase_id, method_id);
+--Script to populate the newly added columns 'execution_status' for existing test run details
+--can be set as complete since in CTKv1.2.0 only one row exists per run_id, testcase_id
+UPDATE toolkit.test_run_details SET execution_status = 'complete';
 
 --Script to populate the newly added columns 'execution_status', 'run_status'
 --for existing test runs 
