@@ -70,13 +70,7 @@ DROP CONSTRAINT test_run_details_archive_id_pk;
 ALTER TABLE toolkit.test_run_details_archive
 ADD CONSTRAINT test_run_details_archive_id_pk PRIMARY KEY (run_id, testcase_id);
 
-ALTER TABLE toolkit.test_run_details_archive DROP CONSTRAINT test_run_details_archive_execution_status_values;
-ALTER TABLE toolkit.test_run_details_archive DROP CONSTRAINT test_run_details_archive_result_status_values;
-
 ALTER TABLE toolkit.test_run_archive DROP COLUMN execution_status;
 ALTER TABLE toolkit.test_run_archive DROP COLUMN result_status;
 COMMENT ON COLUMN toolkit.test_run_archive.execution_status IS NULL;
 COMMENT ON COLUMN toolkit.test_run_archive.result_status IS NULL;
-
-ALTER TABLE toolkit.test_run_archive DROP CONSTRAINT test_run_archive_execution_status_values;
-ALTER TABLE toolkit.test_run_archive DROP CONSTRAINT test_run_archive_run_status_values;

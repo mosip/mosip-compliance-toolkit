@@ -23,10 +23,6 @@ CREATE TABLE toolkit.test_run_details_archive(
 
 CREATE INDEX IF NOT EXISTS idx_test_run_details_archive_id ON toolkit.test_run_details_archive USING btree (run_id);
 CREATE INDEX IF NOT EXISTS idx_test_run_details_archive_id_partner_id ON toolkit.test_run_details_archive USING btree (run_id, partner_id);
-ALTER TABLE toolkit.test_run_details_archive
-    ADD CONSTRAINT test_run_details_archive_execution_status_values CHECK (execution_status IN ('incomplete','complete'));
-ALTER TABLE toolkit.test_run_details_archive
-    ADD CONSTRAINT test_run_details_archive_result_status_values CHECK (result_status IN ('success','failure'));
 COMMENT ON TABLE toolkit.test_run_details_archive IS 'This table has all the execution details archives for a test run for a given collection in compliance toolkit project.';
 COMMENT ON COLUMN toolkit.test_run_details_archive.run_id IS 'run_id: Unique run Id generated for an test run.';
 COMMENT ON COLUMN toolkit.test_run_details_archive.testcase_id IS 'Testcase ID: Id of the corresponding testcase.';
