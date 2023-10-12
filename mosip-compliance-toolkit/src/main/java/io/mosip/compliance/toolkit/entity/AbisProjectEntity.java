@@ -57,6 +57,9 @@ public class AbisProjectEntity implements Serializable {
 	
 	@Column(name = "partner_id")
 	private String partnerId;
+
+	@Column(name = "org_name")
+	private String orgName;
 	
 	@Column(name = "cr_by")
 	private String crBy;

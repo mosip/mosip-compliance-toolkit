@@ -4,9 +4,11 @@
 ALTER TABLE toolkit.abis_projects Add COLUMN modality character varying(256) NOT NULL DEFAULT 'All';
 ALTER TABLE toolkit.abis_projects Add COLUMN abis_hash character varying NOT NULL DEFAULT 'To_Be_Added';
 ALTER TABLE toolkit.abis_projects Add COLUMN website_url character varying(256) NOT NULL DEFAULT 'To_Be_Added';
+ALTER TABLE toolkit.abis_projects Add COLUMN org_name character varying(64) NOT NULL DEFAULT 'Not_Available';
 COMMENT ON COLUMN toolkit.abis_projects.modality IS 'modality: different modalities combination';
 COMMENT ON COLUMN toolkit.abis_projects.abis_hash IS 'abis_hash: Encoded hash of ABIS installation file';
 COMMENT ON COLUMN toolkit.abis_projects.website_url IS 'website_url: Partner website url';
+COMMENT ON COLUMN toolkit.abis_projects.org_name IS 'orgname: organization name to which partner belongs to.';
 
 -- This table has biometric scores of sbi and sdk from biometric quality check validation.
 CREATE TABLE toolkit.biometric_scores(
