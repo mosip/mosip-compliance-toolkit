@@ -30,6 +30,8 @@ public class SdkProjectDto {
 	private String purpose;
 	
 	private String partnerId;
+
+	private String orgName;
 	
 	private String crBy;
 

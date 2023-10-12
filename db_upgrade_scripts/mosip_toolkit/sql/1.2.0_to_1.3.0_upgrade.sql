@@ -71,8 +71,10 @@ COMMENT ON COLUMN toolkit.sbi_projects.org_name IS 'orgname: organization name t
 -- add new columns in sdk_projects table.
 ALTER TABLE toolkit.sdk_projects Add COLUMN sdk_hash character varying NOT NULL DEFAULT 'To_Be_Added';
 ALTER TABLE toolkit.sdk_projects Add COLUMN website_url character varying(256) NOT NULL DEFAULT 'To_Be_Added';
+ALTER TABLE toolkit.sdk_projects Add COLUMN org_name character varying(64) NOT NULL DEFAULT 'Not_Available';
 COMMENT ON COLUMN toolkit.sdk_projects.sdk_hash IS 'sdk_hash: Encoded hash of SDK installation file';
 COMMENT ON COLUMN toolkit.sdk_projects.website_url IS 'website_url: Partner website url';
+COMMENT ON COLUMN toolkit.sdk_projects.org_name IS 'orgname: organization name to which partner belongs to.';
 
 -- add new columns and constraints in test_run table
 ALTER TABLE toolkit.test_run Add COLUMN execution_status character varying(36) NOT NULL DEFAULT 'incomplete';

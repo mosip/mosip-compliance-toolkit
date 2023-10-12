@@ -39,8 +39,10 @@ ALTER TABLE toolkit.sbi_projects DROP COLUMN org_name;
 -- sdk_projects
 COMMENT ON COLUMN toolkit.sdk_projects.sdk_hash IS NULL;
 COMMENT ON COLUMN toolkit.sdk_projects.website_url IS NULL;
+COMMENT ON COLUMN toolkit.sdk_projects.org_name IS NULL;
 ALTER TABLE toolkit.sdk_projects DROP COLUMN sdk_hash;
 ALTER TABLE toolkit.sdk_projects DROP COLUMN website_url;
+ALTER TABLE toolkit.sdk_projects DROP COLUMN org_name;
 
 -- test_run
 ALTER TABLE toolkit.test_run DROP CONSTRAINT test_run_execution_status_values;

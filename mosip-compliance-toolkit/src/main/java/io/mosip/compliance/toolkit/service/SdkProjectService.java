@@ -56,6 +56,9 @@ public class SdkProjectService {
 	private BiometricTestDataRepository biometricTestDataRepository;
 
 	@Autowired
+	ResourceCacheService resourceCacheService;
+
+	@Autowired
 	private ObjectMapperConfig objectMapperConfig;
 
 	@Autowired
@@ -154,6 +157,7 @@ public class SdkProjectService {
 					entity.setSdkVersion(sdkProjectDto.getSdkVersion());
 					entity.setBioTestDataFileName(sdkProjectDto.getBioTestDataFileName());
 					entity.setPartnerId(partnerId);
+					entity.setOrgName(resourceCacheService.getOrgName(partnerId));
 					entity.setCrBy(this.getUserBy());
 					entity.setCrDate(crDate);
 					entity.setDeleted(false);
@@ -165,6 +169,7 @@ public class SdkProjectService {
 					sdkProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, SdkProjectDto.class);
 					sdkProjectDto.setId(entity.getId());
 					sdkProjectDto.setPartnerId(entity.getPartnerId());
+					sdkProjectDto.setOrgName(entity.getOrgName());
 					sdkProjectDto.setCrBy(entity.getCrBy());
 					sdkProjectDto.setCrDate(entity.getCrDate());
 				} else {
