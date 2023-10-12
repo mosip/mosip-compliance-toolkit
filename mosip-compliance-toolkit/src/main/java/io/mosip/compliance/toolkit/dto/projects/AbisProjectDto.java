@@ -26,6 +26,8 @@ public class AbisProjectDto {
 	private String inboundQueueName;
 	
 	private String partnerId;
+
+	private String orgName;
 	
 	private String crBy;
 

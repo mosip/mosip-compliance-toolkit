@@ -66,6 +66,9 @@ public class AbisProjectService {
 	private TestCasesService testCasesService;
 
 	@Autowired
+	ResourceCacheService resourceCacheService;
+
+	@Autowired
 	private CollectionsService collectionsService;
 
 	@Autowired
@@ -155,6 +158,7 @@ public class AbisProjectService {
 					entity.setPassword(abisProjectDto.getPassword());
 					entity.setInboundQueueName(abisProjectDto.getInboundQueueName());
 					entity.setPartnerId(partnerId);
+					entity.setOrgName(resourceCacheService.getOrgName(partnerId));
 					entity.setCrBy(this.getUserBy());
 					entity.setCrDate(crDate);
 					entity.setDeleted(false);
@@ -172,6 +176,7 @@ public class AbisProjectService {
 					abisProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, AbisProjectDto.class);
 					abisProjectDto.setId(entity.getId());
 					abisProjectDto.setPartnerId(entity.getPartnerId());
+					abisProjectDto.setOrgName(entity.getOrgName());
 					abisProjectDto.setCrBy(entity.getCrBy());
 					abisProjectDto.setCrDate(entity.getCrDate());
 				} else {

@@ -41,8 +41,10 @@ COMMENT ON COLUMN toolkit.sdk_projects.website_url IS 'website_url: Partner webs
 
 ALTER TABLE toolkit.abis_projects Add COLUMN abis_hash character varying NOT NULL DEFAULT 'To_Be_Added';
 ALTER TABLE toolkit.abis_projects Add COLUMN website_url character varying(256) NOT NULL DEFAULT 'To_Be_Added';
+ALTER TABLE toolkit.abis_projects Add COLUMN org_name character varying(64) NOT NULL DEFAULT 'Not_Available';
 COMMENT ON COLUMN toolkit.abis_projects.abis_hash IS 'abis_hash: Encoded hash of ABIS installation file';
 COMMENT ON COLUMN toolkit.abis_projects.website_url IS 'website_url: Partner website url';
+COMMENT ON COLUMN toolkit.abis_projects.org_name IS 'orgname: organization name to which partner belongs to.';
 
 ALTER TABLE toolkit.test_run Add COLUMN execution_status character varying(36) NOT NULL DEFAULT 'incomplete';
 ALTER TABLE toolkit.test_run Add COLUMN run_status character varying(36) DEFAULT 'failure';
