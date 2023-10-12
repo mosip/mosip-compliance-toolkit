@@ -19,6 +19,9 @@ public class BiometricScoresService {
     @Autowired
     private BiometricScoresRepository biometricScoresRepository;
 
+    @Autowired
+    ResourceCacheService resourceCacheService;
+
     private Logger log = LoggerConfiguration.logConfig(SbiProjectService.class);
 
     private AuthUserDetails authUserDetails() {
@@ -43,6 +46,7 @@ public class BiometricScoresService {
                 entity.setId(RandomIdGenerator.generateUUID(AppConstants.SBI.toLowerCase(), "", 36));
                 entity.setProjectId(projectId);
                 entity.setPartnerId(getPartnerId());
+                entity.setOrgName(resourceCacheService.getOrgName(getPartnerId()));
                 entity.setScoresJson(scoresJson);
                 entity.setCrDate(crDate);
                 entity.setCrBy(getUserBy());
