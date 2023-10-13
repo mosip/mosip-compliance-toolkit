@@ -93,14 +93,18 @@ ALTER TABLE toolkit.test_run ADD CONSTRAINT test_run_run_status_values CHECK (ru
 -- add new columns in test_run_archive table
 ALTER TABLE toolkit.test_run_archive ADD COLUMN execution_status character varying(36) NOT NULL DEFAULT 'incomplete';
 ALTER TABLE toolkit.test_run_archive ADD COLUMN run_status character varying(36) NOT NULL DEFAULT 'failure';
+ALTER TABLE toolkit.test_run_archive Add COLUMN org_name character varying(64) NOT NULL DEFAULT 'Not_Available';
 COMMENT ON COLUMN toolkit.test_run_archive.execution_status IS 'Execution Status: test run execution status Incomplete or Complete.';
 COMMENT ON COLUMN toolkit.test_run_archive.run_status IS 'Test Run Status: test run status as Failure/Success';
+COMMENT ON COLUMN toolkit.test_run_archive.org_name IS 'orgname: organization name to which partner belongs to.';
 
 -- add new columns in test_run_details table
 ALTER TABLE toolkit.test_run_details ADD COLUMN method_id character varying(150) NOT NULL DEFAULT 'Not_Available';
 ALTER TABLE toolkit.test_run_details ADD COLUMN execution_status character varying(36) NOT NULL DEFAULT 'Not_Available';
+ALTER TABLE toolkit.test_run_details Add COLUMN org_name character varying(64) NOT NULL DEFAULT 'Not_Available';
 COMMENT ON COLUMN toolkit.test_run_details.method_id IS 'Method ID: Unique method Id created for each method response';
 COMMENT ON COLUMN toolkit.test_run_details.execution_status IS 'Execution Status: test case execution status Incomplete or Complete.';
+COMMENT ON COLUMN toolkit.test_run_details.org_name IS 'orgname: organization name to which partner belongs to.';
 ALTER TABLE toolkit.test_run_details DROP CONSTRAINT test_run_details_id_pk;
 ALTER TABLE toolkit.test_run_details ADD CONSTRAINT test_run_details_id_pk PRIMARY KEY (run_id, testcase_id, method_id);
 ALTER TABLE toolkit.test_run_details ADD CONSTRAINT test_run_details_execution_status_values CHECK (execution_status IN ('incomplete','complete'));
@@ -109,8 +113,10 @@ ALTER TABLE toolkit.test_run_details ADD CONSTRAINT test_run_details_result_stat
 -- add new columns in test_run_details_archive table
 ALTER TABLE toolkit.test_run_details_archive ADD COLUMN method_id character varying(150) NOT NULL DEFAULT 'Not_Available';
 ALTER TABLE toolkit.test_run_details_archive ADD COLUMN execution_status character varying(36) NOT NULL DEFAULT 'Not_Available';
+ALTER TABLE toolkit.test_run_details_archive Add COLUMN org_name character varying(64) NOT NULL DEFAULT 'Not_Available';
 COMMENT ON COLUMN toolkit.test_run_details_archive.method_id IS 'Method ID: Unique method Id created for each method response';
 COMMENT ON COLUMN toolkit.test_run_details_archive.execution_status IS 'Execution Status: test case execution status Incomplete or Complete.';
+COMMENT ON COLUMN toolkit.test_run_details_archive.org_name IS 'orgname: organization name to which partner belongs to.';
 ALTER TABLE toolkit.test_run_details_archive DROP CONSTRAINT test_run_details_archive_id_pk;
 ALTER TABLE toolkit.test_run_details_archive ADD CONSTRAINT test_run_details_archive_id_pk PRIMARY KEY (run_id, testcase_id, method_id);
 
