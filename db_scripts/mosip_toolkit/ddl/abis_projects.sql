@@ -10,7 +10,7 @@ CREATE TABLE toolkit.abis_projects(
 	password character varying(256) NOT NULL,
 	inbound_queue_name character varying(256) NOT NULL,
 	outbound_queue_name character varying(256) NOT NULL,
-	modality character varying(256) NOT NULL,
+	modality character varying(256) NOT NULL DEFAULT 'All',
 	bio_test_data_file_name character varying(64) NOT NULL,
 	abis_hash character varying NOT NULL,
 	website_url character varying(256) NOT NULL,

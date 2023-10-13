@@ -88,9 +88,9 @@ ALTER TABLE toolkit.test_run ADD CONSTRAINT test_run_run_status_values CHECK (ru
 	
 -- add new columns in test_run_archive table
 ALTER TABLE toolkit.test_run_archive ADD COLUMN execution_status character varying(36) NOT NULL DEFAULT 'incomplete';
-ALTER TABLE toolkit.test_run_archive ADD COLUMN result_status character varying(36) NOT NULL DEFAULT 'failure';
+ALTER TABLE toolkit.test_run_archive ADD COLUMN run_status character varying(36) NOT NULL DEFAULT 'failure';
 COMMENT ON COLUMN toolkit.test_run_archive.execution_status IS 'Execution Status: test run execution status Incomplete or Complete.';
-COMMENT ON COLUMN toolkit.test_run_archive.result_status IS 'Test Run Status: test run status as Failure/Success';
+COMMENT ON COLUMN toolkit.test_run_archive.run_status IS 'Test Run Status: test run status as Failure/Success';
 
 -- add new columns in test_run_details table
 ALTER TABLE toolkit.test_run_details ADD COLUMN method_id character varying(150) NOT NULL DEFAULT 'Not_Available';
