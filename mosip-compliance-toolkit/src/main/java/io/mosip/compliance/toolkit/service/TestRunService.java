@@ -309,12 +309,9 @@ public class TestRunService {
 				ToolkitErrorCodes toolkitError = validateRunId(runId, getPartnerId());
 				if (ToolkitErrorCodes.SUCCESS.equals(toolkitError)) {
 					boolean resultStatus = false;
-					int successCount = testRunDetailsRepository.getTestRunSuccessCount(runId, getPartnerId());
+					int successCount = testRunRepository.getTestRunSuccessCount(runId, getPartnerId());
 					if (successCount > 0) {
-						int testcaseCount = testRunRepository.getTestCaseCount(runId);
-						if (testcaseCount == successCount) {
-							resultStatus = true;
-						}
+						resultStatus = true;
 					}
 					testRunStatus = new TestRunStatusDto();
 					testRunStatus.setResultStatus(resultStatus);

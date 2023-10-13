@@ -34,6 +34,9 @@ public interface TestRunRepository extends BaseRepository<TestRunEntity, String>
 	public Page<TestRunHistoryEntity> getTestRunHistoryByCollectionId(Pageable pageable, String collectionId,
 			String partnerId);
 
+	@Query("SELECT COUNT(CASE WHEN LOWER(tr.runStatus)='success' AND LOWER(tr.executionStatus)='complete' THEN 1 ELSE NULL END) FROM TestRunEntity AS tr WHERE tr.id = ?1 AND tr.partnerId = ?2 AND tr.isDeleted<>'true'")
+	public int getTestRunSuccessCount(String runId, String partnerId);
+
 	@Query("SELECT COUNT(ct.testcaseId) FROM TestRunEntity AS tr LEFT JOIN CollectionTestCaseEntity AS ct ON (tr.collectionId = ct.collectionId) WHERE tr.id = ?1 AND tr.isDeleted<>'true' GROUP BY (ct.collectionId)")
 	public int getTestCaseCount(String runId);
 
