@@ -50,6 +50,9 @@ public class CollectionsServiceTest {
     private Authentication authentication;
 
     @Mock
+    private ResourceCacheService resourceCacheService;
+
+    @Mock
     SecurityContext securityContext;
 
     @Mock

@@ -36,7 +36,9 @@ COMMENT ON COLUMN toolkit.biometric_scores.org_name IS 'orgname: organization na
 
 -- add new columns in collections table.
 ALTER TABLE toolkit.collections Add COLUMN collection_type character varying(256) NOT NULL DEFAULT 'custom_collection';
+ALTER TABLE toolkit.collections Add COLUMN org_name character varying(64) NOT NULL DEFAULT 'Not_Available';
 COMMENT ON COLUMN toolkit.collections.collection_type IS 'Collection Type: this can be custom_collection or compliance_collection';
+COMMENT ON COLUMN toolkit.collections.org_name IS 'orgname: organization name to which partner belongs to.';
 
 -- This table has all the data share tokens for a test run for a given collection in ABIS project.
 CREATE TABLE toolkit.datashare_tokens(

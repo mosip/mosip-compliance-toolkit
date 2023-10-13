@@ -15,7 +15,9 @@ DROP TABLE IF EXISTS toolkit.biometric_scores;
 
 -- collections
 COMMENT ON COLUMN toolkit.collections.collection_type IS NULL;
+COMMENT ON COLUMN toolkit.collections.org_name IS NULL;
 ALTER TABLE toolkit.collections DROP COLUMN collection_type;
+ALTER TABLE toolkit.collections DROP COLUMN org_name;
 
 -- datashare_tokens
 DROP TABLE IF EXISTS toolkit.datashare_tokens;
