@@ -238,6 +238,8 @@ public class TestRunService {
 					testRunDetailsResponseDto.setRunId(testRunEntity.getId());
 					testRunDetailsResponseDto.setRunDtimes(testRunEntity.getRunDtimes());
 					testRunDetailsResponseDto.setExecutionDtimes(testRunEntity.getExecutionDtimes());
+					testRunDetailsResponseDto.setRunStatus(testRunEntity.getRunStatus());
+					testRunDetailsResponseDto.setExecutionStatus(testRunEntity.getExecutionStatus());
 					testRunDetailsResponseDto.setTestRunDetailsList(testRunDetailsList);
 				} else {
 					handleToolkitError(ToolkitErrorCodes.TESTRUN_NOT_AVAILABLE, responseWrapper);
