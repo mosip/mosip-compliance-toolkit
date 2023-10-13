@@ -18,9 +18,6 @@ public interface TestRunDetailsRepository extends BaseRepository<TestRunDetailsE
 	@Query("SELECT e FROM TestRunDetailsEntity e  WHERE e.runId= ?1 and e.partnerId= ?2 and e.isDeleted<>'true' order by e.crDtimes desc")
 	public List<TestRunDetailsEntity> getTestRunDetails(String runId, String partnerId);
 
-	@Query("SELECT COUNT(CASE WHEN LOWER(tr.runStatus)='success' AND LOWER(tr.executionStatus)='complete' THEN 1 ELSE NULL END) FROM TestRunEntity AS tr WHERE tr.id = ?1 AND tr.partnerId = ?2 AND tr.isDeleted<>'true'")
-	public int getTestRunSuccessCount(String runId, String partnerId);
-
 	@Modifying
 	@Transactional
 	@Query(value = "INSERT INTO toolkit.test_run_details_archive (SELECT * FROM toolkit.test_run_details trd WHERE trd.run_id = ?1 AND trd.partner_id = ?2)", nativeQuery = true)
