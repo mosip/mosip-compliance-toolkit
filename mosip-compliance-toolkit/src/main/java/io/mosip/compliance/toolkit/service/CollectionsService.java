@@ -62,6 +62,9 @@ public class CollectionsService {
 	private CollectionTestCaseRepository collectionTestCaseRepository;
 
 	@Autowired
+	private ResourceCacheService resourceCacheService;
+
+	@Autowired
 	private CollectionsRepository collectionsRepository;
 
 	@Autowired
@@ -279,6 +282,7 @@ public class CollectionsService {
 					inputEntity.setSdkProjectId(sdkProjectId);
 					inputEntity.setAbisProjectId(abisProjectId);
 					inputEntity.setPartnerId(getPartnerId());
+					inputEntity.setOrgName(resourceCacheService.getOrgName(getPartnerId()));
 					inputEntity.setCollectionType(collectionType);
 					inputEntity.setCrBy(getUserBy());
 					inputEntity.setCrDate(LocalDateTime.now());
