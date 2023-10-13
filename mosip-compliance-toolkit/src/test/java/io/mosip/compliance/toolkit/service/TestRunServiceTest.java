@@ -299,7 +299,7 @@ public class TestRunServiceTest {
 		LocalDateTime lastRunTime = LocalDateTime.now();
 
 		List<TestRunHistoryEntity> entityList = new ArrayList<>();
-		TestRunHistoryEntity entity = new TestRunHistoryEntity(collectionId, lastRunTime, 2, 1, 1);
+		TestRunHistoryEntity entity = new TestRunHistoryEntity(collectionId, lastRunTime, 2, 1);
 		entityList.add(entity);
 
 		Page<TestRunHistoryEntity> pages = new PageImpl<TestRunHistoryEntity>(entityList);
