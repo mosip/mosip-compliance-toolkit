@@ -201,7 +201,8 @@ public class TestRunService {
 					entity.setUpdDtimes(null);
 					entity.setDeleted(false);
 					entity.setDelTime(null);
-					entity.setPartnerId(getPartnerId());	
+					entity.setPartnerId(getPartnerId());
+					entity.setOrgName(resourceCacheService.getOrgName(getPartnerId()));
 					TestRunDetailsEntity outputEntity = testRunDetailsRepository.save(entity);
 
 					testRunDetails = mapper.convertValue(outputEntity, TestRunDetailsDto.class);

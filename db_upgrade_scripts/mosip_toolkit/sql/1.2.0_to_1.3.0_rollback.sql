@@ -60,8 +60,10 @@ ALTER TABLE toolkit.test_run DROP COLUMN org_name;
 -- test_run_archive
 COMMENT ON COLUMN toolkit.test_run_archive.execution_status IS NULL;
 COMMENT ON COLUMN toolkit.test_run_archive.run_status IS NULL;
+COMMENT ON COLUMN toolkit.test_run_archive.org_name IS NULL;
 ALTER TABLE toolkit.test_run_archive DROP COLUMN execution_status;
 ALTER TABLE toolkit.test_run_archive DROP COLUMN run_status;
+ALTER TABLE toolkit.test_run_archive DROP COLUMN org_name;
 
 -- test_run_details
 ALTER TABLE toolkit.test_run_details DROP CONSTRAINT test_run_details_execution_status_values;
@@ -69,15 +71,18 @@ ALTER TABLE toolkit.test_run_details DROP CONSTRAINT test_run_details_result_sta
 ALTER TABLE toolkit.test_run_details DROP CONSTRAINT test_run_details_id_pk;
 COMMENT ON COLUMN toolkit.test_run_details.method_id IS NULL;
 COMMENT ON COLUMN toolkit.test_run_details.execution_status IS NULL;
+COMMENT ON COLUMN toolkit.test_run_details.org_name IS NULL;
 ALTER TABLE toolkit.test_run_details DROP COLUMN method_id;
 ALTER TABLE toolkit.test_run_details DROP COLUMN execution_status;
 ALTER TABLE toolkit.test_run_details ADD CONSTRAINT test_run_details_id_pk PRIMARY KEY (run_id, testcase_id);
+ALTER TABLE toolkit.test_run_details DROP COLUMN org_name;
 
 -- test_run_details_archive
 ALTER TABLE toolkit.test_run_details_archive DROP CONSTRAINT test_run_details_archive_id_pk;
 COMMENT ON COLUMN toolkit.test_run_details_archive.method_id IS NULL;
 COMMENT ON COLUMN toolkit.test_run_details_archive.execution_status IS NULL;
+COMMENT ON COLUMN toolkit.test_run_details_archive.org_name IS NULL;
 ALTER TABLE toolkit.test_run_details_archive DROP COLUMN method_id;
 ALTER TABLE toolkit.test_run_details_archive DROP COLUMN execution_status;
-ALTER TABLE toolkit.test_run_details_archive
+ALTER TABLE toolkit.test_run_details_archive DROP COLUMN org_name;
 ADD CONSTRAINT test_run_details_archive_id_pk PRIMARY KEY (run_id, testcase_id);

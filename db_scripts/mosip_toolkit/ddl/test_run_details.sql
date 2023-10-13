@@ -12,6 +12,7 @@ CREATE TABLE toolkit.test_run_details(
 	result_description character varying NOT NULL,
 	test_data_source character varying(256),
 	partner_id character varying(36) NOT NULL,
+	org_name character varying(64) NOT NULL,
     cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
     upd_by character varying(256),
@@ -39,6 +40,7 @@ COMMENT ON COLUMN toolkit.test_run_details.result_status IS 'result_status: stat
 COMMENT ON COLUMN toolkit.test_run_details.result_description IS 'result_description: description of a test run execution as received from validators.';
 COMMENT ON COLUMN toolkit.test_run_details.test_data_source IS 'test_data_source: biometric test data used for this testcase';
 COMMENT ON COLUMN toolkit.test_run_details.partner_id IS 'Partner Id: partner id who has created this project.';
+COMMENT ON COLUMN toolkit.test_run_details.org_name IS 'orgname: organization name to which partner belongs to.';
 COMMENT ON COLUMN toolkit.test_run_details.cr_by IS 'Created By : ID or name of the user who create / insert record.';
 COMMENT ON COLUMN toolkit.test_run_details.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
 COMMENT ON COLUMN toolkit.test_run_details.is_deleted IS 'is Deleted :flag to store soft delete status';
