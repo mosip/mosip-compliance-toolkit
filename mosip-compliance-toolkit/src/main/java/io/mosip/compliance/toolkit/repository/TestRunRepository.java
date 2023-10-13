@@ -30,7 +30,7 @@ public interface TestRunRepository extends BaseRepository<TestRunEntity, String>
 	@Query("SELECT e.partnerId FROM TestRunEntity e WHERE e.id = ?1 AND e.isDeleted<>'true' and e.partnerId= ?2")
 	public String getPartnerIdByRunId(String id, String partnerId);
 
-	@Query("SELECT new io.mosip.compliance.toolkit.entity.TestRunHistoryEntity(tr.id as runId, MAX(tr.runDtimes) AS last_run_time, COUNT(DISTINCT trd.testcaseId) AS testcase_count, COUNT(CASE WHEN trd.resultStatus = 'success' THEN 1 ELSE NULL END) as passcase_count, COUNT(CASE WHEN trd.resultStatus = 'failure' THEN 1 ELSE NULL END) as failcase_count) FROM TestRunEntity AS tr LEFT JOIN TestRunDetailsEntity AS trd ON (tr.id = trd.runId) WHERE tr.collectionId = ?1 AND tr.partnerId = ?2 AND tr.isDeleted<>'true' AND (trd.isDeleted<>'true' OR trd.isDeleted IS NULL) GROUP BY (tr.id) ORDER BY last_run_time DESC")
+	@Query("SELECT new io.mosip.compliance.toolkit.entity.TestRunHistoryEntity(tr.id as runId, MAX(tr.runDtimes) AS last_run_time, COUNT(DISTINCT trd.testcaseId) AS testcase_count, COUNT(CASE WHEN trd.resultStatus = 'success' and trd.executionStatus = 'complete' THEN 1 ELSE NULL END) as passcase_count) FROM TestRunEntity AS tr LEFT JOIN TestRunDetailsEntity AS trd ON (tr.id = trd.runId) WHERE tr.collectionId = ?1 AND tr.partnerId = ?2 AND tr.isDeleted<>'true' AND (trd.isDeleted<>'true' OR trd.isDeleted IS NULL) GROUP BY (tr.id) ORDER BY last_run_time DESC")
 	public Page<TestRunHistoryEntity> getTestRunHistoryByCollectionId(Pageable pageable, String collectionId,
 			String partnerId);
 
