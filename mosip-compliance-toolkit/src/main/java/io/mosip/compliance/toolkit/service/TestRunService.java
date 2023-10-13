@@ -75,6 +75,9 @@ public class TestRunService {
 	TestRunDetailsRepository testRunDetailsRepository;
 
 	@Autowired
+	ResourceCacheService resourceCacheService;
+
+	@Autowired
 	CollectionsRepository collectionsRepository;
 
 	@Autowired
@@ -112,6 +115,7 @@ public class TestRunService {
 							collectionId.substring(0, Math.min(5, collectionId.length())).toLowerCase(), "", 36));
 					entity.setRunDtimes(inputTestRun.getRunDtimes());
 					entity.setPartnerId(getPartnerId());
+					entity.setOrgName(resourceCacheService.getOrgName(getPartnerId()));
 					entity.setExecutionStatus(AppConstants.INCOMPLETE);
 					entity.setRunStatus(AppConstants.FAILURE);
 					entity.setCrBy(getUserBy());

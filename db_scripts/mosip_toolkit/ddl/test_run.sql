@@ -2,11 +2,12 @@
 
 CREATE TABLE toolkit.test_run(
 	id character varying(36) NOT NULL,
-    collection_id character varying(36) NOT NULL,
+        collection_id character varying(36) NOT NULL,
 	run_dtimes timestamp NOT NULL,
-    execution_dtimes timestamp, 
-    run_configuration_json character varying(256), 
+        execution_dtimes timestamp, 
+        run_configuration_json character varying(256), 
 	partner_id character varying(36) NOT NULL, 
+	org_name character varying(64) NOT NULL,
 	execution_status character varying(36) NOT NULL,
 	run_status character varying(36) NOT NULL,
 	cr_by character varying(256) NOT NULL,
@@ -32,6 +33,7 @@ COMMENT ON COLUMN toolkit.test_run.run_dtimes IS 'Run Dt Time: Timestamp when ru
 COMMENT ON COLUMN toolkit.test_run.execution_dtimes IS 'Execution Dt Time: Timestamp when run has completed execution.';
 COMMENT ON COLUMN toolkit.test_run.run_configuration_json IS 'Run configuration json: Configuration details for a test run.';
 COMMENT ON COLUMN toolkit.test_run.partner_id IS 'Partner Id: partner id who has created this project.';
+COMMENT ON COLUMN toolkit.test_run.org_name IS 'orgname: organization name to which partner belongs to.';
 COMMENT ON COLUMN toolkit.test_run.execution_status IS 'Execution Status: test run execution status Incomplete or Complete.';
 COMMENT ON COLUMN toolkit.test_run.run_status IS 'Test Run Status: test run status as Failure/Success';
 COMMENT ON COLUMN toolkit.test_run.cr_by IS 'Created By : ID or name of the user who create / insert record.';

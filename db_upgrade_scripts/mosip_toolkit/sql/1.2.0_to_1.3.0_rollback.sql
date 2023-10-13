@@ -52,8 +52,10 @@ ALTER TABLE toolkit.test_run DROP CONSTRAINT test_run_run_status_values;
 
 COMMENT ON COLUMN toolkit.test_run.execution_status IS NULL;
 COMMENT ON COLUMN toolkit.test_run.run_status IS NULL;
+COMMENT ON COLUMN toolkit.test_run.org_name IS NULL;
 ALTER TABLE toolkit.test_run DROP COLUMN execution_status;
 ALTER TABLE toolkit.test_run DROP COLUMN run_status;
+ALTER TABLE toolkit.test_run DROP COLUMN org_name;
 
 -- test_run_archive
 COMMENT ON COLUMN toolkit.test_run_archive.execution_status IS NULL;
