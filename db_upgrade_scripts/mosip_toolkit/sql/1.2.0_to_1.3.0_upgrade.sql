@@ -83,8 +83,10 @@ COMMENT ON COLUMN toolkit.sdk_projects.org_name IS 'orgname: organization name t
 -- add new columns and constraints in test_run table
 ALTER TABLE toolkit.test_run Add COLUMN execution_status character varying(36) NOT NULL DEFAULT 'incomplete';
 ALTER TABLE toolkit.test_run Add COLUMN run_status character varying(36) DEFAULT 'failure';
+ALTER TABLE toolkit.test_run Add COLUMN org_name character varying(64) NOT NULL DEFAULT 'Not_Available';
 COMMENT ON COLUMN toolkit.test_run.execution_status IS 'Execution Status: test run execution status incomplete or complete.';
 COMMENT ON COLUMN toolkit.test_run.run_status IS 'Test Run Status: test run status as failure/success';
+COMMENT ON COLUMN toolkit.test_run.org_name IS 'orgname: organization name to which partner belongs to.';
 ALTER TABLE toolkit.test_run ADD CONSTRAINT test_run_execution_status_values CHECK (execution_status IN ('incomplete','complete'));
 ALTER TABLE toolkit.test_run ADD CONSTRAINT test_run_run_status_values CHECK (run_status IN ('success','failure'));
 	

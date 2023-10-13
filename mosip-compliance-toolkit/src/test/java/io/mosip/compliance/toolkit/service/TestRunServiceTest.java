@@ -56,6 +56,9 @@ public class TestRunServiceTest {
 	private SecurityContext securityContext;
 
 	@Mock
+	ResourceCacheService resourceCacheService;
+
+	@Mock
 	private CollectionsRepository collectionsRepository;
 
 	@Mock
