@@ -2,10 +2,10 @@
 
 CREATE TABLE toolkit.test_run(
 	id character varying(36) NOT NULL,
-    collection_id character varying(36) NOT NULL,
+        collection_id character varying(36) NOT NULL,
 	run_dtimes timestamp NOT NULL,
-    execution_dtimes timestamp, 
-    run_configuration_json character varying(256), 
+        execution_dtimes timestamp, 
+        run_configuration_json character varying(256), 
 	partner_id character varying(36) NOT NULL, 
 	org_name character varying(64) NOT NULL,
 	execution_status character varying(36) NOT NULL,
