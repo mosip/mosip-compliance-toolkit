@@ -97,6 +97,9 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 				String healthUrl = item.get("healthUrl").asText();
 				String sdkName = item.get("name").asText();
 				boolean includeInResults = item.get("includeInResults").asBoolean();
+				if (isQualityAssessmentTestCase) {
+					includeInResults = false;
+				}
 				boolean isSdkServiceAccessible = this.callSdkHealthUrl(healthUrl);
 				// if yes, then try calling quality check
 				String validatorMsg = "";
