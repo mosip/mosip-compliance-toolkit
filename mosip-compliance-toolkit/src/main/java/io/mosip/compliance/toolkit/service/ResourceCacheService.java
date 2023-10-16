@@ -42,12 +42,14 @@ public class ResourceCacheService {
 			if (partner != null) {
 				String orgName = partner.getOrganizationName();
 				if (orgName != null) {
+					log.info("sessionId", "idType", "id", "Fetching and returning orgname from PartnerManagerHelper.");
 					return orgName;
 				}
 			}
 		} catch (Exception ex) {
 			log.error("sessionId", "idType", "id", "In getOrgName method of ResourceCacheService" + ex.getMessage());
 		}
+		log.info("sessionId", "idType", "id", "Orgname could not be fetched from PartnerManagerHelper,returning default value. ");
 		return "Not_Available";
 	}
 
