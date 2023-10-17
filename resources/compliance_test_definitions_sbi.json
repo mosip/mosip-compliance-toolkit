@@ -1969,10 +1969,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Face - Timeout",
+		"testName": "Registration capture - Face - Timeout (without any input)",
 		"testId": "SBI1040",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate face timeout<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Donot place your face infront of the camera and wait for capture to timeout",
+		"testDescription": "Test to validate face timeout<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Do not place your face infront of the camera and wait for capture to timeout",
 		"androidTestDescription": "Test to validate face timeout<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Do not place your face infront of the camera and wait for capture to timeout",
 		"isNegativeTestcase": false,
 		"methodName": [
@@ -2016,7 +2016,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Double Iris - Timeout",
+		"testName": "Registration capture - Double Iris - Timeout (without any input)",
 		"testId": "SBI1041",
 		"specVersion": "0.9.5",
 		"testDescription": "Test to validate iris timeout<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Do not place your iris on the iris scanner and wait for capture to timeout",
@@ -2066,7 +2066,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Left Slap - Timeout",
+		"testName": "Registration capture - Left Slap - Timeout (without any input)",
 		"testId": "SBI1042",
 		"specVersion": "0.9.5",
 		"testDescription": "Test to validate left slap timeout<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Do not place your fingers on the slap scanner and wait for capture to timeout",
@@ -2118,7 +2118,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Right Slap - Timeout",
+		"testName": "Registration capture - Right Slap - Timeout (without any input)",
 		"testId": "SBI1043",
 		"specVersion": "0.9.5",
 		"testDescription": "Test to validate right slap timeout<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Do not place your fingers on the slap scanner and wait for capture to timeout",
@@ -2170,7 +2170,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Two Thumbs - Timeout",
+		"testName": "Registration capture - Two Thumbs - Timeout (without any input)",
 		"testId": "SBI1044",
 		"specVersion": "0.9.5",
 		"testDescription": "Test to validate thumb timeout<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Do not place your fingers on the slap scanner and wait for capture to timeout",
@@ -2220,7 +2220,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Exception Photo - Timeout",
+		"testName": "Registration capture - Exception Photo - Timeout (without any input)",
 		"testId": "SBI1045",
 		"specVersion": "0.9.5",
 		"testDescription": "Test to validate exception photo timeout<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Do not place your face infront of the camera and wait for capture to timeout",
@@ -2269,7 +2269,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Auth capture - Face - Timeout",
+		"testName": "Auth capture - Face - Timeout (without any input)",
 		"testId": "SBI1046",
 		"specVersion": "0.9.5",
 		"testDescription": "Test to validate face timeout<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Do not place your face infront of the camera and wait for capture to timeout",
@@ -2315,7 +2315,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Auth capture - Single Iris - Unknown Iris - Timeout",
+		"testName": "Auth capture - Single Iris - Unknown Iris - Timeout (without any input)",
 		"testId": "SBI1047",
 		"specVersion": "0.9.5",
 		"testDescription": "Test to validate iris timeout<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Donot place your iris on ths iris scanner and wait for capture to timeout",
@@ -2363,7 +2363,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Auth capture - Unknown Finger - Timeout",
+		"testName": "Auth capture - Unknown Finger - Timeout (without any input)",
 		"testId": "SBI1048",
 		"specVersion": "0.9.5",
 		"testDescription": "Test to validate finger timeout<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Donot place your finger on the finger scanner and wait for capture to timeout",
@@ -2411,11 +2411,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Face - Force Capture",
+		"testName": "Registration capture - Face - Timeout (with user input)",
 		"testId": "SBI1049",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for registration capture request for face<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera and wait for capture",
-		"androidTestDescription": "Force Capture validation for registration capture request for face<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera and wait for capture",
+		"testDescription": "Timeout Capture validation for registration capture request for face<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera and wait for capture",
+		"androidTestDescription": "Timeout Capture validation for registration capture request for face<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera and wait for capture",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2462,11 +2462,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Double Iris - Force Capture",
+		"testName": "Registration capture - Double Iris - Timeout (with user input)",
 		"testId": "SBI1050",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for registration capture request for double iris<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your iris infront of the camera and wait for capture",
-		"androidTestDescription": "Force Capture validation for registration capture request for double iris<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your iris infront of the camera and wait for capture",
+		"testDescription": "Timeout Capture validation for registration capture request for double iris<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your iris infront of the camera and wait for capture",
+		"androidTestDescription": "Timeout Capture validation for registration capture request for double iris<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your iris infront of the camera and wait for capture",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2516,11 +2516,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Left Slap - Force Capture",
+		"testName": "Registration capture - Left Slap - Timeout (with user input)",
 		"testId": "SBI1051",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for registration capture request for Left Slap<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your left slap on device and wait for capture",
-		"androidTestDescription": "Force Capture validation for registration capture request for Left Slap<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your left slap on device and wait for capture",
+		"testDescription": "Timeout Capture validation for registration capture request for Left Slap<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your left slap on device and wait for capture",
+		"androidTestDescription": "Timeout Capture validation for registration capture request for Left Slap<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your left slap on device and wait for capture",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2572,11 +2572,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Right Slap - Force Capture",
+		"testName": "Registration capture - Right Slap - Timeout (with user input)",
 		"testId": "SBI1052",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for registration capture request for Right Slap<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your right slap on device and wait for capture",
-		"androidTestDescription": "Force Capture validation for registration capture request for Right Slap<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your right slap on device and wait for capture",
+		"testDescription": "Timeout Capture validation for registration capture request for Right Slap<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your right slap on device and wait for capture",
+		"androidTestDescription": "Timeout Capture validation for registration capture request for Right Slap<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your right slap on device and wait for capture",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2628,11 +2628,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Two Thumbs - Force Capture",
+		"testName": "Registration capture - Two Thumbs - Timeout (with user input)",
 		"testId": "SBI1053",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for registration capture request for Two Thumbs<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your two thumbs on device and wait for capture",
-		"androidTestDescription": "Force Capture validation for registration capture request for Two Thumbs<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your two thumbs on device and wait for capture",
+		"testDescription": "Timeout Capture validation for registration capture request for Two Thumbs<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your two thumbs on device and wait for capture",
+		"androidTestDescription": "Timeout Capture validation for registration capture request for Two Thumbs<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your two thumbs on device and wait for capture",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2682,10 +2682,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Exception Photo - Force Capture",
+		"testName": "Registration capture - Exception Photo - Timeout (with user input)",
 		"testId": "SBI1054",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for Face device type exception value left little finger or any will give Exception photo ",
+		"testDescription": "Timeout Capture validation for Face device type exception value left little finger or any will give Exception photo ",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2734,10 +2734,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Auth capture - Face - Force Capture",
+		"testName": "Auth capture - Face - Timeout (with user input)",
 		"testId": "SBI1055",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for Auth capture Request only for Face",
+		"testDescription": "Timeout Capture validation for Auth capture Request only for Face",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -2784,10 +2784,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Auth capture - Single Iris - Unknown Iris - Force Capture",
+		"testName": "Auth capture - Single Iris - Unknown Iris - Timeout (with user input)",
 		"testId": "SBI1056",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for Auth capture Request for Unknown iris",
+		"testDescription": "Timeout Capture validation for Auth capture Request for Unknown iris",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -2836,10 +2836,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Auth capture - Unknown Finger - Force Capture",
+		"testName": "Auth capture - Unknown Finger - Timeout (with user input)",
 		"testId": "SBI1057",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for Auth capture Request for Unknown Finger",
+		"testDescription": "Timeout Capture validation for Auth capture Request for Unknown Finger",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
