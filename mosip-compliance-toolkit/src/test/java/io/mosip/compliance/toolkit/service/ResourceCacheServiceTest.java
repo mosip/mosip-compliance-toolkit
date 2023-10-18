@@ -14,6 +14,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.context.WebApplicationContext;
+import io.mosip.compliance.toolkit.dto.report.PartnerDetailsDto;
+import io.mosip.compliance.toolkit.util.PartnerManagerHelper;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 import java.io.*;
 
@@ -27,6 +31,9 @@ public class ResourceCacheServiceTest {
 
     @Mock
     private ObjectStoreAdapter objectStore;
+
+    @Mock
+    PartnerManagerHelper partnerManagerHelper;
 
     @Mock
     private InputStream inputStream;
@@ -72,5 +79,25 @@ public class ResourceCacheServiceTest {
         InputStream input = new FileInputStream( "src/test/java/io/mosip/compliance/toolkit/testFile.txt");
         resourceCacheService.putSchema(null,version,fileName,inputStream);
         resourceCacheService.putSchema(type,version,fileName,inputStream);
+    }
+
+    @Test
+    public void getOrgNameTest() throws IOException {
+        String partnerId = "abc";
+        PartnerDetailsDto partnerDetailsDto = new PartnerDetailsDto();
+        PartnerDetailsDto.Partner partner = new PartnerDetailsDto.Partner();
+        partner.setOrganizationName("abc");
+        partnerDetailsDto.setId("123");
+        partnerDetailsDto.setResponse(partner);
+        Mockito.when(partnerManagerHelper.getPartnerDetails(partnerId)).thenReturn(partnerDetailsDto);
+        String result = resourceCacheService.getOrgName(partnerId);
+        assertEquals("abc", result);
+    }
+
+    @Test
+    public void getOrgNameTestDefault() throws IOException {
+        String partnerId = null;
+        String result = resourceCacheService.getOrgName(partnerId);
+        assertEquals("Not_Available", result);
     }
 }
