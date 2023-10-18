@@ -2,18 +2,22 @@ package io.mosip.compliance.toolkit.service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.mosip.compliance.toolkit.constants.AppConstants;
+import io.mosip.compliance.toolkit.dto.collections.CollectionTestCasesResponseDto;
 import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
 import io.mosip.compliance.toolkit.dto.projects.SdkProjectDto;
-import io.mosip.compliance.toolkit.dto.report.PartnerDetailsDto;
-import io.mosip.compliance.toolkit.dto.report.SbiProjectTable;
+import io.mosip.compliance.toolkit.dto.report.*;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.util.PartnerManagerHelper;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.kernel.core.authmanager.authadapter.model.MosipUserDto;
+import org.apache.velocity.VelocityContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +31,6 @@ import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.mosip.compliance.toolkit.dto.projects.AbisProjectDto;
-import io.mosip.compliance.toolkit.dto.report.ReportRequestDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
 import io.mosip.kernel.core.exception.ServiceError;
@@ -37,18 +40,32 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import javax.annotation.meta.When;
+
+import static io.restassured.RestAssured.authentication;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ReportGeneratorServiceTest {
-        @Mock
-        private TestRunDetailsResponseDto testRunDetailsResponseDto;
+
 
         @Mock
         private TestRunService testRunService;
 
         @Mock
         private SbiProjectService sbiProjectService;
+
+        @Mock
+        AuthUserDetails authUserDetails;
+
+        @Mock
+        Authentication authentication;
+
+        @Mock
+        SecurityContext securityContext;
 
         @Mock
         private SdkProjectService sdkProjectService;
@@ -58,6 +75,9 @@ public class ReportGeneratorServiceTest {
 
         @Mock
         private Authentication mockAuthentication;
+
+        @Mock
+        TestRunDetailsDto testRunDetailsDto;
 
         @Mock
         private AuthUserDetails mockAuthUserDetails;
@@ -462,9 +482,9 @@ public class ReportGeneratorServiceTest {
 
         @Test(expected = Exception.class)
         public void getCountOfPassedTestCasesTest() {
-                TestRunDetailsResponseDto testRunDetailsResponseDto1 = new TestRunDetailsResponseDto();
-                testRunDetailsResponseDto1.setCollectionId("lkdjskdjsaldks");
-                testRunDetailsResponseDto1.setRunId("ksjdkjdhaskj");
+                TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
+                testRunDetailsResponseDto.setCollectionId("lkdjskdjsaldks");
+                testRunDetailsResponseDto.setRunId("ksjdkjdhaskj");
                 List<TestRunDetailsDto> testRunDetailsDtoList = new ArrayList<>();
                 TestRunDetailsDto testRunDetailsDto = new TestRunDetailsDto();
                 testRunDetailsDto.setResultStatus("Success");
@@ -476,11 +496,80 @@ public class ReportGeneratorServiceTest {
                 testRunDetailsDto.setResultDescription("Test Run successful");
                 testRunDetailsDto.setTestcaseId("ABIS3000");
                 testRunDetailsDtoList.add(testRunDetailsDto);
-                testRunDetailsResponseDto1.setTestRunDetailsList(testRunDetailsDtoList);
-                testRunDetailsResponseDto1.setRunDtimes(LocalDateTime.now());
-                testRunDetailsResponseDto1.setExecutionDtimes(LocalDateTime.now().plusMinutes(4));
+                testRunDetailsResponseDto.setTestRunDetailsList(testRunDetailsDtoList);
+                testRunDetailsResponseDto.setRunDtimes(LocalDateTime.now());
+                testRunDetailsResponseDto.setExecutionDtimes(LocalDateTime.now().plusMinutes(4));
                 ReflectionTestUtils.invokeMethod(reportGeneratorService, "getCountOfPassedTestCases", testRunDetailsResponseDto);
                 ReflectionTestUtils.invokeMethod(reportGeneratorService, "getCountOfFailedTestCases", testRunDetailsResponseDto);
         }
+
+        @Test
+        public void populateTestRunTableTest() {
+                List<TestCaseDto> testcasesList = new ArrayList<>();
+                TestCaseDto testCaseDto = new TestCaseDto();
+                testCaseDto.setTestId("132");
+                testCaseDto.setTestName("iufewhfi");
+                testcasesList.add(testCaseDto);
+                TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
+                List<TestRunDetailsDto> testRunDetailsList = new ArrayList<>();
+                TestRunDetailsDto testRunDetailsDto = Mockito.mock(TestRunDetailsDto.class);
+                Mockito.when(testRunDetailsDto.getTestcaseId()).thenReturn("132");
+                Mockito.when(testRunDetailsDto.getResultStatus()).thenReturn(AppConstants.SUCCESS);
+                testRunDetailsList.add(testRunDetailsDto);
+                testRunDetailsResponseDto.setTestRunDetailsList(testRunDetailsList);
+                ReportGeneratorService reportGeneratorService = new ReportGeneratorService();
+                List<TestRunTable> result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "populateTestRunTable", testcasesList, testRunDetailsResponseDto);
+        }
+
+        @Test
+        public void countOfSuccessTestCasesTest() {
+                List<TestCaseDto> testcasesList = new ArrayList<>();
+                TestCaseDto testCaseDto = new TestCaseDto();
+                testCaseDto.setTestId("123");
+                testcasesList.add(testCaseDto);
+
+                TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
+                List<TestRunDetailsDto> testRunDetailsList = new ArrayList<>();
+                TestRunDetailsDto testRunDetailsDto = Mockito.mock(TestRunDetailsDto.class);
+                Mockito.when(testRunDetailsDto.getTestcaseId()).thenReturn("123");
+                Mockito.when(testRunDetailsDto.getResultStatus()).thenReturn(AppConstants.SUCCESS);
+                testRunDetailsList.add(testRunDetailsDto);
+                testRunDetailsResponseDto.setTestRunDetailsList(testRunDetailsList);
+                ReportGeneratorService reportGeneratorService = new ReportGeneratorService();
+                int result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "countOfSuccessTestCases", testcasesList, testRunDetailsResponseDto);
+                assertEquals(1, result);
+        }
+
+        @Test
+        public void getTestRunStartDtTest() {
+                TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
+                LocalDateTime testRunStartDt = LocalDateTime.of(2023, 10, 17, 10, 30, 0);
+                testRunDetailsResponseDto.setRunDtimes(testRunStartDt);
+
+                String result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "getTestRunStartDt",testRunDetailsResponseDto);
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
+                String expected = formatter.format(testRunStartDt);
+                assertEquals(expected, result);
+        }
+
+        @Test
+        public void getReportValidityDtTest() {
+                TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
+                LocalDateTime testRunStartDt = LocalDateTime.of(2023, 10, 17, 10, 30, 0);
+                testRunDetailsResponseDto.setRunDtimes(testRunStartDt);
+                int reportExpiryPeriod = 6;
+                String result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "getReportValidityDt",testRunDetailsResponseDto);
+        }
+
+
+
+        private MosipUserDto getMosipUserDto(){
+                MosipUserDto mosipUserDto = new MosipUserDto();
+                mosipUserDto.setUserId("123");
+                mosipUserDto.setMail("abc@gmail.com");
+                return mosipUserDto;
+        }
+
 
 }
