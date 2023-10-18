@@ -20,6 +20,10 @@ public class TestRunDetailsResponseDto {
 
 	private LocalDateTime executionDtimes;
 
+	private String executionStatus;
+
+	private String runStatus;
+
 	private List<TestRunDetailsDto> testRunDetailsList;
 
 }

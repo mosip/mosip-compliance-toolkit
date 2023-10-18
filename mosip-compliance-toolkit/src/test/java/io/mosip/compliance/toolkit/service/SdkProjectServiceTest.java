@@ -3,7 +3,9 @@ package io.mosip.compliance.toolkit.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.constants.*;
+import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
 import io.mosip.compliance.toolkit.dto.projects.SdkProjectDto;
+import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
 import io.mosip.compliance.toolkit.entity.SdkProjectEntity;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
@@ -30,6 +32,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
@@ -53,6 +57,9 @@ public class SdkProjectServiceTest {
     private ObjectStoreAdapter objectStore;
 
     @Mock
+    ResourceCacheService resourceCacheService;
+
+    @Mock
     private BiometricTestDataRepository biometricTestDataRepository;
 
     @Mock
@@ -60,6 +67,12 @@ public class SdkProjectServiceTest {
 
     @Mock
     private ObjectMapper mapper;
+
+    @Mock
+    private CollectionsService collectionsService;
+
+    @Mock
+    private TestCasesService testCasesService;
 
     private MosipUserDto mosipUserDto;
 
@@ -145,6 +158,31 @@ public class SdkProjectServiceTest {
         sdkProjectDto.setPurpose(SdkPurpose.CHECK_QUALITY.getCode());
         sdkProjectDto.setUrl("http://localhost:9099/biosdk-service");
         sdkProjectDto.setBioTestDataFileName("testFile");
+        sdkProjectDto.setOrgName("Not_Available");
+
+        BiometricTestDataEntity biometricTestData = new BiometricTestDataEntity();
+        biometricTestData.setFileId("1234");
+        Mockito.when(biometricTestDataRepository.findByTestDataName(Mockito.any(), Mockito.any())).thenReturn(biometricTestData);
+        Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
+        Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
+        Mockito.when(resourceCacheService.getOrgName("abc")).thenReturn("abc");
+        SdkProjectDto sdkProjectDtoResponse = new SdkProjectDto();
+        Mockito.when(mapper.convertValue(null, SdkProjectDto.class)).thenReturn(sdkProjectDtoResponse);
+
+        ResponseWrapper<SdkProjectDto> sdkProjectDtoResponseWrapper = new ResponseWrapper<>();
+        sdkProjectDtoResponseWrapper = sdkProjectService.addSdkProject(sdkProjectDto);
+        Assert.assertNotNull(sdkProjectDtoResponseWrapper.getResponse());
+    }
+
+    @Test
+    public void addSdkProjectAddDefaultTestCaseTest(){
+        SdkProjectDto sdkProjectDto = new SdkProjectDto();
+        sdkProjectDto.setProjectType(ProjectTypes.SDK.getCode());
+        sdkProjectDto.setSdkVersion(SdkSpecVersions.SPEC_VER_0_9_0.getCode());
+        sdkProjectDto.setPurpose(SdkPurpose.CHECK_QUALITY.getCode());
+        sdkProjectDto.setUrl("http://localhost:9099/biosdk-service");
+        sdkProjectDto.setBioTestDataFileName("testFile");
+        sdkProjectDto.setOrgName("Not_Available");
 
         BiometricTestDataEntity biometricTestData = new BiometricTestDataEntity();
         biometricTestData.setFileId("1234");
@@ -153,11 +191,41 @@ public class SdkProjectServiceTest {
         Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
         SdkProjectDto sdkProjectDtoResponse = new SdkProjectDto();
         Mockito.when(mapper.convertValue(null, SdkProjectDto.class)).thenReturn(sdkProjectDtoResponse);
+        ResponseWrapper<CollectionDto> addCollectionWrapper = new ResponseWrapper<CollectionDto>();
+        CollectionDto collectionDto = new CollectionDto();
+        collectionDto.setCollectionId("12345678");
+        collectionDto.setProjectId("abcdefgh");
+        collectionDto.setName("MyCollection");
+        collectionDto.setTestCaseCount(8);
+        addCollectionWrapper.setResponse(collectionDto);
+        Mockito.when(collectionsService.addCollection(Mockito.any())).thenReturn(addCollectionWrapper);
+        ResponseWrapper<List<TestCaseDto>> testCaseWrapper = new ResponseWrapper<List<TestCaseDto>>();
+        List<TestCaseDto> testCaseDtoList = new ArrayList<TestCaseDto>();
+        TestCaseDto testCaseDto = new TestCaseDto();
+        testCaseDto.setTestCaseType("SDK");
+        testCaseDto.setTestId("SDK2000");
+        testCaseDto.setSpecVersion("0.9.5");
+        testCaseDto.setTestName("Init Test");
+        testCaseDto.setTestDescription("Initialise Bio SDK Services");
+        testCaseDto.setAndroidTestDescription(null);
+        testCaseDto.setNegativeTestcase(false);
+        testCaseDto.setInactive(false);
+        testCaseDto.setInactiveForAndroid(null);
+        testCaseDto.setMethodName(null);
+        testCaseDto.setRequestSchema(null);
+        testCaseDto.setResponseSchema(null);
+        testCaseDto.setValidatorDefs(null);
+        testCaseDto.setOtherAttributes(null);
+        testCaseDtoList.add(testCaseDto);
+        testCaseWrapper.setResponse(testCaseDtoList);
+        Mockito.when(testCasesService.getSdkTestCases(Mockito.any(),Mockito.any())).thenReturn(testCaseWrapper);
+
 
         ResponseWrapper<SdkProjectDto> sdkProjectDtoResponseWrapper = new ResponseWrapper<>();
         sdkProjectDtoResponseWrapper = sdkProjectService.addSdkProject(sdkProjectDto);
         Assert.assertNotNull(sdkProjectDtoResponseWrapper.getResponse());
     }
+
 
     /*
      * This class tests the addSdkProject method in case of exception

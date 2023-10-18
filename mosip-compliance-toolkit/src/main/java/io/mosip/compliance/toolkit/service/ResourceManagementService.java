@@ -2,10 +2,9 @@ package io.mosip.compliance.toolkit.service;
 
 import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
+import io.mosip.compliance.toolkit.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +18,6 @@ import io.mosip.compliance.toolkit.constants.SdkPurpose;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.kernel.core.exception.ExceptionUtils;
-import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.virusscanner.exception.VirusScannerException;
@@ -40,7 +38,9 @@ public class ResourceManagementService {
 
 	private static final String SDK_SCHEMA = AppConstants.SCHEMAS + UNDERSCORE + AppConstants.SDK;
 
-    @Value("${mosip.toolkit.document.scan}")
+	private static final String ABIS_SCHEMA = AppConstants.SCHEMAS + UNDERSCORE + AppConstants.ABIS;
+
+	@Value("${mosip.toolkit.document.scan}")
     private Boolean scanDocument;
     
 	/**
@@ -87,9 +87,13 @@ public class ResourceManagementService {
 					container = AppConstants.TESTDATA;
 					String purposeDefault = fileName.replace(AppConstants.MOSIP_DEFAULT + UNDERSCORE, "")
 							.replace(ZIP_EXT, "");
-					SdkPurpose sdkPurposeDefault = SdkPurpose.valueOf(purposeDefault);
-					objectName = AppConstants.MOSIP_DEFAULT + UNDERSCORE + sdkPurposeDefault.toString().toUpperCase()
-							+ ZIP_EXT;
+					if(purposeDefault.contains(AppConstants.ABIS)) {
+						objectName = AppConstants.MOSIP_DEFAULT + UNDERSCORE + purposeDefault.toUpperCase() + ZIP_EXT;
+					} else {
+						SdkPurpose sdkPurposeDefault = SdkPurpose.valueOf(purposeDefault);
+						objectName = AppConstants.MOSIP_DEFAULT + UNDERSCORE + sdkPurposeDefault.toString().toUpperCase()
+								+ ZIP_EXT;
+					}
 					break;
 				case AppConstants.SCHEMAS:
 					if (Objects.isNull(fileName) || !fileName.equals(AppConstants.TESTCASE_SCHEMA_JSON)) {
@@ -115,6 +119,14 @@ public class ResourceManagementService {
 					container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.SDK.toLowerCase() + "/" + version;
 					objectName = fileName;
 					break;
+				case ABIS_SCHEMA:
+					if (Objects.isNull(fileName) || !fileName.endsWith(JSON_EXT)) {
+						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+					}
+					container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.ABIS.toLowerCase() + "/" + version;
+					objectName = fileName;
+					break;
 				default:
 					throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode(),
 							ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
@@ -123,34 +135,24 @@ public class ResourceManagementService {
 				status = putInObjectStore(container, objectName, is);
 				is.close();
 			} else {
-				List<ServiceError> serviceErrorsList = new ArrayList<>();
-				ServiceError serviceError = new ServiceError();
-				serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode());
-				serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
-				serviceErrorsList.add(serviceError);
-				responseWrapper.setErrors(serviceErrorsList);
+				String errorCode = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode();
+				String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage();
+				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 			}
 		} catch (ToolkitException ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
-					"In uploadSampleBioTestDataFile method of ResourceManagementService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ex.getErrorCode());
-			serviceError.setMessage(ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+					"In uploadResourceFile method of ResourceManagementService Service - " + ex.getMessage());
+			String errorCode = ex.getErrorCode();
+			String errorMessage = ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
-					"In uploadSampleBioTestDataFile method of ResourceManagementService Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorCode());
-			serviceError.setMessage(
-					ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorMessage() + BLANK_SPACE + ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+					"In uploadResourceFile method of ResourceManagementService Service - " + ex.getMessage());
+			String errorCode = ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorMessage() + BLANK_SPACE + ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 		}
 		responseWrapper.setId(postResourceFileId);
 		responseWrapper.setResponse(status);
@@ -168,8 +170,9 @@ public class ResourceManagementService {
             log.info("sessionId", "idType", "id", "In isVirusScanSuccess method of ResourceManagementService");
             return virusScan.scanDocument(file.getBytes());
         } catch (Exception e) {
-            log.error("sessionId", "idType", "id", ExceptionUtils.getStackTrace(e));
-            log.error("sessionId", "idType", "id", e.getMessage());
+            log.debug("sessionId", "idType", "id", e.getStackTrace());
+            log.error("sessionId", "idType", "id",
+					"In isVirusScanSuccess method of ResourceManagementService Service - " + e.getMessage());
             throw new VirusScannerException(ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorCode(),
                     ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorMessage() + e.getMessage());
         }

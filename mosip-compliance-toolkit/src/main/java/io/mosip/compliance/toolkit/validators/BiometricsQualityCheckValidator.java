@@ -5,6 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
+import io.mosip.compliance.toolkit.service.BiometricScoresService;
+import io.mosip.compliance.toolkit.service.TestCasesService;
+import io.mosip.kernel.core.http.ResponseWrapper;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -28,7 +35,6 @@ import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.MethodName;
 import io.mosip.compliance.toolkit.constants.Modalities;
-import io.mosip.compliance.toolkit.constants.Purposes;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.sdk.CheckQualityRequestDto;
 import io.mosip.compliance.toolkit.dto.sdk.RequestDto;
@@ -62,6 +68,12 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 	private QualityCheckValidator sdkQualityCheckValidator;
 
 	@Autowired
+	private TestCasesService testCasesService;
+
+	@Autowired
+	private BiometricScoresService biometricScoresService;
+
+	@Autowired
 	private BIRBuilder birBuilder;
 
 	@Autowired
@@ -76,17 +88,25 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 			Map<String, Boolean> testCaseSuccessfulMap = new HashMap<String, Boolean>();
 			String sdkUrls = getSdkUrlsJsonString(inputDto);
 			ArrayNode sdkUrlsArr = (ArrayNode) objectMapperConfig.objectMapper().readValue(sdkUrls, ArrayNode.class);
+			String testId = inputDto.getTestId();
+			TestCaseDto testCase = getTestCaseDetails(testId);
+			boolean isQualityAssessmentTestCase = isQualityAssessmentTestCase(testCase);
 			for (JsonNode item : sdkUrlsArr) {
 				// first check if init is successful
 				String sdkUrl = item.get("url").asText();
 				String healthUrl = item.get("healthUrl").asText();
 				String sdkName = item.get("name").asText();
 				boolean includeInResults = item.get("includeInResults").asBoolean();
+				// Validator shouldn't fail if testcase is a quality assessment testcase.
+				if (isQualityAssessmentTestCase) {
+					includeInResults = false;
+				}
 				boolean isSdkServiceAccessible = this.callSdkHealthUrl(healthUrl);
 				// if yes, then try calling quality check
 				String validatorMsg = "";
 				if (isSdkServiceAccessible) {
-					validationResultDto = this.performQualityCheck(sdkUrl, inputDto);
+					validationResultDto = this.performQualityCheck(sdkUrl, sdkName, inputDto,
+							isQualityAssessmentTestCase, testCase);
 					if (!validationResultDto.getStatus().equals(AppConstants.FAILURE)) {
 						if (includeInResults) {
 							testCaseSuccessfulMap.put(sdkUrl, Boolean.TRUE);
@@ -133,6 +153,9 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 				codes.append(validatorMsg);
 				codes.append(AppConstants.COMMA_SEPARATOR);
 			}
+			if (isQualityAssessmentTestCase) {
+				saveSbiScore(inputDto, testCase);
+			}
 			Boolean areAllQualityChecksSuccessful = Boolean.TRUE;
 			for (Boolean status : testCaseSuccessfulMap.values()) {
 				if (status == Boolean.FALSE) {
@@ -151,17 +174,38 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 				validationResultDto.setDescriptionKey("BIOMETRIC_QUALITY_CHECK_001," + codes.toString());
 			}
 		} catch (ToolkitException e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
 			log.error("sessionId", "idType", "id", "In BiometricsQualityCheckValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
 			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
 			log.error("sessionId", "idType", "id", "In BiometricsQualityCheckValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
 			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		}
 		return validationResultDto;
+	}
+
+	private void saveSbiScore(ValidationInputDto inputDto, TestCaseDto testCase) {
+		try {
+			JsonNode arrBiometricNodes = captureInfoResponse(inputDto);
+			if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
+				for (final JsonNode biometricNode : arrBiometricNodes) {
+					DeviceAttributes deviceAttributes = getDeviceAttributes(biometricNode);
+					ObjectNode sbiScore = objectMapper.createObjectNode();
+					sbiScore.put("score", deviceAttributes.getSbiScore());
+					saveBiometricScores(deviceAttributes, inputDto, AppConstants.SBI, sbiScore.toString(), testCase);
+				}
+			}
+		} catch (Exception ex) {
+			// only log the exception since this is a fail safe situation
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In saveBiometricScores method of BiometricsQualityCheckValidator - " + ex.getMessage());
+		}
 	}
 
 	private String getSdkUrlsJsonString(ValidationInputDto inputDto)
@@ -209,56 +253,33 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 
 	}
 
-	private ValidationResultDto performQualityCheck(String sdkUrl, ValidationInputDto inputDto) throws Exception {
-		ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper()
-				.readValue(inputDto.getMethodResponse(), ObjectNode.class);
-
+	private ValidationResultDto performQualityCheck(String sdkUrl, String sdkName, ValidationInputDto inputDto,
+			boolean isQualityAssessmentTestCase, TestCaseDto testCase) throws Exception {
 		List<ValidationResultDto> validationResultDtoList = new ArrayList<>();
 
 		// STEP 1: extract "bioValue" from the "sbi" capture /racpture response
-		JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
+		JsonNode arrBiometricNodes = captureInfoResponse(inputDto);
 		if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
 
 			BiometricType biometricType = null;
 			for (final JsonNode biometricNode : arrBiometricNodes) {
-
-				JsonNode dataNode = biometricNode.get(DECODED_DATA);
-				String specVersion = biometricNode.get("specVersion").asText();
-				String bioValue = null;
-
-				String purpose = dataNode.get(PURPOSE).asText();
-				String bioType = dataNode.get(BIO_TYPE).asText();
-				String bioSubType = "";
-				if (dataNode.get(BIO_SUBTYPE) != null) {
-					bioSubType = dataNode.get(BIO_SUBTYPE).asText();
-				}
-				String qualityScore = dataNode.get("qualityScore").asText();
-				long qualityScoreLong = Long.parseLong(qualityScore);
-				biometricType = BiometricType.fromValue(bioType);
-				boolean isAuth = false;
-				switch (Purposes.fromCode(purpose)) {
-				case AUTH:
-					isAuth = true;
-					// for authentication, the "bioValue" is encrypted, so decrypt it first
-					bioValue = getDecryptedBioValue(biometricNode.get(THUMB_PRINT).asText(),
-							biometricNode.get(SESSION_KEY).asText(), KEY_SPLITTER, dataNode.get(TIME_STAMP).asText(),
-							dataNode.get(TRANSACTION_ID).asText(), dataNode.get(BIO_VALUE).asText());
-					break;
-				case REGISTRATION:
-					// for registration, the "bioValue" is encoded only
-					bioValue = dataNode.get(BIO_VALUE).asText();
-					break;
-				default:
-					throw new ToolkitException(ToolkitErrorCodes.INVALID_PURPOSE.getErrorCode(),
-							ToolkitErrorCodes.INVALID_PURPOSE.getErrorMessage());
-				}
+				// STEP 1: get bioValue and other attributes
+				DeviceAttributes deviceAttributes = getDeviceAttributes(biometricNode);
+				long sbiScoreLong = deviceAttributes.getSbiScore();
+				biometricType = BiometricType.fromValue(deviceAttributes.getBioType());
+				String bioValue = extractBioValue(biometricNode);
 				// STEP 2: create BIR from the "bioValue"
 				byte[] bdb = CommonUtil.decodeURLSafeBase64(bioValue);
-				BIR probeBir = birBuilder.buildBIR(bdb, bioType, bioSubType, qualityScoreLong, isAuth, specVersion);
+				BIR probeBir = birBuilder.buildBIR(bdb, deviceAttributes.getBioType(), deviceAttributes.getBioSubType(),
+						sbiScoreLong, deviceAttributes.isAuth(), deviceAttributes.getSpecVersion());
 				List<io.mosip.kernel.biometrics.entities.BIR> birsForProbe = new ArrayList<>();
 				birsForProbe.add(probeBir);
 				// STEP 3: call "check-quality" to get qualityScore for the probeBir
 				ValidationResultDto validationResult = this.callSdkCheckQualityUrl(sdkUrl, birsForProbe, biometricType);
+				if (isQualityAssessmentTestCase) {
+					saveBiometricScores(deviceAttributes, inputDto, sdkName, validationResult.getExtraInfoJson(),
+							testCase);
+				}
 				validationResultDtoList.add(validationResult);
 			}
 			// STEP 4: calculate aggregate score and messages;
@@ -286,6 +307,67 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 
 	}
 
+	private JsonNode captureInfoResponse(ValidationInputDto inputDto) throws Exception {
+		ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper()
+				.readValue(inputDto.getMethodResponse(), ObjectNode.class);
+		return captureInfoResponse.get(BIOMETRICS);
+	}
+
+	private DeviceAttributes getDeviceAttributes(JsonNode biometricNode) {
+		JsonNode dataNode = biometricNode.get(DECODED_DATA);
+		String specVersion = biometricNode.get("specVersion").asText();
+		String purpose = dataNode.get(PURPOSE).asText();
+		boolean isAuth = "Auth".equalsIgnoreCase(purpose);
+		String bioType = dataNode.get(BIO_TYPE).asText();
+		String bioSubType = dataNode.has(BIO_SUBTYPE) ? dataNode.get(BIO_SUBTYPE).asText() : "";
+		float score = dataNode.get("qualityScore").floatValue();
+		int sbiScore = Math.round(score);
+		return new DeviceAttributes(specVersion, isAuth, bioType, bioSubType, sbiScore);
+	}
+
+	private TestCaseDto getTestCaseDetails(String testId) {
+		ResponseWrapper<TestCaseDto> testCaseResponseWrapper = testCasesService.getTestCaseById(testId);
+		return testCaseResponseWrapper.getResponse();
+	}
+
+	private void saveBiometricScores(DeviceAttributes bioAttributes, ValidationInputDto inputDto, String sdkName,
+			String scoreJson, TestCaseDto testCase) {
+		try {
+			// get testRunId and projectId from inputDto
+			ObjectNode extraInfoJson = (ObjectNode) objectMapperConfig.objectMapper()
+					.readValue(inputDto.getExtraInfoJson(), ObjectNode.class);
+			String testRunId = extraInfoJson.get("testRunId").asText();
+			String projectId = extraInfoJson.get("projectId").asText();
+			// populate biometric scores json
+			ObjectNode biometricScoresItem = objectMapper.createObjectNode();
+			biometricScoresItem.put("ageGroup", testCase.getOtherAttributes().getAgeGroup());
+			biometricScoresItem.put("occupation", testCase.getOtherAttributes().getOccupation());
+			biometricScoresItem.put("gender", testCase.getOtherAttributes().getGender());
+			biometricScoresItem.put("biometricType", bioAttributes.getBioType());
+			biometricScoresItem.put("deviceSubType", bioAttributes.getBioSubType());
+			biometricScoresItem.put("name", sdkName);
+			ObjectNode bioScore = (ObjectNode) objectMapper.readValue(scoreJson, ObjectNode.class);
+			biometricScoresItem.put("biometricScore", bioScore.get("score").asText());
+			// save biometric scores in database
+			biometricScoresService.addBiometricScores(projectId, testRunId, testCase.getTestId(),
+					biometricScoresItem.toString());
+		} catch (Exception ex) {
+			// only log the exception since this is a fail safe situation
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In saveBiometricScores method of BiometricsQualityCheckValidator - " + ex.getMessage());
+		}
+	}
+
+	private boolean isQualityAssessmentTestCase(TestCaseDto testCase) {
+		boolean flag = false;
+
+		if (testCase.getOtherAttributes().qualityAssessmentTestCase) {
+			flag = true;
+		}
+		return flag;
+	}
+
 	private ValidationResultDto callSdkCheckQualityUrl(String sdkUrl,
 			List<io.mosip.kernel.biometrics.entities.BIR> birsForProbe, BiometricType biometricType) throws Exception {
 		Response restCallResponse = null;
@@ -305,11 +387,13 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 			// TODO: set flags
 			checkQualityRequestDto.setFlags(null);
 			String requestJson = gson.toJson(checkQualityRequestDto);
+			// System.out.println(requestJson);
 			RequestDto inputDto = new RequestDto();
 			inputDto.setVersion(AppConstants.VERSION);
 			inputDto.setRequest(StringUtil.base64Encode(requestJson));
 
 			String requestBody = gson.toJson(inputDto);
+			// System.out.println(requestBody);
 			MediaType mediaType = MediaType.parse(AppConstants.APPLICATION_JSON_CHARSET_UTF_8);
 			RequestBody body = RequestBody.create(mediaType, requestBody);
 
@@ -318,7 +402,7 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 			} else {
 				sdkUrl = sdkUrl + "/" + MethodName.CHECK_QUALITY.getCode();
 			}
-			log.info(sdkUrl);
+			log.info("sessionId", "idType", "id", "SdkCheckQualityUrl " + sdkUrl);
 			Request request = new Request.Builder().url(sdkUrl).post(body).build();
 
 			restCallResponse = client.newCall(request).execute();
@@ -346,4 +430,17 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 		validationResultDto.setStatus(AppConstants.FAILURE);
 		return validationResultDto;
 	}
+}
+
+@Component
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+class DeviceAttributes {
+
+	private String specVersion;
+	private boolean isAuth;
+	private String bioType;
+	private String bioSubType;
+	private int sbiScore;
 }

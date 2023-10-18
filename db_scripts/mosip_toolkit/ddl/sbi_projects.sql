@@ -8,7 +8,14 @@ CREATE TABLE toolkit.sbi_projects(
 	purpose character varying(256) NOT NULL,
 	device_type character varying(64) NOT NULL,
 	device_sub_type character varying(64) NOT NULL,
+	device_image1 character varying,
+	device_image2 character varying,
+	device_image3 character varying,
+	device_image4 character varying,
+	sbi_hash character varying NOT NULL,
+	website_url character varying(256) NOT NULL,
 	partner_id character varying(36) NOT NULL,
+	org_name character varying(64) NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
@@ -29,7 +36,14 @@ COMMENT ON COLUMN toolkit.sbi_projects.sbi_version IS 'sbi_version: the sbi_vers
 COMMENT ON COLUMN toolkit.sbi_projects.purpose IS 'Purpose: the purpose for testing';
 COMMENT ON COLUMN toolkit.sbi_projects.device_type IS 'device_type: the device type for testing';
 COMMENT ON COLUMN toolkit.sbi_projects.device_sub_type IS 'device_sub_type: the device sub type for testing';
+COMMENT ON COLUMN toolkit.sbi_projects.device_image1 IS 'device_image1: Base64 value of device image';
+COMMENT ON COLUMN toolkit.sbi_projects.device_image2 IS 'device_image2: Base64 value of device image';
+COMMENT ON COLUMN toolkit.sbi_projects.device_image3 IS 'device_image3: Base64 value of device image';
+COMMENT ON COLUMN toolkit.sbi_projects.device_image4 IS 'device_image4: Base64 value of device image';
+COMMENT ON COLUMN toolkit.sbi_projects.sbi_hash IS 'sbi_hash: Encoded hash of SBI installation file';
+COMMENT ON COLUMN toolkit.sbi_projects.website_url IS 'website_url: Partner website url';
 COMMENT ON COLUMN toolkit.sbi_projects.partner_id IS 'Partner Id: partner id who has created this project.';
+COMMENT ON COLUMN toolkit.sbi_projects.org_name IS 'orgname: organization name to which partner belongs to.';
 COMMENT ON COLUMN toolkit.sbi_projects.cr_by IS 'Created By : ID or name of the user who create / insert record.';
 COMMENT ON COLUMN toolkit.sbi_projects.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
 COMMENT ON COLUMN toolkit.sbi_projects.upd_by IS 'Updated By : ID or name of the user who update the record with new values';

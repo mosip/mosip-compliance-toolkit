@@ -215,10 +215,28 @@
 				"keyRotationTestCase": {
 					"type": "boolean"
 				},
+				"hashValidationTestCase": {
+					"type": "boolean"
+				},
 				"transactionId": {
 					"type": "string"
 				},
 				"invalidRequestAttribute": {
+					"type": "string"
+				},
+				"qualityAssessmentTestCase": {
+					"type": "boolean"
+				},
+				"ageGroup": {
+					"type": "string"
+				},
+				"gender": {
+					"type": "string"
+				},
+				"occupation": {
+					"type": "string"
+				},
+				"testCaseRepeatCount": {
 					"type": "string"
 				},
 				"modalities": {

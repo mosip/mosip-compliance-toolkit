@@ -3,7 +3,9 @@ package io.mosip.compliance.toolkit.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.constants.*;
+import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
 import io.mosip.compliance.toolkit.dto.projects.AbisProjectDto;
+import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.entity.AbisProjectEntity;
 import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
 import io.mosip.compliance.toolkit.repository.AbisProjectRepository;
@@ -30,6 +32,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
@@ -53,6 +57,9 @@ public class AbisProjectServiceTest {
     private ObjectStoreAdapter objectStore;
 
     @Mock
+    ResourceCacheService resourceCacheService;
+
+    @Mock
     private BiometricTestDataRepository biometricTestDataRepository;
 
     @Mock
@@ -60,6 +67,12 @@ public class AbisProjectServiceTest {
 
     @Mock
     private ObjectMapper mapper;
+
+    @Mock
+    private CollectionsService collectionsService;
+
+    @Mock
+    private TestCasesService testCasesService;
 
     private MosipUserDto mosipUserDto;
 
@@ -154,6 +167,7 @@ public class AbisProjectServiceTest {
         Mockito.when(biometricTestDataRepository.findByTestDataName(Mockito.any(), Mockito.any())).thenReturn(biometricTestData);
         Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
         Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
+        Mockito.when(resourceCacheService.getOrgName("abc")).thenReturn("abc");
         AbisProjectDto abisProjectDtoResponse = new AbisProjectDto();
         Mockito.when(mapper.convertValue(null, AbisProjectDto.class)).thenReturn(abisProjectDtoResponse);
 
@@ -161,6 +175,61 @@ public class AbisProjectServiceTest {
         abisProjectDtoResponseWrapper = abisProjectService.addAbisProject(abisProjectDto);
         Assert.assertNotNull(abisProjectDtoResponseWrapper.getResponse());
     }
+
+    @Test
+    public void addAbisProjectAddDefaultCollectionTest() {
+        AbisProjectDto abisProjectDto = new AbisProjectDto();
+        abisProjectDto.setProjectType(ProjectTypes.ABIS.getCode());
+        abisProjectDto.setAbisVersion(AbisSpecVersions.SPEC_VER_0_9_0.getCode());
+        abisProjectDto.setUsername("admin");
+        abisProjectDto.setPassword("admin123");
+        abisProjectDto.setOutboundQueueName("ctk-to-abis");
+        abisProjectDto.setInboundQueueName("abis-to-ctk");
+        abisProjectDto.setUrl("wss://activemq.dev.mosip.net/ws");
+        abisProjectDto.setBioTestDataFileName("testFile");
+        abisProjectDto.setOrgName("Not_Available");
+
+        BiometricTestDataEntity biometricTestData = new BiometricTestDataEntity();
+        biometricTestData.setFileId("1234");
+        Mockito.when(biometricTestDataRepository.findByTestDataName(Mockito.any(), Mockito.any())).thenReturn(biometricTestData);
+        Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
+        Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
+        AbisProjectDto abisProjectDtoResponse = new AbisProjectDto();
+        Mockito.when(mapper.convertValue(null, AbisProjectDto.class)).thenReturn(abisProjectDtoResponse);
+        ResponseWrapper<CollectionDto> addCollectionWrapper = new ResponseWrapper<CollectionDto>();
+        CollectionDto collectionDto = new CollectionDto();
+        collectionDto.setCollectionId("12345678");
+        collectionDto.setProjectId("abcdefgh");
+        collectionDto.setName("MyCollection");
+        collectionDto.setTestCaseCount(8);
+        addCollectionWrapper.setResponse(collectionDto);
+        Mockito.when(collectionsService.addCollection(Mockito.any())).thenReturn(addCollectionWrapper);
+        ResponseWrapper<List<TestCaseDto>> testCaseWrapper = new ResponseWrapper<List<TestCaseDto>>();
+        List<TestCaseDto> testCaseDtoList = new ArrayList<TestCaseDto>();
+        TestCaseDto testCaseDto = new TestCaseDto();
+        testCaseDto.setTestCaseType("ABIS");
+        testCaseDto.setTestId("ABIS3000");
+        testCaseDto.setSpecVersion("0.9.5");
+        testCaseDto.setTestName("Insert one person's biomterics in ABIS");
+        testCaseDto.setTestDescription("Insert one person's biomterics in ABIS");
+        testCaseDto.setAndroidTestDescription(null);
+        testCaseDto.setNegativeTestcase(false);
+        testCaseDto.setInactive(false);
+        testCaseDto.setInactiveForAndroid(null);
+        testCaseDto.setMethodName(null);
+        testCaseDto.setRequestSchema(null);
+        testCaseDto.setResponseSchema(null);
+        testCaseDto.setValidatorDefs(null);
+        testCaseDto.setOtherAttributes(null);
+        testCaseDtoList.add(testCaseDto);
+        testCaseWrapper.setResponse(testCaseDtoList);
+        Mockito.when(testCasesService.getAbisTestCases(Mockito.any())).thenReturn(testCaseWrapper);
+
+        ResponseWrapper<AbisProjectDto> abisProjectDtoResponseWrapper = new ResponseWrapper<>();
+        abisProjectDtoResponseWrapper = abisProjectService.addAbisProject(abisProjectDto);
+        Assert.assertNotNull(abisProjectDtoResponseWrapper.getResponse());
+    }
+
 
     /*
      * This class tests the addAbisProject method in case of exception

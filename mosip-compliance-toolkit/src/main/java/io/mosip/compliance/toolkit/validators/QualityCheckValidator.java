@@ -6,6 +6,8 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
+import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +33,8 @@ public class QualityCheckValidator extends SDKValidator {
 
 	@Value("${mosip.toolkit.sdk.iris.qualitycheck.threshold.value}")
 	private String irisThresholdValue;
+
+	private Logger log = LoggerConfiguration.logConfig(QualityCheckValidator.class);
 
 	@Override
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
@@ -85,6 +89,8 @@ public class QualityCheckValidator extends SDKValidator {
 				}
 			}
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In QualityCheckValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
 			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
@@ -96,6 +102,10 @@ public class QualityCheckValidator extends SDKValidator {
 	private void checkScore(String biometricTypeStr, ValidationInputDto inputDto, float thresholdValue,
 			ValidationResultDto validationResultDto, float score, Map<String, String> analyticsInfo) {
 		String resourceBundleKeyName = "";
+		ObjectNode sdkScoreObj = objectMapperConfig.objectMapper().createObjectNode();
+		int sdkScore = Math.round(score);
+		sdkScoreObj.put("score", String.valueOf(sdkScore));
+		validationResultDto.setExtraInfoJson(sdkScoreObj.toString());
 		if (!inputDto.isNegativeTestCase()) {
 			// positive test case
 			if (score >= thresholdValue) {

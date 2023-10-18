@@ -24,8 +24,22 @@ public class SbiProjectDto {
 	private String deviceType;
 	
 	private String deviceSubType;
+
+	private String deviceImage1;
+
+	private String deviceImage2;
+
+	private String deviceImage3;
+
+	private String deviceImage4;
+
+	private String sbiHash;
+
+	private String websiteUrl;
 	
 	private String partnerId;
+
+	private String orgName;
 	
 	private String crBy;
 

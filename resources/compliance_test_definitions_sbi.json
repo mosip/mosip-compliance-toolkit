@@ -126,7 +126,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -181,7 +181,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -237,7 +237,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -292,7 +292,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -348,7 +348,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -401,7 +401,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -500,7 +500,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -553,7 +553,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -652,7 +652,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -749,15 +749,11 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
-				},
-				{
-					"name": "TransactionIdValidator",
-					"description": "Validates the methodRequest and methodResponse transactionId are same"
 				}
 			]
 		],
@@ -802,15 +798,11 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
-				},
-				{
-					"name": "TransactionIdValidator",
-					"description": "Validates the methodRequest and methodResponse transactionId are same"
 				}
 			]
 		],
@@ -857,15 +849,11 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
-				},
-				{
-					"name": "TransactionIdValidator",
-					"description": "Validates the methodRequest and methodResponse transactionId are same"
 				}
 			]
 		],
@@ -912,15 +900,11 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
-				},
-				{
-					"name": "TransactionIdValidator",
-					"description": "Validates the methodRequest and methodResponse transactionId are same"
 				}
 			]
 		],
@@ -967,15 +951,11 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
-				},
-				{
-					"name": "TransactionIdValidator",
-					"description": "Validates the methodRequest and methodResponse transactionId are same"
 				}
 			]
 		],
@@ -1022,15 +1002,11 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
-				},
-				{
-					"name": "TransactionIdValidator",
-					"description": "Validates the methodRequest and methodResponse transactionId are same"
 				}
 			]
 		],
@@ -1078,15 +1054,11 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
-				},
-				{
-					"name": "TransactionIdValidator",
-					"description": "Validates the methodRequest and methodResponse transactionId are same"
 				}
 			]
 		],
@@ -1133,15 +1105,11 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
 					"description": "Validates the response signature"
-				},
-				{
-					"name": "TransactionIdValidator",
-					"description": "Validates the methodRequest and methodResponse transactionId are same"
 				}
 			]
 		],
@@ -1969,10 +1937,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Face - Timeout",
+		"testName": "Registration capture - Face - Timeout (without any input)",
 		"testId": "SBI1040",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate face timeout<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Donot place your face infront of the camera and wait for capture to timeout",
+		"testDescription": "Test to validate face timeout<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Do not place your face infront of the camera and wait for capture to timeout",
 		"androidTestDescription": "Test to validate face timeout<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Do not place your face infront of the camera and wait for capture to timeout",
 		"isNegativeTestcase": false,
 		"methodName": [
@@ -2016,7 +1984,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Double Iris - Timeout",
+		"testName": "Registration capture - Double Iris - Timeout (without any input)",
 		"testId": "SBI1041",
 		"specVersion": "0.9.5",
 		"testDescription": "Test to validate iris timeout<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Do not place your iris on the iris scanner and wait for capture to timeout",
@@ -2066,7 +2034,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Left Slap - Timeout",
+		"testName": "Registration capture - Left Slap - Timeout (without any input)",
 		"testId": "SBI1042",
 		"specVersion": "0.9.5",
 		"testDescription": "Test to validate left slap timeout<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Do not place your fingers on the slap scanner and wait for capture to timeout",
@@ -2118,7 +2086,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Right Slap - Timeout",
+		"testName": "Registration capture - Right Slap - Timeout (without any input)",
 		"testId": "SBI1043",
 		"specVersion": "0.9.5",
 		"testDescription": "Test to validate right slap timeout<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Do not place your fingers on the slap scanner and wait for capture to timeout",
@@ -2170,7 +2138,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Two Thumbs - Timeout",
+		"testName": "Registration capture - Two Thumbs - Timeout (without any input)",
 		"testId": "SBI1044",
 		"specVersion": "0.9.5",
 		"testDescription": "Test to validate thumb timeout<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Do not place your fingers on the slap scanner and wait for capture to timeout",
@@ -2220,7 +2188,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Exception Photo - Timeout",
+		"testName": "Registration capture - Exception Photo - Timeout (without any input)",
 		"testId": "SBI1045",
 		"specVersion": "0.9.5",
 		"testDescription": "Test to validate exception photo timeout<br><br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Do not place your face infront of the camera and wait for capture to timeout",
@@ -2269,7 +2237,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Auth capture - Face - Timeout",
+		"testName": "Auth capture - Face - Timeout (without any input)",
 		"testId": "SBI1046",
 		"specVersion": "0.9.5",
 		"testDescription": "Test to validate face timeout<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Do not place your face infront of the camera and wait for capture to timeout",
@@ -2315,7 +2283,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Auth capture - Single Iris - Unknown Iris - Timeout",
+		"testName": "Auth capture - Single Iris - Unknown Iris - Timeout (without any input)",
 		"testId": "SBI1047",
 		"specVersion": "0.9.5",
 		"testDescription": "Test to validate iris timeout<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Donot place your iris on ths iris scanner and wait for capture to timeout",
@@ -2363,7 +2331,7 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Auth capture - Unknown Finger - Timeout",
+		"testName": "Auth capture - Unknown Finger - Timeout (without any input)",
 		"testId": "SBI1048",
 		"specVersion": "0.9.5",
 		"testDescription": "Test to validate finger timeout<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Donot place your finger on the finger scanner and wait for capture to timeout",
@@ -2411,11 +2379,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Face - Force Capture",
+		"testName": "Registration capture - Face - Timeout (with user input)",
 		"testId": "SBI1049",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for registration capture request for face<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera and wait for capture",
-		"androidTestDescription": "Force Capture validation for registration capture request for face<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera and wait for capture",
+		"testDescription": "Timeout Capture validation for registration capture request for face<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera and wait for capture",
+		"androidTestDescription": "Timeout Capture validation for registration capture request for face<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera and wait for capture",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2462,11 +2430,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Double Iris - Force Capture",
+		"testName": "Registration capture - Double Iris - Timeout (with user input)",
 		"testId": "SBI1050",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for registration capture request for double iris<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your iris infront of the camera and wait for capture",
-		"androidTestDescription": "Force Capture validation for registration capture request for double iris<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your iris infront of the camera and wait for capture",
+		"testDescription": "Timeout Capture validation for registration capture request for double iris<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your iris infront of the camera and wait for capture",
+		"androidTestDescription": "Timeout Capture validation for registration capture request for double iris<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your iris infront of the camera and wait for capture",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2516,11 +2484,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Left Slap - Force Capture",
+		"testName": "Registration capture - Left Slap - Timeout (with user input)",
 		"testId": "SBI1051",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for registration capture request for Left Slap<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your left slap on device and wait for capture",
-		"androidTestDescription": "Force Capture validation for registration capture request for Left Slap<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your left slap on device and wait for capture",
+		"testDescription": "Timeout Capture validation for registration capture request for Left Slap<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your left slap on device and wait for capture",
+		"androidTestDescription": "Timeout Capture validation for registration capture request for Left Slap<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your left slap on device and wait for capture",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2572,11 +2540,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Right Slap - Force Capture",
+		"testName": "Registration capture - Right Slap - Timeout (with user input)",
 		"testId": "SBI1052",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for registration capture request for Right Slap<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your right slap on device and wait for capture",
-		"androidTestDescription": "Force Capture validation for registration capture request for Right Slap<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your right slap on device and wait for capture",
+		"testDescription": "Timeout Capture validation for registration capture request for Right Slap<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your right slap on device and wait for capture",
+		"androidTestDescription": "Timeout Capture validation for registration capture request for Right Slap<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your right slap on device and wait for capture",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2628,11 +2596,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Two Thumbs - Force Capture",
+		"testName": "Registration capture - Two Thumbs - Timeout (with user input)",
 		"testId": "SBI1053",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for registration capture request for Two Thumbs<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your two thumbs on device and wait for capture",
-		"androidTestDescription": "Force Capture validation for registration capture request for Two Thumbs<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your two thumbs on device and wait for capture",
+		"testDescription": "Timeout Capture validation for registration capture request for Two Thumbs<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your two thumbs on device and wait for capture",
+		"androidTestDescription": "Timeout Capture validation for registration capture request for Two Thumbs<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your two thumbs on device and wait for capture",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2682,10 +2650,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Registration capture - Exception Photo - Force Capture",
+		"testName": "Registration capture - Exception Photo - Timeout (with user input)",
 		"testId": "SBI1054",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for Face device type exception value left little finger or any will give Exception photo ",
+		"testDescription": "Timeout Capture validation for Face device type exception value left little finger or any will give Exception photo ",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -2734,10 +2702,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Auth capture - Face - Force Capture",
+		"testName": "Auth capture - Face - Timeout (with user input)",
 		"testId": "SBI1055",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for Auth capture Request only for Face",
+		"testDescription": "Timeout Capture validation for Auth capture Request only for Face",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -2784,10 +2752,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Auth capture - Single Iris - Unknown Iris - Force Capture",
+		"testName": "Auth capture - Single Iris - Unknown Iris - Timeout (with user input)",
 		"testId": "SBI1056",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for Auth capture Request for Unknown iris",
+		"testDescription": "Timeout Capture validation for Auth capture Request for Unknown iris",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -2836,10 +2804,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Auth capture - Unknown Finger - Force Capture",
+		"testName": "Auth capture - Unknown Finger - Timeout (with user input)",
 		"testId": "SBI1057",
 		"specVersion": "0.9.5",
-		"testDescription": "Force Capture validation for Auth capture Request for Unknown Finger",
+		"testDescription": "Timeout Capture validation for Auth capture Request for Unknown Finger",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -2910,7 +2878,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -2971,7 +2939,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -3112,7 +3080,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -3171,7 +3139,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -3230,7 +3198,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -3287,7 +3255,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -3340,7 +3308,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -3393,7 +3361,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -3448,7 +3416,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -3503,7 +3471,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -3560,7 +3528,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -3616,7 +3584,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -3672,7 +3640,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -3726,7 +3694,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -3780,7 +3748,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -3830,7 +3798,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -3889,7 +3857,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -3948,7 +3916,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -4005,7 +3973,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -4058,7 +4026,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -4111,7 +4079,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -4166,7 +4134,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -4221,7 +4189,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -4277,7 +4245,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -4336,7 +4304,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -4395,7 +4363,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -4452,7 +4420,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -4505,7 +4473,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -4558,7 +4526,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -4613,7 +4581,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -4668,7 +4636,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -4713,7 +4681,7 @@
 			"AuthCaptureRequestSchema"
 		],
 		"responseSchema": [
-			"TransactionIdErrorResponseSchema"
+			"TransactionIdErrorCaptureResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -4723,7 +4691,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -4763,7 +4731,7 @@
 			"AuthCaptureRequestSchema"
 		],
 		"responseSchema": [
-			"TransactionIdErrorResponseSchema"
+			"TransactionIdErrorCaptureResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -4773,7 +4741,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -4815,7 +4783,7 @@
 			"AuthCaptureRequestSchema"
 		],
 		"responseSchema": [
-			"TransactionIdErrorResponseSchema"
+			"TransactionIdErrorCaptureResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -4825,7 +4793,7 @@
 				},
 				{
 					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if bioCount and segments match the ones set in request"
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
 				},
 				{
 					"name": "SignatureValidator",
@@ -5181,6 +5149,877 @@
 			"bioCount": "1",
 			"deviceSubId": "0",
 			"invalidRequestAttribute": "bio[0].deviceSubId"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Left Slap - Hash Validations",
+		"testId": "SBI1101",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate the RCapture interface for Left Slap Fingerprints<br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes",
+		"androidTestDescription": "Test to validate the RCapture interface for Left Slap Fingerprints<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "HashValidator",
+					"description": "Validates the 'hash value' received in the response matches 'previous hash' in request"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+				"LeftIndex",
+				"LeftMiddle",
+				"LeftRing",
+				"LeftLittle"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "4",
+			"deviceSubId": "1",
+			"hashValidationTestCase": true
+		}
+	},{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Face - Hash Validations",
+		"testId": "SBI1102",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate RCapture interface for face<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes",
+		"androidTestDescription": "Test to validate RCapture interface for face<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "HashValidator",
+					"description": "Validates the 'hash value' received in the response matches 'previous hash' in request"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Face"
+			],
+			"deviceSubTypes": [
+				"Full face"
+			],
+			"segments": [],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0",
+			"hashValidationTestCase": true
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Right Slap - Hash Validations",
+		"testId": "SBI1103",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate RCapture interface for Right Slap Fingerprints<br>Steps:<br>1. Click on Start Streaming button.<br>3. Once streaming is done, click on Inititate Capture button to start the capture <br>2. Place your right slap on the device until the capture completes",
+		"androidTestDescription": "Test to validate RCapture interface for Right Slap Fingerprints<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your right slap on the device until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "HashValidator",
+					"description": "Validates the 'hash value' received in the response matches 'previous hash' in request"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+				"RightIndex",
+				"RightMiddle",
+				"RightRing",
+				"RightLittle"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "4",
+			"deviceSubId": "2",
+			"hashValidationTestCase": true
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Double Iris- Hash Validations",
+		"testId": "SBI1104",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate RCapture interface for Two Iris<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place both your iris on the device until the capture completes",
+		"androidTestDescription": "Test to validate RCapture interface for Two Iris<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place both your iris on the device until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "HashValidator",
+					"description": "Validates the 'hash value' received in the response matches 'previous hash' in request"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Double"
+			],
+			"segments": [
+				"Left",
+				"Right"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "2",
+			"deviceSubId": "3",
+			"hashValidationTestCase": true
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Auth capture - Face - Hash Validations",
+		"testId": "SBI1105",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate Capture method for face<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "HashValidator",
+					"description": "Validates the 'hash value' received in the response matches 'previous hash' in request"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Face"
+			],
+			"deviceSubTypes": [
+				"Full face"
+			],
+			"segments": [],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0",
+			"hashValidationTestCase": true
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Auth capture - Single Iris - Unknown Iris - Hash Validations",
+		"testId": "SBI1106",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate Capture method for a single iris<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your iris infront of the iris scanner",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "HashValidator",
+					"description": "Validates the 'hash value' received in the response matches 'previous hash' in request"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Single"
+			],
+			"segments": [
+				"UNKNOWN"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0",
+			"hashValidationTestCase": true
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Auth capture - Unknown Finger - Hash Validations",
+		"testId": "SBI1107",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate Capture method for a finger<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"capture"
+		],
+		"requestSchema": [
+			"AuthCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"AuthCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "HashValidator",
+					"description": "Validates the 'hash value' received in the response matches 'previous hash' in request"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Auth"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Single"
+			],
+			"segments": [
+				"UNKNOWN"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0",
+			"hashValidationTestCase": true
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Quality Assessment for Registration capture - Left Slap - Males - 30 to 40 - labourer",
+		"testId": "SBI1108",
+		"specVersion": "0.9.5",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - 30 to 40 - labourer <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - 30 to 40 - labourer <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "BiometricsQualityCheckValidator",
+					"description": "Checks the quality of biometrics using all configured SDK services"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+				"LeftIndex",
+				"LeftMiddle",
+				"LeftRing",
+				"LeftLittle"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "4",
+			"deviceSubId": "1",
+			"qualityAssessmentTestCase": true,
+			"ageGroup": "30-40",
+			"gender": "male",
+			"occupation": "labourer",
+			"testCaseRepeatCount": "5"
+		}
+	},
+    {
+	    "testCaseType": "SBI",
+		"testName": "Quality Assessment for Registration capture - Left Slap - Males - 30 to 40 - farmer",
+		"testId": "SBI1109",
+		"specVersion": "0.9.5",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - 30 to 40 - farmer <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - 30 to 40 - farmer <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "BiometricsQualityCheckValidator",
+					"description": "Checks the quality of biometrics using all configured SDK services"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+				"LeftIndex",
+				"LeftMiddle",
+				"LeftRing",
+				"LeftLittle"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "4",
+			"deviceSubId": "1",
+			"qualityAssessmentTestCase": true,
+			"ageGroup": "30-40",
+			"gender": "male",
+			"occupation": "farmer",
+			"testCaseRepeatCount": "5"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Quality Assessment for Registration capture - Left Slap - Females - 50 to 60 - labourer",
+		"testId": "SBI1110",
+		"specVersion": "0.9.5",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for left slap fingerprints for - Females - 50 to 60 - labourer <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for left slap fingerprints for - Females - 50 to 60 - labourer <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "BiometricsQualityCheckValidator",
+					"description": "Checks the quality of biometrics using all configured SDK services"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+				"LeftIndex",
+				"LeftMiddle",
+				"LeftRing",
+				"LeftLittle"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "4",
+			"deviceSubId": "1",
+			"qualityAssessmentTestCase": true,
+			"ageGroup": "50-60",
+			"gender": "female",
+			"occupation": "labourer",
+			"testCaseRepeatCount": "5"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Quality Assessment for Registration capture - Left Slap - Females - 50 to 60 - doctor",
+		"testId": "SBI1111",
+		"specVersion": "0.9.5",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for left slap fingerprints for - Females - 50 to 60 - doctor <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for left slap fingerprints for - Females - 50 to 60 - doctor <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
+		"isNegativeTestcase": false,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"RegistrationCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				},
+				{
+					"name": "BiometricsQualityCheckValidator",
+					"description": "Checks the quality of biometrics using all configured SDK services"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+				"LeftIndex",
+				"LeftMiddle",
+				"LeftRing",
+				"LeftLittle"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "4",
+			"deviceSubId": "1",
+			"qualityAssessmentTestCase": true,
+			"ageGroup": "50-60",
+			"gender": "female",
+			"occupation": "doctor",
+			"testCaseRepeatCount": "5"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Left Slap - Invalid Transaction Id",
+		"testId": "SBI1112",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate transactionId of RCapture method for Left Slap Fingerprints<br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes",
+		"androidTestDescription": "Test to validate transactionId of RCapture method for Left Slap Fingerprints<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes",
+		"isNegativeTestcase": true,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"TransactionIdErrorRCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+				"LeftIndex",
+				"LeftMiddle",
+				"LeftRing",
+				"LeftLittle"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "4",
+			"deviceSubId": "1",
+			"transactionId":"SBI1112-987654783454765675346546526738495712345617645373336644"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Right Slap - Invalid Transaction Id",
+		"testId": "SBI1113",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate transactionId of RCapture method for Right Slap Fingerprints<br>Steps:<br>1. Click on Start Streaming button.<br>3. Once streaming is done, click on Inititate Capture button to start the capture <br>2. Place your right slap on the device until the capture completes",
+		"androidTestDescription": "Test to validate transactionId of RCapture method for Right Slap Fingerprints<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your right slap on the device until the capture completes",
+		"isNegativeTestcase": true,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"TransactionIdErrorRCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+				"RightIndex",
+				"RightMiddle",
+				"RightRing",
+				"RightLittle"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "4",
+			"deviceSubId": "2",
+			"transactionId":"SBI1113-234654783454765675346546526738495712345617645432198765"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Double Iris - Invalid Transaction Id",
+		"testId": "SBI1114",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate transactionId of RCapture method for Two Iris<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place both your iris on the device until the capture completes",
+		"androidTestDescription": "Test to validate transactionId of RCapture method for Two Iris<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place both your iris on the device until the capture completes",
+		"isNegativeTestcase": true,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"TransactionIdErrorRCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Double"
+			],
+			"segments": [
+				"Left",
+				"Right"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "2",
+			"deviceSubId": "3",
+			"transactionId":"SBI1114-567891234554765675346546526738495712345617645432198123"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Face - Invalid Transaction Id",
+		"testId": "SBI1115",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate transactionId of RCapture method for face<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes",
+		"androidTestDescription": "Test to validate transactionId of RCapture method for face<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes",
+		"isNegativeTestcase": true,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"TransactionIdErrorRCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Face"
+			],
+			"deviceSubTypes": [
+				"Full face"
+			],
+			"segments": [],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0",
+			"transactionId":"SBI1115-456891234554765675346546526738495712345617645432198321"
 		}
 	}
 ]

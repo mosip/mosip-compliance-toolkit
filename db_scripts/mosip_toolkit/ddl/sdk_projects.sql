@@ -8,7 +8,10 @@ CREATE TABLE toolkit.sdk_projects(
 	url character varying(256) NOT NULL,
 	bio_test_data_file_name character varying(64) NOT NULL,
 	purpose character varying(256) NOT NULL,
+	sdk_hash character varying NOT NULL,
+	website_url character varying(256) NOT NULL,
 	partner_id character varying(36) NOT NULL,
+	org_name character varying(64) NOT NULL,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
@@ -29,7 +32,10 @@ COMMENT ON COLUMN toolkit.sdk_projects.sdk_version IS 'sdk_version: the sdk_vers
 COMMENT ON COLUMN toolkit.sdk_projects.url IS 'URL: the url where SDK is running on users machine.';
 COMMENT ON COLUMN toolkit.sdk_projects.bio_test_data_file_name IS 'Biometric Test Data File Name : Name of the biometric test data file to be used';
 COMMENT ON COLUMN toolkit.sdk_projects.purpose IS 'Purpose: the purpose for testing';
+COMMENT ON COLUMN toolkit.sdk_projects.sdk_hash IS 'sdk_hash: Encoded hash of SDK installation file';
+COMMENT ON COLUMN toolkit.sdk_projects.website_url IS 'website_url: Partner website url';
 COMMENT ON COLUMN toolkit.sdk_projects.partner_id IS 'Partner Id: partner id who has created this project.';
+COMMENT ON COLUMN toolkit.sdk_projects.org_name IS 'orgname: organization name to which partner belongs to.';
 COMMENT ON COLUMN toolkit.sdk_projects.cr_by IS 'Created By : ID or name of the user who create / insert record.';
 COMMENT ON COLUMN toolkit.sdk_projects.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
 COMMENT ON COLUMN toolkit.sdk_projects.upd_by IS 'Updated By : ID or name of the user who update the record with new values';

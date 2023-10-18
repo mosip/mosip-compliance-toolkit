@@ -1,5 +1,7 @@
 package io.mosip.compliance.toolkit.validators;
 
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
+import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +27,6 @@ import io.mosip.biometrics.util.iris.IrisBDIR;
 import io.mosip.biometrics.util.iris.IrisDecoder;
 import io.mosip.biometrics.util.iris.IrisISOStandardsValidator;
 import io.mosip.biometrics.util.iris.IrisQualityBlock;
-import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.DeviceTypes;
 import io.mosip.compliance.toolkit.constants.Purposes;
@@ -42,7 +43,7 @@ import io.mosip.imagedecoder.model.Response;
 import io.mosip.imagedecoder.openjpeg.OpenJpegDecoder;
 import io.mosip.imagedecoder.spi.IImageDecoderApi;
 import io.mosip.imagedecoder.wsq.WsqDecoder;
-import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.kernel.core.http.ResponseWrapper;
 
 @Component
 public class ISOStandardsValidator extends SBIValidator {
@@ -65,26 +66,9 @@ public class ISOStandardsValidator extends SBIValidator {
 			if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
 				for (final JsonNode biometricNode : arrBiometricNodes) {
 					JsonNode dataNode = biometricNode.get(DECODED_DATA);
-
 					String purpose = dataNode.get(PURPOSE).asText();
 					String bioType = dataNode.get(BIO_TYPE).asText();
-					String bioValue = null;
-					switch (Purposes.fromCode(purpose)) {
-					case AUTH:
-						bioValue = getDecryptedBioValue(biometricNode.get(THUMB_PRINT).asText(),
-								biometricNode.get(SESSION_KEY).asText(), KEY_SPLITTER,
-								dataNode.get(TIME_STAMP).asText(), dataNode.get(TRANSACTION_ID).asText(),
-								dataNode.get(BIO_VALUE).asText());
-						log.info("sessionId", "idType", "id", "auth bioValue - " + bioValue);
-						log.debug("sessionId", "idType", "id", "auth bioValue - " + bioValue);
-						break;
-					case REGISTRATION:
-						bioValue = dataNode.get(BIO_VALUE).asText();
-						break;
-					default:
-						throw new ToolkitException(ToolkitErrorCodes.INVALID_PURPOSE.getErrorCode(),
-								ToolkitErrorCodes.INVALID_PURPOSE.getErrorMessage());
-					}
+					String bioValue = extractBioValue(biometricNode);
 					validationResultDto = doISOValidations(purpose, bioType, bioValue);
 					if (validationResultDto.getStatus().equals(AppConstants.FAILURE)) {
 						break;
@@ -92,10 +76,14 @@ public class ISOStandardsValidator extends SBIValidator {
 				}
 			}
 		} catch (ToolkitException e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
 			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
 			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
@@ -103,6 +91,30 @@ public class ISOStandardsValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
+	public String extractBioValue(final JsonNode biometricNode) {
+		JsonNode dataNode = biometricNode.get(DECODED_DATA);
+		String purpose = dataNode.get(PURPOSE).asText();
+		String bioValue = null;
+		switch (Purposes.fromCode(purpose)) {
+		case AUTH:
+			// for authentication, the "bioValue" is encrypted, so decrypt it first
+			bioValue = getDecryptedBioValue(biometricNode.get(THUMB_PRINT).asText(),
+					biometricNode.get(SESSION_KEY).asText(), KEY_SPLITTER,
+					dataNode.get(TIME_STAMP).asText(), dataNode.get(TRANSACTION_ID).asText(),
+					dataNode.get(BIO_VALUE).asText());
+			break;
+		case REGISTRATION:
+			// for registration, the "bioValue" is encoded only
+			bioValue = dataNode.get(BIO_VALUE).asText();
+			break;
+		default:
+			throw new ToolkitException(ToolkitErrorCodes.INVALID_PURPOSE.getErrorCode(),
+					ToolkitErrorCodes.INVALID_PURPOSE.getErrorMessage());
+		}
+		
+		return bioValue;
+	}
+	
 	public String getDecryptedBioValue(String thumbprint, String sessionKey, String keySplitter, String timestamp,
 			String transactionId, String encryptedData) {
 
@@ -132,10 +144,13 @@ public class ISOStandardsValidator extends SBIValidator {
 		decryptValidatorDto.setRequest(decryptRequest);
 
 		try {
-			io.restassured.response.Response postResponse = keyManagerHelper.decryptionResponse(decryptValidatorDto);
+			DecryptValidatorResponseDto decryptValidatorResponseDto = keyManagerHelper.decryptionResponse(decryptValidatorDto);
+			
 
-			DecryptValidatorResponseDto decryptValidatorResponseDto = objectMapperConfig.objectMapper()
-					.readValue(postResponse.getBody().asString(), DecryptValidatorResponseDto.class);
+//			io.restassured.response.Response postResponse = keyManagerHelper.decryptionResponse(decryptValidatorDto);
+//
+//			DecryptValidatorResponseDto decryptValidatorResponseDto = objectMapperConfig.objectMapper()
+//					.readValue(postResponse.getBody().asString(), DecryptValidatorResponseDto.class);
 
 			if ((decryptValidatorResponseDto.getErrors() != null && decryptValidatorResponseDto.getErrors().size() > 0)
 					|| (decryptValidatorResponseDto.getResponse().getData() == null)) {
@@ -145,6 +160,8 @@ public class ISOStandardsValidator extends SBIValidator {
 				return decryptValidatorResponseDto.getResponse().getData();
 			}
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			throw new ToolkitException(ToolkitErrorCodes.AUTH_BIO_VALUE_DECRYPT_ERROR.getErrorCode(),
 					ToolkitErrorCodes.AUTH_BIO_VALUE_DECRYPT_ERROR.getErrorMessage() + e.getLocalizedMessage());
 		}
@@ -203,6 +220,8 @@ public class ISOStandardsValidator extends SBIValidator {
 			bioData = CommonUtil.decodeURLSafeBase64(bioValue);
 			requestDto.setInputBytes(bioData);
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_BASE64URLENCODED_EXCEPTION;
 			throw new ToolkitException(errorCode.getErrorCode(), e.getLocalizedMessage());
 		}
@@ -565,8 +584,8 @@ public class ISOStandardsValidator extends SBIValidator {
 						Integer.parseInt(decoderResponseInfo.getImageDepth()),
 						Integer.parseInt(decoderResponseInfo.getImageDpiHorizontal() == null ? "0" : decoderResponseInfo.getImageDpiHorizontal()),
 						Integer.parseInt(decoderResponseInfo.getImageDpiVertical() == null ? "0" : decoderResponseInfo.getImageDpiVertical()),
-						0,
 						//Integer.parseInt(decoderResponseInfo.getImageBitRate() == null ? "0" : decoderResponseInfo.getImageBitRate()),
+						0,
 						Integer.parseInt(decoderResponseInfo.getImageSize()), decoderResponseInfo.getImageData(),
 						decoderResponseInfo.getImageColorSpace(), decoderResponseInfo.getImageAspectRatio(),
 						decoderResponseInfo.getImageCompressionRatio());
@@ -693,6 +712,8 @@ public class ISOStandardsValidator extends SBIValidator {
 			}
 			/* Image Validation Ends*/
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_FINGER_ISO_FORMAT_EXCEPTION;
 			message.append("<BR>" + errorCode.getErrorMessage() + "<BR>" + e.getLocalizedMessage());
 			code.append(AppConstants.COMMA_SEPARATOR);
@@ -746,6 +767,8 @@ public class ISOStandardsValidator extends SBIValidator {
 			bioData = CommonUtil.decodeURLSafeBase64(bioValue);
 			requestDto.setInputBytes(bioData);
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_BASE64URLENCODED_EXCEPTION;
 			throw new ToolkitException(errorCode.getErrorCode(), e.getLocalizedMessage());
 		}
@@ -1050,7 +1073,7 @@ public class ISOStandardsValidator extends SBIValidator {
 						Integer.parseInt(decoderResponseInfo.getImageDpiHorizontal() == null ? "0" : decoderResponseInfo.getImageDpiHorizontal()),
 						Integer.parseInt(decoderResponseInfo.getImageDpiVertical() == null ? "0" : decoderResponseInfo.getImageDpiVertical()),
 						0,
-						//Integer.parseInt(decoderResponseInfo.getImageBitRate() == null ? "0" : decoderResponseInfo.getImageBitRate()),
+						// Integer.parseInt(decoderResponseInfo.getImageBitRate() == null ? "0" : decoderResponseInfo.getImageBitRate()),
 						Integer.parseInt(decoderResponseInfo.getImageSize()), decoderResponseInfo.getImageData(),
 						decoderResponseInfo.getImageColorSpace(), decoderResponseInfo.getImageAspectRatio(),
 						decoderResponseInfo.getImageCompressionRatio());
@@ -1263,6 +1286,8 @@ public class ISOStandardsValidator extends SBIValidator {
 			}
 			/* Image Validation Ends*/
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_IRIS_ISO_FORMAT_EXCEPTION;
 			message.append("<BR>" + errorCode.getErrorMessage() + "<BR>" + e.getLocalizedMessage());
 			code.append(AppConstants.COMMA_SEPARATOR);
@@ -1316,6 +1341,8 @@ public class ISOStandardsValidator extends SBIValidator {
 			bioData = CommonUtil.decodeURLSafeBase64(bioValue);
 			requestDto.setInputBytes(bioData);
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_BASE64URLENCODED_EXCEPTION;
 			throw new ToolkitException(errorCode.getErrorCode(), e.getLocalizedMessage());
 		}
@@ -1853,6 +1880,8 @@ public class ISOStandardsValidator extends SBIValidator {
 			}
 			/* Image Validation Ends*/
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_FACE_ISO_FORMAT_EXCEPTION;
 			message.append("<BR>" + errorCode.getErrorMessage() + "<BR>" + e.getLocalizedMessage());
 			code.append(AppConstants.COMMA_SEPARATOR);

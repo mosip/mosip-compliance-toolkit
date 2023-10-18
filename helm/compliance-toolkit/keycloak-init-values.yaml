@@ -1,6 +1,8 @@
 keycloak:
   realms: |-
     mosip: # realm
+      roles:
+       - CTK_ADMIN
       clients:   
         - name: mosip-toolkit-client
           saroles: []

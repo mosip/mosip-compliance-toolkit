@@ -21,7 +21,7 @@ public class ResourceManagementController {
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getUploadResource())")
 	@PostMapping(value = "/uploadResourceFile", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE,
 			MediaType.APPLICATION_JSON_VALUE })
-	@Operation(summary = "upload resource file", description = "type any of these [MOSIP_DEFAULT, SCHEMAS, SCHEMAS_SBI, SCHEMAS_SDK] & version as per SBI/SDK schema version", tags = "ResourceManagementController")
+	@Operation(summary = "upload resource file", description = "type any of these [MOSIP_DEFAULT, SCHEMAS, SCHEMAS_SBI, SCHEMAS_SDK, SCHEMAS_ABIS] & version as per SBI/SDK/ABIS schema version", tags = "ResourceManagementController")
 	public ResponseWrapper<Boolean> uploadResourceFile(@RequestParam(required = true) String type,
 			@RequestParam(required = false) String version, @RequestParam("file") MultipartFile file) {
 		return resourceMgmtService.uploadResourceFile(type, version, file);

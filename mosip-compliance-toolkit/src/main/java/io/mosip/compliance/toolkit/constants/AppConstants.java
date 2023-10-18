@@ -31,6 +31,10 @@ public class AppConstants {
 	public static final String SUCCESS = "success";
 
 	public static final String FAILURE = "failure";
+	
+	public static final String COMPLETE = "complete";
+	
+	public static final String INCOMPLETE = "incomplete";
 
 	public static final String RS256_ALGORITHM_TYPE = "RS256";
 
@@ -47,10 +51,32 @@ public class AppConstants {
 	public static final String COLON = " : ";
 
 	public static final String BOLD_TAG_START = "<b>";
-	
+
 	public static final String BOLD_TAG_END = "</b>";
-	
+
 	public static final String ITALICS_TAG_START = "<i>";
-	
+
 	public static final String ITALICS_TAG_END = "</i>";
+
+	public static final String BIOMETRICS = "biometrics";
+
+	public static final String DECODED_DATA = "dataDecoded";
+
+	public static final String DIGITAL_ID_DECODED_DATA = "digitalIdDecoded";
+	
+	public static final String DEVICE_INFO_DECODED = "deviceInfoDecoded";
+	
+	public static final String MAKE = "make";
+
+	public static final String MODEL = "model";
+
+	public static final String SERIAL_NO = "serialNo";
+
+	public static final String DEVICE_PROVIDER = "deviceProvider";
+
+	public static final String DEVICE_PROVIDER_ID = "deviceProviderId";
+
+	public static final String COMPLIANCE_COLLECTION = "compliance_collection";
+	
+	public static final String CUSTOM_COLLECTION = "custom_collection";
 }

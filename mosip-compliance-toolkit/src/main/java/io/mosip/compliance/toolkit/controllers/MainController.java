@@ -42,7 +42,7 @@ public class MainController {
 
 	@Value("${mosip.service.abis.partner.type}")
 	private String abisPartnerType;
-
+	
 	private AuthUserDetails authUserDetails() {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}

@@ -5,12 +5,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
 import io.mosip.compliance.toolkit.service.SbiProjectService;
@@ -25,6 +20,9 @@ public class SbiProjectController {
 	
 	/** The Constant SBI_PROJECT_POST_ID application. */
 	private static final String SBI_PROJECT_POST_ID = "sbi.project.post";
+
+	/** The Constant SBI_PROJECT_UPDATE_ID application. */
+	private static final String SBI_PROJECT_UPDATE_ID = "sbi.project.put";
 	
 	@Autowired
 	private SbiProjectService sbiProjectService;
@@ -63,6 +61,25 @@ public class SbiProjectController {
 		requestValidator.validateId(SBI_PROJECT_POST_ID, value.getId(), errors);
 		DataValidationUtil.validate(errors, SBI_PROJECT_POST_ID);
 		return sbiProjectService.addSbiProject(value.getRequest());
+	}
+
+	/**
+	 * Update Sbi Project details.
+	 *
+	 * @param SbiProjectDto
+	 * @return SbiProjectDto added
+	 * @throws Exception
+	 */
+	@ResponseFilter
+	@PutMapping(value = "/updateSbiProject", produces = "application/json")
+	public ResponseWrapper<SbiProjectDto> updateSbiProject(
+			@RequestBody @Valid RequestWrapper<SbiProjectDto> value,
+			Errors errors) throws Exception {
+
+		requestValidator.validate(value, errors);
+		requestValidator.validateId(SBI_PROJECT_UPDATE_ID, value.getId(), errors);
+		DataValidationUtil.validate(errors, SBI_PROJECT_UPDATE_ID);
+		return sbiProjectService.updateSbiProject(value.getRequest());
 	}
 	
 	/**
