@@ -3,6 +3,8 @@ package io.mosip.compliance.toolkit.service;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.constants.ProjectTypes;
 import io.mosip.compliance.toolkit.constants.SbiSpecVersions;
+import io.mosip.compliance.toolkit.dto.report.PartnerDetailsDto;
+import io.mosip.compliance.toolkit.util.PartnerManagerHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,6 +18,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = { TestContext.class, WebApplicationContext.class })
 @RunWith(SpringRunner.class)
@@ -31,13 +36,16 @@ public class ResourceCacheServiceTest {
     @Mock
     private InputStream inputStream;
 
+    @Mock
+    PartnerManagerHelper partnerManagerHelper;
+
     @Test
     public void getSchemaTest() throws Exception {
         String type = ProjectTypes.SBI.getCode();
         String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
         String fileName = "testFile";
 
-        Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
+        when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
         resourceCacheService.getSchema(null,version,fileName);
         resourceCacheService.getSchema(type,version,fileName);
     }
@@ -47,9 +55,9 @@ public class ResourceCacheServiceTest {
         String type = ProjectTypes.SBI.getCode();
         String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
         String fileName = "testFile";
-        Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
+        when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
         InputStream input = new FileInputStream( "src/test/java/io/mosip/compliance/toolkit/testFile.txt");
-        OngoingStubbing<InputStream> inputStreamOngoingStubbing = Mockito.when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(inputStream);
+        OngoingStubbing<InputStream> inputStreamOngoingStubbing = when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(inputStream);
         resourceCacheService.getSchema(type, version, fileName);
     }
 
@@ -58,9 +66,9 @@ public class ResourceCacheServiceTest {
         String type = ProjectTypes.SBI.getCode();
         String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
         String fileName = "testFile";
-        Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
+        when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
         InputStream input = new FileInputStream( "src/test/java/io/mosip/compliance/toolkit/testFile.txt");
-        Mockito.when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(input);
+        when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(input);
         resourceCacheService.getSchema(type, version, fileName);
     }
 
@@ -72,5 +80,25 @@ public class ResourceCacheServiceTest {
         InputStream input = new FileInputStream( "src/test/java/io/mosip/compliance/toolkit/testFile.txt");
         resourceCacheService.putSchema(null,version,fileName,inputStream);
         resourceCacheService.putSchema(type,version,fileName,inputStream);
+    }
+
+    @Test
+    public void getOrgNameTest() throws IOException {
+        String partnerId = "abc";
+        PartnerDetailsDto partnerDetailsDto = new PartnerDetailsDto();
+        PartnerDetailsDto.Partner partner = new PartnerDetailsDto.Partner();
+        partner.setOrganizationName("abc");
+        partnerDetailsDto.setId("123");
+        partnerDetailsDto.setResponse(partner);
+        Mockito.when(partnerManagerHelper.getPartnerDetails(partnerId)).thenReturn(partnerDetailsDto);
+        String result = resourceCacheService.getOrgName(partnerId);
+        assertEquals("abc", result);
+    }
+
+    @Test
+    public void getOrgNameTestDefault() throws IOException {
+        String partnerId = null;
+        String result = resourceCacheService.getOrgName(partnerId);
+        assertEquals("Not_Available", result);
     }
 }

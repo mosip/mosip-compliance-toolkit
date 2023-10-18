@@ -19,6 +19,10 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.LocalDateTime;
+
+import static org.mockito.Mockito.mock;
+
 @ContextConfiguration(classes = { TestContext.class, WebApplicationContext.class })
 @RunWith(SpringRunner.class)
 @WebMvcTest
@@ -31,7 +35,7 @@ public class ReportGeneratorControllerTest {
     private ReportGeneratorController reportGeneratorController;
 
     @Mock
-    private Errors errors;
+    RequestValidator requestValidator;
 
     @Test
     public void initBinderTest() {
@@ -39,13 +43,20 @@ public class ReportGeneratorControllerTest {
         reportGeneratorController.initBinder(binder);
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void createReportTest() throws Exception {
         RequestWrapper<ReportRequestDto> value = new RequestWrapper<>();
+        Errors errors = mock(Errors.class);
         ReportRequestDto reportRequestDto = new ReportRequestDto();
+        reportRequestDto.setProjectType("SBI");
+        reportRequestDto.setProjectId("123");
+        reportRequestDto.setTestRunId("123");
+        reportRequestDto.setCollectionId("123");
         value.setRequest(reportRequestDto);
+        value.setId("abc");
+        value.setRequesttime(LocalDateTime.now());
+        value.setVersion("1.0");
         String origin = "abc";
-        Mockito.when(reportGeneratorService.createReport(value.getRequest(), origin)).thenReturn(ResponseEntity.noContent().build());
         reportGeneratorController.createReport(value, origin, errors);
     }
 }
