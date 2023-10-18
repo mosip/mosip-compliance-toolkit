@@ -1,8 +1,8 @@
 {
 	"$schema": "https://json-schema.org/draft/2019-09/schema#",
-	"$id": "http://mosip-compliance-toolkit.com/schemas/TransactionIdErrorResponseSchema.json",
-	"title": "Transaction Id Error Response Schema",
-	"description": "Transaction Id Error Response Schema",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/TransactionIdErrorRCaptureResponseSchema.json",
+	"title": "Transaction Id Error RCapture Response Schema",
+	"description": "Transaction Id Error RCapture Response Schema",
 	"type": "object",
 	"additionalProperties": false,
 	"properties": {
@@ -172,7 +172,7 @@
 								"purpose": {
 									"type": "string",
 									"enum": [
-										"Auth"
+										"Registration"
 									]
 								},
 								"env": {
@@ -183,9 +183,6 @@
 										"Pre-Production",
 										"Production"
 									]
-								},
-								"domainUri": {
-									"type": "string"
 								},
 								"bioValue": {
 									"$ref": "#/definitions/non-empty-string"
@@ -254,7 +251,6 @@
 											"bioSubType",
 											"purpose",
 											"env",
-											"domainUri",
 											"bioValue",
 											"transactionId",
 											"timestamp",
@@ -297,7 +293,6 @@
 											"bioSubType",
 											"purpose",
 											"env",
-											"domainUri",
 											"bioValue",
 											"transactionId",
 											"timestamp",
@@ -337,7 +332,6 @@
 											"bioType",
 											"purpose",
 											"env",
-											"domainUri",
 											"bioValue",
 											"transactionId",
 											"timestamp",
@@ -349,13 +343,6 @@
 							]
 						},
 						"hash": {
-							"$ref": "#/definitions/non-empty-string",
-							"pattern": "^[A-Z0-9]{64}$"
-						},
-						"sessionKey": {
-							"$ref": "#/definitions/non-empty-string"
-						},
-						"thumbprint": {
 							"$ref": "#/definitions/non-empty-string",
 							"pattern": "^[A-Z0-9]{64}$"
 						},
@@ -392,8 +379,6 @@
 						"data",
 						"dataDecoded",
 						"hash",
-						"sessionKey",
-						"thumbprint",
 						"error"
 					]
 				}
