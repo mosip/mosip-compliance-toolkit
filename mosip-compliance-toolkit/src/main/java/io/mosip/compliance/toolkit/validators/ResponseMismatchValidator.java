@@ -27,6 +27,7 @@ public class ResponseMismatchValidator extends ToolkitValidator {
     public static final String BIO_SUBTYPE = "bioSubType";
     public static final String EXCEPTION = "exception";
     public static final String DEVICE_SUBID = "deviceSubId";
+    public static final String TRANSACTION_ID = "transactionId";
 
     private Logger log = LoggerConfiguration.logConfig(ResponseMismatchValidator.class);
 
@@ -47,6 +48,7 @@ public class ResponseMismatchValidator extends ToolkitValidator {
             int reqBioCount = -1;
             List<String> reqBioSubtype = null;
             List<String> reqException = null;
+            String reqTransactionId = captureInfoRequest.get(TRANSACTION_ID).asText();
             String reqPurpose = captureInfoRequest.get(PURPOSE).asText();
             String resPurpose = null;
             String reqDeviceSubId = null;
@@ -98,7 +100,13 @@ public class ResponseMismatchValidator extends ToolkitValidator {
                                 if (Purposes.REGISTRATION.getCode().equals(reqPurpose)) {
                                     if (isValidException(reqException, resBioSubType).getStatus()
                                             .equals(AppConstants.SUCCESS)) {
-                                        continue;
+                                        String resTransactionId = dataNode.get(TRANSACTION_ID).asText();
+                                        validationResultDto = isValidTransactionId(reqTransactionId, resTransactionId);
+                                        if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
+                                            continue;
+                                        } else {
+                                            break;
+                                        }
                                     } else {
                                         break;
                                     }
@@ -116,7 +124,7 @@ public class ResponseMismatchValidator extends ToolkitValidator {
             }
             if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
                 validationResultDto.setDescription(
-                        "The bioCount, segments and exceptions in response match the request.");
+                        "The bioCount, segments, exceptions and transactionId in response match the request.");
                 validationResultDto.setDescriptionKey("RESPONSE_MISMATCH_VALIDATOR_001");
             }
         } catch (ToolkitException e) {
@@ -305,5 +313,20 @@ public class ResponseMismatchValidator extends ToolkitValidator {
                 errorCode = ToolkitErrorCodes.INVALID_DEVICE_TYPE;
                 throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
         }
+    }
+
+    private ValidationResultDto isValidTransactionId(String reqTransactionId, String resTransactionId) {
+        ValidationResultDto validationResultDto = new ValidationResultDto();
+        validationResultDto.setStatus(AppConstants.SUCCESS);
+        if (reqTransactionId.equals(resTransactionId)) {
+            validationResultDto.setStatus(AppConstants.SUCCESS);
+        } else {
+            validationResultDto.setStatus(AppConstants.FAILURE);
+            validationResultDto.setDescription("ResponseMismatchValidator failed due to " + " transactionId mismatch."
+                    + "In request, transactionId = " + reqTransactionId + " and in response, transactionId = " + resTransactionId);
+            validationResultDto.setDescriptionKey("RESPONSE_MISMATCH_VALIDATOR_006" + AppConstants.ARGUMENTS_DELIMITER + reqTransactionId + AppConstants.ARGUMENTS_SEPARATOR
+                    + resTransactionId);
+        }
+        return validationResultDto;
     }
 }
