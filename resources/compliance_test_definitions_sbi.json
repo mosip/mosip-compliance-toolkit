@@ -4713,7 +4713,7 @@
 			"AuthCaptureRequestSchema"
 		],
 		"responseSchema": [
-			"TransactionIdErrorResponseSchema"
+			"TransactionIdErrorCaptureResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -4763,7 +4763,7 @@
 			"AuthCaptureRequestSchema"
 		],
 		"responseSchema": [
-			"TransactionIdErrorResponseSchema"
+			"TransactionIdErrorCaptureResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -4815,7 +4815,7 @@
 			"AuthCaptureRequestSchema"
 		],
 		"responseSchema": [
-			"TransactionIdErrorResponseSchema"
+			"TransactionIdErrorCaptureResponseSchema"
 		],
 		"validatorDefs": [
 			[
@@ -5847,6 +5847,223 @@
 			"gender": "female",
 			"occupation": "doctor",
 			"testCaseRepeatCount": "5"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Left Slap - Invalid Transaction Id",
+		"testId": "SBI1112",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate transactionId of RCapture method for Left Slap Fingerprints<br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes",
+		"androidTestDescription": "Test to validate transactionId of RCapture method for Left Slap Fingerprints<br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes",
+		"isNegativeTestcase": true,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"TransactionIdErrorRCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+				"LeftIndex",
+				"LeftMiddle",
+				"LeftRing",
+				"LeftLittle"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "4",
+			"deviceSubId": "1",
+			"transactionId":"SBI1112-987654783454765675346546526738495712345617645373336644"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Right Slap - Invalid Transaction Id",
+		"testId": "SBI1113",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate transactionId of RCapture method for Right Slap Fingerprints<br>Steps:<br>1. Click on Start Streaming button.<br>3. Once streaming is done, click on Inititate Capture button to start the capture <br>2. Place your right slap on the device until the capture completes",
+		"androidTestDescription": "Test to validate transactionId of RCapture method for Right Slap Fingerprints<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your right slap on the device until the capture completes",
+		"isNegativeTestcase": true,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"TransactionIdErrorRCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Finger"
+			],
+			"deviceSubTypes": [
+				"Slap"
+			],
+			"segments": [
+				"RightIndex",
+				"RightMiddle",
+				"RightRing",
+				"RightLittle"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "4",
+			"deviceSubId": "2",
+			"transactionId":"SBI1113-234654783454765675346546526738495712345617645432198765"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Double Iris - Invalid Transaction Id",
+		"testId": "SBI1114",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate transactionId of RCapture method for Two Iris<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place both your iris on the device until the capture completes",
+		"androidTestDescription": "Test to validate transactionId of RCapture method for Two Iris<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place both your iris on the device until the capture completes",
+		"isNegativeTestcase": true,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"TransactionIdErrorRCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Iris"
+			],
+			"deviceSubTypes": [
+				"Double"
+			],
+			"segments": [
+				"Left",
+				"Right"
+			],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "2",
+			"deviceSubId": "3",
+			"transactionId":"SBI1114-567891234554765675346546526738495712345617645432198123"
+		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Registration capture - Face - Invalid Transaction Id",
+		"testId": "SBI1115",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to validate transactionId of RCapture method for face<br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes",
+		"androidTestDescription": "Test to validate transactionId of RCapture method for face<br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes",
+		"isNegativeTestcase": true,
+		"methodName": [
+			"rcapture"
+		],
+		"requestSchema": [
+			"RegistrationCaptureRequestSchema"
+		],
+		"responseSchema": [
+			"TransactionIdErrorRCaptureResponseSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				},
+				{
+					"name": "ResponseMismatchValidator",
+					"description": "Validates the response to check if  bioCount, exceptions and segments match the ones set in request"
+				},
+				{
+					"name": "SignatureValidator",
+					"description": "Validates the response signature"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration"
+			],
+			"biometricTypes": [
+				"Face"
+			],
+			"deviceSubTypes": [
+				"Full face"
+			],
+			"segments": [],
+			"exceptions": [],
+			"requestedScore": "40",
+			"bioCount": "1",
+			"deviceSubId": "0",
+			"transactionId":"SBI1115-456891234554765675346546526738495712345617645432198321"
 		}
 	}
 ]

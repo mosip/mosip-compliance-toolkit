@@ -1,8 +1,8 @@
 {
 	"$schema": "https://json-schema.org/draft/2019-09/schema#",
-	"$id": "http://mosip-compliance-toolkit.com/schemas/RegistrationCaptureResponseSchema.json",
-	"title": "Registration Capture Response Schema",
-	"description": "Registration Capture Response Schema",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/TransactionIdErrorCaptureResponseSchema.json",
+	"title": "Transaction Id Error Capture Response Schema",
+	"description": "Transaction Id Error Capture Response Schema",
 	"type": "object",
 	"additionalProperties": false,
 	"properties": {
@@ -172,7 +172,7 @@
 								"purpose": {
 									"type": "string",
 									"enum": [
-										"Registration"
+										"Auth"
 									]
 								},
 								"env": {
@@ -184,13 +184,14 @@
 										"Production"
 									]
 								},
+								"domainUri": {
+									"type": "string"
+								},
 								"bioValue": {
 									"$ref": "#/definitions/non-empty-string"
 								},
 								"transactionId": {
-									"$ref": "#/definitions/non-empty-string",
-									"minLength": 1,
-									"maxLength": 50
+									"$ref": "#/definitions/non-empty-string"
 								},
 								"timestamp": {
 									"string": "string",
@@ -253,6 +254,7 @@
 											"bioSubType",
 											"purpose",
 											"env",
+											"domainUri",
 											"bioValue",
 											"transactionId",
 											"timestamp",
@@ -295,6 +297,7 @@
 											"bioSubType",
 											"purpose",
 											"env",
+											"domainUri",
 											"bioValue",
 											"transactionId",
 											"timestamp",
@@ -334,6 +337,7 @@
 											"bioType",
 											"purpose",
 											"env",
+											"domainUri",
 											"bioValue",
 											"transactionId",
 											"timestamp",
@@ -345,6 +349,13 @@
 							]
 						},
 						"hash": {
+							"$ref": "#/definitions/non-empty-string",
+							"pattern": "^[A-Z0-9]{64}$"
+						},
+						"sessionKey": {
+							"$ref": "#/definitions/non-empty-string"
+						},
+						"thumbprint": {
 							"$ref": "#/definitions/non-empty-string",
 							"pattern": "^[A-Z0-9]{64}$"
 						},
@@ -381,6 +392,8 @@
 						"data",
 						"dataDecoded",
 						"hash",
+						"sessionKey",
+						"thumbprint",
 						"error"
 					]
 				}
