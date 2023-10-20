@@ -347,7 +347,39 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 			biometricScoresItem.put("deviceSubType", bioAttributes.getBioSubType());
 			biometricScoresItem.put("name", sdkName);
 			ObjectNode bioScore = (ObjectNode) objectMapper.readValue(scoreJson, ObjectNode.class);
-			biometricScoresItem.put("biometricScore", bioScore.get("score").asText());
+			String score = bioScore.get("score").asText();
+			biometricScoresItem.put("biometricScore", score);
+			int scoreInt = Integer.parseInt(score);
+			if (isBetween(scoreInt, 0, 10)) {
+				biometricScoresItem.put("biometricScoreRange", "0-10");	
+			}
+			if (isBetween(scoreInt, 10, 20)) {
+				biometricScoresItem.put("biometricScoreRange", "11-20");	
+			}
+			if (isBetween(scoreInt, 20, 30)) {
+				biometricScoresItem.put("biometricScoreRange", "21-30");	
+			}
+			if (isBetween(scoreInt, 30, 40)) {
+				biometricScoresItem.put("biometricScoreRange", "31-40");	
+			}
+			if (isBetween(scoreInt, 40, 50)) {
+				biometricScoresItem.put("biometricScoreRange", "41-50");	
+			}
+			if (isBetween(scoreInt, 50, 60)) {
+				biometricScoresItem.put("biometricScoreRange", "51-60");	
+			}
+			if (isBetween(scoreInt, 60, 70)) {
+				biometricScoresItem.put("biometricScoreRange", "61-70");	
+			}
+			if (isBetween(scoreInt, 70, 80)) {
+				biometricScoresItem.put("biometricScoreRange", "71-80");	
+			}
+			if (isBetween(scoreInt, 80, 90)) {
+				biometricScoresItem.put("biometricScoreRange", "81-90");	
+			}
+			if (isBetween(scoreInt, 90, 100)) {
+				biometricScoresItem.put("biometricScoreRange", "91-100");	
+			}
 			// save biometric scores in database
 			biometricScoresService.addBiometricScores(projectId, testRunId, testCase.getTestId(),
 					biometricScoresItem.toString());
@@ -357,6 +389,10 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 			log.error("sessionId", "idType", "id",
 					"In saveBiometricScores method of BiometricsQualityCheckValidator - " + ex.getMessage());
 		}
+	}
+
+	private boolean isBetween(int x, int lower, int upper) {
+		return lower <= x && x <= upper;
 	}
 
 	private boolean isQualityAssessmentTestCase(TestCaseDto testCase) {
