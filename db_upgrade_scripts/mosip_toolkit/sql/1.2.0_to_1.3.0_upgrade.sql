@@ -1,5 +1,16 @@
 \c mosip_toolkit sysadmin
 
+--create dblink
+CREATE EXTENSION dblink;
+--set properties
+\set db_user `grep -oP 'SU_USER=\K[^ ]+' upgrade.properties`
+\set db_password `grep -oP 'PMS_DB_PWD=\K[^ ]+' upgrade.properties`
+--test org_name table population
+UPDATE mosip_toolkit.toolkit.abis_projects AS t
+SET org_name = i.name
+FROM dblink('dbname=mosip_pms user=:db_user password=:db_password'::text, 'SELECT id, name FROM partner'::text) AS i(id TEXT, name TEXT)
+WHERE partner_id = i.id AND t.org_name = 'Not_Available';
+
 -- add new columns in abis_projects table.
 ALTER TABLE toolkit.abis_projects Add COLUMN modality character varying(256) NOT NULL DEFAULT 'All';
 ALTER TABLE toolkit.abis_projects Add COLUMN abis_hash character varying NOT NULL DEFAULT 'To_Be_Added';
