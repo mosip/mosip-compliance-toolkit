@@ -3,8 +3,8 @@
 --create dblink
 CREATE EXTENSION dblink;
 --set properties
-\set db_user `grep -oP 'DB_USER=\K[^ ]+' upgrade.properties`
-\set db_password `grep -oP 'DB_PWD=\K[^ ]+' upgrade.properties`
+\set db_user `grep -oP 'SU_USER=\K[^ ]+' upgrade.properties`
+\set db_password `grep -oP 'PMS_DB_PWD=\K[^ ]+' upgrade.properties`
 --test org_name table population
 UPDATE mosip_toolkit.toolkit.abis_projects AS t
 SET org_name = i.name
