@@ -1,7 +1,14 @@
 \c mosip_toolkit sysadmin
 
---create dblink
-CREATE EXTENSION dblink;
+-- Check if the dblink extension exists
+DO $$ 
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_extension WHERE extname = 'dblink') THEN
+    -- Create the dblink extension if it doesn't exist
+    CREATE EXTENSION dblink;
+  END IF;
+END $$;
+
 --set properties
 \set db_user `grep -oP 'SU_USER=\K[^ ]+' upgrade.properties`
 \set db_password `grep -oP 'PMS_DB_PWD=\K[^ ]+' upgrade.properties`
