@@ -7,6 +7,7 @@ CREATE TABLE toolkit.biometric_testdata
 	type character varying(36) NOT NULL,
 	purpose character varying(36) NOT NULL,
 	partner_id character varying(36) NOT NULL,
+	org_name character varying(64) NOT NULL,
 	file_id character varying(256) NOT NULL,
 	file_hash character varying(64) NOT NULL,
 	cr_by character varying(256) NOT NULL,
@@ -27,6 +28,7 @@ COMMENT ON COLUMN toolkit.biometric_testdata.name IS 'Name: name of the biometri
 COMMENT ON COLUMN toolkit.biometric_testdata.type IS 'Type: typeof project SDK or ABIS.';
 COMMENT ON COLUMN toolkit.biometric_testdata.purpose IS 'Purpose: the purpose of the biometric test data.';
 COMMENT ON COLUMN toolkit.biometric_testdata.partner_id IS 'Partner Id: partner id who has created this project.';
+COMMENT ON COLUMN toolkit.biometric_testdata.org_name IS 'orgname: organization name to which partner belongs to.';
 COMMENT ON COLUMN toolkit.biometric_testdata.file_id IS 'File Id: Name of the biometric test data file.';
 COMMENT ON COLUMN toolkit.biometric_testdata.file_hash IS 'File Hash: Encoded SHA256 hash of the biometric test data file.';
 COMMENT ON COLUMN toolkit.biometric_testdata.cr_by IS 'Created By : ID or name of the user who create / insert record.';
