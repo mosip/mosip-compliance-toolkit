@@ -8,13 +8,20 @@ BEGIN
     CREATE EXTENSION dblink;
   END IF;
 END $$;
---set properties
-\set db_user `grep -oP 'SU_USER=\K[^ ]+' upgrade.properties`
+-- Set properties
+\set db_super_user `grep -oP 'SU_USER=\K[^ ]+' upgrade.properties`
 \set db_password `grep -oP 'PMS_DB_PWD=\K[^ ]+' upgrade.properties`
---test org_name table population
-UPDATE mosip_toolkit.toolkit.abis_projects AS t
+
+-- Set the connection string using string concatenation
+\set conn_str 'dbname=mosip_pms user=' :db_super_user ' password=' :db_password
+
+-- update org_name table 
+UPDATE mosip_toolkit.toolkit.sdk_projects AS t
 SET org_name = i.name
-FROM dblink('dbname=mosip_pms user=:db_user password=:db_password'::text, 'SELECT id, name FROM partner'::text) AS i(id TEXT, name TEXT)
+FROM dblink(
+  :'conn_str',
+  'SELECT id, name FROM partner'
+) AS i(id TEXT, name TEXT)
 WHERE partner_id = i.id AND t.org_name = 'Not_Available';
 
 -- add new columns in abis_projects table.
