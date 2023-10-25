@@ -120,6 +120,10 @@ COMMENT ON COLUMN toolkit.test_run_details_archive.org_name IS 'orgname: organiz
 ALTER TABLE toolkit.test_run_details_archive DROP CONSTRAINT test_run_details_archive_id_pk;
 ALTER TABLE toolkit.test_run_details_archive ADD CONSTRAINT test_run_details_archive_id_pk PRIMARY KEY (run_id, testcase_id, method_id);
 
+-- add new columns in biometric_testdata table
+ALTER TABLE toolkit.biometric_testdata Add COLUMN org_name character varying(64) NOT NULL DEFAULT 'Not_Available';
+COMMENT ON COLUMN toolkit.biometric_testdata.org_name IS 'orgname: organization name to which partner belongs to.';
+
 --Script to populate the newly added columns 'execution_status' for existing test run details
 --can be set as complete since in CTKv1.2.0 only one row exists per run_id, testcase_id
 UPDATE toolkit.test_run_details SET execution_status = 'complete';
@@ -259,8 +263,8 @@ FROM dblink(
 ) AS i(id TEXT, name TEXT)
 WHERE partner_id = i.id AND t.org_name = 'Not_Available';
 
--- update org_name table for test_run_archive table
-UPDATE mosip_toolkit.toolkit.test_run_archive AS t
+-- update org_name table for biometric_testdata table
+UPDATE mosip_toolkit.toolkit.biometric_testdata AS t
 SET org_name = i.name
 FROM dblink(
   :'conn_str',
@@ -270,15 +274,6 @@ WHERE partner_id = i.id AND t.org_name = 'Not_Available';
 
 -- update org_name table for test_run_details table
 UPDATE mosip_toolkit.toolkit.test_run_details AS t
-SET org_name = i.name
-FROM dblink(
-  :'conn_str',
-  'SELECT id, name FROM partner'
-) AS i(id TEXT, name TEXT)
-WHERE partner_id = i.id AND t.org_name = 'Not_Available';
-
--- update org_name table for test_run_details_archive table
-UPDATE mosip_toolkit.toolkit.test_run_details_archive AS t
 SET org_name = i.name
 FROM dblink(
   :'conn_str',
