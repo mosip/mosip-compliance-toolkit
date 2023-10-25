@@ -1,29 +1,5 @@
 \c mosip_toolkit sysadmin
 
--- Check if the dblink extension exists
-DO $$ 
-BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_extension WHERE extname = 'dblink') THEN
-    -- Create the dblink extension if it doesn't exist
-    CREATE EXTENSION dblink;
-  END IF;
-END $$;
--- Set properties
-\set db_super_user `grep -oP 'SU_USER=\K[^ ]+' upgrade.properties`
-\set db_password `grep -oP 'PMS_DB_PWD=\K[^ ]+' upgrade.properties`
-
--- Set the connection string using string concatenation
-\set conn_str 'dbname=mosip_pms user=' :db_super_user ' password=' :db_password
-
--- update org_name table 
-UPDATE mosip_toolkit.toolkit.sdk_projects AS t
-SET org_name = i.name
-FROM dblink(
-  :'conn_str',
-  'SELECT id, name FROM partner'
-) AS i(id TEXT, name TEXT)
-WHERE partner_id = i.id AND t.org_name = 'Not_Available';
-
 -- add new columns in abis_projects table.
 ALTER TABLE toolkit.abis_projects Add COLUMN modality character varying(256) NOT NULL DEFAULT 'All';
 ALTER TABLE toolkit.abis_projects Add COLUMN abis_hash character varying NOT NULL DEFAULT 'To_Be_Added';
@@ -212,3 +188,100 @@ WHERE
     WHERE 
       collection_summary.total_testcases = test_run_summary.success_count
   )
+
+--Script to populate the newly added column 'org_name' for existing tables
+-- Check if the dblink extension exists
+DO $$ 
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_extension WHERE extname = 'dblink') THEN
+    -- Create the dblink extension if it doesn't exist
+    CREATE EXTENSION dblink;
+  END IF;
+END $$;
+-- Set properties 
+\set db_super_user `grep -oP 'SU_USER=\K[^ ]+' upgrade.properties`
+\set db_password `grep -oP 'SU_USER_PWD=\K[^ ]+' upgrade.properties`
+
+-- Set the connection string using string concatenation
+\set conn_str 'dbname=mosip_pms user=' :db_super_user ' password=' :db_password
+
+-- update org_name table for abis_projects table
+UPDATE mosip_toolkit.toolkit.abis_projects AS t
+SET org_name = i.name
+FROM dblink(
+  :'conn_str',
+  'SELECT id, name FROM partner'
+) AS i(id TEXT, name TEXT)
+WHERE partner_id = i.id AND t.org_name = 'Not_Available';
+
+-- update org_name table for sbi_projects table
+UPDATE mosip_toolkit.toolkit.sbi_projects AS t
+SET org_name = i.name
+FROM dblink(
+  :'conn_str',
+  'SELECT id, name FROM partner'
+) AS i(id TEXT, name TEXT)
+WHERE partner_id = i.id AND t.org_name = 'Not_Available';
+
+-- update org_name table for sdk_projects table
+UPDATE mosip_toolkit.toolkit.sdk_projects AS t
+SET org_name = i.name
+FROM dblink(
+  :'conn_str',
+  'SELECT id, name FROM partner'
+) AS i(id TEXT, name TEXT)
+WHERE partner_id = i.id AND t.org_name = 'Not_Available';
+
+-- update org_name table for biometric_scores table
+UPDATE mosip_toolkit.toolkit.biometric_scores AS t
+SET org_name = i.name
+FROM dblink(
+  :'conn_str',
+  'SELECT id, name FROM partner'
+) AS i(id TEXT, name TEXT)
+WHERE partner_id = i.id AND t.org_name = 'Not_Available';
+
+-- update org_name table for collections table
+UPDATE mosip_toolkit.toolkit.collections AS t
+SET org_name = i.name
+FROM dblink(
+  :'conn_str',
+  'SELECT id, name FROM partner'
+) AS i(id TEXT, name TEXT)
+WHERE partner_id = i.id AND t.org_name = 'Not_Available';
+
+-- update org_name table for test_run table
+UPDATE mosip_toolkit.toolkit.test_run AS t
+SET org_name = i.name
+FROM dblink(
+  :'conn_str',
+  'SELECT id, name FROM partner'
+) AS i(id TEXT, name TEXT)
+WHERE partner_id = i.id AND t.org_name = 'Not_Available';
+
+-- update org_name table for test_run_archive table
+UPDATE mosip_toolkit.toolkit.test_run_archive AS t
+SET org_name = i.name
+FROM dblink(
+  :'conn_str',
+  'SELECT id, name FROM partner'
+) AS i(id TEXT, name TEXT)
+WHERE partner_id = i.id AND t.org_name = 'Not_Available';
+
+-- update org_name table for test_run_details table
+UPDATE mosip_toolkit.toolkit.test_run_details AS t
+SET org_name = i.name
+FROM dblink(
+  :'conn_str',
+  'SELECT id, name FROM partner'
+) AS i(id TEXT, name TEXT)
+WHERE partner_id = i.id AND t.org_name = 'Not_Available';
+
+-- update org_name table for test_run_details_archive table
+UPDATE mosip_toolkit.toolkit.test_run_details_archive AS t
+SET org_name = i.name
+FROM dblink(
+  :'conn_str',
+  'SELECT id, name FROM partner'
+) AS i(id TEXT, name TEXT)
+WHERE partner_id = i.id AND t.org_name = 'Not_Available';
