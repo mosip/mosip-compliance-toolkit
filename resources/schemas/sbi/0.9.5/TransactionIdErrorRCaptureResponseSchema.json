@@ -188,7 +188,8 @@
 									"$ref": "#/definitions/non-empty-string"
 								},
 								"transactionId": {
-									"$ref": "#/definitions/non-empty-string"
+									"type": "string",
+									"pattern": "^[a-zA-Z0-9-]+$"
 								},
 								"timestamp": {
 									"string": "string",
