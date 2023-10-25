@@ -40,7 +40,8 @@
 			"type": ["string", "null"]
 		},
 		"transactionId": {
-			"$ref": "#/definitions/non-empty-string"
+			"type": "string",
+			"pattern": "^[a-zA-Z0-9-]+$"
 		},
 		"bio": {
 			"type": "array",
