@@ -1464,7 +1464,7 @@
 		"testName": "Check Device Status - Not Registered",
 		"testId": "SBI1029",
 		"specVersion": "0.9.5",
-		"testDescription": "Test to validate if the device is in Not Registered state<br>Steps:<br>1. <b>De-register</b> the device <br>2. Click on <b>Resume</b> button<br>3. After test execution is done, <b>register</b> the device and click on <b>Resume Next</b> button",
+		"testDescription": "Verify the response of a Not Registered device.<br>Steps:<br>1. Make sure that you are testing with a <b>Not Registered</b> device<br>2. Click on <b>Resume</b> button<br>3. After test execution is done, <b>register</b> the device and click on <b>Resume Next</b> button",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"info"
