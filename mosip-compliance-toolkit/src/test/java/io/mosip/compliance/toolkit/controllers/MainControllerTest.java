@@ -42,7 +42,33 @@ public class MainControllerTest {
     private Authentication authentication;
 
     @Test(expected = NullPointerException.class)
+    public void getConfigValuesTestException(){
+        mainController.getConfigValues();
+    }
+
+    @Test
     public void getConfigValuesTest(){
+        MosipUserDto mosipUserDto = getMosipUserDto();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ABIS_PARTNER"));
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
+        authUserDetails.setAuthorities(authorities);
+        SecurityContextHolder.setContext(securityContext);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        mainController.getConfigValues();
+    }
+
+    @Test
+    public void getConfigValuesTest1(){
+        MosipUserDto mosipUserDto = getMosipUserDto();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("abc"));
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
+        authUserDetails.setAuthorities(authorities);
+        SecurityContextHolder.setContext(securityContext);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
         mainController.getConfigValues();
     }
 
