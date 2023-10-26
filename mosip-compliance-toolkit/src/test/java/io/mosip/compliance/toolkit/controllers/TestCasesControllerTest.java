@@ -68,6 +68,36 @@ public class TestCasesControllerTest {
         testCasesController.validateResponse(input, errors);
     }
 
+
+    /*
+     * This class tests the ggenerateRequestForSDKFrmBirs method
+     */
+    @Test
+    public void generateRequestForSDKFrmBirsTest() throws  Exception{
+        RequestWrapper<SdkRequestDto> request = new RequestWrapper<>();
+        ResponseWrapper<GenerateSdkRequestResponseDto> response = new ResponseWrapper<>();
+        Mockito.when(testCasesController.generateRequestForSDKFrmBirs(request,errors)).thenReturn(response);
+        Assert.assertEquals(response, testCasesController.generateRequestForSDKFrmBirs(request,errors));
+    }
+
+    /*
+     * This class tests the getAbisTestCases method
+     */
+    @Test
+    public void getAbisTestCasesTest(){
+        String specVersion = "0.9.5";
+        ResponseWrapper<List<TestCaseDto>> response = new ResponseWrapper<>();
+        Mockito.when(testCasesService.getAbisTestCases(specVersion)).thenReturn(response);
+        Assert.assertEquals(response, testCasesController.getAbisTestCases(specVersion));
+    }
+
+    @Test
+    public void getAbisTestCasesTestExceptoion(){
+        ResponseWrapper<List<TestCaseDto>> response = new ResponseWrapper<>();
+        ReflectionTestUtils.setField(testCasesController, "service", null);
+        testCasesController.getAbisTestCases("0.9.0");
+    }
+
     /*
      * This class tests the getSbiTestCases method
      */
