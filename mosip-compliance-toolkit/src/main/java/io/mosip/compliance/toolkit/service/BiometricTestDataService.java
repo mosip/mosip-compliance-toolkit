@@ -78,6 +78,9 @@ public class BiometricTestDataService {
     @Autowired
     VirusScanner<Boolean, InputStream> virusScan;
 
+    @Autowired
+    ResourceCacheService resourceCacheService;
+
     @Value("$(mosip.toolkit.api.id.biometric.testdata.get)")
     private String getBiometricTestDataId;
 
@@ -205,6 +208,7 @@ public class BiometricTestDataService {
                 inputEntity.setPartnerId(getPartnerId());
                 inputEntity.setFileId(file.getOriginalFilename());
                 inputEntity.setFileHash(encodedHash);
+                inputEntity.setOrgName(resourceCacheService.getOrgName(getPartnerId()));
                 inputEntity.setCrBy(getUserBy());
                 inputEntity.setCrDate(LocalDateTime.now());
                 inputEntity.setUpBy(null);

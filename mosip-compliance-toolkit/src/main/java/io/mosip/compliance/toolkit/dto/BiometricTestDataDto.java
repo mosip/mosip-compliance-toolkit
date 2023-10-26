@@ -19,6 +19,8 @@ public class BiometricTestDataDto {
 
 	private String partnerId;
 
+	private String orgName;
+
 	private String fileId;
 	
 	private String crDate;
