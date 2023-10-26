@@ -1,6 +1,7 @@
 package io.mosip.compliance.toolkit.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -40,6 +41,8 @@ import org.springframework.web.context.WebApplicationContext;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
+
+import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = { TestContext.class, WebApplicationContext.class })
 @RunWith(SpringRunner.class)
@@ -86,10 +89,10 @@ public class TestCasesServiceTest {
 	@Before
 	public void before() {
 		MockitoAnnotations.initMocks(this);
-		Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+		when(securityContext.getAuthentication()).thenReturn(authentication);
 		mosipUserDto = getMosipUserDto();
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
-		Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
+		when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		SecurityContextHolder.setContext(securityContext);
 	}
 
@@ -120,13 +123,13 @@ public class TestCasesServiceTest {
 		String deviceType = DeviceTypes.FINGER.getCode();
 		String deviceSubType = DeviceSubTypes.SLAP.getCode();
 		String schemaResponse = "schemaResponse";
-		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
+		when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
 				.thenReturn(schemaResponse);
 		List<TestCaseEntity> testCaseEntities = new ArrayList<>();
 		TestCaseEntity testCaseEntity = new TestCaseEntity();
 		testCaseEntity.setTestcaseJson("testCaseJson");
 		testCaseEntities.add(testCaseEntity);
-		Mockito.when(testCaseCacheService.getSbiTestCases(AppConstants.SBI, specVersion)).thenReturn(testCaseEntities);
+		when(testCaseCacheService.getSbiTestCases(AppConstants.SBI, specVersion)).thenReturn(testCaseEntities);
 		TestCasesService testCasesServiceSpy = Mockito.spy(testCasesService);
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		validationResultDto.setStatus(AppConstants.SUCCESS);
@@ -146,7 +149,7 @@ public class TestCasesServiceTest {
 		deviceSubTypes.add(DeviceSubTypes.SLAP.getCode());
 		otherAttributes.setDeviceSubTypes(deviceSubTypes);
 		testCaseDto.setOtherAttributes(otherAttributes);
-		Mockito.when(objectMapper.readValue(testCaseEntity.getTestcaseJson(), TestCaseDto.class))
+		when(objectMapper.readValue(testCaseEntity.getTestcaseJson(), TestCaseDto.class))
 				.thenReturn(testCaseDto);
 		testCasesServiceSpy.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType);
 	}
@@ -161,13 +164,13 @@ public class TestCasesServiceTest {
 		String deviceType = DeviceTypes.IRIS.getCode();
 		String deviceSubType = DeviceSubTypes.DOUBLE.getCode();
 		String schemaResponse = "schemaResponse";
-		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
+		when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
 				.thenReturn(schemaResponse);
 		List<TestCaseEntity> testCaseEntities = new ArrayList<>();
 		TestCaseEntity testCaseEntity = new TestCaseEntity();
 		testCaseEntity.setTestcaseJson("testCaseJson");
 		testCaseEntities.add(testCaseEntity);
-		Mockito.when(testCaseCacheService.getSbiTestCases(AppConstants.SBI, specVersion)).thenReturn(testCaseEntities);
+		when(testCaseCacheService.getSbiTestCases(AppConstants.SBI, specVersion)).thenReturn(testCaseEntities);
 		TestCasesService testCasesServiceSpy = Mockito.spy(testCasesService);
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		validationResultDto.setStatus(AppConstants.SUCCESS);
@@ -187,7 +190,7 @@ public class TestCasesServiceTest {
 		deviceSubTypes.add(DeviceSubTypes.DOUBLE.getCode());
 		otherAttributes.setDeviceSubTypes(deviceSubTypes);
 		testCaseDto.setOtherAttributes(otherAttributes);
-		Mockito.when(objectMapper.readValue(testCaseEntity.getTestcaseJson(), TestCaseDto.class))
+		when(objectMapper.readValue(testCaseEntity.getTestcaseJson(), TestCaseDto.class))
 				.thenReturn(testCaseDto);
 		testCasesServiceSpy.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType);
 	}
@@ -202,15 +205,15 @@ public class TestCasesServiceTest {
 		String purpose = Purposes.REGISTRATION.getCode();
 		String deviceType = DeviceTypes.FINGER.getCode();
 		String deviceSubType = DeviceSubTypes.SLAP.getCode();
-		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON)).thenReturn(null);
+		when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON)).thenReturn(null);
 		testCasesService.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType);
 		// exception
 		String schemaResponse = "schemaResponse";
-		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
+		when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
 				.thenReturn(schemaResponse);
 		List<TestCaseEntity> testCaseEntities = new ArrayList<>();
 		testCaseEntities.add(null);
-		Mockito.when(testCaseCacheService.getSbiTestCases(AppConstants.SBI, specVersion)).thenReturn(testCaseEntities);
+		when(testCaseCacheService.getSbiTestCases(AppConstants.SBI, specVersion)).thenReturn(testCaseEntities);
 		testCasesService.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType);
 	}
 
@@ -234,13 +237,13 @@ public class TestCasesServiceTest {
 		String specVersion = SdkSpecVersions.SPEC_VER_0_9_0.getCode();
 		String sdkPurpose = SdkPurpose.CHECK_QUALITY.getCode();
 		String schemaResponse = "schemaResponse";
-		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
+		when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
 				.thenReturn(schemaResponse);
 		List<TestCaseEntity> testCaseEntities = new ArrayList<>();
 		TestCaseEntity testCaseEntity = new TestCaseEntity();
 		testCaseEntity.setTestcaseJson("testCaseJson");
 		testCaseEntities.add(testCaseEntity);
-		Mockito.when(testCaseCacheService.getSdkTestCases(AppConstants.SDK, specVersion)).thenReturn(testCaseEntities);
+		when(testCaseCacheService.getSdkTestCases(AppConstants.SDK, specVersion)).thenReturn(testCaseEntities);
 		TestCasesService testCasesServiceSpy = Mockito.spy(testCasesService);
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		validationResultDto.setStatus(AppConstants.SUCCESS);
@@ -254,7 +257,7 @@ public class TestCasesServiceTest {
 		sdkPurposes.add(SdkPurpose.CHECK_QUALITY.getCode());
 		otherAttributes.setSdkPurpose(sdkPurposes);
 		testCaseDto.setOtherAttributes(otherAttributes);
-		Mockito.when(objectMapper.readValue(testCaseEntity.getTestcaseJson(), TestCaseDto.class))
+		when(objectMapper.readValue(testCaseEntity.getTestcaseJson(), TestCaseDto.class))
 				.thenReturn(testCaseDto);
 		testCasesServiceSpy.getSdkTestCases(specVersion, sdkPurpose);
 	}
@@ -267,15 +270,15 @@ public class TestCasesServiceTest {
 		// toolkit exception
 		String specVersion = SdkSpecVersions.SPEC_VER_0_9_0.getCode();
 		String sdkPurpose = SdkPurpose.CHECK_QUALITY.getCode();
-		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON)).thenReturn(null);
+		when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON)).thenReturn(null);
 		testCasesService.getSdkTestCases(specVersion, sdkPurpose);
 		// exception
 		String schemaResponse = "schemaResponse";
-		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
+		when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
 				.thenReturn(schemaResponse);
 		List<TestCaseEntity> testCaseEntities = new ArrayList<>();
 		testCaseEntities.add(null);
-		Mockito.when(testCaseCacheService.getSdkTestCases(AppConstants.SDK, specVersion)).thenReturn(testCaseEntities);
+		when(testCaseCacheService.getSdkTestCases(AppConstants.SDK, specVersion)).thenReturn(testCaseEntities);
 		testCasesService.getSdkTestCases(specVersion, sdkPurpose);
 	}
 
@@ -296,13 +299,13 @@ public class TestCasesServiceTest {
 	public void getAbisTestCasesTest() throws Exception {
 		String specVersion = AbisSpecVersions.SPEC_VER_0_9_0.getCode();
 		String schemaResponse = "schemaResponse";
-		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
+		when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
 				.thenReturn(schemaResponse);
 		List<TestCaseEntity> testCaseEntities = new ArrayList<>();
 		TestCaseEntity testCaseEntity = new TestCaseEntity();
 		testCaseEntity.setTestcaseJson("testCaseJson");
 		testCaseEntities.add(testCaseEntity);
-		Mockito.when(testCaseCacheService.getAbisTestCases(AppConstants.ABIS, specVersion)).thenReturn(testCaseEntities);
+		when(testCaseCacheService.getAbisTestCases(AppConstants.ABIS, specVersion)).thenReturn(testCaseEntities);
 		TestCasesService testCasesServiceSpy = Mockito.spy(testCasesService);
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		validationResultDto.setStatus(AppConstants.SUCCESS);
@@ -313,7 +316,7 @@ public class TestCasesServiceTest {
 		testCaseDto.setSpecVersion(AbisSpecVersions.SPEC_VER_0_9_0.getCode());
 		TestCaseDto.OtherAttributes otherAttributes = new TestCaseDto.OtherAttributes();
 		testCaseDto.setOtherAttributes(otherAttributes);
-		Mockito.when(objectMapper.readValue(testCaseEntity.getTestcaseJson(), TestCaseDto.class))
+		when(objectMapper.readValue(testCaseEntity.getTestcaseJson(), TestCaseDto.class))
 				.thenReturn(testCaseDto);
 		testCasesServiceSpy.getAbisTestCases(specVersion);
 	}
@@ -325,15 +328,15 @@ public class TestCasesServiceTest {
 	public void getAbisTestCasesExceptionTest() throws Exception {
 		// toolkit exception
 		String specVersion = AbisSpecVersions.SPEC_VER_0_9_0.getCode();
-		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON)).thenReturn(null);
+		when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON)).thenReturn(null);
 		testCasesService.getAbisTestCases(specVersion);
 		// exception
 		String schemaResponse = "schemaResponse";
-		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
+		when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
 				.thenReturn(schemaResponse);
 		List<TestCaseEntity> testCaseEntities = new ArrayList<>();
 		testCaseEntities.add(null);
-		Mockito.when(testCaseCacheService.getAbisTestCases(AppConstants.ABIS, specVersion)).thenReturn(testCaseEntities);
+		when(testCaseCacheService.getAbisTestCases(AppConstants.ABIS, specVersion)).thenReturn(testCaseEntities);
 		testCasesService.getAbisTestCases(specVersion);
 	}
 
@@ -349,13 +352,53 @@ public class TestCasesServiceTest {
 	/*
 	 *This class tests the validateJsonWithSchema method
 	 */
-	@Test(expected = Exception.class)
+	@Test
 	public void validateJsonWithSchemaTest() throws Exception {
+		String sourceJson="{\n" +
+				"  \"testName\": \"Discover device\",\n" +
+				"  \"methodName\": false,\n" +
+				"  \"requestSchema\": \"DiscoverRequestSchema\",\n" +
+				"  \"responseSchema\": \"DiscoverResponseSchema\"" +
+				"}";
+		String schemaJson="{\n" +
+				"  \"type\": \"object\",\n" +
+				"  \"properties\": {\n" +
+				"    \"testName\": {\n" +
+				"      \"type\": \"string\"\n" +
+				"    },\n" +
+				"    \"methodName\": {\n" +
+				"      \"type\": \"string\"\n" +
+				"    }\n" +
+				"  },\n" +
+				"  \"required\": [\"testName\", \"methodName\"]\n" +
+				"}";
+		String expectedJson = "{\n" +
+				"  \"type\": \"object\",\n" +
+				"  \"properties\": {\n" +
+				"    \"testName\": {\n" +
+				"      \"type\": \"string\"\n" +
+				"    },\n" +
+				"    \"methodName\": {\n" +
+				"      \"type\": \"string\"\n" +
+				"    }\n" +
+				"  },\n" +
+				"  \"required\": [\"testName\", \"methodName\"]\n" +
+				"}";
+		JsonNode expectedJsonNode = new ObjectMapper().readTree(expectedJson);
+		when(objectMapper.readTree(sourceJson)).thenReturn(expectedJsonNode);
+		testCasesService.validateJsonWithSchema(sourceJson,schemaJson);
+	}
+
+	/*
+	 *This class tests the validateJsonWithSchema method in case of exception
+	 */
+	@Test(expected = Exception.class)
+	public void validateJsonWithSchemaTestException() throws Exception {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		validationResultDto.setStatus(AppConstants.SUCCESS);
 		String sourceJson="";
 		String schemaJson="";
-		Mockito.when(testCasesService.validateJsonWithSchema(sourceJson,schemaJson)).thenReturn(validationResultDto);
+		when(testCasesService.validateJsonWithSchema(sourceJson,schemaJson)).thenReturn(validationResultDto);
 	}
 
 	/*
@@ -367,7 +410,7 @@ public class TestCasesServiceTest {
 		validationResultDto.setStatus(AppConstants.SUCCESS);
 		String sourceJson = "{\n" + "\t\"name\": \"John\",\n" + "\t\"age\": 30,\n" + "\t\"car\": null\n" + "\t\"name\": \"John\",\n"+ "\t\"name\": \"John\",\n"+ "\t\"name\": \"John\",\n"+"}";
 		String schemaJson = null;
-		Mockito.when(testCasesService.validateJsonWithSchema(sourceJson,schemaJson)).thenReturn(validationResultDto);
+		when(testCasesService.validateJsonWithSchema(sourceJson,schemaJson)).thenReturn(validationResultDto);
 	}
 
 	/*
@@ -396,10 +439,10 @@ public class TestCasesServiceTest {
 		validatorDefs.add(validatorDef);
 		testCaseDto.setValidatorDefs(validatorDefs);
 		String schemaResponse = "schemaResponse";
-		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
+		when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
 				.thenReturn(schemaResponse);
 		String jsonValue = "jsonValue";
-		Mockito.when(objectMapper.writeValueAsString(testCaseDto)).thenReturn(jsonValue);
+		when(objectMapper.writeValueAsString(testCaseDto)).thenReturn(jsonValue);
 		TestCasesService testCasesServiceSpy = Mockito.spy(testCasesService);
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		validationResultDto.setStatus(AppConstants.SUCCESS);
@@ -408,11 +451,11 @@ public class TestCasesServiceTest {
 		TestCaseEntity testCaseEntity = new TestCaseEntity();
 		// checkTestCaseEntity is empty
 		Optional<TestCaseEntity> checkTestCaseEntity = Optional.empty();
-		Mockito.when(testCasesRepository.findById(testCaseDto.getTestId())).thenReturn(checkTestCaseEntity);
+		when(testCasesRepository.findById(testCaseDto.getTestId())).thenReturn(checkTestCaseEntity);
 		testCasesServiceSpy.saveTestCases(values);
 		// checkTestCaseEntity
 		checkTestCaseEntity = Optional.of(testCaseEntity);
-		Mockito.when(testCasesRepository.findById(testCaseDto.getTestId())).thenReturn(checkTestCaseEntity);
+		when(testCasesRepository.findById(testCaseDto.getTestId())).thenReturn(checkTestCaseEntity);
 		ResponseWrapper<TestCaseResponseDto> testCaseResponseDtoRW = testCasesServiceSpy.saveTestCases(values);
 		Assert.assertEquals(null, testCaseResponseDtoRW.getResponse().getTestCases().get(0));
 	}
@@ -425,14 +468,14 @@ public class TestCasesServiceTest {
 		List<TestCaseDto> values = new ArrayList<>();
 		TestCaseDto testCaseDto = new TestCaseDto();
 		values.add(testCaseDto);
-		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON)).thenReturn(null);
+		when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON)).thenReturn(null);
 		TestCasesService testCasesServiceSpy = Mockito.spy(testCasesService);
 		testCasesServiceSpy.saveTestCases(values);
 		String schemaResponse = "schemaResponse";
-		Mockito.when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
+		when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
 				.thenReturn(schemaResponse);
 		String jsonValue = "jsonValue";
-		Mockito.when(objectMapper.writeValueAsString(testCaseDto)).thenReturn(jsonValue);
+		when(objectMapper.writeValueAsString(testCaseDto)).thenReturn(jsonValue);
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		validationResultDto.setStatus(AppConstants.FAILURE);
 		Mockito.doReturn(validationResultDto).when(testCasesServiceSpy).validateJsonWithSchema(jsonValue,
@@ -546,7 +589,7 @@ public class TestCasesServiceTest {
 		requestDto.setTestCaseType(AppConstants.SDK);
 		requestDto.setSpecVersion(SdkSpecVersions.SPEC_VER_0_9_0.getCode());
 		String schemaResponse = "schemaResponse";
-		Mockito.when(resourceCacheService.getSchema(AppConstants.SDK.toLowerCase(), requestDto.getSpecVersion(),
+		when(resourceCacheService.getSchema(AppConstants.SDK.toLowerCase(), requestDto.getSpecVersion(),
 				requestDto.getRequestSchema() + ".json")).thenReturn(schemaResponse);
 		TestCasesService testCasesServiceSpy = Mockito.spy(testCasesService);
 		ValidationResultDto validationResultDto = new ValidationResultDto();
@@ -557,14 +600,14 @@ public class TestCasesServiceTest {
 		// type SBI
 		requestDto.setTestCaseType(AppConstants.SBI);
 		requestDto.setSpecVersion(SbiSpecVersions.SPEC_VER_0_9_5.getCode());
-		Mockito.when(resourceCacheService.getSchema(AppConstants.SBI.toLowerCase(), requestDto.getSpecVersion(),
+		when(resourceCacheService.getSchema(AppConstants.SBI.toLowerCase(), requestDto.getSpecVersion(),
 				requestDto.getRequestSchema() + ".json")).thenReturn(schemaResponse);
 		Assert.assertEquals(AppConstants.SUCCESS,
 				testCasesServiceSpy.performRequestValidations(requestDto).getResponse().getStatus());
 		// type ABIS
 		requestDto.setTestCaseType(AppConstants.ABIS);
 		requestDto.setSpecVersion(AbisSpecVersions.SPEC_VER_0_9_0.getCode());
-		Mockito.when(resourceCacheService.getSchema(AppConstants.ABIS.toLowerCase(), requestDto.getSpecVersion(),
+		when(resourceCacheService.getSchema(AppConstants.ABIS.toLowerCase(), requestDto.getSpecVersion(),
 				requestDto.getRequestSchema() + ".json")).thenReturn(schemaResponse);
 		Assert.assertEquals(AppConstants.SUCCESS,
 				testCasesServiceSpy.performRequestValidations(requestDto).getResponse().getStatus());
@@ -580,7 +623,7 @@ public class TestCasesServiceTest {
 		requestDto.setTestCaseType(AppConstants.SDK);
 		requestDto.setSpecVersion(SdkSpecVersions.SPEC_VER_0_9_0.getCode());
 		String schemaResponse = "schemaResponse";
-		Mockito.when(resourceCacheService.getSchema(AppConstants.SDK.toLowerCase(), requestDto.getSpecVersion(),
+		when(resourceCacheService.getSchema(AppConstants.SDK.toLowerCase(), requestDto.getSpecVersion(),
 				requestDto.getRequestSchema() + ".json")).thenReturn(schemaResponse);
 		testCasesService.performRequestValidations(requestDto);
 	}
@@ -668,12 +711,12 @@ public class TestCasesServiceTest {
 	@Test
 	public void getTestCaseByIdTest() throws JsonProcessingException {
 		String testCaseId = "SBI1000";
-		Mockito.when(testCasesRepository.getTestCasesById(testCaseId)).thenReturn(null);
+		when(testCasesRepository.getTestCasesById(testCaseId)).thenReturn(null);
 		testCasesService.getTestCaseById(testCaseId);
 		String testCaseJson = "testCaseJson";
-		Mockito.when(testCasesRepository.getTestCasesById(testCaseId)).thenReturn(testCaseJson);
+		when(testCasesRepository.getTestCasesById(testCaseId)).thenReturn(testCaseJson);
 		TestCaseDto testCase = new TestCaseDto();
-		Mockito.when(objectMapper.readValue(testCaseJson, TestCaseDto.class)).thenReturn(testCase);
+		when(objectMapper.readValue(testCaseJson, TestCaseDto.class)).thenReturn(testCase);
 		ResponseWrapper<TestCaseDto> responseWrapper = testCasesService.getTestCaseById(testCaseId);
 		Assert.assertEquals(testCase, responseWrapper.getResponse());
 	}
@@ -684,7 +727,7 @@ public class TestCasesServiceTest {
 	@Test
 	public void getTestCaseByIdExceptionTest() throws JsonProcessingException {
 		String testCaseId = "SBI1000";
-		Mockito.when(testCasesRepository.getTestCasesById(testCaseId)).thenReturn(null);
+		when(testCasesRepository.getTestCasesById(testCaseId)).thenReturn(null);
 		ReflectionTestUtils.setField(testCasesService, "testCasesRepository", null);
 		testCasesService.getTestCaseById(testCaseId);
 	}
@@ -717,11 +760,11 @@ public class TestCasesServiceTest {
 		biometricTestData.setDelTime(LocalDateTime.now().plusMinutes(4));
 
 
-		Mockito.when(biometricTestDataRepository.findByTestDataName(Mockito.any(),Mockito.any()))
+		when(biometricTestDataRepository.findByTestDataName(Mockito.any(),Mockito.any()))
 						.thenReturn(biometricTestData);
-		Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+		when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(true);
-		Mockito.when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+		when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(inputFile);
 		testCasesService.generateRequestForSDKTestcase(requestDto);
 	}
@@ -737,13 +780,13 @@ public class TestCasesServiceTest {
 		String json = "{\n" + "\t\"name\": \"John\",\n" + "\t\"age\": 30,\n" + "\t\"car\": null\n" + "}";
 		ReflectionTestUtils.setField(testCasesService, "objectMapper", objectMapper);
 		InputStream inputFile = new ByteArrayInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.zip".getBytes());
-		Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+		when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(true);
-		Mockito.when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+		when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(inputFile);
 		testCasesService.generateRequestForSDKTestcase(requestDto);
 
-		Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+		when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(false);
 		testCasesService.generateRequestForSDKTestcase(requestDto);
 		// requestDto=null
@@ -869,12 +912,12 @@ public class TestCasesServiceTest {
 		BiometricTestDataEntity biometricTestData=new BiometricTestDataEntity();
 		biometricTestData.setFileId("123");
 		biometricTestData.setFileHash("456");
-		Mockito.when(biometricTestDataRepository.findByTestDataName(requestDto.getBioTestDataName(),partnerId))
+		when(biometricTestDataRepository.findByTestDataName(requestDto.getBioTestDataName(),partnerId))
 				.thenReturn(biometricTestData);
-		Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+		when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(true);
 		InputStream inputFile = new ByteArrayInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.zip".getBytes());
-		Mockito.when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+		when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(inputFile);
 		ReflectionTestUtils.invokeMethod(testCasesService, "getPartnerTestDataStream", requestDto.getBioTestDataName(), partnerId,
 				sdkPurpose.getCode());
@@ -892,12 +935,12 @@ public class TestCasesServiceTest {
 		BiometricTestDataEntity biometricTestData = new BiometricTestDataEntity();
 		biometricTestData.setFileId("123");
 		biometricTestData.setFileHash("123");
-		Mockito.when(biometricTestDataRepository.findByTestDataName(requestDto.getBioTestDataName(), partnerId))
+		when(biometricTestDataRepository.findByTestDataName(requestDto.getBioTestDataName(), partnerId))
 				.thenReturn(biometricTestData);
-		Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+		when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(true);
 		FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.zip");
-		Mockito.when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
+		when(objectStore.getObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(inputFile);
 		ReflectionTestUtils.invokeMethod(testCasesService, "getPartnerTestDataStream", requestDto, partnerId,
 				sdkPurpose);
