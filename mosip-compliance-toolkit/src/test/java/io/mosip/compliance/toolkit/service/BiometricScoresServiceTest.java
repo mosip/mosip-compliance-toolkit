@@ -35,6 +35,9 @@ public class BiometricScoresServiceTest {
     @Mock
     SecurityContext securityContext;
 
+    @Mock
+    ResourceCacheService resourceCacheService;
+
     private MosipUserDto mosipUserDto;
 
     @Before
@@ -88,6 +91,7 @@ public class BiometricScoresServiceTest {
         MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
         Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        Mockito.when(resourceCacheService.getOrgName("abc")).thenReturn("abc");
         SecurityContextHolder.setContext(securityContext);
         biometricScoresService.addBiometricScores("123", "abc", "100", "score");
     }
@@ -98,6 +102,7 @@ public class BiometricScoresServiceTest {
         MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
         Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        Mockito.when(resourceCacheService.getOrgName("abc")).thenReturn("abc");
         SecurityContextHolder.setContext(securityContext);
         biometricScoresService.addBiometricScores(null, "abc", "100", "score");
     }
