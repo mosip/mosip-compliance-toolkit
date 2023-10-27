@@ -229,7 +229,7 @@
 					]
 				},
 				"error": {
-					"type": ["object", "null"],
+					"type": "object",
 					"properties": {
 						"errorCode": {
 							"$ref": "#/definitions/non-empty-string",
