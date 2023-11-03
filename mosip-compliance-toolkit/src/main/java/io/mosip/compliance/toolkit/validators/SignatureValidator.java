@@ -3,6 +3,7 @@ package io.mosip.compliance.toolkit.validators;
 import java.io.IOException;
 import java.util.Objects;
 
+import io.mosip.compliance.toolkit.util.CommonUtilError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -65,10 +66,10 @@ public class SignatureValidator extends SBIValidator {
 				}
 			}
 		} catch (ToolkitException e) {
-			ValidatorCommonException.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+			CommonUtilError.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
 					"In SignatureValidator - ");
 		} catch (Exception e) {
-			ValidatorCommonException.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+			CommonUtilError.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
 					"In SignatureValidator - ");
 		}
 		return validationResultDto;

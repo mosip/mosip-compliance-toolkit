@@ -8,6 +8,7 @@ import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
+import io.mosip.compliance.toolkit.util.CommonUtilError;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.model.Decision;
 import io.mosip.kernel.biometrics.model.MatchDecision;
@@ -128,7 +129,7 @@ public abstract class MatchBaseValidator extends SDKValidator {
                 validationResultDto.setDescriptionKey("MATCH_VALIDATOR_005" + AppConstants.ARGUMENTS_DELIMITER + statusCode);
             }
         } catch (Exception e) {
-            ValidatorCommonException.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+            CommonUtilError.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
                     "In MatchBaseValidator - ");
             return validationResultDto;
         }

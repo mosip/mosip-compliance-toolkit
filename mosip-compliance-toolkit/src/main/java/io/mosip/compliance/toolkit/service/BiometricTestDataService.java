@@ -15,6 +15,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import io.mosip.compliance.toolkit.util.CommonUtilError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,7 +47,6 @@ import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
 import io.mosip.compliance.toolkit.entity.TestCaseEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
-import io.mosip.compliance.toolkit.util.CommonUtil;
 import io.mosip.compliance.toolkit.util.CryptoUtil;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
@@ -105,10 +105,10 @@ public class BiometricTestDataService {
 
     @Value("${mosip.toolkit.sample.testdata.sdk.readme.text}")
     private String readmeIntro;
-	
+
 	@Value("${mosip.toolkit.sample.testdata.sdk.outer.readme.text.head}")
 	private String outerReadmeIntro;
-	
+
 	@Value("${mosip.toolkit.sample.testdata.sdk.outer.readme.text.body}")
 	private String outerReadmeBody;
 
@@ -159,7 +159,7 @@ public class BiometricTestDataService {
             } else {
                 String errorCode = ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorCode();
                 String errorMessage = ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorMessage();
-                responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+                responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode,errorMessage));
             }
         } catch (Exception ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -168,7 +168,7 @@ public class BiometricTestDataService {
             String errorCode = ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorCode();
             String errorMessage = ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorMessage() + BLANK_SPACE
                     + ex.getMessage();
-            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+            responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode,errorMessage));
         }
         responseWrapper.setId(getBiometricTestDataId);
         responseWrapper.setResponse(biometricTestDataList);
@@ -198,7 +198,7 @@ public class BiometricTestDataService {
                     purpose = requestPurpose;
                 }
                 TestDataValidationDto testDataValidation = validateTestData(purpose, file);
-                
+
                 String encodedHash = CryptoUtil.getEncodedHash(file.getBytes());
 
                 ObjectMapper mapper = objectMapperConfig.objectMapper();
@@ -253,19 +253,19 @@ public class BiometricTestDataService {
                         biometricTestDataRepository.delete(entity);
                         String errorCode = ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorCode();
                         String errorMessage = ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorMessage();
-                        responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+                        responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode,errorMessage));
                     }
 
                 } else {
                     String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorCode();
                     String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorMessage() + inputEntity.getFileId();
-                    responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+                    responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode,errorMessage));
                 }
 
             } else {
                 String errorCode = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode();
                 String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage();
-                responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+                responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode,errorMessage));
             }
         } catch (ToolkitException ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -273,7 +273,7 @@ public class BiometricTestDataService {
                     "In addBiometricTestdata method of BiometricTestDataService - " + ex.getMessage());
             String errorCode = ex.getErrorCode();
             String errorMessage = ex.getMessage();
-            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+            responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode,errorMessage));
         } catch (DataIntegrityViolationException ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
@@ -285,7 +285,7 @@ public class BiometricTestDataService {
             String errorCode = ToolkitErrorCodes.BIO_TEST_DATA_FILE_EXISTS.getErrorCode();
             String errorMessage = ToolkitErrorCodes.BIO_TEST_DATA_FILE_EXISTS.getErrorMessage() + BLANK_SPACE
                     + bioTestName;
-            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+            responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode,errorMessage));
         } catch (Exception ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
@@ -293,7 +293,7 @@ public class BiometricTestDataService {
             String errorCode = ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorCode();
             String errorMessage = ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorMessage() + BLANK_SPACE
                     + ex.getMessage();
-            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+            responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode,errorMessage));
         }
         responseWrapper.setId(postBiometricTestDataId);
         responseWrapper.setResponse(addBioTestDataResponseDto);
@@ -460,7 +460,7 @@ public class BiometricTestDataService {
 					}
 					if (!entryName.isBlank()) {
 						if (!purpose.equals(AppConstants.ABIS)) {
-                                                    
+
 							if (zipEntry.isDirectory()) {
 								String testcaseId = entryName.substring(0, entryName.length() - 1);
 								if (testDataValidation.getFolders().contains(testcaseId)) {
@@ -567,7 +567,7 @@ public class BiometricTestDataService {
             } else {
                 String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode();
                 String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage();
-                responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+                responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode,errorMessage));
             }
         } catch (Exception ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -576,7 +576,7 @@ public class BiometricTestDataService {
             String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode();
             String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage() + BLANK_SPACE
                     + ex.getMessage();
-            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+            responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode,errorMessage));
         }
         responseWrapper.setId(getBioTestDataFileNames);
         responseWrapper.setResponse(testDataNames);

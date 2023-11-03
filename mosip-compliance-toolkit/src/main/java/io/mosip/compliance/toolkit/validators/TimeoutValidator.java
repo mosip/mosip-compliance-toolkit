@@ -11,6 +11,7 @@ import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
+import io.mosip.compliance.toolkit.util.CommonUtilError;
 import io.mosip.kernel.core.logger.spi.Logger;
 
 public class TimeoutValidator extends SBIValidator {
@@ -40,10 +41,10 @@ public class TimeoutValidator extends SBIValidator {
                 validationResultDto.setDescriptionKey("TIMEOUT_VALIDATOR_002" + AppConstants.ARGUMENTS_DELIMITER + timeout + AppConstants.ARGUMENTS_SEPARATOR + diff);
             }
         } catch (ToolkitException e) {
-            ValidatorCommonException.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+            CommonUtilError.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
                     "In TimeoutValidator - ");
         } catch (Exception e) {
-            ValidatorCommonException.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+            CommonUtilError.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
                     "In TimeoutValidator - ");
         }
         return validationResultDto;

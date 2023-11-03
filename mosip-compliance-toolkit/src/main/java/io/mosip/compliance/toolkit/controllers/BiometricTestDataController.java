@@ -3,6 +3,7 @@ package io.mosip.compliance.toolkit.controllers;
 import java.util.List;
 
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
+import io.mosip.compliance.toolkit.util.CommonUtilError;
 import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -23,7 +24,6 @@ import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.AddBioTestDataResponseDto;
 import io.mosip.compliance.toolkit.dto.BiometricTestDataDto;
 import io.mosip.compliance.toolkit.service.BiometricTestDataService;
-import io.mosip.compliance.toolkit.util.CommonUtil;
 import io.mosip.compliance.toolkit.util.DataValidationUtil;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RequestValidator;
@@ -71,7 +71,7 @@ public class BiometricTestDataController {
 			ResponseWrapper<AddBioTestDataResponseDto> responseWrapper = new ResponseWrapper<>();
 			String errorCode = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode,errorMessage));
 			return responseWrapper;
 		}
 	}

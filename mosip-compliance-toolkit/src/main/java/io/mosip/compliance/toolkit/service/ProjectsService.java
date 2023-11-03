@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import io.mosip.compliance.toolkit.util.CommonUtil;
+import io.mosip.compliance.toolkit.util.CommonUtilError;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -71,7 +71,7 @@ public class ProjectsService {
 			if (!isProjectTypeValid) {
 				errorCode = ToolkitErrorCodes.INVALID_PROJECT_TYPE;
 				String errorMessage = ToolkitErrorCodes.INVALID_PROJECT_TYPE.getErrorMessage();
-				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode.getErrorCode(),errorMessage));
+				responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode.getErrorCode(),errorMessage));
 			} else {
 				String partnerId = this.getPartnerId();
 				boolean fetchAll = false;
@@ -113,7 +113,7 @@ public class ProjectsService {
 			log.error("sessionId", "idType", "id", "In getProjects method of Projects Service - " + ex.getMessage());
 			errorCode = ToolkitErrorCodes.PROJECTS_NOT_AVAILABLE;
 			String errorMessage = ToolkitErrorCodes.PROJECTS_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode.getErrorCode(),errorMessage));
+			responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode.getErrorCode(),errorMessage));
 		}
 		responseWrapper.setId(getProjectsId);
 		responseWrapper.setVersion(AppConstants.VERSION);

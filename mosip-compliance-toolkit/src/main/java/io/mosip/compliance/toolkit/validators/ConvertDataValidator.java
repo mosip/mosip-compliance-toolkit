@@ -12,6 +12,7 @@ import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.sdk.ConvertFormatRequestDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
+import io.mosip.compliance.toolkit.util.CommonUtilError;
 import io.mosip.compliance.toolkit.util.ConverterDataUtil;
 import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
@@ -66,7 +67,7 @@ public class ConvertDataValidator extends SDKValidator {
 				validationResultDto.setDescriptionKey("CONVERT_DATA_VALIDATOR_003" + AppConstants.ARGUMENTS_DELIMITER + statusCode);
 			}
 		} catch (Exception e) {
-			ValidatorCommonException.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+			CommonUtilError.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
 					"In convertDataValidator - ");
 			return validationResultDto;
 		}

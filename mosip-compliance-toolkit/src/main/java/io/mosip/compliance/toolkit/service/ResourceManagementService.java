@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import io.mosip.compliance.toolkit.util.CommonUtil;
+import io.mosip.compliance.toolkit.util.CommonUtilError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +17,6 @@ import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.SdkPurpose;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
-import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.virusscanner.exception.VirusScannerException;
@@ -137,7 +136,7 @@ public class ResourceManagementService {
 			} else {
 				String errorCode = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode();
 				String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage();
-				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+				responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode,errorMessage));
 			}
 		} catch (ToolkitException ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -145,14 +144,14 @@ public class ResourceManagementService {
 					"In uploadResourceFile method of ResourceManagementService Service - " + ex.getMessage());
 			String errorCode = ex.getErrorCode();
 			String errorMessage = ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode,errorMessage));
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In uploadResourceFile method of ResourceManagementService Service - " + ex.getMessage());
 			String errorCode = ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorMessage() + BLANK_SPACE + ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode,errorMessage));
 		}
 		responseWrapper.setId(postResourceFileId);
 		responseWrapper.setResponse(status);

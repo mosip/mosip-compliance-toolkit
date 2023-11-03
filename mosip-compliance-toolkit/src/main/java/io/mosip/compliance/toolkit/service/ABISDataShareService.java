@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import io.mosip.compliance.toolkit.util.CommonUtilError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,7 +30,6 @@ import io.mosip.compliance.toolkit.dto.abis.DataShareSaveTokenRequest;
 import io.mosip.compliance.toolkit.entity.AbisDataShareTokenEntity;
 import io.mosip.compliance.toolkit.repository.AbisDataShareTokenRepository;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
-import io.mosip.compliance.toolkit.util.CommonUtil;
 import io.mosip.compliance.toolkit.util.DataShareHelper;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
@@ -169,7 +169,7 @@ public class ABISDataShareService {
 			String errorCode = ToolkitErrorCodes.ABIS_DATA_SHARE_URL_EXCEPTION.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.ABIS_DATA_SHARE_URL_EXCEPTION.getErrorMessage() + " "
 					+ ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+			responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getDataShareUrlId);
 		responseWrapper.setVersion(AppConstants.VERSION);
@@ -225,7 +225,7 @@ public class ABISDataShareService {
 			String errorCode = ToolkitErrorCodes.ABIS_EXPIRE_DATA_SHARE_URL_EXCEPTION.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.ABIS_EXPIRE_DATA_SHARE_URL_EXCEPTION.getErrorMessage() + " "
 					+ ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+			responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getDataShareUrlId);
 		responseWrapper.setVersion(AppConstants.VERSION);

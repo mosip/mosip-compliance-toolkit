@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import io.mosip.compliance.toolkit.util.CommonUtilError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,7 +31,6 @@ import io.mosip.compliance.toolkit.entity.CollectionTestCaseEntity;
 import io.mosip.compliance.toolkit.repository.CollectionTestCaseRepository;
 import io.mosip.compliance.toolkit.repository.CollectionsRepository;
 import io.mosip.compliance.toolkit.repository.CollectionsSummaryRepository;
-import io.mosip.compliance.toolkit.util.CommonUtil;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
@@ -112,7 +112,7 @@ public class CollectionsService {
 			} else {
 				String errorCode = ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorCode();
 				String errorMessage = ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorMessage();
-				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+				responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode, errorMessage));
 			}
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -120,7 +120,7 @@ public class CollectionsService {
 					"In getCollectionByCollectionId method of CollectionsService Service - " + ex.getMessage());
 			String errorCode = ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+			responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getCollectionId);
 		responseWrapper.setVersion(AppConstants.VERSION);
@@ -153,7 +153,7 @@ public class CollectionsService {
 				} else {
 					String errorCode = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode();
 					String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage();
-					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+					responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode, errorMessage));
 				}
 			}
 		} catch (Exception ex) {
@@ -163,7 +163,7 @@ public class CollectionsService {
 			String errorCode = ToolkitErrorCodes.COLLECTION_TESTCASES_NOT_AVAILABLE.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.COLLECTION_TESTCASES_NOT_AVAILABLE.getErrorMessage() + " "
 					+ ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+			responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getTestCasesForCollectionId);
 		responseWrapper.setVersion(AppConstants.VERSION);
@@ -215,12 +215,12 @@ public class CollectionsService {
 				} else {
 					String errorCode = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode();
 					String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage();
-					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+					responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode, errorMessage));
 				}
 			} else {
 				String errorCode = ToolkitErrorCodes.INVALID_PROJECT_TYPE.getErrorCode();
 				String errorMessage = ToolkitErrorCodes.INVALID_PROJECT_TYPE.getErrorMessage();
-				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+				responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode, errorMessage));
 			}
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -228,7 +228,7 @@ public class CollectionsService {
 					"In getProjectCollectionTestrun method of CollectionsService Service - " + ex.getMessage());
 			String errorCode = ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+			responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getCollectionsId);
 		responseWrapper.setVersion(AppConstants.VERSION);
@@ -300,12 +300,12 @@ public class CollectionsService {
 					String errorCode = ToolkitErrorCodes.COLLECTION_NAME_EXISTS.getErrorCode();
 					String errorMessage = ToolkitErrorCodes.COLLECTION_NAME_EXISTS.getErrorMessage()
 							+ duplicates.get(0).getName();
-					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+					responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode, errorMessage));
 				}
 			} else {
 				String errorCode = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode();
 				String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage();
-				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+				responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode, errorMessage));
 			}
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -313,7 +313,7 @@ public class CollectionsService {
 					"In saveCollection method of CollectionsService Service - " + ex.getMessage());
 			String errorCode = ToolkitErrorCodes.COLLECTION_UNABLE_TO_ADD.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.COLLECTION_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+			responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode, errorMessage));
 		}
 		responseWrapper.setId(postCollectionId);
 		responseWrapper.setVersion(AppConstants.VERSION);
@@ -345,7 +345,7 @@ public class CollectionsService {
 			} else {
 				String errorCode = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode();
 				String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage();
-				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+				responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode, errorMessage));
 			}
 
 		} catch (Exception ex) {
@@ -356,7 +356,7 @@ public class CollectionsService {
 			String errorCode = ToolkitErrorCodes.COLLECTION_TESTCASE_UNABLE_TO_ADD.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.COLLECTION_TESTCASE_UNABLE_TO_ADD.getErrorMessage() + " "
 					+ ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+			responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode, errorMessage));
 		}
 		responseWrapper.setId(postCollectionTestCaseId);
 		responseWrapper.setVersion(AppConstants.VERSION);
