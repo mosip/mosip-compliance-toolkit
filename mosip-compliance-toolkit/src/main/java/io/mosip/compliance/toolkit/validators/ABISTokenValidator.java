@@ -76,12 +76,8 @@ public class ABISTokenValidator extends ToolkitValidator {
 						+ AppConstants.ARGUMENTS_SEPARATOR + partnerId);
 			}
 		} catch (Exception e) {
-			log.debug("sessionId", "idType", "id", e.getStackTrace());
-			log.error("sessionId", "idType", "id",
-					"In ABISTokenValidator - " + e.getMessage());
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription(e.getLocalizedMessage());
-			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
+			ValidatorCommonException.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+					"In ABISTokenValidator - ");
 			return validationResultDto;
 		}
 		return validationResultDto;

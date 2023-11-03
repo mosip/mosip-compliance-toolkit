@@ -76,19 +76,13 @@ public class ISOStandardsValidator extends SBIValidator {
 				}
 			}
 		} catch (ToolkitException e) {
-			handleExceptionAndSetResultStatus(validationResultDto,e);
+			ValidatorCommonException.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+					"In ISOStandardsValidator - ");
 		} catch (Exception e) {
-			handleExceptionAndSetResultStatus(validationResultDto,e);
+			ValidatorCommonException.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+					"In ISOStandardsValidator - ");
 		}
 		return validationResultDto;
-	}
-
-	public void handleExceptionAndSetResultStatus(ValidationResultDto validationResultDto, Exception e) {
-		log.debug("sessionId", "idType", "id", e.getStackTrace());
-		log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
-		validationResultDto.setStatus(AppConstants.FAILURE);
-		validationResultDto.setDescription(e.getLocalizedMessage());
-		validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 	}
 
 	public String extractBioValue(final JsonNode biometricNode) {

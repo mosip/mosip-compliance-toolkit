@@ -89,11 +89,8 @@ public class QualityCheckValidator extends SDKValidator {
 				}
 			}
 		} catch (Exception e) {
-			log.debug("sessionId", "idType", "id", e.getStackTrace());
-			log.error("sessionId", "idType", "id", "In QualityCheckValidator - " + e.getMessage());
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription(e.getLocalizedMessage());
-			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
+			ValidatorCommonException.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+					"In QualityCheckValidator - ");
 			return validationResultDto;
 		}
 		return validationResultDto;
