@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import io.mosip.compliance.toolkit.util.CommonUtilError;
+import io.mosip.compliance.toolkit.util.CommonErrorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -169,7 +169,7 @@ public class ABISDataShareService {
 			String errorCode = ToolkitErrorCodes.ABIS_DATA_SHARE_URL_EXCEPTION.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.ABIS_DATA_SHARE_URL_EXCEPTION.getErrorMessage() + " "
 					+ ex.getMessage();
-			responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode, errorMessage));
+			responseWrapper.setErrors(CommonErrorUtil.getServiceErr(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getDataShareUrlId);
 		responseWrapper.setVersion(AppConstants.VERSION);
@@ -225,7 +225,7 @@ public class ABISDataShareService {
 			String errorCode = ToolkitErrorCodes.ABIS_EXPIRE_DATA_SHARE_URL_EXCEPTION.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.ABIS_EXPIRE_DATA_SHARE_URL_EXCEPTION.getErrorMessage() + " "
 					+ ex.getMessage();
-			responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode, errorMessage));
+			responseWrapper.setErrors(CommonErrorUtil.getServiceErr(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getDataShareUrlId);
 		responseWrapper.setVersion(AppConstants.VERSION);

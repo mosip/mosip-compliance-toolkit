@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
-import io.mosip.compliance.toolkit.util.CommonUtilError;
+import io.mosip.compliance.toolkit.util.CommonErrorUtil;
 import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -89,7 +89,7 @@ public class QualityCheckValidator extends SDKValidator {
 				}
 			}
 		} catch (Exception e) {
-			CommonUtilError.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+			CommonErrorUtil.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
 					"In QualityCheckValidator - ");
 			return validationResultDto;
 		}

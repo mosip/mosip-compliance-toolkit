@@ -2,7 +2,7 @@ package io.mosip.compliance.toolkit.validators;
 
 import java.util.Optional;
 
-import io.mosip.compliance.toolkit.util.CommonUtilError;
+import io.mosip.compliance.toolkit.util.CommonErrorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -77,7 +77,7 @@ public class ABISTokenValidator extends ToolkitValidator {
 						+ AppConstants.ARGUMENTS_SEPARATOR + partnerId);
 			}
 		} catch (Exception e) {
-			CommonUtilError.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+			CommonErrorUtil.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
 					"In ABISTokenValidator - ");
 			return validationResultDto;
 		}

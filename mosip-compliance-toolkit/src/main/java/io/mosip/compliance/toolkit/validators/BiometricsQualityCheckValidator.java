@@ -8,7 +8,7 @@ import java.util.Map;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.service.BiometricScoresService;
 import io.mosip.compliance.toolkit.service.TestCasesService;
-import io.mosip.compliance.toolkit.util.CommonUtilError;
+import io.mosip.compliance.toolkit.util.CommonErrorUtil;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -175,10 +175,10 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 				validationResultDto.setDescriptionKey("BIOMETRIC_QUALITY_CHECK_001," + codes.toString());
 			}
 		} catch (ToolkitException e) {
-			CommonUtilError.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+			CommonErrorUtil.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
 					"In BiometricsQualityCheckValidator - ");
 		} catch (Exception e) {
-			CommonUtilError.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+			CommonErrorUtil.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
 					"In BiometricsQualityCheckValidator - ");
 		}
 		return validationResultDto;

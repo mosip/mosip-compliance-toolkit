@@ -8,7 +8,7 @@ import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
-import io.mosip.compliance.toolkit.util.CommonUtilError;
+import io.mosip.compliance.toolkit.util.CommonErrorUtil;
 import io.mosip.kernel.biometrics.constant.BiometricType;
 import io.mosip.kernel.biometrics.model.Decision;
 import io.mosip.kernel.biometrics.model.MatchDecision;
@@ -129,13 +129,13 @@ public abstract class MatchBaseValidator extends SDKValidator {
                 validationResultDto.setDescriptionKey("MATCH_VALIDATOR_005" + AppConstants.ARGUMENTS_DELIMITER + statusCode);
             }
         } catch (Exception e) {
-            CommonUtilError.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+            CommonErrorUtil.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
                     "In MatchBaseValidator - ");
             return validationResultDto;
         }
         return validationResultDto;
     }
-    private static void appendToResultKey(StringBuffer resultsKey, String value1, String value2,Map.Entry<BiometricType, Boolean> entry2,Integer galleryIndex ) {
+    private void appendToResultKey(StringBuffer resultsKey, String value1, String value2,Map.Entry<BiometricType, Boolean> entry2,Integer galleryIndex ) {
         resultsKey.append(value1);
         resultsKey.append(AppConstants.COMMA_SEPARATOR);
         resultsKey.append(entry2.getKey().toString());

@@ -8,7 +8,7 @@ import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.logger.spi.Logger;
 
-public final class CommonUtilError {
+public final class CommonErrorUtil {
 
 	public static List<ServiceError> getServiceErr(String errorCode, String errorMessage) {
 		List<ServiceError> serviceErrorsList = new ArrayList<>();

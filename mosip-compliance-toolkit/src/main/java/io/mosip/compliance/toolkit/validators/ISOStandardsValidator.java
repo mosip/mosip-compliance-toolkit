@@ -1,7 +1,7 @@
 package io.mosip.compliance.toolkit.validators;
 
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
-import io.mosip.compliance.toolkit.util.CommonUtilError;
+import io.mosip.compliance.toolkit.util.CommonErrorUtil;
 import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -76,10 +76,10 @@ public class ISOStandardsValidator extends SBIValidator {
 				}
 			}
 		} catch (ToolkitException e) {
-			CommonUtilError.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+			CommonErrorUtil.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
 					"In ISOStandardsValidator - ");
 		} catch (Exception e) {
-			CommonUtilError.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+			CommonErrorUtil.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
 					"In ISOStandardsValidator - ");
 		}
 		return validationResultDto;

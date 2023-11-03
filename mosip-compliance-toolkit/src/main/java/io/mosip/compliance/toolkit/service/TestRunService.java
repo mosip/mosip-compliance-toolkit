@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import io.mosip.compliance.toolkit.util.CommonUtilError;
+import io.mosip.compliance.toolkit.util.CommonErrorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -147,7 +147,7 @@ public class TestRunService {
 	private void handleToolkitError(ToolkitErrorCodes toolkitError, ResponseWrapper<?> responseWrapper) {
 		String errorCode = toolkitError.getErrorCode();
 		String errorMessage = toolkitError.getErrorMessage();
-		responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode, errorMessage));
+		responseWrapper.setErrors(CommonErrorUtil.getServiceErr(errorCode, errorMessage));
 	}
 
 	private void logAndSetError(Exception ex, ResponseWrapper<?> responseWrapper, ToolkitErrorCodes toolkitErrorCodes, String logMessage) {
@@ -155,7 +155,7 @@ public class TestRunService {
 		log.error("sessionId", "idType", "id", logMessage + ex.getMessage());
 		String errorCode = toolkitErrorCodes.getErrorCode();
 		String errorMessage = toolkitErrorCodes.getErrorMessage() + " " + ex.getMessage();
-		responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode, errorMessage));
+		responseWrapper.setErrors(CommonErrorUtil.getServiceErr(errorCode, errorMessage));
 	}
 
 	public ResponseWrapper<TestRunDto> updateTestRunExecutionTime(TestRunDto inputTestRun) {

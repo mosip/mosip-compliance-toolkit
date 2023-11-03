@@ -4,7 +4,7 @@ import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.List;
 
-import io.mosip.compliance.toolkit.util.CommonUtilError;
+import io.mosip.compliance.toolkit.util.CommonErrorUtil;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.lang.JoseException;
 import org.springframework.stereotype.Component;
@@ -79,10 +79,10 @@ public class KeyRotationValidator extends SignatureValidator {
 			validationResultDto.setDescription("Key Rotation validations are successful.");
 			validationResultDto.setDescriptionKey("KEY_ROTATION_VALIDATOR_001");
 		} catch (ToolkitException e) {
-			CommonUtilError.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+			CommonErrorUtil.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
 					"In KeyRotationValidator - ");
 		} catch (Exception e) {
-			CommonUtilError.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+			CommonErrorUtil.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
 					"In KeyRotationValidator - ");
 		}
 		return validationResultDto;

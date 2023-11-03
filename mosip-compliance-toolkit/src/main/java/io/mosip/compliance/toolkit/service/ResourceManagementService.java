@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import io.mosip.compliance.toolkit.util.CommonUtilError;
+import io.mosip.compliance.toolkit.util.CommonErrorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -136,7 +136,7 @@ public class ResourceManagementService {
 			} else {
 				String errorCode = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode();
 				String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage();
-				responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode,errorMessage));
+				responseWrapper.setErrors(CommonErrorUtil.getServiceErr(errorCode,errorMessage));
 			}
 		} catch (ToolkitException ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -144,14 +144,14 @@ public class ResourceManagementService {
 					"In uploadResourceFile method of ResourceManagementService Service - " + ex.getMessage());
 			String errorCode = ex.getErrorCode();
 			String errorMessage = ex.getMessage();
-			responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode,errorMessage));
+			responseWrapper.setErrors(CommonErrorUtil.getServiceErr(errorCode,errorMessage));
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In uploadResourceFile method of ResourceManagementService Service - " + ex.getMessage());
 			String errorCode = ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorCode();
 			String errorMessage = ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorMessage() + BLANK_SPACE + ex.getMessage();
-			responseWrapper.setErrors(CommonUtilError.getServiceErr(errorCode,errorMessage));
+			responseWrapper.setErrors(CommonErrorUtil.getServiceErr(errorCode,errorMessage));
 		}
 		responseWrapper.setId(postResourceFileId);
 		responseWrapper.setResponse(status);
