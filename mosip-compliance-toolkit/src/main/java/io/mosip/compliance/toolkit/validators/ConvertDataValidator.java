@@ -47,12 +47,8 @@ public class ConvertDataValidator extends SDKValidator {
 				for(BIR value:birList)
 				{
 					byte[] responseData = value.getBdb();
-					if (targetCode.equalsIgnoreCase ("IMAGE/JPEG") && ConverterDataUtil.isJPEG(responseData)){
-						validationResultDto.setStatus(AppConstants.SUCCESS);
-						validationResultDto.setDescription("Convert validation is successful");
-						validationResultDto.setDescriptionKey("CONVERT_DATA_VALIDATOR_001");
-					}
-					else if (targetCode.equalsIgnoreCase ("IMAGE/PNG") && ConverterDataUtil.isPNG(responseData)){
+					if ((targetCode.equalsIgnoreCase("IMAGE/JPEG") && ConverterDataUtil.isJPEG(responseData)) ||
+							(targetCode.equalsIgnoreCase("IMAGE/PNG") && ConverterDataUtil.isPNG(responseData))){
 						validationResultDto.setStatus(AppConstants.SUCCESS);
 						validationResultDto.setDescription("Convert validation is successful");
 						validationResultDto.setDescriptionKey("CONVERT_DATA_VALIDATOR_001");
