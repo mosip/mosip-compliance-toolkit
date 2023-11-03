@@ -128,11 +128,8 @@ public abstract class MatchBaseValidator extends SDKValidator {
                 validationResultDto.setDescriptionKey("MATCH_VALIDATOR_005" + AppConstants.ARGUMENTS_DELIMITER + statusCode);
             }
         } catch (Exception e) {
-            log.debug("sessionId", "idType", "id", e.getStackTrace());
-            log.error("sessionId", "idType", "id", "In MatchBaseValidator - " + e.getMessage());
-            validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription(e.getLocalizedMessage());
-            validationResultDto.setDescriptionKey(e.getLocalizedMessage());
+            ValidatorCommonException.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+                    "In MatchBaseValidator - ");
             return validationResultDto;
         }
         return validationResultDto;

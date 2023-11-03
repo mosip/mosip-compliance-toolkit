@@ -69,19 +69,13 @@ public class TimeCheckValidator extends SBIValidator{
 
             }
         }catch (ToolkitException e) {
-            handleExceptionAndSetResultStatus(validationResultDto,e);
+            ValidatorCommonException.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+                    "In TimeCheckValidator - ");
         } catch (Exception e) {
-            handleExceptionAndSetResultStatus(validationResultDto,e);
+            ValidatorCommonException.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+                    "In TimeCheckValidator - ");
         }
         return validationResultDto;
-    }
-
-    public void handleExceptionAndSetResultStatus(ValidationResultDto validationResultDto, Exception e) {
-        log.debug("sessionId", "idType", "id", e.getStackTrace());
-        log.error("sessionId", "idType", "id", "In TimeCheckValidator - " + e.getMessage());
-        validationResultDto.setStatus(AppConstants.FAILURE);
-        validationResultDto.setDescription(e.getLocalizedMessage());
-        validationResultDto.setDescriptionKey(e.getLocalizedMessage());
     }
 
     private LocalDateTime getLocalDate(String time) {

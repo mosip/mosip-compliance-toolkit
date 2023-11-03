@@ -78,19 +78,13 @@ public class KeyRotationValidator extends SignatureValidator {
 			validationResultDto.setDescription("Key Rotation validations are successful.");
 			validationResultDto.setDescriptionKey("KEY_ROTATION_VALIDATOR_001");
 		} catch (ToolkitException e) {
-			handleExceptionAndSetResultStatus(validationResultDto,e);
+			ValidatorCommonException.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+					"In KeyRotationValidator - ");
 		} catch (Exception e) {
-			handleExceptionAndSetResultStatus(validationResultDto,e);
+			ValidatorCommonException.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+					"In KeyRotationValidator - ");
 		}
 		return validationResultDto;
-	}
-
-	public void handleExceptionAndSetResultStatus(ValidationResultDto validationResultDto, Exception e) {
-		log.debug("sessionId", "idType", "id", e.getStackTrace());
-		log.error("sessionId", "idType", "id", "In KeyRotationValidator - " + e.getMessage());
-		validationResultDto.setStatus(AppConstants.FAILURE);
-		validationResultDto.setDescription(e.getLocalizedMessage());
-		validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 	}
 
 	private ValidationResultDto compareMakeAndModel(ObjectNode beforeKeyRotationResp, ObjectNode afterKeyRotationResp)
