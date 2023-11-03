@@ -174,19 +174,19 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 				validationResultDto.setDescriptionKey("BIOMETRIC_QUALITY_CHECK_001," + codes.toString());
 			}
 		} catch (ToolkitException e) {
-			log.debug("sessionId", "idType", "id", e.getStackTrace());
-			log.error("sessionId", "idType", "id", "In BiometricsQualityCheckValidator - " + e.getMessage());
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription(e.getLocalizedMessage());
-			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
+			handleExceptionAndSetResultStatus(validationResultDto,e);
 		} catch (Exception e) {
-			log.debug("sessionId", "idType", "id", e.getStackTrace());
-			log.error("sessionId", "idType", "id", "In BiometricsQualityCheckValidator - " + e.getMessage());
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription(e.getLocalizedMessage());
-			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
+			handleExceptionAndSetResultStatus(validationResultDto,e);
 		}
 		return validationResultDto;
+	}
+
+	public void handleExceptionAndSetResultStatus(ValidationResultDto validationResultDto, Exception e) {
+		log.debug("sessionId", "idType", "id", e.getStackTrace());
+		log.error("sessionId", "idType", "id", "In BiometricsQualityCheckValidator - " + e.getMessage());
+		validationResultDto.setStatus(AppConstants.FAILURE);
+		validationResultDto.setDescription(e.getLocalizedMessage());
+		validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 	}
 
 	private void saveSbiScore(ValidationInputDto inputDto, TestCaseDto testCase) {

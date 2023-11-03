@@ -40,20 +40,20 @@ public class TimeoutValidator extends SBIValidator {
                 validationResultDto.setDescriptionKey("TIMEOUT_VALIDATOR_002" + AppConstants.ARGUMENTS_DELIMITER + timeout + AppConstants.ARGUMENTS_SEPARATOR + diff);
             }
         } catch (ToolkitException e) {
-            log.debug("sessionId", "idType", "id", e.getStackTrace());
-            log.error("sessionId", "idType", "id", "In TimeoutValidator - " + e.getMessage());
-            validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription(e.getLocalizedMessage());
-            validationResultDto.setDescriptionKey(e.getLocalizedMessage());
+            handleExceptionAndSetResultStatus(validationResultDto,e);
         } catch (Exception e) {
-            log.debug("sessionId", "idType", "id", e.getStackTrace());
-            log.error("sessionId", "idType", "id", "In TimeoutValidator - " + e.getMessage());
-            validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription(e.getLocalizedMessage());
-            validationResultDto.setDescriptionKey(e.getLocalizedMessage());
+            handleExceptionAndSetResultStatus(validationResultDto,e);
         }
         return validationResultDto;
     }
+    public void handleExceptionAndSetResultStatus(ValidationResultDto validationResultDto, Exception e) {
+        log.debug("sessionId", "idType", "id", e.getStackTrace());
+        log.error("sessionId", "idType", "id", "In TimeoutValidator - " + e.getMessage());
+        validationResultDto.setStatus(AppConstants.FAILURE);
+        validationResultDto.setDescription(e.getLocalizedMessage());
+        validationResultDto.setDescriptionKey(e.getLocalizedMessage());
+    }
+
 
     private LocalDateTime getLocalDate(String executionTime) {
         String DATEFORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";

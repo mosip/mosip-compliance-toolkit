@@ -85,13 +85,7 @@ public abstract class MatchBaseValidator extends SDKValidator {
                                 }
                                 results += "Positive Match for " + entry2.getKey().toString()
                                         + " is successful for gallery" + (galleryIndex + 1) + ".xml";
-                                resultsKey.append("MATCH_VALIDATOR_001");
-                                resultsKey.append(AppConstants.COMMA_SEPARATOR);
-                                resultsKey.append(entry2.getKey().toString());
-                                resultsKey.append(AppConstants.COMMA_SEPARATOR);
-                                resultsKey.append("MATCH_VALIDATOR_002");
-                                resultsKey.append(AppConstants.COMMA_SEPARATOR);
-                                resultsKey.append((galleryIndex + 1) + ".xml");
+                                appendToResultKey(resultsKey,"MATCH_VALIDATOR_001","MATCH_VALIDATOR_002",entry2,galleryIndex);
                             } else {
                                 //if status is previously failed, then do not reset
                                 if (validationResultDto.getStatus() != null
@@ -102,37 +96,19 @@ public abstract class MatchBaseValidator extends SDKValidator {
                                 }
                                 results += "Negative Match for " + entry2.getKey().toString()
                                         + " is successful for gallery" + (galleryIndex + 1) + ".xml";
-                                resultsKey.append("MATCH_VALIDATOR_003");
-                                resultsKey.append(AppConstants.COMMA_SEPARATOR);
-                                resultsKey.append(entry2.getKey().toString());
-                                resultsKey.append(AppConstants.COMMA_SEPARATOR);
-                                resultsKey.append("MATCH_VALIDATOR_002");
-                                resultsKey.append(AppConstants.COMMA_SEPARATOR);
-                                resultsKey.append((galleryIndex + 1) + ".xml");
+                                appendToResultKey(resultsKey,"MATCH_VALIDATOR_003","MATCH_VALIDATOR_002",entry2,galleryIndex);
                             }
                         } else {
                             if (!inputDto.isNegativeTestCase()) {
                                 validationResultDto.setStatus(AppConstants.FAILURE);
                                 results += "Positive Match for " + entry2.getKey().toString()
                                         + " failed for gallery" + (galleryIndex + 1) + ".xml";
-                                resultsKey.append("MATCH_VALIDATOR_001");
-                                resultsKey.append(AppConstants.COMMA_SEPARATOR);
-                                resultsKey.append(entry2.getKey().toString());
-                                resultsKey.append(AppConstants.COMMA_SEPARATOR);
-                                resultsKey.append("MATCH_VALIDATOR_004");
-                                resultsKey.append(AppConstants.COMMA_SEPARATOR);
-                                resultsKey.append((galleryIndex + 1) + ".xml");
+                                appendToResultKey(resultsKey,"MATCH_VALIDATOR_001","MATCH_VALIDATOR_004",entry2,galleryIndex);
                             } else {
                                 validationResultDto.setStatus(AppConstants.FAILURE);
                                 results += "Negative Match for " + entry2.getKey().toString()
                                         + " failed for gallery" + (galleryIndex + 1) + ".xml";
-                                resultsKey.append("MATCH_VALIDATOR_003");
-                                resultsKey.append(AppConstants.COMMA_SEPARATOR);
-                                resultsKey.append(entry2.getKey().toString());
-                                resultsKey.append(AppConstants.COMMA_SEPARATOR);
-                                resultsKey.append("MATCH_VALIDATOR_004");
-                                resultsKey.append(AppConstants.COMMA_SEPARATOR);
-                                resultsKey.append((galleryIndex + 1) + ".xml");
+                                appendToResultKey(resultsKey,"MATCH_VALIDATOR_003","MATCH_VALIDATOR_004",entry2,galleryIndex);
                             }
                         }
                         results += "<br>";
@@ -161,7 +137,15 @@ public abstract class MatchBaseValidator extends SDKValidator {
         }
         return validationResultDto;
     }
-
+    private static void appendToResultKey(StringBuffer resultsKey, String value1, String value2,Map.Entry<BiometricType, Boolean> entry2,Integer galleryIndex ) {
+        resultsKey.append(value1);
+        resultsKey.append(AppConstants.COMMA_SEPARATOR);
+        resultsKey.append(entry2.getKey().toString());
+        resultsKey.append(AppConstants.COMMA_SEPARATOR);
+        resultsKey.append(value2);
+        resultsKey.append(AppConstants.COMMA_SEPARATOR);
+        resultsKey.append((galleryIndex + 1) + ".xml");
+    }
     protected void setResults(Map<Integer, Map<BiometricType, Boolean>> resultsMap, Integer galleryIndex,
                             BiometricType biometricType, Boolean result) {
         if (resultsMap.get(galleryIndex) != null) {
