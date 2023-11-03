@@ -135,7 +135,9 @@ public abstract class MatchBaseValidator extends SDKValidator {
         }
         return validationResultDto;
     }
-    private void appendToResultKey(StringBuffer resultsKey, String value1, String value2,Map.Entry<BiometricType, Boolean> entry2,Integer galleryIndex ) {
+    
+    private void appendToResultKey(StringBuffer resultsKey, String value1, String value2,
+            Map.Entry<BiometricType, Boolean> entry2, Integer galleryIndex) {
         resultsKey.append(value1);
         resultsKey.append(AppConstants.COMMA_SEPARATOR);
         resultsKey.append(entry2.getKey().toString());
