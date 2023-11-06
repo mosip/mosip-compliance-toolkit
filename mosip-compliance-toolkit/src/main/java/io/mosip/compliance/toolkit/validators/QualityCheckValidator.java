@@ -3,10 +3,10 @@ package io.mosip.compliance.toolkit.validators;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.Set;
 
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
+import io.mosip.compliance.toolkit.util.CommonErrorUtil;
 import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -89,11 +89,8 @@ public class QualityCheckValidator extends SDKValidator {
 				}
 			}
 		} catch (Exception e) {
-			log.debug("sessionId", "idType", "id", e.getStackTrace());
-			log.error("sessionId", "idType", "id", "In QualityCheckValidator - " + e.getMessage());
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription(e.getLocalizedMessage());
-			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
+			CommonErrorUtil.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+					"In QualityCheckValidator - ");
 			return validationResultDto;
 		}
 		return validationResultDto;

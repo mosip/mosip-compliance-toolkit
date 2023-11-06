@@ -3,6 +3,7 @@ package io.mosip.compliance.toolkit.validators;
 import java.io.IOException;
 import java.util.Objects;
 
+import io.mosip.compliance.toolkit.util.CommonErrorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -65,17 +66,11 @@ public class SignatureValidator extends SBIValidator {
 				}
 			}
 		} catch (ToolkitException e) {
-			log.debug("sessionId", "idType", "id", e.getStackTrace());
-			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription(e.getLocalizedMessage());
-			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
+			CommonErrorUtil.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+					"In SignatureValidator - ");
 		} catch (Exception e) {
-			log.debug("sessionId", "idType", "id", e.getStackTrace());
-			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription(e.getLocalizedMessage());
-			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
+			CommonErrorUtil.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+					"In SignatureValidator - ");
 		}
 		return validationResultDto;
 	}

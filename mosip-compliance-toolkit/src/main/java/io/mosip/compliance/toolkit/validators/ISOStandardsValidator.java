@@ -1,6 +1,7 @@
 package io.mosip.compliance.toolkit.validators;
 
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
+import io.mosip.compliance.toolkit.util.CommonErrorUtil;
 import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -43,7 +44,6 @@ import io.mosip.imagedecoder.model.Response;
 import io.mosip.imagedecoder.openjpeg.OpenJpegDecoder;
 import io.mosip.imagedecoder.spi.IImageDecoderApi;
 import io.mosip.imagedecoder.wsq.WsqDecoder;
-import io.mosip.kernel.core.http.ResponseWrapper;
 
 @Component
 public class ISOStandardsValidator extends SBIValidator {
@@ -76,17 +76,11 @@ public class ISOStandardsValidator extends SBIValidator {
 				}
 			}
 		} catch (ToolkitException e) {
-			log.debug("sessionId", "idType", "id", e.getStackTrace());
-			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription(e.getLocalizedMessage());
-			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
+			CommonErrorUtil.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+					"In ISOStandardsValidator - ");
 		} catch (Exception e) {
-			log.debug("sessionId", "idType", "id", e.getStackTrace());
-			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription(e.getLocalizedMessage());
-			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
+			CommonErrorUtil.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+					"In ISOStandardsValidator - ");
 		}
 		return validationResultDto;
 	}

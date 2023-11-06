@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import io.mosip.compliance.toolkit.util.CommonUtil;
+import io.mosip.compliance.toolkit.util.CommonErrorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -114,7 +114,7 @@ public class TestCasesController {
 		responseWrapper.setResponse(null);
 		String errorCode = ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorCode();
 		String errorMessage = ToolkitErrorCodes.GET_TEST_CASE_ERROR.getErrorMessage() + " " + ex.getLocalizedMessage();
-		responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+		responseWrapper.setErrors(CommonErrorUtil.getServiceErr(errorCode,errorMessage));
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;

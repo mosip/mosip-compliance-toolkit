@@ -4,6 +4,7 @@ import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.List;
 
+import io.mosip.compliance.toolkit.util.CommonErrorUtil;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.lang.JoseException;
 import org.springframework.stereotype.Component;
@@ -78,17 +79,11 @@ public class KeyRotationValidator extends SignatureValidator {
 			validationResultDto.setDescription("Key Rotation validations are successful.");
 			validationResultDto.setDescriptionKey("KEY_ROTATION_VALIDATOR_001");
 		} catch (ToolkitException e) {
-			log.debug("sessionId", "idType", "id", e.getStackTrace());
-			log.error("sessionId", "idType", "id", "In KeyRotationValidator - " + e.getMessage());
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription(e.getLocalizedMessage());
-			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
+			CommonErrorUtil.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+					"In KeyRotationValidator - ");
 		} catch (Exception e) {
-			log.debug("sessionId", "idType", "id", e.getStackTrace());
-			log.error("sessionId", "idType", "id", "In KeyRotationValidator - " + e.getMessage());
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription(e.getLocalizedMessage());
-			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
+			CommonErrorUtil.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+					"In KeyRotationValidator - ");
 		}
 		return validationResultDto;
 	}

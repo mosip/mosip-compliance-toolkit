@@ -11,6 +11,7 @@ import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
+import io.mosip.compliance.toolkit.util.CommonErrorUtil;
 import io.mosip.kernel.core.logger.spi.Logger;
 
 public class TimeoutValidator extends SBIValidator {
@@ -40,17 +41,11 @@ public class TimeoutValidator extends SBIValidator {
                 validationResultDto.setDescriptionKey("TIMEOUT_VALIDATOR_002" + AppConstants.ARGUMENTS_DELIMITER + timeout + AppConstants.ARGUMENTS_SEPARATOR + diff);
             }
         } catch (ToolkitException e) {
-            log.debug("sessionId", "idType", "id", e.getStackTrace());
-            log.error("sessionId", "idType", "id", "In TimeoutValidator - " + e.getMessage());
-            validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription(e.getLocalizedMessage());
-            validationResultDto.setDescriptionKey(e.getLocalizedMessage());
+            CommonErrorUtil.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+                    "In TimeoutValidator - ");
         } catch (Exception e) {
-            log.debug("sessionId", "idType", "id", e.getStackTrace());
-            log.error("sessionId", "idType", "id", "In TimeoutValidator - " + e.getMessage());
-            validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription(e.getLocalizedMessage());
-            validationResultDto.setDescriptionKey(e.getLocalizedMessage());
+            CommonErrorUtil.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+                    "In TimeoutValidator - ");
         }
         return validationResultDto;
     }

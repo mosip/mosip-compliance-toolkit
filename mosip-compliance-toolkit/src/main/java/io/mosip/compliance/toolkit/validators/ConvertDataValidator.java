@@ -12,6 +12,7 @@ import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.sdk.ConvertFormatRequestDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
+import io.mosip.compliance.toolkit.util.CommonErrorUtil;
 import io.mosip.compliance.toolkit.util.ConverterDataUtil;
 import io.mosip.kernel.biometrics.entities.BIR;
 import io.mosip.kernel.biometrics.entities.BiometricRecord;
@@ -47,12 +48,8 @@ public class ConvertDataValidator extends SDKValidator {
 				for(BIR value:birList)
 				{
 					byte[] responseData = value.getBdb();
-					if (targetCode.equalsIgnoreCase ("IMAGE/JPEG") && ConverterDataUtil.isJPEG(responseData)){
-						validationResultDto.setStatus(AppConstants.SUCCESS);
-						validationResultDto.setDescription("Convert validation is successful");
-						validationResultDto.setDescriptionKey("CONVERT_DATA_VALIDATOR_001");
-					}
-					else if (targetCode.equalsIgnoreCase ("IMAGE/PNG") && ConverterDataUtil.isPNG(responseData)){
+					if ((targetCode.equalsIgnoreCase("IMAGE/JPEG") && ConverterDataUtil.isJPEG(responseData)) ||
+							(targetCode.equalsIgnoreCase("IMAGE/PNG") && ConverterDataUtil.isPNG(responseData))) {
 						validationResultDto.setStatus(AppConstants.SUCCESS);
 						validationResultDto.setDescription("Convert validation is successful");
 						validationResultDto.setDescriptionKey("CONVERT_DATA_VALIDATOR_001");
@@ -70,12 +67,8 @@ public class ConvertDataValidator extends SDKValidator {
 				validationResultDto.setDescriptionKey("CONVERT_DATA_VALIDATOR_003" + AppConstants.ARGUMENTS_DELIMITER + statusCode);
 			}
 		} catch (Exception e) {
-			log.debug("sessionId", "idType", "id", e.getStackTrace());
-			log.error("sessionId", "idType", "id",
-					"In convertDataValidator - " + e.getMessage());
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto.setDescription(e.getLocalizedMessage());
-			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
+			CommonErrorUtil.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+					"In convertDataValidator - ");
 			return validationResultDto;
 		}
 		return validationResultDto;

@@ -9,6 +9,7 @@ import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 
+import io.mosip.compliance.toolkit.util.CommonErrorUtil;
 import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -69,17 +70,11 @@ public class TimeCheckValidator extends SBIValidator{
 
             }
         }catch (ToolkitException e) {
-            log.debug("sessionId", "idType", "id", e.getStackTrace());
-            log.error("sessionId", "idType", "id", "In TimeCheckValidator - " + e.getMessage());
-            validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription(e.getLocalizedMessage());
-            validationResultDto.setDescriptionKey(e.getLocalizedMessage());
+            CommonErrorUtil.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+                    "In TimeCheckValidator - ");
         } catch (Exception e) {
-            log.debug("sessionId", "idType", "id", e.getStackTrace());
-            log.error("sessionId", "idType", "id", "In TimeCheckValidator - " + e.getMessage());
-            validationResultDto.setStatus(AppConstants.FAILURE);
-            validationResultDto.setDescription(e.getLocalizedMessage());
-            validationResultDto.setDescriptionKey(e.getLocalizedMessage());
+            CommonErrorUtil.getExceptionMessageAndSetResultStatus(validationResultDto, e, log,
+                    "In TimeCheckValidator - ");
         }
         return validationResultDto;
     }
