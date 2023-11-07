@@ -191,7 +191,7 @@ WHERE
       ) test_run_summary ON collection_summary.collection_id = test_run_summary.collection_id 
     WHERE 
       collection_summary.total_testcases = test_run_summary.success_count
-  )
+  );
 
 --Script to populate the newly added column 'org_name' for existing tables
 -- Check if the dblink extension exists
