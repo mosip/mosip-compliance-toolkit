@@ -191,11 +191,11 @@ WHERE
       ) test_run_summary ON collection_summary.collection_id = test_run_summary.collection_id 
     WHERE 
       collection_summary.total_testcases = test_run_summary.success_count
-  )
+  );
 
 --Script to populate the newly added column 'org_name' for existing tables
 -- Check if the dblink extension exists
-DO $$ 
+DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_extension WHERE extname = 'dblink') THEN
     -- Create the dblink extension if it doesn't exist
