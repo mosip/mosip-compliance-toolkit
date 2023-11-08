@@ -101,10 +101,10 @@ public class ReportGeneratorService {
 	private String postCreateReport;
 
 	@Value("${mosip.toolkit.sdk.testcases.ignore.list}")
-	private String ignoreSdkTestcases;
+	private String ignoreTestDataSourceForSdkTestcases;
 
 	@Value("${mosip.toolkit.abis.testcases.ignore.list}")
-	private String ignoreAbisTestcases;
+	private String ignoreTestDataSourceForAbisTestcases;
 
 	private AuthUserDetails authUserDetails() {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -264,8 +264,8 @@ public class ReportGeneratorService {
 		String invalidTestCaseId = BLANK_STRING;
 		List<TestRunDetailsDto> testRunDetailsList = testRunDetailsResponseDto.getTestRunDetailsList();
 		boolean validationResult = true;
-		List<String> ignoreSdkTestcaseList = Arrays.asList(ignoreSdkTestcases.split(","));
-		List<String> ignoreAbisTestcaseList = Arrays.asList(ignoreAbisTestcases.split(","));
+		List<String> ignoreSdkTestcaseList = Arrays.asList(ignoreTestDataSourceForSdkTestcases.split(","));
+		List<String> ignoreAbisTestcaseList = Arrays.asList(ignoreTestDataSourceForAbisTestcases.split(","));
 		for (TestRunDetailsDto testRunDetailsDto : testRunDetailsList) {
 			if (ProjectTypes.SDK.getCode().equals(projectType)
 					&& !ignoreSdkTestcaseList.contains(testRunDetailsDto.getTestcaseId())
