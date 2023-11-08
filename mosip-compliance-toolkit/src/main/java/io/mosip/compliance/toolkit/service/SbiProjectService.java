@@ -2,6 +2,7 @@ package io.mosip.compliance.toolkit.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -70,9 +71,12 @@ public class SbiProjectService {
 	@Autowired
 	private CollectionsService collectionsService;
 
-	@Value("${mosip.toolkit.default.collection.name}")
-	private String defaultCollectionName;
-
+	@Value("${mosip.toolkit.compliance.collection.name}")
+	private String complianceCollectionName;
+	
+	@Value("${mosip.toolkit.compliance.collection.ignore.testcases}")
+	private String ignoreTestcases;
+	
 	private Logger log = LoggerConfiguration.logConfig(SbiProjectService.class);
 
 	private AuthUserDetails authUserDetails() {
@@ -150,7 +154,7 @@ public class SbiProjectService {
 
 				sbiProjectRepository.save(entity);
 				// Add a default "ALL" collection for the newly created project
-				addDefaultCollection(sbiProjectDto, entity.getId());
+				addComplianceCollection(sbiProjectDto, entity.getId());
 				// send response
 				sbiProjectDto.setId(entity.getId());
 				sbiProjectDto.setPartnerId(entity.getPartnerId());
@@ -194,46 +198,49 @@ public class SbiProjectService {
 		return responseWrapper;
 	}
 
-	public void addDefaultCollection(SbiProjectDto sbiProjectDto, String projectId) {
-		log.debug("sessionId", "idType", "id", "Started addDefaultCollection for SBI project: {}", projectId);
+	public void addComplianceCollection(SbiProjectDto sbiProjectDto, String projectId) {
+		log.debug("sessionId", "idType", "id", "Started addComplianceCollection for SBI project: {}", projectId);
 		try {
-			// 1. Add a new default collection
+			// 1. Add a new Compliance collection
 			CollectionRequestDto collectionRequestDto = new CollectionRequestDto();
 			collectionRequestDto.setProjectId(projectId);
 			collectionRequestDto.setProjectType(sbiProjectDto.getProjectType());
-			collectionRequestDto.setCollectionName(defaultCollectionName);
+			collectionRequestDto.setCollectionName(complianceCollectionName);
 			collectionRequestDto.setCollectionType(AppConstants.COMPLIANCE_COLLECTION);
 			ResponseWrapper<CollectionDto> addCollectionWrapper = collectionsService.addCollection(collectionRequestDto);
-			String defaultCollectionId = null;
+			String complianceCollectionId = null;
 			if (addCollectionWrapper.getResponse() != null) {
-				defaultCollectionId = addCollectionWrapper.getResponse().getCollectionId();
-				log.debug("sessionId", "idType", "id", "Default collection added: {}", defaultCollectionId);
+				complianceCollectionId = addCollectionWrapper.getResponse().getCollectionId();
+				log.debug("sessionId", "idType", "id", "Compliance collection added: {}", complianceCollectionId);
 			} else {
-				log.debug("sessionId", "idType", "id", "Default collection could not be added for this project: {}",
+				log.debug("sessionId", "idType", "id", "Compliance collection could not be added for this project: {}",
 						projectId);
 			}
-			if (defaultCollectionId != null) {
+			if (complianceCollectionId != null) {
 				// 2. Get the testcases
 				ResponseWrapper<List<TestCaseDto>> testCaseWrapper = testCasesService.getSbiTestCases(
 						sbiProjectDto.getSbiVersion(), sbiProjectDto.getPurpose(), sbiProjectDto.getDeviceType(),
 						sbiProjectDto.getDeviceSubType());
 				List<CollectionTestCaseDto> inputList = new ArrayList<>();
 				if (testCaseWrapper.getResponse() != null && testCaseWrapper.getResponse().size() > 0) {
+					List<String> ignoreTestcaseList = Arrays.asList(ignoreTestcases.split(","));
 					for (TestCaseDto testCase : testCaseWrapper.getResponse()) {
-						CollectionTestCaseDto collectionTestCaseDto = new CollectionTestCaseDto();
-						collectionTestCaseDto.setCollectionId(defaultCollectionId);
-						collectionTestCaseDto.setTestCaseId(testCase.getTestId());
-						inputList.add(collectionTestCaseDto);
+						if (!ignoreTestcaseList.contains(testCase.getTestId())) {
+							CollectionTestCaseDto collectionTestCaseDto = new CollectionTestCaseDto();
+							collectionTestCaseDto.setCollectionId(complianceCollectionId);
+							collectionTestCaseDto.setTestCaseId(testCase.getTestId());
+							inputList.add(collectionTestCaseDto);	
+						}
 					}
 				}
-				// 3. add the testcases for the default collection
+				// 3. add the testcases for the Compliance collection
 				if (inputList.size() > 0) {
 					collectionsService.addTestCasesForCollection(inputList);
 				}
 			}
 		} catch (Exception ex) {
 			// This is a fail safe operation, so exception can be ignored
-			log.debug("sessionId", "idType", "id", "Error in adding default collection: {}", ex.getLocalizedMessage());
+			log.debug("sessionId", "idType", "id", "Error in adding Compliance collection: {}", ex.getLocalizedMessage());
 		}
 	}
 
