@@ -106,9 +106,9 @@ public class ReportGeneratorServiceTest {
                 Mockito.when(securityContext.getAuthentication()).thenReturn(mockAuthentication);
 
                 String ignoreSdkTestcases = "SDK2000";
-                ReflectionTestUtils.setField(reportGeneratorService, "ignoreSdkTestcases", ignoreSdkTestcases);
+                ReflectionTestUtils.setField(reportGeneratorService, "ignoreTestDataSourceForSdkTestcases", ignoreSdkTestcases);
                 String ignoreAbisTestcases = "ABIS3000";
-                ReflectionTestUtils.setField(reportGeneratorService, "ignoreAbisTestcases", ignoreAbisTestcases);
+                ReflectionTestUtils.setField(reportGeneratorService, "ignoreTestDataSourceForAbisTestcases", ignoreAbisTestcases);
         }
 
         @InjectMocks
