@@ -83,9 +83,6 @@ public class ReportGeneratorService {
 	private AbisProjectService abisProjectService;
 
 	@Autowired
-	private TestCasesService testCaseService;
-
-	@Autowired
 	private CollectionsService collectionsService;
 
 	@Autowired
