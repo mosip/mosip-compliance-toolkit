@@ -32,6 +32,10 @@ public class TestRunDetailsEntity {
 	@Id
 	@Column(name = "testcase_id")
 	private String testcaseId;
+
+	@Id
+	@Column(name = "method_id")
+	private String methodId;
 	
 	@Column(name = "method_url")
 	private String methodUrl;
@@ -41,6 +45,9 @@ public class TestRunDetailsEntity {
 	
 	@Column(name = "method_response")
 	private String methodResponse;
+
+	@Column(name = "execution_status")
+	private String executionStatus;
 	
 	@Column(name = "result_status")
 	private String resultStatus;
@@ -53,6 +60,9 @@ public class TestRunDetailsEntity {
 	
 	@Column(name = "partner_id")
 	private String partnerId;
+
+	@Column(name = "org_name")
+	private String orgName;
 	
 	@Column(name = "cr_by")
 	private String crBy;

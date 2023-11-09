@@ -21,11 +21,17 @@ public class SdkProjectDto {
 	
 	private String url;
 
+	private String sdkHash;
+
+	private String websiteUrl;
+
 	private String bioTestDataFileName;
 	
 	private String purpose;
 	
 	private String partnerId;
+
+	private String orgName;
 	
 	private String crBy;
 

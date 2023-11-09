@@ -55,6 +55,7 @@ Prerequisites:
 
 * Install `kubectl` and `helm` utilities.
 * Run the `keycloak-init.sh` script to create the `mosip-toolkit-client` keycloak client. You can skip this step if you have already done it.
+* `Keycloak-init.sh` will create a user 'mpartner-default-abis' and its temporary password is 'abcd1234'.
   ```
   cd helm
   ./keycloak-init.sh

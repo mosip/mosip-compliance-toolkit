@@ -3,11 +3,13 @@ package io.mosip.compliance.toolkit.validators;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 
+import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +19,8 @@ import java.time.format.DateTimeFormatter;
 
 @Component
 public class TimeCheckValidator extends SBIValidator{
+
+    private Logger log = LoggerConfiguration.logConfig(TimeCheckValidator.class);
 
     @Value("${mosip.toolkit.sbi.timestamp-interval}")
     String interval;
@@ -65,11 +69,17 @@ public class TimeCheckValidator extends SBIValidator{
 
             }
         }catch (ToolkitException e) {
+            log.debug("sessionId", "idType", "id", e.getStackTrace());
+            log.error("sessionId", "idType", "id", "In TimeCheckValidator - " + e.getMessage());
             validationResultDto.setStatus(AppConstants.FAILURE);
             validationResultDto.setDescription(e.getLocalizedMessage());
+            validationResultDto.setDescriptionKey(e.getLocalizedMessage());
         } catch (Exception e) {
+            log.debug("sessionId", "idType", "id", e.getStackTrace());
+            log.error("sessionId", "idType", "id", "In TimeCheckValidator - " + e.getMessage());
             validationResultDto.setStatus(AppConstants.FAILURE);
             validationResultDto.setDescription(e.getLocalizedMessage());
+            validationResultDto.setDescriptionKey(e.getLocalizedMessage());
         }
         return validationResultDto;
     }

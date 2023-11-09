@@ -11,5 +11,8 @@ public class DataShareRequestDto {
 
 	private String testcaseId;
 	private String bioTestDataName;
-	public int cbeffFileSuffix;
+	private String abisProjectModality;
+	private int cbeffFileSuffix;
+	private String incorrectPartnerId;
+	private String testRunId;
 }

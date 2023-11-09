@@ -66,5 +66,5 @@ test.txt
 **/META-INF/
 .vscode
 .idea
-helm/Chart.lock
-helm/charts
+helm/*/Chart.lock
+helm/*/charts

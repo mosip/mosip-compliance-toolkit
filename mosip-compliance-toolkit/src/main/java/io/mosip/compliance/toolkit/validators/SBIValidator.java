@@ -12,6 +12,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
+import io.mosip.kernel.core.logger.spi.Logger;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.lang.JoseException;
 
@@ -67,6 +69,8 @@ public abstract class SBIValidator extends ToolkitValidator {
 	private final String END_CERTIFICATE = "\n-----END CERTIFICATE-----\n";
 	private final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----\n";
 
+	private Logger log = LoggerConfiguration.logConfig(SBIValidator.class);
+
 	protected boolean validateMethodName(String methodName) throws Exception {
 		MethodName.fromCode(methodName);
 		return true;
@@ -94,16 +98,25 @@ public abstract class SBIValidator extends ToolkitValidator {
 				validationResultDto.setDescriptionKey("JWT_SIGNATURE_002");
 			}
 		} catch (CertificateExpiredException e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SBIValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto
 					.setDescription(" CertificateExpiredException - " + "with Message - " + e.getLocalizedMessage());
+			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		} catch (CertificateNotYetValidException e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SBIValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(
 					" CertificateNotYetValidException - " + "with Message - " + e.getLocalizedMessage());
+			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		} catch (JoseException e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SBIValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(" JoseException - " + "with Message - " + e.getLocalizedMessage());
+			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		}
 		return validationResultDto;
 	}
@@ -137,6 +150,8 @@ public abstract class SBIValidator extends ToolkitValidator {
 				return true;
 			}
 		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SBIValidator - " + ex.getMessage());
 			// ex.printStackTrace();
 		}
 		return false;
@@ -161,7 +176,7 @@ public abstract class SBIValidator extends ToolkitValidator {
 	}
 
 	@Data
-	protected static class DeviceTrustRequestDto implements Serializable {
+	public static class DeviceTrustRequestDto implements Serializable {
 		private static final long serialVersionUID = -4874932813550831900L;
 		String certificateData;
 		String partnerDomain;
@@ -188,7 +203,7 @@ public abstract class SBIValidator extends ToolkitValidator {
 	}
 
 	@Data
-	protected static class DecryptRequestDto implements Serializable {
+	public static class DecryptRequestDto implements Serializable {
 		private static final long serialVersionUID = 6098449354733115976L;
 		String applicationId;
 		String referenceId;
@@ -199,7 +214,7 @@ public abstract class SBIValidator extends ToolkitValidator {
 	}
 
 	@Data
-	protected static class DecryptValidatorResponseDto implements Serializable {
+	public static class DecryptValidatorResponseDto implements Serializable {
 		private static final long serialVersionUID = 414320755574491361L;
 		String id;
 		Object metadata;
@@ -210,7 +225,7 @@ public abstract class SBIValidator extends ToolkitValidator {
 	}
 
 	@Data
-	protected static class DeviceValidatorResponseDto implements Serializable {
+	public static class DeviceValidatorResponseDto implements Serializable {
 		private static final long serialVersionUID = -3533369757932860828L;
 		String id;
 		Object metadata;
@@ -221,25 +236,25 @@ public abstract class SBIValidator extends ToolkitValidator {
 	}
 
 	@Data
-	protected static class ErrorDto {
+	public static class ErrorDto {
 		String errorCode;
 		String message;
 	}
 
 	@Data
-	protected static class DecryptValidatorResponse implements Serializable {
+	public static class DecryptValidatorResponse implements Serializable {
 		private static final long serialVersionUID = 5675428669597716934L;
 		String data;
 	}
 
 	@Data
-	protected static class DeviceValidatorResponse implements Serializable {
+	public static class DeviceValidatorResponse implements Serializable {
 		private static final long serialVersionUID = -2714540550294089151L;
 		String status;
 	}
 
 	@Data
-	protected static class DeviceValidatorRequestDto implements Serializable {
+	public static class DeviceValidatorRequestDto implements Serializable {
 		private static final long serialVersionUID = 6066767653045843567L;
 		String deviceCode;
 		String deviceServiceVersion;
@@ -249,7 +264,7 @@ public abstract class SBIValidator extends ToolkitValidator {
 	}
 
 	@Data
-	protected static class DeviceValidatorDigitalIdDto implements Serializable {
+	public static class DeviceValidatorDigitalIdDto implements Serializable {
 		private static final long serialVersionUID = 5438972186954170612L;
 		String dateTime;
 		String deviceSubType;

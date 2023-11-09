@@ -257,7 +257,7 @@
                                 "Thumb",
                                 "Right",
                                 "Left", 
-								"Unknown"
+								"UNKNOWN"
                               ]
                             }
                           ],
@@ -337,7 +337,7 @@
                                       "LittleFinger",
                                       "IndexFinger",
                                       "Thumb", 
-									  "Unknown"
+									  "UNKNOWN"
                                     ]
                                   }
                                 ]
@@ -416,7 +416,7 @@
                                       "null"
                                     ],
                                     "enum": [
-                                      "Unknown"
+                                      "UNKNOWN"
                                     ]
                                   }
                                 ]

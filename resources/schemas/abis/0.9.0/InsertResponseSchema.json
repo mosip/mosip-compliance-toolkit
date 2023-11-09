@@ -1,6 +1,8 @@
 {
 	"$schema": "https://json-schema.org/draft/2019-09/schema#",
 	"$id": "http://mosip-compliance-toolkit.com/schemas/InsertResponseSchema.json",
+	"title": "ABIS Insert Response Schema",
+	"description": "ABIS Insert Response Schema",
 	"type": "object",
 	"properties": {
 		"id": {
@@ -13,10 +15,10 @@
 			"type": "string"
 		},
 		"returnValue": {
-			"type": "integer"
-		},
-		"failureReason": {
-			"type": "integer"
+			"type": "string",
+			"enum": [
+				"1"
+			]
 		}
 	},
 	"required": [

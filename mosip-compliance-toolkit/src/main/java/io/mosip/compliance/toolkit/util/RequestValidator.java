@@ -144,13 +144,13 @@ public class RequestValidator implements Validator {
 		if (Objects.nonNull(requestId)) {
 			if (!requestId.equals(id.get(operation))) {
 				mosipLogger.error("", "", "validateId", "\n" + "Id is not correct");
-				errorCode = ToolkitErrorCodes.PROJECTS_NOT_AVAILABLE;
+				errorCode = ToolkitErrorCodes.INVALID_REQUEST_ID;
 				errors.rejectValue(ID, errorCode.getErrorCode(),
 						String.format(errorCode.getErrorMessage(), ID));
 			}
 		} else {
 			mosipLogger.error("", "", "validateId", "\n" + "Id is null");
-			errorCode = ToolkitErrorCodes.PROJECTS_NOT_AVAILABLE;
+			errorCode = ToolkitErrorCodes.INVALID_REQUEST_ID;
 			errors.rejectValue(ID, errorCode.getErrorCode(),
 					String.format(errorCode.getErrorMessage(), ID));
 		}

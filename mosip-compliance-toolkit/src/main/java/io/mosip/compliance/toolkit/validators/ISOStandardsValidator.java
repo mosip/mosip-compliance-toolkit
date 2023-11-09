@@ -1,5 +1,7 @@
 package io.mosip.compliance.toolkit.validators;
 
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
+import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -8,6 +10,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.mosip.biometrics.util.CommonUtil;
 import io.mosip.biometrics.util.ConvertRequestDto;
+import io.mosip.biometrics.util.ImageDecoderRequestDto;
+import io.mosip.biometrics.util.ImageType;
 import io.mosip.biometrics.util.Modality;
 import io.mosip.biometrics.util.face.FaceBDIR;
 import io.mosip.biometrics.util.face.FaceDecoder;
@@ -23,7 +27,6 @@ import io.mosip.biometrics.util.iris.IrisBDIR;
 import io.mosip.biometrics.util.iris.IrisDecoder;
 import io.mosip.biometrics.util.iris.IrisISOStandardsValidator;
 import io.mosip.biometrics.util.iris.IrisQualityBlock;
-import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.DeviceTypes;
 import io.mosip.compliance.toolkit.constants.Purposes;
@@ -34,7 +37,13 @@ import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.util.CryptoUtil;
 import io.mosip.compliance.toolkit.util.KeyManagerHelper;
 import io.mosip.compliance.toolkit.util.StringUtil;
-import io.mosip.kernel.core.logger.spi.Logger;
+import io.mosip.imagedecoder.model.DecoderRequestInfo;
+import io.mosip.imagedecoder.model.DecoderResponseInfo;
+import io.mosip.imagedecoder.model.Response;
+import io.mosip.imagedecoder.openjpeg.OpenJpegDecoder;
+import io.mosip.imagedecoder.spi.IImageDecoderApi;
+import io.mosip.imagedecoder.wsq.WsqDecoder;
+import io.mosip.kernel.core.http.ResponseWrapper;
 
 @Component
 public class ISOStandardsValidator extends SBIValidator {
@@ -57,26 +66,9 @@ public class ISOStandardsValidator extends SBIValidator {
 			if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
 				for (final JsonNode biometricNode : arrBiometricNodes) {
 					JsonNode dataNode = biometricNode.get(DECODED_DATA);
-
 					String purpose = dataNode.get(PURPOSE).asText();
 					String bioType = dataNode.get(BIO_TYPE).asText();
-					String bioValue = null;
-					switch (Purposes.fromCode(purpose)) {
-					case AUTH:
-						bioValue = getDecryptedBioValue(biometricNode.get(THUMB_PRINT).asText(),
-								biometricNode.get(SESSION_KEY).asText(), KEY_SPLITTER,
-								dataNode.get(TIME_STAMP).asText(), dataNode.get(TRANSACTION_ID).asText(),
-								dataNode.get(BIO_VALUE).asText());
-						log.info("sessionId", "idType", "id", "auth bioValue - " + bioValue);
-						log.debug("sessionId", "idType", "id", "auth bioValue - " + bioValue);
-						break;
-					case REGISTRATION:
-						bioValue = dataNode.get(BIO_VALUE).asText();
-						break;
-					default:
-						throw new ToolkitException(ToolkitErrorCodes.INVALID_PURPOSE.getErrorCode(),
-								ToolkitErrorCodes.INVALID_PURPOSE.getErrorMessage());
-					}
+					String bioValue = extractBioValue(biometricNode);
 					validationResultDto = doISOValidations(purpose, bioType, bioValue);
 					if (validationResultDto.getStatus().equals(AppConstants.FAILURE)) {
 						break;
@@ -84,15 +76,45 @@ public class ISOStandardsValidator extends SBIValidator {
 				}
 			}
 		} catch (ToolkitException e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
+			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
+			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		}
 		return validationResultDto;
 	}
 
+	public String extractBioValue(final JsonNode biometricNode) {
+		JsonNode dataNode = biometricNode.get(DECODED_DATA);
+		String purpose = dataNode.get(PURPOSE).asText();
+		String bioValue = null;
+		switch (Purposes.fromCode(purpose)) {
+		case AUTH:
+			// for authentication, the "bioValue" is encrypted, so decrypt it first
+			bioValue = getDecryptedBioValue(biometricNode.get(THUMB_PRINT).asText(),
+					biometricNode.get(SESSION_KEY).asText(), KEY_SPLITTER,
+					dataNode.get(TIME_STAMP).asText(), dataNode.get(TRANSACTION_ID).asText(),
+					dataNode.get(BIO_VALUE).asText());
+			break;
+		case REGISTRATION:
+			// for registration, the "bioValue" is encoded only
+			bioValue = dataNode.get(BIO_VALUE).asText();
+			break;
+		default:
+			throw new ToolkitException(ToolkitErrorCodes.INVALID_PURPOSE.getErrorCode(),
+					ToolkitErrorCodes.INVALID_PURPOSE.getErrorMessage());
+		}
+		
+		return bioValue;
+	}
+	
 	public String getDecryptedBioValue(String thumbprint, String sessionKey, String keySplitter, String timestamp,
 			String transactionId, String encryptedData) {
 
@@ -122,10 +144,13 @@ public class ISOStandardsValidator extends SBIValidator {
 		decryptValidatorDto.setRequest(decryptRequest);
 
 		try {
-			io.restassured.response.Response postResponse = keyManagerHelper.decryptionResponse(decryptValidatorDto);
+			DecryptValidatorResponseDto decryptValidatorResponseDto = keyManagerHelper.decryptionResponse(decryptValidatorDto);
+			
 
-			DecryptValidatorResponseDto decryptValidatorResponseDto = objectMapperConfig.objectMapper()
-					.readValue(postResponse.getBody().asString(), DecryptValidatorResponseDto.class);
+//			io.restassured.response.Response postResponse = keyManagerHelper.decryptionResponse(decryptValidatorDto);
+//
+//			DecryptValidatorResponseDto decryptValidatorResponseDto = objectMapperConfig.objectMapper()
+//					.readValue(postResponse.getBody().asString(), DecryptValidatorResponseDto.class);
 
 			if ((decryptValidatorResponseDto.getErrors() != null && decryptValidatorResponseDto.getErrors().size() > 0)
 					|| (decryptValidatorResponseDto.getResponse().getData() == null)) {
@@ -135,6 +160,8 @@ public class ISOStandardsValidator extends SBIValidator {
 				return decryptValidatorResponseDto.getResponse().getData();
 			}
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			throw new ToolkitException(ToolkitErrorCodes.AUTH_BIO_VALUE_DECRYPT_ERROR.getErrorCode(),
 					ToolkitErrorCodes.AUTH_BIO_VALUE_DECRYPT_ERROR.getErrorMessage() + e.getLocalizedMessage());
 		}
@@ -176,9 +203,13 @@ public class ISOStandardsValidator extends SBIValidator {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		validationResultDto.setStatus(AppConstants.FAILURE);
 
+		StringBuilder warningMessage = new StringBuilder("ImageValidator warnings:");
+		StringBuilder warningMsgCode = new StringBuilder("<b>"
+				+ AppConstants.COMMA_SEPARATOR
+				+ "ISO_WARNING_001");
 		StringBuilder message = new StringBuilder("ISOStandardsValidator[ISO19794-4:2011] failed due to below issues:");
 		StringBuilder code = new StringBuilder("ISO_VALIDATOR_003");
-		boolean isValid = true;
+		boolean isValid = true, isValidWarnings = false;
 
 		ConvertRequestDto requestDto = new ConvertRequestDto();
 		requestDto.setModality(DeviceTypes.FINGER.getCode());
@@ -189,6 +220,8 @@ public class ISOStandardsValidator extends SBIValidator {
 			bioData = CommonUtil.decodeURLSafeBase64(bioValue);
 			requestDto.setInputBytes(bioData);
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_BASE64URLENCODED_EXCEPTION;
 			throw new ToolkitException(errorCode.getErrorCode(), e.getLocalizedMessage());
 		}
@@ -234,7 +267,7 @@ public class ISOStandardsValidator extends SBIValidator {
 					bdir.getRecordLength())) {
 				message.append(
 						"<BR>Invalid Record Length for Finger Modality, expected values between[0x00000039 and 0xFFFFFFFF], but received input value["
-								+ String.format("0x%08X", (bioData != null ? bioData.length : 0) + "]"));
+								+ String.format("0x%08X", (bioData != null ? bioData.length : 0)) + "]");
 				code.append(AppConstants.COMMA_SEPARATOR);
 				code.append("ISO_VALIDATOR_007");
 				code.append(AppConstants.ARGUMENTS_DELIMITER);
@@ -404,8 +437,7 @@ public class ISOStandardsValidator extends SBIValidator {
 						code.append(AppConstants.COMMA_SEPARATOR);
 						code.append("ISO_VALIDATOR_020");
 						code.append(AppConstants.ARGUMENTS_DELIMITER);
-						code.append(String.format("0x%04X",
-								fingerCertificationBlock.getCertificationAuthorityID()));
+						code.append(String.format("0x%04X", fingerCertificationBlock.getCertificationAuthorityID()));
 						isValid = false;
 					}
 
@@ -419,8 +451,8 @@ public class ISOStandardsValidator extends SBIValidator {
 						code.append(AppConstants.COMMA_SEPARATOR);
 						code.append("ISO_VALIDATOR_021");
 						code.append(AppConstants.ARGUMENTS_DELIMITER);
-						code.append(String.format("0x%02X",
-								fingerCertificationBlock.getCertificationSchemeIdentifier()));
+						code.append(
+								String.format("0x%02X", fingerCertificationBlock.getCertificationSchemeIdentifier()));
 						isValid = false;
 					}
 				}
@@ -428,8 +460,8 @@ public class ISOStandardsValidator extends SBIValidator {
 
 			if (!FingerISOStandardsValidator.getInstance().isValidFingerPosition(purpose, bdir.getFingerPosition())) {
 				message.append(
-						"<BR>Invalid Finger Position Value for Finger Modality, expected values between[Purpose(Auth)[0x00 and 0x0A], Purpose(Registration)[0x01 And 0x0A]], but received input value[Purpose("+ purpose +"){"
-								+ String.format("0x%02X", bdir.getFingerPosition()) + "}]");
+						"<BR>Invalid Finger Position Value for Finger Modality, expected values between[Purpose(Auth)[0x00 and 0x0A], Purpose(Registration)[0x01 And 0x0A]], but received input value[Purpose("
+								+ purpose + "){" + String.format("0x%02X", bdir.getFingerPosition()) + "}]");
 				code.append(AppConstants.COMMA_SEPARATOR);
 				code.append("ISO_VALIDATOR_022");
 				code.append(AppConstants.ARGUMENTS_DELIMITER);
@@ -479,7 +511,7 @@ public class ISOStandardsValidator extends SBIValidator {
 			int scanSpatialSamplingRateVertical = bdir.getCaptureDeviceSpatialSamplingRateVertical();
 			if (!FingerISOStandardsValidator.getInstance()
 					.isValidScanSpatialSamplingRateVertical(scanSpatialSamplingRateVertical)) {
-				validationResultDto.setDescription(
+				message.append(
 						"<BR>Invalid Device Scan Spatial Sampling Rate Vertical for Finger Modality, expected values between[0x01EA and 0x03F2], but received input value["
 								+ String.format("0x%04X", scanSpatialSamplingRateVertical) + "]");
 				code.append(AppConstants.COMMA_SEPARATOR);
@@ -521,8 +553,53 @@ public class ISOStandardsValidator extends SBIValidator {
 				isValid = false;
 			}
 
+			ImageDecoderRequestDto decoderRequestDto = null;
+			IImageDecoderApi decoder = null;
+			DecoderResponseInfo decoderResponseInfo = null;
 			byte[] inImageData = bdir.getImage();
-			if (!FingerISOStandardsValidator.getInstance().isValidBitDepth(inImageData, bdir.getBitDepth())) {
+
+			Response<DecoderResponseInfo> response = null;
+			DecoderRequestInfo requestInfo = new DecoderRequestInfo();
+			requestInfo.setImageData(inImageData);
+
+			int bioDataType = FingerISOStandardsValidator.getInstance().getBioDataType(purpose, Modality.Finger,
+					inImageData);
+			if (bioDataType == ImageType.JPEG2000.value()) {
+				decoder = new OpenJpegDecoder();
+				response = decoder.decode(requestInfo);
+				if (response != null && response.getStatusCode() == 0)
+					decoderResponseInfo = response.getResponse();
+			} else if (bioDataType == ImageType.WSQ.value()) {
+				decoder = new WsqDecoder();
+				response = decoder.decode(requestInfo);
+				if (response != null && response.getStatusCode() == 0)
+					decoderResponseInfo = response.getResponse();
+			}
+
+			if (decoderResponseInfo != null) {
+				decoderRequestDto = new ImageDecoderRequestDto(decoderResponseInfo.getImageType(),
+						Integer.parseInt(decoderResponseInfo.getImageWidth()),
+						Integer.parseInt(decoderResponseInfo.getImageHeight()),
+						Integer.parseInt(decoderResponseInfo.getImageLossless()) == 1 ? true : false,
+						Integer.parseInt(decoderResponseInfo.getImageDepth()),
+						Integer.parseInt(decoderResponseInfo.getImageDpiHorizontal() == null ? "0" : decoderResponseInfo.getImageDpiHorizontal()),
+						Integer.parseInt(decoderResponseInfo.getImageDpiVertical() == null ? "0" : decoderResponseInfo.getImageDpiVertical()),
+						//Integer.parseInt(decoderResponseInfo.getImageBitRate() == null ? "0" : decoderResponseInfo.getImageBitRate()),
+						0,
+						Integer.parseInt(decoderResponseInfo.getImageSize()), decoderResponseInfo.getImageData(),
+						decoderResponseInfo.getImageColorSpace(), decoderResponseInfo.getImageAspectRatio(),
+						decoderResponseInfo.getImageCompressionRatio());
+
+			} else {
+				message.append("<BR>Invalid Image Information");
+				isValid = false;
+				validationResultDto.setDescription(message.toString());
+				message = null;
+				return validationResultDto;
+			}
+
+			// need to check on a) DPI, b) Aspect Ratio, c) Compression Ratio
+			if (!FingerISOStandardsValidator.getInstance().isValidBitDepth(bdir.getBitDepth(), decoderRequestDto)) {
 				message.append(
 						"<BR>Invalid Image Bit Depth Value for Finger Modality, expected values[0x08], but received input value["
 								+ String.format("0x%02X", bdir.getBitDepth()) + "]");
@@ -534,7 +611,8 @@ public class ISOStandardsValidator extends SBIValidator {
 			}
 
 			int compressionType = bdir.getCompressionType();
-			if (!FingerISOStandardsValidator.getInstance().isValidImageCompressionType(purpose, compressionType)) {
+			if (!FingerISOStandardsValidator.getInstance().isValidImageCompressionType(purpose, compressionType,
+					decoderRequestDto)) {
 				message.append(
 						"<BR>Invalid Image Compression Type for Finger Modality, expected values[Purpose(Auth), ({JPEG_2000_LOSSY(0x04) or WSQ(0x02)}), Purpose(Registration), ({JPEG_2000_LOSS_LESS(0x05)})], but received input value[Purpose("
 								+ purpose + "), (" + String.format("0x%02X", compressionType) + ")]");
@@ -559,8 +637,8 @@ public class ISOStandardsValidator extends SBIValidator {
 				isValid = false;
 			}
 
-			if (!FingerISOStandardsValidator.getInstance().isValidImageHorizontalLineLength(purpose, inImageData,
-					bdir.getLineLengthHorizontal())) {
+			if (!FingerISOStandardsValidator.getInstance().isValidImageHorizontalLineLength(purpose,
+					bdir.getLineLengthHorizontal(), decoderRequestDto)) {
 				message.append(
 						"<BR>Invalid Image Horizontal Line Length for Finger Modality, expected values between[0x0001 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getLineLengthHorizontal()) + "]");
@@ -571,8 +649,8 @@ public class ISOStandardsValidator extends SBIValidator {
 				isValid = false;
 			}
 
-			if (!FingerISOStandardsValidator.getInstance().isValidImageVerticalLineLength(purpose, inImageData,
-					bdir.getLineLengthVertical())) {
+			if (!FingerISOStandardsValidator.getInstance().isValidImageVerticalLineLength(purpose,
+					bdir.getLineLengthVertical(), decoderRequestDto)) {
 				message.append(
 						"<BR>Invalid Image Vertical Line Length for Finger Modality, expected values[0x0001 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getLineLengthVertical()) + "]");
@@ -594,16 +672,52 @@ public class ISOStandardsValidator extends SBIValidator {
 				isValid = false;
 			}
 
-			if (!FingerISOStandardsValidator.getInstance().isValidImageData(purpose, Modality.Finger, inImageData)) {
+			if (!FingerISOStandardsValidator.getInstance().isValidImageData(purpose, Modality.Finger,
+					decoderRequestDto)) {
 				message.append(
 						"<BR>Invalid Image Data for Finger Modality, expected values[Purpose(Auth){JPEG_2000_LOSSY/WSQ}, Purpose(Registration){JPEG_2000_LOSS_LESS}]");
 				code.append(AppConstants.COMMA_SEPARATOR);
 				code.append("ISO_VALIDATOR_035");
 				isValid = false;
 			}
+			
+			/* Image Validation Starts*/
+			if (!FingerISOStandardsValidator.getInstance().isValidImageCompressionRatio(purpose, Modality.Finger, decoderRequestDto)) {
+				warningMessage.append(
+						"<BR>Invalid Image Compression ratio allowed values Up to 15:1");
+				warningMsgCode.append(AppConstants.COMMA_SEPARATOR);
+				warningMsgCode.append("ISO_WARNING_002");
+				isValidWarnings = true;
+			}
+			if (!FingerISOStandardsValidator.getInstance().isValidImageAspectRatio(purpose, Modality.Finger, decoderRequestDto)) {
+				warningMessage.append(
+						"<BR>Invalid Image Aspect ratio allowed values Up to 1:1");
+				warningMsgCode.append(AppConstants.COMMA_SEPARATOR);
+				warningMsgCode.append("ISO_WARNING_003");
+				isValidWarnings = true;
+			}
+			if (!FingerISOStandardsValidator.getInstance().isValidImageColorSpace(purpose, Modality.Finger, decoderRequestDto)) {
+				warningMessage.append(
+						"<BR>Invalid Image Color Space allowed values Up to GRAY[8 bit]");
+				warningMsgCode.append(AppConstants.COMMA_SEPARATOR);
+				warningMsgCode.append("ISO_WARNING_004");
+				isValidWarnings = true;
+			}
+			if (!FingerISOStandardsValidator.getInstance().isValidImageDPI(purpose, Modality.Finger, decoderRequestDto)) {
+				warningMessage.append(
+						"<BR>Invalid Image Minimum resolution between 500 DPI and 1000 DPI");
+				warningMsgCode.append(AppConstants.COMMA_SEPARATOR);
+				warningMsgCode.append("ISO_WARNING_005");
+				isValidWarnings = true;
+			}
+			/* Image Validation Ends*/
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_FINGER_ISO_FORMAT_EXCEPTION;
 			message.append("<BR>" + errorCode.getErrorMessage() + "<BR>" + e.getLocalizedMessage());
+			code.append(AppConstants.COMMA_SEPARATOR);
+			code.append("<BR>" + errorCode.getErrorMessage() + "<BR>" + e.getLocalizedMessage());
 			isValid = false;
 		}
 
@@ -613,13 +727,21 @@ public class ISOStandardsValidator extends SBIValidator {
 			validationResultDto.setDescription(message.toString());
 			validationResultDto.setDescriptionKey(code.toString());
 			message = null;
-			code=null;
+			code = null;
 			return validationResultDto;
 		}
 
 		validationResultDto.setStatus(AppConstants.SUCCESS);
 		validationResultDto.setDescription("ISO Standards Validation is successful");
 		validationResultDto.setDescriptionKey("ISO_VALIDATOR_036");
+		if (isValidWarnings) {
+			validationResultDto.setDescription(validationResultDto.getDescription() + "<span style='color:yellow'>" + warningMessage.toString() + "</span>");
+			warningMsgCode.append(AppConstants.COMMA_SEPARATOR);
+			warningMsgCode.append("</b>");
+			validationResultDto.setDescriptionKey("ISO_VALIDATOR_036"
+					+ AppConstants.COMMA_SEPARATOR
+					+ warningMsgCode.toString());
+		}
 		return validationResultDto;
 	}
 
@@ -628,9 +750,13 @@ public class ISOStandardsValidator extends SBIValidator {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		validationResultDto.setStatus(AppConstants.FAILURE);
 
+		StringBuilder warningMessage = new StringBuilder("ImageValidator warnings:");
+		StringBuilder warningMsgCode = new StringBuilder("<b>"
+				+ AppConstants.COMMA_SEPARATOR
+				+ "ISO_WARNING_001");
 		StringBuilder message = new StringBuilder("ISOStandardsValidator[ISO19794-6:2011] failed due to below issues:");
 		StringBuilder code = new StringBuilder("ISO_VALIDATOR_037");
-		boolean isValid = true;
+		boolean isValid = true, isValidWarnings = false;
 
 		ConvertRequestDto requestDto = new ConvertRequestDto();
 		requestDto.setModality(DeviceTypes.IRIS.getCode());
@@ -641,6 +767,8 @@ public class ISOStandardsValidator extends SBIValidator {
 			bioData = CommonUtil.decodeURLSafeBase64(bioValue);
 			requestDto.setInputBytes(bioData);
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_BASE64URLENCODED_EXCEPTION;
 			throw new ToolkitException(errorCode.getErrorCode(), e.getLocalizedMessage());
 		}
@@ -689,7 +817,7 @@ public class ISOStandardsValidator extends SBIValidator {
 					bdir.getRecordLength())) {
 				message.append(
 						"<BR>Invalid Record Length for Iris Modality, expected values between[0x00000045 and 0xFFFFFFFF], but received input value["
-								+ String.format("0x%08X", (bioData != null ? bioData.length : 0) + "]"));
+								+ String.format("0x%08X", (bioData != null ? bioData.length : 0)) + "]");
 				code.append(AppConstants.COMMA_SEPARATOR);
 				code.append("ISO_VALIDATOR_041");
 				code.append(AppConstants.ARGUMENTS_DELIMITER);
@@ -919,8 +1047,48 @@ public class ISOStandardsValidator extends SBIValidator {
 				isValid = false;
 			}
 
+			inImageData = bdir.getImage();
+			ImageDecoderRequestDto decoderRequestDto = null;
+			IImageDecoderApi decoder = null;
+			Response<DecoderResponseInfo> response = null;
+			DecoderResponseInfo decoderResponseInfo = null;
+			DecoderRequestInfo requestInfo = new DecoderRequestInfo();
+			requestInfo.setImageData(inImageData);
+
+			int bioDataType = IrisISOStandardsValidator.getInstance().getBioDataType(purpose, Modality.Iris,
+					inImageData);
+			if (bioDataType == ImageType.JPEG2000.value()) {
+				decoder = new OpenJpegDecoder();
+				response = decoder.decode(requestInfo);
+				if (response != null && response.getStatusCode() == 0)
+					decoderResponseInfo = response.getResponse();
+			}
+
+			if (decoderResponseInfo != null) {
+				decoderRequestDto = new ImageDecoderRequestDto(decoderResponseInfo.getImageType(),
+						Integer.parseInt(decoderResponseInfo.getImageWidth()),
+						Integer.parseInt(decoderResponseInfo.getImageHeight()),
+						Integer.parseInt(decoderResponseInfo.getImageLossless()) == 1 ? true : false,
+						Integer.parseInt(decoderResponseInfo.getImageDepth()),
+						Integer.parseInt(decoderResponseInfo.getImageDpiHorizontal() == null ? "0" : decoderResponseInfo.getImageDpiHorizontal()),
+						Integer.parseInt(decoderResponseInfo.getImageDpiVertical() == null ? "0" : decoderResponseInfo.getImageDpiVertical()),
+						0,
+						// Integer.parseInt(decoderResponseInfo.getImageBitRate() == null ? "0" : decoderResponseInfo.getImageBitRate()),
+						Integer.parseInt(decoderResponseInfo.getImageSize()), decoderResponseInfo.getImageData(),
+						decoderResponseInfo.getImageColorSpace(), decoderResponseInfo.getImageAspectRatio(),
+						decoderResponseInfo.getImageCompressionRatio());
+
+			} else {
+				message.append("<BR>Invalid Image Information");
+				isValid = false;
+				validationResultDto.setDescription(message.toString());
+				message = null;
+				return validationResultDto;
+			}
+
 			int compressionType = bdir.getCompressionType();
-			if (!IrisISOStandardsValidator.getInstance().isValidImageCompressionType(purpose, compressionType)) {
+			if (!IrisISOStandardsValidator.getInstance().isValidImageCompressionType(purpose, compressionType,
+					decoderRequestDto)) {
 				message.append(
 						"<BR>Invalid Image Compression Type for Iris Modality, expected values[Purpose(Auth), ({JPEG_2000_LOSSY(0x02)}), Purpose(Registration), ({JPEG_2000_LOSS_LESS(0x01)})], but received input value[Purpose("
 								+ purpose + "), (" + String.format("0x%02X", compressionType) + ")]");
@@ -933,9 +1101,9 @@ public class ISOStandardsValidator extends SBIValidator {
 				isValid = false;
 			}
 
-			inImageData = bdir.getImage();
-
-			if (!IrisISOStandardsValidator.getInstance().isValidImageWidth(purpose, inImageData, bdir.getWidth())) {
+			// need to check on a) DPI, b) Aspect Ratio, c) Compression Ration
+			if (!IrisISOStandardsValidator.getInstance().isValidImageWidth(purpose, bdir.getWidth(),
+					decoderRequestDto)) {
 				message.append(
 						"<BR>Invalid Image Width Value for Iris Modality, expected values between[0x0001 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getWidth()) + "]");
@@ -946,7 +1114,8 @@ public class ISOStandardsValidator extends SBIValidator {
 				isValid = false;
 			}
 
-			if (!IrisISOStandardsValidator.getInstance().isValidImageHeight(purpose, inImageData, bdir.getHeight())) {
+			if (!IrisISOStandardsValidator.getInstance().isValidImageHeight(purpose, bdir.getHeight(),
+					decoderRequestDto)) {
 				message.append(
 						"<BR>Invalid Image Height Value for Iris Modality, expected values between[0x0001 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getHeight()) + "]");
@@ -957,7 +1126,7 @@ public class ISOStandardsValidator extends SBIValidator {
 				isValid = false;
 			}
 
-			if (!IrisISOStandardsValidator.getInstance().isValidBitDepth(inImageData, bdir.getBitDepth())) {
+			if (!IrisISOStandardsValidator.getInstance().isValidBitDepth(bdir.getBitDepth(), decoderRequestDto)) {
 				message.append(
 						"<BR>Invalid Image Bit Depth Value for Iris Modality, expected values[0x08(Grayscale)], but received input value["
 								+ String.format("0x%02X", bdir.getBitDepth()) + "]");
@@ -1078,16 +1247,51 @@ public class ISOStandardsValidator extends SBIValidator {
 				isValid = false;
 			}
 
-			if (!IrisISOStandardsValidator.getInstance().isValidImageData(purpose, Modality.Iris, inImageData)) {
+			if (!IrisISOStandardsValidator.getInstance().isValidImageData(purpose, Modality.Iris, decoderRequestDto)) {
 				message.append(
 						"<BR>Invalid Image Data for Iris Modality, expected values[Purpose(Auth){JPEG_2000_LOSSY}, Purpose(Registration){JPEG_2000_LOSS_LESS}]");
 				code.append(AppConstants.COMMA_SEPARATOR);
 				code.append("ISO_VALIDATOR_074");
 				isValid = false;
 			}
+			
+			/* Image Validation Starts*/
+			if (!IrisISOStandardsValidator.getInstance().isValidImageCompressionRatio(purpose, Modality.Iris, decoderRequestDto)) {
+				warningMessage.append(
+						"<BR>Invalid Image Compression ratio allowed values Up to 15:1 for Auth");
+				warningMsgCode.append(AppConstants.COMMA_SEPARATOR);
+				warningMsgCode.append("ISO_WARNING_006");
+				isValidWarnings = true;
+			}
+			if (!IrisISOStandardsValidator.getInstance().isValidImageAspectRatio(purpose, Modality.Iris, decoderRequestDto)) {
+				warningMessage.append(
+						"<BR>Invalid Image Aspect ratio allowed values Up to 1:1");
+				warningMsgCode.append(AppConstants.COMMA_SEPARATOR);
+				warningMsgCode.append("ISO_WARNING_007");
+				isValidWarnings = true;
+			}
+			if (!IrisISOStandardsValidator.getInstance().isValidImageColorSpace(purpose, Modality.Iris, decoderRequestDto)) {
+				warningMessage.append(
+						"<BR>Invalid Image Color Space allowed values Up to GRAY[8 bit]");
+				warningMsgCode.append(AppConstants.COMMA_SEPARATOR);
+				warningMsgCode.append("ISO_WARNING_008");
+				isValidWarnings = true;
+			}
+			if (!IrisISOStandardsValidator.getInstance().isValidImageDPI(purpose, Modality.Iris, decoderRequestDto)) {
+				warningMessage.append(
+						"<BR>Invalid Image Minimum resolution between 500 DPI and 1000 DPI");
+				warningMsgCode.append(AppConstants.COMMA_SEPARATOR);
+				warningMsgCode.append("ISO_WARNING_009");
+				isValidWarnings = true;
+			}
+			/* Image Validation Ends*/
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_IRIS_ISO_FORMAT_EXCEPTION;
 			message.append("<BR>" + errorCode.getErrorMessage() + "<BR>" + e.getLocalizedMessage());
+			code.append(AppConstants.COMMA_SEPARATOR);
+			code.append("<BR>" + errorCode.getErrorMessage() + "<BR>" + e.getLocalizedMessage());
 			isValid = false;
 		}
 
@@ -1104,6 +1308,14 @@ public class ISOStandardsValidator extends SBIValidator {
 		validationResultDto.setStatus(AppConstants.SUCCESS);
 		validationResultDto.setDescription("ISO Standards Validation is successful");
 		validationResultDto.setDescriptionKey("ISO_VALIDATOR_075");
+		if (isValidWarnings){
+			validationResultDto.setDescription(validationResultDto.getDescription() + "<span style='color:yellow'>" + warningMessage.toString() + "</span>");
+		warningMsgCode.append(AppConstants.COMMA_SEPARATOR);
+		warningMsgCode.append("</b>");
+		validationResultDto.setDescriptionKey("ISO_VALIDATOR_075"
+				+ AppConstants.COMMA_SEPARATOR
+				+ warningMsgCode.toString());
+		}
 		return validationResultDto;
 	}
 
@@ -1112,9 +1324,13 @@ public class ISOStandardsValidator extends SBIValidator {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		validationResultDto.setStatus(AppConstants.FAILURE);
 
+		StringBuilder warningMessage = new StringBuilder("ImageValidator warnings:");
+		StringBuilder warningMsgCode = new StringBuilder("<b>"
+				+ AppConstants.COMMA_SEPARATOR
+				+ "ISO_WARNING_001");
 		StringBuilder message = new StringBuilder("ISOStandardsValidator[ISO19794-5:2011] failed due to below issues:");
 		StringBuilder code = new StringBuilder("ISO_VALIDATOR_076");
-		boolean isValid = true;
+		boolean isValid = true, isValidWarnings = false;
 
 		ConvertRequestDto requestDto = new ConvertRequestDto();
 		requestDto.setModality(DeviceTypes.FACE.getCode());
@@ -1125,6 +1341,8 @@ public class ISOStandardsValidator extends SBIValidator {
 			bioData = CommonUtil.decodeURLSafeBase64(bioValue);
 			requestDto.setInputBytes(bioData);
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_BASE64URLENCODED_EXCEPTION;
 			throw new ToolkitException(errorCode.getErrorCode(), e.getLocalizedMessage());
 		}
@@ -1170,7 +1388,7 @@ public class ISOStandardsValidator extends SBIValidator {
 					bdir.getRecordLength())) {
 				message.append(
 						"<BR>Invalid Record Length for Face Modality, expected values between[0x00000001 and 0xFFFFFFFF], but received input value["
-								+ String.format("0x%08X", (bioData != null ? bioData.length : 0) + "]"));
+								+ String.format("0x%08X", (bioData != null ? bioData.length : 0)) + "]");
 				code.append(AppConstants.COMMA_SEPARATOR);
 				code.append("ISO_VALIDATOR_080");
 				code.append(AppConstants.ARGUMENTS_DELIMITER);
@@ -1291,8 +1509,7 @@ public class ISOStandardsValidator extends SBIValidator {
 							.isValidQualityAlgorithmIdentifier(qualityBlock.getQualityAlgorithmIdentifier())) {
 						message.append(
 								"<BR>Invalid Quality Algorithm Identifier for Face Modality, expected values between[0x0000 and 0xFFFF], but received input value["
-										+ String.format("0x%04X", qualityBlock.getQualityAlgorithmIdentifier())
-										+ "]");
+										+ String.format("0x%04X", qualityBlock.getQualityAlgorithmIdentifier()) + "]");
 						code.append(AppConstants.COMMA_SEPARATOR);
 						code.append("ISO_VALIDATOR_090");
 						code.append(AppConstants.ARGUMENTS_DELIMITER);
@@ -1492,8 +1709,48 @@ public class ISOStandardsValidator extends SBIValidator {
 				isValid = false;
 			}
 
+			byte[] inImageData = bdir.getImage();
+			ImageDecoderRequestDto decoderRequestDto = null;
+			IImageDecoderApi decoder = null;
+			Response<DecoderResponseInfo> response = null;
+			DecoderResponseInfo decoderResponseInfo = null;
+			DecoderRequestInfo requestInfo = new DecoderRequestInfo();
+			requestInfo.setImageData(inImageData);
+
+			int bioDataType = FaceISOStandardsValidator.getInstance().getBioDataType(purpose, Modality.Face,
+					inImageData);
+			if (bioDataType == ImageType.JPEG2000.value()) {
+				decoder = new OpenJpegDecoder();
+				response = decoder.decode(requestInfo);
+				if (response != null && response.getStatusCode() == 0)
+					decoderResponseInfo = decoder.decode(requestInfo).getResponse();
+			}
+
+			if (decoderResponseInfo != null) {
+				decoderRequestDto = new ImageDecoderRequestDto(decoderResponseInfo.getImageType(),
+						Integer.parseInt(decoderResponseInfo.getImageWidth()),
+						Integer.parseInt(decoderResponseInfo.getImageHeight()),
+						Integer.parseInt(decoderResponseInfo.getImageLossless()) == 1 ? true : false,
+						Integer.parseInt(decoderResponseInfo.getImageDepth()),
+						Integer.parseInt(decoderResponseInfo.getImageDpiHorizontal() == null ? "0" : decoderResponseInfo.getImageDpiHorizontal()),
+						Integer.parseInt(decoderResponseInfo.getImageDpiVertical() == null ? "0" : decoderResponseInfo.getImageDpiVertical()),
+						0,
+						//Integer.parseInt(decoderResponseInfo.getImageBitRate() == null ? "0" : decoderResponseInfo.getImageBitRate()),
+						Integer.parseInt(decoderResponseInfo.getImageSize()), decoderResponseInfo.getImageData(),
+						decoderResponseInfo.getImageColorSpace(), decoderResponseInfo.getImageAspectRatio(),
+						decoderResponseInfo.getImageCompressionRatio());
+
+			} else {
+				message.append("<BR>Invalid Image Information");
+				isValid = false;
+				validationResultDto.setDescription(message.toString());
+				message = null;
+				return validationResultDto;
+			}
+
 			int compressionType = bdir.getImageDataType();
-			if (!FaceISOStandardsValidator.getInstance().isValidImageCompressionType(purpose, compressionType)) {
+			if (!FaceISOStandardsValidator.getInstance().isValidImageCompressionType(purpose, compressionType,
+					decoderRequestDto)) {
 				message.append(
 						"<BR>Invalid Image Compression Type for Finger Modality, expected values[Purpose(Auth), ({JPEG_2000_LOSSY(0x01)}), Purpose(Registration), ({JPEG_2000_LOSS_LESS(0x02)})], but received input value[Purpose("
 								+ purpose + "), (" + String.format("0x%02X", compressionType) + ")]");
@@ -1506,9 +1763,8 @@ public class ISOStandardsValidator extends SBIValidator {
 				isValid = false;
 			}
 
-			byte[] inImageData = bdir.getImage();
-
-			if (!FaceISOStandardsValidator.getInstance().isValidImageWidth(purpose, inImageData, bdir.getWidth())) {
+			if (!FaceISOStandardsValidator.getInstance().isValidImageWidth(purpose, bdir.getWidth(),
+					decoderRequestDto)) {
 				message.append(
 						"<BR>Invalid Image Width Value for Face Modality, expected values between[0x0001 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getWidth()) + "]");
@@ -1519,7 +1775,8 @@ public class ISOStandardsValidator extends SBIValidator {
 				isValid = false;
 			}
 
-			if (!FaceISOStandardsValidator.getInstance().isValidImageHeight(purpose, inImageData, bdir.getHeight())) {
+			if (!FaceISOStandardsValidator.getInstance().isValidImageHeight(purpose, bdir.getHeight(),
+					decoderRequestDto)) {
 				message.append(
 						"<BR>Invalid Image Height Value for Face Modality, expected values between[0x0001 and 0xFFFF], but received input value["
 								+ String.format("0x%04X", bdir.getHeight()) + "]");
@@ -1565,8 +1822,8 @@ public class ISOStandardsValidator extends SBIValidator {
 				isValid = false;
 			}
 
-			if (!FaceISOStandardsValidator.getInstance().isValidImageColourSpace(purpose, inImageData,
-					bdir.getImageColorSpace())) {
+			if (!FaceISOStandardsValidator.getInstance().isValidImageColourSpace(purpose, bdir.getImageColorSpace(),
+					decoderRequestDto)) {
 				message.append(
 						"<BR>Invalid Image Bit Depth Value for Face Modality, expected values[0x01], but received input value["
 								+ String.format("0x%02X", bdir.getImageColorSpace()) + "]");
@@ -1588,16 +1845,47 @@ public class ISOStandardsValidator extends SBIValidator {
 				isValid = false;
 			}
 
-			if (!FaceISOStandardsValidator.getInstance().isValidImageData(purpose, Modality.Face, inImageData)) {
+			if (!FaceISOStandardsValidator.getInstance().isValidImageData(purpose, Modality.Face, decoderRequestDto)) {
 				message.append(
 						"<BR>Invalid Image Data for Face Modality, expected values[JPEG_2000_LOSSY(Auth), JPEG_2000_LOSS_LESS(Registration)]");
 				code.append(AppConstants.COMMA_SEPARATOR);
 				code.append("ISO_VALIDATOR_116");
 				isValid = false;
 			}
+			
+			/* Image Validation Starts*/
+			if (!FaceISOStandardsValidator.getInstance().isValidImageCompressionRatio(purpose, Modality.Face, decoderRequestDto)) {
+				warningMessage.append(
+						"<BR>Invalid Image Compression ratio allowed values Up to 15:1 for Auth");
+				warningMsgCode.append("ISO_WARNING_010");
+				isValidWarnings = true;
+			}
+			if (!FaceISOStandardsValidator.getInstance().isValidImageAspectRatio(purpose, Modality.Face, decoderRequestDto)) {
+				warningMessage.append(
+						"<BR>Invalid Image Aspect ratio allowed values Up to 1:1");
+				warningMsgCode.append("ISO_WARNING_011");
+				isValidWarnings = true;
+			}
+			if (!FaceISOStandardsValidator.getInstance().isValidImageColorSpace(purpose, Modality.Face, decoderRequestDto)) {
+				warningMessage.append(
+						"<BR>Invalid Image Color Space allowed values Up to RGB[24 bit]");
+				warningMsgCode.append("ISO_WARNING_012");
+				isValidWarnings = true;
+			}
+			if (!FaceISOStandardsValidator.getInstance().isValidImageDPI(purpose, Modality.Face, decoderRequestDto)) {
+				warningMessage.append(
+						"<BR>Invalid Image Minimum resolution between 500 DPI and 1000 DPI");
+				warningMsgCode.append("ISO_WARNING_013");
+				isValidWarnings = true;
+			}
+			/* Image Validation Ends*/
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In ISOStandardsValidator - " + e.getMessage());
 			errorCode = ToolkitErrorCodes.SOURCE_NOT_VALID_FACE_ISO_FORMAT_EXCEPTION;
 			message.append("<BR>" + errorCode.getErrorMessage() + "<BR>" + e.getLocalizedMessage());
+			code.append(AppConstants.COMMA_SEPARATOR);
+			code.append("<BR>" + errorCode.getErrorMessage() + "<BR>" + e.getLocalizedMessage());
 			isValid = false;
 		}
 
@@ -1610,10 +1898,18 @@ public class ISOStandardsValidator extends SBIValidator {
 			code = null;
 			return validationResultDto;
 		}
-
+		
 		validationResultDto.setStatus(AppConstants.SUCCESS);
 		validationResultDto.setDescription("ISO Standards Validation is successful");
 		validationResultDto.setDescriptionKey("ISO_VALIDATOR_117");
+		if (isValidWarnings) {
+			validationResultDto.setDescription(validationResultDto.getDescription() + "<span style='color:yellow'>" + warningMessage.toString() + "</span>");
+			warningMsgCode.append(AppConstants.COMMA_SEPARATOR);
+			warningMsgCode.append("</b>");
+			validationResultDto.setDescriptionKey("ISO_VALIDATOR_117"
+					+ AppConstants.COMMA_SEPARATOR
+					+ warningMsgCode.toString());
+		}
 		return validationResultDto;
 	}
 }

@@ -973,6 +973,7 @@
 		"testDescription": "Finger match fail when wrong subtype",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": true,
+		"inactive": true,
 		"methodName": [
 			"match"
 		],
@@ -1232,6 +1233,7 @@
 		"testDescription": "Iris match fail when wrong subtype",
 		"specVersion": "0.9.0",
 		"isNegativeTestcase": true,
+		"inactive": true,
 		"methodName": [
 			"match"
 		],

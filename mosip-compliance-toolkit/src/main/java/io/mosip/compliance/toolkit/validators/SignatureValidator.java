@@ -47,10 +47,10 @@ public class SignatureValidator extends SBIValidator {
 						validationResultDto = validateDeviceSignature(inputDto);
 						break;
 					case CAPTURE:
-						validationResultDto = validateCaptureSignature(inputDto);
+						validationResultDto = validateSignature(inputDto);
 						break;
 					case RCAPTURE:
-						validationResultDto = validateRCaptureSignature(inputDto);
+						validationResultDto = validateSignature(inputDto);
 						break;
 					default:
 						validationResultDto.setStatus(AppConstants.FAILURE);
@@ -65,13 +65,17 @@ public class SignatureValidator extends SBIValidator {
 				}
 			}
 		} catch (ToolkitException e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
 			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
+			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
 			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
+			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		}
 		return validationResultDto;
 	}
@@ -87,6 +91,8 @@ public class SignatureValidator extends SBIValidator {
 					.toUtf8String(StringUtil.base64UrlDecode(discoveryInfoNode.get(DIGITAL_ID).asText()));
 			validationResultDto = validateUnsignedDigitalID(digitalId);
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto
 					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
@@ -127,6 +133,8 @@ public class SignatureValidator extends SBIValidator {
 					break;
 			}
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto
 					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
@@ -150,10 +158,14 @@ public class SignatureValidator extends SBIValidator {
 				validationResultDto.setDescriptionKey("SIGNATURE_VALIDATOR_006");
 			}
 		} catch (ToolkitException e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto
 					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto
 					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
@@ -184,6 +196,8 @@ public class SignatureValidator extends SBIValidator {
 				}
 			}
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto
 					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
@@ -191,7 +205,7 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	protected ValidationResultDto validateCaptureSignature(ValidationInputDto inputDto) {
+	protected ValidationResultDto validateSignature(ValidationInputDto inputDto) {
 		ValidationResultDto validationResultDto = new ValidationResultDto();
 		try {
 			ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper()
@@ -223,45 +237,8 @@ public class SignatureValidator extends SBIValidator {
 				}
 			}
 		} catch (Exception e) {
-			validationResultDto.setStatus(AppConstants.FAILURE);
-			validationResultDto
-					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
-		}
-		return validationResultDto;
-	}
-
-	protected ValidationResultDto validateRCaptureSignature(ValidationInputDto inputDto) {
-		ValidationResultDto validationResultDto = new ValidationResultDto();
-		try {
-			ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper()
-					.readValue(inputDto.getMethodResponse(), ObjectNode.class);
-
-			final JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
-			if (arrBiometricNodes.isArray()) {
-				for (final JsonNode biometricNode : arrBiometricNodes) {
-					String dataInfo = biometricNode.get(DATA).asText();
-					validationResultDto = checkIfJWTSignatureIsValid(dataInfo);
-					if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
-						validationResultDto = trustRootValidation(getCertificate(dataInfo),
-								PartnerTypes.DEVICE.toString(), TRUST_FOR_BIOMETRIC_INFO);
-
-						if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
-							String biometricData = getPayload(dataInfo);
-							ObjectNode biometricDataNode = (ObjectNode) objectMapperConfig.objectMapper()
-									.readValue(biometricData, ObjectNode.class);
-
-							ObjectNode extraInfo = (ObjectNode) objectMapperConfig.objectMapper()
-									.readValue(inputDto.getExtraInfoJson(), ObjectNode.class);
-							String certificationType = extraInfo.get(CERTIFICATION_TYPE).asText();
-							validationResultDto = validateSignedDigitalId(biometricDataNode.get(DIGITAL_ID).asText(),
-									certificationType, TRUST_FOR_DIGITAL_ID);
-						}
-					}
-					if (validationResultDto.getStatus().equals(AppConstants.FAILURE))
-						break;
-				}
-			}
-		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto
 					.setDescription("SignatureValidator failure - " + "with Message - " + e.getLocalizedMessage());
@@ -284,9 +261,13 @@ public class SignatureValidator extends SBIValidator {
 				}
 			}
 		} catch (ToolkitException e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
 		}
@@ -305,11 +286,8 @@ public class SignatureValidator extends SBIValidator {
 		deviceValidatorDto.setRequest(trustRequest);
 
 		try {
-			io.restassured.response.Response postResponse = keyManagerHelper
+			DeviceValidatorResponseDto deviceValidatorResponseDto = keyManagerHelper
 					.trustValidationResponse(deviceValidatorDto);
-
-			DeviceValidatorResponseDto deviceValidatorResponseDto = objectMapperConfig.objectMapper()
-					.readValue(postResponse.getBody().asString(), DeviceValidatorResponseDto.class);
 
 			if ((deviceValidatorResponseDto.getErrors() != null && deviceValidatorResponseDto.getErrors().size() > 0)
 					|| (deviceValidatorResponseDto.getResponse().getStatus().equals("false"))) {
@@ -324,6 +302,8 @@ public class SignatureValidator extends SBIValidator {
 				validationResultDto.setDescriptionKey("SIGNATURE_VALIDATOR_009");
 			}
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(
 					"Exception in Trust root Validation - " + "with Message - " + e.getLocalizedMessage());

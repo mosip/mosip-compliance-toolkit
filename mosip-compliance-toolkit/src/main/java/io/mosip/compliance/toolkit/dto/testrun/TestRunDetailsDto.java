@@ -13,11 +13,15 @@ public class TestRunDetailsDto {
 
 	private String testcaseId;
 
+	private String methodId;
+
 	private String methodUrl;
 
 	private String methodRequest;
 
 	private String methodResponse;
+
+	private String executionStatus;
 
 	private String resultStatus;
 

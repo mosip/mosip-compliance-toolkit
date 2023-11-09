@@ -26,6 +26,8 @@ public class AbisProjectDto {
 	private String inboundQueueName;
 	
 	private String partnerId;
+
+	private String orgName;
 	
 	private String crBy;
 
@@ -36,6 +38,12 @@ public class AbisProjectDto {
 	private LocalDateTime updDate;
 	
 	private String outboundQueueName;
+
+	private String modality;
+
+	private String abisHash;
+
+	private String websiteUrl;
 	
 	private String bioTestDataFileName;
 

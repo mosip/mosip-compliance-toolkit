@@ -1,5 +1,7 @@
 package io.mosip.compliance.toolkit.validators;
 
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
+import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,6 +13,8 @@ import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 
 @Component
 public class IdentifyDuplicateNotFoundValidator extends ToolkitValidator {
+
+	private Logger log = LoggerConfiguration.logConfig(IdentifyDuplicateNotFoundValidator.class);
 
 	@Override
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
@@ -26,15 +30,22 @@ public class IdentifyDuplicateNotFoundValidator extends ToolkitValidator {
 			if (count == 0) {
 				validationResultDto.setStatus(AppConstants.SUCCESS);
 				validationResultDto.setDescription("Identify - no duplicate found for given the referenceId.");
+				validationResultDto.setDescriptionKey("DUPLICATE_NOT_FOUND_VALIDATOR_001");
 
 			} else {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto
 						.setDescription("Identify - found " + count + " duplicate for given the referenceId.");
+				validationResultDto.setDescriptionKey("DUPLICATE_NOT_FOUND_VALIDATOR_002"
+						+ AppConstants.ARGUMENTS_DELIMITER
+						+ count);
 			}
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In IdentifyDuplicateNotFoundValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
+			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 			return validationResultDto;
 		}
 		return validationResultDto;

@@ -46,12 +46,12 @@ import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
 import io.mosip.compliance.toolkit.entity.TestCaseEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
+import io.mosip.compliance.toolkit.util.CommonUtil;
 import io.mosip.compliance.toolkit.util.CryptoUtil;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.exception.ExceptionUtils;
-import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.virusscanner.exception.VirusScannerException;
@@ -78,10 +78,13 @@ public class BiometricTestDataService {
     @Autowired
     VirusScanner<Boolean, InputStream> virusScan;
 
+    @Autowired
+    ResourceCacheService resourceCacheService;
+
     @Value("$(mosip.toolkit.api.id.biometric.testdata.get)")
     private String getBiometricTestDataId;
 
-    @Value("$(mosip.toolkit.api.id.biometric.testdata.post)")
+    @Value("${mosip.toolkit.api.id.biometric.testdata.post}")
     private String postBiometricTestDataId;
 
     @Value("$(mosip.toolkit.api.id.biometric.testdata.filenames.get)")
@@ -111,6 +114,9 @@ public class BiometricTestDataService {
 
     @Value("${mosip.toolkit.sdk.testcases.ignore.list}")
     private String ignoreTestcases;
+
+    @Value("${mosip.toolkit.abis.testcases.ignore.list}")
+    private String ignoreAbisTestcases;
 
     @Value("${mosip.toolkit.max.allowed.gallery.files}")
     private String maxAllowedGalleryFiles;
@@ -151,24 +157,18 @@ public class BiometricTestDataService {
                     biometricTestDataList.add(testData);
                 }
             } else {
-                List<ServiceError> serviceErrorsList = new ArrayList<>();
-                ServiceError serviceError = new ServiceError();
-                serviceError.setErrorCode(ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorCode());
-                serviceError.setMessage(ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorMessage());
-                serviceErrorsList.add(serviceError);
-                responseWrapper.setErrors(serviceErrorsList);
+                String errorCode = ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorCode();
+                String errorMessage = ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorMessage();
+                responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
             }
         } catch (Exception ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In getBiometricTestdata method of BiometricTestDataService Service - " + ex.getMessage());
-            List<ServiceError> serviceErrorsList = new ArrayList<>();
-            ServiceError serviceError = new ServiceError();
-            serviceError.setErrorCode(ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorCode());
-            serviceError.setMessage(ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorMessage() + BLANK_SPACE
-                    + ex.getMessage());
-            serviceErrorsList.add(serviceError);
-            responseWrapper.setErrors(serviceErrorsList);
+            String errorCode = ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorCode();
+            String errorMessage = ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorMessage() + BLANK_SPACE
+                    + ex.getMessage();
+            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
         }
         responseWrapper.setId(getBiometricTestDataId);
         responseWrapper.setResponse(biometricTestDataList);
@@ -189,10 +189,16 @@ public class BiometricTestDataService {
             if (Objects.nonNull(inputBiometricTestDataDto) && Objects.nonNull(file) && !file.isEmpty()
                     && file.getSize() > 0) {
 
-                String purpose = inputBiometricTestDataDto.getPurpose();
-                SdkPurpose sdkPurpose = SdkPurpose.fromCode(purpose);
-                TestDataValidationDto testDataValidation = validateTestData(sdkPurpose.getCode(), file);
-
+                String requestPurpose = inputBiometricTestDataDto.getPurpose();
+                String purpose = "";
+                if (!requestPurpose.equals(AppConstants.ABIS)) {
+                    SdkPurpose sdkPurpose = SdkPurpose.fromCode(requestPurpose);
+                    purpose = sdkPurpose.getCode();
+                } else {
+                    purpose = requestPurpose;
+                }
+                TestDataValidationDto testDataValidation = validateTestData(purpose, file);
+                
                 String encodedHash = CryptoUtil.getEncodedHash(file.getBytes());
 
                 ObjectMapper mapper = objectMapperConfig.objectMapper();
@@ -202,6 +208,7 @@ public class BiometricTestDataService {
                 inputEntity.setPartnerId(getPartnerId());
                 inputEntity.setFileId(file.getOriginalFilename());
                 inputEntity.setFileHash(encodedHash);
+                inputEntity.setOrgName(resourceCacheService.getOrgName(getPartnerId()));
                 inputEntity.setCrBy(getUserBy());
                 inputEntity.setCrDate(LocalDateTime.now());
                 inputEntity.setUpBy(null);
@@ -234,72 +241,59 @@ public class BiometricTestDataService {
                             Set<String> set = null;
                             if (!testDataValidation.getFolders().isEmpty()) {
                                 set = new HashSet<>(testDataValidation.getFolders());
-                                set.addAll(testDataValidation.getProbeFolders());
-                                set.addAll(testDataValidation.getGalleryFolders());
+                                if (!requestPurpose.equals(AppConstants.ABIS)) {
+                                	set.addAll(testDataValidation.getProbeFolders());
+                                	set.addAll(testDataValidation.getGalleryFolders());
+                                }
                                 String msg = "For testcases " + set + " we will use data from MOSIP_DEFAULT";
                                 addBioTestDataResponseDto.setInfo(msg);
                             }
                         }
                     } else {
                         biometricTestDataRepository.delete(entity);
-                        List<ServiceError> serviceErrorsList = new ArrayList<>();
-                        ServiceError serviceError = new ServiceError();
-                        serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorCode());
-                        serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorMessage());
-                        serviceErrorsList.add(serviceError);
-                        responseWrapper.setErrors(serviceErrorsList);
+                        String errorCode = ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorCode();
+                        String errorMessage = ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorMessage();
+                        responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
                     }
 
                 } else {
-                    List<ServiceError> serviceErrorsList = new ArrayList<>();
-                    ServiceError serviceError = new ServiceError();
-                    serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorCode());
-                    serviceError.setMessage(
-                            ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorMessage() + inputEntity.getFileId());
-                    serviceErrorsList.add(serviceError);
-                    responseWrapper.setErrors(serviceErrorsList);
+                    String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorCode();
+                    String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorMessage() + inputEntity.getFileId();
+                    responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
                 }
 
             } else {
-                List<ServiceError> serviceErrorsList = new ArrayList<>();
-                ServiceError serviceError = new ServiceError();
-                serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode());
-                serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
-                serviceErrorsList.add(serviceError);
-                responseWrapper.setErrors(serviceErrorsList);
+                String errorCode = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode();
+                String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage();
+                responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
             }
         } catch (ToolkitException ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In addBiometricTestdata method of BiometricTestDataService - " + ex.getMessage());
-            List<ServiceError> serviceErrorsList = new ArrayList<>();
-            ServiceError serviceError = new ServiceError();
-            serviceError.setErrorCode(ex.getErrorCode());
-            serviceError.setMessage(ex.getMessage());
-            serviceErrorsList.add(serviceError);
-            responseWrapper.setErrors(serviceErrorsList);
+            String errorCode = ex.getErrorCode();
+            String errorMessage = ex.getMessage();
+            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
         } catch (DataIntegrityViolationException ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In addBiometricTestdata method of BiometricTestDataService Service - " + ex.getMessage());
-            List<ServiceError> serviceErrorsList = new ArrayList<>();
-            ServiceError serviceError = new ServiceError();
-            serviceError.setErrorCode(ToolkitErrorCodes.BIO_TEST_DATA_FILE_EXISTS.getErrorCode());
-            serviceError.setMessage(ToolkitErrorCodes.BIO_TEST_DATA_FILE_EXISTS.getErrorMessage() + BLANK_SPACE
-                    + inputBiometricTestDataDto.getName());
-            serviceErrorsList.add(serviceError);
-            responseWrapper.setErrors(serviceErrorsList);
+            String bioTestName = BLANK_SPACE;
+            if (inputBiometricTestDataDto != null) {
+                bioTestName = inputBiometricTestDataDto.getName();
+            }
+            String errorCode = ToolkitErrorCodes.BIO_TEST_DATA_FILE_EXISTS.getErrorCode();
+            String errorMessage = ToolkitErrorCodes.BIO_TEST_DATA_FILE_EXISTS.getErrorMessage() + BLANK_SPACE
+                    + bioTestName;
+            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
         } catch (Exception ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In addBiometricTestdata method of BiometricTestDataService Service - " + ex.getMessage());
-            List<ServiceError> serviceErrorsList = new ArrayList<>();
-            ServiceError serviceError = new ServiceError();
-            serviceError.setErrorCode(ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorCode());
-            serviceError.setMessage(ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorMessage() + BLANK_SPACE
-                    + ex.getMessage());
-            serviceErrorsList.add(serviceError);
-            responseWrapper.setErrors(serviceErrorsList);
+            String errorCode = ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorCode();
+            String errorMessage = ToolkitErrorCodes.BIOMETRIC_TESTDATA_NOT_AVAILABLE.getErrorMessage() + BLANK_SPACE
+                    + ex.getMessage();
+            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
         }
         responseWrapper.setId(postBiometricTestDataId);
         responseWrapper.setResponse(addBioTestDataResponseDto);
@@ -308,70 +302,99 @@ public class BiometricTestDataService {
         return responseWrapper;
     }
 
-    private TestDataValidationDto validateTestData(String purpose, MultipartFile file) throws IOException {
-        TestDataValidationDto testDataValidation = new TestDataValidationDto();
-        ZipInputStream zis = null;
-        try {
-            List<String> validGalleryXmls = new ArrayList<>();
-            for (int i = 1; i <= Integer.valueOf(maxAllowedGalleryFiles); i++) {
-                validGalleryXmls.add(GALLERY + i + DOT_XML);
-            }
-            List<String> ignoreTestcaseList = Arrays.asList(ignoreTestcases.split(","));
-            testDataValidation.setPurpose(purpose);
-            List<TestCaseEntity> testcases = testCaseCacheService.getSdkTestCases(AppConstants.SDK,
-                    sdkSampleTestdataSpecVer);
-            if (Objects.nonNull(testcases)) {
-                List<String> folders = new ArrayList<>();
-                List<String> probeFolders = new ArrayList<>();
-                List<String> galleryFolders = new ArrayList<>();
-                for (TestCaseEntity testcase : testcases) {
-                    String testcaseJson = testcase.getTestcaseJson();
-                    TestCaseDto testCaseDto = objectMapperConfig.objectMapper().readValue(testcaseJson,
-                            TestCaseDto.class);
-                    if (!ignoreTestcaseList.contains(testCaseDto.getTestId())
-                            && testCaseDto.getOtherAttributes().getSdkPurpose().contains(purpose)) {
-                        String folderName = testCaseDto.getTestId();
-                        folders.add(folderName);
-                        probeFolders.add(folderName);
-                        if (testCaseDto.getOtherAttributes().getSdkPurpose().contains(SdkPurpose.MATCHER.getCode())) {
-                            galleryFolders.add(folderName);
-                        }
-                        if (testCaseDto.getMethodName().size() > 1
-                                && testCaseDto.getMethodName().get(1).equals(MethodName.MATCH.getCode())) {
-                            folderName += "/" + testCaseDto.getMethodName().get(1);
-                            folders.add(folderName);
-                            probeFolders.add(folderName);
-                        }
-                    }
+	private TestDataValidationDto validateTestData(String purpose, MultipartFile file) throws IOException {
+		TestDataValidationDto testDataValidation = new TestDataValidationDto();
+		testDataValidation.setPurpose(purpose);
+		ZipInputStream zis = null;
+		try {
+			List<TestCaseEntity> testcases = null;
+			List<String> validGalleryXmls = new ArrayList<>();
+			List<String> ignoreTestcaseList = Arrays.asList(ignoreTestcases.split(","));
+			if (!purpose.equals(AppConstants.ABIS)) {
+				for (int i = 1; i <= Integer.valueOf(maxAllowedGalleryFiles); i++) {
+					validGalleryXmls.add(GALLERY + i + DOT_XML);
+				}
+				testcases = testCaseCacheService.getSdkTestCases(AppConstants.SDK, sdkSampleTestdataSpecVer);
+				if (Objects.nonNull(testcases)) {
+					List<String> folders = new ArrayList<>();
+					List<String> probeFolders = new ArrayList<>();
+					List<String> galleryFolders = new ArrayList<>();
+					for (TestCaseEntity testcase : testcases) {
+						String testcaseJson = testcase.getTestcaseJson();
+						TestCaseDto testCaseDto = objectMapperConfig.objectMapper().readValue(testcaseJson,
+								TestCaseDto.class);
+						if (!ignoreTestcaseList.contains(testCaseDto.getTestId())
+								&& testCaseDto.getOtherAttributes().getSdkPurpose().contains(purpose)) {
+							String folderName = testCaseDto.getTestId();
+							folders.add(folderName);
+							probeFolders.add(folderName);
+							if (testCaseDto.getOtherAttributes().getSdkPurpose()
+									.contains(SdkPurpose.MATCHER.getCode())) {
+								galleryFolders.add(folderName);
+							}
+							if (testCaseDto.getMethodName().size() > 1
+									&& testCaseDto.getMethodName().get(1).equals(MethodName.MATCH.getCode())) {
+								folderName += "/" + testCaseDto.getMethodName().get(1);
+								folders.add(folderName);
+								probeFolders.add(folderName);
+							}
+						}
+					}
+					testDataValidation.setFolders(folders);
+					testDataValidation.setProbeFolders(probeFolders);
+					testDataValidation.setGalleryFolders(galleryFolders);
+				}
+				if (testDataValidation.getFolders().size() == 0 || testDataValidation.getProbeFolders().size() == 0) {
+                    String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                            + AppConstants.COMMA_SEPARATOR
+                            + ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode();
+                    throw new ToolkitException(errorCode,
+                            ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
                 }
-                testDataValidation.setFolders(folders);
-                testDataValidation.setProbeFolders(probeFolders);
-                testDataValidation.setGalleryFolders(galleryFolders);
-            }
+			} else {
+				testcases = testCaseCacheService.getAbisTestCases(AppConstants.ABIS, sdkSampleTestdataSpecVer);
+				if (Objects.nonNull(testcases)) {
+					List<String> folders = new ArrayList<>();
+					for (TestCaseEntity testcase : testcases) {
+						String testcaseJson = testcase.getTestcaseJson();
+						TestCaseDto testCaseDto = objectMapperConfig.objectMapper().readValue(testcaseJson,
+								TestCaseDto.class);
+						String folderName = testCaseDto.getTestId();
+						folders.add(folderName);
 
-            if (testDataValidation.getFolders().size() == 0 || testDataValidation.getProbeFolders().size() == 0) {
-                throw new ToolkitException(ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode(),
-                        ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
-            }
-
-            if (Objects.nonNull(file)) {
-                InputStream zipFileIs = file.getInputStream();
-                zis = new ZipInputStream(zipFileIs);
-                ZipEntry zipEntry = null;
-
-                if (!file.getOriginalFilename().endsWith(ZIP_EXT)) {
-                    throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorCode(),
-                            ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorMessage());
+					}
+					testDataValidation.setFolders(folders);
+				}
+				if (testDataValidation.getFolders().size() == 0) {
+                    String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                            + AppConstants.COMMA_SEPARATOR
+                            + ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorCode();
+                    throw new ToolkitException(errorCode,
+                            ToolkitErrorCodes.TESTCASE_NOT_AVAILABLE.getErrorMessage());
                 }
-                
-                double THRESHOLD_RATIO = 10;
-    			int THRESHOLD_ENTRIES = 10000;
-    			int THRESHOLD_SIZE = 1000000000; // 1 GB
-    			int totalSizeArchive = 0;
-    			int totalEntryArchive = 0;
-                while ((zipEntry = zis.getNextEntry()) != null) {
-                    totalEntryArchive++;
-                    int nBytes = -1;
+			}
+
+			if (Objects.nonNull(file)) {
+				InputStream zipFileIs = file.getInputStream();
+				zis = new ZipInputStream(zipFileIs);
+				ZipEntry zipEntry = null;
+
+				if (!file.getOriginalFilename().endsWith(ZIP_EXT)) {
+                    String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                            + AppConstants.COMMA_SEPARATOR
+                            + ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorCode();
+					throw new ToolkitException(errorCode,
+							ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorMessage());
+				}
+
+				double THRESHOLD_RATIO = 10;
+				int THRESHOLD_ENTRIES = 10000;
+				int THRESHOLD_SIZE = 1000000000; // 1 GB
+				int totalSizeArchive = 0;
+				int totalEntryArchive = 0;
+				while ((zipEntry = zis.getNextEntry()) != null) {
+					totalEntryArchive++;
+					int nBytes = -1;
 					byte[] buffer = new byte[2048];
 					double totalSizeEntry = 0;
 					while ((nBytes = zis.read(buffer)) > 0) { // Compliant
@@ -381,76 +404,150 @@ public class BiometricTestDataService {
 						if (compressionRatio > THRESHOLD_RATIO) {
 							// ratio between compressed and uncompressed data is highly suspicious, looks
 							// like a Zip Bomb Attack
-							throw new ToolkitException(ToolkitErrorCodes.ZIP_HIGH_COMPRESSION_RATIO_ERROR.getErrorCode(),
+                            String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                                    + AppConstants.COMMA_SEPARATOR
+                                    + ToolkitErrorCodes.ZIP_HIGH_COMPRESSION_RATIO_ERROR.getErrorCode();
+							throw new ToolkitException(errorCode,
 									ToolkitErrorCodes.ZIP_HIGH_COMPRESSION_RATIO_ERROR.getErrorMessage());
 						}
 					}
 
 					if (totalSizeArchive > THRESHOLD_SIZE) {
-						throw new ToolkitException(ToolkitErrorCodes.ZIP_SIZE_TOO_LARGE_ERROR.getErrorCode(),
+                        String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                                + AppConstants.COMMA_SEPARATOR
+                                + ToolkitErrorCodes.ZIP_SIZE_TOO_LARGE_ERROR.getErrorCode();
+						throw new ToolkitException(errorCode,
 								ToolkitErrorCodes.ZIP_SIZE_TOO_LARGE_ERROR.getErrorMessage());
 					}
 
 					if (totalEntryArchive > THRESHOLD_ENTRIES) {
-						throw new ToolkitException(ToolkitErrorCodes.ZIP_ENTRIES_TOO_MANY_ERROR.getErrorCode(),
+                        String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                                + AppConstants.COMMA_SEPARATOR
+                                + ToolkitErrorCodes.ZIP_ENTRIES_TOO_MANY_ERROR.getErrorCode();
+						throw new ToolkitException(errorCode,
 								ToolkitErrorCodes.ZIP_ENTRIES_TOO_MANY_ERROR.getErrorMessage());
 					}
-                    
-                    String entryName = zipEntry.getName();
-                    if (!entryName.startsWith(purpose)) {
-                        throw new ToolkitException(ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode(),
-                                ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorMessage() + " " + entryName);
-                    } else {
-                        entryName = entryName.replace(purpose + "/", "");
-                    }
-                    if (!entryName.isBlank()) {
-                        if (zipEntry.isDirectory()) {
-                            String testcaseId = entryName.substring(0, entryName.length() - 1);
-                            if (testDataValidation.getFolders().contains(testcaseId)) {
-                                testDataValidation.getFolders().remove(testcaseId);
-                            } else {
-                                throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorCode(),
-                                        ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorMessage() + " " + testcaseId);
-                            }
-                        } else if (entryName.endsWith(PROBE_XML)) {
-                            String testcaseId = entryName.substring(entryName.indexOf(AppConstants.SDK),
-                                    entryName.indexOf(PROBE_XML) - 1);
-                            testDataValidation.getProbeFolders().remove(testcaseId);
-                        } else if (entryName.contains(GALLERY) && purpose.equals(SdkPurpose.MATCHER.getCode())) {
-                            String testcaseId = entryName.substring(entryName.indexOf(AppConstants.SDK),
-                                    entryName.indexOf(GALLERY) - 1);
-                            testDataValidation.getGalleryFolders().remove(testcaseId);
-                            String galleryXml = entryName.substring(entryName.indexOf(GALLERY));
-                            if (!validGalleryXmls.contains(galleryXml)) {
-                                throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_GALLERY.getErrorCode(),
-                                        ToolkitErrorCodes.TESTDATA_INVALID_GALLERY.getErrorMessage() + " " + galleryXml
-                                                + " in " + testcaseId);
-                            }
-                        }
-                    }
-                }
 
-                if (0 == totalEntryArchive) {
-                    throw new ToolkitException(ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorCode(),
-                            ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorMessage());
-                }
+					String entryName = zipEntry.getName();
+					if (!purpose.equals(AppConstants.ABIS)) {
+						if (!entryName.startsWith(purpose)) {
+                            entryName = entryName.charAt(entryName.length() - 1) != '/' ? entryName
+                                    : entryName.substring(0, entryName.length() - 1);
+                            String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                                    + AppConstants.COMMA_SEPARATOR
+                                    + ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode()
+                                    + AppConstants.COMMA_SEPARATOR
+                                    + entryName;
+							throw new ToolkitException(errorCode,
+									ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorMessage() + " " + entryName);
+						} else {
+							entryName = entryName.replace(purpose + "/", "");
+						}
+					} else {
+						if (!entryName.split("/")[0].equals(AppConstants.ABIS)) {
+                            entryName = entryName.charAt(entryName.length() - 1) != '/' ? entryName
+                                    : entryName.substring(0, entryName.length() - 1);
+                            String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                                    + AppConstants.COMMA_SEPARATOR
+                                    + ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorCode()
+                                    + AppConstants.COMMA_SEPARATOR
+                                    + entryName;
+							throw new ToolkitException(errorCode,
+									ToolkitErrorCodes.TESTDATA_WRONG_PURPOSE.getErrorMessage() + " " + entryName);
+						} else {
+							entryName = entryName.replace(purpose + "/", "");
+						}
+					}
+					if (!entryName.isBlank()) {
+						if (!purpose.equals(AppConstants.ABIS)) {
+                                                    
+							if (zipEntry.isDirectory()) {
+								String testcaseId = entryName.substring(0, entryName.length() - 1);
+								if (testDataValidation.getFolders().contains(testcaseId)) {
+									testDataValidation.getFolders().remove(testcaseId);
+								} else {
+                                    String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                                            + AppConstants.COMMA_SEPARATOR
+                                            + ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorCode()
+                                            + AppConstants.COMMA_SEPARATOR
+                                            + testcaseId;
+									throw new ToolkitException(errorCode,
+											ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorMessage()
+                                                    + " "
+													+ testcaseId);
+								}
+							} else if (entryName.endsWith(PROBE_XML)) {
+								String testcaseId = entryName.substring(entryName.indexOf(AppConstants.SDK),
+										entryName.indexOf(PROBE_XML) - 1);
+								testDataValidation.getProbeFolders().remove(testcaseId);
+							} else if (entryName.contains(GALLERY) && purpose.equals(SdkPurpose.MATCHER.getCode())) {
+								String testcaseId = entryName.substring(entryName.indexOf(AppConstants.SDK),
+										entryName.indexOf(GALLERY) - 1);
+								testDataValidation.getGalleryFolders().remove(testcaseId);
+								String galleryXml = entryName.substring(entryName.indexOf(GALLERY));
+								if (!validGalleryXmls.contains(galleryXml)) {
+                                    String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                                            + AppConstants.COMMA_SEPARATOR
+                                            + ToolkitErrorCodes.TESTDATA_INVALID_GALLERY.getErrorCode()
+                                            + AppConstants.ARGUMENTS_DELIMITER
+                                            + galleryXml
+                                            + AppConstants.ARGUMENTS_SEPARATOR
+                                            + testcaseId;
+									throw new ToolkitException(
+											errorCode,
+											ToolkitErrorCodes.TESTDATA_INVALID_GALLERY.getErrorMessage() + " "
+													+ galleryXml + " in " + testcaseId);
+								}
+							}
+						} else {
+							if (zipEntry.isDirectory()) {
+								String testcaseId = entryName.substring(0, entryName.length() - 1);
+								if (testDataValidation.getFolders().contains(testcaseId)) {
+									testDataValidation.getFolders().remove(testcaseId);
+								} else {
+                                    String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                                            + AppConstants.COMMA_SEPARATOR
+                                            + ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorCode()
+                                            + AppConstants.COMMA_SEPARATOR
+                                            + testcaseId;
+									throw new ToolkitException(errorCode,
+											ToolkitErrorCodes.TESTDATA_INVALID_FOLDER.getErrorMessage() + " "
+													+ testcaseId);
+								}
+							}
+						}
+					}
+				}
 
-                testDataValidation.setValidated(true);
-            } else {
-                throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
-                        ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
-            }
-        } catch (Exception ex) {
-            throw new ToolkitException(ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode(),
-                    ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorMessage() + " " + ex.getMessage());
-        } finally {
-            if (zis != null) {
-                zis.closeEntry();
-                zis.close();
-            }
-        }
-        return testDataValidation;
-    }
+				if (0 == totalEntryArchive) {
+                    String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                            + AppConstants.COMMA_SEPARATOR
+                            + ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorCode();
+					throw new ToolkitException(errorCode,
+							ToolkitErrorCodes.TESTDATA_INVALID_FILE.getErrorMessage());
+				}
+
+				testDataValidation.setValidated(true);
+			} else {
+                String errorCode = ToolkitErrorCodes.TESTDATA_VALIDATION_UNSUCCESSFULL.getErrorCode()
+                        + AppConstants.COMMA_SEPARATOR
+                        + ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode();
+				throw new ToolkitException(errorCode,
+						ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+			}
+		} catch (Exception ex) {
+            log.debug("sessionId", "idType", "id", ex.getStackTrace());
+            log.error("sessionId", "idType", "id",
+                    "In validateTestData method of BiometricTestDataService Service - " + ex.getMessage());
+			throw ex;
+		} finally {
+			if (zis != null) {
+				zis.closeEntry();
+				zis.close();
+			}
+		}
+		return testDataValidation;
+	}
 
     public ResponseWrapper<List<String>> getBioTestDataNames(String purpose) {
         ResponseWrapper<List<String>> responseWrapper = new ResponseWrapper<>();
@@ -468,24 +565,18 @@ public class BiometricTestDataService {
                 testDataNames = biometricTestDataRepository.findTestDataNamesByFileIds(inputFileNames, purpose,
                         partnerId);
             } else {
-                List<ServiceError> serviceErrorsList = new ArrayList<>();
-                ServiceError serviceError = new ServiceError();
-                serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode());
-                serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage());
-                serviceErrorsList.add(serviceError);
-                responseWrapper.setErrors(serviceErrorsList);
+                String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode();
+                String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage();
+                responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
             }
         } catch (Exception ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In getBioTestDataFileNames method of BiometricTestDataService Service - " + ex.getMessage());
-            List<ServiceError> serviceErrorsList = new ArrayList<>();
-            ServiceError serviceError = new ServiceError();
-            serviceError.setErrorCode(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode());
-            serviceError.setMessage(ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage() + BLANK_SPACE
-                    + ex.getMessage());
-            serviceErrorsList.add(serviceError);
-            responseWrapper.setErrors(serviceErrorsList);
+            String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode();
+            String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage() + BLANK_SPACE
+                    + ex.getMessage();
+            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
         }
         responseWrapper.setId(getBioTestDataFileNames);
         responseWrapper.setResponse(testDataNames);
@@ -497,11 +588,25 @@ public class BiometricTestDataService {
     public ResponseEntity<Resource> getSampleBioTestDataFile(String purpose) {
         Resource resource = null;
         try {
-            byte[] bytes = generateSampleSdkTestData(purpose);
+            byte[] bytes;
+            List<TestCaseEntity> sdkTestCaseEntities = testCaseCacheService.getSdkTestCases(AppConstants.SDK,
+                    sdkSampleTestdataSpecVer);
+            List<TestCaseEntity> abisTestCaseEntities = testCaseCacheService.getAbisTestCases(AppConstants.ABIS,
+                    sdkSampleTestdataSpecVer);
+            if (!purpose.equals(AppConstants.ABIS)) {
+                bytes = generateSampleTestData(purpose,sdkTestCaseEntities,ignoreTestcases);
+            } else {
+                bytes = generateSampleTestData(purpose,abisTestCaseEntities,ignoreAbisTestcases);
+            }
             if (Objects.nonNull(bytes)) {
-                SdkPurpose sdkPurpose = SdkPurpose.fromCode(purpose);
-                String defaultFileName = AppConstants.SAMPLE + UNDERSCORE + sdkPurpose.toString().toUpperCase()
-                        + ZIP_EXT;
+                String defaultFileName;
+                if (!purpose.equals(AppConstants.ABIS)) {
+                    SdkPurpose sdkPurpose = SdkPurpose.fromCode(purpose);
+                    defaultFileName = AppConstants.SAMPLE + UNDERSCORE + sdkPurpose.toString().toUpperCase()
+                            + ZIP_EXT;
+                } else {
+                    defaultFileName = AppConstants.SAMPLE + UNDERSCORE + purpose.toUpperCase() + ZIP_EXT;
+                }
 
                 resource = new ByteArrayResource(bytes);
 
@@ -523,108 +628,132 @@ public class BiometricTestDataService {
         return ResponseEntity.noContent().build();
     }
 
-    private byte[] generateSampleSdkTestData(String purpose) {
+    private byte[] generateSampleTestData(String purpose,List<TestCaseEntity> testCaseEntities, String ignoretestcases) {
         byte[] response = null;
-		ByteArrayOutputStream byteArrayOutputStream = null;
-		BufferedOutputStream bufferedOutputStream = null;
-		ZipOutputStream zipOutputStream = null;
-		try {
-			List<TestCaseEntity> testCaseEntities = testCaseCacheService.getSdkTestCases(AppConstants.SDK,
-					sdkSampleTestdataSpecVer);
+        ByteArrayOutputStream byteArrayOutputStream = null;
+        BufferedOutputStream bufferedOutputStream = null;
+        ZipOutputStream zipOutputStream = null;
+        try {
+            if (Objects.nonNull(testCaseEntities) && testCaseEntities.size() > 0) {
+                String folderName = purpose;
+                String fileName = "Readme.txt";
 
-			if (Objects.nonNull(testCaseEntities) && testCaseEntities.size() > 0) {
-				String folderName = purpose;
-				String fileName = "Readme.txt";
+                byteArrayOutputStream = new ByteArrayOutputStream();
+                bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
+                zipOutputStream = new ZipOutputStream(bufferedOutputStream);
 
-				byteArrayOutputStream = new ByteArrayOutputStream();
-				bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
-				zipOutputStream = new ZipOutputStream(bufferedOutputStream);
+                List<String> ignoreTestcaseList = Arrays.asList(ignoretestcases.split(","));
 
-				List<String> ignoreTestcaseList = Arrays.asList(ignoreTestcases.split(","));
+                // adding Readme file outside testcases
+                StringBuilder builder = new StringBuilder();
+                builder.append(outerReadmeIntro + "\n\n");
+                builder.append("Method - " + purpose + "\n\n");
+                builder.append(outerReadmeBody);
 
-				// adding Readme file outside testcases
-				StringBuilder builder = new StringBuilder();
-				builder.append(outerReadmeIntro + "\n\n");
-				builder.append("Method - " + purpose + "\n\n");
-				builder.append(outerReadmeBody);
+                zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
+                zipOutputStream.write(builder.toString().getBytes());
+                zipOutputStream.closeEntry();
+                if (!purpose.equals(AppConstants.ABIS)) {
+                    generateSampleSdkTestData(purpose,testCaseEntities, ignoreTestcaseList, zipOutputStream, fileName);
+                } else {
+                    generateSampleAbisTestData(purpose,testCaseEntities, ignoreTestcaseList, zipOutputStream, fileName);
+                }
+                if (null != zipOutputStream) {
+                    zipOutputStream.finish();
+                    zipOutputStream.flush();
+                    zipOutputStream.close();
+                    zipOutputStream = null;
+                }
 
-				zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
-				zipOutputStream.write(builder.toString().getBytes());
-				zipOutputStream.closeEntry();
+                response = byteArrayOutputStream.toByteArray();
 
-				for (final TestCaseEntity testCaseEntity : testCaseEntities) {
-					String testcaseJson = testCaseEntity.getTestcaseJson();
-					TestCaseDto testCaseDto = objectMapperConfig.objectMapper().readValue(testcaseJson,
-							TestCaseDto.class);
-					if (testCaseDto.getSpecVersion() != null
-							&& testCaseDto.getSpecVersion().equals(sdkSampleTestdataSpecVer)
-							&& !ignoreTestcaseList.contains(testCaseDto.getTestId())
-							&& testCaseDto.getOtherAttributes().getSdkPurpose().contains(purpose)) {
+                if (Objects.nonNull(bufferedOutputStream)) {
+                    bufferedOutputStream.close();
+                    bufferedOutputStream = null;
+                }
+                if (Objects.nonNull(byteArrayOutputStream)) {
+                    byteArrayOutputStream.close();
+                    byteArrayOutputStream = null;
+                }
+            }
+        } catch (Exception ex) {
+            log.debug("sessionId", "idType", "id", ex.getStackTrace());
+            log.error("sessionId", "idType", "id",
+                    "In generateSampleTestData method of BiometricTestDataService Service - " + ex.getMessage());
+        } finally {
+            try {
+                if (null != zipOutputStream) {
+                    zipOutputStream.finish();
+                    zipOutputStream.flush();
+                    zipOutputStream.close();
+                }
+                if (null != bufferedOutputStream) {
+                    bufferedOutputStream.close();
+                }
+                if (null != byteArrayOutputStream) {
+                    byteArrayOutputStream.close();
+                }
+            } catch (Exception e) {
+                log.debug("sessionId", "idType", "id", e.getStackTrace());
+                log.error("sessionId", "idType", "id",
+                        "In generateSampleTestData method of BiometricTestDataService Service - " + e.getMessage());
+            }
+        }
+        return response;
+    }
+    private void generateSampleSdkTestData(String purpose, List<TestCaseEntity> testCaseEntities,List<String> ignoreTestcasesList,
+                                             ZipOutputStream zipOutputStream, String fileName) throws IOException {
 
-						folderName = purpose + "/" + testCaseDto.testId;
+        for (final TestCaseEntity testCaseEntity : testCaseEntities) {
+            String testcaseJson = testCaseEntity.getTestcaseJson();
+            TestCaseDto testCaseDto = objectMapperConfig.objectMapper().readValue(testcaseJson,
+                    TestCaseDto.class);
+            if (testCaseDto.getSpecVersion() != null
+                    && testCaseDto.getSpecVersion().equals(sdkSampleTestdataSpecVer)
+                    && !ignoreTestcasesList.contains(testCaseDto.getTestId())
+                    && testCaseDto.getOtherAttributes().getSdkPurpose().contains(purpose)) {
 
-						String content = prepareReadme(testCaseDto);
+                String folderName = purpose + "/" + testCaseDto.testId;
 
-						zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
-						zipOutputStream.write(content.getBytes());
-						zipOutputStream.closeEntry();
+                String content = prepareReadme(testCaseDto);
 
-						if (testCaseDto.getMethodName().size() > 1
-								&& testCaseDto.getMethodName().get(1).equals(MethodName.MATCH.getCode())) {
-							folderName = purpose + "/" + testCaseDto.testId + "/" + testCaseDto.getMethodName().get(1);
-							fileName = "Readme.txt";
+                zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
+                zipOutputStream.write(content.getBytes());
+                zipOutputStream.closeEntry();
 
-							content = prepareReadme(testCaseDto);
+                if (testCaseDto.getMethodName().size() > 1
+                        && testCaseDto.getMethodName().get(1).equals(MethodName.MATCH.getCode())) {
+                    folderName = purpose + "/" + testCaseDto.testId + "/" + testCaseDto.getMethodName().get(1);
+                    fileName = "Readme.txt";
 
-							zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
-							zipOutputStream.write(content.getBytes());
-							zipOutputStream.closeEntry();
-						}
+                    content = prepareReadme(testCaseDto);
 
-					}
-				}
-				if (null != zipOutputStream) {
-					zipOutputStream.finish();
-					zipOutputStream.flush();
-					zipOutputStream.close();
-					zipOutputStream = null;
-				}
+                    zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
+                    zipOutputStream.write(content.getBytes());
+                    zipOutputStream.closeEntry();
+                }
+            }
+        }
+    }
 
-				response = byteArrayOutputStream.toByteArray();
+    private void generateSampleAbisTestData(String purpose, List<TestCaseEntity> testCaseEntities,List<String> ignoreTestcasesList,
+                                              ZipOutputStream zipOutputStream, String fileName) throws IOException {
+        for (final TestCaseEntity testCaseEntity : testCaseEntities) {
+            String testcaseJson = testCaseEntity.getTestcaseJson();
+            TestCaseDto testCaseDto = objectMapperConfig.objectMapper().readValue(testcaseJson,
+                    TestCaseDto.class);
+            if (testCaseDto.getSpecVersion() != null
+                    && testCaseDto.getSpecVersion().equals(sdkSampleTestdataSpecVer)
+                    && purpose.equals(AppConstants.ABIS)
+                    && !ignoreTestcasesList.contains(testCaseDto.getTestId())) {
+                String folderName = purpose + "/" + testCaseDto.testId;
+                String content = prepareReadme(testCaseDto);
 
-				if (Objects.nonNull(bufferedOutputStream)) {
-					bufferedOutputStream.close();
-					bufferedOutputStream = null;
-				}
-				if (Objects.nonNull(byteArrayOutputStream)) {
-					byteArrayOutputStream.close();
-					byteArrayOutputStream = null;
-				}
-			}
-		} catch (Exception ex) {
-			log.debug("sessionId", "idType", "id", ex.getStackTrace());
-			log.error("sessionId", "idType", "id",
-					"In generateSampleSdkTestData method of BiometricTestDataService Service - " + ex.getMessage());
-		} finally {
-			try {
-				if (null != zipOutputStream) {
-					zipOutputStream.finish();
-					zipOutputStream.flush();
-					zipOutputStream.close();
-				}
-				if (null != bufferedOutputStream) {
-					bufferedOutputStream.close();
-				}
-				if (null != byteArrayOutputStream) {
-					byteArrayOutputStream.close();
-				}
-			} catch (Exception e) {
-				log.debug("sessionId", "idType", "id", e.getStackTrace());
-				log.error("sessionId", "idType", "id",
-						"In generateSampleSdkTestData method of BiometricTestDataService Service - " + e.getMessage());
-			}
-		}
-		return response;
+                zipOutputStream.putNextEntry(new ZipEntry(folderName + "/" + fileName));
+                zipOutputStream.write(content.getBytes());
+                zipOutputStream.closeEntry();
+            }
+        }
     }
 
     private String prepareReadme(TestCaseDto testCaseDto) {
@@ -637,8 +766,13 @@ public class BiometricTestDataService {
                 builder.append("ID - " + testCaseDto.testId + "\n");
                 builder.append("Description - " + testCaseDto.testDescription + "\n");
                 builder.append("Spec Version - " + testCaseDto.specVersion + "\n");
-                builder.append("Purpose - " + testCaseDto.getOtherAttributes().getSdkPurpose().toString() + "\n");
-                builder.append("Modality - " + testCaseDto.getOtherAttributes().getModalities().toString() + "\n\n");
+                if (testCaseDto.getTestCaseType().equals(AppConstants.SDK)) {
+                    builder.append("Purpose - " + testCaseDto.getOtherAttributes().getSdkPurpose().toString() + "\n");
+                    builder.append(
+                            "Modality - " + testCaseDto.getOtherAttributes().getModalities().toString() + "\n\n");
+                } else {
+                    builder.append("\n");
+                }
                 if (testCaseDto.isNegativeTestcase) {
                     builder.append("This is Negative Testcase\n\n");
                 }
@@ -717,8 +851,9 @@ public class BiometricTestDataService {
             log.info("sessionId", "idType", "id", "In isVirusScanSuccess method of BiometricTestDataService");
             return virusScan.scanDocument(file.getBytes());
         } catch (Exception e) {
-            log.error("sessionId", "idType", "id", ExceptionUtils.getStackTrace(e));
-            log.error("sessionId", "idType", "id", e.getMessage());
+            log.debug("sessionId", "idType", "id", ExceptionUtils.getStackTrace(e));
+            log.error("sessionId", "idType", "id",
+                    "In isVirusScanSuccess method of BiometricTestDataService Service - " + e.getMessage());
             throw new VirusScannerException(ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorCode(),
                     ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorMessage() + e.getMessage());
         }

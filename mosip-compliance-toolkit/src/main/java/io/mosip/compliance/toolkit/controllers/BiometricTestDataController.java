@@ -1,8 +1,9 @@
 package io.mosip.compliance.toolkit.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import io.mosip.compliance.toolkit.config.LoggerConfiguration;
+import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -22,14 +23,12 @@ import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.AddBioTestDataResponseDto;
 import io.mosip.compliance.toolkit.dto.BiometricTestDataDto;
 import io.mosip.compliance.toolkit.service.BiometricTestDataService;
+import io.mosip.compliance.toolkit.util.CommonUtil;
 import io.mosip.compliance.toolkit.util.DataValidationUtil;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RequestValidator;
-import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 public class BiometricTestDataController {
@@ -45,6 +44,8 @@ public class BiometricTestDataController {
 
 	@Autowired
 	private ObjectMapperConfig objectMapperConfig;
+
+	private Logger log = LoggerConfiguration.logConfig(BiometricTestDataController.class);
 
 	@GetMapping(value = "/getListOfBiometricTestData")
 	public ResponseWrapper<List<BiometricTestDataDto>> getListOfBiometricTestData() {
@@ -64,13 +65,13 @@ public class BiometricTestDataController {
 			DataValidationUtil.validate(errors, BIOMETRIC_TESTDATA_POST_ID);
 			return biometricTestDataService.addBiometricTestdata(requestWrapper.getRequest(), file);
 		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In addBiometricTestData method of BiometricTestDataController - " + ex.getMessage());
 			ResponseWrapper<AddBioTestDataResponseDto> responseWrapper = new ResponseWrapper<>();
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode());
-			serviceError.setMessage(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage() + " " + ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+			String errorCode = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
 			return responseWrapper;
 		}
 	}

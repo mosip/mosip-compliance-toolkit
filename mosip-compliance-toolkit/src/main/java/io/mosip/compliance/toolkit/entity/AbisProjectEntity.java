@@ -57,6 +57,9 @@ public class AbisProjectEntity implements Serializable {
 	
 	@Column(name = "partner_id")
 	private String partnerId;
+
+	@Column(name = "org_name")
+	private String orgName;
 	
 	@Column(name = "cr_by")
 	private String crBy;
@@ -78,7 +81,16 @@ public class AbisProjectEntity implements Serializable {
 	
 	@Column(name = "outbound_queue_name")
 	private String outboundQueueName;
-	
+
+	@Column(name = "modality")
+	private String modality;
+
+	@Column(name = "abis_hash")
+	private String abisHash;
+
+	@Column(name = "website_url")
+	private String websiteUrl;
+
 	@Column(name = "bio_test_data_file_name")
 	private String bioTestDataFileName;
 	

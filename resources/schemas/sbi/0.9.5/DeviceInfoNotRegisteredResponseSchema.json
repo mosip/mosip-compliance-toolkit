@@ -11,14 +11,15 @@
 		"type": ["object", "null"],
 			"properties": {
 				"deviceInfo": {
-					"type": "string"
+					"type": ["string", "null"]
 				},
 				"deviceInfoDecoded": {
-					"type": "object",
+					"type": ["object", "null"],
 					"properties": {
 						"env": {
 							"type": "string",
 							"enum": [
+								"None",
 								"Staging",
 								"Developer",
 								"Pre-Production",
@@ -263,7 +264,6 @@
 				}
 			},
 			"required": [
-				"deviceInfo",
 				"error"
 			]
 		}

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import io.mosip.compliance.toolkit.util.CommonUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +20,6 @@ import io.mosip.compliance.toolkit.dto.projects.ProjectsResponseDto;
 import io.mosip.compliance.toolkit.entity.ProjectSummaryEntity;
 import io.mosip.compliance.toolkit.repository.ProjectSummaryRepository;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
-import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 
@@ -58,7 +58,7 @@ public class ProjectsService {
 		List<ProjectDto> projectsList = new ArrayList<ProjectDto>();
 
 		boolean isProjectTypeValid = false;
-		ToolkitErrorCodes errorCode = null; 
+		ToolkitErrorCodes errorCode = null;
 		if (Objects.nonNull(type)) {
 			if (AppConstants.SBI.equalsIgnoreCase(type) || AppConstants.ABIS.equalsIgnoreCase(type)
 					|| AppConstants.SDK.equalsIgnoreCase(type)) {
@@ -69,13 +69,9 @@ public class ProjectsService {
 		}
 		try {
 			if (!isProjectTypeValid) {
-				List<ServiceError> serviceErrorsList = new ArrayList<>();
-				ServiceError serviceError = new ServiceError();
 				errorCode = ToolkitErrorCodes.INVALID_PROJECT_TYPE;
-				serviceError.setErrorCode(errorCode.getErrorCode());
-				serviceError.setMessage(errorCode.getErrorMessage());
-				serviceErrorsList.add(serviceError);
-				responseWrapper.setErrors(serviceErrorsList);
+				String errorMessage = ToolkitErrorCodes.INVALID_PROJECT_TYPE.getErrorMessage();
+				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode.getErrorCode(),errorMessage));
 			} else {
 				String partnerId = this.getPartnerId();
 				boolean fetchAll = false;
@@ -84,20 +80,20 @@ public class ProjectsService {
 				}
 				List<ProjectSummaryEntity> projectsSummaryList = null;
 				if (fetchAll) {
-					log.info("fetching ALL projects for partner {}", partnerId);
+					log.info("sessionId", "idType", "id", "fetching ALL projects for partner {}", partnerId);
 					projectsSummaryList = projectSummaryRepository.getSummaryOfAllProjects(partnerId);
 				} else if (type.equalsIgnoreCase(AppConstants.SDK)) {
-					log.info("fetching SDK projects for partner {}", partnerId);
+					log.info("sessionId", "idType", "id", "fetching SDK projects for partner {}", partnerId);
 					projectsSummaryList = projectSummaryRepository.getSummaryOfAllSDKProjects(partnerId);
 				} else if (type.equalsIgnoreCase(AppConstants.SBI)) {
-					log.info("fetching SBI projects for partner {}", partnerId);
+					log.info("sessionId", "idType", "id", "fetching SBI projects for partner {}", partnerId);
 					projectsSummaryList = projectSummaryRepository.getSummaryOfAllSBIProjects(partnerId);
 				} else if (type.equalsIgnoreCase(AppConstants.ABIS)) {
-					log.info("fetching ABIS projects for partner {}", partnerId);
+					log.info("sessionId", "idType", "id", "fetching ABIS projects for partner {}", partnerId);
 					projectsSummaryList = projectSummaryRepository.getSummaryOfAllABISProjects(partnerId);
 				}
 				if (projectsSummaryList != null) {
-					log.info("number of projects found {}", projectsSummaryList.size());
+					log.info("sessionId", "idType", "id", "number of projects found {}", projectsSummaryList.size());
 					projectsSummaryList.forEach(entity -> {
 						ProjectDto projectDto = new ProjectDto();
 						projectDto.setId(entity.getProjectId());
@@ -115,13 +111,9 @@ public class ProjectsService {
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ExceptionUtils.getStackTrace(ex));
 			log.error("sessionId", "idType", "id", "In getProjects method of Projects Service - " + ex.getMessage());
-			List<ServiceError> serviceErrorsList = new ArrayList<>();
 			errorCode = ToolkitErrorCodes.PROJECTS_NOT_AVAILABLE;
-			ServiceError serviceError = new ServiceError();
-			serviceError.setErrorCode(errorCode.getErrorCode());
-			serviceError.setMessage(errorCode.getErrorMessage() + " " + ex.getMessage());
-			serviceErrorsList.add(serviceError);
-			responseWrapper.setErrors(serviceErrorsList);
+			String errorMessage = ToolkitErrorCodes.PROJECTS_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode.getErrorCode(),errorMessage));
 		}
 		responseWrapper.setId(getProjectsId);
 		responseWrapper.setVersion(AppConstants.VERSION);

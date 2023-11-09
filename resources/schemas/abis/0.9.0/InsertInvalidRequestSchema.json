@@ -1,0 +1,29 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema#",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/InsertInvalidRequestSchema.json",
+	"title": "ABIS Insert Invalid Request Schema",
+	"description": "ABIS Insert Invalid Request Schema",
+	"type": "object",
+	"properties": {
+		"id": {
+			"type": "string"
+		},
+		"version": {
+			"type": "string"
+		},
+		"requestId": {
+			"type": "string"
+		},
+		"requesttime": {
+			"type": "string"
+		},
+		"referenceId": {
+			"type": "string"
+		},
+		"referenceURL": {
+			"type": "string"
+		}
+	},
+	"required": [
+	]
+}

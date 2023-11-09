@@ -78,13 +78,17 @@ public class KeyRotationValidator extends SignatureValidator {
 			validationResultDto.setDescription("Key Rotation validations are successful.");
 			validationResultDto.setDescriptionKey("KEY_ROTATION_VALIDATOR_001");
 		} catch (ToolkitException e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
 			log.error("sessionId", "idType", "id", "In KeyRotationValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
+			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
 			log.error("sessionId", "idType", "id", "In KeyRotationValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(e.getLocalizedMessage());
+			validationResultDto.setDescriptionKey(e.getLocalizedMessage());
 		}
 		return validationResultDto;
 	}
@@ -159,6 +163,8 @@ public class KeyRotationValidator extends SignatureValidator {
 
 			validationResultDto.setStatus(AppConstants.SUCCESS);
 		} catch (JoseException e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In KeyRotationValidator - " + e.getMessage());
 			validationResultDto.setStatus(AppConstants.FAILURE);
 			validationResultDto.setDescription(" JoseException - " + "with Message - " + e.getLocalizedMessage());
 		}

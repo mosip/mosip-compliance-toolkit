@@ -1,0 +1,37 @@
+keycloak:
+  realms: |-
+    mosip: # realm
+      roles:
+       - CTK_ADMIN
+      clients:   
+        - name: mosip-toolkit-client
+          saroles: []
+        - name: mosip-toolkit-android-client
+          public_client: True
+          redirect_urls: ["android://mosip-compliance-toolkit-ui","http://localhost"]
+          web_origins: ["android://mosip-compliance-toolkit-ui","http://localhost"]
+          direct_grant_flow_alias: 'direct grant'
+          browser_flow_alias: 'browser'
+    
+      users:
+        - username: mpartner-default-abis
+          email: abis@gmail.com
+          firstName: mpartner-default-abis
+          lastName: 
+          password: abcd1234
+          temporary: true
+          attributes: {
+            "address": "mpartner-default-auth",
+            "langCode": "eng",
+            "organizationName": "mpartner-default-auth",
+            "partnerType": "ABIS_PARTNER",
+            "phoneNumber": "9988776655"
+           }
+          realmRoles:
+            - ABIS_PARTNER
+
+## These will be passed as environments variables to keycloak-init docker. Note the expected naming convention is
+## <clientname>_<secret>.  If empty secret is passed, it shall be randomly generated
+#clientSecrets:
+#  - name: mosip_toolkit_client_secret
+#    secret: ""

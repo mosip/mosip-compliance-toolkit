@@ -29,6 +29,4 @@ public class TestRunHistoryEntity {
 	@Column(name = "passcase_count")
 	private long passCaseCount;
 	
-	@Column(name = "failcase_count")
-	private long failCaseCount; 
 }

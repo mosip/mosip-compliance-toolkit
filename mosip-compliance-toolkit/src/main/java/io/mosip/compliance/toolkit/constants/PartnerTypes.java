@@ -10,7 +10,8 @@ import io.mosip.compliance.toolkit.exceptions.ToolkitException;
  */
 public enum PartnerTypes {
 	DEVICE("DEVICE"),
-	FTM("FTM");
+	FTM("FTM"),
+	ABIS("ABIS_PARTNER");
 
 	private final String code;
 

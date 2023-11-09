@@ -43,6 +43,9 @@ public class BiometricTestDataEntity implements Serializable {
 	@Column(name = "partner_id")
 	private String partnerId;
 
+	@Column(name = "org_name")
+	private String orgName;
+
 	@Column(name = "file_id")
 	private String fileId;
 	

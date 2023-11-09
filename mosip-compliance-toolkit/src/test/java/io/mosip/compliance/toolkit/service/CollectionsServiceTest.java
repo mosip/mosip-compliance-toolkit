@@ -1,6 +1,8 @@
 package io.mosip.compliance.toolkit.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.*;
 import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
 import io.mosip.compliance.toolkit.dto.collections.CollectionRequestDto;
@@ -46,6 +48,9 @@ public class CollectionsServiceTest {
 
     @Mock
     private Authentication authentication;
+
+    @Mock
+    private ResourceCacheService resourceCacheService;
 
     @Mock
     SecurityContext securityContext;
