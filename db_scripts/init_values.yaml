@@ -10,8 +10,8 @@ databases:
       user: postgres
       secret:
         name: postgres-postgresql
-        key: postgresql-password
-    dml: 0   
+        key: postgres-password
+    dml: 0
     branch: develop
 
   mosip_master:
