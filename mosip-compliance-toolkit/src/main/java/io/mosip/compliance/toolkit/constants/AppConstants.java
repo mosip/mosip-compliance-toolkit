@@ -79,4 +79,11 @@ public class AppConstants {
 	public static final String COMPLIANCE_COLLECTION = "compliance_collection";
 	
 	public static final String CUSTOM_COLLECTION = "custom_collection";
+	
+	public static final String REPORT_STATUS_SENT_FOR_REVIEW = "sent for review";
+	
+	public static final String REPORT_STATUS_APPROVED = "approved";
+	
+	public static final String REPORT_STATUS_REJECTED = "rejected";
+	
 }
