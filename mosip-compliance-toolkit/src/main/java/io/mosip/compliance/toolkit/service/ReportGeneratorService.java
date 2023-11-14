@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import io.mosip.compliance.toolkit.dto.collections.CollectionTestCasesResponseDto;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +29,8 @@ import org.springframework.stereotype.Component;
 import org.xhtmlrenderer.layout.SharedContext;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -38,6 +40,7 @@ import io.mosip.compliance.toolkit.config.VelocityEngineConfig;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ProjectTypes;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
+import io.mosip.compliance.toolkit.dto.collections.CollectionTestCasesResponseDto;
 import io.mosip.compliance.toolkit.dto.projects.AbisProjectDto;
 import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
 import io.mosip.compliance.toolkit.dto.projects.SdkProjectDto;
@@ -45,6 +48,7 @@ import io.mosip.compliance.toolkit.dto.report.AbisProjectTable;
 import io.mosip.compliance.toolkit.dto.report.PartnerDetailsDto;
 import io.mosip.compliance.toolkit.dto.report.PartnerDetailsDto.Partner;
 import io.mosip.compliance.toolkit.dto.report.PartnerTable;
+import io.mosip.compliance.toolkit.dto.report.ReportDataDto;
 import io.mosip.compliance.toolkit.dto.report.ReportRequestDto;
 import io.mosip.compliance.toolkit.dto.report.SbiProjectTable;
 import io.mosip.compliance.toolkit.dto.report.SdkProjectTable;
@@ -52,8 +56,12 @@ import io.mosip.compliance.toolkit.dto.report.TestRunTable;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
+import io.mosip.compliance.toolkit.entity.ComplianceTestRunSummaryEntity;
+import io.mosip.compliance.toolkit.entity.ComplianceTestRunSummaryPK;
+import io.mosip.compliance.toolkit.repository.ComplianceTestRunSummaryRepository;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.PartnerManagerHelper;
+import io.mosip.compliance.toolkit.util.StringUtil;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -61,6 +69,34 @@ import io.mosip.kernel.core.logger.spi.Logger;
 
 @Component
 public class ReportGeneratorService {
+
+	private static final String COUNT_OF_FAILED_TEST_CASES = "countOfFailedTestCases";
+
+	private static final String COUNT_OF_PASSED_TEST_CASES = "countOfPassedTestCases";
+
+	private static final String TOTAL_TEST_CASES_COUNT = "totalTestCasesCount";
+
+	private static final String TIME_TAKEN_BY_TEST_RUN = "timeTakenByTestRun";
+
+	private static final String TEST_RUN_DETAILS_LIST = "testRunDetailsList";
+
+	private static final String REPORT_VALIDITY_DATE = "reportValidityDate";
+
+	private static final String REPORT_EXPIRY_PERIOD = "reportExpiryPeriod";
+
+	private static final String TEST_RUN_START_TIME = "testRunStartTime";
+
+	private static final String ABIS_PROJECT_DETAILS_TABLE = "abisProjectDetailsTable";
+
+	private static final String SDK_PROJECT_DETAILS_TABLE = "sdkProjectDetailsTable";
+
+	private static final String SBI_PROJECT_DETAILS_TABLE = "sbiProjectDetailsTable";
+
+	private static final String PARTNER_DETAILS = "partnerDetails";
+
+	private static final String ORIGIN_KEY = "origin";
+
+	private static final String PROJECT_TYPE = "projectType";
 
 	private static final String BLANK_STRING = "";
 
@@ -103,6 +139,12 @@ public class ReportGeneratorService {
 	@Value("${mosip.toolkit.abis.testcases.ignore.list}")
 	private String ignoreTestDataSourceForAbisTestcases;
 
+	@Autowired
+	private ComplianceTestRunSummaryRepository complianceTestRunSummaryRepository;
+
+	@Autowired
+	ResourceCacheService resourceCacheService;
+
 	private AuthUserDetails authUserDetails() {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
@@ -110,6 +152,11 @@ public class ReportGeneratorService {
 	private String getPartnerId() {
 		String partnerId = authUserDetails().getUsername();
 		return partnerId;
+	}
+
+	private String getUserBy() {
+		String crBy = authUserDetails().getMail();
+		return crBy;
 	}
 
 	public ResponseEntity<?> createReport(ReportRequestDto requestDto, String origin) {
@@ -180,7 +227,9 @@ public class ReportGeneratorService {
 			String mergedHtml = mergeVelocityTemplate(velocityContext, "testRunReport.vm");
 			// 6. Covert the merged HTML to PDF
 			ByteArrayResource resource = convertHtmltToPdf(mergedHtml);
-			// 7. Send PDF in response
+			// 7. Save Report Data in DB for future
+			saveReportData(projectType, projectId, testRunDetailsResponseDto, velocityContext);
+			// 8. Send PDF in response
 			return sendPdfResponse(requestDto, resource);
 
 		} catch (Exception e) {
@@ -192,6 +241,71 @@ public class ReportGeneratorService {
 			}
 		}
 
+	}
+
+	private void saveReportData(String projectType, String projectId,
+			TestRunDetailsResponseDto testRunDetailsResponseDto, VelocityContext velocityContext)
+			throws JsonProcessingException {
+
+		ReportDataDto reportDataDto = new ReportDataDto();
+		reportDataDto.setProjectType(velocityContext.get(PROJECT_TYPE).toString());
+		reportDataDto.setOrigin(velocityContext.get(ORIGIN_KEY).toString());
+		reportDataDto.setPartnerDetails((PartnerTable) velocityContext.get(PARTNER_DETAILS));
+		if (ProjectTypes.SBI.getCode().equals(projectType)) {
+			reportDataDto.setSbiProjectDetailsTable((SbiProjectTable) velocityContext.get(SBI_PROJECT_DETAILS_TABLE));
+		}
+		if (ProjectTypes.SDK.getCode().equals(projectType)) {
+			reportDataDto.setSdkProjectDetailsTable((SdkProjectTable) velocityContext.get(SDK_PROJECT_DETAILS_TABLE));
+		}
+		if (ProjectTypes.ABIS.getCode().equals(projectType)) {
+			reportDataDto
+					.setAbisProjectDetailsTable((AbisProjectTable) velocityContext.get(ABIS_PROJECT_DETAILS_TABLE));
+		}
+		reportDataDto.setTestRunStartTime(velocityContext.get(TEST_RUN_START_TIME).toString());
+		reportDataDto.setReportExpiryPeriod(Integer.parseInt(velocityContext.get(REPORT_EXPIRY_PERIOD).toString()));
+		reportDataDto.setReportValidityDate(velocityContext.get(REPORT_VALIDITY_DATE).toString());
+		reportDataDto.setTestRunDetailsList(objectMapperConfig.objectMapper()
+				.convertValue(velocityContext.get(TEST_RUN_DETAILS_LIST), new TypeReference<List<TestRunTable>>() {
+				}));
+		reportDataDto.setTimeTakenByTestRun(velocityContext.get(TIME_TAKEN_BY_TEST_RUN).toString());
+		reportDataDto.setTotalTestCasesCount(Integer.parseInt(velocityContext.get(TOTAL_TEST_CASES_COUNT).toString()));
+		reportDataDto.setCountOfPassedTestCases(
+				Integer.parseInt(velocityContext.get(COUNT_OF_PASSED_TEST_CASES).toString()));
+		reportDataDto.setCountOfFailedTestCases(
+				Integer.parseInt(velocityContext.get(COUNT_OF_FAILED_TEST_CASES).toString()));
+
+		LocalDateTime nowDate = LocalDateTime.now();
+		ComplianceTestRunSummaryEntity entity = new ComplianceTestRunSummaryEntity();
+		entity.setProjectId(projectId);
+		entity.setCollectionId(testRunDetailsResponseDto.getCollectionId());
+		entity.setRunId(testRunDetailsResponseDto.getRunId());
+		entity.setProjectType(projectType);
+		entity.setPartnerId(getPartnerId());
+		entity.setOrgName(resourceCacheService.getOrgName(this.getPartnerId()));
+		String reportData = objectMapperConfig.objectMapper().writeValueAsString(reportDataDto);
+		String encodedReportData = StringUtil.base64Encode(reportData);
+		entity.setReportDataJson(encodedReportData);
+		entity.setReportStatus(AppConstants.REPORT_STATUS_SENT_FOR_REVIEW);
+
+		ComplianceTestRunSummaryPK pk = new ComplianceTestRunSummaryPK();
+		pk.setProjectId(projectId);
+		pk.setCollectionId(testRunDetailsResponseDto.getCollectionId());
+		pk.setRunId(testRunDetailsResponseDto.getRunId());
+		Optional<ComplianceTestRunSummaryEntity> optionalEntity = complianceTestRunSummaryRepository.findById(pk);
+		if (optionalEntity.isPresent()) {
+			log.info("sessionId", "idType", "id", "Updating report data in DB");
+			entity.setUpdBy(this.getUserBy());
+			entity.setUpdDtimes(nowDate);
+			entity.setCrBy(optionalEntity.get().getCrBy());
+			entity.setCrDtimes(optionalEntity.get().getCrDtimes());
+		} else {
+			entity.setCrBy(this.getUserBy());
+			entity.setCrDtimes(nowDate);
+		}
+		entity.setDeleted(false);
+
+		complianceTestRunSummaryRepository.save(entity);
+		log.info("sessionId", "idType", "id", "Saved report data successfully in DB");
 	}
 
 	private ResponseEntity<Resource> handleServiceErrors(ReportRequestDto requestDto, List<ServiceError> serviceErrors)
@@ -227,31 +341,32 @@ public class ReportGeneratorService {
 			String projectType, String projectId, SbiProjectTable sbiProjectTable) throws Exception {
 
 		VelocityContext velocityContext = new VelocityContext();
-		velocityContext.put("projectType", projectType);
-		velocityContext.put("origin", getOrigin(origin));
-		velocityContext.put("partnerDetails", getPartnerDetails(getPartnerId()));
+		velocityContext.put(PROJECT_TYPE, projectType);
+
+		velocityContext.put(ORIGIN_KEY, getOrigin(origin));
+		velocityContext.put(PARTNER_DETAILS, getPartnerDetails(getPartnerId()));
 		if (ProjectTypes.SBI.getCode().equals(projectType)) {
-			velocityContext.put("sbiProjectDetailsTable", getSbiProjectDetails(sbiProjectDto,
+			velocityContext.put(SBI_PROJECT_DETAILS_TABLE, getSbiProjectDetails(sbiProjectDto,
 					testRunDetailsResponseDto.getTestRunDetailsList(), sbiProjectTable));
 		}
 		if (ProjectTypes.SDK.getCode().equals(projectType)) {
-			velocityContext.put("sdkProjectDetailsTable", getSdkProjectDetails(sdkProjectDto));
+			velocityContext.put(SDK_PROJECT_DETAILS_TABLE, getSdkProjectDetails(sdkProjectDto));
 		}
 		if (ProjectTypes.ABIS.getCode().equals(projectType)) {
-			velocityContext.put("abisProjectDetailsTable", getAbisProjectDetails(abisProjectDto));
+			velocityContext.put(ABIS_PROJECT_DETAILS_TABLE, getAbisProjectDetails(abisProjectDto));
 		}
 		List<TestCaseDto> allTestCases = getAllTestcases(testRunDetailsResponseDto);
 		int countOfAllTestCases = allTestCases.size();
 		int countOfSuccessTestCases = countOfSuccessTestCases(allTestCases, testRunDetailsResponseDto);
 		int countOfFailedTestCases = countOfAllTestCases - countOfSuccessTestCases;
-		velocityContext.put("testRunStartTime", getTestRunStartDt(testRunDetailsResponseDto));
-		velocityContext.put("reportExpiryPeriod", reportExpiryPeriod);
-		velocityContext.put("reportValidityDate", getReportValidityDt(testRunDetailsResponseDto));
-		velocityContext.put("testRunDetailsList", populateTestRunTable(allTestCases, testRunDetailsResponseDto));
-		velocityContext.put("timeTakenByTestRun", getTestRunExecutionTime(testRunDetailsResponseDto));
-		velocityContext.put("totalTestCasesCount", countOfAllTestCases);
-		velocityContext.put("countOfPassedTestCases", countOfSuccessTestCases);
-		velocityContext.put("countOfFailedTestCases", countOfFailedTestCases);
+		velocityContext.put(TEST_RUN_START_TIME, getTestRunStartDt(testRunDetailsResponseDto));
+		velocityContext.put(REPORT_EXPIRY_PERIOD, reportExpiryPeriod);
+		velocityContext.put(REPORT_VALIDITY_DATE, getReportValidityDt(testRunDetailsResponseDto));
+		velocityContext.put(TEST_RUN_DETAILS_LIST, populateTestRunTable(allTestCases, testRunDetailsResponseDto));
+		velocityContext.put(TIME_TAKEN_BY_TEST_RUN, getTestRunExecutionTime(testRunDetailsResponseDto));
+		velocityContext.put(TOTAL_TEST_CASES_COUNT, countOfAllTestCases);
+		velocityContext.put(COUNT_OF_PASSED_TEST_CASES, countOfSuccessTestCases);
+		velocityContext.put(COUNT_OF_FAILED_TEST_CASES, countOfFailedTestCases);
 		log.info("sessionId", "idType", "id", "Added all attributes in velocity template successfully");
 		return velocityContext;
 	}
@@ -464,7 +579,8 @@ public class ReportGeneratorService {
 		return testRunDetailsResponseDto;
 	}
 
-	private List<TestRunTable> populateTestRunTable(List<TestCaseDto> testcasesList, TestRunDetailsResponseDto testRunDetailsResponseDto) {
+	private List<TestRunTable> populateTestRunTable(List<TestCaseDto> testcasesList,
+			TestRunDetailsResponseDto testRunDetailsResponseDto) {
 		List<TestRunTable> testRunTable = new ArrayList<>();
 		List<TestRunDetailsDto> testRunDetailsList = testRunDetailsResponseDto.getTestRunDetailsList();
 		for (TestCaseDto testcase : testcasesList) {
@@ -521,7 +637,8 @@ public class ReportGeneratorService {
 		return testcasesList;
 	}
 
-	private int countOfSuccessTestCases(List<TestCaseDto> testcasesList, TestRunDetailsResponseDto testRunDetailsResponseDto) {
+	private int countOfSuccessTestCases(List<TestCaseDto> testcasesList,
+			TestRunDetailsResponseDto testRunDetailsResponseDto) {
 		int passCount = 0;
 		for (TestCaseDto testcase : testcasesList) {
 			String testCaseId = testcase.getTestId();
