@@ -438,6 +438,7 @@ public class TestCasesServiceTest {
 		validatorDef.add(validatorDef1);
 		validatorDefs.add(validatorDef);
 		testCaseDto.setValidatorDefs(validatorDefs);
+		testCaseDto.setInactiveForAndroid("yes");
 		String schemaResponse = "schemaResponse";
 		when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
 				.thenReturn(schemaResponse);
@@ -449,6 +450,11 @@ public class TestCasesServiceTest {
 		Mockito.doReturn(validationResultDto).when(testCasesServiceSpy).validateJsonWithSchema(jsonValue,
 				schemaResponse);
 		TestCaseEntity testCaseEntity = new TestCaseEntity();
+		Map<String, Object> mockResponse = new HashMap<>();
+		mockResponse.put("inactive", false);
+		mockResponse.put("inactiveForAndroid", "yes");
+		Mockito.when(objectMapper.readValue(testCaseEntity.getTestcaseJson(), Map.class))
+				.thenReturn(mockResponse);
 		// checkTestCaseEntity is empty
 		Optional<TestCaseEntity> checkTestCaseEntity = Optional.empty();
 		when(testCasesRepository.findById(testCaseDto.getTestId())).thenReturn(checkTestCaseEntity);
@@ -458,6 +464,15 @@ public class TestCasesServiceTest {
 		when(testCasesRepository.findById(testCaseDto.getTestId())).thenReturn(checkTestCaseEntity);
 		ResponseWrapper<TestCaseResponseDto> testCaseResponseDtoRW = testCasesServiceSpy.saveTestCases(values);
 		Assert.assertEquals(null, testCaseResponseDtoRW.getResponse().getTestCases().get(0));
+	}
+
+	@Test
+	public void saveTestCasesTestException() throws Exception {
+		List<TestCaseDto> values = new ArrayList<>();
+		TestCaseDto testCaseDto = new TestCaseDto();
+		values.add(testCaseDto);
+		TestCasesService testCasesServiceSpy = Mockito.spy(testCasesService);
+		testCasesServiceSpy.saveTestCases(values);
 	}
 
 	/*
