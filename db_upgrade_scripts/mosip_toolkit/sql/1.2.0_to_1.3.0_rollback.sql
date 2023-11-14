@@ -13,6 +13,9 @@ ALTER TABLE toolkit.abis_projects DROP COLUMN org_name;
 -- biometric_scores
 DROP TABLE IF EXISTS toolkit.biometric_scores;
 
+-- compliance_testrun_summary
+DROP TABLE IF EXISTS toolkit.compliance_testrun_summary;
+
 -- collections
 COMMENT ON COLUMN toolkit.collections.collection_type IS NULL;
 COMMENT ON COLUMN toolkit.collections.org_name IS NULL;

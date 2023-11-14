@@ -206,9 +206,9 @@ public class BiometricTestDataService {
                         BiometricTestDataEntity.class);
                 inputEntity.setId(RandomIdGenerator.generateUUID("btd", "", 36));
                 inputEntity.setPartnerId(getPartnerId());
-                inputEntity.setOrgName(resourceCacheService.getOrgName(getPartnerId()));
                 inputEntity.setFileId(file.getOriginalFilename());
                 inputEntity.setFileHash(encodedHash);
+                inputEntity.setOrgName(resourceCacheService.getOrgName(getPartnerId()));
                 inputEntity.setCrBy(getUserBy());
                 inputEntity.setCrDate(LocalDateTime.now());
                 inputEntity.setUpBy(null);
