@@ -347,7 +347,7 @@ public class TestCasesService {
                             TestCaseEntity testCase = checkTestCaseEntity.get();
                             Map<String, Object> jsonMap = objectMapper.readValue(testCase.getTestcaseJson(), Map.class);
                             jsonMap.put("inactive", testCaseDto.isInactive());
-                            if (testCaseDto.getInactiveForAndroid()!=null) {
+                            if (testCaseDto.getInactiveForAndroid() != null) {
                                 jsonMap.put("inactiveForAndroid", testCaseDto.inactiveForAndroid);
                             }
                             String updatedJsonValue = objectMapper.writeValueAsString(jsonMap);
