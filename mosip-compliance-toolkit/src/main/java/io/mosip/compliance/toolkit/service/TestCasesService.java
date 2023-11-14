@@ -345,7 +345,15 @@ public class TestCasesService {
                         // Check if test case present .. update
                         else {
                             TestCaseEntity testCase = checkTestCaseEntity.get();
-                            testCase.setTestcaseJson(jsonValue);
+                            Map<String, Object> jsonMap = objectMapper.readValue(testCase.getTestcaseJson(), Map.class);
+                            if (jsonMap.containsKey("inactive")) {
+                                jsonMap.put("inactive", testCaseDto.inactive);
+                            }
+                            if (jsonMap.containsKey("inactiveForAndroid")) {
+                                jsonMap.put("inactiveForAndroid", testCaseDto.inactiveForAndroid);
+                            }
+                            String updatedJsonValue = objectMapper.writeValueAsString(jsonMap);
+                            testCase.setTestcaseJson(updatedJsonValue);
                             testCase.setTestcaseType(testCaseDto.getTestCaseType());
                             testCase.setSpecVersion(testCaseDto.getSpecVersion());
                             testCase = testCaseCacheService.updateTestCase(testCase);
