@@ -31,7 +31,9 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -45,6 +47,7 @@ import io.mosip.compliance.toolkit.dto.projects.AbisProjectDto;
 import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
 import io.mosip.compliance.toolkit.dto.projects.SdkProjectDto;
 import io.mosip.compliance.toolkit.dto.report.AbisProjectTable;
+import io.mosip.compliance.toolkit.dto.report.ComplianceTestRunSummaryDto;
 import io.mosip.compliance.toolkit.dto.report.PartnerDetailsDto;
 import io.mosip.compliance.toolkit.dto.report.PartnerDetailsDto.Partner;
 import io.mosip.compliance.toolkit.dto.report.PartnerTable;
@@ -59,16 +62,18 @@ import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
 import io.mosip.compliance.toolkit.entity.ComplianceTestRunSummaryEntity;
 import io.mosip.compliance.toolkit.entity.ComplianceTestRunSummaryPK;
 import io.mosip.compliance.toolkit.repository.ComplianceTestRunSummaryRepository;
+import io.mosip.compliance.toolkit.util.CommonUtil;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.PartnerManagerHelper;
 import io.mosip.compliance.toolkit.util.StringUtil;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.exception.ServiceError;
+import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 
 @Component
-public class ReportGeneratorService {
+public class ReportService {
 
 	private static final String COUNT_OF_FAILED_TEST_CASES = "countOfFailedTestCases";
 
@@ -100,11 +105,13 @@ public class ReportGeneratorService {
 
 	private static final String BLANK_STRING = "";
 
+	private static final String VALIDATION_ERR_REPORT_UNDER_REVIEW = "Report for this project is already under review hence new report cannot be generated.";
+
 	private static final String VALIDATION_ERR_TEST_DATA = "Only MOSIP_DEFAULT test data should be used with the Test Run to generate the report. It is failing for testcase :";
 
 	private static final String VALIDATION_ERR_DEVICE_INFO = "Make, model and serial number of the device should be same in all the testcases. It is failing for testcase :";
 
-	private Logger log = LoggerConfiguration.logConfig(ReportGeneratorService.class);
+	private Logger log = LoggerConfiguration.logConfig(ReportService.class);
 
 	@Autowired
 	private TestRunService testRunService;
@@ -149,7 +156,7 @@ public class ReportGeneratorService {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 
-	private String getPartnerId() {
+	public String getPartnerId() {
 		String partnerId = authUserDetails().getUsername();
 		return partnerId;
 	}
@@ -177,6 +184,18 @@ public class ReportGeneratorService {
 			}
 			TestRunDetailsResponseDto testRunDetailsResponseDto = testRunDetailsResponse.getResponse();
 			// 2. Validate that report can be generated
+			// Chk if report is already under review, so new report cannot be generated
+			ComplianceTestRunSummaryPK pk = new ComplianceTestRunSummaryPK();
+			pk.setPartnerId(getPartnerId());
+			pk.setProjectId(projectId);
+			pk.setCollectionId(testRunDetailsResponseDto.getCollectionId());
+			Optional<ComplianceTestRunSummaryEntity> optionalEntity = complianceTestRunSummaryRepository.findById(pk);
+			if (optionalEntity.isPresent() && projectType.equals(optionalEntity.get().getProjectType())) {
+				if (!AppConstants.REPORT_STATUS_DRAFT.equals(optionalEntity.get().getReportStatus())) {
+					// report is already under review, so new report cannot be generated
+					return handleValidationErrors(requestDto, VALIDATION_ERR_REPORT_UNDER_REVIEW);
+				}
+			}
 			SbiProjectTable sbiProjectTable = new SbiProjectTable();
 			if (ProjectTypes.SBI.getCode().equals(projectType)) {
 				String invalidTestCaseId = this.validateDeviceInfo(testRunDetailsResponseDto, sbiProjectTable);
@@ -234,7 +253,7 @@ public class ReportGeneratorService {
 			return sendPdfResponse(requestDto, resource);
 
 		} catch (Exception e) {
-			log.info("sessionId", "idType", "id", "Exception in createDraftReport {}", e.getLocalizedMessage());
+			log.info("sessionId", "idType", "id", "Exception in createDraftReport " + e.getLocalizedMessage());
 			try {
 				return handleValidationErrors(requestDto, e.getLocalizedMessage());
 			} catch (Exception e1) {
@@ -293,7 +312,7 @@ public class ReportGeneratorService {
 		pk.setProjectId(projectId);
 		pk.setCollectionId(testRunDetailsResponseDto.getCollectionId());
 		Optional<ComplianceTestRunSummaryEntity> optionalEntity = complianceTestRunSummaryRepository.findById(pk);
-		if (optionalEntity.isPresent()) {
+		if (optionalEntity.isPresent() && projectType.equals(optionalEntity.get().getProjectType())) {
 			log.info("sessionId", "idType", "id", "Updating report data in DB");
 			entity.setUpdBy(this.getUserBy());
 			entity.setUpdDtimes(nowDate);
@@ -734,7 +753,8 @@ public class ReportGeneratorService {
 			pk.setCollectionId(collectionId);
 			Optional<ComplianceTestRunSummaryEntity> optionalEntity = complianceTestRunSummaryRepository.findById(pk);
 			if (optionalEntity.isPresent() && testRunId.equals(optionalEntity.get().getRunId())
-					&& projectType.equals(optionalEntity.get().getProjectType())) {
+					&& projectType.equals(optionalEntity.get().getProjectType())
+					&& !AppConstants.REPORT_STATUS_DRAFT.equals(optionalEntity.get().getReportStatus())) {
 				log.info("sessionId", "idType", "id", "report data is available in DB");
 				String reportDateEncoded = optionalEntity.get().getReportDataJson();
 				String reportDataDecoded = StringUtil.base64Decode(reportDateEncoded);
@@ -774,7 +794,7 @@ public class ReportGeneratorService {
 						"Report Data is not available. Try with correct values for partner id, project type, project id, collection id and test run id.");
 			}
 		} catch (Exception e) {
-			log.info("sessionId", "idType", "id", "Exception in createPartnerReport {}", e.getLocalizedMessage());
+			log.info("sessionId", "idType", "id", "Exception in createPartnerReport " + e.getLocalizedMessage());
 			try {
 				return handleValidationErrors(requestDto, e.getLocalizedMessage());
 			} catch (Exception e1) {
@@ -782,6 +802,82 @@ public class ReportGeneratorService {
 			}
 		}
 
+	}
+
+	public ResponseWrapper<ComplianceTestRunSummaryDto> updateReportStatus(String partnerId,
+			RequestWrapper<ReportRequestDto> requestWrapper, String oldStatus, String newStatus) {
+		ReportRequestDto requestDto = requestWrapper.getRequest();
+		ResponseWrapper<ComplianceTestRunSummaryDto> responseWrapper = new ResponseWrapper<>();
+		ComplianceTestRunSummaryDto complianceTestRunSummaryDto = new ComplianceTestRunSummaryDto();
+		try {
+			log.info("sessionId", "idType", "id", "Started updateReportStatus processing");
+			String projectType = requestDto.getProjectType();
+			String projectId = requestDto.getProjectId();
+			String collectionId = requestDto.getCollectionId();
+			String testRunId = requestDto.getTestRunId();
+			log.info("sessionId", "idType", "id", "partnerId: " + partnerId);
+			log.info("sessionId", "idType", "id", "projectType: " + projectType);
+			log.info("sessionId", "idType", "id", "projectId: " + projectId);
+			log.info("sessionId", "idType", "id", "collectionId: " + requestDto.getCollectionId());
+			log.info("sessionId", "idType", "id", "testRunId: " + requestDto.getTestRunId());
+			log.info("sessionId", "idType", "id", "oldStatus: " + oldStatus);
+			log.info("sessionId", "idType", "id", "newStatus: " + newStatus);
+			// 1. get the report data
+			ComplianceTestRunSummaryPK pk = new ComplianceTestRunSummaryPK();
+			pk.setPartnerId(partnerId);
+			pk.setProjectId(projectId);
+			pk.setCollectionId(collectionId);
+			Optional<ComplianceTestRunSummaryEntity> optionalEntity = complianceTestRunSummaryRepository.findById(pk);
+			if (optionalEntity.isPresent() && testRunId.equals(optionalEntity.get().getRunId())
+					&& projectType.equals(optionalEntity.get().getProjectType())) {
+				ComplianceTestRunSummaryEntity entity = optionalEntity.get();
+				if (oldStatus.equals(entity.getReportStatus())) {
+					log.info("sessionId", "idType", "id", "report with status: " + oldStatus + " is available in DB");
+					LocalDateTime nowDate = LocalDateTime.now();
+					entity.setReportStatus(newStatus);
+					if (AppConstants.REPORT_STATUS_REVIEW.equals(newStatus)) {
+						entity.setPartnerComments(requestDto.getPartnerComments());
+						entity.setReviewDtimes(nowDate);
+					}
+					if (AppConstants.REPORT_STATUS_APPROVED.equals(newStatus)
+							|| AppConstants.REPORT_STATUS_REJECTED.equals(newStatus)) {
+						entity.setAdminComments(requestDto.getAdminComments());
+						entity.setApproveRejectDtimes(nowDate);
+					}
+					entity.setUpdBy(this.getUserBy());
+					entity.setUpdDtimes(nowDate);
+					ComplianceTestRunSummaryEntity respEntity = complianceTestRunSummaryRepository.save(entity);
+					ObjectMapper objectMapper = objectMapperConfig.objectMapper();
+					objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+					complianceTestRunSummaryDto = (ComplianceTestRunSummaryDto) objectMapper.convertValue(respEntity,
+							new TypeReference<ComplianceTestRunSummaryDto>() {
+							});
+					responseWrapper.setResponse(complianceTestRunSummaryDto);
+				} else {
+					String errorCode = ToolkitErrorCodes.TOOLKIT_REPORT_STATUS_INVALID_ERR.getErrorCode();
+					String errorMessage = ToolkitErrorCodes.TOOLKIT_REPORT_STATUS_INVALID_ERR.getErrorMessage() + " - "
+							+ entity.getReportStatus();
+					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+				}
+			} else {
+				String errorCode = ToolkitErrorCodes.TOOLKIT_REPORT_NOT_AVAILABLE_ERR.getErrorCode();
+				String errorMessage = ToolkitErrorCodes.TOOLKIT_REPORT_NOT_AVAILABLE_ERR.getErrorMessage();
+				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+			}
+		} catch (Exception ex) {
+			log.info("sessionId", "idType", "id", "Exception in updateReportStatus " + ex.getLocalizedMessage());
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In approvePartnerReport method of ReportGenerator Service - " + ex.getMessage());
+			String errorCode = ToolkitErrorCodes.TOOLKIT_REPORT_STATUS_UPDATE_ERR.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.TOOLKIT_REPORT_STATUS_UPDATE_ERR.getErrorMessage() + " "
+					+ ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+		}
+		responseWrapper.setId(requestWrapper.getId());
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
 	}
 
 }
