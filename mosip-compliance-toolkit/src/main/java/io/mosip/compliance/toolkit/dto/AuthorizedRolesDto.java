@@ -18,6 +18,6 @@ public class AuthorizedRolesDto {
 	
 	private List<String> saveTestCases;
 	
-	private List<String> createPartnerReport;
+	private List<String> adminPartnerReport;
 
 }

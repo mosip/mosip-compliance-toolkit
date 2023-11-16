@@ -45,7 +45,7 @@ import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ReportGeneratorServiceTest {
+public class ReportServiceTest {
 
 
         @Mock
@@ -108,7 +108,7 @@ public class ReportGeneratorServiceTest {
         }
 
         @InjectMocks
-        private ReportGeneratorService reportGeneratorService;
+        private ReportService reportGeneratorService;
 
         @Test
         public void testcreateDraftReportSBI() throws JsonProcessingException {
@@ -206,7 +206,7 @@ public class ReportGeneratorServiceTest {
 
 
 
-                Mockito.when(sdkProjectService.getSdkProject(Mockito.any())).thenReturn(sdkProjectResponse);
+                //Mockito.when(sdkProjectService.getSdkProject(Mockito.any())).thenReturn(sdkProjectResponse);
                 Mockito.when(mockAuthentication.getPrincipal()).thenReturn(mockAuthUserDetails);
                 Mockito.when(testRunService.getTestRunDetails(Mockito.any()))
                         .thenReturn(testRunDetailsResponse);
@@ -304,9 +304,9 @@ public class ReportGeneratorServiceTest {
                 caseDto.setTestCaseType("ABIS");
                 testCaseDto.setResponse(caseDto);
 
-                Mockito.when(partnerManagerHelper.getPartnerDetails(Mockito.any())).thenReturn(partnerDetailsDto);
+                //Mockito.when(partnerManagerHelper.getPartnerDetails(Mockito.any())).thenReturn(partnerDetailsDto);
                 Mockito.when(mockAuthentication.getPrincipal()).thenReturn(mockAuthUserDetails);
-                Mockito.when(abisProjectService.getAbisProject(Mockito.any())).thenReturn(abisProjectResponse);
+                //Mockito.when(abisProjectService.getAbisProject(Mockito.any())).thenReturn(abisProjectResponse);
                 reportGeneratorService.createDraftReport(requestDto, "abcdefgh");
         }
         @Test
@@ -322,10 +322,10 @@ public class ReportGeneratorServiceTest {
 
         private ResponseEntity<Resource> invokeHandleServiceErrors(ReportRequestDto requestDto, List<ServiceError> serviceErrors)
                 throws Exception {
-                ReportGeneratorService reportGeneratorService = new ReportGeneratorService();
+                ReportService reportGeneratorService = new ReportService();
                 Class<?>[] parameterTypes = { ReportRequestDto.class, List.class };
                 Object[] arguments = { requestDto, serviceErrors };
-                java.lang.reflect.Method privateMethod = ReportGeneratorService.class.getDeclaredMethod("handleServiceErrors", parameterTypes);
+                java.lang.reflect.Method privateMethod = ReportService.class.getDeclaredMethod("handleServiceErrors", parameterTypes);
                 privateMethod.setAccessible(true);
                 return (ResponseEntity<Resource>) privateMethod.invoke(reportGeneratorService, arguments);
         }
@@ -353,10 +353,10 @@ public class ReportGeneratorServiceTest {
         private SbiProjectTable invokeGetSbiProjectDetails(SbiProjectDto projectDto, List<TestRunDetailsDto> testRunDetailsList,
         SbiProjectTable sbiProjectTable)
                 throws Exception {
-                ReportGeneratorService reportGeneratorService = new ReportGeneratorService();
+                ReportService reportGeneratorService = new ReportService();
                 Class<?>[] parameterTypes = { SbiProjectDto.class, List.class, SbiProjectTable.class };
                 Object[] arguments = { projectDto, testRunDetailsList, sbiProjectTable };
-                java.lang.reflect.Method privateMethod = ReportGeneratorService.class.getDeclaredMethod("getSbiProjectDetails", parameterTypes);
+                java.lang.reflect.Method privateMethod = ReportService.class.getDeclaredMethod("getSbiProjectDetails", parameterTypes);
                 privateMethod.setAccessible(true);
                 return (SbiProjectTable) privateMethod.invoke(reportGeneratorService, arguments);
         }
@@ -450,10 +450,10 @@ public class ReportGeneratorServiceTest {
         private boolean invokeValidateDeviceMakeModelSerialNo(SbiProjectTable sbiProjectTable, boolean validationResult,
                                                                       JsonNode dataNode)
                 throws Exception {
-                ReportGeneratorService reportGeneratorService = new ReportGeneratorService();
+                ReportService reportGeneratorService = new ReportService();
                 Class<?>[] parameterTypes = { SbiProjectTable.class, boolean.class, JsonNode.class };
                 Object[] arguments = { sbiProjectTable, validationResult, dataNode };
-                java.lang.reflect.Method privateMethod = ReportGeneratorService.class.getDeclaredMethod("validateDeviceMakeModelSerialNo", parameterTypes);
+                java.lang.reflect.Method privateMethod = ReportService.class.getDeclaredMethod("validateDeviceMakeModelSerialNo", parameterTypes);
                 privateMethod.setAccessible(true);
                 return (boolean) privateMethod.invoke(reportGeneratorService, arguments);
         }
@@ -513,7 +513,7 @@ public class ReportGeneratorServiceTest {
                 Mockito.when(testRunDetailsDto.getResultStatus()).thenReturn(AppConstants.SUCCESS);
                 testRunDetailsList.add(testRunDetailsDto);
                 testRunDetailsResponseDto.setTestRunDetailsList(testRunDetailsList);
-                ReportGeneratorService reportGeneratorService = new ReportGeneratorService();
+                ReportService reportGeneratorService = new ReportService();
                 List<TestRunTable> result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "populateTestRunTable", testcasesList, testRunDetailsResponseDto);
         }
 
@@ -531,7 +531,7 @@ public class ReportGeneratorServiceTest {
                 Mockito.when(testRunDetailsDto.getResultStatus()).thenReturn(AppConstants.SUCCESS);
                 testRunDetailsList.add(testRunDetailsDto);
                 testRunDetailsResponseDto.setTestRunDetailsList(testRunDetailsList);
-                ReportGeneratorService reportGeneratorService = new ReportGeneratorService();
+                ReportService reportGeneratorService = new ReportService();
                 int result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "countOfSuccessTestCases", testcasesList, testRunDetailsResponseDto);
                 assertEquals(1, result);
         }
@@ -550,7 +550,7 @@ public class ReportGeneratorServiceTest {
         }
 
         @Test
-        public void getReportValidityDtTest() {
+		public void getReportValidityDtTest() {
                 TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
                 LocalDateTime testRunStartDt = LocalDateTime.of(2023, 10, 17, 10, 30, 0);
                 testRunDetailsResponseDto.setRunDtimes(testRunStartDt);
