@@ -247,9 +247,9 @@ public class ABISDataShareServiceTest {
 
 		when(abisDataShareTokenRepository.findTokenForTestRun(Mockito.any(), Mockito.any(), Mockito.any()))
 				.thenReturn(Optional.of(savedEntity));
-		 abisDataShareService.saveDataShareToken(requestWrapper);
+		abisDataShareService.saveDataShareToken(requestWrapper);
 	}
-	
+
 	@Test
 	public void testSaveDataShareToken_newToken() {
 		RequestWrapper<DataShareSaveTokenRequest> requestWrapper = new RequestWrapper<>();
