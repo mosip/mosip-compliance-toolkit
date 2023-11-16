@@ -58,6 +58,12 @@ public class ComplianceTestRunSummaryEntity {
 	@Column(name = "admin_comments")
 	private String adminComments;
 
+	@Column(name = "review_dttimes")
+	private LocalDateTime reviewDtimes;
+	
+	@Column(name = "approve_reject_dttimes")
+	private LocalDateTime approveRejectDtimes;
+	
 	@Column(name = "cr_by")
 	private String crBy;
 

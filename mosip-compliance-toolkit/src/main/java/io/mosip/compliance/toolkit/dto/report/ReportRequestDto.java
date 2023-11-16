@@ -13,4 +13,6 @@ public class ReportRequestDto {
 	private String projectId;
 	private String collectionId;
 	private String testRunId;
+	private String adminComments;
+	private String partnerComments;
 }

@@ -39,13 +39,15 @@ CREATE TABLE toolkit.compliance_testrun_summary(
 	partner_id character varying(36) NOT NULL, 
 	project_id character varying(36) NOT NULL,
 	collection_id character varying(36) NOT NULL,
-  run_id character varying(36) NOT NULL,
+    run_id character varying(36) NOT NULL,
 	project_type character varying(64) NOT NULL,
 	org_name character varying(64) NOT NULL,
-  report_data_json character varying NOT NULL,
-  report_status character varying(36) NOT NULL,
+    report_data_json character varying NOT NULL,
+    report_status character varying(36) NOT NULL,
 	partner_comments character varying,
 	admin_comments character varying,
+	review_dttimes timestamp,
+	approve_reject_dttimes timestamp,
 	cr_by character varying(256) NOT NULL,
 	cr_dtimes timestamp NOT NULL,
 	upd_by character varying(256),
@@ -69,6 +71,8 @@ COMMENT ON COLUMN toolkit.compliance_testrun_summary.report_data_json IS 'Report
 COMMENT ON COLUMN toolkit.compliance_testrun_summary.report_status IS 'Report Status: Status of the report - draft, review,approved,rejected';
 COMMENT ON COLUMN toolkit.compliance_testrun_summary.partner_comments IS 'Partner Comments: Comments by partner';
 COMMENT ON COLUMN toolkit.compliance_testrun_summary.admin_comments IS 'Admin Comments: Comments by admin';
+COMMENT ON COLUMN toolkit.compliance_testrun_summary.review_dttimes IS 'Review DateTimestamp : Date and Timestamp when the report is submitted for review';
+COMMENT ON COLUMN toolkit.compliance_testrun_summary.approve_reject_dttimes IS 'Approve / Reject DateTimestamp : Date and Timestamp when the report is approved or rejected';
 COMMENT ON COLUMN toolkit.compliance_testrun_summary.cr_by IS 'Created By : ID or name of the user who create / insert record.';
 COMMENT ON COLUMN toolkit.compliance_testrun_summary.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
 COMMENT ON COLUMN toolkit.compliance_testrun_summary.upd_by IS 'Updated By : ID or name of the user who update the record with new values';
