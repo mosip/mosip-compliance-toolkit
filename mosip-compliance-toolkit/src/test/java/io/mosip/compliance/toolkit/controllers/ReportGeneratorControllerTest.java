@@ -18,7 +18,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.context.WebApplicationContext;
+
 import java.time.LocalDateTime;
+
 import static org.mockito.Mockito.mock;
 
 @ContextConfiguration(classes = { TestContext.class, WebApplicationContext.class })
@@ -33,9 +35,6 @@ public class ReportGeneratorControllerTest {
     private ReportGeneratorController reportGeneratorController;
 
     @Mock
-    private Errors errors;
-
-    @Mock
     RequestValidator requestValidator;
 
     @Test
@@ -45,7 +44,7 @@ public class ReportGeneratorControllerTest {
     }
 
     @Test
-    public void createReportTest() throws Exception {
+    public void createDraftReportTest() throws Exception {
         RequestWrapper<ReportRequestDto> value = new RequestWrapper<>();
         Errors errors = mock(Errors.class);
         ReportRequestDto reportRequestDto = new ReportRequestDto();
@@ -58,6 +57,6 @@ public class ReportGeneratorControllerTest {
         value.setRequesttime(LocalDateTime.now());
         value.setVersion("1.0");
         String origin = "abc";
-        reportGeneratorController.createReport(value, origin, errors);
+        reportGeneratorController.createDraftReport(value, origin, errors);
     }
 }

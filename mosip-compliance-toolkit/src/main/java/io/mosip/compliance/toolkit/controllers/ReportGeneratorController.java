@@ -4,9 +4,11 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -47,12 +49,23 @@ public class ReportGeneratorController {
 		binder.addValidators(requestValidator);
 	}
 	
-	@PostMapping(value = "/createReport")
-	public ResponseEntity<?> createReport(@RequestBody @Valid RequestWrapper<ReportRequestDto> value,
+	@PostMapping(value = "/createDraftReport")
+	public ResponseEntity<?> createDraftReport(@RequestBody @Valid RequestWrapper<ReportRequestDto> value,
 			@RequestHeader String origin, Errors errors) throws Exception {
 		requestValidator.validate(value, errors);
 		requestValidator.validateId(CREATE_REPORT_ID, value.getId(), errors);
 		DataValidationUtil.validate(errors, CREATE_REPORT_ID);
-		return service.createReport(value.getRequest(), origin);
+		return service.createDraftReport(value.getRequest(), origin);
+	}
+	
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getCreatePartnerReport())")
+	@PostMapping(value = "/createPartnerReport/{partnerId}")
+	public ResponseEntity<?> createPartnerReport(@PathVariable String partnerId,
+			@RequestBody @Valid RequestWrapper<ReportRequestDto> reportRequestDto,
+			@RequestHeader String origin, Errors errors) throws Exception {
+		requestValidator.validate(reportRequestDto, errors);
+		requestValidator.validateId(CREATE_REPORT_ID, reportRequestDto.getId(), errors);
+		DataValidationUtil.validate(errors, CREATE_REPORT_ID);
+		return service.createPartnerReport(partnerId, reportRequestDto.getRequest(), origin);
 	}
 }
