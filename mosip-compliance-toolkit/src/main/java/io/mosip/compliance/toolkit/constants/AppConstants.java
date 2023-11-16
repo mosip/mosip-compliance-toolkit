@@ -80,7 +80,9 @@ public class AppConstants {
 	
 	public static final String CUSTOM_COLLECTION = "custom_collection";
 	
-	public static final String REPORT_STATUS_SENT_FOR_REVIEW = "sent for review";
+	public static final String REPORT_STATUS_DRAFT = "draft";
+	
+	public static final String REPORT_STATUS_REVIEW = "review";
 	
 	public static final String REPORT_STATUS_APPROVED = "approved";
 	

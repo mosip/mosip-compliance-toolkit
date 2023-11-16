@@ -51,6 +51,12 @@ public class ComplianceTestRunSummaryEntity {
 
 	@Column(name = "report_status")
 	private String reportStatus;
+	
+	@Column(name = "partner_comments")
+	private String partnerComments;
+	
+	@Column(name = "admin_comments")
+	private String adminComments;
 
 	@Column(name = "cr_by")
 	private String crBy;

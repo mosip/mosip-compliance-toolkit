@@ -14,10 +14,10 @@ import lombok.NoArgsConstructor;
 public class ComplianceTestRunSummaryPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	private String partnerId;
+
 	private String projectId;
 
 	private String collectionId;
-
-	private String runId;
 
 }

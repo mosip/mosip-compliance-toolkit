@@ -159,14 +159,15 @@ public class ReportGeneratorService {
 		return crBy;
 	}
 
-	public ResponseEntity<?> createReport(ReportRequestDto requestDto, String origin) {
+	public ResponseEntity<?> createDraftReport(ReportRequestDto requestDto, String origin) {
 		try {
-			log.info("sessionId", "idType", "id", "Started createReport processing");
+			log.info("sessionId", "idType", "id", "Started createDraftReport processing");
 			String projectType = requestDto.getProjectType();
 			String projectId = requestDto.getProjectId();
-			log.info("sessionId", "idType", "id", "projectType {}", projectType);
-			log.info("sessionId", "idType", "id", "projectId {}", projectId);
-			log.info("sessionId", "idType", "id", "testRunId {}", requestDto.getTestRunId());
+			log.info("sessionId", "idType", "id", "projectType: " + projectType);
+			log.info("sessionId", "idType", "id", "projectId: " + projectId);
+			log.info("sessionId", "idType", "id", "collectionId: " + requestDto.getCollectionId());
+			log.info("sessionId", "idType", "id", "testRunId: " + requestDto.getTestRunId());
 			// 1. get the test run details
 			ResponseWrapper<TestRunDetailsResponseDto> testRunDetailsResponse = getTestRunDetails(
 					requestDto.getTestRunId());
@@ -233,7 +234,7 @@ public class ReportGeneratorService {
 			return sendPdfResponse(requestDto, resource);
 
 		} catch (Exception e) {
-			log.info("sessionId", "idType", "id", "Exception in createReport {}", e.getLocalizedMessage());
+			log.info("sessionId", "idType", "id", "Exception in createDraftReport {}", e.getLocalizedMessage());
 			try {
 				return handleValidationErrors(requestDto, e.getLocalizedMessage());
 			} catch (Exception e1) {
@@ -285,12 +286,12 @@ public class ReportGeneratorService {
 		String reportData = objectMapperConfig.objectMapper().writeValueAsString(reportDataDto);
 		String encodedReportData = StringUtil.base64Encode(reportData);
 		entity.setReportDataJson(encodedReportData);
-		entity.setReportStatus(AppConstants.REPORT_STATUS_SENT_FOR_REVIEW);
+		entity.setReportStatus(AppConstants.REPORT_STATUS_DRAFT);
 
 		ComplianceTestRunSummaryPK pk = new ComplianceTestRunSummaryPK();
+		pk.setPartnerId(getPartnerId());
 		pk.setProjectId(projectId);
 		pk.setCollectionId(testRunDetailsResponseDto.getCollectionId());
-		pk.setRunId(testRunDetailsResponseDto.getRunId());
 		Optional<ComplianceTestRunSummaryEntity> optionalEntity = complianceTestRunSummaryRepository.findById(pk);
 		if (optionalEntity.isPresent()) {
 			log.info("sessionId", "idType", "id", "Updating report data in DB");
@@ -314,7 +315,7 @@ public class ReportGeneratorService {
 		if (serviceErrors != null && serviceErrors.size() > 0) {
 			String err = serviceErrors.get(0).getMessage();
 			String errorMessage = ToolkitErrorCodes.TOOLKIT_REPORT_ERR.getErrorMessage() + " - " + err;
-			log.error("sessionId", "idType", "id", "In createReport method - " + err);
+			log.error("sessionId", "idType", "id", "In handleServiceErrors method - " + err);
 			VelocityContext velocityContext = new VelocityContext();
 			velocityContext.put("error", errorMessage);
 			String mergedHtml = mergeVelocityTemplate(velocityContext, "errTestRunReport.vm");
@@ -327,7 +328,7 @@ public class ReportGeneratorService {
 	private ResponseEntity<Resource> handleValidationErrors(ReportRequestDto requestDto, String message)
 			throws Exception, IOException {
 		String errorMessage = ToolkitErrorCodes.TOOLKIT_REPORT_ERR.getErrorMessage() + " - " + message;
-		log.error("sessionId", "idType", "id", "In createReport method - " + message);
+		log.error("sessionId", "idType", "id", "In handleValidationErrors method - " + message);
 		VelocityContext velocityContext = new VelocityContext();
 		velocityContext.put("error", errorMessage);
 		String mergedHtml = mergeVelocityTemplate(velocityContext, "errTestRunReport.vm");
@@ -713,4 +714,74 @@ public class ReportGeneratorService {
 		return ResponseEntity.ok().headers(header).contentLength(resource.contentLength())
 				.contentType(MediaType.APPLICATION_PDF).body(resource);
 	}
+
+	public ResponseEntity<?> createPartnerReport(String partnerId, ReportRequestDto requestDto, String origin) {
+		try {
+			log.info("sessionId", "idType", "id", "Started createPartnerReport processing");
+			String projectType = requestDto.getProjectType();
+			String projectId = requestDto.getProjectId();
+			String collectionId = requestDto.getCollectionId();
+			String testRunId = requestDto.getTestRunId();
+			log.info("sessionId", "idType", "id", "partnerId: " + partnerId);
+			log.info("sessionId", "idType", "id", "projectType: " + projectType);
+			log.info("sessionId", "idType", "id", "projectId: " + projectId);
+			log.info("sessionId", "idType", "id", "collectionId: " + requestDto.getCollectionId());
+			log.info("sessionId", "idType", "id", "testRunId: " + requestDto.getTestRunId());
+			// 1. get the report data
+			ComplianceTestRunSummaryPK pk = new ComplianceTestRunSummaryPK();
+			pk.setPartnerId(partnerId);
+			pk.setProjectId(projectId);
+			pk.setCollectionId(collectionId);
+			Optional<ComplianceTestRunSummaryEntity> optionalEntity = complianceTestRunSummaryRepository.findById(pk);
+			if (optionalEntity.isPresent() && testRunId.equals(optionalEntity.get().getRunId())
+					&& projectType.equals(optionalEntity.get().getProjectType())) {
+				log.info("sessionId", "idType", "id", "report data is available in DB");
+				String reportDateEncoded = optionalEntity.get().getReportDataJson();
+				String reportDataDecoded = StringUtil.base64Decode(reportDateEncoded);
+				ReportDataDto reportDataDto = (ReportDataDto) objectMapperConfig.objectMapper()
+						.readValue(reportDataDecoded, ReportDataDto.class);
+				// 2. Populate all attributes in velocity template VelocityContext
+				VelocityContext velocityContext = new VelocityContext();
+				velocityContext.put(PROJECT_TYPE, reportDataDto.getProjectType());
+				velocityContext.put(ORIGIN_KEY, reportDataDto.getOrigin());
+				velocityContext.put(PARTNER_DETAILS, reportDataDto.getPartnerDetails());
+				if (ProjectTypes.SBI.getCode().equals(projectType)) {
+					velocityContext.put(SBI_PROJECT_DETAILS_TABLE, reportDataDto.getSbiProjectDetailsTable());
+				}
+				if (ProjectTypes.SDK.getCode().equals(projectType)) {
+					velocityContext.put(SDK_PROJECT_DETAILS_TABLE, reportDataDto.getSdkProjectDetailsTable());
+				}
+				if (ProjectTypes.ABIS.getCode().equals(projectType)) {
+					velocityContext.put(ABIS_PROJECT_DETAILS_TABLE, reportDataDto.getAbisProjectDetailsTable());
+				}
+				velocityContext.put(TEST_RUN_START_TIME, reportDataDto.getTestRunStartTime());
+				velocityContext.put(REPORT_EXPIRY_PERIOD, reportDataDto.getReportExpiryPeriod());
+				velocityContext.put(REPORT_VALIDITY_DATE, reportDataDto.getReportValidityDate());
+				velocityContext.put(TEST_RUN_DETAILS_LIST, reportDataDto.getTestRunDetailsList());
+				velocityContext.put(TIME_TAKEN_BY_TEST_RUN, reportDataDto.getTimeTakenByTestRun());
+				velocityContext.put(TOTAL_TEST_CASES_COUNT, reportDataDto.getTotalTestCasesCount());
+				velocityContext.put(COUNT_OF_PASSED_TEST_CASES, reportDataDto.getCountOfPassedTestCases());
+				velocityContext.put(COUNT_OF_FAILED_TEST_CASES, reportDataDto.getCountOfFailedTestCases());
+				log.info("sessionId", "idType", "id", "Added all attributes in velocity template successfully");
+				// 3. merge report data with template
+				String mergedHtml = mergeVelocityTemplate(velocityContext, "testRunReport.vm");
+				// 4. Covert the merged HTML to PDF
+				ByteArrayResource resource = convertHtmltToPdf(mergedHtml);
+				// 5. Send PDF in response
+				return sendPdfResponse(requestDto, resource);
+			} else {
+				return handleValidationErrors(requestDto,
+						"Report Data is not available. Try with correct values for partner id, project type, project id, collection id and test run id.");
+			}
+		} catch (Exception e) {
+			log.info("sessionId", "idType", "id", "Exception in createPartnerReport {}", e.getLocalizedMessage());
+			try {
+				return handleValidationErrors(requestDto, e.getLocalizedMessage());
+			} catch (Exception e1) {
+				return ResponseEntity.noContent().build();
+			}
+		}
+
+	}
+
 }
