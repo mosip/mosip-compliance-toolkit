@@ -1,5 +1,8 @@
 package io.mosip.compliance.toolkit.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -7,17 +10,6 @@ import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import io.mosip.compliance.toolkit.constants.AppConstants;
-import io.mosip.compliance.toolkit.dto.collections.CollectionTestCasesResponseDto;
-import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
-import io.mosip.compliance.toolkit.dto.projects.SdkProjectDto;
-import io.mosip.compliance.toolkit.dto.report.*;
-import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
-import io.mosip.compliance.toolkit.util.PartnerManagerHelper;
-import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
-import io.mosip.kernel.core.authmanager.authadapter.model.MosipUserDto;
-import org.apache.velocity.VelocityContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,26 +19,30 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import io.mosip.compliance.toolkit.dto.projects.AbisProjectDto;
-import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
-import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
-import io.mosip.kernel.core.exception.ServiceError;
-import io.mosip.kernel.core.http.ResponseWrapper;
 import org.springframework.security.core.Authentication;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.util.ReflectionTestUtils;
 
-import javax.annotation.meta.When;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 
-import static io.restassured.RestAssured.authentication;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import io.mosip.compliance.toolkit.constants.AppConstants;
+import io.mosip.compliance.toolkit.dto.projects.AbisProjectDto;
+import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
+import io.mosip.compliance.toolkit.dto.projects.SdkProjectDto;
+import io.mosip.compliance.toolkit.dto.report.PartnerDetailsDto;
+import io.mosip.compliance.toolkit.dto.report.ReportRequestDto;
+import io.mosip.compliance.toolkit.dto.report.SbiProjectTable;
+import io.mosip.compliance.toolkit.dto.report.TestRunTable;
+import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
+import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
+import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
+import io.mosip.compliance.toolkit.util.PartnerManagerHelper;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.kernel.core.authmanager.authadapter.model.MosipUserDto;
+import io.mosip.kernel.core.exception.ServiceError;
+import io.mosip.kernel.core.http.ResponseWrapper;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ReportGeneratorServiceTest {
@@ -115,7 +111,7 @@ public class ReportGeneratorServiceTest {
         private ReportGeneratorService reportGeneratorService;
 
         @Test
-        public void testCreateReportSBI() throws JsonProcessingException {
+        public void testcreateDraftReportSBI() throws JsonProcessingException {
                 ReportRequestDto requestDto = new ReportRequestDto();
                 requestDto.setProjectType("SBI");
                 requestDto.setProjectId("kdshfksjd");
@@ -141,11 +137,11 @@ public class ReportGeneratorServiceTest {
 
                 Mockito.when(testRunService.getTestRunDetails(Mockito.any()))
                                 .thenReturn(testRunDetailsResponse);
-                reportGeneratorService.createReport(requestDto, "abcdefgh");
+                reportGeneratorService.createDraftReport(requestDto, "abcdefgh");
         }
 
         @Test
-        public void testCreateReportSDK() throws JsonProcessingException {
+        public void testcreateDraftReportSDK() throws JsonProcessingException {
                 ReportRequestDto requestDto = new ReportRequestDto();
                 requestDto.setProjectType("SDK");
                 requestDto.setProjectId("kdshfksjd");
@@ -170,11 +166,11 @@ public class ReportGeneratorServiceTest {
                 testRunDetailsResponse.setResponse(testRunDetailsResponseDto1);
                 Mockito.when(testRunService.getTestRunDetails(Mockito.any()))
                                 .thenReturn(testRunDetailsResponse);
-                reportGeneratorService.createReport(requestDto, "abcdefgh");
+                reportGeneratorService.createDraftReport(requestDto, "abcdefgh");
         }
 
         @Test
-        public void testCreateReportSDKDefault() throws JsonProcessingException {
+        public void testcreateDraftReportSDKDefault() throws JsonProcessingException {
                 ReportRequestDto requestDto = new ReportRequestDto();
                 requestDto.setProjectType("SDK");
                 requestDto.setProjectId("kdshfksjd");
@@ -214,11 +210,11 @@ public class ReportGeneratorServiceTest {
                 Mockito.when(mockAuthentication.getPrincipal()).thenReturn(mockAuthUserDetails);
                 Mockito.when(testRunService.getTestRunDetails(Mockito.any()))
                         .thenReturn(testRunDetailsResponse);
-                reportGeneratorService.createReport(requestDto, "abcdefgh");
+                reportGeneratorService.createDraftReport(requestDto, "abcdefgh");
         }
 
         @Test
-        public void testCreateReportABIS() throws JsonProcessingException {
+        public void testcreateDraftReportABIS() throws JsonProcessingException {
                 ReportRequestDto requestDto = new ReportRequestDto();
                 requestDto.setProjectType("ABIS");
                 requestDto.setProjectId("kdshfksjd");
@@ -243,11 +239,11 @@ public class ReportGeneratorServiceTest {
                 testRunDetailsResponse.setResponse(testRunDetailsResponseDto1);
                 Mockito.when(testRunService.getTestRunDetails(Mockito.any()))
                                 .thenReturn(testRunDetailsResponse);
-                reportGeneratorService.createReport(requestDto, "abcdefgh");
+                reportGeneratorService.createDraftReport(requestDto, "abcdefgh");
         }
 
         @Test
-        public void testCreateReportAbisDefault() throws IOException {
+        public void testcreateDraftReportAbisDefault() throws IOException {
                 ReportRequestDto requestDto = new ReportRequestDto();
                 requestDto.setProjectType("ABIS");
                 requestDto.setProjectId("kdshfksjd");
@@ -311,7 +307,7 @@ public class ReportGeneratorServiceTest {
                 Mockito.when(partnerManagerHelper.getPartnerDetails(Mockito.any())).thenReturn(partnerDetailsDto);
                 Mockito.when(mockAuthentication.getPrincipal()).thenReturn(mockAuthUserDetails);
                 Mockito.when(abisProjectService.getAbisProject(Mockito.any())).thenReturn(abisProjectResponse);
-                reportGeneratorService.createReport(requestDto, "abcdefgh");
+                reportGeneratorService.createDraftReport(requestDto, "abcdefgh");
         }
         @Test
         public void testHandleServiceErrors_WithErrors() throws Exception {

@@ -17,5 +17,7 @@ public class AuthorizedRolesDto {
 	private List<String> uploadResource;
 	
 	private List<String> saveTestCases;
+	
+	private List<String> createPartnerReport;
 
 }
