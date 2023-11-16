@@ -73,6 +73,9 @@ public class BiometricTestDataServiceTest {
     private ObjectMapperConfig objectMapperConfig;
 
     @Mock
+    ResourceCacheService resourceCacheService;
+
+    @Mock
     private ObjectMapper mapper;
 
     @Mock
@@ -80,9 +83,6 @@ public class BiometricTestDataServiceTest {
 
     @Mock
     private ObjectStoreAdapter objectStore;
-
-    @Mock
-    ResourceCacheService resourceCacheService;
 
     @Mock
     private TestCaseCacheService testCaseCacheService;
@@ -305,6 +305,7 @@ public class BiometricTestDataServiceTest {
         Assert.assertEquals(false, response.getErrors().isEmpty());
         Assert.assertEquals(1, response.getErrors().size());
     }
+
     @Test
     public void addBiometricTestdataTest() throws IOException {
         ResponseWrapper<AddBioTestDataResponseDto> response = new ResponseWrapper<>();
@@ -503,7 +504,6 @@ public class BiometricTestDataServiceTest {
         biometricTestDataService.getSampleBioTestDataFile("ABIS");
     }
 
-
     /*
      * This class tests the getSampleBioTestDataFile method in case of Exception
      */
@@ -636,7 +636,6 @@ public class BiometricTestDataServiceTest {
         ReflectionTestUtils.setField(biometricTestDataService, "testCaseCacheService", null);
         ReflectionTestUtils.invokeMethod(biometricTestDataService, "generateSampleTestData", purpose,testCaseEntities,"abc");
     }
-
     /*
      * This method is used to get MosipUserDto in class
      */

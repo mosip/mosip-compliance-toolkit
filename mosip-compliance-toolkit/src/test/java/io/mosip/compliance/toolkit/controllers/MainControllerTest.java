@@ -1,8 +1,6 @@
 package io.mosip.compliance.toolkit.controllers;
 
 
-import org.jboss.jandex.Main;
-
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.authmanager.authadapter.model.MosipUserDto;
 import org.jboss.jandex.Main;
@@ -108,5 +106,6 @@ public class MainControllerTest {
         mosipUserDto.setMail("abc@gmail.com");
         return mosipUserDto;
     }
+
 
 }

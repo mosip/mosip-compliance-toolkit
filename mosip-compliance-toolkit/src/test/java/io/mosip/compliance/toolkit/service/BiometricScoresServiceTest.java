@@ -33,10 +33,10 @@ public class BiometricScoresServiceTest {
     private Authentication authentication;
 
     @Mock
-    ResourceCacheService resourceCacheService;
+    SecurityContext securityContext;
 
     @Mock
-    SecurityContext securityContext;
+    ResourceCacheService resourceCacheService;
 
     private MosipUserDto mosipUserDto;
 

@@ -352,6 +352,7 @@ public class TestCasesServiceTest {
 	/*
 	 *This class tests the validateJsonWithSchema method
 	 */
+
 	@Test
 	public void validateJsonWithSchemaTest() throws Exception {
 		String sourceJson="{\n" +
@@ -400,6 +401,7 @@ public class TestCasesServiceTest {
 		String schemaJson="";
 		when(testCasesService.validateJsonWithSchema(sourceJson,schemaJson)).thenReturn(validationResultDto);
 	}
+
 
 	/*
 	 *This class tests the validateJsonWithSchema method in case of exception
