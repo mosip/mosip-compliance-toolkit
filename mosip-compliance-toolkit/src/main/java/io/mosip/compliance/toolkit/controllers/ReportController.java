@@ -60,23 +60,34 @@ public class ReportController {
 		binder.addValidators(requestValidator);
 	}
 
+	@PostMapping(value = "/isReportAlreadySubmitted")
+	public ResponseWrapper<Boolean> isReportAlreadySubmitted(
+			@RequestBody @Valid RequestWrapper<ReportRequestDto> reportRequestWrapper, Errors errors) throws Exception {
+		validateRequestForPartner(reportRequestWrapper, errors);
+		return service.isReportAlreadySubmitted(reportRequestWrapper);
+	}
+
 	@PostMapping(value = "/generateDraftReport")
 	public ResponseEntity<?> generateDraftReport(@RequestBody @Valid RequestWrapper<ReportRequestDto> value,
 			@RequestHeader String origin, Errors errors) throws Exception {
-		requestValidator.validate(value, errors);
-		requestValidator.validateId(PARTNER_REPORT_ID, value.getId(), errors);
-		DataValidationUtil.validate(errors, PARTNER_REPORT_ID);
+		validateRequestForPartner(value, errors);
 		return service.generateDraftReport(value.getRequest(), origin);
 	}
 
 	@PostMapping(value = "/submitReportForReview")
 	public ResponseWrapper<ComplianceTestRunSummaryDto> submitReportForReview(
 			@RequestBody @Valid RequestWrapper<ReportRequestDto> reportRequestWrapper, Errors errors) throws Exception {
-		requestValidator.validate(reportRequestWrapper, errors);
-		requestValidator.validateId(PARTNER_REPORT_ID, reportRequestWrapper.getId(), errors);
-		DataValidationUtil.validate(errors, PARTNER_REPORT_ID);
+		validateRequestForPartner(reportRequestWrapper, errors);
 		return service.updateReportStatus(service.getPartnerId(), reportRequestWrapper,
 				AppConstants.REPORT_STATUS_DRAFT, AppConstants.REPORT_STATUS_REVIEW);
+	}
+
+	@PostMapping(value = "/getSubmittedReport")
+	public ResponseEntity<?> getSubmittedReport(
+			@RequestBody @Valid RequestWrapper<ReportRequestDto> reportRequestWrapper, Errors errors) throws Exception {
+		validateRequestForPartner(reportRequestWrapper, errors);
+		//when user is downloading submitted report for self, then there is no need for testrunId
+		return service.getSubmittedReport(service.getPartnerId(), reportRequestWrapper.getRequest(), true);
 	}
 
 	@GetMapping(value = "/getSubmittedReportList")
@@ -95,19 +106,15 @@ public class ReportController {
 	@PostMapping(value = "/getPartnerReport/{partnerId}")
 	public ResponseEntity<?> getPartnerReport(@PathVariable String partnerId,
 			@RequestBody @Valid RequestWrapper<ReportRequestDto> reportRequestWrapper, Errors errors) throws Exception {
-		requestValidator.validate(reportRequestWrapper, errors);
-		requestValidator.validateId(ADMIN_REPORT_ID, reportRequestWrapper.getId(), errors);
-		DataValidationUtil.validate(errors, ADMIN_REPORT_ID);
-		return service.getPartnerReport(partnerId, reportRequestWrapper.getRequest());
+		validateRequestForAdmin(reportRequestWrapper, errors);
+		return service.getSubmittedReport(partnerId, reportRequestWrapper.getRequest(), false);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getAdminPartnerReport())")
 	@PostMapping(value = "/approvePartnerReport/{partnerId}")
 	public ResponseWrapper<ComplianceTestRunSummaryDto> approvePartnerReport(@PathVariable String partnerId,
 			@RequestBody @Valid RequestWrapper<ReportRequestDto> reportRequestWrapper, Errors errors) throws Exception {
-		requestValidator.validate(reportRequestWrapper, errors);
-		requestValidator.validateId(ADMIN_REPORT_ID, reportRequestWrapper.getId(), errors);
-		DataValidationUtil.validate(errors, ADMIN_REPORT_ID);
+		validateRequestForAdmin(reportRequestWrapper, errors);
 		return service.updateReportStatus(partnerId, reportRequestWrapper, AppConstants.REPORT_STATUS_REVIEW,
 				AppConstants.REPORT_STATUS_APPROVED);
 	}
@@ -116,10 +123,22 @@ public class ReportController {
 	@PostMapping(value = "/rejectPartnerReport/{partnerId}")
 	public ResponseWrapper<ComplianceTestRunSummaryDto> rejectPartnerReport(@PathVariable String partnerId,
 			@RequestBody @Valid RequestWrapper<ReportRequestDto> reportRequestWrapper, Errors errors) throws Exception {
+		validateRequestForAdmin(reportRequestWrapper, errors);
+		return service.updateReportStatus(partnerId, reportRequestWrapper, AppConstants.REPORT_STATUS_REVIEW,
+				AppConstants.REPORT_STATUS_REJECTED);
+	}
+
+	private void validateRequestForAdmin(RequestWrapper<ReportRequestDto> reportRequestWrapper, Errors errors)
+			throws Exception {
 		requestValidator.validate(reportRequestWrapper, errors);
 		requestValidator.validateId(ADMIN_REPORT_ID, reportRequestWrapper.getId(), errors);
 		DataValidationUtil.validate(errors, ADMIN_REPORT_ID);
-		return service.updateReportStatus(partnerId, reportRequestWrapper, AppConstants.REPORT_STATUS_REVIEW,
-				AppConstants.REPORT_STATUS_REJECTED);
+	}
+
+	private void validateRequestForPartner(RequestWrapper<ReportRequestDto> reportRequestWrapper, Errors errors)
+			throws Exception {
+		requestValidator.validate(reportRequestWrapper, errors);
+		requestValidator.validateId(PARTNER_REPORT_ID, reportRequestWrapper.getId(), errors);
+		DataValidationUtil.validate(errors, PARTNER_REPORT_ID);
 	}
 }

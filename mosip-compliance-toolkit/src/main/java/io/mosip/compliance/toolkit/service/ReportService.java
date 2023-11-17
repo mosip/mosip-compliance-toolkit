@@ -267,7 +267,11 @@ public class ReportService {
 		log.info("sessionId", "idType", "id", "projectType: " + projectType);
 		log.info("sessionId", "idType", "id", "projectId: " + projectId);
 		log.info("sessionId", "idType", "id", "collectionId: " + requestDto.getCollectionId());
-		log.info("sessionId", "idType", "id", "testRunId: " + requestDto.getTestRunId());
+		if (requestDto.getTestRunId() != null) {
+			log.info("sessionId", "idType", "id", "testRunId: " + requestDto.getTestRunId());
+		} else {
+			log.info("sessionId", "idType", "id", "testRunId: null");
+		}
 	}
 
 	private void saveReportData(String projectType, String projectId,
@@ -291,8 +295,8 @@ public class ReportService {
 		reportDataDto.setTestRunStartTime(velocityContext.get(TEST_RUN_START_TIME).toString());
 		reportDataDto.setReportExpiryPeriod(Integer.parseInt(velocityContext.get(REPORT_EXPIRY_PERIOD).toString()));
 		reportDataDto.setReportValidityDate(velocityContext.get(REPORT_VALIDITY_DATE).toString());
-		reportDataDto.setTestRunDetailsList(getObjectMapper()
-				.convertValue(velocityContext.get(TEST_RUN_DETAILS_LIST), new TypeReference<List<TestRunTable>>() {
+		reportDataDto.setTestRunDetailsList(getObjectMapper().convertValue(velocityContext.get(TEST_RUN_DETAILS_LIST),
+				new TypeReference<List<TestRunTable>>() {
 				}));
 		reportDataDto.setTimeTakenByTestRun(velocityContext.get(TIME_TAKEN_BY_TEST_RUN).toString());
 		reportDataDto.setTotalTestCasesCount(Integer.parseInt(velocityContext.get(TOTAL_TEST_CASES_COUNT).toString()));
@@ -741,8 +745,48 @@ public class ReportService {
 				.contentType(MediaType.APPLICATION_PDF).body(resource);
 	}
 
-	public ResponseWrapper<List<ComplianceTestRunSummaryDto>> getReportList(boolean isAdmin,
-			String reportStatus) {
+	public ResponseWrapper<Boolean> isReportAlreadySubmitted(RequestWrapper<ReportRequestDto> requestWrapper) {
+		ReportRequestDto requestDto = requestWrapper.getRequest();
+		ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
+		boolean isReportAlreadySubmitted = false;
+		try {
+			log.info("sessionId", "idType", "id", "Started isReportAlreadySubmitted processing");
+			String projectType = requestDto.getProjectType();
+			String projectId = requestDto.getProjectId();
+			String collectionId = requestDto.getCollectionId();
+			logInput(requestDto, projectType, projectId);
+			// validate the reportStatus
+			ComplianceTestRunSummaryPK pk = new ComplianceTestRunSummaryPK();
+			pk.setPartnerId(getPartnerId());
+			pk.setProjectId(projectId);
+			pk.setCollectionId(collectionId);
+			Optional<ComplianceTestRunSummaryEntity> optionalEntity = complianceTestRunSummaryRepository.findById(pk);
+			if (optionalEntity.isPresent() && projectType.equals(optionalEntity.get().getProjectType())) {
+				if (!AppConstants.REPORT_STATUS_DRAFT.equals(optionalEntity.get().getReportStatus())) {
+					isReportAlreadySubmitted = true;
+				}
+			} else {
+				// no previous report data present
+				isReportAlreadySubmitted = false;
+			}
+			responseWrapper.setResponse(Boolean.valueOf(isReportAlreadySubmitted));
+		} catch (Exception ex) {
+			log.info("sessionId", "idType", "id",
+					"Exception in checkIfReportCanBeGenerated " + ex.getLocalizedMessage());
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In isReportAlreadySubmitted method of ReportGenerator Service - " + ex.getMessage());
+			String errorCode = ToolkitErrorCodes.TOOLKIT_REPORT_ERR.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.TOOLKIT_REPORT_ERR.getErrorMessage() + " " + ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+		}
+		responseWrapper.setId(getPartnerReportId.toString());
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+
+	public ResponseWrapper<List<ComplianceTestRunSummaryDto>> getReportList(boolean isAdmin, String reportStatus) {
 
 		ResponseWrapper<List<ComplianceTestRunSummaryDto>> responseWrapper = new ResponseWrapper<>();
 
@@ -785,7 +829,7 @@ public class ReportService {
 			String errorMessage = ToolkitErrorCodes.TOOLKIT_REPORT_GET_ERR.getErrorMessage() + " " + ex.getMessage();
 			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 		}
-		responseWrapper.setId(getAdminReportId);
+		responseWrapper.setId(getAdminReportId.toString());
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
@@ -797,9 +841,10 @@ public class ReportService {
 		return objectMapper;
 	}
 
-	public ResponseEntity<?> getPartnerReport(String partnerId, ReportRequestDto requestDto) {
+	public ResponseEntity<?> getSubmittedReport(String partnerId, ReportRequestDto requestDto,
+			boolean ignoreTestRunId) {
 		try {
-			log.info("sessionId", "idType", "id", "Started getPartnerReport processing");
+			log.info("sessionId", "idType", "id", "Started getSubmittedReport processing");
 			log.info("sessionId", "idType", "id", "partnerId: " + partnerId);
 			String projectType = requestDto.getProjectType();
 			String projectId = requestDto.getProjectId();
@@ -812,15 +857,17 @@ public class ReportService {
 			pk.setProjectId(projectId);
 			pk.setCollectionId(collectionId);
 			Optional<ComplianceTestRunSummaryEntity> optionalEntity = complianceTestRunSummaryRepository.findById(pk);
-			if (optionalEntity.isPresent() && testRunId.equals(optionalEntity.get().getRunId())
-					&& projectType.equals(optionalEntity.get().getProjectType())) {
+			if (optionalEntity.isPresent() && projectType.equals(optionalEntity.get().getProjectType())
+					&& (
+					(!ignoreTestRunId && testRunId != null && testRunId.equals(optionalEntity.get().getRunId())))
+					|| ignoreTestRunId) {
 
 				if (!AppConstants.REPORT_STATUS_DRAFT.equals(optionalEntity.get().getReportStatus())) {
 					log.info("sessionId", "idType", "id", "report data is available in DB");
 					String reportDateEncoded = optionalEntity.get().getReportDataJson();
 					String reportDataDecoded = StringUtil.base64Decode(reportDateEncoded);
-					ReportDataDto reportDataDto = (ReportDataDto) getObjectMapper()
-							.readValue(reportDataDecoded, ReportDataDto.class);
+					ReportDataDto reportDataDto = (ReportDataDto) getObjectMapper().readValue(reportDataDecoded,
+							ReportDataDto.class);
 					// 2. Populate all attributes in velocity template VelocityContext
 					VelocityContext velocityContext = new VelocityContext();
 					velocityContext.put(PROJECT_TYPE, reportDataDto.getProjectType());
@@ -859,7 +906,7 @@ public class ReportService {
 						"Report Data is not available. Try with correct values for partner id, project type, project id, collection id and test run id.");
 			}
 		} catch (Exception e) {
-			log.info("sessionId", "idType", "id", "Exception in getPartnerReport " + e.getLocalizedMessage());
+			log.info("sessionId", "idType", "id", "Exception in getSubmittedReport " + e.getLocalizedMessage());
 			try {
 				return handleValidationErrors(requestDto, e.getLocalizedMessage());
 			} catch (Exception e1) {
@@ -910,8 +957,8 @@ public class ReportService {
 					entity.setUpdBy(this.getUserBy());
 					entity.setUpdDtimes(nowDate);
 					ComplianceTestRunSummaryEntity respEntity = complianceTestRunSummaryRepository.save(entity);
-					complianceTestRunSummaryDto = (ComplianceTestRunSummaryDto) getObjectMapper().convertValue(respEntity,
-							new TypeReference<ComplianceTestRunSummaryDto>() {
+					complianceTestRunSummaryDto = (ComplianceTestRunSummaryDto) getObjectMapper()
+							.convertValue(respEntity, new TypeReference<ComplianceTestRunSummaryDto>() {
 							});
 					responseWrapper.setResponse(complianceTestRunSummaryDto);
 				} else {
