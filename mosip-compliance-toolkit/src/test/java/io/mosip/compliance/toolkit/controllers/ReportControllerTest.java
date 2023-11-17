@@ -42,7 +42,7 @@ public class ReportControllerTest {
     }
 
     @Test
-    public void createDraftReportTest() throws Exception {
+    public void generateDraftReportTest() throws Exception {
         RequestWrapper<ReportRequestDto> value = new RequestWrapper<>();
         Errors errors = mock(Errors.class);
         ReportRequestDto reportRequestDto = new ReportRequestDto();
@@ -55,6 +55,6 @@ public class ReportControllerTest {
         value.setRequesttime(LocalDateTime.now());
         value.setVersion("1.0");
         String origin = "abc";
-        reportGeneratorController.createDraftReport(value, origin, errors);
+        reportGeneratorController.generateDraftReport(value, origin, errors);
     }
 }

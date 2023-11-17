@@ -116,7 +116,9 @@ public enum ToolkitErrorCodes {
 			"Report Data is not available. Try with correct values for partner id, project type, project id, collection id and test run id."),
 	TOOLKIT_REPORT_STATUS_INVALID_ERR("TOOLKIT_REPORT_003",
 			"Report status cannot be updated to new value since currently it is :"),
-	TOOLKIT_REPORT_STATUS_UPDATE_ERR("TOOLKIT_REPORT_004", "Error while changing report status");
+	TOOLKIT_REPORT_STATUS_UPDATE_ERR("TOOLKIT_REPORT_004", "Error while changing report status"),
+	TOOLKIT_REPORT_GET_ERR("TOOLKIT_REPORT_005", "Error while fetching list of reports"),
+	TOOLKIT_INVALID_REPORT_STATUS_ERR("TOOLKIT_REPORT_006", "Error while fetching list of reports. Invalid report status: ");
 
 	private final String errorCode;
 	private final String errorMessage;

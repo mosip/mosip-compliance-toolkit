@@ -16,7 +16,7 @@ public class ComplianceTestRunSummaryDto {
 	private String projectType;
 	private String projectId;
 	private String collectionId;
-	private String testRunId;
+	private String runId;
 	private String reportStatus;
 	private String partnerComments;
 	private String adminComments;
