@@ -36,7 +36,7 @@ public class ComplianceTestRunSummaryEntity {
 	@Id
 	@Column(name = "run_id")
 	private String runId;
-
+	
 	@Column(name = "project_type")
 	private String projectType;
 
@@ -45,7 +45,7 @@ public class ComplianceTestRunSummaryEntity {
 
 	@Column(name = "org_name")
 	private String orgName;
-
+	
 	@Column(name = "report_data_json")
 	private String reportDataJson;
 

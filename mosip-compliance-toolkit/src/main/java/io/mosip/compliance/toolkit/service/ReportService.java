@@ -1,5 +1,7 @@
 package io.mosip.compliance.toolkit.service;
 
+import static org.mockito.ArgumentMatchers.nullable;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -61,7 +63,11 @@ import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
 import io.mosip.compliance.toolkit.entity.ComplianceTestRunSummaryEntity;
 import io.mosip.compliance.toolkit.entity.ComplianceTestRunSummaryPK;
+import io.mosip.compliance.toolkit.repository.AbisProjectRepository;
+import io.mosip.compliance.toolkit.repository.CollectionsRepository;
 import io.mosip.compliance.toolkit.repository.ComplianceTestRunSummaryRepository;
+import io.mosip.compliance.toolkit.repository.SbiProjectRepository;
+import io.mosip.compliance.toolkit.repository.SdkProjectRepository;
 import io.mosip.compliance.toolkit.util.CommonUtil;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.PartnerManagerHelper;
@@ -151,6 +157,18 @@ public class ReportService {
 
 	@Autowired
 	private ComplianceTestRunSummaryRepository complianceTestRunSummaryRepository;
+
+	@Autowired
+	private CollectionsRepository collectionsRepository;
+
+	@Autowired
+	private SbiProjectRepository sbiProjectRepository;
+
+	@Autowired
+	private SdkProjectRepository sdkProjectRepository;
+
+	@Autowired
+	private AbisProjectRepository abisProjectRepository;
 
 	@Autowired
 	ResourceCacheService resourceCacheService;
@@ -809,13 +827,15 @@ public class ReportService {
 				if (isAdmin) {
 					listEntity = complianceTestRunSummaryRepository.findAllByReportStatus(reportStatus);
 				} else {
-					listEntity = complianceTestRunSummaryRepository.findAllByPartnerId(getPartnerId());
+					listEntity = complianceTestRunSummaryRepository.findAllBySubmittedReportsPartnerId(getPartnerId());
 				}
 				ObjectMapper objectMapper = getObjectMapper();
 				for (ComplianceTestRunSummaryEntity respEntity : listEntity) {
 					ComplianceTestRunSummaryDto complianceTestRunSummaryDto = (ComplianceTestRunSummaryDto) objectMapper
 							.convertValue(respEntity, new TypeReference<ComplianceTestRunSummaryDto>() {
 							});
+					complianceTestRunSummaryDto.setCollectionName(getCollectionName(respEntity));
+					complianceTestRunSummaryDto.setProjectName(getProjectName(respEntity));
 					responseList.add(complianceTestRunSummaryDto);
 				}
 			}
@@ -833,6 +853,28 @@ public class ReportService {
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
+	}
+
+	private String getProjectName(ComplianceTestRunSummaryEntity respEntity) {
+		String projectType = respEntity.getProjectType();
+		String projectName = null;
+		if (AppConstants.SBI.equals(projectType)) {
+			projectName = sbiProjectRepository.getProjectNameById(respEntity.getProjectId(), respEntity.getPartnerId());
+		}
+		if (AppConstants.SDK.equals(projectType)) {
+			projectName = sdkProjectRepository.getProjectNameById(respEntity.getProjectId(), respEntity.getPartnerId());
+		}
+		if (AppConstants.ABIS.equals(projectType)) {
+			projectName = abisProjectRepository.getProjectNameById(respEntity.getProjectId(),
+					respEntity.getPartnerId());
+		}
+		return projectName;
+	}
+
+	private String getCollectionName(ComplianceTestRunSummaryEntity respEntity) {
+		String collectionName = collectionsRepository.getCollectionNameById(respEntity.getCollectionId(),
+				respEntity.getPartnerId());
+		return collectionName;
 	}
 
 	private ObjectMapper getObjectMapper() {
@@ -858,8 +900,7 @@ public class ReportService {
 			pk.setCollectionId(collectionId);
 			Optional<ComplianceTestRunSummaryEntity> optionalEntity = complianceTestRunSummaryRepository.findById(pk);
 			if (optionalEntity.isPresent() && projectType.equals(optionalEntity.get().getProjectType())
-					&& (
-					(!ignoreTestRunId && testRunId != null && testRunId.equals(optionalEntity.get().getRunId())))
+					&& ((!ignoreTestRunId && testRunId != null && testRunId.equals(optionalEntity.get().getRunId())))
 					|| ignoreTestRunId) {
 
 				if (!AppConstants.REPORT_STATUS_DRAFT.equals(optionalEntity.get().getReportStatus())) {

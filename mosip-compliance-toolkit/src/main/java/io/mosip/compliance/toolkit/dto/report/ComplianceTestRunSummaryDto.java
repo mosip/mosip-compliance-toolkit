@@ -22,6 +22,8 @@ public class ComplianceTestRunSummaryDto {
 	private String adminComments;
 	private LocalDateTime reviewDtimes;
 	private LocalDateTime approveRejectDtimes;
-	private LocalDateTime crDtimes;
 	private LocalDateTime updDtimes;
+	private String collectionName;
+	private String projectName;
+	private String updBy;
 }
