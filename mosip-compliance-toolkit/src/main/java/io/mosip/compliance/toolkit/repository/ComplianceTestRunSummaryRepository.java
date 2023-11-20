@@ -16,7 +16,7 @@ public interface ComplianceTestRunSummaryRepository
 	@Query("SELECT e FROM ComplianceTestRunSummaryEntity e  WHERE e.reportStatus= ?1 and e.isDeleted<>'true' order by e.crDtimes desc")
 	public List<ComplianceTestRunSummaryEntity> findAllByReportStatus(String reportStatus);
 
-	@Query("SELECT e FROM ComplianceTestRunSummaryEntity e  WHERE e.partnerId= ?1 and e.isDeleted<>'true' order by e.crDtimes desc")
-	public List<ComplianceTestRunSummaryEntity> findAllByPartnerId(String partnerId);
+	@Query("SELECT e FROM ComplianceTestRunSummaryEntity e  WHERE e.partnerId= ?1 and e.isDeleted<>'true' and e.reportStatus<>'draft' order by e.crDtimes desc")
+	public List<ComplianceTestRunSummaryEntity> findAllBySubmittedReportsPartnerId(String partnerId);
 
 }

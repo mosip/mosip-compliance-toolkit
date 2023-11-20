@@ -25,4 +25,8 @@ public interface CollectionsRepository extends BaseRepository<CollectionEntity, 
 	
 	@Query("SELECT e.partnerId FROM CollectionEntity e  WHERE e.id= ?1 AND e.isDeleted<>'true' ORDER BY e.crDate DESC")
 	public String getPartnerById(String collectionId);
+
+	@Query("SELECT e.name FROM CollectionEntity e  WHERE e.id= ?1 and e.partnerId= ?2 and e.isDeleted<>'true' order by e.crDate desc")
+	public String getCollectionNameById(String collectionId, String partnerId);
+	
 }
