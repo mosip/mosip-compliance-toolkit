@@ -79,6 +79,8 @@ import io.mosip.kernel.core.logger.spi.Logger;
 @Component
 public class ReportService {
 
+	private static final String COLLECTION_NAME = "collectionName";
+
 	private static final String COUNT_OF_FAILED_TEST_CASES = "countOfFailedTestCases";
 
 	private static final String COUNT_OF_PASSED_TEST_CASES = "countOfPassedTestCases";
@@ -308,6 +310,7 @@ public class ReportService {
 			reportDataDto
 					.setAbisProjectDetailsTable((AbisProjectTable) velocityContext.get(ABIS_PROJECT_DETAILS_TABLE));
 		}
+		reportDataDto.setCollectionName(velocityContext.get(COLLECTION_NAME).toString());
 		reportDataDto.setTestRunStartTime(velocityContext.get(TEST_RUN_START_TIME).toString());
 		reportDataDto.setReportExpiryPeriod(Integer.parseInt(velocityContext.get(REPORT_EXPIRY_PERIOD).toString()));
 		reportDataDto.setReportValidityDate(velocityContext.get(REPORT_VALIDITY_DATE).toString());
@@ -406,6 +409,9 @@ public class ReportService {
 		int countOfAllTestCases = allTestCases.size();
 		int countOfSuccessTestCases = countOfSuccessTestCases(allTestCases, testRunDetailsResponseDto);
 		int countOfFailedTestCases = countOfAllTestCases - countOfSuccessTestCases;
+
+		velocityContext.put(COLLECTION_NAME,
+				this.getCollectionName(testRunDetailsResponseDto.getCollectionId(), this.getPartnerId()));
 		velocityContext.put(TEST_RUN_START_TIME, getTestRunStartDt(testRunDetailsResponseDto));
 		velocityContext.put(REPORT_EXPIRY_PERIOD, reportExpiryPeriod);
 		velocityContext.put(REPORT_VALIDITY_DATE, getReportValidityDt(testRunDetailsResponseDto));
@@ -832,7 +838,8 @@ public class ReportService {
 					ComplianceTestRunSummaryDto complianceTestRunSummaryDto = (ComplianceTestRunSummaryDto) objectMapper
 							.convertValue(respEntity, new TypeReference<ComplianceTestRunSummaryDto>() {
 							});
-					complianceTestRunSummaryDto.setCollectionName(getCollectionName(respEntity));
+					complianceTestRunSummaryDto.setCollectionName(
+							getCollectionName(respEntity.getCollectionId(), respEntity.getPartnerId()));
 					complianceTestRunSummaryDto.setProjectName(getProjectName(respEntity));
 					responseList.add(complianceTestRunSummaryDto);
 				}
@@ -869,9 +876,8 @@ public class ReportService {
 		return projectName;
 	}
 
-	private String getCollectionName(ComplianceTestRunSummaryEntity respEntity) {
-		String collectionName = collectionsRepository.getCollectionNameById(respEntity.getCollectionId(),
-				respEntity.getPartnerId());
+	private String getCollectionName(String collectionId, String partnerId) {
+		String collectionName = collectionsRepository.getCollectionNameById(collectionId, partnerId);
 		return collectionName;
 	}
 
@@ -921,6 +927,7 @@ public class ReportService {
 					if (ProjectTypes.ABIS.getCode().equals(projectType)) {
 						velocityContext.put(ABIS_PROJECT_DETAILS_TABLE, reportDataDto.getAbisProjectDetailsTable());
 					}
+					velocityContext.put(COLLECTION_NAME, reportDataDto.getCollectionName());
 					velocityContext.put(TEST_RUN_START_TIME, reportDataDto.getTestRunStartTime());
 					velocityContext.put(REPORT_EXPIRY_PERIOD, reportDataDto.getReportExpiryPeriod());
 					velocityContext.put(REPORT_VALIDITY_DATE, reportDataDto.getReportValidityDate());

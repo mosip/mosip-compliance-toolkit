@@ -23,6 +23,7 @@ public class ReportDataDto {
 	private int reportExpiryPeriod;
 	private String reportValidityDate;
 	private List<TestRunTable> testRunDetailsList;
+	private String collectionName;
 	private String timeTakenByTestRun;
 	private int totalTestCasesCount;
 	private int countOfPassedTestCases;
