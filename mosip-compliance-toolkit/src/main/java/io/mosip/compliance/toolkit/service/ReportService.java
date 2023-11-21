@@ -1,7 +1,5 @@
 package io.mosip.compliance.toolkit.service;
 
-import static org.mockito.ArgumentMatchers.nullable;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
