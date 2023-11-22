@@ -265,6 +265,7 @@
 		<div class="page-break-after">
 			<h2>Test Cases</h2>
 			<div style="border: 1.5px solid black; padding: 10px; background-color: #fff; border-radius: 5px; margin-bottom: 20px;">
+                <h3 style="text-align: left;">${collectionName}</h3>
                 <h3 style="text-align: left;">Time Taken for Run: ${timeTakenByTestRun}</h3>
                 <h3 style="text-align: left;">Total ${totalTestCasesCount} testcases were executed in the test run.</h3>
                 <h3 style="text-align: left;">Overall result for testcases:</h3>

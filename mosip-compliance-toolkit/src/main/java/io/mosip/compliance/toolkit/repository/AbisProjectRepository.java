@@ -21,7 +21,10 @@ public interface AbisProjectRepository extends BaseRepository<AbisProjectEntity,
 
 	@Query("SELECT e FROM AbisProjectEntity e  WHERE e.partnerId= ?1 and e.projectType='ABIS' and e.isDeleted<>'true' order by e.crDate desc")
 	public List<AbisProjectEntity> findAllByPartnerId(String partnerId);
-	
+
 	@Query("SELECT e FROM AbisProjectEntity e  WHERE e.id= ?1 and e.partnerId= ?2 and e.projectType='ABIS' and e.isDeleted<>'true' order by e.crDate desc")
 	public Optional<AbisProjectEntity> findById(String id, String partnerId);
+
+	@Query("SELECT e.name FROM AbisProjectEntity e  WHERE e.id= ?1 and e.partnerId= ?2 and e.isDeleted<>'true' order by e.crDate desc")
+	public String getProjectNameById(String projectId, String partnerId);
 }
