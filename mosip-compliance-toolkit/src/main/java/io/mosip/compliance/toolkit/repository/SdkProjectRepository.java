@@ -24,4 +24,7 @@ public interface SdkProjectRepository extends BaseRepository<SdkProjectEntity, S
 
 	@Query("SELECT e FROM SdkProjectEntity e  WHERE e.id= ?1 and e.partnerId= ?2 and e.projectType='SDK' and e.isDeleted<>'true' order by e.crDate desc")
 	public Optional<SdkProjectEntity> findById(String id, String partnerId);
+
+	@Query("SELECT e.name FROM SdkProjectEntity e  WHERE e.id= ?1 and e.partnerId= ?2 and e.isDeleted<>'true' order by e.crDate desc")
+	public String getProjectNameById(String projectId, String partnerId);
 }

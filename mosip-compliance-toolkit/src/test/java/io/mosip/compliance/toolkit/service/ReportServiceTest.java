@@ -111,7 +111,7 @@ public class ReportServiceTest {
         private ReportService reportGeneratorService;
 
         @Test
-        public void testcreateDraftReportSBI() throws JsonProcessingException {
+        public void testgenerateDraftReportSBI() throws JsonProcessingException {
                 ReportRequestDto requestDto = new ReportRequestDto();
                 requestDto.setProjectType("SBI");
                 requestDto.setProjectId("kdshfksjd");
@@ -137,11 +137,11 @@ public class ReportServiceTest {
 
                 Mockito.when(testRunService.getTestRunDetails(Mockito.any()))
                                 .thenReturn(testRunDetailsResponse);
-                reportGeneratorService.createDraftReport(requestDto, "abcdefgh");
+                reportGeneratorService.generateDraftReport(requestDto, "abcdefgh");
         }
 
         @Test
-        public void testcreateDraftReportSDK() throws JsonProcessingException {
+        public void testgenerateDraftReportSDK() throws JsonProcessingException {
                 ReportRequestDto requestDto = new ReportRequestDto();
                 requestDto.setProjectType("SDK");
                 requestDto.setProjectId("kdshfksjd");
@@ -166,11 +166,11 @@ public class ReportServiceTest {
                 testRunDetailsResponse.setResponse(testRunDetailsResponseDto1);
                 Mockito.when(testRunService.getTestRunDetails(Mockito.any()))
                                 .thenReturn(testRunDetailsResponse);
-                reportGeneratorService.createDraftReport(requestDto, "abcdefgh");
+                reportGeneratorService.generateDraftReport(requestDto, "abcdefgh");
         }
 
         @Test
-        public void testcreateDraftReportSDKDefault() throws JsonProcessingException {
+        public void testgenerateDraftReportSDKDefault() throws JsonProcessingException {
                 ReportRequestDto requestDto = new ReportRequestDto();
                 requestDto.setProjectType("SDK");
                 requestDto.setProjectId("kdshfksjd");
@@ -210,11 +210,11 @@ public class ReportServiceTest {
                 Mockito.when(mockAuthentication.getPrincipal()).thenReturn(mockAuthUserDetails);
                 Mockito.when(testRunService.getTestRunDetails(Mockito.any()))
                         .thenReturn(testRunDetailsResponse);
-                reportGeneratorService.createDraftReport(requestDto, "abcdefgh");
+                reportGeneratorService.generateDraftReport(requestDto, "abcdefgh");
         }
 
         @Test
-        public void testcreateDraftReportABIS() throws JsonProcessingException {
+        public void testgenerateDraftReportABIS() throws JsonProcessingException {
                 ReportRequestDto requestDto = new ReportRequestDto();
                 requestDto.setProjectType("ABIS");
                 requestDto.setProjectId("kdshfksjd");
@@ -239,11 +239,11 @@ public class ReportServiceTest {
                 testRunDetailsResponse.setResponse(testRunDetailsResponseDto1);
                 Mockito.when(testRunService.getTestRunDetails(Mockito.any()))
                                 .thenReturn(testRunDetailsResponse);
-                reportGeneratorService.createDraftReport(requestDto, "abcdefgh");
+                reportGeneratorService.generateDraftReport(requestDto, "abcdefgh");
         }
 
         @Test
-        public void testcreateDraftReportAbisDefault() throws IOException {
+        public void testgenerateDraftReportAbisDefault() throws IOException {
                 ReportRequestDto requestDto = new ReportRequestDto();
                 requestDto.setProjectType("ABIS");
                 requestDto.setProjectId("kdshfksjd");
@@ -307,7 +307,7 @@ public class ReportServiceTest {
                 //Mockito.when(partnerManagerHelper.getPartnerDetails(Mockito.any())).thenReturn(partnerDetailsDto);
                 Mockito.when(mockAuthentication.getPrincipal()).thenReturn(mockAuthUserDetails);
                 //Mockito.when(abisProjectService.getAbisProject(Mockito.any())).thenReturn(abisProjectResponse);
-                reportGeneratorService.createDraftReport(requestDto, "abcdefgh");
+                reportGeneratorService.generateDraftReport(requestDto, "abcdefgh");
         }
         @Test
         public void testHandleServiceErrors_WithErrors() throws Exception {

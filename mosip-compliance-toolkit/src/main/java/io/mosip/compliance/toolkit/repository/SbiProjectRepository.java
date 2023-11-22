@@ -28,5 +28,8 @@ public interface SbiProjectRepository extends BaseRepository<SbiProjectEntity, S
 	@Query("SELECT e FROM SbiProjectEntity e  WHERE e.id= ?1 and e.partnerId= ?2 and e.projectType='SBI' and e.isDeleted<>'true' order by e.crDate desc")
 	public Optional<SbiProjectEntity> findById(String id, String partnerId);
 	
+	@Query("SELECT e.name FROM SbiProjectEntity e  WHERE e.id= ?1 and e.partnerId= ?2 and e.isDeleted<>'true' order by e.crDate desc")
+	public String getProjectNameById(String projectId, String partnerId);
+	
 	
 }
