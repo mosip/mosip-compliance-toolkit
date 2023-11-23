@@ -76,7 +76,7 @@ public class CollectionsService {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 
-	private String getPartnerId() {
+	public String getPartnerId() {
 		String partnerId = authUserDetails().getUsername();
 		return partnerId;
 	}
@@ -129,14 +129,14 @@ public class CollectionsService {
 		return responseWrapper;
 	}
 
-	public ResponseWrapper<CollectionTestCasesResponseDto> getTestCasesForCollection(String collectionId) {
+	public ResponseWrapper<CollectionTestCasesResponseDto> getTestCasesForCollection(String partnerId, String collectionId) {
 		ResponseWrapper<CollectionTestCasesResponseDto> responseWrapper = new ResponseWrapper<>();
 		CollectionTestCasesResponseDto collectionTestCasesResponseDto = null;
 
 		try {
 			if (Objects.nonNull(collectionId)) {
 				List<String> testCases = collectionTestCaseRepository.getTestCasesByCollectionId(collectionId,
-						getPartnerId());
+						partnerId);
 
 				if (Objects.nonNull(testCases) && !testCases.isEmpty()) {
 					List<TestCaseDto> collectionTestCases = new ArrayList<>(testCases.size());

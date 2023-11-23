@@ -71,7 +71,7 @@ public class CollectionsServiceTest {
     private ObjectMapper mapper;
 
     static String id ="123";
-
+    final static String partnerId = "test";
     /*
      * This class tests the authUserDetails method
      */
@@ -183,7 +183,7 @@ public class CollectionsServiceTest {
         Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
         SecurityContextHolder.setContext(securityContext);
         Mockito.when(collectionTestcaseRepository.getTestCasesByCollectionId(Mockito.any(), Mockito.any())).thenReturn(null);
-        ResponseWrapper<CollectionTestCasesResponseDto> result = collectionsService.getTestCasesForCollection(id);
+        ResponseWrapper<CollectionTestCasesResponseDto> result = collectionsService.getTestCasesForCollection(partnerId, id);
         Assert.assertNull(result.getResponse());
     }
 
@@ -201,7 +201,7 @@ public class CollectionsServiceTest {
         List<String> testcases = new ArrayList<>();
         testcases.add("sbi1");
         Mockito.when(collectionTestcaseRepository.getTestCasesByCollectionId(Mockito.any(), Mockito.any())).thenReturn(testcases);
-        ResponseWrapper<CollectionTestCasesResponseDto> result = collectionsService.getTestCasesForCollection(id);
+        ResponseWrapper<CollectionTestCasesResponseDto> result = collectionsService.getTestCasesForCollection(partnerId, id);
         Assert.assertNull(result.getResponse());
     }
 
@@ -211,7 +211,7 @@ public class CollectionsServiceTest {
      */
     @Test
     public void getTestcasesForCollectionTestException(){
-        collectionsService.getTestCasesForCollection(id);
+        collectionsService.getTestCasesForCollection(partnerId, id);
     }
 
 

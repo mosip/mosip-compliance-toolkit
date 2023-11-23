@@ -3,6 +3,7 @@ package io.mosip.compliance.toolkit.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,14 +59,21 @@ public class CollectionsController {
 
 	@GetMapping(value = "/getTestCasesForCollection/{id}")
 	public ResponseWrapper<CollectionTestCasesResponseDto> getTestCasesForCollection(@PathVariable String id) {
-		return collectionsService.getTestCasesForCollection(id);
+		return collectionsService.getTestCasesForCollection(collectionsService.getPartnerId(), id);
+	}
+	
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getAdminPartnerReport())")
+	@GetMapping(value = "/getPartnerTestCasesForCollection/{partnerId}/{id}")
+	public ResponseWrapper<CollectionTestCasesResponseDto> getPartnerTestCasesForCollection(@PathVariable String partnerId, 
+			@PathVariable String id) {
+		return collectionsService.getTestCasesForCollection(partnerId, id);
 	}
 
 	@GetMapping(value = "/getCollection/{id}")
 	public ResponseWrapper<CollectionDto> getCollection(@PathVariable String id) {
 		return collectionsService.getCollectionById(id);
 	}
-
+	
 	@PostMapping(value = "/addCollection")
 	public ResponseWrapper<CollectionDto> addCollection(
 			@RequestBody RequestWrapper<CollectionRequestDto> requestWrapper, Errors errors) throws Exception {
