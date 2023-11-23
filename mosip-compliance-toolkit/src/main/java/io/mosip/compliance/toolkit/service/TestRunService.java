@@ -89,7 +89,7 @@ public class TestRunService {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 
-	private String getPartnerId() {
+	public String getPartnerId() {
 		String partnerId = authUserDetails().getUsername();
 		return partnerId;
 	}
@@ -222,16 +222,16 @@ public class TestRunService {
 		return responseWrapper;
 	}
 
-	public ResponseWrapper<TestRunDetailsResponseDto> getTestRunDetails(String runId) {
+	public ResponseWrapper<TestRunDetailsResponseDto> getTestRunDetails(String partnerId, String runId) {
 		ResponseWrapper<TestRunDetailsResponseDto> responseWrapper = new ResponseWrapper<>();
 		TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
 		try {
 			List<TestRunDetailsDto> testRunDetailsList = new ArrayList<TestRunDetailsDto>();
 			if (Objects.nonNull(runId)) {
-				TestRunEntity testRunEntity = testRunRepository.getTestRunById(runId, getPartnerId());
+				TestRunEntity testRunEntity = testRunRepository.getTestRunById(runId, partnerId);
 				if (Objects.nonNull(testRunEntity)) {
 					List<TestRunDetailsEntity> testRunDetailsEntityList = testRunDetailsRepository
-							.getTestRunDetails(runId, getPartnerId());
+							.getTestRunDetails(runId, partnerId);
 					if (Objects.nonNull(testRunDetailsEntityList) && !testRunDetailsEntityList.isEmpty()) {
 						ObjectMapper mapper = objectMapperConfig.objectMapper();
 						for (TestRunDetailsEntity testRunDetailsEntity : testRunDetailsEntityList) {
