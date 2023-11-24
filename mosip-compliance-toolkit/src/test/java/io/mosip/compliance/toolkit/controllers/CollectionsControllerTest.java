@@ -45,6 +45,7 @@ public class CollectionsControllerTest {
     private Errors errors;
 
     final static String id = "123";
+    final static String partnerId = "test";
     static String projectType;
 
     /*
@@ -73,7 +74,7 @@ public class CollectionsControllerTest {
     @Test
     public void getTestcasesForCollectionTest(){
         ResponseWrapper<CollectionTestCasesResponseDto> response = new ResponseWrapper<>();
-        Mockito.when(collectionsService.getTestCasesForCollection(id)).thenReturn(response);
+        Mockito.when(collectionsService.getTestCasesForCollection(partnerId, id)).thenReturn(response);
         collectionsController.getTestCasesForCollection(id);
     }
 

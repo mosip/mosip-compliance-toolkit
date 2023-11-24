@@ -1,6 +1,7 @@
 package io.mosip.compliance.toolkit.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -70,7 +71,13 @@ public class TestRunController {
 
 	@GetMapping(value = "/getTestRunDetails/{runId}")
 	public ResponseWrapper<TestRunDetailsResponseDto> getTestRunDetails(@PathVariable String runId) {
-		return testRunService.getTestRunDetails(runId);
+		return testRunService.getTestRunDetails(testRunService.getPartnerId(), runId);
+	}
+	
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getAdminPartnerReport())")
+	@GetMapping(value = "/getPartnerTestRunDetails/{partnerId}/{runId}")
+	public ResponseWrapper<TestRunDetailsResponseDto> getPartnerTestRunDetails(@PathVariable String partnerId, @PathVariable String runId) {
+		return testRunService.getTestRunDetails(partnerId, runId);
 	}
 
 	@GetMapping(value = "/getTestRunHistory")
