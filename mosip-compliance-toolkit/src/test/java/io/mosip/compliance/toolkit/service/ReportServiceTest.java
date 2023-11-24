@@ -87,7 +87,7 @@ public class ReportServiceTest {
         @Mock
         private CollectionsService collectionsService;
 
-
+        final static String partnerId = "test";
 
         @Before
         public void before() {
@@ -135,7 +135,7 @@ public class ReportServiceTest {
                 testRunDetailsResponseDto1.setTestRunDetailsList(testRunDetailsDtoList);
                 testRunDetailsResponse.setResponse(testRunDetailsResponseDto1);
 
-                Mockito.when(testRunService.getTestRunDetails(Mockito.any()))
+                Mockito.when(testRunService.getTestRunDetails(Mockito.any(), Mockito.any()))
                                 .thenReturn(testRunDetailsResponse);
                 reportGeneratorService.generateDraftReport(requestDto, "abcdefgh");
         }
@@ -164,7 +164,7 @@ public class ReportServiceTest {
                 testRunDetailsDtoList.add(testRunDetailsDto);
                 testRunDetailsResponseDto1.setTestRunDetailsList(testRunDetailsDtoList);
                 testRunDetailsResponse.setResponse(testRunDetailsResponseDto1);
-                Mockito.when(testRunService.getTestRunDetails(Mockito.any()))
+                Mockito.when(testRunService.getTestRunDetails(Mockito.any(), Mockito.any()))
                                 .thenReturn(testRunDetailsResponse);
                 reportGeneratorService.generateDraftReport(requestDto, "abcdefgh");
         }
@@ -208,7 +208,7 @@ public class ReportServiceTest {
 
                 //Mockito.when(sdkProjectService.getSdkProject(Mockito.any())).thenReturn(sdkProjectResponse);
                 Mockito.when(mockAuthentication.getPrincipal()).thenReturn(mockAuthUserDetails);
-                Mockito.when(testRunService.getTestRunDetails(Mockito.any()))
+                Mockito.when(testRunService.getTestRunDetails(Mockito.any(), Mockito.any()))
                         .thenReturn(testRunDetailsResponse);
                 reportGeneratorService.generateDraftReport(requestDto, "abcdefgh");
         }
@@ -237,7 +237,7 @@ public class ReportServiceTest {
                 testRunDetailsDtoList.add(testRunDetailsDto);
                 testRunDetailsResponseDto1.setTestRunDetailsList(testRunDetailsDtoList);
                 testRunDetailsResponse.setResponse(testRunDetailsResponseDto1);
-                Mockito.when(testRunService.getTestRunDetails(Mockito.any()))
+                Mockito.when(testRunService.getTestRunDetails(Mockito.any(), Mockito.any()))
                                 .thenReturn(testRunDetailsResponse);
                 reportGeneratorService.generateDraftReport(requestDto, "abcdefgh");
         }
@@ -268,7 +268,7 @@ public class ReportServiceTest {
                 testRunDetailsResponseDto1.setRunDtimes(LocalDateTime.now());
                 testRunDetailsResponseDto1.setExecutionDtimes(LocalDateTime.now().plusMinutes(4));
                 testRunDetailsResponse.setResponse(testRunDetailsResponseDto1);
-                Mockito.when(testRunService.getTestRunDetails(Mockito.any()))
+                Mockito.when(testRunService.getTestRunDetails(Mockito.any(), Mockito.any()))
                         .thenReturn(testRunDetailsResponse);
 
                 ResponseWrapper<AbisProjectDto> abisProjectResponse = new ResponseWrapper<>();
@@ -472,7 +472,7 @@ public class ReportServiceTest {
               TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
               testRunDetailsResponseDto.setRunId("abc");
               testRunDetailsResponseDto.setCollectionId("123");
-              collectionsService.getTestCasesForCollection(testRunDetailsResponseDto.getCollectionId());
+              collectionsService.getTestCasesForCollection(Mockito.any(), testRunDetailsResponseDto.getCollectionId());
               ReflectionTestUtils.invokeMethod(reportGeneratorService, "getTotalTestcases", testRunDetailsResponseDto);
         }
 

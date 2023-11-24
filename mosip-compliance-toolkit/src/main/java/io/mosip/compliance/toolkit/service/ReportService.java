@@ -628,7 +628,7 @@ public class ReportService {
 
 	private ResponseWrapper<TestRunDetailsResponseDto> getTestRunDetails(String testRunId) {
 		ResponseWrapper<TestRunDetailsResponseDto> testRunDetailsResponseDto = testRunService
-				.getTestRunDetails(testRunId);
+				.getTestRunDetails(collectionsService.getPartnerId(), testRunId);
 		return testRunDetailsResponseDto;
 	}
 
@@ -685,7 +685,7 @@ public class ReportService {
 
 	private List<TestCaseDto> getAllTestcases(TestRunDetailsResponseDto testRunDetailsResponseDto) {
 		ResponseWrapper<CollectionTestCasesResponseDto> testcasesForCollection = collectionsService
-				.getTestCasesForCollection(testRunDetailsResponseDto.getCollectionId());
+				.getTestCasesForCollection(collectionsService.getPartnerId(), testRunDetailsResponseDto.getCollectionId());
 		List<TestCaseDto> testcasesList = testcasesForCollection.getResponse().getTestcases();
 		return testcasesList;
 	}
