@@ -40,7 +40,7 @@ public class TestRunControllerTest {
     private Errors errors;
 
     final static String partnerId = "test";
-    
+
     /*
      * This class tests the addTestRun method in case of Exception
      */
@@ -102,6 +102,25 @@ public class TestRunControllerTest {
         ResponseWrapper<TestRunStatusDto> response = new ResponseWrapper<>();
         Mockito.when(testRunService.getTestRunStatus(runId)).thenReturn(response);
         ResponseWrapper<TestRunStatusDto> result = testRunController.getTestRunStatus(runId);
+        Assert.assertEquals(response.getResponse(), result.getResponse());
+    }
+
+    @Test
+    public void getPartnerTestRunDetailsTest() throws Exception {
+        String runId = "123";
+        String partnerId = "1234";
+        ResponseWrapper<TestRunDetailsResponseDto> response = new ResponseWrapper<>();
+        Mockito.when(testRunService.getTestRunDetails(partnerId, runId)).thenReturn(response);
+        ResponseWrapper<TestRunDetailsResponseDto> result = testRunController.getPartnerTestRunDetails(partnerId, runId);
+        Assert.assertEquals(response.getResponse(), result.getResponse());
+    }
+
+    @Test
+    public void deleteTestRunTest() throws Exception {
+        String runId = "123";
+        ResponseWrapper<Boolean> response = new ResponseWrapper<>();
+        Mockito.when(testRunService.deleteTestRun(runId)).thenReturn(response);
+        ResponseWrapper<Boolean> result = testRunController.deleteTestRun(runId);
         Assert.assertEquals(response.getResponse(), result.getResponse());
     }
 }

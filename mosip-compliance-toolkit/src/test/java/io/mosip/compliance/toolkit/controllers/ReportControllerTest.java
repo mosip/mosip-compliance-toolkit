@@ -1,13 +1,19 @@
 package io.mosip.compliance.toolkit.controllers;
 
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import io.mosip.compliance.toolkit.dto.report.ComplianceTestRunSummaryDto;
+import io.mosip.kernel.core.http.ResponseWrapper;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContext;
@@ -21,7 +27,9 @@ import io.mosip.compliance.toolkit.service.ReportService;
 import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.kernel.core.http.RequestWrapper;
 
-@ContextConfiguration(classes = { TestContext.class, WebApplicationContext.class })
+import javax.validation.constraints.AssertTrue;
+
+@ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
 @RunWith(SpringRunner.class)
 @WebMvcTest
 public class ReportControllerTest {
@@ -34,6 +42,9 @@ public class ReportControllerTest {
 
     @Mock
     RequestValidator requestValidator;
+
+    @Mock
+    Errors errors;
 
     @Test
     public void initBinderTest() {
@@ -56,5 +67,68 @@ public class ReportControllerTest {
         value.setVersion("1.0");
         String origin = "abc";
         reportGeneratorController.generateDraftReport(value, origin, errors);
+    }
+
+    @Test
+    public void isReportAlreadySubmittedTest() throws Exception {
+        RequestWrapper<ReportRequestDto> reportRequestWrapper = new RequestWrapper<>();
+        ResponseWrapper<Boolean> result = new ResponseWrapper<>();
+        Mockito.when(reportGeneratorController.isReportAlreadySubmitted(reportRequestWrapper, errors)).thenReturn(result);
+        reportGeneratorController.isReportAlreadySubmitted(reportRequestWrapper, errors);
+    }
+
+    @Test
+    public void submitReportForReviewTest() throws Exception {
+        RequestWrapper<ReportRequestDto> reportRequestWrapper = new RequestWrapper<>();
+        ReportRequestDto reportRequestDto = new ReportRequestDto();
+        reportRequestWrapper.setId("partner.report.post");
+        reportRequestWrapper.setRequest(reportRequestDto);
+        reportGeneratorController.submitReportForReview(reportRequestWrapper, errors);
+    }
+
+    @Test
+    public void getSubmittedReportTest() throws Exception {
+        RequestWrapper<ReportRequestDto> reportRequestWrapper = new RequestWrapper<>();
+        ReportRequestDto reportRequestDto = new ReportRequestDto();
+        reportRequestWrapper.setId("partner.report.post");
+        reportRequestWrapper.setRequest(reportRequestDto);
+        reportGeneratorController.getSubmittedReport(reportRequestWrapper, errors);
+    }
+
+    @Test
+    public void getSubmittedReportListTest() throws Exception {
+        reportGeneratorController.getSubmittedReportList();
+        verify(reportGeneratorService).getReportList(eq(false), eq(null));
+    }
+
+    @Test
+    public void getPartnerReportListTest() throws Exception {
+        String reportStatus = "review";
+        reportGeneratorController.getPartnerReportList(reportStatus);
+        verify(reportGeneratorService).getReportList(eq(true), eq(reportStatus));
+    }
+
+    @Test
+    public void getPartnerReportTest() throws Exception {
+        RequestWrapper<ReportRequestDto> requestWrapper = new RequestWrapper<>();
+        String partnerId = "abc";
+        reportGeneratorController.getPartnerReport(partnerId, requestWrapper, errors);
+        verify(reportGeneratorService).getSubmittedReport(eq(partnerId), eq(requestWrapper.getRequest()), eq(false));
+    }
+
+    @Test
+    public void approvePartnerReportTest() throws Exception {
+        RequestWrapper<ReportRequestDto> requestWrapper = new RequestWrapper<>();
+        requestWrapper.setId("partner.report.post");
+        String partnerId = "abc";
+        reportGeneratorController.approvePartnerReport(partnerId, requestWrapper, errors);
+    }
+
+    @Test
+    public void rejectPartnerReportTest() throws Exception {
+        RequestWrapper<ReportRequestDto> requestWrapper = new RequestWrapper<>();
+        requestWrapper.setId("partner.report.post");
+        String partnerId = "abc";
+        reportGeneratorController.rejectPartnerReport(partnerId, requestWrapper, errors);
     }
 }
