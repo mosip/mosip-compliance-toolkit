@@ -1,7 +1,11 @@
 package io.mosip.compliance.toolkit.service;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -10,6 +14,19 @@ import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.mosip.compliance.toolkit.dto.collections.CollectionTestCasesResponseDto;
+import io.mosip.compliance.toolkit.dto.report.*;
+import io.mosip.compliance.toolkit.entity.ComplianceTestRunSummaryEntity;
+import io.mosip.compliance.toolkit.entity.ComplianceTestRunSummaryPK;
+import io.mosip.compliance.toolkit.repository.*;
+import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
+import io.mosip.compliance.toolkit.util.StringUtil;
+import io.mosip.kernel.core.http.RequestWrapper;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +39,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -31,10 +49,6 @@ import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.projects.AbisProjectDto;
 import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
 import io.mosip.compliance.toolkit.dto.projects.SdkProjectDto;
-import io.mosip.compliance.toolkit.dto.report.PartnerDetailsDto;
-import io.mosip.compliance.toolkit.dto.report.ReportRequestDto;
-import io.mosip.compliance.toolkit.dto.report.SbiProjectTable;
-import io.mosip.compliance.toolkit.dto.report.TestRunTable;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
@@ -44,6 +58,10 @@ import io.mosip.kernel.core.authmanager.authadapter.model.MosipUserDto;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.http.ResponseWrapper;
 
+import javax.validation.constraints.AssertTrue;
+import java.util.Optional;
+
+@TestPropertySource(properties = "mosip.toolkit.api.id.partner.report.get=value")
 @RunWith(MockitoJUnitRunner.class)
 public class ReportServiceTest {
 
@@ -87,7 +105,32 @@ public class ReportServiceTest {
         @Mock
         private CollectionsService collectionsService;
 
-        final static String partnerId = "test";
+        @Mock
+        ComplianceTestRunSummaryRepository complianceTestRunSummaryRepository;
+
+        @Mock
+        ObjectMapper objectMapper;
+
+        @Mock
+        ObjectMapperConfig objectMapperConfig;
+
+        @Mock
+        ComplianceTestRunSummaryPK complianceTestRunSummaryPK;
+
+        @Mock
+        SbiProjectRepository sbiProjectRepository;
+
+        @Mock
+        SdkProjectRepository sdkProjectRepository;
+
+        @Mock
+        AbisProjectRepository abisProjectRepository;
+
+        @Mock
+        CollectionsRepository collectionsRepository;
+
+        @Mock
+        ResourceCacheService resourceCacheService;
 
         @Before
         public void before() {
@@ -99,7 +142,7 @@ public class ReportServiceTest {
 
                 SecurityContext securityContext = mock(SecurityContext.class);
                 SecurityContextHolder.setContext(securityContext);
-                Mockito.when(securityContext.getAuthentication()).thenReturn(mockAuthentication);
+                when(securityContext.getAuthentication()).thenReturn(mockAuthentication);
 
                 String ignoreSdkTestcases = "SDK2000";
                 ReflectionTestUtils.setField(reportGeneratorService, "ignoreTestDataSourceForSdkTestcases", ignoreSdkTestcases);
@@ -134,9 +177,92 @@ public class ReportServiceTest {
                 testRunDetailsDtoList.add(testRunDetailsDto);
                 testRunDetailsResponseDto1.setTestRunDetailsList(testRunDetailsDtoList);
                 testRunDetailsResponse.setResponse(testRunDetailsResponseDto1);
+                MosipUserDto mosipUserDto = getMosipUserDto();
+                AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+                ComplianceTestRunSummaryEntity complianceTestRunSummaryEntity = new ComplianceTestRunSummaryEntity();
+                complianceTestRunSummaryEntity.setProjectType("SBI");
+                complianceTestRunSummaryEntity.setReportStatus("");
+                SecurityContextHolder.setContext(securityContext);
+                reportGeneratorService.generateDraftReport(requestDto, "abcdefgh");
+        }
 
-                Mockito.when(testRunService.getTestRunDetails(Mockito.any(), Mockito.any()))
-                                .thenReturn(testRunDetailsResponse);
+        @Test
+        public void testgenerateDraftReportSBI1() throws JsonProcessingException {
+                ReportRequestDto requestDto = new ReportRequestDto();
+                requestDto.setProjectType("SBI");
+                requestDto.setProjectId("kdshfksjd");
+                requestDto.setCollectionId("sajdnsaldk");
+                requestDto.setTestRunId("12345678");
+                ResponseWrapper<TestRunDetailsResponseDto> testRunDetailsResponse = new ResponseWrapper<TestRunDetailsResponseDto>();
+                TestRunDetailsResponseDto testRunDetailsResponseDto1 = new TestRunDetailsResponseDto();
+                testRunDetailsResponseDto1.setCollectionId("lkdjskdjsaldks");
+                testRunDetailsResponseDto1.setRunId("ksjdkjdhaskj");
+                testRunDetailsResponseDto1.setRunDtimes(LocalDateTime.now());
+                testRunDetailsResponseDto1.setExecutionDtimes(LocalDateTime.now());
+                List<TestRunDetailsDto> testRunDetailsDtoList = new ArrayList<>();
+                TestRunDetailsDto testRunDetailsDto = new TestRunDetailsDto();
+                testRunDetailsDto.setResultStatus("Success");
+                testRunDetailsDto.setRunId("kjdfhkfdjhskjd");
+                testRunDetailsDto.setTestDataSource("sjadskajddk");
+                testRunDetailsDto.setMethodUrl("https://");
+                testRunDetailsDto.setMethodRequest(null);
+                testRunDetailsDto.setMethodResponse("{\"biometrics\":\"Fingerprint\"}");
+                testRunDetailsDto.setResultDescription("Test Run successful");
+                testRunDetailsDto.setTestcaseId("SBI1000");
+                testRunDetailsDtoList.add(testRunDetailsDto);
+                testRunDetailsResponseDto1.setTestRunDetailsList(testRunDetailsDtoList);
+                testRunDetailsResponse.setResponse(testRunDetailsResponseDto1);
+                MosipUserDto mosipUserDto = getMosipUserDto();
+                AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+                when(authentication.getPrincipal()).thenReturn(authUserDetails);
+                when(securityContext.getAuthentication()).thenReturn(authentication);
+                ComplianceTestRunSummaryEntity complianceTestRunSummaryEntity = new ComplianceTestRunSummaryEntity();
+                complianceTestRunSummaryEntity.setProjectType("SBI");
+                complianceTestRunSummaryEntity.setReportStatus("draft");
+
+                Mockito.when(objectMapperConfig.objectMapper()).thenReturn(objectMapper);
+
+                ObjectMapper mapper = new ObjectMapper();
+                ArrayNode arrayNode = mapper.createArrayNode();
+                ObjectNode element = mapper.createObjectNode();
+                ObjectNode value1 = mapper.createObjectNode();
+                value1.put("make", "abc");
+                value1.put("model", "aisak");
+                value1.put("serialNo", "aisak");
+                value1.put("deviceProvider", "aisaasdk");
+                value1.put("deviceProviderId", "aaesrdtyisak");
+                element.put("deviceInfoDecoded", value1);
+                element.put("digitalIdDecoded", value1);
+                element.put("dataDecoded", value1);
+                arrayNode.add(element);
+                ObjectNode methodResponse = mapper.createObjectNode();
+                ArrayNode arrayNode1 = mapper.createArrayNode();
+                arrayNode1.add(element);
+                methodResponse.put("biometrics", arrayNode1);
+
+                ObjectMapper objectMapper = objectMapperConfig.objectMapper();
+                when(objectMapper.readValue(anyString(), Mockito.eq(ArrayNode.class))).thenReturn(arrayNode);
+                when(objectMapper.readValue(anyString(), Mockito.eq(ObjectNode.class))).thenReturn(methodResponse);
+                ResponseWrapper<SbiProjectDto> responseWrapper = new ResponseWrapper<>();
+                SbiProjectDto sbiProjectDto = new SbiProjectDto();
+                sbiProjectDto.setId("123");
+                responseWrapper.setResponse(sbiProjectDto);
+                when(sbiProjectService.getSbiProject(anyString())).thenReturn(responseWrapper);
+                TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
+                testRunDetailsResponseDto.setCollectionId("1234");
+                ResponseWrapper<CollectionTestCasesResponseDto> responseWrapper1 = new ResponseWrapper<>();
+                CollectionTestCasesResponseDto collectionTestCasesResponseDto = new CollectionTestCasesResponseDto();
+                List<TestCaseDto> testCaseDtos = new ArrayList<>();
+                collectionTestCasesResponseDto.setTestcases(testCaseDtos);
+                responseWrapper1.setResponse(collectionTestCasesResponseDto);
+                Mockito.when(collectionsService.getPartnerId()).thenReturn("123456");
+                Mockito.when(collectionsService.getTestCasesForCollection(anyString(), anyString())).thenReturn(responseWrapper1);
+                Mockito.when(collectionsService.getTestCasesForCollection(anyString(), anyString())).thenReturn(responseWrapper1);
+                when(collectionsRepository.getCollectionNameById(anyString(), anyString())).thenReturn("abc");
+                when(resourceCacheService.getOrgName(anyString())).thenReturn("abcd");
+                Mockito.when(complianceTestRunSummaryRepository.findById(any())).thenReturn(Optional.of(complianceTestRunSummaryEntity));
+                SecurityContextHolder.setContext(securityContext);
+                when(testRunService.getTestRunDetails(any(), any())).thenReturn(testRunDetailsResponse);
                 reportGeneratorService.generateDraftReport(requestDto, "abcdefgh");
         }
 
@@ -165,7 +291,8 @@ public class ReportServiceTest {
                 testRunDetailsResponseDto1.setTestRunDetailsList(testRunDetailsDtoList);
                 testRunDetailsResponse.setResponse(testRunDetailsResponseDto1);
                 Mockito.when(testRunService.getTestRunDetails(Mockito.any(), Mockito.any()))
-                                .thenReturn(testRunDetailsResponse);
+
+                        .thenReturn(testRunDetailsResponse);
                 reportGeneratorService.generateDraftReport(requestDto, "abcdefgh");
         }
 
@@ -204,11 +331,9 @@ public class ReportServiceTest {
                 sdkProjectDto.setWebsiteUrl("https://");
                 sdkProjectResponse.setResponse(sdkProjectDto);
 
-
-
-                //Mockito.when(sdkProjectService.getSdkProject(Mockito.any())).thenReturn(sdkProjectResponse);
                 Mockito.when(mockAuthentication.getPrincipal()).thenReturn(mockAuthUserDetails);
                 Mockito.when(testRunService.getTestRunDetails(Mockito.any(), Mockito.any()))
+
                         .thenReturn(testRunDetailsResponse);
                 reportGeneratorService.generateDraftReport(requestDto, "abcdefgh");
         }
@@ -238,7 +363,8 @@ public class ReportServiceTest {
                 testRunDetailsResponseDto1.setTestRunDetailsList(testRunDetailsDtoList);
                 testRunDetailsResponse.setResponse(testRunDetailsResponseDto1);
                 Mockito.when(testRunService.getTestRunDetails(Mockito.any(), Mockito.any()))
-                                .thenReturn(testRunDetailsResponse);
+
+                        .thenReturn(testRunDetailsResponse);
                 reportGeneratorService.generateDraftReport(requestDto, "abcdefgh");
         }
 
@@ -268,8 +394,7 @@ public class ReportServiceTest {
                 testRunDetailsResponseDto1.setRunDtimes(LocalDateTime.now());
                 testRunDetailsResponseDto1.setExecutionDtimes(LocalDateTime.now().plusMinutes(4));
                 testRunDetailsResponse.setResponse(testRunDetailsResponseDto1);
-                Mockito.when(testRunService.getTestRunDetails(Mockito.any(), Mockito.any()))
-                        .thenReturn(testRunDetailsResponse);
+                Mockito.when(testRunService.getTestRunDetails(Mockito.any(), Mockito.any())).thenReturn(testRunDetailsResponse);
 
                 ResponseWrapper<AbisProjectDto> abisProjectResponse = new ResponseWrapper<>();
                 AbisProjectDto abisProjectDto = new AbisProjectDto();
@@ -304,11 +429,10 @@ public class ReportServiceTest {
                 caseDto.setTestCaseType("ABIS");
                 testCaseDto.setResponse(caseDto);
 
-                //Mockito.when(partnerManagerHelper.getPartnerDetails(Mockito.any())).thenReturn(partnerDetailsDto);
-                Mockito.when(mockAuthentication.getPrincipal()).thenReturn(mockAuthUserDetails);
-                //Mockito.when(abisProjectService.getAbisProject(Mockito.any())).thenReturn(abisProjectResponse);
+                when(mockAuthentication.getPrincipal()).thenReturn(mockAuthUserDetails);
                 reportGeneratorService.generateDraftReport(requestDto, "abcdefgh");
         }
+
         @Test
         public void testHandleServiceErrors_WithErrors() throws Exception {
                 List<ServiceError> serviceErrors = new ArrayList<>();
@@ -320,11 +444,10 @@ public class ReportServiceTest {
 
         }
 
-        private ResponseEntity<Resource> invokeHandleServiceErrors(ReportRequestDto requestDto, List<ServiceError> serviceErrors)
-                throws Exception {
+        private ResponseEntity<Resource> invokeHandleServiceErrors(ReportRequestDto requestDto, List<ServiceError> serviceErrors) throws Exception {
                 ReportService reportGeneratorService = new ReportService();
-                Class<?>[] parameterTypes = { ReportRequestDto.class, List.class };
-                Object[] arguments = { requestDto, serviceErrors };
+                Class<?>[] parameterTypes = {ReportRequestDto.class, List.class};
+                Object[] arguments = {requestDto, serviceErrors};
                 java.lang.reflect.Method privateMethod = ReportService.class.getDeclaredMethod("handleServiceErrors", parameterTypes);
                 privateMethod.setAccessible(true);
                 return (ResponseEntity<Resource>) privateMethod.invoke(reportGeneratorService, arguments);
@@ -350,12 +473,10 @@ public class ReportServiceTest {
                 sbiProjectTable1 = invokeGetSbiProjectDetails(sbiProjectDto, testRunDetailsList, sbiProjectTable);
         }
 
-        private SbiProjectTable invokeGetSbiProjectDetails(SbiProjectDto projectDto, List<TestRunDetailsDto> testRunDetailsList,
-        SbiProjectTable sbiProjectTable)
-                throws Exception {
+        private SbiProjectTable invokeGetSbiProjectDetails(SbiProjectDto projectDto, List<TestRunDetailsDto> testRunDetailsList, SbiProjectTable sbiProjectTable) throws Exception {
                 ReportService reportGeneratorService = new ReportService();
-                Class<?>[] parameterTypes = { SbiProjectDto.class, List.class, SbiProjectTable.class };
-                Object[] arguments = { projectDto, testRunDetailsList, sbiProjectTable };
+                Class<?>[] parameterTypes = {SbiProjectDto.class, List.class, SbiProjectTable.class};
+                Object[] arguments = {projectDto, testRunDetailsList, sbiProjectTable};
                 java.lang.reflect.Method privateMethod = ReportService.class.getDeclaredMethod("getSbiProjectDetails", parameterTypes);
                 privateMethod.setAccessible(true);
                 return (SbiProjectTable) privateMethod.invoke(reportGeneratorService, arguments);
@@ -369,24 +490,23 @@ public class ReportServiceTest {
                 JsonNode modelNode = Mockito.mock(JsonNode.class);
                 JsonNode serialNoNode = Mockito.mock(JsonNode.class);
 
-                Mockito.when(dataNode.get(AppConstants.DIGITAL_ID_DECODED_DATA)).thenReturn(dataNode);
-                Mockito.when(dataNode.get(AppConstants.MAKE)).thenReturn(makeNode);
-                Mockito.when(dataNode.get(AppConstants.MODEL)).thenReturn(modelNode);
-                Mockito.when(dataNode.get(AppConstants.SERIAL_NO)).thenReturn(serialNoNode);
-                Mockito.when(dataNode.get(AppConstants.DEVICE_PROVIDER)).thenReturn(dataNode);
-                Mockito.when(dataNode.get(AppConstants.DEVICE_PROVIDER_ID)).thenReturn(dataNode);
+                when(dataNode.get(AppConstants.DIGITAL_ID_DECODED_DATA)).thenReturn(dataNode);
+                when(dataNode.get(AppConstants.MAKE)).thenReturn(makeNode);
+                when(dataNode.get(AppConstants.MODEL)).thenReturn(modelNode);
+                when(dataNode.get(AppConstants.SERIAL_NO)).thenReturn(serialNoNode);
+                when(dataNode.get(AppConstants.DEVICE_PROVIDER)).thenReturn(dataNode);
+                when(dataNode.get(AppConstants.DEVICE_PROVIDER_ID)).thenReturn(dataNode);
 
                 String makeInResp = "MakeInResp";
                 String modelInResp = "ModelInResp";
                 String serialNoInResp = "SerialNoInResp";
 
-                Mockito.when(makeNode.asText()).thenReturn(makeInResp);
-                Mockito.when(modelNode.asText()).thenReturn(modelInResp);
-                Mockito.when(serialNoNode.asText()).thenReturn(serialNoInResp);
+                when(makeNode.asText()).thenReturn(makeInResp);
+                when(modelNode.asText()).thenReturn(modelInResp);
+                when(serialNoNode.asText()).thenReturn(serialNoInResp);
 
                 boolean bool = true;
-                boolean bool1 = invokeValidateDeviceMakeModelSerialNo(sbiProjectTable, bool,
-                        dataNode);
+                boolean bool1 = invokeValidateDeviceMakeModelSerialNo(sbiProjectTable, bool, dataNode);
         }
 
         @Test
@@ -400,20 +520,19 @@ public class ReportServiceTest {
                 JsonNode modelNode = Mockito.mock(JsonNode.class);
                 JsonNode serialNoNode = Mockito.mock(JsonNode.class);
 
-                Mockito.when(dataNode.get(AppConstants.DIGITAL_ID_DECODED_DATA)).thenReturn(dataNode);
-                Mockito.when(dataNode.get(AppConstants.MAKE)).thenReturn(makeNode);
-                Mockito.when(dataNode.get(AppConstants.MODEL)).thenReturn(modelNode);
-                Mockito.when(dataNode.get(AppConstants.SERIAL_NO)).thenReturn(serialNoNode);
-                Mockito.when(dataNode.get(AppConstants.DEVICE_PROVIDER)).thenReturn(dataNode);
-                Mockito.when(dataNode.get(AppConstants.DEVICE_PROVIDER_ID)).thenReturn(dataNode);
+                when(dataNode.get(AppConstants.DIGITAL_ID_DECODED_DATA)).thenReturn(dataNode);
+                when(dataNode.get(AppConstants.MAKE)).thenReturn(makeNode);
+                when(dataNode.get(AppConstants.MODEL)).thenReturn(modelNode);
+                when(dataNode.get(AppConstants.SERIAL_NO)).thenReturn(serialNoNode);
+                when(dataNode.get(AppConstants.DEVICE_PROVIDER)).thenReturn(dataNode);
+                when(dataNode.get(AppConstants.DEVICE_PROVIDER_ID)).thenReturn(dataNode);
 
-                Mockito.when(makeNode.asText()).thenReturn(null);
-                Mockito.when(modelNode.asText()).thenReturn(null);
-                Mockito.when(serialNoNode.asText()).thenReturn(null);
+                when(makeNode.asText()).thenReturn(null);
+                when(modelNode.asText()).thenReturn(null);
+                when(serialNoNode.asText()).thenReturn(null);
 
                 boolean bool = true;
-                boolean bool1 = invokeValidateDeviceMakeModelSerialNo(sbiProjectTable, bool,
-                        dataNode);
+                boolean bool1 = invokeValidateDeviceMakeModelSerialNo(sbiProjectTable, bool, dataNode);
         }
 
         @Test
@@ -427,32 +546,29 @@ public class ReportServiceTest {
                 JsonNode modelNode = Mockito.mock(JsonNode.class);
                 JsonNode serialNoNode = Mockito.mock(JsonNode.class);
 
-                Mockito.when(dataNode.get(AppConstants.DIGITAL_ID_DECODED_DATA)).thenReturn(dataNode);
-                Mockito.when(dataNode.get(AppConstants.MAKE)).thenReturn(makeNode);
-                Mockito.when(dataNode.get(AppConstants.MODEL)).thenReturn(modelNode);
-                Mockito.when(dataNode.get(AppConstants.SERIAL_NO)).thenReturn(serialNoNode);
-                Mockito.when(dataNode.get(AppConstants.DEVICE_PROVIDER)).thenReturn(dataNode);
-                Mockito.when(dataNode.get(AppConstants.DEVICE_PROVIDER_ID)).thenReturn(dataNode);
+                when(dataNode.get(AppConstants.DIGITAL_ID_DECODED_DATA)).thenReturn(dataNode);
+                when(dataNode.get(AppConstants.MAKE)).thenReturn(makeNode);
+                when(dataNode.get(AppConstants.MODEL)).thenReturn(modelNode);
+                when(dataNode.get(AppConstants.SERIAL_NO)).thenReturn(serialNoNode);
+                when(dataNode.get(AppConstants.DEVICE_PROVIDER)).thenReturn(dataNode);
+                when(dataNode.get(AppConstants.DEVICE_PROVIDER_ID)).thenReturn(dataNode);
 
                 String makeInResp = "MakeInResp";
                 String modelInResp = "ModelInResp";
                 String serialNoInResp = "SerialNoInResp";
 
-                Mockito.when(makeNode.asText()).thenReturn(makeInResp);
-                Mockito.when(modelNode.asText()).thenReturn(modelInResp);
-                Mockito.when(serialNoNode.asText()).thenReturn(serialNoInResp);
+                when(makeNode.asText()).thenReturn(makeInResp);
+                when(modelNode.asText()).thenReturn(modelInResp);
+                when(serialNoNode.asText()).thenReturn(serialNoInResp);
 
                 boolean bool = true;
-                boolean bool1 = invokeValidateDeviceMakeModelSerialNo(sbiProjectTable, bool,
-                        dataNode);
+                boolean bool1 = invokeValidateDeviceMakeModelSerialNo(sbiProjectTable, bool, dataNode);
         }
 
-        private boolean invokeValidateDeviceMakeModelSerialNo(SbiProjectTable sbiProjectTable, boolean validationResult,
-                                                                      JsonNode dataNode)
-                throws Exception {
+        private boolean invokeValidateDeviceMakeModelSerialNo(SbiProjectTable sbiProjectTable, boolean validationResult, JsonNode dataNode) throws Exception {
                 ReportService reportGeneratorService = new ReportService();
-                Class<?>[] parameterTypes = { SbiProjectTable.class, boolean.class, JsonNode.class };
-                Object[] arguments = { sbiProjectTable, validationResult, dataNode };
+                Class<?>[] parameterTypes = {SbiProjectTable.class, boolean.class, JsonNode.class};
+                Object[] arguments = {sbiProjectTable, validationResult, dataNode};
                 java.lang.reflect.Method privateMethod = ReportService.class.getDeclaredMethod("validateDeviceMakeModelSerialNo", parameterTypes);
                 privateMethod.setAccessible(true);
                 return (boolean) privateMethod.invoke(reportGeneratorService, arguments);
@@ -469,11 +585,11 @@ public class ReportServiceTest {
 
         @Test(expected = Exception.class)
         public void getTotalTestcasesTest() {
-              TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
-              testRunDetailsResponseDto.setRunId("abc");
-              testRunDetailsResponseDto.setCollectionId("123");
-              collectionsService.getTestCasesForCollection(Mockito.any(), testRunDetailsResponseDto.getCollectionId());
-              ReflectionTestUtils.invokeMethod(reportGeneratorService, "getTotalTestcases", testRunDetailsResponseDto);
+                TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
+                testRunDetailsResponseDto.setRunId("abc");
+                testRunDetailsResponseDto.setCollectionId("123");
+                collectionsService.getTestCasesForCollection(Mockito.any(), testRunDetailsResponseDto.getCollectionId());
+                ReflectionTestUtils.invokeMethod(reportGeneratorService, "getTotalTestcases", testRunDetailsResponseDto);
         }
 
         @Test(expected = Exception.class)
@@ -509,8 +625,8 @@ public class ReportServiceTest {
                 TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
                 List<TestRunDetailsDto> testRunDetailsList = new ArrayList<>();
                 TestRunDetailsDto testRunDetailsDto = Mockito.mock(TestRunDetailsDto.class);
-                Mockito.when(testRunDetailsDto.getTestcaseId()).thenReturn("132");
-                Mockito.when(testRunDetailsDto.getResultStatus()).thenReturn(AppConstants.SUCCESS);
+                when(testRunDetailsDto.getTestcaseId()).thenReturn("132");
+                when(testRunDetailsDto.getResultStatus()).thenReturn(AppConstants.SUCCESS);
                 testRunDetailsList.add(testRunDetailsDto);
                 testRunDetailsResponseDto.setTestRunDetailsList(testRunDetailsList);
                 ReportService reportGeneratorService = new ReportService();
@@ -527,8 +643,8 @@ public class ReportServiceTest {
                 TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
                 List<TestRunDetailsDto> testRunDetailsList = new ArrayList<>();
                 TestRunDetailsDto testRunDetailsDto = Mockito.mock(TestRunDetailsDto.class);
-                Mockito.when(testRunDetailsDto.getTestcaseId()).thenReturn("123");
-                Mockito.when(testRunDetailsDto.getResultStatus()).thenReturn(AppConstants.SUCCESS);
+                when(testRunDetailsDto.getTestcaseId()).thenReturn("123");
+                when(testRunDetailsDto.getResultStatus()).thenReturn(AppConstants.SUCCESS);
                 testRunDetailsList.add(testRunDetailsDto);
                 testRunDetailsResponseDto.setTestRunDetailsList(testRunDetailsList);
                 ReportService reportGeneratorService = new ReportService();
@@ -542,7 +658,7 @@ public class ReportServiceTest {
                 LocalDateTime testRunStartDt = LocalDateTime.of(2023, 10, 17, 10, 30, 0);
                 testRunDetailsResponseDto.setRunDtimes(testRunStartDt);
 
-                String result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "getTestRunStartDt",testRunDetailsResponseDto);
+                String result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "getTestRunStartDt", testRunDetailsResponseDto);
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
                 String expected = formatter.format(testRunStartDt);
@@ -550,22 +666,400 @@ public class ReportServiceTest {
         }
 
         @Test
-		public void getReportValidityDtTest() {
+        public void getReportValidityDtTest() {
                 TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
                 LocalDateTime testRunStartDt = LocalDateTime.of(2023, 10, 17, 10, 30, 0);
                 testRunDetailsResponseDto.setRunDtimes(testRunStartDt);
                 int reportExpiryPeriod = 6;
-                String result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "getReportValidityDt",testRunDetailsResponseDto);
+                String result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "getReportValidityDt", testRunDetailsResponseDto);
+        }
+
+        @Test
+        public void getSdkProjectDetailsTest() {
+                SdkProjectDto sdkProjectDto = new SdkProjectDto();
+                sdkProjectDto.setName("sdk");
+                sdkProjectDto.setProjectType("SDK");
+                sdkProjectDto.setPurpose("check quality");
+                sdkProjectDto.setSdkVersion("1.0");
+                sdkProjectDto.setSdkHash("sdf");
+                sdkProjectDto.setWebsiteUrl("test.com");
+                SdkProjectTable result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "getSdkProjectDetails", sdkProjectDto);
+                assertThat(result, instanceOf(SdkProjectTable.class));
+        }
+
+        @Test
+        public void getAbisProjectDetailsTest() {
+                AbisProjectDto abisProjectDto = new AbisProjectDto();
+                abisProjectDto.setProjectType("ABIS");
+                abisProjectDto.setName("abis");
+                abisProjectDto.setAbisVersion("1.0");
+                abisProjectDto.setAbisHash("aygc");
+                abisProjectDto.setWebsiteUrl("test.com");
+                AbisProjectTable result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "getAbisProjectDetails", abisProjectDto);
+                assertThat(result, instanceOf(AbisProjectTable.class));
+        }
+
+        @Test
+        public void isReportAlreadySubmittedTestFalse() {
+                RequestWrapper<ReportRequestDto> requestWrapper = new RequestWrapper<>();
+                ReportRequestDto reportRequestDto = new ReportRequestDto();
+                reportRequestDto.setProjectType("SBI");
+                reportRequestDto.setTestRunId("12");
+                reportRequestDto.setProjectId("12374");
+                reportRequestDto.setProjectId("123");
+                reportRequestDto.setCollectionId("263");
+                requestWrapper.setRequest(reportRequestDto);
+                ComplianceTestRunSummaryEntity complianceTestRunSummaryEntity = new ComplianceTestRunSummaryEntity();
+                complianceTestRunSummaryEntity.setReportStatus("draft");
+                complianceTestRunSummaryEntity.setProjectType("SBI");
+                when(complianceTestRunSummaryRepository.findById(any(ComplianceTestRunSummaryPK.class))).thenReturn(Optional.of(complianceTestRunSummaryEntity));
+                MosipUserDto mosipUserDto = getMosipUserDto();
+                AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+                when(authentication.getPrincipal()).thenReturn(authUserDetails);
+                when(securityContext.getAuthentication()).thenReturn(authentication);
+                SecurityContextHolder.setContext(securityContext);
+                ReflectionTestUtils.setField(reportGeneratorService, "getPartnerReportId", "mockedPartnerReportId");
+
+                ResponseWrapper<Boolean> result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "isReportAlreadySubmitted", requestWrapper);
+                assertThat(result, instanceOf(ResponseWrapper.class));
+        }
+
+        @Test
+        public void isReportAlreadySubmittedTestTrue() {
+                RequestWrapper<ReportRequestDto> requestWrapper = new RequestWrapper<>();
+                ReportRequestDto reportRequestDto = new ReportRequestDto();
+                reportRequestDto.setProjectType("SBI");
+                reportRequestDto.setTestRunId("12");
+                reportRequestDto.setProjectId("12374");
+                reportRequestDto.setProjectId("123");
+                reportRequestDto.setCollectionId("263");
+                requestWrapper.setRequest(reportRequestDto);
+                ComplianceTestRunSummaryEntity complianceTestRunSummaryEntity = new ComplianceTestRunSummaryEntity();
+                complianceTestRunSummaryEntity.setReportStatus("teyrugt");
+                complianceTestRunSummaryEntity.setProjectType("SBI");
+                when(complianceTestRunSummaryRepository.findById(any(ComplianceTestRunSummaryPK.class))).thenReturn(Optional.of(complianceTestRunSummaryEntity));
+                MosipUserDto mosipUserDto = getMosipUserDto();
+                AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+                when(authentication.getPrincipal()).thenReturn(authUserDetails);
+                when(securityContext.getAuthentication()).thenReturn(authentication);
+                SecurityContextHolder.setContext(securityContext);
+                ReflectionTestUtils.setField(reportGeneratorService, "getPartnerReportId", "mockedPartnerReportId");
+
+                ResponseWrapper<Boolean> result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "isReportAlreadySubmitted", requestWrapper);
+                assertThat(result, instanceOf(ResponseWrapper.class));
+        }
+
+        @Test(expected = Exception.class)
+        public void isReportAlreadySubmittedTestException() {
+                RequestWrapper<ReportRequestDto> requestWrapper = new RequestWrapper<>();
+                ReportRequestDto reportRequestDto = new ReportRequestDto();
+                reportRequestDto.setProjectType("SBI");
+                reportRequestDto.setTestRunId("12");
+                reportRequestDto.setProjectId("12374");
+                reportRequestDto.setProjectId("123");
+                reportRequestDto.setCollectionId("263");
+                requestWrapper.setRequest(reportRequestDto);
+                ComplianceTestRunSummaryEntity complianceTestRunSummaryEntity = new ComplianceTestRunSummaryEntity();
+                complianceTestRunSummaryEntity.setReportStatus("draft");
+                complianceTestRunSummaryEntity.setProjectType("SBI");
+                MosipUserDto mosipUserDto = getMosipUserDto();
+                AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+
+                ResponseWrapper<Boolean> result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "isReportAlreadySubmitted", requestWrapper);
+        }
+
+        @Test(expected = Exception.class)
+        public void getReportListTest() {
+                boolean isAdmin = false;
+                ComplianceTestRunSummaryEntity complianceTestRunSummaryEntity = new ComplianceTestRunSummaryEntity();
+                complianceTestRunSummaryEntity.setReportStatus("teyrugt");
+                complianceTestRunSummaryEntity.setProjectType("SBI");
+                List<ComplianceTestRunSummaryEntity> listEntity = new ArrayList<>();
+                listEntity.add(complianceTestRunSummaryEntity);
+                MosipUserDto mosipUserDto = getMosipUserDto();
+                AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+                when(authentication.getPrincipal()).thenReturn(authUserDetails);
+                when(securityContext.getAuthentication()).thenReturn(authentication);
+                SecurityContextHolder.setContext(securityContext);
+                when(complianceTestRunSummaryRepository.findAllBySubmittedReportsPartnerId(anyString())).thenReturn(listEntity);
+                Mockito.when(objectMapperConfig.objectMapper()).thenReturn(objectMapper);
+                ComplianceTestRunSummaryDto complianceTestRunSummaryDto = new ComplianceTestRunSummaryDto();
+                complianceTestRunSummaryDto.setCollectionId("123");
+                ResponseWrapper<Boolean> result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "getReportList", isAdmin, "draft");
+        }
+
+        @Test
+        public void getProjectNameSbiTest() {
+                ComplianceTestRunSummaryEntity respEntity = new ComplianceTestRunSummaryEntity();
+                respEntity.setReportStatus("teyrugt");
+                respEntity.setProjectType("SBI");
+                when(sbiProjectRepository.getProjectNameById(respEntity.getProjectId(), respEntity.getPartnerId())).thenReturn("yasud");
+                String result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "getProjectName", respEntity);
+                assertThat(result, instanceOf(String.class));
+        }
+
+        @Test
+        public void getProjectNameSdkTest() {
+                ComplianceTestRunSummaryEntity respEntity = new ComplianceTestRunSummaryEntity();
+                respEntity.setReportStatus("teyrugt");
+                respEntity.setProjectType("SDK");
+                when(sdkProjectRepository.getProjectNameById(respEntity.getProjectId(), respEntity.getPartnerId())).thenReturn("yasud");
+                String result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "getProjectName", respEntity);
+                assertThat(result, instanceOf(String.class));
+        }
+
+        @Test
+        public void getProjectNameAbisTest() {
+                ComplianceTestRunSummaryEntity respEntity = new ComplianceTestRunSummaryEntity();
+                respEntity.setReportStatus("teyrugt");
+                respEntity.setProjectType("ABIS");
+                when(abisProjectRepository.getProjectNameById(respEntity.getProjectId(), respEntity.getPartnerId())).thenReturn("yasud");
+                String result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "getProjectName", respEntity);
+                assertThat(result, instanceOf(String.class));
         }
 
 
+        @Test
+        public void getSubmittedReportTest() throws JsonProcessingException {
+                ReportRequestDto reportRequestDto = new ReportRequestDto();
+                reportRequestDto.setProjectType("SBI");
+                reportRequestDto.setTestRunId("12");
+                reportRequestDto.setProjectId("12374");
+                reportRequestDto.setProjectId("123");
+                reportRequestDto.setCollectionId("263");
+                ComplianceTestRunSummaryEntity complianceTestRunSummaryEntity = new ComplianceTestRunSummaryEntity();
+                complianceTestRunSummaryEntity.setProjectType("SBI");
+                complianceTestRunSummaryEntity.setRunId("12");
+                complianceTestRunSummaryEntity.setReportStatus("draft");
+                complianceTestRunSummaryEntity.setReportDataJson("asfg");
+                ResponseEntity result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "getSubmittedReport", "abc", reportRequestDto, true);
+                assertThat(result, instanceOf(ResponseEntity.class));
+        }
 
-        private MosipUserDto getMosipUserDto(){
+        @Test
+        public void getSubmittedReportTest1() throws JsonProcessingException {
+                ReportRequestDto reportRequestDto = new ReportRequestDto();
+                reportRequestDto.setProjectType("SBI");
+                reportRequestDto.setTestRunId("12");
+                reportRequestDto.setProjectId("12374");
+                reportRequestDto.setProjectId("123");
+                reportRequestDto.setCollectionId("263");
+                ComplianceTestRunSummaryEntity complianceTestRunSummaryEntity = new ComplianceTestRunSummaryEntity();
+                complianceTestRunSummaryEntity.setProjectType("SBwqergI");
+                complianceTestRunSummaryEntity.setRunId("12");
+                complianceTestRunSummaryEntity.setReportStatus("draft");
+                complianceTestRunSummaryEntity.setReportDataJson("asfg");
+                ResponseEntity result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "getSubmittedReport", "abc", reportRequestDto, false);
+                assertThat(result, instanceOf(ResponseEntity.class));
+        }
+
+        @Test
+        public void getSubmittedReportSbiTest() throws JsonProcessingException {
+                ReportRequestDto reportRequestDto = new ReportRequestDto();
+                reportRequestDto.setProjectType("SBI");
+                reportRequestDto.setTestRunId("12");
+                reportRequestDto.setProjectId("12374");
+                reportRequestDto.setProjectId("123");
+                reportRequestDto.setCollectionId("263");
+                ComplianceTestRunSummaryEntity complianceTestRunSummaryEntity = new ComplianceTestRunSummaryEntity();
+                complianceTestRunSummaryEntity.setProjectType("SBI");
+                complianceTestRunSummaryEntity.setRunId("12");
+                complianceTestRunSummaryEntity.setReportStatus("doiwfjsd");
+                complianceTestRunSummaryEntity.setReportDataJson("asfg");
+                ReportDataDto reportDataDto = new ReportDataDto();
+                Mockito.when(objectMapperConfig.objectMapper()).thenReturn(objectMapper);
+                Mockito.when(objectMapper.readValue(anyString(), eq(ReportDataDto.class))).thenReturn(reportDataDto);
+                when(complianceTestRunSummaryRepository.findById(any(ComplianceTestRunSummaryPK.class))).thenReturn(Optional.of(complianceTestRunSummaryEntity));
+                ResponseEntity result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "getSubmittedReport", "abc", reportRequestDto, true);
+                assertThat(result, instanceOf(ResponseEntity.class));
+        }
+
+        @Test
+        public void getSubmittedReportSdkTest() throws JsonProcessingException {
+                ReportRequestDto reportRequestDto = new ReportRequestDto();
+                reportRequestDto.setProjectType("SDK");
+                reportRequestDto.setTestRunId("12");
+                reportRequestDto.setProjectId("12374");
+                reportRequestDto.setProjectId("123");
+                reportRequestDto.setCollectionId("263");
+                ComplianceTestRunSummaryEntity complianceTestRunSummaryEntity = new ComplianceTestRunSummaryEntity();
+                complianceTestRunSummaryEntity.setProjectType("SBI");
+                complianceTestRunSummaryEntity.setRunId("12");
+                complianceTestRunSummaryEntity.setReportStatus("drsdaft");
+                complianceTestRunSummaryEntity.setReportDataJson("asfg");
+                ReportDataDto reportDataDto = new ReportDataDto();
+                Mockito.when(objectMapperConfig.objectMapper()).thenReturn(objectMapper);
+                Mockito.when(objectMapper.readValue(anyString(), eq(ReportDataDto.class))).thenReturn(reportDataDto);
+                when(complianceTestRunSummaryRepository.findById(any(ComplianceTestRunSummaryPK.class))).thenReturn(Optional.of(complianceTestRunSummaryEntity));
+                ResponseEntity result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "getSubmittedReport", "abc", reportRequestDto, true);
+                assertThat(result, instanceOf(ResponseEntity.class));
+        }
+
+        @Test
+        public void getSubmittedReportabisTest() throws JsonProcessingException {
+                ReportRequestDto reportRequestDto = new ReportRequestDto();
+                reportRequestDto.setProjectType("ABIS");
+                reportRequestDto.setTestRunId("12");
+                reportRequestDto.setProjectId("12374");
+                reportRequestDto.setProjectId("123");
+                reportRequestDto.setCollectionId("263");
+                ComplianceTestRunSummaryEntity complianceTestRunSummaryEntity = new ComplianceTestRunSummaryEntity();
+                complianceTestRunSummaryEntity.setProjectType("SBI");
+                complianceTestRunSummaryEntity.setRunId("12");
+                complianceTestRunSummaryEntity.setReportStatus("draqweft");
+                complianceTestRunSummaryEntity.setReportDataJson("asfg");
+                ReportDataDto reportDataDto = new ReportDataDto();
+                Mockito.when(objectMapperConfig.objectMapper()).thenReturn(objectMapper);
+                Mockito.when(objectMapper.readValue(anyString(), eq(ReportDataDto.class))).thenReturn(reportDataDto);
+                when(complianceTestRunSummaryRepository.findById(any(ComplianceTestRunSummaryPK.class))).thenReturn(Optional.of(complianceTestRunSummaryEntity));
+                ResponseEntity result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "getSubmittedReport", "abc", reportRequestDto, true);
+                assertThat(result, instanceOf(ResponseEntity.class));
+        }
+
+        @Test
+        public void updateReportStatusTest() {
+                RequestWrapper<ReportRequestDto> requestWrapper = new RequestWrapper<>();
+                ReportRequestDto reportRequestDto = new ReportRequestDto();
+                reportRequestDto.setProjectType("SBI");
+                reportRequestDto.setTestRunId("12");
+                reportRequestDto.setProjectId("12374");
+                reportRequestDto.setProjectId("123");
+                reportRequestDto.setCollectionId("263");
+                requestWrapper.setRequest(reportRequestDto);
+                ComplianceTestRunSummaryEntity complianceTestRunSummaryEntity = new ComplianceTestRunSummaryEntity();
+                complianceTestRunSummaryEntity.setProjectType("SBI");
+                complianceTestRunSummaryEntity.setRunId("12");
+                complianceTestRunSummaryEntity.setReportStatus("draft");
+                complianceTestRunSummaryEntity.setReportDataJson("asfg");
+                MosipUserDto mosipUserDto = getMosipUserDto();
+                when(complianceTestRunSummaryRepository.findById(any(ComplianceTestRunSummaryPK.class))).thenReturn(Optional.of(complianceTestRunSummaryEntity));
+                AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+                when(authentication.getPrincipal()).thenReturn(authUserDetails);
+                when(securityContext.getAuthentication()).thenReturn(authentication);
+                SecurityContextHolder.setContext(securityContext);
+
+                when(complianceTestRunSummaryRepository.save(complianceTestRunSummaryEntity)).thenReturn(complianceTestRunSummaryEntity);
+                Mockito.when(objectMapperConfig.objectMapper()).thenReturn(objectMapper);
+                ComplianceTestRunSummaryDto complianceTestRunSummaryDto = new ComplianceTestRunSummaryDto();
+                ComplianceTestRunSummaryEntity respEntity = mock(ComplianceTestRunSummaryEntity.class);
+                ResponseWrapper<ComplianceTestRunSummaryDto> result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "updateReportStatus", "abc", requestWrapper, "draft", "approved");
+                assertThat(result, instanceOf(ResponseWrapper.class));
+        }
+
+        @Test
+        public void updateReportStatusTestReview() {
+                RequestWrapper<ReportRequestDto> requestWrapper = new RequestWrapper<>();
+                ReportRequestDto reportRequestDto = new ReportRequestDto();
+                reportRequestDto.setProjectType("SBI");
+                reportRequestDto.setTestRunId("12");
+                reportRequestDto.setProjectId("12374");
+                reportRequestDto.setProjectId("123");
+                reportRequestDto.setCollectionId("263");
+                requestWrapper.setRequest(reportRequestDto);
+                ComplianceTestRunSummaryEntity complianceTestRunSummaryEntity = new ComplianceTestRunSummaryEntity();
+                complianceTestRunSummaryEntity.setProjectType("SBI");
+                complianceTestRunSummaryEntity.setRunId("12");
+                complianceTestRunSummaryEntity.setReportStatus("draft");
+                complianceTestRunSummaryEntity.setReportDataJson("asfg");
+                MosipUserDto mosipUserDto = getMosipUserDto();
+                AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+                when(authentication.getPrincipal()).thenReturn(authUserDetails);
+                when(securityContext.getAuthentication()).thenReturn(authentication);
+                SecurityContextHolder.setContext(securityContext);
+                Mockito.when(objectMapperConfig.objectMapper()).thenReturn(objectMapper);
+                ComplianceTestRunSummaryDto complianceTestRunSummaryDto = new ComplianceTestRunSummaryDto();
+                when(complianceTestRunSummaryRepository.findById(any(ComplianceTestRunSummaryPK.class))).thenReturn(Optional.of(complianceTestRunSummaryEntity));
+                ResponseWrapper<ComplianceTestRunSummaryDto> result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "updateReportStatus", "abc", requestWrapper, "draft", "review");
+                assertThat(result, instanceOf(ResponseWrapper.class));
+        }
+
+        @Test
+        public void updateReportStatusTestError() {
+                RequestWrapper<ReportRequestDto> requestWrapper = new RequestWrapper<>();
+                ReportRequestDto reportRequestDto = new ReportRequestDto();
+                reportRequestDto.setProjectType("SBI");
+                reportRequestDto.setTestRunId("12");
+                reportRequestDto.setProjectId("12374");
+                reportRequestDto.setProjectId("123");
+                reportRequestDto.setCollectionId("263");
+                requestWrapper.setRequest(reportRequestDto);
+                ComplianceTestRunSummaryEntity complianceTestRunSummaryEntity = new ComplianceTestRunSummaryEntity();
+                complianceTestRunSummaryEntity.setProjectType("SBI");
+                complianceTestRunSummaryEntity.setRunId("12");
+                complianceTestRunSummaryEntity.setReportStatus("driuydaft");
+                complianceTestRunSummaryEntity.setReportDataJson("asfg");
+                when(complianceTestRunSummaryRepository.findById(any(ComplianceTestRunSummaryPK.class))).thenReturn(Optional.of(complianceTestRunSummaryEntity));
+                ResponseWrapper<ComplianceTestRunSummaryDto> result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "updateReportStatus", "abc", requestWrapper, "draft", "review");
+                assertThat(result, instanceOf(ResponseWrapper.class));
+        }
+
+        @Test
+        public void updateReportStatusTesterror2() {
+                RequestWrapper<ReportRequestDto> requestWrapper = new RequestWrapper<>();
+                ReportRequestDto reportRequestDto = new ReportRequestDto();
+                reportRequestDto.setProjectType("SBsfI");
+                reportRequestDto.setTestRunId("12");
+                reportRequestDto.setProjectId("12374");
+                reportRequestDto.setProjectId("123");
+                reportRequestDto.setCollectionId("263");
+                requestWrapper.setRequest(reportRequestDto);
+                ComplianceTestRunSummaryEntity complianceTestRunSummaryEntity = new ComplianceTestRunSummaryEntity();
+                complianceTestRunSummaryEntity.setProjectType("SBI");
+                complianceTestRunSummaryEntity.setRunId("12234");
+                complianceTestRunSummaryEntity.setReportStatus("draft");
+                complianceTestRunSummaryEntity.setReportDataJson("asfg");
+                MosipUserDto mosipUserDto = getMosipUserDto();
+                AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+                SecurityContextHolder.setContext(securityContext);
+                ComplianceTestRunSummaryDto complianceTestRunSummaryDto = new ComplianceTestRunSummaryDto();
+                when(complianceTestRunSummaryRepository.findById(any(ComplianceTestRunSummaryPK.class))).thenReturn(Optional.of(complianceTestRunSummaryEntity));
+                ResponseWrapper<ComplianceTestRunSummaryDto> result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "updateReportStatus", "abc", requestWrapper, "draft", "review");
+                assertThat(result, instanceOf(ResponseWrapper.class));
+        }
+
+        @Test
+        public void updateReportStatusTestException() {
+                RequestWrapper<ReportRequestDto> requestWrapper = new RequestWrapper<>();
+                ResponseWrapper<ComplianceTestRunSummaryDto> result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "updateReportStatus", "abc", requestWrapper, "draft", "review");
+        }
+
+        @Test
+        public void getAllTestcasesTest() {
+                TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
+                testRunDetailsResponseDto.setCollectionId("1234");
+                ResponseWrapper<CollectionTestCasesResponseDto> responseWrapper = new ResponseWrapper<>();
+                CollectionTestCasesResponseDto collectionTestCasesResponseDto = new CollectionTestCasesResponseDto();
+                List<TestCaseDto> testCaseDtos = new ArrayList<>();
+                collectionTestCasesResponseDto.setTestcases(testCaseDtos);
+                responseWrapper.setResponse(collectionTestCasesResponseDto);
+                Mockito.when(collectionsService.getPartnerId()).thenReturn("123456");
+                Mockito.when(collectionsService.getTestCasesForCollection(anyString(), anyString())).thenReturn(responseWrapper);
+
+                List<TestCaseDto> result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "getAllTestcases", testRunDetailsResponseDto);
+                assertThat(result, instanceOf(List.class));
+        }
+
+        @Test
+        public void saveReportData() {
+                TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
+                testRunDetailsResponseDto.setCollectionId("1234");
+                ResponseWrapper<CollectionTestCasesResponseDto> responseWrapper = new ResponseWrapper<>();
+                CollectionTestCasesResponseDto collectionTestCasesResponseDto = new CollectionTestCasesResponseDto();
+                List<TestCaseDto> testCaseDtos = new ArrayList<>();
+                collectionTestCasesResponseDto.setTestcases(testCaseDtos);
+                responseWrapper.setResponse(collectionTestCasesResponseDto);
+                Mockito.when(collectionsService.getPartnerId()).thenReturn("123456");
+                Mockito.when(collectionsService.getTestCasesForCollection(anyString(), anyString())).thenReturn(responseWrapper);
+
+                List<TestCaseDto> result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "getAllTestcases", testRunDetailsResponseDto);
+                assertThat(result, instanceOf(List.class));
+        }
+
+        private MosipUserDto getMosipUserDto() {
                 MosipUserDto mosipUserDto = new MosipUserDto();
                 mosipUserDto.setUserId("123");
                 mosipUserDto.setMail("abc@gmail.com");
                 return mosipUserDto;
         }
-
 
 }
