@@ -61,7 +61,10 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 
 	@Value("${mosip.toolkit.sbi.qualitycheck.iris.sdk.urls}")
 	private String irisSdkUrlsJsonStr;
-
+	
+	@Value("${mosip.toolkit.sbi.quality.assessment.failsafe}")
+	private Boolean qualityAssessmentFailSafe;
+	
 	private Gson gson = new GsonBuilder().create();
 
 	@Autowired
@@ -98,7 +101,7 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 				String sdkName = item.get("name").asText();
 				boolean includeInResults = item.get("includeInResults").asBoolean();
 				// Validator shouldn't fail if testcase is a quality assessment testcase.
-				if (isQualityAssessmentTestCase) {
+				if (isQualityAssessmentTestCase && qualityAssessmentFailSafe) {
 					includeInResults = false;
 				}
 				boolean isSdkServiceAccessible = this.callSdkHealthUrl(healthUrl);
@@ -343,6 +346,7 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 			biometricScoresItem.put("ageGroup", testCase.getOtherAttributes().getAgeGroup());
 			biometricScoresItem.put("occupation", testCase.getOtherAttributes().getOccupation());
 			biometricScoresItem.put("gender", testCase.getOtherAttributes().getGender());
+			biometricScoresItem.put("race", testCase.getOtherAttributes().getRace());
 			biometricScoresItem.put("biometricType", bioAttributes.getBioType());
 			biometricScoresItem.put("deviceSubType", bioAttributes.getBioSubType());
 			biometricScoresItem.put("name", sdkName);
@@ -394,7 +398,7 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 	private boolean isBetween(int x, int lower, int upper) {
 		return lower <= x && x <= upper;
 	}
-
+	
 	private boolean isQualityAssessmentTestCase(TestCaseDto testCase) {
 		boolean flag = false;
 
