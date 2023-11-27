@@ -30,6 +30,8 @@ import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
 
+import static org.mockito.Mockito.when;
+
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
 @RunWith(SpringRunner.class)
 @WebMvcTest
@@ -61,7 +63,7 @@ public class BiometricTestDataControllerTest {
     @Test
     public void getListOfBiometricTestDataTest(){
         ResponseWrapper<List<BiometricTestDataDto>> response = new ResponseWrapper<>();
-        Mockito.when(biometricTestDataService.getListOfBiometricTestData()).thenReturn(response);
+        when(biometricTestDataService.getListOfBiometricTestData()).thenReturn(response);
         Assert.assertEquals(response, biometricTestDataController.getListOfBiometricTestData());
     }
 
@@ -74,9 +76,9 @@ public class BiometricTestDataControllerTest {
         String strRequestWrapper = "";
         RequestWrapper<BiometricTestDataDto> request = new RequestWrapper<>();
         request.setId(BIOMETRIC_TESTDATA_POST_ID);
-        Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
-        Mockito.when(mapper.readValue(strRequestWrapper, new TypeReference<RequestWrapper<BiometricTestDataDto>>() {
-        })).thenReturn(request);
+        when(objectMapperConfig.objectMapper()).thenReturn(mapper);
+        when(mapper.readValue(Mockito.any(String.class), Mockito.any(TypeReference.class)))
+                .thenReturn(request);
         biometricTestDataController.addBiometricTestData(file, strRequestWrapper, errors);
     }
 
@@ -95,7 +97,7 @@ public class BiometricTestDataControllerTest {
     public void getBiometricTestDataFileTest(){
         String id = "123";
         ResponseEntity<Resource> response = new ResponseEntity<>(HttpStatus.ACCEPTED);
-        Mockito.when(biometricTestDataService.getBiometricTestDataFile(id)).thenReturn(response);
+        when(biometricTestDataService.getBiometricTestDataFile(id)).thenReturn(response);
         Assert.assertEquals(response, biometricTestDataController.getBiometricTestDataFile(id));
     }
 
@@ -106,7 +108,7 @@ public class BiometricTestDataControllerTest {
     public void getBioTestDataNamesTest(){
         String purpose = "Auth";
         ResponseWrapper<List<String>> response = new ResponseWrapper<>();
-        Mockito.when(biometricTestDataService.getBioTestDataNames(purpose)).thenReturn(response);
+        when(biometricTestDataService.getBioTestDataNames(purpose)).thenReturn(response);
         Assert.assertEquals(response, biometricTestDataController.getBioTestDataNames(purpose));
     }
 
@@ -117,7 +119,7 @@ public class BiometricTestDataControllerTest {
     public void getDefaultBioTestDataTest(){
         String purpose = "Auth";
         ResponseEntity<Resource> response = new ResponseEntity<>(HttpStatus.ACCEPTED);
-        Mockito.when(biometricTestDataService.getSampleBioTestDataFile(purpose)).thenReturn(response);
+        when(biometricTestDataService.getSampleBioTestDataFile(purpose)).thenReturn(response);
         Assert.assertEquals(response, biometricTestDataController.getSampleBioTestDataFile(purpose));
     }
 
