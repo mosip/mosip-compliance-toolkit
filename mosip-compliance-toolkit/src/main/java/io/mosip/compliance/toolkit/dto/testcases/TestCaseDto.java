@@ -67,6 +67,7 @@ public class TestCaseDto implements Serializable {
 		public String ageGroup;
 		public String gender;
 		public String occupation;
+		public String race;
 		public String testCaseRepeatCount;
 		public List<String> modalities;
 		public List<String> sdkPurpose;
