@@ -14,6 +14,7 @@ import lombok.ToString;
 public class ReportDataDto {
 
 	private String projectType;
+	private String statusText;
 	private String origin;
 	private PartnerTable partnerDetails;
 	private SbiProjectTable sbiProjectDetailsTable;
