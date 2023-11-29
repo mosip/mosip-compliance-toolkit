@@ -79,6 +79,8 @@ import io.mosip.kernel.core.logger.spi.Logger;
 @Component
 public class ReportService {
 
+	private static final String STATUS_TEXT = "statusText";
+
 	private static final String COLLECTION_NAME = "collectionName";
 
 	private static final String COUNT_OF_FAILED_TEST_CASES = "countOfFailedTestCases";
@@ -299,6 +301,7 @@ public class ReportService {
 		ReportDataDto reportDataDto = new ReportDataDto();
 		reportDataDto.setProjectType(velocityContext.get(PROJECT_TYPE).toString());
 		reportDataDto.setOrigin(velocityContext.get(ORIGIN_KEY).toString());
+		reportDataDto.setStatusText(velocityContext.get(STATUS_TEXT).toString());
 		reportDataDto.setPartnerDetails((PartnerTable) velocityContext.get(PARTNER_DETAILS));
 		if (ProjectTypes.SBI.getCode().equals(projectType)) {
 			reportDataDto.setSbiProjectDetailsTable((SbiProjectTable) velocityContext.get(SBI_PROJECT_DETAILS_TABLE));
@@ -392,7 +395,7 @@ public class ReportService {
 
 		VelocityContext velocityContext = new VelocityContext();
 		velocityContext.put(PROJECT_TYPE, projectType);
-
+		velocityContext.put(STATUS_TEXT, AppConstants.REPORT_STATUS_DRAFT.toUpperCase());
 		velocityContext.put(ORIGIN_KEY, getOrigin(origin));
 		velocityContext.put(PARTNER_DETAILS, getPartnerDetails(getPartnerId()));
 		if (ProjectTypes.SBI.getCode().equals(projectType)) {
@@ -906,8 +909,8 @@ public class ReportService {
 			if (optionalEntity.isPresent() && projectType.equals(optionalEntity.get().getProjectType())
 					&& ((!ignoreTestRunId && testRunId != null && testRunId.equals(optionalEntity.get().getRunId())))
 					|| ignoreTestRunId) {
-
-				if (!AppConstants.REPORT_STATUS_DRAFT.equals(optionalEntity.get().getReportStatus())) {
+				String reportStatus = optionalEntity.get().getReportStatus();
+				if (!AppConstants.REPORT_STATUS_DRAFT.equals(reportStatus)) {
 					log.info("sessionId", "idType", "id", "report data is available in DB");
 					String reportDateEncoded = optionalEntity.get().getReportDataJson();
 					String reportDataDecoded = StringUtil.base64Decode(reportDateEncoded);
@@ -916,6 +919,15 @@ public class ReportService {
 					// 2. Populate all attributes in velocity template VelocityContext
 					VelocityContext velocityContext = new VelocityContext();
 					velocityContext.put(PROJECT_TYPE, reportDataDto.getProjectType());
+					if (!AppConstants.REPORT_STATUS_REVIEW.equals(reportStatus)) {
+						velocityContext.put(STATUS_TEXT, reportStatus.toUpperCase());
+						velocityContext.put("reviewedBy", optionalEntity.get().getUpdBy());
+						DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
+						velocityContext.put("reviewDt", formatter.format(optionalEntity.get().getApproveRejectDtimes()));
+					} else {
+						//report should say status as draft only
+						velocityContext.put(STATUS_TEXT, AppConstants.REPORT_STATUS_DRAFT.toUpperCase());
+					}
 					velocityContext.put(ORIGIN_KEY, reportDataDto.getOrigin());
 					velocityContext.put(PARTNER_DETAILS, reportDataDto.getPartnerDetails());
 					if (ProjectTypes.SBI.getCode().equals(projectType)) {
