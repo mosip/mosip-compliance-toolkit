@@ -185,7 +185,7 @@ public class ReportService {
 	}
 
 	private String getUserBy() {
-		String crBy = authUserDetails().getMail();
+		String crBy = authUserDetails().getUsername();
 		return crBy;
 	}
 
