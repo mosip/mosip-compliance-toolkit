@@ -22,6 +22,8 @@ CREATE INDEX IF NOT EXISTS idx_collections_id ON toolkit.collections USING btree
 CREATE INDEX IF NOT EXISTS idx_collections_sbi_project_id ON toolkit.collections USING btree (sbi_project_id);
 CREATE INDEX IF NOT EXISTS idx_collections_sdk_project_id ON toolkit.collections USING btree (sdk_project_id);
 CREATE INDEX IF NOT EXISTS idx_collections_abis_project_id ON toolkit.collections USING btree (abis_project_id);
+ALTER TABLE toolkit.collections ADD CONSTRAINT collections_collection_type_values CHECK (collection_type IN ('custom_collection','compliance_collection','quality_assessment_collection'));
+
 COMMENT ON TABLE toolkit.collections IS 'This table has all collections for the compliance toolkit project.';
 COMMENT ON COLUMN toolkit.collections.id IS 'ID: Unique Id generated for an collection.';
 COMMENT ON COLUMN toolkit.collections.sbi_project_id IS 'Project ID: Id of the corresponding SBI project.';
@@ -30,7 +32,7 @@ COMMENT ON COLUMN toolkit.collections.abis_project_id IS 'Project ID: Id of the 
 COMMENT ON COLUMN toolkit.collections.name IS 'Name: name of the collection.';
 COMMENT ON COLUMN toolkit.collections.partner_id IS 'Partner Id: partner id who has created this project.';
 COMMENT ON COLUMN toolkit.collections.org_name IS 'orgname: organization name to which partner belongs to.';
-COMMENT ON COLUMN toolkit.collections.collection_type IS 'Collection Type: this can be custom_collection or compliance_collection';
+COMMENT ON COLUMN toolkit.collections.collection_type IS 'Collection Type: this can be custom_collection, compliance_collection or quality_assessment_collection';
 COMMENT ON COLUMN toolkit.collections.cr_by IS 'Created By : ID or name of the user who create / insert record.';
 COMMENT ON COLUMN toolkit.collections.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
 COMMENT ON COLUMN toolkit.collections.upd_by IS 'Updated By : ID or name of the user who update the record with new values';

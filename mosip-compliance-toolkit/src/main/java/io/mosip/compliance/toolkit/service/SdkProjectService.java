@@ -1,17 +1,28 @@
 package io.mosip.compliance.toolkit.service;
 
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
-import io.mosip.compliance.toolkit.constants.*;
-import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
-import io.mosip.compliance.toolkit.dto.collections.CollectionRequestDto;
-import io.mosip.compliance.toolkit.dto.collections.CollectionTestCaseDto;
-import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
-import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
+import io.mosip.compliance.toolkit.constants.AppConstants;
+import io.mosip.compliance.toolkit.constants.ProjectTypes;
+import io.mosip.compliance.toolkit.constants.SdkPurpose;
+import io.mosip.compliance.toolkit.constants.SdkSpecVersions;
+import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
+import io.mosip.compliance.toolkit.dto.projects.SdkProjectDto;
 import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
 import io.mosip.compliance.toolkit.entity.SdkProjectEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
@@ -21,22 +32,8 @@ import io.mosip.compliance.toolkit.util.CommonUtil;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
-import io.mosip.compliance.toolkit.dto.projects.SdkProjectDto;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class SdkProjectService {
@@ -48,12 +45,6 @@ public class SdkProjectService {
 	@Value("${mosip.toolkit.api.id.sdk.project.put}")
 	private String putSdkProjectId;
 
-	@Value("${mosip.toolkit.compliance.collection.name}")
-	private String complianceCollectionName;
-	
-	@Value("${mosip.toolkit.compliance.collection.ignore.testcases}")
-	private String ignoreTestcases;
-	
 	@Autowired
 	private SdkProjectRepository sdkProjectRepository;
 
@@ -65,9 +56,6 @@ public class SdkProjectService {
 
 	@Autowired
 	private ObjectMapperConfig objectMapperConfig;
-
-	@Autowired
-	private TestCasesService testCasesService;
 
 	@Autowired
 	private CollectionsService collectionsService;
@@ -169,8 +157,9 @@ public class SdkProjectService {
 
 					SdkProjectEntity outputEntity = sdkProjectRepository.save(entity);
 					// Add a default "ALL" collection for the newly created project
-					addComplianceCollection(sdkProjectDto, entity.getId());
-
+					collectionsService.addDefaultCollection(AppConstants.COMPLIANCE_COLLECTION, null, sdkProjectDto,
+							null, entity.getId());
+					
 					sdkProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, SdkProjectDto.class);
 					sdkProjectDto.setId(entity.getId());
 					sdkProjectDto.setPartnerId(entity.getPartnerId());
@@ -213,51 +202,6 @@ public class SdkProjectService {
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
-	}
-
-	public void addComplianceCollection(SdkProjectDto sdkProjectDto, String projectId) {
-		log.debug("sessionId", "idType", "id", "Started addComplianceCollection for SDK project: {}", projectId);
-		try {
-			// 1. Add a new default collection
-			CollectionRequestDto collectionRequestDto = new CollectionRequestDto();
-			collectionRequestDto.setProjectId(projectId);
-			collectionRequestDto.setProjectType(sdkProjectDto.getProjectType());
-			collectionRequestDto.setCollectionName(complianceCollectionName);
-			collectionRequestDto.setCollectionType(AppConstants.COMPLIANCE_COLLECTION);
-			ResponseWrapper<CollectionDto> addCollectionWrapper = collectionsService.addCollection(collectionRequestDto);
-			String complianceCollectionId = null;
-			if (addCollectionWrapper.getResponse() != null) {
-				complianceCollectionId = addCollectionWrapper.getResponse().getCollectionId();
-				log.debug("sessionId", "idType", "id", "Compliance collection added: {}", complianceCollectionId);
-			} else {
-				log.debug("sessionId", "idType", "id", "Compliance collection could not be added for this project: {}",
-						projectId);
-			}
-			if (complianceCollectionId != null) {
-				// 2. Get the testcases
-				ResponseWrapper<List<TestCaseDto>> testCaseWrapper = testCasesService
-						.getSdkTestCases(sdkProjectDto.getSdkVersion(), sdkProjectDto.getPurpose());
-				List<CollectionTestCaseDto> inputList = new ArrayList<>();
-				if (testCaseWrapper.getResponse() != null && testCaseWrapper.getResponse().size() > 0) {
-					List<String> ignoreTestcaseList = Arrays.asList(ignoreTestcases.split(","));
-					for (TestCaseDto testCase : testCaseWrapper.getResponse()) {
-						if (!ignoreTestcaseList.contains(testCase.getTestId())) {
-							CollectionTestCaseDto collectionTestCaseDto = new CollectionTestCaseDto();
-							collectionTestCaseDto.setCollectionId(complianceCollectionId);
-							collectionTestCaseDto.setTestCaseId(testCase.getTestId());
-							inputList.add(collectionTestCaseDto);	
-						}
-					}
-				}
-				// 3. add the testcases for the Compliance collection
-				if (inputList.size() > 0) {
-					collectionsService.addTestCasesForCollection(inputList);
-				}
-			}
-		} catch (Exception ex) {
-			// This is a fail safe operation, so exception can be ignored
-			log.debug("sessionId", "idType", "id", "Error in adding Compliance collection: {}", ex.getLocalizedMessage());
-		}
 	}
 
 	public ResponseWrapper<SdkProjectDto> updateSdkProject(SdkProjectDto sdkProjectDto) {

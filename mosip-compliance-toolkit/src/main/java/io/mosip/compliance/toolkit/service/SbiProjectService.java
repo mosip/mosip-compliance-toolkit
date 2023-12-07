@@ -1,9 +1,6 @@
 package io.mosip.compliance.toolkit.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -26,11 +23,7 @@ import io.mosip.compliance.toolkit.constants.Purposes;
 import io.mosip.compliance.toolkit.constants.SbiSpecVersions;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.EncryptionKeyResponseDto;
-import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
-import io.mosip.compliance.toolkit.dto.collections.CollectionRequestDto;
-import io.mosip.compliance.toolkit.dto.collections.CollectionTestCaseDto;
 import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
-import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.entity.SbiProjectEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.SbiProjectRepository;
@@ -63,20 +56,11 @@ public class SbiProjectService {
 	private KeyManagerHelper keyManagerHelper;
 
 	@Autowired
-	private TestCasesService testCasesService;
-
-	@Autowired
 	ResourceCacheService resourceCacheService;
 
 	@Autowired
 	private CollectionsService collectionsService;
 
-	@Value("${mosip.toolkit.compliance.collection.name}")
-	private String complianceCollectionName;
-	
-	@Value("${mosip.toolkit.compliance.collection.ignore.testcases}")
-	private String ignoreTestcases;
-	
 	private Logger log = LoggerConfiguration.logConfig(SbiProjectService.class);
 
 	private AuthUserDetails authUserDetails() {
@@ -154,7 +138,10 @@ public class SbiProjectService {
 
 				sbiProjectRepository.save(entity);
 				// Add a default "ALL" collection for the newly created project
-				addComplianceCollection(sbiProjectDto, entity.getId());
+				collectionsService.addDefaultCollection(AppConstants.COMPLIANCE_COLLECTION, sbiProjectDto, null, null,
+						entity.getId());
+				collectionsService.addDefaultCollection(AppConstants.QUALITY_ASSESSMENT_COLLECTION, sbiProjectDto, null, null,
+						entity.getId());
 				// send response
 				sbiProjectDto.setId(entity.getId());
 				sbiProjectDto.setPartnerId(entity.getPartnerId());
@@ -196,52 +183,6 @@ public class SbiProjectService {
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
-	}
-
-	public void addComplianceCollection(SbiProjectDto sbiProjectDto, String projectId) {
-		log.debug("sessionId", "idType", "id", "Started addComplianceCollection for SBI project: {}", projectId);
-		try {
-			// 1. Add a new Compliance collection
-			CollectionRequestDto collectionRequestDto = new CollectionRequestDto();
-			collectionRequestDto.setProjectId(projectId);
-			collectionRequestDto.setProjectType(sbiProjectDto.getProjectType());
-			collectionRequestDto.setCollectionName(complianceCollectionName);
-			collectionRequestDto.setCollectionType(AppConstants.COMPLIANCE_COLLECTION);
-			ResponseWrapper<CollectionDto> addCollectionWrapper = collectionsService.addCollection(collectionRequestDto);
-			String complianceCollectionId = null;
-			if (addCollectionWrapper.getResponse() != null) {
-				complianceCollectionId = addCollectionWrapper.getResponse().getCollectionId();
-				log.debug("sessionId", "idType", "id", "Compliance collection added: {}", complianceCollectionId);
-			} else {
-				log.debug("sessionId", "idType", "id", "Compliance collection could not be added for this project: {}",
-						projectId);
-			}
-			if (complianceCollectionId != null) {
-				// 2. Get the testcases
-				ResponseWrapper<List<TestCaseDto>> testCaseWrapper = testCasesService.getSbiTestCases(
-						sbiProjectDto.getSbiVersion(), sbiProjectDto.getPurpose(), sbiProjectDto.getDeviceType(),
-						sbiProjectDto.getDeviceSubType());
-				List<CollectionTestCaseDto> inputList = new ArrayList<>();
-				if (testCaseWrapper.getResponse() != null && testCaseWrapper.getResponse().size() > 0) {
-					List<String> ignoreTestcaseList = Arrays.asList(ignoreTestcases.split(","));
-					for (TestCaseDto testCase : testCaseWrapper.getResponse()) {
-						if (!ignoreTestcaseList.contains(testCase.getTestId())) {
-							CollectionTestCaseDto collectionTestCaseDto = new CollectionTestCaseDto();
-							collectionTestCaseDto.setCollectionId(complianceCollectionId);
-							collectionTestCaseDto.setTestCaseId(testCase.getTestId());
-							inputList.add(collectionTestCaseDto);	
-						}
-					}
-				}
-				// 3. add the testcases for the Compliance collection
-				if (inputList.size() > 0) {
-					collectionsService.addTestCasesForCollection(inputList);
-				}
-			}
-		} catch (Exception ex) {
-			// This is a fail safe operation, so exception can be ignored
-			log.debug("sessionId", "idType", "id", "Error in adding Compliance collection: {}", ex.getLocalizedMessage());
-		}
 	}
 
 	public ResponseWrapper<SbiProjectDto> updateSbiProject(SbiProjectDto sbiProjectDto) {

@@ -1,25 +1,9 @@
 package io.mosip.compliance.toolkit.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.mosip.compliance.toolkit.constants.AbisSpecVersions;
-import io.mosip.compliance.toolkit.constants.ProjectTypes;
-import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
-import io.mosip.compliance.toolkit.dto.collections.CollectionRequestDto;
-import io.mosip.compliance.toolkit.dto.collections.CollectionTestCaseDto;
-import io.mosip.compliance.toolkit.dto.projects.SdkProjectDto;
-import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
-import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
-import io.mosip.compliance.toolkit.exceptions.ToolkitException;
-import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
-import io.mosip.compliance.toolkit.util.CommonUtil;
-import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
-import io.mosip.compliance.toolkit.util.RandomIdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,11 +17,19 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
+import io.mosip.compliance.toolkit.constants.AbisSpecVersions;
 import io.mosip.compliance.toolkit.constants.AppConstants;
+import io.mosip.compliance.toolkit.constants.ProjectTypes;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.projects.AbisProjectDto;
 import io.mosip.compliance.toolkit.entity.AbisProjectEntity;
+import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
+import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.AbisProjectRepository;
+import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
+import io.mosip.compliance.toolkit.util.CommonUtil;
+import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
+import io.mosip.compliance.toolkit.util.RandomIdGenerator;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
@@ -51,10 +43,6 @@ public class AbisProjectService {
 	private String getAbisProjectPostId;
 	@Value("${mosip.toolkit.api.id.abis.project.put}")
 	private String putAbisProjectId;
-	@Value("${mosip.toolkit.compliance.collection.name}")
-	private String complianceCollectionName;
-	@Value("${mosip.toolkit.compliance.collection.ignore.testcases}")
-	private String ignoreTestcases;
 
 	@Autowired
 	private AbisProjectRepository abisProjectRepository;
@@ -64,9 +52,6 @@ public class AbisProjectService {
 
 	@Value("${mosip.kernel.objectstore.account-name}")
 	private String objectStoreAccountName;
-
-	@Autowired
-	private TestCasesService testCasesService;
 
 	@Autowired
 	private CollectionsService collectionsService;
@@ -113,15 +98,16 @@ public class AbisProjectService {
 			} else {
 				String errorCode = ToolkitErrorCodes.ABIS_PROJECT_NOT_AVAILABLE.getErrorCode();
 				String errorMessage = ToolkitErrorCodes.ABIS_PROJECT_NOT_AVAILABLE.getErrorMessage();
-				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 			}
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In getAbisProject method of AbisProjectService Service - " + ex.getMessage());
 			String errorCode = ToolkitErrorCodes.ABIS_PROJECT_NOT_AVAILABLE.getErrorCode();
-			String errorMessage = ToolkitErrorCodes.ABIS_PROJECT_NOT_AVAILABLE.getErrorMessage() + " " + ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			String errorMessage = ToolkitErrorCodes.ABIS_PROJECT_NOT_AVAILABLE.getErrorMessage() + " "
+					+ ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getAbisProjectId);
 		responseWrapper.setResponse(abisProjectDto);
@@ -173,9 +159,10 @@ public class AbisProjectService {
 					entity.setAbisVersion(abisProjectDto.getAbisVersion());
 
 					AbisProjectEntity outputEntity = abisProjectRepository.save(entity);
-					//Add a default "ALL" collection for the newly created project
-					addComplianceCollection(abisProjectDto, entity.getId());
-
+					// Add a default "ALL" collection for the newly created project
+					collectionsService.addDefaultCollection(AppConstants.COMPLIANCE_COLLECTION, null, null,
+							abisProjectDto, partnerId);
+					
 					abisProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, AbisProjectDto.class);
 					abisProjectDto.setId(entity.getId());
 					abisProjectDto.setPartnerId(entity.getPartnerId());
@@ -185,7 +172,7 @@ public class AbisProjectService {
 				} else {
 					String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode();
 					String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage();
-					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 				}
 			}
 		} catch (ToolkitException ex) {
@@ -195,22 +182,24 @@ public class AbisProjectService {
 					"In addAbisProject method of AbisProjectService Service - " + ex.getMessage());
 			String errorCode = ex.getErrorCode();
 			String errorMessage = ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 		} catch (DataIntegrityViolationException ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In addSAbisProject method of AbisProjectService Service - " + ex.getMessage());
 			String errorCode = ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorCode();
-			String errorMessage = ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorMessage() + " " + abisProjectDto.getName();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			String errorMessage = ToolkitErrorCodes.PROJECT_NAME_EXISTS.getErrorMessage() + " "
+					+ abisProjectDto.getName();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 		} catch (Exception ex) {
 			abisProjectDto = null;
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In addAbisProject method of AbisProjectService Service - " + ex.getMessage());
 			String errorCode = ToolkitErrorCodes.ABIS_PROJECT_UNABLE_TO_ADD.getErrorCode();
-			String errorMessage = ToolkitErrorCodes.ABIS_PROJECT_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			String errorMessage = ToolkitErrorCodes.ABIS_PROJECT_UNABLE_TO_ADD.getErrorMessage() + " "
+					+ ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 		}
 		responseWrapper.setId(getAbisProjectPostId);
 		responseWrapper.setResponse(abisProjectDto);
@@ -218,53 +207,6 @@ public class AbisProjectService {
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
-
-	public void addComplianceCollection(AbisProjectDto abisProjectDto,
-									 String projectId) {
-		log.debug("sessionId", "idType", "id", "Started addComplianceCollection for ABIS project: {}", projectId);
-		try {
-			//1. Add a new default collection
-			CollectionRequestDto collectionRequestDto = new CollectionRequestDto();
-			collectionRequestDto.setProjectId(projectId);
-			collectionRequestDto.setProjectType(abisProjectDto.getProjectType());
-			collectionRequestDto.setCollectionName(complianceCollectionName);
-			collectionRequestDto.setCollectionType(AppConstants.COMPLIANCE_COLLECTION);
-			ResponseWrapper<CollectionDto> addCollectionWrapper = collectionsService.addCollection(collectionRequestDto);
-			String complianceCollectionId = null;
-			if (addCollectionWrapper.getResponse() != null) {
-				complianceCollectionId = addCollectionWrapper.getResponse().getCollectionId();
-				log.debug("sessionId", "idType", "id", "Compliance collection added: {}", complianceCollectionId);
-			} else {
-				log.debug("sessionId", "idType", "id", "Compliance collection could not be added for this project: {}", projectId);
-			}
-			if (complianceCollectionId != null) {
-				//2. Get the testcases
-				ResponseWrapper<List<TestCaseDto>> testCaseWrapper = testCasesService.getAbisTestCases(
-						abisProjectDto.getAbisVersion()
-				);
-				List<CollectionTestCaseDto> inputList = new ArrayList<>();
-				if (testCaseWrapper.getResponse() != null && testCaseWrapper.getResponse().size() > 0) {
-					List<String> ignoreTestcaseList = Arrays.asList(ignoreTestcases.split(","));
-					for (TestCaseDto testCase : testCaseWrapper.getResponse()) {
-						if (!ignoreTestcaseList.contains(testCase.getTestId())) {
-							CollectionTestCaseDto collectionTestCaseDto = new CollectionTestCaseDto();
-							collectionTestCaseDto.setCollectionId(complianceCollectionId);
-							collectionTestCaseDto.setTestCaseId(testCase.getTestId());
-							inputList.add(collectionTestCaseDto);	
-						}
-					}
-				}
-				//3. add the testcases for the default collection
-				if (inputList.size() > 0 ) {
-					collectionsService.addTestCasesForCollection(inputList);
-				}
-			}
-		} catch (Exception ex) {
-			//This is a fail safe operation, so exception can be ignored
-			log.debug("sessionId", "idType", "id", "Error in adding compliance collection: {}", ex.getLocalizedMessage());
-		}
-	}
-
 
 	public ResponseWrapper<AbisProjectDto> updateAbisProject(AbisProjectDto abisProjectDto) {
 		ResponseWrapper<AbisProjectDto> responseWrapper = new ResponseWrapper<>();
@@ -285,7 +227,7 @@ public class AbisProjectService {
 					String abisHash = abisProjectDto.getAbisHash();
 					String websiteUrl = abisProjectDto.getWebsiteUrl();
 					String bioTestDataName = abisProjectDto.getBioTestDataFileName();
-					//Updating ABIS project values
+					// Updating ABIS project values
 					if (Objects.nonNull(url) && !url.isEmpty()) {
 						entity.setUrl(url);
 					}
@@ -314,25 +256,26 @@ public class AbisProjectService {
 							BiometricTestDataEntity biometricTestData = biometricTestDataRepository
 									.findByTestDataName(bioTestDataName, partnerId);
 							String fileName = biometricTestData.getFileId();
-							String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/" + AppConstants.ABIS;
+							String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/"
+									+ AppConstants.ABIS;
 							if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
 								entity.setBioTestDataFileName(bioTestDataName);
 							} else {
 								String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode();
-								String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage();
-								responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+								String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE
+										.getErrorMessage();
+								responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 							}
 						}
 					}
 					entity.setUpBy(this.getUserBy());
 					entity.setUpdDate(updDate);
 					AbisProjectEntity outputEntity = abisProjectRepository.save(entity);
-					abisProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity,
-							AbisProjectDto.class);
+					abisProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, AbisProjectDto.class);
 				} else {
 					String errorCode = ToolkitErrorCodes.ABIS_PROJECT_NOT_AVAILABLE.getErrorCode();
 					String errorMessage = ToolkitErrorCodes.ABIS_PROJECT_NOT_AVAILABLE.getErrorMessage();
-					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 				}
 			}
 		} catch (ToolkitException ex) {
@@ -342,15 +285,16 @@ public class AbisProjectService {
 					"In updateAbisProject method of AbisProjectService Service - " + ex.getMessage());
 			String errorCode = ex.getErrorCode();
 			String errorMessage = ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 		} catch (Exception ex) {
 			abisProjectDto = null;
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
 					"In updateAbisProject method of AbisProjectService Service - " + ex.getMessage());
 			String errorCode = ToolkitErrorCodes.ABIS_PROJECT_UNABLE_TO_ADD.getErrorCode();
-			String errorMessage = ToolkitErrorCodes.ABIS_PROJECT_UNABLE_TO_ADD.getErrorMessage() + " " + ex.getMessage();
-			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+			String errorMessage = ToolkitErrorCodes.ABIS_PROJECT_UNABLE_TO_ADD.getErrorMessage() + " "
+					+ ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 		}
 		responseWrapper.setId(putAbisProjectId);
 		responseWrapper.setResponse(abisProjectDto);
@@ -378,18 +322,18 @@ public class AbisProjectService {
 		}
 
 		switch (projectTypesCode) {
-			case ABIS:
-				switch (specVersionCode) {
-					case SPEC_VER_0_9_0:
-						break;
-					default:
-						errorCode = ToolkitErrorCodes.INVALID_ABIS_SPEC_VERSION;
-						throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
-				}
+		case ABIS:
+			switch (specVersionCode) {
+			case SPEC_VER_0_9_0:
 				break;
 			default:
-				errorCode = ToolkitErrorCodes.INVALID_PROJECT_TYPE;
+				errorCode = ToolkitErrorCodes.INVALID_ABIS_SPEC_VERSION;
 				throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
+			}
+			break;
+		default:
+			errorCode = ToolkitErrorCodes.INVALID_PROJECT_TYPE;
+			throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
 		}
 		return true;
 	}
