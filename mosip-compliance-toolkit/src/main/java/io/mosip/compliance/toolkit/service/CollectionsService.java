@@ -2,6 +2,7 @@ package io.mosip.compliance.toolkit.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,6 +24,9 @@ import io.mosip.compliance.toolkit.dto.collections.CollectionRequestDto;
 import io.mosip.compliance.toolkit.dto.collections.CollectionTestCaseDto;
 import io.mosip.compliance.toolkit.dto.collections.CollectionTestCasesResponseDto;
 import io.mosip.compliance.toolkit.dto.collections.CollectionsResponseDto;
+import io.mosip.compliance.toolkit.dto.projects.AbisProjectDto;
+import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
+import io.mosip.compliance.toolkit.dto.projects.SdkProjectDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.entity.CollectionEntity;
 import io.mosip.compliance.toolkit.entity.CollectionSummaryEntity;
@@ -54,6 +58,21 @@ public class CollectionsService {
 
 	@Value("${mosip.toolkit.api.id.collection.post}")
 	private String postCollectionId;
+
+	@Value("${mosip.toolkit.compliance.collection.name}")
+	private String complianceCollectionName;
+
+	@Value("${mosip.toolkit.compliance.collection.ignore.testcases}")
+	private String complianceIgnoreTestcases;
+
+	@Value("${mosip.toolkit.quality.assessment.collection.name}")
+	private String qualityAssessmentCollectionName;
+
+	@Value("${mosip.toolkit.quality.assessment.collection.ignore.testcases}")
+	private String qualityAssessmentIgnoreTestcases;
+
+	@Autowired
+	private TestCasesService testCasesService;
 
 	@Autowired
 	private CollectionsSummaryRepository collectionsSummaryRepository;
@@ -129,7 +148,8 @@ public class CollectionsService {
 		return responseWrapper;
 	}
 
-	public ResponseWrapper<CollectionTestCasesResponseDto> getTestCasesForCollection(String partnerId, String collectionId) {
+	public ResponseWrapper<CollectionTestCasesResponseDto> getTestCasesForCollection(String partnerId,
+			String collectionId) {
 		ResponseWrapper<CollectionTestCasesResponseDto> responseWrapper = new ResponseWrapper<>();
 		CollectionTestCasesResponseDto collectionTestCasesResponseDto = null;
 
@@ -276,7 +296,7 @@ public class CollectionsService {
 					}
 					CollectionEntity inputEntity = new CollectionEntity();
 					inputEntity.setId(RandomIdGenerator.generateUUID(
-					collectionRequest.getProjectType().toLowerCase() + "_" + collectionType, "", 36));
+							collectionRequest.getProjectType().toLowerCase() + "_" + collectionType, "", 36));
 					inputEntity.setName(collectionRequest.getCollectionName());
 					inputEntity.setSbiProjectId(sbiProjectId);
 					inputEntity.setSdkProjectId(sdkProjectId);
@@ -363,6 +383,100 @@ public class CollectionsService {
 		responseWrapper.setResponse(responseList);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
+	}
+
+	public void addDefaultCollection(String collectionType, SbiProjectDto sbiProjectDto, SdkProjectDto sdkProjectDto,
+			AbisProjectDto abisProjectDto, String projectId) {
+		log.debug("sessionId", "idType", "id", "Started addDefaultCollection for collectionType: {}", collectionType);
+		log.debug("sessionId", "idType", "id", "Started addDefaultCollection for project: {}", projectId);
+		try {
+			// 1. Add a new default collection
+			String projectType = "";
+			if (abisProjectDto != null && AppConstants.ABIS.equals(abisProjectDto.getProjectType())) {
+				projectType = abisProjectDto.getProjectType();
+			}
+			if (sbiProjectDto != null && AppConstants.SBI.equals(sbiProjectDto.getProjectType())) {
+				projectType = sbiProjectDto.getProjectType();
+			}
+			if (sdkProjectDto != null && AppConstants.SDK.equals(sdkProjectDto.getProjectType())) {
+				projectType = sdkProjectDto.getProjectType();
+			}
+			log.debug("sessionId", "idType", "id", "Started addDefaultCollection for projectType: {}", projectType);
+			CollectionRequestDto collectionRequestDto = new CollectionRequestDto();
+			collectionRequestDto.setProjectId(projectId);
+			collectionRequestDto.setProjectType(projectType);
+			if (AppConstants.COMPLIANCE_COLLECTION.equals(collectionType)) {
+				collectionRequestDto.setCollectionName(complianceCollectionName);
+			}
+			if (AppConstants.QUALITY_ASSESSMENT_COLLECTION.equals(collectionType)) {
+				collectionRequestDto.setCollectionName(qualityAssessmentCollectionName);
+			}
+			collectionRequestDto.setCollectionType(collectionType);
+			ResponseWrapper<CollectionDto> addCollectionWrapper = this.addCollection(collectionRequestDto);
+			String complianceCollectionId = null;
+			if (addCollectionWrapper.getResponse() != null) {
+				complianceCollectionId = addCollectionWrapper.getResponse().getCollectionId();
+				log.debug("sessionId", "idType", "id", "Default collection added: {}", complianceCollectionId);
+			} else {
+				log.debug("sessionId", "idType", "id", "Default collection could not be added for this project: {}",
+						projectId);
+			}
+			if (complianceCollectionId != null) {
+				// 2. Get the testcases
+				ResponseWrapper<List<TestCaseDto>> testCaseWrapper = null;
+				if (AppConstants.ABIS.equals(projectType)) {
+					testCaseWrapper = testCasesService.getAbisTestCases(abisProjectDto.getAbisVersion());
+				}
+				if (AppConstants.SBI.equals(projectType)) {
+					testCaseWrapper = testCasesService.getSbiTestCases(sbiProjectDto.getSbiVersion(),
+							sbiProjectDto.getPurpose(), sbiProjectDto.getDeviceType(),
+							sbiProjectDto.getDeviceSubType());
+				}
+				if (AppConstants.SDK.equals(projectType)) {
+					testCaseWrapper = testCasesService.getSdkTestCases(sdkProjectDto.getSdkVersion(),
+							sdkProjectDto.getPurpose());
+				}
+				List<CollectionTestCaseDto> inputList = new ArrayList<>();
+				if (testCaseWrapper.getResponse() != null && testCaseWrapper.getResponse().size() > 0) {
+					List<String> ignoreTestCasesList = new ArrayList<>();
+					if (AppConstants.COMPLIANCE_COLLECTION.equals(collectionType)) {
+						ignoreTestCasesList = Arrays.asList(complianceIgnoreTestcases.split(","));
+					}
+					if (AppConstants.QUALITY_ASSESSMENT_COLLECTION.equals(collectionType)) {
+						ignoreTestCasesList = Arrays.asList(qualityAssessmentIgnoreTestcases.split(","));
+					}
+					for (TestCaseDto testCase : testCaseWrapper.getResponse()) {
+						if (!ignoreTestCasesList.contains(testCase.getTestId())) {
+							boolean proceed = false;
+							if (AppConstants.COMPLIANCE_COLLECTION.equals(collectionType)
+									&& testCase.getOtherAttributes() != null
+									&& !testCase.getOtherAttributes().isQualityAssessmentTestCase()) {
+								proceed = true;
+							}
+							if (AppConstants.QUALITY_ASSESSMENT_COLLECTION.equals(collectionType)
+									&& testCase.getOtherAttributes() != null
+									&& testCase.getOtherAttributes().isQualityAssessmentTestCase()) {
+								proceed = true;
+							}
+							if (proceed) {
+								CollectionTestCaseDto collectionTestCaseDto = new CollectionTestCaseDto();
+								collectionTestCaseDto.setCollectionId(complianceCollectionId);
+								collectionTestCaseDto.setTestCaseId(testCase.getTestId());
+								inputList.add(collectionTestCaseDto);
+							}
+						}
+					}
+				}
+				// 3. add the testcases for the default collection
+				if (inputList.size() > 0) {
+					this.addTestCasesForCollection(inputList);
+				}
+			}
+		} catch (Exception ex) {
+			// This is a fail safe operation, so exception can be ignored
+			log.debug("sessionId", "idType", "id", "Error in adding compliance collection: {}",
+					ex.getLocalizedMessage());
+		}
 	}
 
 }

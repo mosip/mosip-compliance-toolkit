@@ -78,6 +78,8 @@ public class AppConstants {
 
 	public static final String COMPLIANCE_COLLECTION = "compliance_collection";
 	
+	public static final String QUALITY_ASSESSMENT_COLLECTION = "quality_assessment_collection";
+	
 	public static final String CUSTOM_COLLECTION = "custom_collection";
 	
 	public static final String REPORT_STATUS_DRAFT = "draft";
