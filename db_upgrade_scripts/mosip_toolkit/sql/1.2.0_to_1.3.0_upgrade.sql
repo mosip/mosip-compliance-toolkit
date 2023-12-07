@@ -83,8 +83,9 @@ COMMENT ON COLUMN toolkit.compliance_testrun_summary.del_dtimes IS 'Deleted Date
 -- add new columns in collections table.
 ALTER TABLE toolkit.collections Add COLUMN collection_type character varying(256) NOT NULL DEFAULT 'custom_collection';
 ALTER TABLE toolkit.collections Add COLUMN org_name character varying(64) NOT NULL DEFAULT 'Not_Available';
-COMMENT ON COLUMN toolkit.collections.collection_type IS 'Collection Type: this can be custom_collection or compliance_collection';
+COMMENT ON COLUMN toolkit.collections.collection_type IS 'Collection Type: this can be custom_collection, compliance_collection or quality_assessment_collection';
 COMMENT ON COLUMN toolkit.collections.org_name IS 'orgname: organization name to which partner belongs to.';
+ALTER TABLE toolkit.collections ADD CONSTRAINT collections_collection_type_values CHECK (collection_type IN ('custom_collection','compliance_collection','quality_assessment_collection'));
 
 -- This table has all the data share tokens for a test run for a given collection in ABIS project.
 CREATE TABLE toolkit.datashare_tokens(
