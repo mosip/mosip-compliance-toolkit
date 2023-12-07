@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.mosip.compliance.toolkit.util.ProjectHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,6 +62,9 @@ public class AbisProjectService {
 
 	@Autowired
 	private ObjectMapperConfig objectMapperConfig;
+
+	@Autowired
+	private ProjectHelper projectHelper;
 
 	@Qualifier("S3Adapter")
 	@Autowired
@@ -214,6 +218,12 @@ public class AbisProjectService {
 			if (Objects.nonNull(abisProjectDto)) {
 				String projectId = abisProjectDto.getId();
 				String partnerId = this.getPartnerId();
+				String projectType = abisProjectDto.getProjectType();
+				String complianceCollectionId = projectHelper.getComplianceCollectionId(projectId, projectType);
+				boolean isReportAlreadySubmitted = false;
+				if (!complianceCollectionId.equals(null)) {
+					isReportAlreadySubmitted = projectHelper.checkIfHashCanBeUpdated(projectId, projectType, complianceCollectionId);
+				}
 				Optional<AbisProjectEntity> optionalAbisProjectEntity = abisProjectRepository.findById(projectId,
 						getPartnerId());
 				if (optionalAbisProjectEntity.isPresent()) {
@@ -243,7 +253,7 @@ public class AbisProjectService {
 					if (Objects.nonNull(responseQueueName) && !responseQueueName.isEmpty()) {
 						entity.setInboundQueueName(responseQueueName);
 					}
-					if (Objects.nonNull(abisHash) && !abisHash.isEmpty()) {
+					if (Objects.nonNull(abisHash) && !abisHash.isEmpty() && !isReportAlreadySubmitted) {
 						entity.setAbisHash(abisHash);
 					}
 					if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty()) {

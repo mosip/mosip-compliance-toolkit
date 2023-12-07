@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.mosip.compliance.toolkit.util.ProjectHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,6 +60,9 @@ public class SdkProjectService {
 
 	@Autowired
 	private CollectionsService collectionsService;
+
+	@Autowired
+	private ProjectHelper projectHelper;
 
 	@Value("${mosip.kernel.objectstore.account-name}")
 	private String objectStoreAccountName;
@@ -210,6 +214,12 @@ public class SdkProjectService {
 			if (Objects.nonNull(sdkProjectDto)) {
 				String projectId = sdkProjectDto.getId();
 				String partnerId = this.getPartnerId();
+				String projectType = sdkProjectDto.getProjectType();
+				String complianceCollectionId = projectHelper.getComplianceCollectionId(projectId, projectType);
+				boolean isReportAlreadySubmitted = false;
+				if (!complianceCollectionId.equals(null)) {
+					isReportAlreadySubmitted = projectHelper.checkIfHashCanBeUpdated(projectId, projectType, complianceCollectionId);
+				}
 				Optional<SdkProjectEntity> optionalSdkProjectEntity = sdkProjectRepository.findById(projectId,
 						getPartnerId());
 				if (optionalSdkProjectEntity.isPresent()) {
@@ -224,7 +234,7 @@ public class SdkProjectService {
 					if (Objects.nonNull(url) && !url.isEmpty()) {
 						entity.setUrl(url);
 					}
-					if (Objects.nonNull(sdkHash) && !sdkHash.isEmpty()) {
+					if (Objects.nonNull(sdkHash) && !sdkHash.isEmpty() && isReportAlreadySubmitted) {
 						entity.setSdkHash(sdkHash);
 					}
 					if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty()) {

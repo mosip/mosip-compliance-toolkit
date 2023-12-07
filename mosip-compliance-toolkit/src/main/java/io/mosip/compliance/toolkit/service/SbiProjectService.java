@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.mosip.compliance.toolkit.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,10 +28,6 @@ import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
 import io.mosip.compliance.toolkit.entity.SbiProjectEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.SbiProjectRepository;
-import io.mosip.compliance.toolkit.util.CommonUtil;
-import io.mosip.compliance.toolkit.util.KeyManagerHelper;
-import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
-import io.mosip.compliance.toolkit.util.RandomIdGenerator;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
@@ -60,6 +57,9 @@ public class SbiProjectService {
 
 	@Autowired
 	private CollectionsService collectionsService;
+
+	@Autowired
+	private ProjectHelper projectHelper;
 
 	private Logger log = LoggerConfiguration.logConfig(SbiProjectService.class);
 
@@ -190,6 +190,12 @@ public class SbiProjectService {
 		try {
 			if (Objects.nonNull(sbiProjectDto)) {
 				String projectId = sbiProjectDto.getId();
+				String projectType = sbiProjectDto.getProjectType();
+				String complianceCollectionId = projectHelper.getComplianceCollectionId(projectId, projectType);
+				boolean isReportAlreadySubmitted = false;
+				if (!complianceCollectionId.equals(null)) {
+					isReportAlreadySubmitted = projectHelper.checkIfHashCanBeUpdated(projectId, projectType, complianceCollectionId);
+				}
 				Optional<SbiProjectEntity> optionalSbiProjectEntity = sbiProjectRepository.findById(projectId,
 						getPartnerId());
 				if (optionalSbiProjectEntity.isPresent()) {
@@ -205,7 +211,7 @@ public class SbiProjectService {
 					entity.setDeviceImage2(deviceImage2);
 					entity.setDeviceImage3(deviceImage3);
 					entity.setDeviceImage4(deviceImage4);
-					if (Objects.nonNull(sbiHash) && !sbiHash.isEmpty()) {
+					if (Objects.nonNull(sbiHash) && !sbiHash.isEmpty() && !isReportAlreadySubmitted) {
 						entity.setSbiHash(sbiHash);
 					}
 					if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty()) {
