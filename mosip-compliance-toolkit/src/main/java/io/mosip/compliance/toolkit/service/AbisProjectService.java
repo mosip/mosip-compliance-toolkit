@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.mosip.compliance.toolkit.util.ProjectHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,6 +62,9 @@ public class AbisProjectService {
 
 	@Autowired
 	private ObjectMapperConfig objectMapperConfig;
+
+	@Autowired
+	private ProjectHelper projectHelper;
 
 	@Qualifier("S3Adapter")
 	@Autowired
@@ -243,8 +247,11 @@ public class AbisProjectService {
 					if (Objects.nonNull(responseQueueName) && !responseQueueName.isEmpty()) {
 						entity.setInboundQueueName(responseQueueName);
 					}
-					if (Objects.nonNull(abisHash) && !abisHash.isEmpty()) {
-						entity.setAbisHash(abisHash);
+					if (Objects.nonNull(abisHash) && !abisHash.isEmpty() && !entity.getAbisHash().equals(abisHash)) {
+						boolean canHashBeUpdated = projectHelper.checkIfHashCanBeUpdated(projectId, abisProjectDto.getProjectType(), partnerId);
+						if (canHashBeUpdated) {
+							entity.setAbisHash(abisHash);
+						}
 					}
 					if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty()) {
 						entity.setWebsiteUrl(websiteUrl);
