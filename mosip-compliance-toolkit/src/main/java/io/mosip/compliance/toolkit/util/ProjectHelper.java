@@ -2,10 +2,8 @@ package io.mosip.compliance.toolkit.util;
 
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
-import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
-import io.mosip.compliance.toolkit.dto.collections.CollectionsResponseDto;
 import io.mosip.compliance.toolkit.dto.report.ReportRequestDto;
-import io.mosip.compliance.toolkit.service.CollectionsService;
+import io.mosip.compliance.toolkit.repository.CollectionsRepository;
 import io.mosip.compliance.toolkit.service.ReportService;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -25,7 +22,7 @@ public class ProjectHelper {
     private String partnerReportPostId;
 
     @Autowired
-    private CollectionsService collectionsService;
+    private CollectionsRepository collectionsRepository;
 
     @Autowired
     private ReportService reportService;
@@ -54,17 +51,12 @@ public class ProjectHelper {
 
     private String getComplianceCollectionId(String projectId, String projectType) {
         String complianceCollectionId = null;
-        ResponseWrapper<CollectionsResponseDto> getCollections = collectionsService.getCollections(projectType, projectId);
-        if (getCollections.getResponse() != null) {
-            CollectionsResponseDto collectionsResponseDto = getCollections.getResponse();
-            List<CollectionDto> collectionsList = collectionsResponseDto.getCollections();
-            for (CollectionDto collection: collectionsList) {
-                if (collection.getCollectionType().equalsIgnoreCase(AppConstants.COMPLIANCE_COLLECTION)) {
-                    complianceCollectionId = collection.getCollectionId();
-                }
-            }
-        } else {
-            log.error("sessionId", "idType", "id", "Unable to get collections for this project " + projectId);
+        if (AppConstants.SBI.equalsIgnoreCase(projectType)) {
+            complianceCollectionId = collectionsRepository.getSbiComplianceCollectionId(projectId, AppConstants.COMPLIANCE_COLLECTION);
+        } else if (AppConstants.SDK.equalsIgnoreCase(projectType)) {
+            complianceCollectionId = collectionsRepository.getSdkComplianceCollectionId(projectId, AppConstants.COMPLIANCE_COLLECTION);
+        } else if (AppConstants.ABIS.equalsIgnoreCase(projectType)) {
+            complianceCollectionId = collectionsRepository.getAbisComplianceCollectionId(projectId, AppConstants.COMPLIANCE_COLLECTION);
         }
         return complianceCollectionId;
     }
