@@ -29,8 +29,8 @@ public class ProjectHelper {
 
     private Logger log = LoggerConfiguration.logConfig(ProjectHelper.class);
 
-    public boolean checkIfHashCanBeUpdated(String projectId, String projectType) {
-        String complianceCollectionId = getComplianceCollectionId(projectId, projectType);
+    public boolean checkIfHashCanBeUpdated(String projectId, String projectType, String partnerId) {
+        String complianceCollectionId = getComplianceCollectionId(projectId, projectType, partnerId);
         if (!complianceCollectionId.equals(null)) {
             ReportRequestDto reportRequestDto = new ReportRequestDto();
             reportRequestDto.setProjectId(projectId);
@@ -49,14 +49,14 @@ public class ProjectHelper {
         return true;
     }
 
-    private String getComplianceCollectionId(String projectId, String projectType) {
+    private String getComplianceCollectionId(String projectId, String projectType, String partnerId) {
         String complianceCollectionId = null;
         if (AppConstants.SBI.equalsIgnoreCase(projectType)) {
-            complianceCollectionId = collectionsRepository.getSbiComplianceCollectionId(projectId, AppConstants.COMPLIANCE_COLLECTION);
+            complianceCollectionId = collectionsRepository.getSbiComplianceCollectionId(projectId, AppConstants.COMPLIANCE_COLLECTION, partnerId);
         } else if (AppConstants.SDK.equalsIgnoreCase(projectType)) {
-            complianceCollectionId = collectionsRepository.getSdkComplianceCollectionId(projectId, AppConstants.COMPLIANCE_COLLECTION);
+            complianceCollectionId = collectionsRepository.getSdkComplianceCollectionId(projectId, AppConstants.COMPLIANCE_COLLECTION, partnerId);
         } else if (AppConstants.ABIS.equalsIgnoreCase(projectType)) {
-            complianceCollectionId = collectionsRepository.getAbisComplianceCollectionId(projectId, AppConstants.COMPLIANCE_COLLECTION);
+            complianceCollectionId = collectionsRepository.getAbisComplianceCollectionId(projectId, AppConstants.COMPLIANCE_COLLECTION, partnerId);
         }
         return complianceCollectionId;
     }

@@ -29,13 +29,13 @@ public interface CollectionsRepository extends BaseRepository<CollectionEntity, 
 	@Query("SELECT e.name FROM CollectionEntity e  WHERE e.id= ?1 and e.partnerId= ?2 and e.isDeleted<>'true' order by e.crDate desc")
 	public String getCollectionNameById(String collectionId, String partnerId);
 
-	@Query("SELECT e.id FROM CollectionEntity e WHERE e.sbiProjectId= ?1 and e.collectionType= ?2 and e.isDeleted<>'true' order by e.crDate desc")
-	public String getSbiComplianceCollectionId(String sbiprojectId, String collectionType);
+	@Query("SELECT e.id FROM CollectionEntity e WHERE e.sbiProjectId= ?1 and e.collectionType= ?2 and e.partnerId= ?3 and e.isDeleted<>'true' order by e.crDate desc")
+	public String getSbiComplianceCollectionId(String sbiprojectId, String collectionType, String partnerId);
 
-	@Query("SELECT e.id FROM CollectionEntity e WHERE e.sdkProjectId= ?1 and e.collectionType= ?2 and e.isDeleted<>'true' order by e.crDate desc")
-	public String getSdkComplianceCollectionId(String sdkProjectId, String collectionType);
+	@Query("SELECT e.id FROM CollectionEntity e WHERE e.sdkProjectId= ?1 and e.collectionType= ?2 and e.partnerId= ?3 and e.isDeleted<>'true' order by e.crDate desc")
+	public String getSdkComplianceCollectionId(String sdkProjectId, String collectionType, String partnerId);
 
-	@Query("SELECT e.id FROM CollectionEntity e WHERE e.abisProjectId= ?1 and e.collectionType= ?2 and e.isDeleted<>'true' order by e.crDate desc")
-	public String getAbisComplianceCollectionId(String abisProjectId, String collectionType);
+	@Query("SELECT e.id FROM CollectionEntity e WHERE e.abisProjectId= ?1 and e.collectionType= ?2 and e.partnerId= ?3 and e.isDeleted<>'true' order by e.crDate desc")
+	public String getAbisComplianceCollectionId(String abisProjectId, String collectionType, String partnerId);
 	
 }

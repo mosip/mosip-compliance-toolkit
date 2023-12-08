@@ -248,7 +248,7 @@ public class AbisProjectService {
 						entity.setInboundQueueName(responseQueueName);
 					}
 					if (Objects.nonNull(abisHash) && !abisHash.isEmpty() && !entity.getAbisHash().equals(abisHash)) {
-						boolean canHashBeUpdated = projectHelper.checkIfHashCanBeUpdated(projectId, abisProjectDto.getProjectType());
+						boolean canHashBeUpdated = projectHelper.checkIfHashCanBeUpdated(projectId, abisProjectDto.getProjectType(), partnerId);
 						if (canHashBeUpdated) {
 							entity.setAbisHash(abisHash);
 						}

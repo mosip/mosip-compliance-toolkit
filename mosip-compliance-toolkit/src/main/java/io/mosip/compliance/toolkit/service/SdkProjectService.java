@@ -229,7 +229,7 @@ public class SdkProjectService {
 						entity.setUrl(url);
 					}
 					if (Objects.nonNull(sdkHash) && !sdkHash.isEmpty() && !entity.getSdkHash().equals(sdkHash)) {
-						boolean canHashBeUpdated = projectHelper.checkIfHashCanBeUpdated(projectId, sdkProjectDto.getProjectType());
+						boolean canHashBeUpdated = projectHelper.checkIfHashCanBeUpdated(projectId, sdkProjectDto.getProjectType(), partnerId);
 						if (canHashBeUpdated) {
 							entity.setSdkHash(sdkHash);
 						}

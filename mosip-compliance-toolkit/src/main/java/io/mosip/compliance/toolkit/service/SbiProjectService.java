@@ -191,8 +191,9 @@ public class SbiProjectService {
 			if (Objects.nonNull(sbiProjectDto)) {
 				String projectId = sbiProjectDto.getId();
 				String projectType = sbiProjectDto.getProjectType();
+				String partnerId = getPartnerId();
 				Optional<SbiProjectEntity> optionalSbiProjectEntity = sbiProjectRepository.findById(projectId,
-						getPartnerId());
+						partnerId);
 				if (optionalSbiProjectEntity.isPresent()) {
 					SbiProjectEntity entity = optionalSbiProjectEntity.get();
 					LocalDateTime updDate = LocalDateTime.now();
@@ -207,7 +208,7 @@ public class SbiProjectService {
 					entity.setDeviceImage3(deviceImage3);
 					entity.setDeviceImage4(deviceImage4);
 					if (Objects.nonNull(sbiHash) && !sbiHash.isEmpty() && !entity.getSbiHash().equals(sbiHash)) {
-						boolean canHashBeUpdated = projectHelper.checkIfHashCanBeUpdated(projectId, projectType);
+						boolean canHashBeUpdated = projectHelper.checkIfHashCanBeUpdated(projectId, projectType, partnerId);
 						if (canHashBeUpdated) {
 							entity.setSbiHash(sbiHash);
 						}
