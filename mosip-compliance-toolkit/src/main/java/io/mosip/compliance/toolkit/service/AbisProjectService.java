@@ -165,7 +165,7 @@ public class AbisProjectService {
 					AbisProjectEntity outputEntity = abisProjectRepository.save(entity);
 					// Add a default "ALL" collection for the newly created project
 					collectionsService.addDefaultCollection(AppConstants.COMPLIANCE_COLLECTION, null, null,
-							abisProjectDto, partnerId);
+							abisProjectDto, entity.getId());
 					
 					abisProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, AbisProjectDto.class);
 					abisProjectDto.setId(entity.getId());
