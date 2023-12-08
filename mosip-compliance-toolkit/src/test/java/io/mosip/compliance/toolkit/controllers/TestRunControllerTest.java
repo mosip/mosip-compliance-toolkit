@@ -75,7 +75,7 @@ public class TestRunControllerTest {
     public void getTestRunDetailsTest() throws Exception {
         String runId ="123";
         ResponseWrapper<TestRunDetailsResponseDto> response = new ResponseWrapper<>();
-        Mockito.when(testRunService.getTestRunDetails(partnerId, runId)).thenReturn(response);
+        Mockito.when(testRunService.getTestRunDetails(partnerId, runId, false)).thenReturn(response);
         ResponseWrapper<TestRunDetailsResponseDto> result = testRunController.getTestRunDetails(runId);
         //Assert.assertEquals(response.getResponse(), result.getResponse());
     }
@@ -110,7 +110,7 @@ public class TestRunControllerTest {
         String runId = "123";
         String partnerId = "1234";
         ResponseWrapper<TestRunDetailsResponseDto> response = new ResponseWrapper<>();
-        Mockito.when(testRunService.getTestRunDetails(partnerId, runId)).thenReturn(response);
+        Mockito.when(testRunService.getTestRunDetails(partnerId, runId, false)).thenReturn(response);
         ResponseWrapper<TestRunDetailsResponseDto> result = testRunController.getPartnerTestRunDetails(partnerId, runId);
         Assert.assertEquals(response.getResponse(), result.getResponse());
     }

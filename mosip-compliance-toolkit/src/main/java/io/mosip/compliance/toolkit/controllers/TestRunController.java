@@ -71,13 +71,27 @@ public class TestRunController {
 
 	@GetMapping(value = "/getTestRunDetails/{runId}")
 	public ResponseWrapper<TestRunDetailsResponseDto> getTestRunDetails(@PathVariable String runId) {
-		return testRunService.getTestRunDetails(testRunService.getPartnerId(), runId);
+		return testRunService.getTestRunDetails(testRunService.getPartnerId(), runId, false);
 	}
-	
+
+	@GetMapping(value = "/getMethodDetails/{runId}/{testcaseId}/{methodId}")
+	public ResponseWrapper<TestRunDetailsDto> getMethodDetails(@PathVariable String runId,
+			@PathVariable String testcaseId, @PathVariable String methodId) {
+		return testRunService.getMethodDetails(testRunService.getPartnerId(), runId, testcaseId, methodId);
+	}
+
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getAdminPartnerReport())")
 	@GetMapping(value = "/getPartnerTestRunDetails/{partnerId}/{runId}")
-	public ResponseWrapper<TestRunDetailsResponseDto> getPartnerTestRunDetails(@PathVariable String partnerId, @PathVariable String runId) {
-		return testRunService.getTestRunDetails(partnerId, runId);
+	public ResponseWrapper<TestRunDetailsResponseDto> getPartnerTestRunDetails(@PathVariable String partnerId,
+			@PathVariable String runId) {
+		return testRunService.getTestRunDetails(partnerId, runId, false);
+	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getAdminPartnerReport())")
+	@GetMapping(value = "/getPartnerMethodDetails/{partnerId}/{runId}/{testcaseId}/{methodId}")
+	public ResponseWrapper<TestRunDetailsDto> getPartnerMethodDetails(@PathVariable String partnerId,
+			@PathVariable String runId, @PathVariable String testcaseId, @PathVariable String methodId) {
+		return testRunService.getMethodDetails(partnerId, runId, testcaseId, methodId);
 	}
 
 	@GetMapping(value = "/getTestRunHistory")
@@ -91,9 +105,9 @@ public class TestRunController {
 	public ResponseWrapper<TestRunStatusDto> getTestRunStatus(@PathVariable String runId) {
 		return testRunService.getTestRunStatus(runId);
 	}
-	
+
 	@DeleteMapping(value = "/deleteTestRun/{runId}")
-	public ResponseWrapper<Boolean> deleteTestRun(@PathVariable String runId){
+	public ResponseWrapper<Boolean> deleteTestRun(@PathVariable String runId) {
 		return testRunService.deleteTestRun(runId);
 	}
 }

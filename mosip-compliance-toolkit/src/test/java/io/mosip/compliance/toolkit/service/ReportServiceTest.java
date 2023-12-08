@@ -262,7 +262,7 @@ public class ReportServiceTest {
         when(resourceCacheService.getOrgName(anyString())).thenReturn("abcd");
         Mockito.when(complianceTestRunSummaryRepository.findById(any())).thenReturn(Optional.of(complianceTestRunSummaryEntity));
         SecurityContextHolder.setContext(securityContext);
-        when(testRunService.getTestRunDetails(any(), any())).thenReturn(testRunDetailsResponse);
+        when(testRunService.getTestRunDetails(any(), any(), Mockito.anyBoolean())).thenReturn(testRunDetailsResponse);
         reportGeneratorService.generateDraftReport(requestDto, "abcdefgh");
     }
 
@@ -290,7 +290,7 @@ public class ReportServiceTest {
         testRunDetailsDtoList.add(testRunDetailsDto);
         testRunDetailsResponseDto1.setTestRunDetailsList(testRunDetailsDtoList);
         testRunDetailsResponse.setResponse(testRunDetailsResponseDto1);
-        Mockito.when(testRunService.getTestRunDetails(Mockito.any(), Mockito.any()))
+        Mockito.when(testRunService.getTestRunDetails(Mockito.any(), Mockito.any(), Mockito.anyBoolean()))
 
                 .thenReturn(testRunDetailsResponse);
         reportGeneratorService.generateDraftReport(requestDto, "abcdefgh");
@@ -332,7 +332,7 @@ public class ReportServiceTest {
         sdkProjectResponse.setResponse(sdkProjectDto);
 
         Mockito.when(mockAuthentication.getPrincipal()).thenReturn(mockAuthUserDetails);
-        Mockito.when(testRunService.getTestRunDetails(Mockito.any(), Mockito.any()))
+        Mockito.when(testRunService.getTestRunDetails(Mockito.any(), Mockito.any(), Mockito.anyBoolean()))
 
                 .thenReturn(testRunDetailsResponse);
         reportGeneratorService.generateDraftReport(requestDto, "abcdefgh");
@@ -362,7 +362,7 @@ public class ReportServiceTest {
         testRunDetailsDtoList.add(testRunDetailsDto);
         testRunDetailsResponseDto1.setTestRunDetailsList(testRunDetailsDtoList);
         testRunDetailsResponse.setResponse(testRunDetailsResponseDto1);
-        Mockito.when(testRunService.getTestRunDetails(Mockito.any(), Mockito.any()))
+        Mockito.when(testRunService.getTestRunDetails(Mockito.any(), Mockito.any(), Mockito.anyBoolean()))
 
                 .thenReturn(testRunDetailsResponse);
         reportGeneratorService.generateDraftReport(requestDto, "abcdefgh");
@@ -394,7 +394,7 @@ public class ReportServiceTest {
         testRunDetailsResponseDto1.setRunDtimes(LocalDateTime.now());
         testRunDetailsResponseDto1.setExecutionDtimes(LocalDateTime.now().plusMinutes(4));
         testRunDetailsResponse.setResponse(testRunDetailsResponseDto1);
-        Mockito.when(testRunService.getTestRunDetails(Mockito.any(), Mockito.any())).thenReturn(testRunDetailsResponse);
+        Mockito.when(testRunService.getTestRunDetails(Mockito.any(), Mockito.any(), Mockito.anyBoolean())).thenReturn(testRunDetailsResponse);
 
         ResponseWrapper<AbisProjectDto> abisProjectResponse = new ResponseWrapper<>();
         AbisProjectDto abisProjectDto = new AbisProjectDto();
