@@ -242,7 +242,7 @@ public class TestRunServiceTest {
 	 */
 	@Test
 	public void getTestRunDetailsTest() {
-		testRunService.getTestRunDetails(partnerId, null);
+		testRunService.getTestRunDetails(partnerId, null, false);
 		String runId = "123";
 		TestRunEntity entity = new TestRunEntity();
 
@@ -252,12 +252,12 @@ public class TestRunServiceTest {
 		Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		SecurityContextHolder.setContext(securityContext);
 		Mockito.when(testRunRepository.getTestRunById(Mockito.any(), Mockito.any())).thenReturn(null);
-		testRunService.getTestRunDetails(partnerId, runId);
+		testRunService.getTestRunDetails(partnerId, runId, false);
 
 		Mockito.when(testRunRepository.getTestRunById(Mockito.any(), Mockito.any())).thenReturn(entity);
 		List<TestRunDetailsEntity> testRunDetailsEntityList = new ArrayList<>();
 		Mockito.when(testRunDetailsRepository.getTestRunDetails(runId, "123")).thenReturn(testRunDetailsEntityList);
-		testRunService.getTestRunDetails(partnerId, runId);
+		testRunService.getTestRunDetails(partnerId, runId, false);
 
 		TestRunDetailsEntity testRunDetailsEntity = new TestRunDetailsEntity();
 		testRunDetailsEntityList.add(testRunDetailsEntity);
@@ -265,7 +265,7 @@ public class TestRunServiceTest {
 		Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
 		TestRunDetailsDto dto = new TestRunDetailsDto();
 		Mockito.when(mapper.convertValue(testRunDetailsEntity, TestRunDetailsDto.class)).thenReturn(dto);
-		ResponseWrapper<TestRunDetailsResponseDto> result = testRunService.getTestRunDetails(partnerId, runId);
+		ResponseWrapper<TestRunDetailsResponseDto> result = testRunService.getTestRunDetails(partnerId, runId, false);
 		TestRunDetailsResponseDto expected = new TestRunDetailsResponseDto();
 		List<TestRunDetailsDto> testRunDetailsDtosList = new ArrayList<>();
 		testRunDetailsDtosList.add(new TestRunDetailsDto());
@@ -278,7 +278,7 @@ public class TestRunServiceTest {
 	 */
 	@Test
 	public void getTestRunDetailsTestException() {
-		testRunService.getTestRunDetails(partnerId, "123");
+		testRunService.getTestRunDetails(partnerId, "123", false);
 	}
 
 	/*

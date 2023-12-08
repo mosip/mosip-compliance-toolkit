@@ -31,7 +31,7 @@ public class ProjectHelper {
 
     public boolean checkIfHashCanBeUpdated(String projectId, String projectType, String partnerId) {
         String complianceCollectionId = getComplianceCollectionId(projectId, projectType, partnerId);
-        if (complianceCollectionId != null && !"".equals(complianceCollectionId)) {
+        if (!complianceCollectionId.equals(null)) {
             ReportRequestDto reportRequestDto = new ReportRequestDto();
             reportRequestDto.setProjectId(projectId);
             reportRequestDto.setProjectType(projectType);

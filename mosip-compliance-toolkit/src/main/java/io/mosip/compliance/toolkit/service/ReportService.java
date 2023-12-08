@@ -631,7 +631,7 @@ public class ReportService {
 
 	private ResponseWrapper<TestRunDetailsResponseDto> getTestRunDetails(String testRunId) {
 		ResponseWrapper<TestRunDetailsResponseDto> testRunDetailsResponseDto = testRunService
-				.getTestRunDetails(collectionsService.getPartnerId(), testRunId);
+				.getTestRunDetails(collectionsService.getPartnerId(), testRunId, true);
 		return testRunDetailsResponseDto;
 	}
 
