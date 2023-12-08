@@ -218,12 +218,6 @@ public class AbisProjectService {
 			if (Objects.nonNull(abisProjectDto)) {
 				String projectId = abisProjectDto.getId();
 				String partnerId = this.getPartnerId();
-				String projectType = abisProjectDto.getProjectType();
-				String complianceCollectionId = projectHelper.getComplianceCollectionId(projectId, projectType);
-				boolean isReportAlreadySubmitted = false;
-				if (!complianceCollectionId.equals(null)) {
-					isReportAlreadySubmitted = projectHelper.checkIfHashCanBeUpdated(projectId, projectType, complianceCollectionId);
-				}
 				Optional<AbisProjectEntity> optionalAbisProjectEntity = abisProjectRepository.findById(projectId,
 						getPartnerId());
 				if (optionalAbisProjectEntity.isPresent()) {
@@ -253,8 +247,11 @@ public class AbisProjectService {
 					if (Objects.nonNull(responseQueueName) && !responseQueueName.isEmpty()) {
 						entity.setInboundQueueName(responseQueueName);
 					}
-					if (Objects.nonNull(abisHash) && !abisHash.isEmpty() && !isReportAlreadySubmitted) {
-						entity.setAbisHash(abisHash);
+					if (Objects.nonNull(abisHash) && !abisHash.isEmpty() && !entity.getAbisHash().equals(abisHash)) {
+						boolean canHashBeUpdated = projectHelper.checkIfHashCanBeUpdated(projectId, abisProjectDto.getProjectType());
+						if (canHashBeUpdated) {
+							entity.setAbisHash(abisHash);
+						}
 					}
 					if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty()) {
 						entity.setWebsiteUrl(websiteUrl);

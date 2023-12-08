@@ -32,13 +32,33 @@ public class ProjectHelper {
 
     private Logger log = LoggerConfiguration.logConfig(ProjectHelper.class);
 
-    public String getComplianceCollectionId(String projectId, String projectType) {
+    public boolean checkIfHashCanBeUpdated(String projectId, String projectType) {
+        String complianceCollectionId = getComplianceCollectionId(projectId, projectType);
+        if (!complianceCollectionId.equals(null)) {
+            ReportRequestDto reportRequestDto = new ReportRequestDto();
+            reportRequestDto.setProjectId(projectId);
+            reportRequestDto.setProjectType(projectType);
+            reportRequestDto.setCollectionId(complianceCollectionId);
+            RequestWrapper<ReportRequestDto> requestWrapper = new RequestWrapper<>();
+            requestWrapper.setId(partnerReportPostId);
+            requestWrapper.setVersion(AppConstants.VERSION);
+            requestWrapper.setRequest(reportRequestDto);
+            requestWrapper.setRequesttime(LocalDateTime.now());
+            ResponseWrapper<Boolean> response = reportService.isReportAlreadySubmitted(requestWrapper);
+            if (Objects.nonNull(response) && response.getResponse()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private String getComplianceCollectionId(String projectId, String projectType) {
         String complianceCollectionId = null;
         ResponseWrapper<CollectionsResponseDto> getCollections = collectionsService.getCollections(projectType, projectId);
         if (getCollections.getResponse() != null) {
             CollectionsResponseDto collectionsResponseDto = getCollections.getResponse();
-            List<CollectionDto> collections = collectionsResponseDto.getCollections();
-            for (CollectionDto collection: collections) {
+            List<CollectionDto> collectionsList = collectionsResponseDto.getCollections();
+            for (CollectionDto collection: collectionsList) {
                 if (collection.getCollectionType().equalsIgnoreCase(AppConstants.COMPLIANCE_COLLECTION)) {
                     complianceCollectionId = collection.getCollectionId();
                 }
@@ -47,23 +67,5 @@ public class ProjectHelper {
             log.error("sessionId", "idType", "id", "Unable to get collections for this project " + projectId);
         }
         return complianceCollectionId;
-    }
-
-    public boolean checkIfHashCanBeUpdated(String projectId, String projectType, String collectionId) {
-        ReportRequestDto reportRequestDto = new ReportRequestDto();
-        reportRequestDto.setProjectId(projectId);
-        reportRequestDto.setProjectType(projectType);
-        reportRequestDto.setCollectionId(collectionId);
-        RequestWrapper<ReportRequestDto> requestWrapper = new RequestWrapper<>();
-        requestWrapper.setId(partnerReportPostId);
-        requestWrapper.setVersion(AppConstants.VERSION);
-        requestWrapper.setRequest(reportRequestDto);
-        requestWrapper.setRequesttime(LocalDateTime.now());
-        ResponseWrapper<Boolean> response = reportService.isReportAlreadySubmitted(requestWrapper);
-        boolean reportSubmittedStatus = false;
-        if (Objects.nonNull(response)) {
-            reportSubmittedStatus = response.getResponse();
-        }
-        return reportSubmittedStatus;
     }
 }

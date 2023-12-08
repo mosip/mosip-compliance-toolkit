@@ -278,7 +278,7 @@ public class SdkProjectServiceTest {
 
         ResponseWrapper<SdkProjectDto> sdkProjectDtoResponseWrapper = new ResponseWrapper<>();
         sdkProjectDtoResponseWrapper = sdkProjectService.updateSdkProject(sdkProjectDto);
-        Assert.assertNull(sdkProjectDtoResponseWrapper.getResponse());
+        Assert.assertNotNull(sdkProjectDtoResponseWrapper.getResponse());
     }
 
     /*

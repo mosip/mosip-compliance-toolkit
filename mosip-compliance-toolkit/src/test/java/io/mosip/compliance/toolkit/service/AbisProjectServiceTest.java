@@ -288,7 +288,7 @@ public class AbisProjectServiceTest {
 
         ResponseWrapper<AbisProjectDto> abisProjectDtoResponseWrapper = new ResponseWrapper<>();
         abisProjectDtoResponseWrapper = abisProjectService.updateAbisProject(abisProjectDto);
-        Assert.assertNull(abisProjectDtoResponseWrapper.getResponse());
+        Assert.assertNotNull(abisProjectDtoResponseWrapper.getResponse());
     }
 
     /*

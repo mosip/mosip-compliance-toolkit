@@ -191,11 +191,6 @@ public class SbiProjectService {
 			if (Objects.nonNull(sbiProjectDto)) {
 				String projectId = sbiProjectDto.getId();
 				String projectType = sbiProjectDto.getProjectType();
-				String complianceCollectionId = projectHelper.getComplianceCollectionId(projectId, projectType);
-				boolean isReportAlreadySubmitted = false;
-				if (!complianceCollectionId.equals(null)) {
-					isReportAlreadySubmitted = projectHelper.checkIfHashCanBeUpdated(projectId, projectType, complianceCollectionId);
-				}
 				Optional<SbiProjectEntity> optionalSbiProjectEntity = sbiProjectRepository.findById(projectId,
 						getPartnerId());
 				if (optionalSbiProjectEntity.isPresent()) {
@@ -211,8 +206,11 @@ public class SbiProjectService {
 					entity.setDeviceImage2(deviceImage2);
 					entity.setDeviceImage3(deviceImage3);
 					entity.setDeviceImage4(deviceImage4);
-					if (Objects.nonNull(sbiHash) && !sbiHash.isEmpty() && !isReportAlreadySubmitted) {
-						entity.setSbiHash(sbiHash);
+					if (Objects.nonNull(sbiHash) && !sbiHash.isEmpty() && !entity.getSbiHash().equals(sbiHash)) {
+						boolean canHashBeUpdated = projectHelper.checkIfHashCanBeUpdated(projectId, projectType);
+						if (canHashBeUpdated) {
+							entity.setSbiHash(sbiHash);
+						}
 					}
 					if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty()) {
 						entity.setWebsiteUrl(websiteUrl);

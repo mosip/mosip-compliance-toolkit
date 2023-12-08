@@ -214,12 +214,6 @@ public class SdkProjectService {
 			if (Objects.nonNull(sdkProjectDto)) {
 				String projectId = sdkProjectDto.getId();
 				String partnerId = this.getPartnerId();
-				String projectType = sdkProjectDto.getProjectType();
-				String complianceCollectionId = projectHelper.getComplianceCollectionId(projectId, projectType);
-				boolean isReportAlreadySubmitted = false;
-				if (!complianceCollectionId.equals(null)) {
-					isReportAlreadySubmitted = projectHelper.checkIfHashCanBeUpdated(projectId, projectType, complianceCollectionId);
-				}
 				Optional<SdkProjectEntity> optionalSdkProjectEntity = sdkProjectRepository.findById(projectId,
 						getPartnerId());
 				if (optionalSdkProjectEntity.isPresent()) {
@@ -234,8 +228,11 @@ public class SdkProjectService {
 					if (Objects.nonNull(url) && !url.isEmpty()) {
 						entity.setUrl(url);
 					}
-					if (Objects.nonNull(sdkHash) && !sdkHash.isEmpty() && isReportAlreadySubmitted) {
-						entity.setSdkHash(sdkHash);
+					if (Objects.nonNull(sdkHash) && !sdkHash.isEmpty() && !entity.getSdkHash().equals(sdkHash)) {
+						boolean canHashBeUpdated = projectHelper.checkIfHashCanBeUpdated(projectId, sdkProjectDto.getProjectType());
+						if (canHashBeUpdated) {
+							entity.setSdkHash(sdkHash);
+						}
 					}
 					if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty()) {
 						entity.setWebsiteUrl(websiteUrl);
