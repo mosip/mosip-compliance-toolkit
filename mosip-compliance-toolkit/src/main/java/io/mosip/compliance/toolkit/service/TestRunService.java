@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -27,6 +28,7 @@ import io.mosip.compliance.toolkit.dto.testrun.TestRunStatusDto;
 import io.mosip.compliance.toolkit.entity.TestRunDetailsEntity;
 import io.mosip.compliance.toolkit.entity.TestRunEntity;
 import io.mosip.compliance.toolkit.entity.TestRunHistoryEntity;
+import io.mosip.compliance.toolkit.entity.TestRunPartialDetailsEntity;
 import io.mosip.compliance.toolkit.repository.CollectionsRepository;
 import io.mosip.compliance.toolkit.repository.TestRunDetailsRepository;
 import io.mosip.compliance.toolkit.repository.TestRunRepository;
@@ -58,19 +60,19 @@ public class TestRunService {
 
 	@Value("${mosip.toolkit.api.id.testrun.status.get}")
 	private String getTestRunStatusId;
-	
+
 	@Value("${mosip.toolkit.api.id.testrun.delete}")
 	private String deleteTestRunId;
-	
+
 	@Value("${mosip.toolkit.testrun.archive.offset}")
 	private int archiveOffset;
 
 	@Autowired
 	TestRunArchiveService testRunArchiveService;
-	
+
 	@Autowired
 	TestRunRepository testRunRepository;
-	
+
 	@Autowired
 	TestRunDetailsRepository testRunDetailsRepository;
 
@@ -135,7 +137,8 @@ public class TestRunService {
 				handleToolkitError(ToolkitErrorCodes.INVALID_REQUEST_BODY, responseWrapper);
 			}
 		} catch (Exception ex) {
-			logAndSetError(ex, responseWrapper, ToolkitErrorCodes.TESTRUN_UNABLE_TO_ADD, "In addTestRun method of TestRunService Service - ");
+			logAndSetError(ex, responseWrapper, ToolkitErrorCodes.TESTRUN_UNABLE_TO_ADD,
+					"In addTestRun method of TestRunService Service - ");
 		}
 		responseWrapper.setId(postTestRunId);
 		responseWrapper.setVersion(AppConstants.VERSION);
@@ -150,7 +153,8 @@ public class TestRunService {
 		responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 	}
 
-	private void logAndSetError(Exception ex, ResponseWrapper<?> responseWrapper, ToolkitErrorCodes toolkitErrorCodes, String logMessage) {
+	private void logAndSetError(Exception ex, ResponseWrapper<?> responseWrapper, ToolkitErrorCodes toolkitErrorCodes,
+			String logMessage) {
 		log.debug("sessionId", "idType", "id", ex.getStackTrace());
 		log.error("sessionId", "idType", "id", logMessage + ex.getMessage());
 		String errorCode = toolkitErrorCodes.getErrorCode();
@@ -164,8 +168,8 @@ public class TestRunService {
 		try {
 			if (Objects.nonNull(inputTestRun)) {
 				int updateRowCount = testRunRepository.updateTestRunById(inputTestRun.getExecutionDtimes(),
-						inputTestRun.getExecutionStatus(), inputTestRun.getRunStatus(),
-						getUserBy(), LocalDateTime.now(), inputTestRun.getId(), getPartnerId());
+						inputTestRun.getExecutionStatus(), inputTestRun.getRunStatus(), getUserBy(),
+						LocalDateTime.now(), inputTestRun.getId(), getPartnerId());
 				if (updateRowCount > 0) {
 					testRun = inputTestRun;
 				} else {
@@ -175,7 +179,8 @@ public class TestRunService {
 				handleToolkitError(ToolkitErrorCodes.INVALID_REQUEST_BODY, responseWrapper);
 			}
 		} catch (Exception ex) {
-			logAndSetError(ex, responseWrapper, ToolkitErrorCodes.TESTRUN_UNABLE_TO_UPDATE, "In updateTestRun method of TestRunService Service - ");
+			logAndSetError(ex, responseWrapper, ToolkitErrorCodes.TESTRUN_UNABLE_TO_UPDATE,
+					"In updateTestRun method of TestRunService Service - ");
 		}
 		responseWrapper.setId(putTestRunId);
 		responseWrapper.setVersion(AppConstants.VERSION);
@@ -189,8 +194,7 @@ public class TestRunService {
 		TestRunDetailsDto testRunDetails = null;
 		try {
 			if (Objects.nonNull(inputTestRunDetails)) {
-				ToolkitErrorCodes toolkitError = validateRunId(inputTestRunDetails.getRunId(),
-						getPartnerId());
+				ToolkitErrorCodes toolkitError = validateRunId(inputTestRunDetails.getRunId(), getPartnerId());
 				if (ToolkitErrorCodes.SUCCESS.equals(toolkitError)) {
 					ObjectMapper mapper = objectMapperConfig.objectMapper();
 
@@ -213,7 +217,8 @@ public class TestRunService {
 				handleToolkitError(ToolkitErrorCodes.INVALID_REQUEST_BODY, responseWrapper);
 			}
 		} catch (Exception ex) {
-			logAndSetError(ex, responseWrapper, ToolkitErrorCodes.TESTRUN_DETAILS_UNABLE_TO_ADD, "In addTestRunDetails method of TestRunService Service - ");
+			logAndSetError(ex, responseWrapper, ToolkitErrorCodes.TESTRUN_DETAILS_UNABLE_TO_ADD,
+					"In addTestRunDetails method of TestRunService Service - ");
 		}
 		responseWrapper.setId(postTestRunDetailsId);
 		responseWrapper.setVersion(AppConstants.VERSION);
@@ -222,23 +227,40 @@ public class TestRunService {
 		return responseWrapper;
 	}
 
-	public ResponseWrapper<TestRunDetailsResponseDto> getTestRunDetails(String partnerId, String runId) {
+	public ResponseWrapper<TestRunDetailsResponseDto> getTestRunDetails(String partnerId, String runId,
+			boolean fullDetails) {
 		ResponseWrapper<TestRunDetailsResponseDto> responseWrapper = new ResponseWrapper<>();
 		TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
 		try {
 			List<TestRunDetailsDto> testRunDetailsList = new ArrayList<TestRunDetailsDto>();
-			if (Objects.nonNull(runId)) {
+			if (Objects.nonNull(runId) || Objects.nonNull(partnerId)) {
 				TestRunEntity testRunEntity = testRunRepository.getTestRunById(runId, partnerId);
 				if (Objects.nonNull(testRunEntity)) {
-					List<TestRunDetailsEntity> testRunDetailsEntityList = testRunDetailsRepository
-							.getTestRunDetails(runId, partnerId);
-					if (Objects.nonNull(testRunDetailsEntityList) && !testRunDetailsEntityList.isEmpty()) {
-						ObjectMapper mapper = objectMapperConfig.objectMapper();
-						for (TestRunDetailsEntity testRunDetailsEntity : testRunDetailsEntityList) {
-							TestRunDetailsDto dto = mapper.convertValue(testRunDetailsEntity, TestRunDetailsDto.class);
-							testRunDetailsList.add(dto);
+					if (!fullDetails) {
+						List<TestRunPartialDetailsEntity> testRunPartialDetailsEntityList = testRunDetailsRepository
+								.getTestRunPartialDetails(runId, partnerId);
+						if (Objects.nonNull(testRunPartialDetailsEntityList)
+								&& !testRunPartialDetailsEntityList.isEmpty()) {
+							ObjectMapper mapper = objectMapperConfig.objectMapper();
+							for (TestRunPartialDetailsEntity testRunPartialDetailsEntity : testRunPartialDetailsEntityList) {
+								TestRunDetailsDto dto = mapper.convertValue(testRunPartialDetailsEntity,
+										TestRunDetailsDto.class);
+								testRunDetailsList.add(dto);
+							}
+						}
+					} else {
+						List<TestRunDetailsEntity> testRunDetailsEntityList = testRunDetailsRepository
+								.getTestRunDetails(runId, partnerId);
+						if (Objects.nonNull(testRunDetailsEntityList) && !testRunDetailsEntityList.isEmpty()) {
+							ObjectMapper mapper = objectMapperConfig.objectMapper();
+							for (TestRunDetailsEntity testRunDetailsEntity : testRunDetailsEntityList) {
+								TestRunDetailsDto dto = mapper.convertValue(testRunDetailsEntity,
+										TestRunDetailsDto.class);
+								testRunDetailsList.add(dto);
+							}
 						}
 					}
+
 					testRunDetailsResponseDto.setCollectionId(testRunEntity.getCollectionId());
 					testRunDetailsResponseDto.setRunId(testRunEntity.getId());
 					testRunDetailsResponseDto.setRunDtimes(testRunEntity.getRunDtimes());
@@ -253,11 +275,45 @@ public class TestRunService {
 				handleToolkitError(ToolkitErrorCodes.INVALID_REQUEST_PARAM, responseWrapper);
 			}
 		} catch (Exception ex) {
-			logAndSetError(ex, responseWrapper, ToolkitErrorCodes.TESTRUN_DETAILS_NOT_AVAILABLE, "In getTestRunDetails method of TestRunService Service - ");
+			logAndSetError(ex, responseWrapper, ToolkitErrorCodes.TESTRUN_DETAILS_NOT_AVAILABLE,
+					"In getTestRunDetails method of TestRunService Service - ");
 		}
 		responseWrapper.setId(getTestRunDetailsId);
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponse(testRunDetailsResponseDto);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+
+	public ResponseWrapper<TestRunDetailsDto> getMethodDetails(String partnerId, String runId, String testcaseId,
+			String methodId) {
+		ResponseWrapper<TestRunDetailsDto> responseWrapper = new ResponseWrapper<>();
+		TestRunDetailsDto testRunDetailsDto = new TestRunDetailsDto();
+		try {
+			if (Objects.nonNull(runId) || Objects.nonNull(partnerId) || Objects.nonNull(testcaseId)
+					|| Objects.nonNull(methodId)) {
+				TestRunEntity testRunEntity = testRunRepository.getTestRunById(runId, partnerId);
+				if (Objects.nonNull(testRunEntity)) {
+					TestRunDetailsEntity testRunDetailsEntity = testRunDetailsRepository.getMethodDetails(runId,
+							partnerId, testcaseId, methodId);
+					if (Objects.nonNull(testRunDetailsEntity)) {
+						ObjectMapper mapper = objectMapperConfig.objectMapper();
+						testRunDetailsDto = mapper.convertValue(testRunDetailsEntity, TestRunDetailsDto.class);
+
+					}
+				} else {
+					handleToolkitError(ToolkitErrorCodes.TESTRUN_NOT_AVAILABLE, responseWrapper);
+				}
+			} else {
+				handleToolkitError(ToolkitErrorCodes.INVALID_REQUEST_PARAM, responseWrapper);
+			}
+		} catch (Exception ex) {
+			logAndSetError(ex, responseWrapper, ToolkitErrorCodes.TESTRUN_DETAILS_NOT_AVAILABLE,
+					"In getMethodDetails method of TestRunService Service - ");
+		}
+		responseWrapper.setId(getTestRunDetailsId);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponse(testRunDetailsDto);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
@@ -299,7 +355,8 @@ public class TestRunService {
 				handleToolkitError(ToolkitErrorCodes.INVALID_REQUEST_PARAM, responseWrapper);
 			}
 		} catch (Exception ex) {
-			logAndSetError(ex, responseWrapper, ToolkitErrorCodes.TESTRUN_DETAILS_NOT_AVAILABLE, "In getTestRunHistory method of TestRunService Service - ");
+			logAndSetError(ex, responseWrapper, ToolkitErrorCodes.TESTRUN_DETAILS_NOT_AVAILABLE,
+					"In getTestRunHistory method of TestRunService Service - ");
 		}
 		responseWrapper.setId(getTestRunHistoryId);
 		responseWrapper.setVersion(AppConstants.VERSION);
@@ -330,7 +387,8 @@ public class TestRunService {
 			}
 
 		} catch (Exception ex) {
-			logAndSetError(ex, responseWrapper, ToolkitErrorCodes.TESTRUN_STATUS_NOT_AVAILABLE, "In getTestRunStatus method of TestRunService Service - " );
+			logAndSetError(ex, responseWrapper, ToolkitErrorCodes.TESTRUN_STATUS_NOT_AVAILABLE,
+					"In getTestRunStatus method of TestRunService Service - ");
 		}
 		responseWrapper.setId(getTestRunStatusId);
 		responseWrapper.setVersion(AppConstants.VERSION);
@@ -338,8 +396,8 @@ public class TestRunService {
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
 	}
-	
-	public ResponseWrapper<Boolean> deleteTestRun(String runId){
+
+	public ResponseWrapper<Boolean> deleteTestRun(String runId) {
 		boolean deleteStatus = false;
 		ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
 		try {
@@ -350,14 +408,15 @@ public class TestRunService {
 					testRunDetailsRepository.deleteById(runId, getPartnerId());
 					testRunRepository.deleteById(runId, getPartnerId());
 					deleteStatus = true;
-				}else {
+				} else {
 					handleToolkitError(ToolkitErrorCodes.TESTRUN_NOT_AVAILABLE, responseWrapper);
 				}
-			}else {
+			} else {
 				handleToolkitError(ToolkitErrorCodes.INVALID_REQUEST_PARAM, responseWrapper);
 			}
-		}catch (Exception ex) {
-			logAndSetError(ex, responseWrapper, ToolkitErrorCodes.TESTRUN_DELETE_ERROR, "In deleteTestRun method of TestRunService Service - ");
+		} catch (Exception ex) {
+			logAndSetError(ex, responseWrapper, ToolkitErrorCodes.TESTRUN_DELETE_ERROR,
+					"In deleteTestRun method of TestRunService Service - ");
 		}
 		responseWrapper.setId(deleteTestRunId);
 		responseWrapper.setVersion(AppConstants.VERSION);
@@ -376,7 +435,7 @@ public class TestRunService {
 				}
 			}
 		} catch (Exception ex) {
-			handleValidateToolkitError(ex,"In validateRunId method of TestRunService Service - ");
+			handleValidateToolkitError(ex, "In validateRunId method of TestRunService Service - ");
 		}
 		return errorCode;
 	}
@@ -393,14 +452,13 @@ public class TestRunService {
 				}
 			}
 		} catch (Exception ex) {
-			handleValidateToolkitError(ex,"In validatePartnerId method of TestRunService Service - ");
+			handleValidateToolkitError(ex, "In validatePartnerId method of TestRunService Service - ");
 		}
 		return errorCode;
 	}
 
 	private void handleValidateToolkitError(Exception ex, String logMessage) {
 		log.debug("sessionId", "idType", "id", ex.getStackTrace());
-		log.error("sessionId", "idType", "id",
-				logMessage + ex.getMessage());
+		log.error("sessionId", "idType", "id", logMessage + ex.getMessage());
 	}
 }

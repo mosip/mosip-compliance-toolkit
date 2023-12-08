@@ -448,14 +448,20 @@ public class CollectionsService {
 					for (TestCaseDto testCase : testCaseWrapper.getResponse()) {
 						if (!ignoreTestCasesList.contains(testCase.getTestId())) {
 							boolean proceed = false;
-							if (AppConstants.COMPLIANCE_COLLECTION.equals(collectionType)
-									&& testCase.getOtherAttributes() != null
-									&& !testCase.getOtherAttributes().isQualityAssessmentTestCase()) {
-								proceed = true;
-							}
-							if (AppConstants.QUALITY_ASSESSMENT_COLLECTION.equals(collectionType)
-									&& testCase.getOtherAttributes() != null
-									&& testCase.getOtherAttributes().isQualityAssessmentTestCase()) {
+							if (AppConstants.SBI.equals(projectType)) {
+								//skip quality assessment testcases for compliance collection
+								if (AppConstants.COMPLIANCE_COLLECTION.equals(collectionType)
+										&& testCase.getOtherAttributes() != null
+										&& !testCase.getOtherAttributes().isQualityAssessmentTestCase()) {
+									proceed = true;
+								}
+								//add only quality assessment testcases for quality assessment collection
+								if (AppConstants.QUALITY_ASSESSMENT_COLLECTION.equals(collectionType)
+										&& testCase.getOtherAttributes() != null
+										&& testCase.getOtherAttributes().isQualityAssessmentTestCase()) {
+									proceed = true;
+								}	
+							} else {
 								proceed = true;
 							}
 							if (proceed) {
