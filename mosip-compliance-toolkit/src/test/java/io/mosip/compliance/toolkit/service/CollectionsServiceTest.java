@@ -2,13 +2,16 @@ package io.mosip.compliance.toolkit.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.mosip.compliance.toolkit.constants.AppConstants;
-import io.mosip.compliance.toolkit.dto.*;
+import io.mosip.compliance.toolkit.constants.*;
 import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
 import io.mosip.compliance.toolkit.dto.collections.CollectionRequestDto;
 import io.mosip.compliance.toolkit.dto.collections.CollectionTestCaseDto;
 import io.mosip.compliance.toolkit.dto.collections.CollectionTestCasesResponseDto;
 import io.mosip.compliance.toolkit.dto.collections.CollectionsResponseDto;
+import io.mosip.compliance.toolkit.dto.projects.AbisProjectDto;
+import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
+import io.mosip.compliance.toolkit.dto.projects.SdkProjectDto;
+import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.entity.CollectionEntity;
 import io.mosip.compliance.toolkit.entity.CollectionSummaryEntity;
 import io.mosip.compliance.toolkit.entity.CollectionTestCaseEntity;
@@ -51,6 +54,9 @@ public class CollectionsServiceTest {
 
     @Mock
     private ResourceCacheService resourceCacheService;
+
+    @Mock
+    private TestCasesService testCasesService;
 
     @Mock
     SecurityContext securityContext;
@@ -335,6 +341,93 @@ public class CollectionsServiceTest {
         CollectionTestCaseDto dto = new CollectionTestCaseDto();
         inputList.add(dto);
         collectionsService.addTestCasesForCollection(inputList);
+    }
+
+    @Test
+    public void addDefaultCollectionTest() {
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
+        Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        SecurityContextHolder.setContext(securityContext);
+        String collectionType = AppConstants.COMPLIANCE_COLLECTION;
+        //sbi
+        SbiProjectDto sbiProjectDto = new SbiProjectDto();
+        sbiProjectDto.setProjectType("SBI");
+        sbiProjectDto.setSbiVersion("0.9.5");
+        sbiProjectDto.setPurpose("Registration");
+        sbiProjectDto.setDeviceType("Finger");
+        sbiProjectDto.setDeviceSubType("Slap");
+        sbiProjectDto.setOrgName("abc");
+        CollectionRequestDto requestDto = new CollectionRequestDto();
+        requestDto.setProjectType("SBI");
+        requestDto.setProjectId("sbi123");
+        requestDto.setCollectionName("My collection");
+        requestDto.setCollectionType(collectionType);
+        ResponseWrapper<CollectionDto> addCollectionWrapper = new ResponseWrapper<>();
+        CollectionDto collectionDto = new CollectionDto();
+        collectionDto.setProjectId("sbi123");
+        collectionDto.setName("My collection");
+        collectionDto.setCollectionType(collectionType);
+        collectionDto.setTestCaseCount(2);
+        addCollectionWrapper.setResponse(collectionDto);
+        CollectionEntity outputEntity = new CollectionEntity();
+        outputEntity.setId("123");
+        Mockito.when(collectionsRepository.save(Mockito.any())).thenReturn(outputEntity);
+        Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
+        Mockito.when(mapper.convertValue(outputEntity, CollectionDto.class)).thenReturn(collectionDto);
+        CollectionsService spyCollectionsService = Mockito.spy(collectionsService);
+        Mockito.doReturn(addCollectionWrapper).when(spyCollectionsService).addCollection(requestDto);
+        ResponseWrapper<List<TestCaseDto>> testCaseWrapper = new ResponseWrapper<List<TestCaseDto>>();
+        List<TestCaseDto> testCaseDtoList = new ArrayList<TestCaseDto>();
+        TestCaseDto testCaseDto = new TestCaseDto();
+        testCaseDto.setTestCaseType("SBI");
+        testCaseDto.setTestId("SBI1000");
+        testCaseDto.setSpecVersion("0.9.5");
+        testCaseDto.setTestName("Discover Device");
+        testCaseDto.setTestDescription("Test to perform validation for the device discovery interface");
+        testCaseDto.setAndroidTestDescription(null);
+        testCaseDto.setNegativeTestcase(false);
+        testCaseDto.setInactive(false);
+        testCaseDto.setInactiveForAndroid(null);
+        testCaseDto.setMethodName(null);
+        testCaseDto.setRequestSchema(null);
+        testCaseDto.setResponseSchema(null);
+        testCaseDto.setValidatorDefs(null);
+        TestCaseDto.OtherAttributes otherAttributes = new TestCaseDto.OtherAttributes();
+        otherAttributes.setBioCount("1");
+        testCaseDto.setOtherAttributes(otherAttributes);
+        testCaseDtoList.add(testCaseDto);
+        testCaseWrapper.setResponse(testCaseDtoList);
+        Mockito.when(testCasesService.getSbiTestCases(Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any())).thenReturn(testCaseWrapper);
+        ReflectionTestUtils.setField(collectionsService, "complianceIgnoreTestcases", "s122,s123");
+        collectionsService.addDefaultCollection(collectionType, sbiProjectDto, null, null,"sbi123");
+
+        //sdk
+        SdkProjectDto sdkProjectDto = new SdkProjectDto();
+        sdkProjectDto.setProjectType(ProjectTypes.SDK.getCode());
+        sdkProjectDto.setSdkVersion(SdkSpecVersions.SPEC_VER_0_9_0.getCode());
+        sdkProjectDto.setPurpose(SdkPurpose.CHECK_QUALITY.getCode());
+        sdkProjectDto.setUrl("http://localhost:9099/biosdk-service");
+        sdkProjectDto.setBioTestDataFileName("testFile");
+        sdkProjectDto.setOrgName("Not_Available");
+        collectionsService.addDefaultCollection(collectionType, null, sdkProjectDto, null,"abcdefgh");
+        //abis
+        AbisProjectDto abisProjectDto = new AbisProjectDto();
+        abisProjectDto.setProjectType(ProjectTypes.ABIS.getCode());
+        abisProjectDto.setAbisVersion(AbisSpecVersions.SPEC_VER_0_9_0.getCode());
+        abisProjectDto.setUsername("admin");
+        abisProjectDto.setPassword("admin123");
+        abisProjectDto.setOutboundQueueName("ctk-to-abis");
+        abisProjectDto.setInboundQueueName("abis-to-ctk");
+        abisProjectDto.setUrl("wss://activemq.dev.mosip.net/ws");
+        abisProjectDto.setBioTestDataFileName("testFile");
+        abisProjectDto.setOrgName("Not_Available");
+        collectionsService.addDefaultCollection(collectionType, null, null, abisProjectDto,"abcdefgh");
+
+        collectionType = AppConstants.QUALITY_ASSESSMENT_COLLECTION;
+        collectionsService.addDefaultCollection(collectionType, sbiProjectDto, null, null,"sbi123");
+
     }
 
     /*
