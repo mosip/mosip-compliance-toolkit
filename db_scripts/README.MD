@@ -3,7 +3,7 @@
 ## Overview
 This folder containers various SQL scripts to create database and tables in postgres. The tables are described under `<db name>/ddl/`. Default data that's populated in the tables is present under `<db name>/dml` folder 
 
-## Install in existing MOSIP K8 Cluster 
+## Install in existing MOSIP K8 Cluster
 These scripts are automatically run with below mentioned script in existing k8 cluster with Postgres installed.
 ### Pre-requisites
 - Command line utilities:
