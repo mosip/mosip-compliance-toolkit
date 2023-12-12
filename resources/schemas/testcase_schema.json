@@ -236,6 +236,9 @@
 				"occupation": {
 					"type": "string"
 				},
+				"race": {
+					"type": "string"
+				},
 				"testCaseRepeatCount": {
 					"type": "string"
 				},
