@@ -5768,11 +5768,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Left Slap - Males - child(5-12)",
+		"testName": "Quality Assessment for Registration capture - Left Slap - Males - child(5-12) - 10 persons",
 		"testId": "SBI1112",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - child(5-12) <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - child(5-12) <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - child(5-12) - 10 persons <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - child(5-12) - 10 persons <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -5831,11 +5831,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Right Slap - Females - child(5-12)",
+		"testName": "Quality Assessment for Registration capture - Right Slap - Females - child(5-12) - 10 persons",
 		"testId": "SBI1113",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for right slap fingerprints for - Females - child(5-12) <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your right slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for right slap fingerprints for - Females - child(5-12) <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your right slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for right slap fingerprints for - Females - child(5-12) - 10 persons <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your right slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for right slap fingerprints for - Females - child(5-12) - 10 persons <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your right slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -5894,11 +5894,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Left Slap - Males - adult(12-40) - labourer",
+		"testName": "Quality Assessment for Registration capture - Left Slap - Males - adult(12-40) - labourer - 10 persons",
 		"testId": "SBI1114",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - adult(12-40) - labourer <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - adult(12-40) - labourer <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - adult(12-40) - labourer - 10 persons <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - adult(12-40) - labourer - 10 persons <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -5958,11 +5958,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Left Slap - Males - adult(12-40) - non labourer",
+		"testName": "Quality Assessment for Registration capture - Left Slap - Males - adult(12-40) - non labourer - 10 persons",
 		"testId": "SBI1115",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - adult(12-40) - non labourer <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - adult(12-40) - non labourer <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - adult(12-40) - non labourer - 10 persons <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - adult(12-40) - non labourer - 10 persons <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -6022,11 +6022,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Right Slap - Females - adult(12-40) - labourer",
+		"testName": "Quality Assessment for Registration capture - Right Slap - Females - adult(12-40) - labourer - 10 persons",
 		"testId": "SBI1116",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for right slap fingerprints for - Females - adult(12-40) - labourer <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your right slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for right slap fingerprints for - Females - adult(12-40) - labourer <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your right slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for right slap fingerprints for - Females - adult(12-40) - labourer - 10 persons <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your right slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for right slap fingerprints for - Females - adult(12-40) - labourer - 10 persons <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your right slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -6086,11 +6086,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Left Slap - Females - adult(12-40) - non labourer",
+		"testName": "Quality Assessment for Registration capture - Left Slap - Females - adult(12-40) - non labourer - 10 persons",
 		"testId": "SBI1117",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for left slap fingerprints for - Females - adult(12-40) - non labourer <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for left slap fingerprints for - Females - adult(12-40) - non labourer <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for left slap fingerprints for - Females - adult(12-40) - non labourer - 10 persons <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for left slap fingerprints for - Females - adult(12-40) - non labourer - 10 persons <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -6150,11 +6150,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Right Slap - Males - mature(40-59) - labourer",
+		"testName": "Quality Assessment for Registration capture - Right Slap - Males - mature(40-59) - labourer - 10 persons",
 		"testId": "SBI1118",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for right slap fingerprints for - Males - mature(40-59) - labourer <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your right slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for right slap fingerprints for - Males - mature(40-59) - labourer <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your right slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for right slap fingerprints for - Males - mature(40-59) - labourer - 10 persons <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your right slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for right slap fingerprints for - Males - mature(40-59) - labourer - 10 persons <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your right slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -6214,11 +6214,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Left Slap - Males - mature(40-59) - non labourer",
+		"testName": "Quality Assessment for Registration capture - Left Slap - Males - mature(40-59) - non labourer - 10 persons",
 		"testId": "SBI1119",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - mature(40-59) - non labourer <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - mature(40-59) - non labourer <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - mature(40-59) - non labourer - 10 persons <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - mature(40-59) - non labourer - 10 persons <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -6278,11 +6278,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Right Slap - Females - mature(40-59) - labourer",
+		"testName": "Quality Assessment for Registration capture - Right Slap - Females - mature(40-59) - labourer - 10 persons",
 		"testId": "SBI1120",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for right slap fingerprints for - Females - mature(40-59) - labourer <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your right slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for right slap fingerprints for - Females - mature(40-59) - labourer <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your right slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for right slap fingerprints for - Females - mature(40-59) - labourer - 10 persons <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your right slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for right slap fingerprints for - Females - mature(40-59) - labourer - 10 persons <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your right slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -6342,11 +6342,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Left Slap - Females - mature(40-59) - non labourer",
+		"testName": "Quality Assessment for Registration capture - Left Slap - Females - mature(40-59) - non labourer - 10 persons",
 		"testId": "SBI1121",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for left slap fingerprints for - Females - mature(40-59) - non labourer <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for left slap fingerprints for - Females - mature(40-59) - non labourer <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for left slap fingerprints for - Females - mature(40-59) - non labourer - 10 persons <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for left slap fingerprints for - Females - mature(40-59) - non labourer - 10 persons <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -6406,11 +6406,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Right Slap - Males - senior(60+) - labourer",
+		"testName": "Quality Assessment for Registration capture - Right Slap - Males - senior(60+) - labourer - 10 persons",
 		"testId": "SBI1122",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for right slap fingerprints for - Males - senior(60+) - labourer <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your right slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for right slap fingerprints for - Males - senior(60+) - labourer <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your right slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for right slap fingerprints for - Males - senior(60+) - labourer - 10 persons <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your right slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for right slap fingerprints for - Males - senior(60+) - labourer - 10 persons <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your right slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -6470,11 +6470,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Left Slap - Males - senior(60+) - non labourer",
+		"testName": "Quality Assessment for Registration capture - Left Slap - Males - senior(60+) - non labourer - 10 persons",
 		"testId": "SBI1123",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - senior(60+) - non labourer <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - senior(60+) - non labourer <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - senior(60+) - non labourer - 10 persons <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your left slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for left slap fingerprints for - Males - senior(60+) - non labourer - 10 persons <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your left slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -6534,11 +6534,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Right Slap - Females - senior(60+) - labourer",
+		"testName": "Quality Assessment for Registration capture - Right Slap - Females - senior(60+) - labourer - 10 persons",
 		"testId": "SBI1124",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for right slap fingerprints for - Females - senior(60+) - labourer <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your right slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for right slap fingerprints for - Females - senior(60+) - labourer <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your right slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for right slap fingerprints for - Females - senior(60+) - labourer - 10 persons <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your right slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for right slap fingerprints for - Females - senior(60+) - labourer - 10 persons <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your right slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -6598,11 +6598,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Right Slap - Females - senior(60+) - non labourer",
+		"testName": "Quality Assessment for Registration capture - Right Slap - Females - senior(60+) - non labourer - 10 persons",
 		"testId": "SBI1125",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for right slap fingerprints for - Females - senior(60+) - non labourer <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your right slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for right slap fingerprints for - Females - senior(60+) - non labourer <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your right slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for right slap fingerprints for - Females - senior(60+) - non labourer - 10 persons <br><br>Steps:<br>1. Click on Start Streaming button. <br>2. Once streaming is done, click on Inititate Capture button to start the capture.  <br> 3. Place your right slap on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase validate the biometrics captured by RCapture interface for right slap fingerprints for - Females - senior(60+) - non labourer - 10 persons <br><br>Steps:<br>1. Click on Inititate Capture button to start the capture.  <br> 2. Place your right slap on the device until the capture completes<br> 3. Repeat above steps, for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -6662,11 +6662,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Males - child(5-12) - african",
+		"testName": "Quality Assessment for Registration capture - Face - Males - child(5-12) - african - 10 persons",
 		"testId": "SBI1126",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - child(5-12) - african <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - child(5-12) - african <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - child(5-12) - african - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - child(5-12) - african - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -6721,11 +6721,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Females - child(5-12) - african",
+		"testName": "Quality Assessment for Registration capture - Face - Females - child(5-12) - african - 10 persons",
 		"testId": "SBI1127",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - child(5-12) - african <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - child(5-12) - african <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - child(5-12) - african - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - child(5-12) - african - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -6780,11 +6780,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Males - child(5-12) - european",
+		"testName": "Quality Assessment for Registration capture - Face - Males - child(5-12) - european - 10 persons",
 		"testId": "SBI1128",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - child(5-12) - european <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - child(5-12) - european <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - child(5-12) - european - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - child(5-12) - european - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -6839,11 +6839,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Females - child(5-12) - european",
+		"testName": "Quality Assessment for Registration capture - Face - Females - child(5-12) - european - 10 persons",
 		"testId": "SBI1129",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - child(5-12) - european <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - child(5-12) - european <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - child(5-12) - european - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - child(5-12) - european - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -6898,11 +6898,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Males - child(5-12) - asian",
+		"testName": "Quality Assessment for Registration capture - Face - Males - child(5-12) - asian - 10 persons",
 		"testId": "SBI1130",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - child(5-12) - asian <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - child(5-12) - asian <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - child(5-12) - asian - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - child(5-12) - asian - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -6957,11 +6957,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Females - child(5-12) - asian",
+		"testName": "Quality Assessment for Registration capture - Face - Females - child(5-12) - asian - 10 persons",
 		"testId": "SBI1131",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - child(5-12) - asian <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - child(5-12) - asian <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - child(5-12) - asian - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - child(5-12) - asian - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -7016,11 +7016,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Males - adult(12-40) - african",
+		"testName": "Quality Assessment for Registration capture - Face - Males - adult(12-40) - african - 10 persons",
 		"testId": "SBI1132",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - adult(12-40) - african <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - adult(12-40) - african <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - adult(12-40) - african - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - adult(12-40) - african - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -7075,11 +7075,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Females - adult(12-40) - african",
+		"testName": "Quality Assessment for Registration capture - Face - Females - adult(12-40) - african - 10 persons",
 		"testId": "SBI1133",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - adult(12-40) - african <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - adult(12-40) - african <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - adult(12-40) - african - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - adult(12-40) - african - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -7134,11 +7134,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Males - adult(12-40) - european",
+		"testName": "Quality Assessment for Registration capture - Face - Males - adult(12-40) - european - 10 persons",
 		"testId": "SBI1134",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - adult(12-40) - european <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - adult(12-40) - european <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - adult(12-40) - european - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - adult(12-40) - european - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -7193,11 +7193,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Females - adult(12-40) - european",
+		"testName": "Quality Assessment for Registration capture - Face - Females - adult(12-40) - european - 10 persons",
 		"testId": "SBI1135",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - adult(12-40) - european <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - adult(12-40) - european <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - adult(12-40) - european - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - adult(12-40) - european - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -7252,11 +7252,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Males - adult(12-40) - asian",
+		"testName": "Quality Assessment for Registration capture - Face - Males - adult(12-40) - asian - 10 persons",
 		"testId": "SBI1136",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - adult(12-40) - asian <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - adult(12-40) - asian <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - adult(12-40) - asian - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - adult(12-40) - asian - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -7311,11 +7311,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Females - adult(12-40) - asian",
+		"testName": "Quality Assessment for Registration capture - Face - Females - adult(12-40) - asian - 10 persons",
 		"testId": "SBI1137",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - adult(12-40) - asian <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - adult(12-40) - asian <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - adult(12-40) - asian - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - adult(12-40) - asian - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -7370,11 +7370,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Males - mature(40-59) - african",
+		"testName": "Quality Assessment for Registration capture - Face - Males - mature(40-59) - african - 10 persons",
 		"testId": "SBI1138",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - mature(40-59) - african <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - mature(40-59) - african <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - mature(40-59) - african - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - mature(40-59) - african - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -7429,11 +7429,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Females - mature(40-59) - african",
+		"testName": "Quality Assessment for Registration capture - Face - Females - mature(40-59) - african - 10 persons",
 		"testId": "SBI1139",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - mature(40-59) - african <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - mature(40-59) - african <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - mature(40-59) - african - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - mature(40-59) - african - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -7488,11 +7488,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Males - mature(40-59) - european",
+		"testName": "Quality Assessment for Registration capture - Face - Males - mature(40-59) - european - 10 persons",
 		"testId": "SBI1140",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - mature(40-59) - european <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - mature(40-59) - european <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - mature(40-59) - european - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - mature(40-59) - european - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -7547,11 +7547,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Females - mature(40-59) - european",
+		"testName": "Quality Assessment for Registration capture - Face - Females - mature(40-59) - european - 10 persons",
 		"testId": "SBI1141",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - mature(40-59) - european <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - mature(40-59) - european <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - mature(40-59) - european - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - mature(40-59) - european - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -7606,11 +7606,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Males - mature(40-59) - asian",
+		"testName": "Quality Assessment for Registration capture - Face - Males - mature(40-59) - asian - 10 persons",
 		"testId": "SBI1142",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - mature(40-59) - asian <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - mature(40-59) - asian <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - mature(40-59) - asian - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - mature(40-59) - asian - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -7665,11 +7665,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Females - mature(40-59) - asian",
+		"testName": "Quality Assessment for Registration capture - Face - Females - mature(40-59) - asian - 10 persons",
 		"testId": "SBI1143",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - mature(40-59) - asian <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - mature(40-59) - asian <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - mature(40-59) - asian - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - mature(40-59) - asian - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -7724,11 +7724,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Males - senior(60+) - african",
+		"testName": "Quality Assessment for Registration capture - Face - Males - senior(60+) - african - 10 persons",
 		"testId": "SBI1144",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - senior(60+) - african <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - senior(60+) - african <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - senior(60+) - african - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - senior(60+) - african - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -7783,11 +7783,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Females - senior(60+) - african",
+		"testName": "Quality Assessment for Registration capture - Face - Females - senior(60+) - african - 10 persons",
 		"testId": "SBI1145",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - senior(60+) - african <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - senior(60+) - african <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - senior(60+) - african - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - senior(60+) - african - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -7842,11 +7842,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Males - senior(60+) - european",
+		"testName": "Quality Assessment for Registration capture - Face - Males - senior(60+) - european - 10 persons",
 		"testId": "SBI1146",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - senior(60+) - european <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - senior(60+) - european <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - senior(60+) - european - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - senior(60+) - european - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -7901,11 +7901,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Females - senior(60+) - european",
+		"testName": "Quality Assessment for Registration capture - Face - Females - senior(60+) - european - 10 persons",
 		"testId": "SBI1147",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - senior(60+) - european <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - senior(60+) - european <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - senior(60+) - european - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - senior(60+) - european - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -7960,11 +7960,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Males - senior(60+) - asian",
+		"testName": "Quality Assessment for Registration capture - Face - Males - senior(60+) - asian - 10 persons",
 		"testId": "SBI1148",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - senior(60+) - asian <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - senior(60+) - asian <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - senior(60+) - asian - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Males - senior(60+) - asian - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -8019,11 +8019,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Face - Females - senior(60+) - asian",
+		"testName": "Quality Assessment for Registration capture - Face - Females - senior(60+) - asian - 10 persons",
 		"testId": "SBI1149",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - senior(60+) - asian <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - senior(60+) - asian <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - senior(60+) - asian - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place your face infront of the camera until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for face for - Females - senior(60+) - asian - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -8078,11 +8078,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Double Iris - child(5-12)",
+		"testName": "Quality Assessment for Registration capture - Double Iris - child(5-12) - 10 persons",
 		"testId": "SBI1150",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for Two Iris for - child(5-12) <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place both your iris on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for Two Iris for - child(5-12) <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place both your iris on the device until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for Two Iris for - child(5-12) - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place both your iris on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for Two Iris for - child(5-12) - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place both your iris on the device until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -8138,11 +8138,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Double Iris - adult(12-40)",
+		"testName": "Quality Assessment for Registration capture - Double Iris - adult(12-40) - 10 persons",
 		"testId": "SBI1151",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for Two Iris for - adult(12-40) <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place both your iris on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for Two Iris for - adult(12-40) <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place both your iris on the device until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for Two Iris for - adult(12-40) - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place both your iris on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for Two Iris for - adult(12-40) - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place both your iris on the device until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -8198,11 +8198,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Double Iris - mature(40-59)",
+		"testName": "Quality Assessment for Registration capture - Double Iris - mature(40-59) - 10 persons",
 		"testId": "SBI1152",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for Two Iris for - mature(40-59) <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place both your iris on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for Two Iris for - mature(40-59) <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place both your iris on the device until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for Two Iris for - mature(40-59) - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place both your iris on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for Two Iris for - mature(40-59) - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place both your iris on the device until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -8258,11 +8258,11 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Registration capture - Double Iris - senior(60+)",
+		"testName": "Quality Assessment for Registration capture - Double Iris - senior(60+) - 10 persons",
 		"testId": "SBI1153",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for Two Iris for - senior(60+) <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place both your iris on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
-		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for Two Iris for - senior(60+) <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place both your iris on the device until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for Two Iris for - senior(60+) - 10 persons <br>Steps:<br>1. Click on Start Streaming button.<br>2. Once streaming is done, click on Inititate Capture button to start the capture <br>3. Place both your iris on the device until the capture completes<br> 4. Repeat above steps , for next person, after clicking on Continue button.",
+		"androidTestDescription": "Quality Assessment Testcase to validate the biometrics captured by RCapture interface for Two Iris for - senior(60+) - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place both your iris on the device until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"rcapture"
@@ -8318,10 +8318,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Unknown Finger - Males - child(5-12)",
+		"testName": "Quality Assessment for Auth capture - Unknown Finger - Males - child(5-12) - 10 persons",
 		"testId": "SBI1154",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Males - child(5-12) <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Males - child(5-12) - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -8377,10 +8377,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Unknown Finger - Females - child(5-12)",
+		"testName": "Quality Assessment for Auth capture - Unknown Finger - Females - child(5-12) - 10 persons",
 		"testId": "SBI1155",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Females - child(5-12) <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Females - child(5-12) - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -8436,10 +8436,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Unknown Finger - Males - adult(12-40) - labourer",
+		"testName": "Quality Assessment for Auth capture - Unknown Finger - Males - adult(12-40) - labourer - 10 persons",
 		"testId": "SBI1156",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Males - adult(12-40) - labourer <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Males - adult(12-40) - labourer - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -8496,10 +8496,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Unknown Finger - Males - adult(12-40) - non labourer",
+		"testName": "Quality Assessment for Auth capture - Unknown Finger - Males - adult(12-40) - non labourer - 10 persons",
 		"testId": "SBI1157",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Males - adult(12-40) - non labourer <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Males - adult(12-40) - non labourer - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -8556,10 +8556,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Unknown Finger - Females - adult(12-40) - labourer",
+		"testName": "Quality Assessment for Auth capture - Unknown Finger - Females - adult(12-40) - labourer - 10 persons",
 		"testId": "SBI1158",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Females - adult(12-40) - labourer <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Females - adult(12-40) - labourer - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -8616,10 +8616,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Unknown Finger - Females - adult(12-40) - non labourer",
+		"testName": "Quality Assessment for Auth capture - Unknown Finger - Females - adult(12-40) - non labourer - 10 persons",
 		"testId": "SBI1159",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Females - adult(12-40) - non labourer <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Females - adult(12-40) - non labourer - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -8676,10 +8676,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Unknown Finger - Males - mature(40-59) - labourer",
+		"testName": "Quality Assessment for Auth capture - Unknown Finger - Males - mature(40-59) - labourer - 10 persons",
 		"testId": "SBI1160",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Males - mature(40-59) - labourer <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Males - mature(40-59) - labourer - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -8736,10 +8736,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Unknown Finger - Males - mature(40-59) - non labourer",
+		"testName": "Quality Assessment for Auth capture - Unknown Finger - Males - mature(40-59) - non labourer - 10 persons",
 		"testId": "SBI1161",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Males - mature(40-59) - non labourer <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Males - mature(40-59) - non labourer - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -8796,10 +8796,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Unknown Finger - Females - mature(40-59) - labourer",
+		"testName": "Quality Assessment for Auth capture - Unknown Finger - Females - mature(40-59) - labourer - 10 persons",
 		"testId": "SBI1162",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Females - mature(40-59) - labourer <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Females - mature(40-59) - labourer - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -8856,10 +8856,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Unknown Finger - Females - mature(40-59) - non labourer",
+		"testName": "Quality Assessment for Auth capture - Unknown Finger - Females - mature(40-59) - non labourer - 10 persons",
 		"testId": "SBI1163",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Females - mature(40-59) - non labourer <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Females - mature(40-59) - non labourer - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -8916,10 +8916,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Unknown Finger - Males - senior(60+) - labourer",
+		"testName": "Quality Assessment for Auth capture - Unknown Finger - Males - senior(60+) - labourer - 10 persons",
 		"testId": "SBI1164",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Males - senior(60+) - labourer <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Males - senior(60+) - labourer - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -8976,10 +8976,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Unknown Finger - Males - senior(60+) - non labourer",
+		"testName": "Quality Assessment for Auth capture - Unknown Finger - Males - senior(60+) - non labourer - 10 persons",
 		"testId": "SBI1165",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Males - senior(60+) - non labourer <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Males - senior(60+) - non labourer - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -9036,10 +9036,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Unknown Finger - Females - senior(60+) - labourer",
+		"testName": "Quality Assessment for Auth capture - Unknown Finger - Females - senior(60+) - labourer - 10 persons",
 		"testId": "SBI1166",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Females - senior(60+) - labourer <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Females - senior(60+) - labourer - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -9096,10 +9096,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Unknown Finger - Females - senior(60+) - non labourer",
+		"testName": "Quality Assessment for Auth capture - Unknown Finger - Females - senior(60+) - non labourer - 10 persons",
 		"testId": "SBI1167",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Females - senior(60+) - non labourer <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for finger for - Females - senior(60+) - non labourer - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place one of your finger on the single fingerprint scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -9156,10 +9156,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Males - child(5-12) - african",
+		"testName": "Quality Assessment for Auth capture - Face - Males - child(5-12) - african - 10 persons",
 		"testId": "SBI1168",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - child(5-12) - african <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - child(5-12) - african - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -9214,10 +9214,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Females - child(5-12) - african",
+		"testName": "Quality Assessment for Auth capture - Face - Females - child(5-12) - african - 10 persons",
 		"testId": "SBI1169",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - child(5-12) - african <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - child(5-12) - african - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -9272,10 +9272,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Males - child(5-12) - european",
+		"testName": "Quality Assessment for Auth capture - Face - Males - child(5-12) - european - 10 persons",
 		"testId": "SBI1170",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - child(5-12) - european <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - child(5-12) - european - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -9330,10 +9330,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Females - child(5-12) - european",
+		"testName": "Quality Assessment for Auth capture - Face - Females - child(5-12) - european - 10 persons",
 		"testId": "SBI1171",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - child(5-12) - european <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - child(5-12) - european - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -9388,10 +9388,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Males - child(5-12) - asian",
+		"testName": "Quality Assessment for Auth capture - Face - Males - child(5-12) - asian - 10 persons",
 		"testId": "SBI1172",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - child(5-12) - asian <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - child(5-12) - asian - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -9446,10 +9446,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Females - child(5-12) - asian",
+		"testName": "Quality Assessment for Auth capture - Face - Females - child(5-12) - asian - 10 persons",
 		"testId": "SBI1173",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - child(5-12) - asian <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - child(5-12) - asian - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -9504,10 +9504,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Males - adult(12-40) - african",
+		"testName": "Quality Assessment for Auth capture - Face - Males - adult(12-40) - african - 10 persons",
 		"testId": "SBI1174",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - adult(12-40) - african <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - adult(12-40) - african - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -9562,10 +9562,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Females - adult(12-40) - african",
+		"testName": "Quality Assessment for Auth capture - Face - Females - adult(12-40) - african - 10 persons",
 		"testId": "SBI1175",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - adult(12-40) - african <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - adult(12-40) - african - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -9620,10 +9620,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Males - adult(12-40) - european",
+		"testName": "Quality Assessment for Auth capture - Face - Males - adult(12-40) - european - 10 persons",
 		"testId": "SBI1176",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - adult(12-40) - european <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - adult(12-40) - european - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -9678,10 +9678,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Females - adult(12-40) - european",
+		"testName": "Quality Assessment for Auth capture - Face - Females - adult(12-40) - european - 10 persons",
 		"testId": "SBI1177",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - adult(12-40) - european <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - adult(12-40) - european - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -9736,10 +9736,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Males - adult(12-40) - asian",
+		"testName": "Quality Assessment for Auth capture - Face - Males - adult(12-40) - asian - 10 persons",
 		"testId": "SBI1178",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - adult(12-40) - asian <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - adult(12-40) - asian - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -9794,10 +9794,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Females - adult(12-40) - asian",
+		"testName": "Quality Assessment for Auth capture - Face - Females - adult(12-40) - asian - 10 persons",
 		"testId": "SBI1179",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - adult(12-40) - asian <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - adult(12-40) - asian - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -9852,10 +9852,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Males - mature(40-59) - african",
+		"testName": "Quality Assessment for Auth capture - Face - Males - mature(40-59) - african - 10 persons",
 		"testId": "SBI1180",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - mature(40-59) - african <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - mature(40-59) - african - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -9910,10 +9910,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Females - mature(40-59) - african",
+		"testName": "Quality Assessment for Auth capture - Face - Females - mature(40-59) - african - 10 persons",
 		"testId": "SBI1181",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - mature(40-59) - african <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - mature(40-59) - african - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -9968,10 +9968,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Males - mature(40-59) - european",
+		"testName": "Quality Assessment for Auth capture - Face - Males - mature(40-59) - european - 10 persons",
 		"testId": "SBI1182",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - mature(40-59) - european <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - mature(40-59) - european - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -10026,10 +10026,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Females - mature(40-59) - european",
+		"testName": "Quality Assessment for Auth capture - Face - Females - mature(40-59) - european - 10 persons",
 		"testId": "SBI1183",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - mature(40-59) - european <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - mature(40-59) - european - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -10084,10 +10084,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Males - mature(40-59) - asian",
+		"testName": "Quality Assessment for Auth capture - Face - Males - mature(40-59) - asian - 10 persons",
 		"testId": "SBI1184",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - mature(40-59) - asian <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - mature(40-59) - asian - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -10142,10 +10142,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Females - mature(40-59) - asian",
+		"testName": "Quality Assessment for Auth capture - Face - Females - mature(40-59) - asian - 10 persons",
 		"testId": "SBI1185",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - mature(40-59) - asian <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - mature(40-59) - asian - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -10200,10 +10200,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Males - senior(60+) - african",
+		"testName": "Quality Assessment for Auth capture - Face - Males - senior(60+) - african - 10 persons",
 		"testId": "SBI1186",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - senior(60+) - african <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - senior(60+) - african - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -10258,10 +10258,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Females - senior(60+) - african",
+		"testName": "Quality Assessment for Auth capture - Face - Females - senior(60+) - african - 10 persons",
 		"testId": "SBI1187",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - senior(60+) - african <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - senior(60+) - african - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -10316,10 +10316,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Males - senior(60+) - european",
+		"testName": "Quality Assessment for Auth capture - Face - Males - senior(60+) - european - 10 persons",
 		"testId": "SBI1188",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - senior(60+) - european <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - senior(60+) - european - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -10374,10 +10374,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Females - senior(60+) - european",
+		"testName": "Quality Assessment for Auth capture - Face - Females - senior(60+) - european - 10 persons",
 		"testId": "SBI1189",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - senior(60+) - european <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - senior(60+) - european - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -10432,10 +10432,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Males - senior(60+) - asian",
+		"testName": "Quality Assessment for Auth capture - Face - Males - senior(60+) - asian - 10 persons",
 		"testId": "SBI1190",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - senior(60+) - asian <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Males - senior(60+) - asian - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -10490,10 +10490,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Face - Females - senior(60+) - asian",
+		"testName": "Quality Assessment for Auth capture - Face - Females - senior(60+) - asian - 10 persons",
 		"testId": "SBI1191",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - senior(60+) - asian <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for face for - Females - senior(60+) - asian - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your face infront of the camera until the capture completes<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -10548,10 +10548,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Single Iris - Left Iris - child(5-12)",
+		"testName": "Quality Assessment for Auth capture - Single Iris - Left Iris - child(5-12) - 10 persons",
 		"testId": "SBI1192",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for left iris for - child(5-12) <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your left iris infront of the iris scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for left iris for - child(5-12) - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your left iris infront of the iris scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -10606,10 +10606,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Single Iris - Right Iris - adult(12-40)",
+		"testName": "Quality Assessment for Auth capture - Single Iris - Right Iris - adult(12-40) - 10 persons",
 		"testId": "SBI1193",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for right iris for - adult(12-40) <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your right iris infront of the iris scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for right iris for - adult(12-40) - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your right iris infront of the iris scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -10664,10 +10664,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Single Iris - Left Iris - mature(40-59)",
+		"testName": "Quality Assessment for Auth capture - Single Iris - Left Iris - mature(40-59) - 10 persons",
 		"testId": "SBI1194",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for left iris for - mature(40-59) <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your left iris infront of the iris scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for left iris for - mature(40-59) - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your left iris infront of the iris scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
@@ -10722,10 +10722,10 @@
 	},
 	{
 		"testCaseType": "SBI",
-		"testName": "Quality Assessment for Auth capture - Single Iris - Right Iris - senior(60+)",
+		"testName": "Quality Assessment for Auth capture - Single Iris - Right Iris - senior(60+) - 10 persons",
 		"testId": "SBI1195",
 		"specVersion": "0.9.5",
-		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for right iris for - senior(60+) <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your right iris infront of the iris scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
+		"testDescription": "Quality Assessment Testcase to validate the biometrics captured by Capture method for right iris for - senior(60+) - 10 persons <br>Steps:<br>1. Click on Inititate Capture button to start the capture <br>2. Place your right iris infront of the iris scanner<br> 3. Repeat above steps , for next person, after clicking on Continue button.",
 		"isNegativeTestcase": false,
 		"methodName": [
 			"capture"
