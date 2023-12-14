@@ -31,6 +31,15 @@ public class MainController {
 	@Value("${mosip.toolkit.sbi.timeout}")
 	private String sbiTimeout;
 
+	@Value("${mosip.toolkit.session.idle.timeout}")
+	private String sessionIdleTimeout;
+
+	@Value("${mosip.toolkit.session.idle.ping}")
+	private String sessionIdlePing;
+
+	@Value("${mosip.toolkit.session.idle.timer}")
+	private String sessionIdleTimer;
+
 	@Value("${mosip.toolkit.sbi.keyrotation.iterations}")
 	private String keyRotationIterations;
 
@@ -74,6 +83,9 @@ public class MainController {
 		configMap.put("rtlLanguages", rtlLanguages);
 		configMap.put("incorrectPartnerId", incorrectPartnerId);
 		configMap.put("adminPartnerReportRole", adminPartnerReportRole);
+		configMap.put("sessionIdleTimeout", sessionIdleTimeout);
+		configMap.put("sessionIdlePing", sessionIdlePing);
+		configMap.put("sessionIdleTimer", sessionIdleTimer);
 		if (isAbisPartner()) {
 			configMap.put("abisPartnerType", abisPartnerType);
 		} else {
