@@ -90,9 +90,10 @@ public class TestCasesController {
 	@GetMapping(value = "/getSbiTestCases")
 	public ResponseWrapper<List<TestCaseDto>> getSbiTestCases(@RequestParam(required = true) String specVersion,
 			@RequestParam(required = true) String purpose, @RequestParam(required = true) String deviceType,
-			@RequestParam(required = true) String deviceSubType) {
+			@RequestParam(required = true) String deviceSubType,
+			@RequestParam(required = true) boolean isAndroid) {
 		try {
-			return service.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType);
+			return service.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType, isAndroid);
 		} catch (Exception ex) {
 			return handleFailureForGetTestcases(ex);
 		}

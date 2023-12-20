@@ -54,6 +54,9 @@ public class SbiProjectEntity implements Serializable {
 
 	@Column(name = "device_sub_type")
 	private String deviceSubType;
+	
+	@Column(name = "is_android")
+	private boolean isAndroid;
 
 	@Column(name = "device_image1")
 	private String deviceImage1;

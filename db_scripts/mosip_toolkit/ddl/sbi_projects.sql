@@ -8,6 +8,7 @@ CREATE TABLE toolkit.sbi_projects(
 	purpose character varying(256) NOT NULL,
 	device_type character varying(64) NOT NULL,
 	device_sub_type character varying(64) NOT NULL,
+	is_android boolean NOT NULL default false,
 	device_image1 character varying,
 	device_image2 character varying,
 	device_image3 character varying,
@@ -36,6 +37,7 @@ COMMENT ON COLUMN toolkit.sbi_projects.sbi_version IS 'sbi_version: the sbi_vers
 COMMENT ON COLUMN toolkit.sbi_projects.purpose IS 'Purpose: the purpose for testing';
 COMMENT ON COLUMN toolkit.sbi_projects.device_type IS 'device_type: the device type for testing';
 COMMENT ON COLUMN toolkit.sbi_projects.device_sub_type IS 'device_sub_type: the device sub type for testing';
+COMMENT ON COLUMN toolkit.sbi_projects.is_android IS 'is_android: flag to indicate if project is created in android app or browser';
 COMMENT ON COLUMN toolkit.sbi_projects.device_image1 IS 'device_image1: Base64 value of device image';
 COMMENT ON COLUMN toolkit.sbi_projects.device_image2 IS 'device_image2: Base64 value of device image';
 COMMENT ON COLUMN toolkit.sbi_projects.device_image3 IS 'device_image3: Base64 value of device image';

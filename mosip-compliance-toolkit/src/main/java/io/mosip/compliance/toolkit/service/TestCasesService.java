@@ -142,7 +142,7 @@ public class TestCasesService {
     }
 
     public ResponseWrapper<List<TestCaseDto>> getTestCases(String specVersion, String purpose, String deviceType,
-                                                           String deviceSubType, String testCaseType) {
+                                                           String deviceSubType, String testCaseType, boolean isAndroid) {
         ResponseWrapper<List<TestCaseDto>> responseWrapper = new ResponseWrapper<>();
         List<TestCaseDto> testCases = new ArrayList<>();
 
@@ -175,7 +175,11 @@ public class TestCasesService {
                                 if (testCaseDto.getOtherAttributes().getPurpose().contains(purpose) &&
                                         testCaseDto.getOtherAttributes().getBiometricTypes().contains(deviceType) &&
                                         testCaseDto.getOtherAttributes().getDeviceSubTypes().contains(deviceSubType)) {
-                                    testCases.add(testCaseDto);
+                                    if (isAndroid && !"yes".equals(testCaseDto.getInactiveForAndroid())) {
+                                    	testCases.add(testCaseDto);	
+                                    } else if (!isAndroid) {
+                                    	testCases.add(testCaseDto);
+                                    }
                                 }
                             } else if (testCaseType.equals(AppConstants.SDK)) {
                                 if (testCaseDto.getOtherAttributes().getSdkPurpose().contains(purpose)) {
@@ -214,8 +218,8 @@ public class TestCasesService {
     }
 
     public ResponseWrapper<List<TestCaseDto>> getSbiTestCases(String specVersion, String purpose, String deviceType,
-            String deviceSubType) {
-        return getTestCases(specVersion, purpose, deviceType, deviceSubType, AppConstants.SBI);
+            String deviceSubType, boolean isAndroid) {
+        return getTestCases(specVersion, purpose, deviceType, deviceSubType, AppConstants.SBI, isAndroid);
     }
 
     /**
@@ -235,11 +239,11 @@ public class TestCasesService {
     }
 
     public ResponseWrapper<List<TestCaseDto>> getSdkTestCases(String specVersion, String sdkPurpose) {
-        return getTestCases(specVersion, sdkPurpose, null, null, AppConstants.SDK);
+        return getTestCases(specVersion, sdkPurpose, null, null, AppConstants.SDK, false);
     }
     
     public ResponseWrapper<List<TestCaseDto>> getAbisTestCases(String abisSpecVersion) {
-        return getTestCases(abisSpecVersion, null, null, null, AppConstants.ABIS);
+        return getTestCases(abisSpecVersion, null, null, null, AppConstants.ABIS, false);
     }
 
     /**
