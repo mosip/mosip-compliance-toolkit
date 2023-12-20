@@ -399,7 +399,7 @@ public class CollectionsServiceTest {
         testCaseDto.setOtherAttributes(otherAttributes);
         testCaseDtoList.add(testCaseDto);
         testCaseWrapper.setResponse(testCaseDtoList);
-        Mockito.when(testCasesService.getSbiTestCases(Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any())).thenReturn(testCaseWrapper);
+        Mockito.when(testCasesService.getSbiTestCases(Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any(), Mockito.anyBoolean())).thenReturn(testCaseWrapper);
         ReflectionTestUtils.setField(collectionsService, "complianceIgnoreTestcases", "s122,s123");
         collectionsService.addDefaultCollection(collectionType, sbiProjectDto, null, null,"sbi123");
 

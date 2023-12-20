@@ -120,10 +120,10 @@
 						As per the test run results dated ${testRunStartTime} in <b>${origin} - ${partnerDetails.orgName}</b> is MOSIP Compliant for ${projectType} Specification* 
 					#end
             		#if($statusText == 'REJECTED')
-            			As per the test run results dated ${testRunStartTime} in <b>${origin} - ${partnerDetails.orgName}</b> is NOT MOSIP Compliant for ${projectType} Specification*
+            			As per the test run results dated ${testRunStartTime} in <b>${origin} - ${partnerDetails.orgName}</b> is NOT MOSIP Compliant for ${projectType} Specification
             		#end
             		#if($statusText == 'DRAFT')
-            			As per the test run results dated ${testRunStartTime} in <b>${origin} - ${partnerDetails.orgName}</b> is to be reviewed for compliance with MOSIP ${projectType} Specification*
+            			As per the test run results dated ${testRunStartTime} in <b>${origin} - ${partnerDetails.orgName}</b> is to be reviewed for compliance with MOSIP ${projectType} Specification
             		#end
             		
             	</p>
