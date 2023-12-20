@@ -13,14 +13,16 @@
 					"type": "object",
 					"properties": {
 						"specVersion": {
-							"type": "string",
-							"enum": [
-								"0.9.5",
-								"1.0.0"
+							"type": [
+								"string",
+								"null"
 							]
 						},
 						"data": {
-							"$ref": "#/definitions/non-empty-string"
+							"type": [
+								"string",
+								"null"
+							]
 						},
 						"dataDecoded": {
 							"type": "object",
@@ -344,23 +346,19 @@
 							]
 						},
 						"hash": {
-							"$ref": "#/definitions/non-empty-string",
-							"pattern": "^[A-Z0-9]{64}$"
+							"type": [
+								"string",
+								"null"
+							]
 						},
 						"error": {
 							"type": "object",
 							"properties": {
 								"errorCode": {
-									"$ref": "#/definitions/non-empty-string",
-									"enum": [
-										"0"
-									]
+									"$ref": "#/definitions/non-empty-string"
 								},
 								"errorInfo": {
-									"$ref": "#/definitions/non-empty-string",
-									"enum": [
-										"Success"
-									]
+									"$ref": "#/definitions/non-empty-string"
 								}
 							},
 							"required": [
@@ -378,7 +376,6 @@
 					"required": [
 						"specVersion",
 						"data",
-						"dataDecoded",
 						"hash",
 						"error"
 					]
