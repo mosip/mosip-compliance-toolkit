@@ -8,7 +8,7 @@ CREATE TABLE toolkit.sbi_projects(
 	purpose character varying(256) NOT NULL,
 	device_type character varying(64) NOT NULL,
 	device_sub_type character varying(64) NOT NULL,
-	is_android_sbi COLUMN is_android_sbi character varying NOT NULL DEFAULT 'no',
+	is_android_sbi character varying NOT NULL DEFAULT 'no',
 	device_image1 character varying,
 	device_image2 character varying,
 	device_image3 character varying,
