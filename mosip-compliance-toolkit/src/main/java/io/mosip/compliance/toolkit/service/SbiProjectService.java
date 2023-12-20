@@ -115,6 +115,7 @@ public class SbiProjectService {
 
 		try {
 			if (isValidSbiProject(sbiProjectDto)) {
+				log.info("sbiProjectDto" + sbiProjectDto);
 				LocalDateTime crDate = LocalDateTime.now();
 				SbiProjectEntity entity = new SbiProjectEntity();
 				entity.setId(RandomIdGenerator.generateUUID(sbiProjectDto.getProjectType().toLowerCase(), "", 36));
