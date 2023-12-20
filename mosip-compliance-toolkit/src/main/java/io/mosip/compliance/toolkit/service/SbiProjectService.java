@@ -130,12 +130,12 @@ public class SbiProjectService {
 				entity.setDeviceImage4(sbiProjectDto.getDeviceImage4());
 				entity.setSbiHash(sbiProjectDto.getSbiHash());
 				entity.setWebsiteUrl(sbiProjectDto.getWebsiteUrl());
+				entity.setIsAndroidSbi(sbiProjectDto.getIsAndroidSbi());
 				entity.setPartnerId(this.getPartnerId());
 				entity.setOrgName(resourceCacheService.getOrgName(this.getPartnerId()));
 				entity.setCrBy(this.getUserBy());
 				entity.setCrDate(crDate);
 				entity.setDeleted(false);
-
 				sbiProjectRepository.save(entity);
 				// Add a default "ALL" collection for the newly created project
 				collectionsService.addDefaultCollection(AppConstants.COMPLIANCE_COLLECTION, sbiProjectDto, null, null,

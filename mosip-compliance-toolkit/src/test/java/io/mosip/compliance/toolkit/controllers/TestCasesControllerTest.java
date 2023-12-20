@@ -108,8 +108,8 @@ public class TestCasesControllerTest {
         String deviceType = "Finger";
         String deviceSubType = "Slap";
         ResponseWrapper<List<TestCaseDto>> response = new ResponseWrapper<>();
-        Mockito.when(testCasesService.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType)).thenReturn(response);
-        Assert.assertEquals(response, testCasesController.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType));
+        Mockito.when(testCasesService.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType, "no")).thenReturn(response);
+        Assert.assertEquals(response, testCasesController.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType, false));
     }
 
     /*
@@ -123,7 +123,7 @@ public class TestCasesControllerTest {
         String deviceSubType = "Slap";
         ResponseWrapper<List<TestCaseDto>> response = new ResponseWrapper<>();
         ReflectionTestUtils.setField(testCasesController, "service", null);
-        testCasesController.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType);
+        testCasesController.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType, false);
     }
 
     /*
