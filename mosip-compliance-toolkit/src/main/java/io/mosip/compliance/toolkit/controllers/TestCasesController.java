@@ -93,7 +93,11 @@ public class TestCasesController {
 			@RequestParam(required = true) String deviceSubType,
 			@RequestParam(required = true) boolean isAndroid) {
 		try {
-			return service.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType, isAndroid);
+			String isAndroidSbi = "no";
+			if (isAndroid) {
+				isAndroidSbi = "yes";
+			}
+			return service.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType, isAndroidSbi);
 		} catch (Exception ex) {
 			return handleFailureForGetTestcases(ex);
 		}

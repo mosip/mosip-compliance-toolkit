@@ -245,7 +245,7 @@ public class SbiProjectServiceTest {
         testCaseDtoList.add(testCaseDto);
         testCaseWrapper.setResponse(testCaseDtoList);
         Mockito.when(testCasesService.getSbiTestCases(Mockito.any(),Mockito.any(),Mockito.any()
-        ,Mockito.any(), Mockito.anyBoolean())).thenReturn(testCaseWrapper);
+        ,Mockito.any(), Mockito.any())).thenReturn(testCaseWrapper);
 
 
         ResponseWrapper<SbiProjectDto> sbiProjectDtoResponseWrapper = new ResponseWrapper<>();
