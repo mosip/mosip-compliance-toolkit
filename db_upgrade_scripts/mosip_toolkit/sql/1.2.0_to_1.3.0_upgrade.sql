@@ -104,6 +104,7 @@ COMMENT ON COLUMN toolkit.datashare_tokens.token IS 'token: Data share token tes
 COMMENT ON COLUMN toolkit.datashare_tokens.result IS 'result: result of data share tokens.';
 
 -- add new columns in sbi_projects table.
+ALTER TABLE toolkit.sbi_projects Add COLUMN is_android_sbi character varying NOT NULL DEFAULT 'no';
 ALTER TABLE toolkit.sbi_projects Add COLUMN device_image1 character varying;
 ALTER TABLE toolkit.sbi_projects Add COLUMN device_image2 character varying;
 ALTER TABLE toolkit.sbi_projects Add COLUMN device_image3 character varying;
@@ -111,6 +112,7 @@ ALTER TABLE toolkit.sbi_projects Add COLUMN device_image4 character varying;
 ALTER TABLE toolkit.sbi_projects Add COLUMN sbi_hash character varying NOT NULL DEFAULT 'To_Be_Added';
 ALTER TABLE toolkit.sbi_projects Add COLUMN website_url character varying(256) NOT NULL DEFAULT 'To_Be_Added';
 ALTER TABLE toolkit.sbi_projects Add COLUMN org_name character varying(64) NOT NULL DEFAULT 'Not_Available';
+COMMENT ON COLUMN toolkit.sbi_projects.is_android_sbi IS 'is_android_sbi: flag to indicate if project is created in android app or browser';
 COMMENT ON COLUMN toolkit.sbi_projects.device_image1 IS 'device_image1: Base64 value of device image';
 COMMENT ON COLUMN toolkit.sbi_projects.device_image2 IS 'device_image2: Base64 value of device image';
 COMMENT ON COLUMN toolkit.sbi_projects.device_image3 IS 'device_image3: Base64 value of device image';
