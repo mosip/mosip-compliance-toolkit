@@ -136,7 +136,8 @@ public class SbiProjectService {
 				entity.setCrBy(this.getUserBy());
 				entity.setCrDate(crDate);
 				entity.setDeleted(false);
-
+				log.info("SbiProjectEntity" + entity);
+				
 				sbiProjectRepository.save(entity);
 				// Add a default "ALL" collection for the newly created project
 				collectionsService.addDefaultCollection(AppConstants.COMPLIANCE_COLLECTION, sbiProjectDto, null, null,
