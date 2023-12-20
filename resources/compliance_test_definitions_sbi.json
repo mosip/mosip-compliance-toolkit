@@ -4688,14 +4688,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -4738,14 +4730,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -4790,14 +4774,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -5571,14 +5547,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -5627,14 +5595,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -5683,14 +5643,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
 				}
 			]
 		],
@@ -5737,14 +5689,6 @@
 				{
 					"name": "SchemaValidator",
 					"description": "Validates the response for mandatory attributes and correct values"
-				},
-				{
-					"name": "ResponseMismatchValidator",
-					"description": "Validates the response to check if  bioCount, exceptions, segments and transactionId match the ones set in request"
-				},
-				{
-					"name": "SignatureValidator",
-					"description": "Validates the response signature"
 				}
 			]
 		],
