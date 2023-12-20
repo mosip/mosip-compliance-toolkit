@@ -108,7 +108,7 @@ public class TestCasesControllerTest {
         String deviceType = "Finger";
         String deviceSubType = "Slap";
         ResponseWrapper<List<TestCaseDto>> response = new ResponseWrapper<>();
-        Mockito.when(testCasesService.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType, false)).thenReturn(response);
+        Mockito.when(testCasesService.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType, "no")).thenReturn(response);
         Assert.assertEquals(response, testCasesController.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType, false));
     }
 

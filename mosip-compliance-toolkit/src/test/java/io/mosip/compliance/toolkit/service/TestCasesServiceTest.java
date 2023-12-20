@@ -151,7 +151,7 @@ public class TestCasesServiceTest {
 		testCaseDto.setOtherAttributes(otherAttributes);
 		when(objectMapper.readValue(testCaseEntity.getTestcaseJson(), TestCaseDto.class))
 				.thenReturn(testCaseDto);
-		testCasesServiceSpy.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType, false);
+		testCasesServiceSpy.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType, "no");
 	}
 
 	/*
@@ -192,7 +192,7 @@ public class TestCasesServiceTest {
 		testCaseDto.setOtherAttributes(otherAttributes);
 		when(objectMapper.readValue(testCaseEntity.getTestcaseJson(), TestCaseDto.class))
 				.thenReturn(testCaseDto);
-		testCasesServiceSpy.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType, false);
+		testCasesServiceSpy.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType, "no");
 	}
 
 	/*
@@ -206,7 +206,7 @@ public class TestCasesServiceTest {
 		String deviceType = DeviceTypes.FINGER.getCode();
 		String deviceSubType = DeviceSubTypes.SLAP.getCode();
 		when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON)).thenReturn(null);
-		testCasesService.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType, false);
+		testCasesService.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType, "no");
 		// exception
 		String schemaResponse = "schemaResponse";
 		when(resourceCacheService.getSchema(null, null, AppConstants.TESTCASE_SCHEMA_JSON))
@@ -214,7 +214,7 @@ public class TestCasesServiceTest {
 		List<TestCaseEntity> testCaseEntities = new ArrayList<>();
 		testCaseEntities.add(null);
 		when(testCaseCacheService.getSbiTestCases(AppConstants.SBI, specVersion)).thenReturn(testCaseEntities);
-		testCasesService.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType, false);
+		testCasesService.getSbiTestCases(specVersion, purpose, deviceType, deviceSubType, "no");
 	}
 
 	/*

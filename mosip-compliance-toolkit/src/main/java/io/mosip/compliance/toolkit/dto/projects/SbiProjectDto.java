@@ -25,7 +25,7 @@ public class SbiProjectDto {
 	
 	private String deviceSubType;
 
-	private boolean isAndroid;
+	private String isAndroidSbi;
 
 	private String deviceImage1;
 

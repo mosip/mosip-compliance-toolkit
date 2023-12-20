@@ -131,7 +131,7 @@ public class SbiProjectService {
 				entity.setDeviceImage4(sbiProjectDto.getDeviceImage4());
 				entity.setSbiHash(sbiProjectDto.getSbiHash());
 				entity.setWebsiteUrl(sbiProjectDto.getWebsiteUrl());
-				entity.setAndroid(sbiProjectDto.isAndroid());
+				entity.setIsAndroidSbi(sbiProjectDto.getIsAndroidSbi());
 				entity.setPartnerId(this.getPartnerId());
 				entity.setOrgName(resourceCacheService.getOrgName(this.getPartnerId()));
 				entity.setCrBy(this.getUserBy());

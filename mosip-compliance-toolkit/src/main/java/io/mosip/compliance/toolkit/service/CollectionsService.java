@@ -430,7 +430,7 @@ public class CollectionsService {
 				if (AppConstants.SBI.equals(projectType)) {
 					testCaseWrapper = testCasesService.getSbiTestCases(sbiProjectDto.getSbiVersion(),
 							sbiProjectDto.getPurpose(), sbiProjectDto.getDeviceType(),
-							sbiProjectDto.getDeviceSubType(), sbiProjectDto.isAndroid());
+							sbiProjectDto.getDeviceSubType(), sbiProjectDto.getIsAndroidSbi());
 				}
 				if (AppConstants.SDK.equals(projectType)) {
 					testCaseWrapper = testCasesService.getSdkTestCases(sdkProjectDto.getSdkVersion(),
