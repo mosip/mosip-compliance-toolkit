@@ -99,6 +99,7 @@ public class ProjectsService {
 						projectDto.setId(entity.getProjectId());
 						projectDto.setName(entity.getProjectName());
 						projectDto.setProjectType(entity.getProjectType());
+						projectDto.setIsAndroidSbi(entity.getIsAndroidSbi());
 						projectDto.setCollectionsCount(entity.getCollectionsCount());
 						projectDto.setCrDate(entity.getProjectCrDate());
 						projectDto.setLastRunDt(entity.getRunDate());
