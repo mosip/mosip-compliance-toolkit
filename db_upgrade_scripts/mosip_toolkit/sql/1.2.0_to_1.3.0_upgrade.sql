@@ -329,3 +329,12 @@ FROM dblink(
   'SELECT id, name FROM partner'
 ) AS i(id TEXT, name TEXT)
 WHERE partner_id = i.id AND t.org_name = 'Not_Available';
+
+-- update sbi_projects and set the is_android_sbi as 'yes'
+-- based on previous discovery test run
+UPDATE toolkit.sbi_projects
+	SET is_android_sbi='yes' where id in (
+SELECT sbi_project_id FROM toolkit.collections
+	where id in (
+SELECT collection_id from toolkit.test_run where id in (
+	SELECT run_id FROM toolkit.test_run_details where method_url='io.sbi.device')))
