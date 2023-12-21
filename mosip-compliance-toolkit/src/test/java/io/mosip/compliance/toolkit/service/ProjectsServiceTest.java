@@ -85,7 +85,7 @@ public class ProjectsServiceTest {
         projectsResponseDtoExpected.setProjects(projects);
         LocalDateTime now = LocalDateTime.now();
         ProjectSummaryEntity projectSummaryEntity = new ProjectSummaryEntity("projectId", "projectname", "projecttype", now,
-        3, "collectionid", "runid", now);
+        "no", 3, "collectionid", "runid", now);
         List<ProjectSummaryEntity> projectsSummaryList = new ArrayList<>();
         projectsSummaryList.add(projectSummaryEntity);
         Mockito.when(projectSummaryRepository.getSummaryOfAllSBIProjects(Mockito.anyString())).thenReturn(projectsSummaryList);
