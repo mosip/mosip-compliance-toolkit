@@ -17,6 +17,8 @@ public class ProjectDto {
 	
 	private String projectType;
 	
+	private String isAndroidSbi;
+	
 	private long collectionsCount;
 	
 	private LocalDateTime crDate;
