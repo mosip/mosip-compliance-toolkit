@@ -77,7 +77,7 @@
 		<io.micrometer.prometheus.version>1.4.2</io.micrometer.prometheus.version>
 		
 		<!-- Object Store -->
-		<kernel.khazana.version>1.2.0.1-SNAPSHOT</kernel.khazana.version>
+		<kernel.khazana.version>1.2.0.1-B2</kernel.khazana.version>
 		
 		<biometrics-util.version>1.2.0.1-B2-SNAPSHOT</biometrics-util.version>
 		<org.openpnp.opencv.version>4.5.3-4</org.openpnp.opencv.version>
