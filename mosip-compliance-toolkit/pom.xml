@@ -79,10 +79,10 @@
 		<!-- Object Store -->
 		<kernel.khazana.version>1.2.0.1-B2</kernel.khazana.version>
 		
-		<biometrics-util.version>1.2.0.1-B4-SNAPSHOT</biometrics-util.version>
+		<biometrics-util.version>1.2.0.1-B4</biometrics-util.version>
 		<org.openpnp.opencv.version>4.5.3-4</org.openpnp.opencv.version>
 		<jnbis.version>2.0.2</jnbis.version>
-		<imagedecoder.version>0.0.1-SNAPSHOT</imagedecoder.version>
+		<imagedecoder.version>0.0.1</imagedecoder.version>
 
 		<velocity.version>1.6.4</velocity.version>
 		
