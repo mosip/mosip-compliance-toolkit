@@ -358,11 +358,16 @@
 							]
 						},
 						"sessionKey": {
-							"$ref": "#/definitions/non-empty-string"
+							"type": [
+								"string",
+								"null"
+							]
 						},
 						"thumbprint": {
-							"$ref": "#/definitions/non-empty-string",
-							"pattern": "^[A-Z0-9]{64}$"
+							"type": [
+								"string",
+								"null"
+							]
 						},
 						"error": {
 							"type": "object",
