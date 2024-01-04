@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>io.mosip.compliance</groupId>
 	<artifactId>mosip-compliance-toolkit-service</artifactId>
-	<version>1.3.0-SNAPSHOT</version>
+	<version>1.4.0-SNAPSHOT</version>
 	<name>mosip-compliance-toolkit-service</name>
 	<description>mosip compliance toolkit</description>
 
@@ -79,10 +79,10 @@
 		<!-- Object Store -->
 		<kernel.khazana.version>1.2.0.1-B2</kernel.khazana.version>
 		
-		<biometrics-util.version>1.2.0.1-B4-SNAPSHOT</biometrics-util.version>
+		<biometrics-util.version>1.2.0.1-B4</biometrics-util.version>
 		<org.openpnp.opencv.version>4.5.3-4</org.openpnp.opencv.version>
 		<jnbis.version>2.0.2</jnbis.version>
-		<imagedecoder.version>0.0.1-SNAPSHOT</imagedecoder.version>
+		<imagedecoder.version>0.9.0</imagedecoder.version>
 
 		<velocity.version>1.6.4</velocity.version>
 		
