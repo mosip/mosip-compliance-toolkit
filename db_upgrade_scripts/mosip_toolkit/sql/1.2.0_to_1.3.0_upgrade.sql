@@ -187,16 +187,32 @@ WHERE id IN (
 			FROM toolkit.collection_testcase_mapping GROUP BY collection_id ORDER BY collection_id
 			) collection_summary 
  		INNER JOIN (
-			SELECT b.collection_id AS collection_id, b.id AS run_id, a.executed_count 
+			SELECT b.collection_id AS collection_id, b.id AS run_id, a.success_count 
 			FROM 
-			(SELECT run_id, Count( CASE WHEN Lower(result_status)= 'success' or Lower(result_status)= 'failure' THEN 1 ELSE NULL END) 
-			AS executed_count FROM toolkit.test_run_details 
+			(SELECT run_id, Count( CASE WHEN Lower(result_status)= 'success' THEN 1 ELSE NULL END) 
+			AS success_count FROM toolkit.test_run_details 
 			WHERE run_id IN (SELECT id FROM toolkit.test_run WHERE collection_id IN (SELECT id FROM toolkit.collections))
 			GROUP BY run_id) a, 
 			toolkit.test_run b 
-			WHERE a.executed_count > 0 AND a.run_id = b.id ORDER BY b.collection_id
+			WHERE a.success_count > 0 AND a.run_id = b.id ORDER BY b.collection_id
 	 	) test_run_summary ON collection_summary.collection_id = test_run_summary.collection_id 
-		WHERE collection_summary.total_testcases = test_run_summary.executed_count);
+		WHERE collection_summary.total_testcases = test_run_summary.success_count
+		UNION
+		SELECT test_run_summary.run_id FROM 
+			(SELECT collection_id, Count(testcase_id) AS total_testcases 
+			FROM toolkit.collection_testcase_mapping GROUP BY collection_id ORDER BY collection_id
+			) collection_summary 
+ 		INNER JOIN (
+			SELECT b.collection_id AS collection_id, b.id AS run_id, a.failure_count 
+			FROM 
+			(SELECT run_id, Count( CASE WHEN Lower(result_status)= 'failure' THEN 1 ELSE NULL END) AS failure_count 
+			FROM toolkit.test_run_details 
+			WHERE run_id IN (SELECT id FROM toolkit.test_run WHERE collection_id IN (SELECT id FROM toolkit.collections))
+			GROUP BY run_id) a, 
+			toolkit.test_run b 
+			WHERE a.failure_count > 0 AND a.run_id = b.id ORDER BY b.collection_id
+	 	) test_run_summary ON collection_summary.collection_id = test_run_summary.collection_id 
+		WHERE collection_summary.total_testcases = test_run_summary.failure_count);
 
 --Script to populate the newly added columns 'execution_status' as complete, 'run_status'
 --as success for existing test runs, when all testcases have passed 
@@ -217,7 +233,8 @@ WHERE id IN (
 			toolkit.test_run b 
 			WHERE a.success_count > 0 AND a.run_id = b.id ORDER BY b.collection_id
 	 	) test_run_summary ON collection_summary.collection_id = test_run_summary.collection_id 
-		WHERE collection_summary.total_testcases = test_run_summary.success_count);
+		WHERE collection_summary.total_testcases = test_run_summary.success_count
+		);
 
 -- update sbi_projects and set the is_android_sbi as 'yes'
 -- based on previous discovery test run
