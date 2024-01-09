@@ -4,6 +4,7 @@
 	"title": "ABIS Identify Response Schema",
 	"description": "ABIS Identify Response Schema",
 	"type": "object",
+	"additionalProperties": false,
 	"properties": {
 		"id": {
 			"type": "string"
@@ -22,6 +23,7 @@
 		},
 		"candidateList": {
 			"type": "object",
+			"additionalProperties": false,
 			"properties": {
 				"count": {
 					"type": "string"
@@ -34,6 +36,7 @@
 					"items": [
 						{
 							"type": "object",
+							"additionalProperties": false,
 							"properties": {
 								"referenceId": {
 									"type": "string"
@@ -59,6 +62,7 @@
 									"items": [
 										{
 											"type": "object",
+											"additionalProperties": false,
 											"properties": {
 												"biometricType": {
 													"type": "string"

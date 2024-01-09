@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2019-09/schema#",
   "$id": "http://mosip-compliance-toolkit.com/schemas/SegmentResponseSchema.json",
   "type": "object",
+  "additionalProperties": false,
   "properties": {
     "version": {
       "type": "string"
@@ -11,6 +12,7 @@
     },
     "response": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "statusCode": {
           "type": "integer"
@@ -26,12 +28,14 @@
             "object",
             "null"
           ],
+          "additionalProperties": false,
           "properties": {
             "version": {
               "type": [
                 "object",
                 "null"
               ],
+              "additionalProperties": false,
               "properties": {
                 "major": {
                   "type": "integer"
@@ -46,6 +50,7 @@
                 "object",
                 "null"
               ],
+              "additionalProperties": false,
               "properties": {
                 "major": {
                   "type": "integer"
@@ -60,6 +65,7 @@
                 "object",
                 "null"
               ],
+              "additionalProperties": false,
               "properties": {
                 "integrity": {
                   "type": "boolean"
@@ -74,9 +80,11 @@
               "items": [
                 {
                   "type": "object",
+                  "additionalProperties": false,
                   "properties": {
                     "version": {
                       "type": "object",
+                      "additionalProperties": false,
                       "properties": {
                         "major": {
                           "type": "integer"
@@ -92,6 +100,7 @@
                     },
                     "cbeffversion": {
                       "type": "object",
+                      "additionalProperties": false,
                       "properties": {
                         "major": {
                           "type": "integer"
@@ -107,6 +116,7 @@
                     },
                     "birInfo": {
                       "type": "object",
+                      "additionalProperties": false,
                       "properties": {
                         "creator": {
                           "type": [
@@ -161,9 +171,11 @@
                     },
                     "bdbInfo": {
                       "type": "object",
+                      "additionalProperties": false,
                       "properties": {
                         "format": {
                           "type": "object",
+                          "additionalProperties": false,
                           "properties": {
                             "organization": {
                               "type": "string"
@@ -179,9 +191,11 @@
                         },
                         "creationDate": {
                           "type": "object",
+                          "additionalProperties": false,
                           "properties": {
                             "date": {
                               "type": "object",
+                              "additionalProperties": false,
                               "properties": {
                                 "year": {
                                   "type": "integer"
@@ -201,6 +215,7 @@
                             },
                             "time": {
                               "type": "object",
+                              "additionalProperties": false,
                               "properties": {
                                 "hour": {
                                   "type": "integer"
@@ -291,9 +306,11 @@
                         },
                         "quality": {
                           "type": "object",
+                          "additionalProperties": false,
                           "properties": {
                             "algorithm": {
                               "type": "object",
+                              "additionalProperties": false,
                               "properties": {
                                 "organization": {
                                   "type": "string"
@@ -469,12 +486,14 @@
                         "object",
                         "null"
                       ],
+                      "additionalProperties": false,
                       "properties": {
                         "format": {
                           "type": [
                             "object",
                             "null"
                           ],
+                          "additionalProperties": false,
                           "properties": {
                             "organization": {
                               "type": [
@@ -510,7 +529,8 @@
               ]
             },
             "others": {
-              "type": "object"
+              "type": "object",
+              "additionalProperties": false
             }
           },
           "required": [
@@ -638,6 +658,7 @@
                 "type": [
                   "object"
                 ],
+                "additionalProperties": false,
                 "properties": {
                   "segments": {
                     "type": [
@@ -656,6 +677,7 @@
                   "object",
                   "null"
                 ],
+                "additionalProperties": false,
                 "properties": {
                   "segments": {
                     "type": [

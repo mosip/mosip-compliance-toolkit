@@ -2,6 +2,7 @@
 	"$schema": "https://json-schema.org/draft/2019-09/schema#",
 	"$id": "http://mosip-compliance-toolkit.com/schemas/MatchNullResponseSchema.json",
 	"type": "object",
+	"additionalProperties": false,
 	"properties": {
 		"version": {
 			"type": "string"
@@ -11,6 +12,7 @@
 		},
 		"response": {
 			"type": "object",
+			"additionalProperties": false,
 			"properties": {
 				"statusCode": {
 					"type": "integer"

@@ -2,6 +2,7 @@
 	"$schema": "https://json-schema.org/draft/2019-09/schema#",
 	"$id": "http://mosip-compliance-toolkit.com/schemas/ExtractTemplateResponseSchema.json",
 	"type": "object",
+	"additionalProperties": false,
 	"properties": {
 		"version": {
 			"type": "string"
@@ -11,6 +12,7 @@
 		},
 		"response": {
 			"type": "object",
+			"additionalProperties": false,
 			"properties": {
 				"statusCode": {
 					"type": "integer"
@@ -23,12 +25,14 @@
 				},
 				"response": {
 					"type": "object",
+					"additionalProperties": false,
 					"properties": {
 						"version": {
 							"type": [
 								"object",
 								"null"
 							],
+							"additionalProperties": false,
 							"properties": {
 								"major": {
 									"type": "integer"
@@ -43,6 +47,7 @@
 								"object",
 								"null"
 							],
+							"additionalProperties": false,
 							"properties": {
 								"major": {
 									"type": "integer"
@@ -57,6 +62,7 @@
 								"object",
 								"null"
 							],
+							"additionalProperties": false,
 							"properties": {
 								"integrity": {
 									"type": "boolean"
@@ -71,12 +77,14 @@
 							"items": [
 								{
 									"type": "object",
+									"additionalProperties": false,
 									"properties": {
 										"version": {
 											"type": [
 												"object",
 												"null"
 											],
+											"additionalProperties": false,
 											"properties": {
 												"major": {
 													"type": "integer"
@@ -95,6 +103,7 @@
 												"object",
 												"null"
 											],
+											"additionalProperties": false,
 											"properties": {
 												"major": {
 													"type": "integer"
@@ -110,6 +119,7 @@
 										},
 										"birInfo": {
 											"type": "object",
+											"additionalProperties": false,
 											"properties": {
 												"creator": {
 													"type": [
@@ -164,9 +174,11 @@
 										},
 										"bdbInfo": {
 											"type": "object",
+											"additionalProperties": false,
 											"properties": {
 												"format": {
 													"type": "object",
+													"additionalProperties": false,
 													"properties": {
 														"organization": {
 															"type": "string"
@@ -182,9 +194,11 @@
 												},
 												"creationDate": {
 													"type": "object",
+													"additionalProperties": false,
 													"properties": {
 														"date": {
 															"type": "object",
+															"additionalProperties": false,
 															"properties": {
 																"year": {
 																	"type": "integer"
@@ -204,6 +218,7 @@
 														},
 														"time": {
 															"type": "object",
+															"additionalProperties": false,
 															"properties": {
 																"hour": {
 																	"type": "integer"
@@ -292,9 +307,11 @@
 												},
 												"quality": {
 													"type": "object",
+													"additionalProperties": false,
 													"properties": {
 														"algorithm": {
 															"type": "object",
+															"additionalProperties": false,
 															"properties": {
 																"organization": {
 																	"type": "string"
@@ -310,11 +327,150 @@
 														},
 														"score": {
 															"type": "integer"
+														},
+														"qualityCalculationFailed": {
+															"type": [
+																"string",
+																"null"
+															]
 														}
 													},
 													"required": [
 														"algorithm",
-														"score"
+														"score",
+														"qualityCalculationFailed"
+													]
+												},
+												"challengeResponse": {
+													"type": [
+														"array",
+														"null"
+													],
+													"items": [
+														{
+															"type": [
+																"integer"
+															]
+														}
+													]
+												},
+												"index": {
+													"type": [
+														"string",
+														"null"
+													]
+												},
+												"encryption": {
+													"type": [
+														"boolean",
+														"null"
+													]
+												},
+												"notValidBefore": {
+													"type": [
+														"string",
+														"null"
+													]
+												},
+												"notValidAfter": {
+													"type": [
+														"string",
+														"null"
+													]
+												},
+												"product": {
+													"type": [
+														"object",
+														"null"
+													],
+													"additionalProperties": false,
+													"properties": {
+														"organization": {
+															"type": "string"
+														},
+														"type": {
+															"type": "string"
+														}
+													},
+													"required": [
+														"organization",
+														"type"
+													]
+												},
+												"captureDevice": {
+													"type": [
+														"object",
+														"null"
+													],
+													"additionalProperties": false,
+													"properties": {
+														"organization": {
+															"type": "string"
+														},
+														"type": {
+															"type": "string"
+														}
+													},
+													"required": [
+														"organization",
+														"type"
+													]
+												},
+												"featureExtractionAlgorithm": {
+													"type": [
+														"object",
+														"null"
+													],
+													"additionalProperties": false,
+													"properties": {
+														"organization": {
+															"type": "string"
+														},
+														"type": {
+															"type": "string"
+														}
+													},
+													"required": [
+														"organization",
+														"type"
+													]
+												},
+												"comparisonAlgorithm": {
+													"type": [
+														"object",
+														"null"
+													],
+													"additionalProperties": false,
+													"properties": {
+														"organization": {
+															"type": "string"
+														},
+														"type": {
+															"type": "string"
+														}
+													},
+													"required": [
+														"organization",
+														"type"
+													]
+												},
+												"compressionAlgorithm": {
+													"type": [
+														"object",
+														"null"
+													],
+													"additionalProperties": false,
+													"properties": {
+														"organization": {
+															"type": "string"
+														},
+														"type": {
+															"type": "string"
+														}
+													},
+													"required": [
+														"organization",
+														"type"
 													]
 												}
 											},
@@ -468,12 +624,14 @@
 												"object",
 												"null"
 											],
+											"additionalProperties": false,
 											"properties": {
 												"format": {
 													"type": [
 														"object",
 														"null"
 													],
+													"additionalProperties": false,
 													"properties": {
 														"organization": {
 															"type": [
@@ -494,7 +652,18 @@
 													]
 												}
 											}
+										},
+										"others": {
+											"type": [
+												"object",
+												"null"
+											],
+											"additionalProperties": false
+										},
+										"birs": {
+											"type": "null"
 										}
+									
 									},
 									"required": [
 										"version",
@@ -509,7 +678,8 @@
 							]
 						},
 						"others": {
-							"type": "object"
+							"type": ["object", "null"],
+							"additionalProperties": false
 						}
 					},
 					"required": [

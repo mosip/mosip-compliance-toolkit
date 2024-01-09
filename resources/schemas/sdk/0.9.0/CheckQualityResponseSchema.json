@@ -2,6 +2,7 @@
 	"$schema": "https://json-schema.org/draft/2019-09/schema#",
 	"$id": "http://mosip-compliance-toolkit.com/schemas/CheckQualityResponseSchema.json",
 	"type": "object",
+	"additionalProperties": false,
 	"properties": {
 		"version": {
 			"type": "string"
@@ -11,6 +12,7 @@
 		},
 		"response": {
 			"type": ["object", "null"],
+			"additionalProperties": false,
 			"properties": {
 				"statusCode": {
 					"type": "integer"
@@ -20,12 +22,15 @@
 				},
 				"response": {
 					"type": "object",
+					"additionalProperties": false,
 					"properties": {
 						"scores": {
 							"type": "object",
+							"additionalProperties": false,
 							"properties": {
 								"FACE": {
 									"type": "object",
+									"additionalProperties": false,
 									"properties": {
 										"score": {
 											"type": "number"
@@ -35,12 +40,14 @@
 											"items": {}
 										},
 										"analyticsInfo": {
-											"type": "object"
+											"type": "object",
+											"additionalProperties": false
 										}
 									}
 								},
 								"FINGER": {
 									"type": "object",
+									"additionalProperties": false,
 									"properties": {
 										"score": {
 											"type": "number"
@@ -50,12 +57,14 @@
 											"items": {}
 										},
 										"analyticsInfo": {
-											"type": "object"
+											"type": "object",
+											"additionalProperties": false
 										}
 									}
 								},
 								"IRIS": {
 									"type": "object",
+									"additionalProperties": false,
 									"properties": {
 										"score": {
 											"type": "number"
@@ -65,14 +74,16 @@
 											"items": {}
 										},
 										"analyticsInfo": {
-											"type": "object"
+											"type": "object",
+											"additionalProperties": false
 										}
 									}
 								}
 							}
 						},
 						"analyticsInfo": {
-							"type": "object"
+							"type": "object",
+							"additionalProperties": false
 						}
 					},
 					"required": [

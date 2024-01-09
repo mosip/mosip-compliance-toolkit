@@ -4,6 +4,7 @@
 	"title": "ABIS Insert Request Schema",
 	"description": "ABIS Insert Request Schema",
 	"type": "object",
+	"additionalProperties": false,
 	"properties": {
 		"id": {
 			"type": "string"

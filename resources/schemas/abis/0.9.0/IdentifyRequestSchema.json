@@ -4,6 +4,7 @@
 	"title": "ABIS Identify Request Schema",
 	"description": "ABIS Identify Request Schema",
 	"type": "object",
+	"additionalProperties": false,
 	"properties": {
 		"id": {
 			"type": "string"
@@ -25,12 +26,14 @@
 		},
 		"gallery": {
 			"type": "object",
+			"additionalProperties": false,
 			"properties": {
 				"referenceIds": {
 					"type": "array",
 					"items": [
 						{
 							"type": "object",
+							"additionalProperties": false,
 							"properties": {
 								"referenceId": {
 									"type": "string"
@@ -49,6 +52,7 @@
 		},
 		"flags": {
 			"type": "object",
+			"additionalProperties": false,
 			"properties": {
 				"maxResults": {
 					"type": "string"

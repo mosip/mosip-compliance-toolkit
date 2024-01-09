@@ -9,12 +9,14 @@
 	"items": [
 		{
 			"type": "object",
+			"additionalProperties": false,
 			"properties": {
 				"deviceInfo": {
 					"$ref": "#/definitions/non-empty-string"
 				},
 				"deviceInfoDecoded": {
 					"type": "object",
+					"additionalProperties": false,
 					"properties": {
 						"env": {
 							"type": "string",
@@ -30,6 +32,7 @@
 						},
 						"digitalIdDecoded": {
 							"type": "object",
+							"additionalProperties": false,
 							"properties": {
 								"serialNo": {
 									"$ref": "#/definitions/non-empty-string"
@@ -230,6 +233,7 @@
 				},
 				"error": {
 					"type": "object",
+					"additionalProperties": false,
 					"properties": {
 						"errorCode": {
 							"$ref": "#/definitions/non-empty-string",

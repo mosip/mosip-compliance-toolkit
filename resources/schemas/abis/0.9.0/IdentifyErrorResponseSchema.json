@@ -4,6 +4,7 @@
 	"title": "ABIS Identify Error Response Schema",
 	"description": "ABIS Identify Error Response Schema",
 	"type": "object",
+	"additionalProperties": false,
 	"properties": {
 		"id": {
 			"type": "string"

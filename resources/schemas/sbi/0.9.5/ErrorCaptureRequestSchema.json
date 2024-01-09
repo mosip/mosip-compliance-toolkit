@@ -4,6 +4,7 @@
 	"title": "Error Capture Request Schema",
 	"description": "Error Capture Request Schema",
 	"type": "object",
+	"additionalProperties": false,
 	"properties": {
 		"env": {
 			"type": "string",
@@ -47,6 +48,7 @@
 			"type": "array",
 			"items": {
 				"type": "object",
+				"additionalProperties": false,
 				"properties": {
 					"type": {
 						"type": "string",
@@ -67,6 +69,10 @@
 								"null"
 							]
 						},
+						"uniqueItems": true
+					},
+					"exception": {
+						"type": "array",
 						"uniqueItems": true
 					},
 					"requestedScore": {
@@ -112,7 +118,8 @@
 			"type": [
 				"null",
 				"object"
-			]
+			],
+			"additionalProperties": false
 		}
 	},
 	"required": [

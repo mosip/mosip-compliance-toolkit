@@ -9,6 +9,7 @@
 	"items": [
 		{
 			"type": "object",
+			"additionalProperties": false,
 			"properties": {
 				"deviceId": {
 					"$ref": "#/definitions/non-empty-string"
@@ -28,6 +29,9 @@
 						"L0",
 						"L1"
 					]
+				},
+				"serviceVersion": {
+					"$ref": "#/definitions/non-empty-string"
 				},
 				"deviceSubId": {
 					"type": "array",
@@ -52,6 +56,7 @@
 				},
 				"digitalIdDecoded": {
 					"type": "object",
+					"additionalProperties": false,
 					"properties": {
 						"serialNo": {
 							"$ref": "#/definitions/non-empty-string"
@@ -195,6 +200,7 @@
 				},
 				"error": {
 					"type": "object",
+					"additionalProperties": false,
 					"properties": {
 						"errorCode": {
 							"$ref": "#/definitions/non-empty-string",
