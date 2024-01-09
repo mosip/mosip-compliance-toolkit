@@ -177,58 +177,38 @@ COMMENT ON COLUMN toolkit.biometric_testdata.org_name IS 'orgname: organization 
 --can be set as complete since in CTKv1.2.0 only one row exists per run_id, testcase_id
 UPDATE toolkit.test_run_details SET execution_status = 'complete';
 
---Script to populate the newly added columns 'execution_status' as complete for existing test runs 
---when all testcases were executed
-UPDATE toolkit.test_run 
-SET execution_status = 'complete' 
-WHERE id IN (
-	SELECT test_run_summary.run_id FROM 
-			(SELECT collection_id, Count(testcase_id) AS total_testcases 
-			FROM toolkit.collection_testcase_mapping GROUP BY collection_id ORDER BY collection_id
-			) collection_summary 
- 		INNER JOIN (
-			SELECT b.collection_id AS collection_id, b.id AS run_id, a.success_count 
-			FROM 
-			(SELECT run_id, Count( CASE WHEN Lower(result_status)= 'success' OR Lower(result_status)= 'failure' THEN 1 ELSE NULL END) 
-			AS success_count FROM toolkit.test_run_details 
-			WHERE run_id IN (SELECT id FROM toolkit.test_run WHERE collection_id IN (SELECT id FROM toolkit.collections))
-			GROUP BY run_id) a, 
-			toolkit.test_run b 
-			WHERE a.success_count > 0 AND a.run_id = b.id ORDER BY b.collection_id
-	 	) test_run_summary ON collection_summary.collection_id = test_run_summary.collection_id 
-		WHERE collection_summary.total_testcases = test_run_summary.success_count);
+--Script to populate the newly added columns 'execution_status' as 'complete', 
+--if all testcases for the collection were executed
+UPDATE toolkit.test_run SET execution_status = 'complete' WHERE id IN ( 
+	SELECT test_run_summary.run_id FROM ( 
+		SELECT collection_id, Count(testcase_id) AS total_testcases FROM toolkit.collection_testcase_mapping 
+		GROUP BY collection_id ORDER BY collection_id ) collection_summary 
+		INNER JOIN ( 
+			SELECT b.collection_id AS collection_id, b.id AS run_id, a.executed_count FROM ( 
+				SELECT run_id, Count( CASE WHEN (Lower(result_status)= 'success' or Lower(result_status)= 'failure') THEN 1 ELSE NULL END ) AS executed_count 
+				FROM toolkit.test_run_details 
+				WHERE run_id IN ( SELECT id FROM toolkit.test_run WHERE collection_id IN ( SELECT id FROM toolkit.collections ) 
+				) GROUP BY run_id ) a, toolkit.test_run b 
+			WHERE a.executed_count > 0 AND a.run_id = b.id ORDER BY b.collection_id 
+	   ) test_run_summary ON collection_summary.collection_id = test_run_summary.collection_id 
+	WHERE collection_summary.total_testcases = test_run_summary.executed_count );
 
---Script to populate the newly added columns 'execution_status' as complete, 'run_status'
---as success for existing test runs, when all testcases have passed 
-UPDATE toolkit.test_run 
-SET run_status = 'success',execution_status = 'complete' 
-WHERE id IN (
-	SELECT test_run_summary.run_id FROM 
-			(SELECT collection_id, Count(testcase_id) AS total_testcases 
-			FROM toolkit.collection_testcase_mapping GROUP BY collection_id ORDER BY collection_id
-			) collection_summary 
- 		INNER JOIN (
-			SELECT b.collection_id AS collection_id, b.id AS run_id, a.success_count 
-			FROM 
-			(SELECT run_id, Count( CASE WHEN Lower(result_status)= 'success' THEN 1 ELSE NULL END) AS success_count 
-			FROM toolkit.test_run_details 
-			WHERE run_id IN (SELECT id FROM toolkit.test_run WHERE collection_id IN (SELECT id FROM toolkit.collections))
-			GROUP BY run_id) a, 
-			toolkit.test_run b 
-			WHERE a.success_count > 0 AND a.run_id = b.id ORDER BY b.collection_id
-	 	) test_run_summary ON collection_summary.collection_id = test_run_summary.collection_id 
-		WHERE collection_summary.total_testcases = test_run_summary.success_count
-		);
+--Script to populate the newly added columns 'execution_status' as 'complete', 
+--and 'run_status' as 'success' if all testcases for the collection are successful
+UPDATE toolkit.test_run SET run_status = 'success', execution_status = 'complete' WHERE id IN ( 
+	SELECT test_run_summary.run_id FROM ( 
+		SELECT collection_id, Count(testcase_id) AS total_testcases FROM toolkit.collection_testcase_mapping 
+		GROUP BY collection_id ORDER BY collection_id ) collection_summary 
+		INNER JOIN ( 
+			SELECT b.collection_id AS collection_id, b.id AS run_id, a.success_count FROM ( 
+				SELECT run_id, Count( CASE WHEN Lower(result_status)= 'success' THEN 1 ELSE NULL END ) AS success_count 
+				FROM toolkit.test_run_details 
+				WHERE run_id IN ( SELECT id FROM toolkit.test_run WHERE collection_id IN ( SELECT id FROM toolkit.collections ) 
+				) GROUP BY run_id ) a, toolkit.test_run b 
+			WHERE a.success_count > 0 AND a.run_id = b.id ORDER BY b.collection_id 
+	   ) test_run_summary ON collection_summary.collection_id = test_run_summary.collection_id 
+	WHERE collection_summary.total_testcases = test_run_summary.success_count );
 
--- update sbi_projects and set the is_android_sbi as 'yes'
--- based on previous discovery test run
-UPDATE toolkit.sbi_projects
-	SET is_android_sbi='yes' where id in (
-SELECT sbi_project_id FROM toolkit.collections
-	where id in (
-SELECT collection_id from toolkit.test_run where id in (
-	SELECT run_id FROM toolkit.test_run_details where method_url='io.sbi.device')))
-  		
 --Script to populate the newly added column 'org_name' for existing tables
 -- Check if the dblink extension exists
 DO $$
@@ -316,3 +296,12 @@ FROM dblink(
   'SELECT id, name FROM partner'
 ) AS i(id TEXT, name TEXT)
 WHERE partner_id = i.id AND t.org_name = 'Not_Available';
+
+-- update sbi_projects and set the is_android_sbi as 'yes'
+-- based on previous discovery test run
+UPDATE toolkit.sbi_projects
+	SET is_android_sbi='yes' where id in (
+SELECT sbi_project_id FROM toolkit.collections
+	where id in (
+SELECT collection_id from toolkit.test_run where id in (
+	SELECT run_id FROM toolkit.test_run_details where method_url='io.sbi.device')))
