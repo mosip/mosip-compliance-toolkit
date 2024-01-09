@@ -4,6 +4,7 @@
 	"title": "Auth Capture Request Schema",
 	"description": "Auth Capture Request Schema",
 	"type": "object",
+	"additionalProperties": false,
 	"properties": {
 		"env": {
 			"type": "string",
@@ -47,6 +48,7 @@
 			"type": "array",
 			"items": {
 				"type": "object",
+				"additionalProperties": false,
 				"properties": {
 					"type": {
 						"type": "string",
@@ -228,7 +230,8 @@
 			"type": [
 				"null",
 				"object"
-			]
+			],
+			"additionalProperties": false
 		}
 	},
 	"required": [

@@ -11,6 +11,7 @@
 			"items": [
 				{
 					"type": "object",
+					"additionalProperties": false,
 					"properties": {
 						"specVersion": {
 							"type": "string",
@@ -24,12 +25,14 @@
 						},
 						"dataDecoded": {
 							"type": "object",
+							"additionalProperties": false,
 							"properties": {
 								"digitalId": {
 									"$ref": "#/definitions/non-empty-string"
 								},
 								"digitalIdDecoded": {
 									"type": "object",
+									"additionalProperties": false,
 									"properties": {
 										"serialNo": {
 											"$ref": "#/definitions/non-empty-string"
@@ -351,6 +354,7 @@
 						},
 						"error": {
 							"type": "object",
+							"additionalProperties": false,
 							"properties": {
 								"errorCode": {
 									"$ref": "#/definitions/non-empty-string",

@@ -4,6 +4,7 @@
 	"title": "ABIS Insert Response Schema",
 	"description": "ABIS Insert Response Schema",
 	"type": "object",
+	"additionalProperties": false,
 	"properties": {
 		"id": {
 			"type": "string"

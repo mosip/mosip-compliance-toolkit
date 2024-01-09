@@ -2,6 +2,7 @@
 	"$schema": "https://json-schema.org/draft/2019-09/schema#",
 	"$id": "http://mosip-compliance-toolkit.com/schemas/MatchResponseSchema.json",
 	"type": "object",
+	"additionalProperties": false,
 	"properties": {
 		"version": {
 			"type": "string"
@@ -11,6 +12,7 @@
 		},
 		"response": {
 			"type": "object",
+			"additionalProperties": false,
 			"properties": {
 				"statusCode": {
 					"type": "integer"
@@ -23,15 +25,18 @@
 					"items": [
 						{
 							"type": "object",
+							"additionalProperties": false,
 							"properties": {
 								"galleryIndex": {
 									"type": "integer"
 								},
 								"decisions": {
 									"type": "object",
+									"additionalProperties": false,
 									"properties": {
 										"FACE": {
 											"type": "object",
+											"additionalProperties": false,
 											"properties": {
 												"match": {
 													"type": "string"
@@ -41,7 +46,8 @@
 													"items": {}
 												},
 												"analyticsInfo": {
-													"type": "object"
+													"type": "object",
+													"additionalProperties": false
 												}
 											},
 											"required": [
@@ -52,6 +58,7 @@
 										},
 										"FINGER": {
 											"type": "object",
+											"additionalProperties": false,
 											"properties": {
 												"match": {
 													"type": "string"
@@ -61,7 +68,8 @@
 													"items": {}
 												},
 												"analyticsInfo": {
-													"type": "object"
+													"type": "object",
+													"additionalProperties": false
 												}
 											},
 											"required": [
@@ -72,6 +80,7 @@
 										},
 										"IRIS": {
 											"type": "object",
+											"additionalProperties": false,
 											"properties": {
 												"match": {
 													"type": "string"
@@ -81,7 +90,8 @@
 													"items": {}
 												},
 												"analyticsInfo": {
-													"type": "object"
+													"type": "object",
+													"additionalProperties": false
 												}
 											},
 											"required": [
@@ -93,7 +103,8 @@
 									}
 								},
 								"analyticsInfo": {
-									"type": "object"
+									"type": "object",
+									"additionalProperties": false
 								}
 							},
 							"required": [
