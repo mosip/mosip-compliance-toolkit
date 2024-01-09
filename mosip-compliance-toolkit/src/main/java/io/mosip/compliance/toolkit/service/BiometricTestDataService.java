@@ -773,7 +773,7 @@ public class BiometricTestDataService {
                 } else {
                     builder.append("\n");
                 }
-                if (testCaseDto.isNegativeTestcase) {
+                if (testCaseDto.negativeTestcase) {
                     builder.append("This is Negative Testcase\n\n");
                 }
 
