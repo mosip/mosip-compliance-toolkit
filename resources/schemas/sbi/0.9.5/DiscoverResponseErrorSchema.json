@@ -1,0 +1,171 @@
+{
+	"$schema": "https://json-schema.org/draft/2019-09/schema#",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/DiscoverResponseErrorSchema.json",
+	"type": "array",
+	"title": "Discover Response Error Schema",
+	"description": "Discover Response Error Schema",
+	"additionalProperties": false,
+	"minItems": 1,
+	"items": [
+		{
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"deviceId": {
+					"type": [
+						"string",
+						"null"
+					]
+				},
+				"deviceStatus": {
+					"type": [
+						"string",
+						"null"
+					]
+				},
+				"certification": {
+					"type": [
+						"string",
+						"null"
+					]
+				},
+				"serviceVersion": {
+					"type": [
+						"string",
+						"null"
+					]
+				},
+				"deviceSubId": {
+					"type": [
+						"array",
+						"null"
+					]
+				},
+				"callbackId": {
+					"type": [
+						"string",
+						"null"
+					]
+				},
+				"digitalId": {
+					"type": [
+						"string",
+						"null"
+					]
+				},
+				"digitalIdDecoded": {
+					"type": [
+						"object",
+						"null"
+					],
+					"additionalProperties": false,
+					"properties": {
+						"serialNo": {
+							"type": [
+								"string",
+								"null"
+							]
+						},
+						"make": {
+							"type": [
+								"string",
+								"null"
+							]
+						},
+						"model": {
+							"type": [
+								"string",
+								"null"
+							]
+						},
+						"type": {
+							"type": [
+								"string",
+								"null"
+							]
+						},
+						"deviceSubType": {
+							"type": [
+								"string",
+								"null"
+							]
+						},
+						"deviceProvider": {
+							"type": [
+								"string",
+								"null"
+							]
+						},
+						"deviceProviderId": {
+							"type": [
+								"string",
+								"null"
+							]
+						},
+						"dateTime": {
+							"type": [
+								"string",
+								"null"
+							]
+						}
+					}
+				},
+				"deviceCode": {
+					"type": [
+						"string",
+						"null"
+					]
+				},
+				"specVersion": {
+					"type": [
+						"array",
+						"null"
+					]
+				},
+				"purpose": {
+					"type": [
+						"string",
+						"null"
+					]
+				},
+				"error": {
+					"type": "object",
+					"additionalProperties": false,
+					"properties": {
+						"errorCode": {
+							"$ref": "#/definitions/non-empty-string",
+							"pattern": "^[1-9][0-9][0-9]$"
+						},
+						"errorInfo": {
+							"$ref": "#/definitions/non-empty-string",
+							"not": {
+								"enum": [
+									"Success"
+								]
+							}
+						}
+					},
+					"required": [
+						"errorCode",
+						"errorInfo"
+					],
+					"definitions": {
+						"non-empty-string": {
+							"type": "string",
+							"minLength": 1
+						}
+					}
+				}
+			},
+			"required": [
+				"error"
+			]
+		}
+	],
+	"definitions": {
+		"non-empty-string": {
+			"type": "string",
+			"minLength": 1
+		}
+	}
+}
