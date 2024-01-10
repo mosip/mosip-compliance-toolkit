@@ -10722,5 +10722,53 @@
 			"ageGroup": "senior(60+)",
 			"testCaseRepeatCount": "10"
 		}
+	},
+	{
+		"testCaseType": "SBI",
+		"testName": "Discover device - Invalid Biometric Types",
+		"testId": "SBI1196",
+		"specVersion": "0.9.5",
+		"testDescription": "Test to perform validation for the device discovery interface with invalid request",
+		"isNegativeTestcase": true,
+		"methodName": [
+			"device"
+		],
+		"requestSchema": [
+			"InvalidDiscoverRequestSchema"
+		],
+		"responseSchema": [
+			"DiscoverResponseErrorSchema"
+		],
+		"validatorDefs": [
+			[
+				{
+					"name": "SchemaValidator",
+					"description": "Validates the response for mandatory attributes and correct values"
+				}
+			]
+		],
+		"otherAttributes": {
+			"purpose": [
+				"Registration",
+				"Auth"
+			],
+			"biometricTypes": [
+				"Finger",
+				"Iris",
+				"Face"
+			],
+			"deviceSubTypes": [
+				"Slap",
+				"Single",
+				"Double",
+				"Full face"
+			],
+			"segments": [],
+			"exceptions": [],
+			"requestedScore": "",
+			"bioCount": "",
+			"deviceSubId": "",
+			"invalidRequestAttribute": "biometricTypes"
+		}
 	}
 ]
