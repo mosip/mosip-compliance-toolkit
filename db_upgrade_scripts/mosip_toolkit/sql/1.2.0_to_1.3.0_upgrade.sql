@@ -149,7 +149,7 @@ COMMENT ON COLUMN toolkit.test_run_archive.org_name IS 'orgname: organization na
 
 -- add new columns in test_run_details table
 ALTER TABLE toolkit.test_run_details ADD COLUMN method_id character varying(150) NOT NULL DEFAULT 'Not_Available';
-ALTER TABLE toolkit.test_run_details ADD COLUMN execution_status character varying(36) NOT NULL DEFAULT 'Not_Available';
+ALTER TABLE toolkit.test_run_details ADD COLUMN execution_status character varying(36) NOT NULL DEFAULT 'incomplete';
 ALTER TABLE toolkit.test_run_details Add COLUMN org_name character varying(64) NOT NULL DEFAULT 'Not_Available';
 COMMENT ON COLUMN toolkit.test_run_details.method_id IS 'Method ID: Unique method Id created for each method response';
 COMMENT ON COLUMN toolkit.test_run_details.execution_status IS 'Execution Status: test case execution status Incomplete or Complete.';
@@ -161,7 +161,7 @@ ALTER TABLE toolkit.test_run_details ADD CONSTRAINT test_run_details_result_stat
 
 -- add new columns in test_run_details_archive table
 ALTER TABLE toolkit.test_run_details_archive ADD COLUMN method_id character varying(150) NOT NULL DEFAULT 'Not_Available';
-ALTER TABLE toolkit.test_run_details_archive ADD COLUMN execution_status character varying(36) NOT NULL DEFAULT 'Not_Available';
+ALTER TABLE toolkit.test_run_details_archive ADD COLUMN execution_status character varying(36) NOT NULL DEFAULT 'incomplete';
 ALTER TABLE toolkit.test_run_details_archive Add COLUMN org_name character varying(64) NOT NULL DEFAULT 'Not_Available';
 COMMENT ON COLUMN toolkit.test_run_details_archive.method_id IS 'Method ID: Unique method Id created for each method response';
 COMMENT ON COLUMN toolkit.test_run_details_archive.execution_status IS 'Execution Status: test case execution status Incomplete or Complete.';
