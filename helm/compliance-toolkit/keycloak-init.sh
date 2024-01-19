@@ -9,7 +9,6 @@ helm repo update
 echo checking if toolkit client is created already
 kubectl -n $NS create ns $NS
 
-IAMHOST_URL=$(kubectl get cm global -o jsonpath={.data.mosip-iam-external-host})
 CTK_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-compliance-host})
 TOOLKIT_CLIENT_SECRET_KEY="mosip_toolkit_client_secret"
 TOOLKIT_CLIENT_SECRET_VALUE=$( kubectl -n keycloak get secret keycloak-client-secrets -o jsonpath={.data.mosip_toolkit_client_secret} | base64 -d )
@@ -45,8 +44,7 @@ kubectl -n $NS create secret generic ctk-captcha --from-literal=ctk-captcha-site
 echo "Creating and copying keycloak toolkit client"
 helm -n $NS delete toolkit-keycloak-init
 kubectl -n $NS delete secret  --ignore-not-found=true keycloak-client-secrets
-helm -n $NS install toolkit-keycloak-init /home/techno-384/Desktop/MOSIP/mosip-helm/charts/keycloak-init \
---set keycloak.realms.mosip.realm_config.attributes.frontendUrl="https://$IAMHOST_URL/auth" \
+helm -n $NS install toolkit-keycloak-init  mosip/keycloak-init \
 --set keycloak.realms.mosip.realm_config.browserSecurityHeaders.contentSecurityPolicy="\"frame-src 'self' https://www.google.com; frame-ancestors 'self'; object-src 'none';\"" \
 --set clientSecrets[0].name="$TOOLKIT_CLIENT_SECRET_KEY" \
 --set clientSecrets[0].secret="$TOOLKIT_CLIENT_SECRET_VALUE" \
