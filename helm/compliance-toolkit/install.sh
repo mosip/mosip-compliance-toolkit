@@ -30,7 +30,6 @@ function installing_compliance-toolkit() {
   echo Copy configmaps
   ./copy_cm.sh
 
-  API_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-api-internal-host})
   COMPLIANCE_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-compliance-host})
 
   echo "Applying EnvoyFilter to set cookie header for compliance toolkit service"
