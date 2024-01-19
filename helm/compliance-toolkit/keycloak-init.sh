@@ -53,3 +53,21 @@ helm -n $NS install toolkit-keycloak-init  mosip/keycloak-init \
 --set extraEnvVarsSecret[0]="ctk-captcha" \
 --version $CHART_VERSION --wait -f keycloak-init-values.yaml
 
+TOOLKIT_CLIENT_SECRET_VALUE=$( kubectl -n $NS get secret keycloak-client-secrets -o json |  jq ".data.$TOOLKIT_CLIENT_SECRET_KEY" )
+
+kubectl -n keycloak get secret keycloak-client-secrets -o json | jq ".data[\"$TOOLKIT_CLIENT_SECRET_KEY\"]=$TOOLKIT_CLIENT_SECRET_VALUE" | kubectl apply -f -
+kubectl -n config-server get secret keycloak-client-secrets -o json | jq ".data[\"$TOOLKIT_CLIENT_SECRET_KEY\"]=$TOOLKIT_CLIENT_SECRET_VALUE" | kubectl apply -f -
+
+echo "Check the existence of the toolkit secret & host placeholder & pass the toolkit secret & toolkit host to config-server deployment if the placeholder does not exist."
+TOOLKIT_HOST=$( kubectl -n config-server get deployment -o json | jq -c '.items[].spec.template.spec.containers[].env[]| select(.name == "SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_MOSIP_COMPLIANCE_HOST")|.name' )
+if [[ -z $TOOLKIT_HOST ]]; then
+  kubectl -n config-server set env --keys=mosip-compliance-host --from configmap/global deployment/config-server --prefix=SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_
+  echo "Waiting for config-server to be Up and running"
+  kubectl -n config-server rollout status deploy/config-server
+fi
+TOOLKIT_SECRET=$( kubectl -n config-server get deployment -o json | jq -c '.items[].spec.template.spec.containers[].env[]| select(.name == "SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_MOSIP_TOOLKIT_CLIENT_SECRET")|.name' )
+if [[ -z $TOOLKIT_SECRET ]]; then
+  kubectl -n config-server set env --keys=mosip_toolkit_client_secret --from secret/keycloak-client-secrets deployment/config-server --prefix=SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_
+  echo "Waiting for config-server to be Up and running"
+  kubectl -n config-server rollout status deploy/config-server
+fi
