@@ -6216,7 +6216,7 @@
 			"qualityAssessmentTestCase": true,
 			"ageGroup": "mature(40-50)",
 			"gender": "male",
-			"occupation": "non labourer",
+			"occupation": "non-labourer",
 			"testCaseRepeatCount": "10"
 		}
 	},
@@ -6344,7 +6344,7 @@
 			"qualityAssessmentTestCase": true,
 			"ageGroup": "mature(40-50)",
 			"gender": "female",
-			"occupation": "non labourer",
+			"occupation": "non-labourer",
 			"testCaseRepeatCount": "10"
 		}
 	},
@@ -6472,7 +6472,7 @@
 			"qualityAssessmentTestCase": true,
 			"ageGroup": "senior(60+)",
 			"gender": "male",
-			"occupation": "non labourer",
+			"occupation": "non-labourer",
 			"testCaseRepeatCount": "10"
 		}
 	},
@@ -6600,7 +6600,7 @@
 			"qualityAssessmentTestCase": true,
 			"ageGroup": "senior(60+)",
 			"gender": "female",
-			"occupation": "non labourer",
+			"occupation": "non-labourer",
 			"testCaseRepeatCount": "10"
 		}
 	},
@@ -8494,7 +8494,7 @@
 			"qualityAssessmentTestCase": true,
 			"ageGroup": "adult(12-40)",
 			"gender": "male",
-			"occupation": "non labourer",
+			"occupation": "non-labourer",
 			"testCaseRepeatCount": "10"
 		}
 	},
@@ -8614,7 +8614,7 @@
 			"qualityAssessmentTestCase": true,
 			"ageGroup": "adult(12-40)",
 			"gender": "female",
-			"occupation": "non labourer",
+			"occupation": "non-labourer",
 			"testCaseRepeatCount": "10"
 		}
 	},
@@ -8734,7 +8734,7 @@
 			"qualityAssessmentTestCase": true,
 			"ageGroup": "mature(40-59)",
 			"gender": "male",
-			"occupation": "non labourer",
+			"occupation": "non-labourer",
 			"testCaseRepeatCount": "10"
 		}
 	},
@@ -8854,7 +8854,7 @@
 			"qualityAssessmentTestCase": true,
 			"ageGroup": "mature(40-59)",
 			"gender": "female",
-			"occupation": "non labourer",
+			"occupation": "non-labourer",
 			"testCaseRepeatCount": "10"
 		}
 	},
@@ -8974,7 +8974,7 @@
 			"qualityAssessmentTestCase": true,
 			"ageGroup": "senior(60+)",
 			"gender": "male",
-			"occupation": "non labourer",
+			"occupation": "non-labourer",
 			"testCaseRepeatCount": "10"
 		}
 	},
@@ -9094,7 +9094,7 @@
 			"qualityAssessmentTestCase": true,
 			"ageGroup": "senior(60+)",
 			"gender": "female",
-			"occupation": "non labourer",
+			"occupation": "non-labourer",
 			"testCaseRepeatCount": "10"
 		}
 	},
