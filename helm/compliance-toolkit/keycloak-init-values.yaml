@@ -1,5 +1,5 @@
 keycloak:
-  realms: |-
+  realms:
     mosip: # realm
       roles:
        - CTK_ADMIN
@@ -12,7 +12,6 @@ keycloak:
           web_origins: ["android://mosip-compliance-toolkit-ui","http://localhost"]
           direct_grant_flow_alias: 'direct grant'
           browser_flow_alias: 'browser'
-    
       users:
         - username: mpartner-default-abis
           email: abis@gmail.com
@@ -29,6 +28,60 @@ keycloak:
            }
           realmRoles:
             - ABIS_PARTNER
+      authentication:
+        auth_flows:
+          - alias: "Browser With Recaptcha"
+            builtIn: false
+            description: ""
+            providerId: "basic-flow"
+            topLevel: true
+            authentication_executions:
+              - provider: "auth-cookie"
+                displayName: "Cookie"
+                update_execution:
+                  requirement: "ALTERNATIVE"
+              - provider: "auth-spnego"
+                displayName: "Kerberos"
+                update_execution:
+                  requirement: "DISABLED"
+              - provider: "identity-provider-redirector"
+                displayName: "Identity Provider Redirector"
+                update_execution:
+                  requirement: "ALTERNATIVE"
+            authentication_flows:
+              - alias: "browser with recaptcha forms"
+                description: ""
+                provider: "registration-page-form"
+                type: "basic-flow"
+                displayName: "browser with recaptcha forms"
+                update_flow_requirement:
+                  requirement: "ALTERNATIVE"
+                authentication_executions:
+                  - provider: "recaptcha-u-p-form"
+                    displayName: "Recaptcha Username Password Form"
+                    update_config:
+                      alias: "ctk-captcha"
+                      config:
+                        secret: ""
+                        site.key: ""
+                        useRecaptchaNet: ""
+                authentication_flows:
+                  - alias: "Browser With Recaptcha Browser - Conditional OTP"
+                    description: ""
+                    provider: "registration-page-form"
+                    type: "basic-flow"
+                    displayName: 'Browser With Recaptcha Browser - Conditional OTP'
+                    update_execution:
+                      requirement: "CONDITIONAL"
+                    authentication_executions:
+                      - provider: "conditional-user-configured"
+                        displayName: "Condition - user configured"
+                        update_execution:
+                          requirement: "REQUIRED"
+                      - provider: "auth-otp-form"
+                        displayName: "OTP Form"
+                        update_execution:
+                          requirement: "REQUIRED"
 
 ## These will be passed as environments variables to keycloak-init docker. Note the expected naming convention is
 ## <clientname>_<secret>.  If empty secret is passed, it shall be randomly generated
