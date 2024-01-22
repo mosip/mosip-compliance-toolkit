@@ -344,7 +344,7 @@ public class SignatureValidator extends SBIValidator {
 		X509Certificate reqX509Cert = (X509Certificate) convertToCertificate(certificateData);
 		String certOrgName = getCertificateOrgName(reqX509Cert.getSubjectX500Principal());
 		String orgName = resourceCacheService.getOrgName(getPartnerId());
-		return !orgName.equals(certOrgName);
+		return !orgName.equalsIgnoreCase(certOrgName);
 	}
 
 	public static String getCertificateOrgName(X500Principal x500CertPrincipal) {
