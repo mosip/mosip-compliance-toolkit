@@ -323,7 +323,8 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 		boolean isAuth = "Auth".equalsIgnoreCase(purpose);
 		String bioType = dataNode.get(BIO_TYPE).asText();
 		String bioSubType = dataNode.has(BIO_SUBTYPE) ? dataNode.get(BIO_SUBTYPE).asText() : "";
-		float score = dataNode.get("qualityScore").floatValue();
+		String qualityScore = dataNode.get("qualityScore").asText();
+		float score = Float.parseFloat(qualityScore);
 		int sbiScore = Math.round(score);
 		return new DeviceAttributes(specVersion, isAuth, bioType, bioSubType, sbiScore);
 	}
