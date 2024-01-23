@@ -118,7 +118,9 @@ public enum ToolkitErrorCodes {
 			"Report status cannot be updated to new value since currently it is :"),
 	TOOLKIT_REPORT_STATUS_UPDATE_ERR("TOOLKIT_REPORT_004", "Error while changing report status"),
 	TOOLKIT_REPORT_GET_ERR("TOOLKIT_REPORT_005", "Error while fetching list of reports"),
-	TOOLKIT_INVALID_REPORT_STATUS_ERR("TOOLKIT_REPORT_006", "Error while fetching list of reports. Invalid report status: ");
+	TOOLKIT_INVALID_REPORT_STATUS_ERR("TOOLKIT_REPORT_006", "Error while fetching list of reports. Invalid report status: "),
+	TOOLKIT_CERTIFICATE_PARSING_ERR("TOOLKIT_CERTIFICATE_PARSING_001", "Error while parsing certificate : ");
+
 
 	private final String errorCode;
 	private final String errorMessage;
