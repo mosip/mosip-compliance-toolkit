@@ -6,6 +6,7 @@ import java.io.StringReader;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Collection;
 import java.util.Objects;
 
 import io.mosip.compliance.toolkit.constants.*;
@@ -22,6 +23,7 @@ import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
 import java.security.cert.CertificateFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -44,6 +46,8 @@ public class SignatureValidator extends SBIValidator {
 
 	protected static final String CERTIFICATION = "certification";
 
+	protected static final String DEVICE_PROVIDER = "ROLE_DEVICE_PROVIDER";
+
 	private Logger log = LoggerConfiguration.logConfig(SignatureValidator.class);
 
 	@Autowired
@@ -59,6 +63,15 @@ public class SignatureValidator extends SBIValidator {
 	private String getPartnerId() {
 		String partnerId = authUserDetails().getUsername();
 		return partnerId;
+	}
+
+	public boolean isDeviceProvider() {
+		AuthUserDetails authUserDetails = authUserDetails();
+		Collection<? extends GrantedAuthority> authorities = authUserDetails.getAuthorities();
+
+		// Check if the user has the "DEVICE_PROVIDER" partnerType
+		return authorities.stream()
+				.anyMatch(authority -> authority.getAuthority().equals(DEVICE_PROVIDER));
 	}
 
 	@Override
@@ -209,6 +222,10 @@ public class SignatureValidator extends SBIValidator {
 			if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
 				validationResultDto = trustRootValidation(getCertificate(deviceInfo), PartnerTypes.DEVICE.toString(),
 						TRUST_FOR_DEVICE_INFO);
+				// validate orgName if trust root validation is successful
+				if (validationResultDto.getStatus().equals(AppConstants.SUCCESS) && isDeviceProvider()) {
+					validationResultDto = validateOrgNameInCertificate(getCertificate(deviceInfo), PartnerTypes.DEVICE.toString(), TRUST_FOR_DEVICE_INFO);
+				}
 				if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
 					ObjectNode deviceInfoDecoded = objectMapperConfig.objectMapper().readValue(getPayload(deviceInfo),
 							ObjectNode.class);
@@ -247,7 +264,10 @@ public class SignatureValidator extends SBIValidator {
 					if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
 						validationResultDto = trustRootValidation(getCertificate(dataInfo),
 								PartnerTypes.DEVICE.toString(), TRUST_FOR_BIOMETRIC_INFO);
-
+						// validate orgName after trust root validation is successful
+						if (validationResultDto.getStatus().equals(AppConstants.SUCCESS) && isDeviceProvider()) {
+							validationResultDto = validateOrgNameInCertificate(getCertificate(dataInfo), PartnerTypes.DEVICE.toString(), TRUST_FOR_BIOMETRIC_INFO);
+						}
 						if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
 							String biometricData = getPayload(dataInfo);
 							ObjectNode biometricDataNode = (ObjectNode) objectMapperConfig.objectMapper()
@@ -317,11 +337,8 @@ public class SignatureValidator extends SBIValidator {
 			DeviceValidatorResponseDto deviceValidatorResponseDto = keyManagerHelper
 					.trustValidationResponse(deviceValidatorDto);
 
-			boolean shouldValidateOrgName = !partnerType.equals(PartnerTypes.FTM.toString());
-
 			if ((deviceValidatorResponseDto.getErrors() != null && deviceValidatorResponseDto.getErrors().size() > 0)
-					|| (deviceValidatorResponseDto.getResponse().getStatus().equals("false"))
-					|| (shouldValidateOrgName && validateOrgNameInCertificate(getCertificateData(certificateData)))) {
+					|| (deviceValidatorResponseDto.getResponse().getStatus().equals("false"))) {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("Trust Validation Failed for [" + trustFor + "] >> PartnerType["
 						+ partnerType + "] and CertificateData[" + certificateData + "]");
@@ -342,11 +359,31 @@ public class SignatureValidator extends SBIValidator {
 		return validationResultDto;
 	}
 
-	private boolean validateOrgNameInCertificate(String certificateData) {
-		X509Certificate reqX509Cert = (X509Certificate) convertToCertificate(certificateData);
-		String certOrgName = getCertificateOrgName(reqX509Cert.getSubjectX500Principal());
-		String orgName = resourceCacheService.getOrgName(getPartnerId());
-		return !orgName.equalsIgnoreCase(certOrgName);
+	private ValidationResultDto validateOrgNameInCertificate(String certificateData, String partnerType, String trustFor) {
+		ValidationResultDto validationResultDto = new ValidationResultDto();
+		try {
+			X509Certificate reqX509Cert = (X509Certificate) convertToCertificate(getCertificateData(certificateData));
+			String certOrgName = getCertificateOrgName(reqX509Cert.getSubjectX500Principal());
+			String orgName = resourceCacheService.getOrgName(getPartnerId());
+			if (orgName.equalsIgnoreCase(certOrgName)) {
+				validationResultDto.setStatus(AppConstants.SUCCESS);
+				validationResultDto.setDescription("Trust Root Validation is Successful");
+				validationResultDto.setDescriptionKey("SIGNATURE_VALIDATOR_009");
+			} else {
+				validationResultDto.setStatus(AppConstants.FAILURE);
+				validationResultDto.setDescription("Trust Validation Failed - Organization Name is not matching with the Certificate for [" + trustFor + "] >> PartnerType["
+						+ partnerType + "] and CertificateData[" + certificateData + "]");
+				validationResultDto.setDescriptionKey("SIGNATURE_VALIDATOR_008" + AppConstants.ARGUMENTS_DELIMITER + trustFor + AppConstants.ARGUMENTS_SEPARATOR + partnerType +
+						AppConstants.ARGUMENTS_SEPARATOR + certificateData);
+			}
+		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
+			validationResultDto.setStatus(AppConstants.FAILURE);
+			validationResultDto.setDescription(
+					"Exception in Organization Name validation - " + "with Message - " + e.getLocalizedMessage());
+		}
+		return validationResultDto;
 	}
 
 	public static String getCertificateOrgName(X500Principal x500CertPrincipal) {
