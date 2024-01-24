@@ -69,6 +69,8 @@ public enum ToolkitErrorCodes {
 	ENCRYPTION_KEY_ERROR("TOOLKIT_REQ_ERR_039",
 			"Unable to get the encryption certificate from KeyManager for the appId"),
 
+	INVALID_USER_DETAILS("TOOLKIT_REQ_ERR_040", "Authorities of Logged in user is null"),
+
 	PROJECT_NAME_EXISTS("TOOLKIT_DB_ERR_001", "You have previously created a project with name: "),
 	BIO_TEST_DATA_FILE_EXISTS("TOOLKIT_DB_ERR_002", "You have previously added biometric test data with name: "),
 	COLLECTION_NAME_EXISTS("TOOLKIT_DB_ERR_003", "You have previously created a collection with name: "),

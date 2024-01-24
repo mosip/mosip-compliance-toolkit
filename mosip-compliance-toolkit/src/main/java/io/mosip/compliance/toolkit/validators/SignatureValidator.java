@@ -69,7 +69,7 @@ public class SignatureValidator extends SBIValidator {
 		AuthUserDetails authUserDetails = authUserDetails();
 		Collection<? extends GrantedAuthority> authorities = authUserDetails.getAuthorities();
 		if (authorities == null) {
-			return false;
+			throw new ToolkitException(ToolkitErrorCodes.INVALID_USER_DETAILS.getErrorCode(), ToolkitErrorCodes.INVALID_USER_DETAILS.getErrorMessage());
 		}
 		// Check if the user has the "DEVICE_PROVIDER" partnerType
 		return authorities.stream()
