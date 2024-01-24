@@ -46,7 +46,7 @@ public class SignatureValidator extends SBIValidator {
 
 	protected static final String CERTIFICATION = "certification";
 
-	protected static final String DEVICE_PROVIDER = "ROLE_DEVICE_PROVIDER";
+	protected static final String DEVICE_PROVIDER = "DEVICE_PROVIDER";
 
 	private Logger log = LoggerConfiguration.logConfig(SignatureValidator.class);
 
@@ -71,7 +71,7 @@ public class SignatureValidator extends SBIValidator {
 
 		// Check if the user has the "DEVICE_PROVIDER" partnerType
 		return authorities.stream()
-				.anyMatch(authority -> authority.getAuthority().equals(DEVICE_PROVIDER));
+				.anyMatch(authority -> authority.getAuthority().replaceFirst("^ROLE_", "").equals(DEVICE_PROVIDER));
 	}
 
 	@Override
