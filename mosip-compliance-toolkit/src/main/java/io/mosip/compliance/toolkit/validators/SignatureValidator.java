@@ -68,7 +68,9 @@ public class SignatureValidator extends SBIValidator {
 	public boolean isDeviceProvider() {
 		AuthUserDetails authUserDetails = authUserDetails();
 		Collection<? extends GrantedAuthority> authorities = authUserDetails.getAuthorities();
-
+		if (authorities == null) {
+			return false;
+		}
 		// Check if the user has the "DEVICE_PROVIDER" partnerType
 		return authorities.stream()
 				.anyMatch(authority -> authority.getAuthority().replaceFirst("^ROLE_", "").equals(DEVICE_PROVIDER));
