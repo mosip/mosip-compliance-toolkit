@@ -6215,7 +6215,7 @@
 			"bioCount": "4",
 			"deviceSubId": "1",
 			"qualityAssessmentTestCase": true,
-			"ageGroup": "mature(40-50)",
+			"ageGroup": "mature(40-59)",
 			"gender": "male",
 			"occupation": "non-labourer",
 			"testCaseRepeatCount": "10"
@@ -6343,7 +6343,7 @@
 			"bioCount": "4",
 			"deviceSubId": "1",
 			"qualityAssessmentTestCase": true,
-			"ageGroup": "mature(40-50)",
+			"ageGroup": "mature(40-59)",
 			"gender": "female",
 			"occupation": "non-labourer",
 			"testCaseRepeatCount": "10"
