@@ -73,6 +73,13 @@ public class ReportController {
 		validateRequestForPartner(value, errors);
 		return service.generateDraftReport(value.getRequest(), origin);
 	}
+	
+	@PostMapping(value = "/generateDraftQAReport")
+	public ResponseEntity<?> generateDraftQAReport(@RequestBody @Valid RequestWrapper<ReportRequestDto> value,
+			@RequestHeader String origin, Errors errors) throws Exception {
+		validateRequestForPartner(value, errors);
+		return service.generateDraftQAReport(value.getRequest(), origin);
+	}
 
 	@PostMapping(value = "/submitReportForReview")
 	public ResponseWrapper<ComplianceTestRunSummaryDto> submitReportForReview(

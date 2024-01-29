@@ -89,5 +89,9 @@ public class AppConstants {
 	public static final String REPORT_STATUS_APPROVED = "approved";
 	
 	public static final String REPORT_STATUS_REJECTED = "rejected";
-	
+
+	public static final String BIOMETRIC_SCORES_FINGER = "Finger";
+	public static final String BIOMETRIC_SCORES_FACE = "Face";
+	public static final String BIOMETRIC_SCORES_IRIS = "Iris";
+
 }
