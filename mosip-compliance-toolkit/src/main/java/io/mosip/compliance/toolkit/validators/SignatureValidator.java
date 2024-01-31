@@ -1,9 +1,30 @@
 package io.mosip.compliance.toolkit.validators;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StringReader;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.Collection;
 import java.util.Objects;
 
+import io.mosip.compliance.toolkit.constants.*;
+import io.mosip.compliance.toolkit.service.ResourceCacheService;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.kernel.keymanagerservice.exception.KeymanagerServiceException;
+import io.mosip.kernel.partnercertservice.constant.PartnerCertManagerConstants;
+import io.mosip.kernel.partnercertservice.util.PartnerCertificateManagerUtil;
+import org.bouncycastle.asn1.x500.RDN;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.asn1.x500.style.IETFUtils;
+import org.bouncycastle.util.io.pem.PemObject;
+import org.bouncycastle.util.io.pem.PemReader;
+import java.security.cert.CertificateFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,11 +32,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
-import io.mosip.compliance.toolkit.constants.AppConstants;
-import io.mosip.compliance.toolkit.constants.CertificationTypes;
-import io.mosip.compliance.toolkit.constants.DeviceStatus;
-import io.mosip.compliance.toolkit.constants.MethodName;
-import io.mosip.compliance.toolkit.constants.PartnerTypes;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
 import io.mosip.compliance.toolkit.dto.testcases.ValidationResultDto;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
@@ -23,15 +39,42 @@ import io.mosip.compliance.toolkit.util.KeyManagerHelper;
 import io.mosip.compliance.toolkit.util.StringUtil;
 import io.mosip.kernel.core.logger.spi.Logger;
 
+import javax.security.auth.x500.X500Principal;
+
 @Component
 public class SignatureValidator extends SBIValidator {
 
 	protected static final String CERTIFICATION = "certification";
 
+	protected static final String DEVICE_PROVIDER = "DEVICE_PROVIDER";
+
 	private Logger log = LoggerConfiguration.logConfig(SignatureValidator.class);
 
 	@Autowired
 	private KeyManagerHelper keyManagerHelper;
+
+	@Autowired
+	private ResourceCacheService resourceCacheService;
+
+	private AuthUserDetails authUserDetails() {
+		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
+
+	private String getPartnerId() {
+		String partnerId = authUserDetails().getUsername();
+		return partnerId;
+	}
+
+	public boolean isDeviceProvider() {
+		AuthUserDetails authUserDetails = authUserDetails();
+		Collection<? extends GrantedAuthority> authorities = authUserDetails.getAuthorities();
+		if (authorities == null) {
+			throw new ToolkitException(ToolkitErrorCodes.INVALID_USER_DETAILS.getErrorCode(), ToolkitErrorCodes.INVALID_USER_DETAILS.getErrorMessage());
+		}
+		// Check if the user has the "DEVICE_PROVIDER" partnerType
+		return authorities.stream()
+				.anyMatch(authority -> authority.getAuthority().replaceFirst("^ROLE_", "").equals(DEVICE_PROVIDER));
+	}
 
 	@Override
 	public ValidationResultDto validateResponse(ValidationInputDto inputDto) {
@@ -181,6 +224,10 @@ public class SignatureValidator extends SBIValidator {
 			if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
 				validationResultDto = trustRootValidation(getCertificate(deviceInfo), PartnerTypes.DEVICE.toString(),
 						TRUST_FOR_DEVICE_INFO);
+				// validate orgName if trust root validation is successful
+				if (validationResultDto.getStatus().equals(AppConstants.SUCCESS) && isDeviceProvider()) {
+					validationResultDto = validateOrgNameInCertificate(getCertificate(deviceInfo), PartnerTypes.DEVICE.toString(), TRUST_FOR_DEVICE_INFO);
+				}
 				if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
 					ObjectNode deviceInfoDecoded = objectMapperConfig.objectMapper().readValue(getPayload(deviceInfo),
 							ObjectNode.class);
@@ -219,7 +266,10 @@ public class SignatureValidator extends SBIValidator {
 					if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
 						validationResultDto = trustRootValidation(getCertificate(dataInfo),
 								PartnerTypes.DEVICE.toString(), TRUST_FOR_BIOMETRIC_INFO);
-
+						// validate orgName after trust root validation is successful
+						if (validationResultDto.getStatus().equals(AppConstants.SUCCESS) && isDeviceProvider()) {
+							validationResultDto = validateOrgNameInCertificate(getCertificate(dataInfo), PartnerTypes.DEVICE.toString(), TRUST_FOR_BIOMETRIC_INFO);
+						}
 						if (validationResultDto.getStatus().equals(AppConstants.SUCCESS)) {
 							String biometricData = getPayload(dataInfo);
 							ObjectNode biometricDataNode = (ObjectNode) objectMapperConfig.objectMapper()
@@ -309,5 +359,63 @@ public class SignatureValidator extends SBIValidator {
 					"Exception in Trust root Validation - " + "with Message - " + e.getLocalizedMessage());
 		}
 		return validationResultDto;
+	}
+
+	private ValidationResultDto validateOrgNameInCertificate(String certificateData, String partnerType, String trustFor) {
+		ValidationResultDto validationResultDto = new ValidationResultDto();
+		try {
+			X509Certificate reqX509Cert = (X509Certificate) convertToCertificate(getCertificateData(certificateData));
+			String certOrgName = getCertificateOrgName(reqX509Cert.getSubjectX500Principal());
+			String orgName = resourceCacheService.getOrgName(getPartnerId());
+			if (orgName.equalsIgnoreCase(certOrgName)) {
+				validationResultDto.setStatus(AppConstants.SUCCESS);
+				validationResultDto.setDescription("Trust Root Validation is Successful");
+				validationResultDto.setDescriptionKey("SIGNATURE_VALIDATOR_009");
+			} else {
+				validationResultDto.setStatus(AppConstants.FAILURE);
+				validationResultDto.setDescription("Trust Validation Failed - Organization Name is not matching with the Certificate for [" + trustFor + "] >> PartnerType["
+						+ partnerType + "] and CertificateData[" + certificateData + "]");
+				validationResultDto.setDescriptionKey("SIGNATURE_VALIDATOR_008" + AppConstants.ARGUMENTS_DELIMITER + trustFor + AppConstants.ARGUMENTS_SEPARATOR + partnerType +
+						AppConstants.ARGUMENTS_SEPARATOR + certificateData);
+			}
+		} catch (Exception e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In SignatureValidator - " + e.getMessage());
+			validationResultDto.setStatus(AppConstants.FAILURE);
+			validationResultDto.setDescription(
+					"Exception in Organization Name validation - " + "with Message - " + e.getLocalizedMessage());
+		}
+		return validationResultDto;
+	}
+
+	public static String getCertificateOrgName(X500Principal x500CertPrincipal) {
+		X500Name x500Name = new X500Name(x500CertPrincipal.getName());
+		RDN[] rdns = x500Name.getRDNs(BCStyle.O);
+		if (rdns.length == 0) {
+			return PartnerCertManagerConstants.EMPTY;
+		}
+		return IETFUtils.valueToString((rdns[0]).getFirst().getValue());
+	}
+
+	public Certificate convertToCertificate(String certData) {
+		try {
+			StringReader strReader = new StringReader(certData);
+			PemReader pemReader = new PemReader(strReader);
+			PemObject pemObject = pemReader.readPemObject();
+			if (Objects.isNull(pemObject)) {
+				log.debug("sessionId", "idType", "id", "Error while parsing certificate ");
+				log.error("sessionId", "idType", "id", "In convertToCertificate method of SignatureValidator ");
+				throw new KeymanagerServiceException(ToolkitErrorCodes.TOOLKIT_CERTIFICATE_PARSING_ERR.getErrorCode(),
+						ToolkitErrorCodes.TOOLKIT_CERTIFICATE_PARSING_ERR.getErrorMessage());
+			}
+			byte[] certBytes = pemObject.getContent();
+			CertificateFactory certFactory = CertificateFactory.getInstance(AppConstants.CERTIFICATE_TYPE);
+			return certFactory.generateCertificate(new ByteArrayInputStream(certBytes));
+		} catch (IOException | CertificateException e) {
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "Error while parsing certificate in convertToCertificate method of SignatureValidator: " + e.getMessage());
+			throw new KeymanagerServiceException(ToolkitErrorCodes.TOOLKIT_CERTIFICATE_PARSING_ERR.getErrorCode(),
+					ToolkitErrorCodes.TOOLKIT_CERTIFICATE_PARSING_ERR.getErrorMessage());
+		}
 	}
 }

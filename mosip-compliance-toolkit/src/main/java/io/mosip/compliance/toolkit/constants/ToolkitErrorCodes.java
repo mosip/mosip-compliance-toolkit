@@ -70,6 +70,8 @@ public enum ToolkitErrorCodes {
 	ENCRYPTION_KEY_ERROR("TOOLKIT_REQ_ERR_039",
 			"Unable to get the encryption certificate from KeyManager for the appId"),
 
+	INVALID_USER_DETAILS("TOOLKIT_REQ_ERR_040", "Authorities of Logged in user is null"),
+
 	PROJECT_NAME_EXISTS("TOOLKIT_DB_ERR_001", "You have previously created a project with name: "),
 	BIO_TEST_DATA_FILE_EXISTS("TOOLKIT_DB_ERR_002", "You have previously added biometric test data with name: "),
 	COLLECTION_NAME_EXISTS("TOOLKIT_DB_ERR_003", "You have previously created a collection with name: "),
@@ -119,7 +121,9 @@ public enum ToolkitErrorCodes {
 			"Report status cannot be updated to new value since currently it is :"),
 	TOOLKIT_REPORT_STATUS_UPDATE_ERR("TOOLKIT_REPORT_004", "Error while changing report status"),
 	TOOLKIT_REPORT_GET_ERR("TOOLKIT_REPORT_005", "Error while fetching list of reports"),
-	TOOLKIT_INVALID_REPORT_STATUS_ERR("TOOLKIT_REPORT_006", "Error while fetching list of reports. Invalid report status: ");
+	TOOLKIT_INVALID_REPORT_STATUS_ERR("TOOLKIT_REPORT_006", "Error while fetching list of reports. Invalid report status: "),
+	TOOLKIT_CERTIFICATE_PARSING_ERR("TOOLKIT_CERTIFICATE_PARSING_001", "Error while parsing certificate : ");
+
 
 	private final String errorCode;
 	private final String errorMessage;
