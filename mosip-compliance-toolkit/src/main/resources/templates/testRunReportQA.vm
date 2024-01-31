@@ -324,7 +324,46 @@
 						</div>
 						#end
 					#end
-				#end
+					#if($biometricType == 'Face')
+                        #foreach ($faceTable in $biometricScoresItem.faceTables)
+                            <div class="page-break-after">
+                                <h3>${biometricScoresItem.sdkName}: Face - ${faceTable.ageGroup}</h3>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Score Range</th>
+                                            <th colspan="2">Asian</th>
+                                            <th colspan="2">African</th>
+                                            <th colspan="2">European</th>
+                                        </tr>
+                                        <tr>
+                                            <th></th>
+                                            <th>Male</th>
+                                            <th>Female</th>
+                                            <th>Male</th>
+                                            <th>Female</th>
+                                            <th>Male</th>
+                                            <th>Female</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        #foreach ($row in $faceTable.rows)
+                                            <tr>
+                                                <td>$row.bioScoreRange</td>
+                                                <td>$row.maleAsianScore</td>
+                                                <td>$row.femaleAsianScore</td>
+                                                <td>$row.maleAfricanScore</td>
+                                                <td>$row.femaleAfricanScore</td>
+                                                <td>$row.maleEuropeanScore</td>
+                                                <td>$row.femaleEuropeanScore</td>
+                                            </tr>
+                                        #end
+                                    </tbody>
+                                </table>
+                            </div>
+                        #end
+                    #end
+                #end
             </div>
             <!-- <div> <h2>QR Code</h2> <img src="" alt="QR Code" style="display: block;width: 400px; height:
             400px;"/> </div> -->

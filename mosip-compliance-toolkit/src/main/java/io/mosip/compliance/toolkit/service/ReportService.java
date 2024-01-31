@@ -350,6 +350,10 @@ public class ReportService {
 						requestDto.getTestRunId());
 			}
 			//TODO: handle for Face
+			if (AppConstants.BIOMETRIC_SCORES_FACE.equals(biometricType)) {
+				biometricScoresList = biometricScoresService.getFaceBiometricScoresList(getPartnerId(), projectId,
+						requestDto.getTestRunId());
+			}
 			//TODO: handle for Iris
 			
 			// 6. Populate all attributes in velocity template

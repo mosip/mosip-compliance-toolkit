@@ -4,15 +4,29 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.mosip.compliance.toolkit.constants.Modalities;
+import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
+import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
+import io.mosip.compliance.toolkit.dto.testcases.ValidationInputDto;
+import io.mosip.compliance.toolkit.exceptions.ToolkitException;
+import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.dto.report.BiometricScores;
-import io.mosip.compliance.toolkit.dto.report.BiometricScores.FingerBioScoresTable;
+import io.mosip.compliance.toolkit.dto.report.BiometricScores.*;
 import io.mosip.compliance.toolkit.dto.report.BiometricScores.FingerBioScoresTable.FingerBioScoresRow;
+import io.mosip.compliance.toolkit.dto.report.BiometricScores.FaceBioScoresTable.FaceBioScoresRow;
 import io.mosip.compliance.toolkit.entity.BiometricScoresEntity;
 import io.mosip.compliance.toolkit.entity.BiometricScoresSummaryEntity;
 import io.mosip.compliance.toolkit.repository.BiometricScoresRepository;
@@ -32,6 +46,18 @@ public class BiometricScoresService {
 
 	@Autowired
 	ResourceCacheService resourceCacheService;
+
+	@Value("${mosip.toolkit.sbi.qualitycheck.finger.sdk.urls}")
+	private String fingerSdkUrlsJsonStr;
+
+	@Value("${mosip.toolkit.sbi.qualitycheck.face.sdk.urls}")
+	private String faceSdkUrlsJsonStr;
+
+	@Value("${mosip.toolkit.sbi.qualitycheck.iris.sdk.urls}")
+	private String irisSdkUrlsJsonStr;
+
+	@Autowired
+	ObjectMapperConfig objectMapperConfig;
 
 	private Logger log = LoggerConfiguration.logConfig(SbiProjectService.class);
 
@@ -82,7 +108,7 @@ public class BiometricScoresService {
 		List<BiometricScores> biometricScoresList = new ArrayList<BiometricScores>();
 		try {
 			String biometricType = AppConstants.BIOMETRIC_SCORES_FINGER;
-			String[] sdkNames = new String[] { "BQAT SDK", "SBI" };
+			List<String> sdkNames = getSdkNames(AppConstants.BIOMETRIC_SCORES_FINGER);
 			String[] ageGroups = new String[] { "child(5-12)", "adult(12-40)", "mature(40-59)", "senior(60+)" };
 			String[] occupations = new String[] { "labourer", "non-labourer" };
 			String[] scoreRanges = new String[] { "0-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80",
@@ -97,18 +123,18 @@ public class BiometricScoresService {
 					table.setAgeGroup(ageGroup);
 					List<FingerBioScoresRow> rows = new ArrayList<FingerBioScoresRow>();
 					if (childAgeGroupIndex == 0) { // child age group
-						logQuery(name, ageGroup, null);
+						logFingerQuery(name, ageGroup, null);
 						List<BiometricScoresSummaryEntity> childScores = biometricScoresSummaryRepository
 								.getBiometricScoresForChildFinger(partnerId, projectId, testRunId, name, biometricType,
 										ageGroup);
 						rows = populateFingerBioScoresRows(scoreRanges, childScores, null, null);
 						table.setChildAgeGroup(true);
 					} else { // other non child age groups
-						logQuery(name, ageGroup, occupations[0]);
+						logFingerQuery(name, ageGroup, occupations[0]);
 						List<BiometricScoresSummaryEntity> labourerScores = biometricScoresSummaryRepository
 								.getBiometricScoresForFinger(partnerId, projectId, testRunId, name, biometricType,
 										ageGroup, occupations[0]);
-						logQuery(name, ageGroup, occupations[1]);
+						logFingerQuery(name, ageGroup, occupations[1]);
 						List<BiometricScoresSummaryEntity> nonLabourerScores = biometricScoresSummaryRepository
 								.getBiometricScoresForFinger(partnerId, projectId, testRunId, name, biometricType,
 										ageGroup, occupations[1]);
@@ -125,13 +151,89 @@ public class BiometricScoresService {
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
 			log.error("sessionId", "idType", "id",
-					"In addBiometricScores method of BiometricScoresService Service - " + ex.getMessage());
+					"In getFingerBiometricScoresList method of BiometricScoresService Service - " + ex.getMessage());
 			throw ex;
 		}
 		return biometricScoresList;
 	}
 
-	private void logQuery(String name, String ageGroup, String occupation) {
+	public List<BiometricScores> getFaceBiometricScoresList(String partnerId, String projectId, String testRunId)
+			throws Exception {
+		List<BiometricScores> biometricScoresList = new ArrayList<BiometricScores>();
+		try {
+			String biometricType = AppConstants.BIOMETRIC_SCORES_FACE;
+			List<String> sdkNames = getSdkNames(AppConstants.BIOMETRIC_SCORES_FACE);
+			String[] ageGroups = new String[]{"child(5-12)", "adult(12-40)", "mature(40-59)", "senior(60+)"};
+			String[] race = new String[]{"asian", "african", "european"};
+			String[] scoreRanges = new String[]{"0-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80",
+					"81-90", "91-100"};
+			for (String name : sdkNames) {
+				BiometricScores faceBiometricScores = new BiometricScores();
+				faceBiometricScores.setSdkName(name);
+				List<FaceBioScoresTable> faceBioScoresTables = new ArrayList<FaceBioScoresTable>();
+				for (String ageGroup : ageGroups) {
+					FaceBioScoresTable table = new FaceBioScoresTable();
+					table.setAgeGroup(ageGroup);
+					List<FaceBioScoresRow> rows = new ArrayList<FaceBioScoresRow>();
+					logFaceQuery(name, ageGroup, race[0]);
+					List<BiometricScoresSummaryEntity> asianScores = biometricScoresSummaryRepository
+							.getBiometricScoresForFace(partnerId, projectId, testRunId, name, biometricType,
+									ageGroup, race[0]);
+					logFaceQuery(name, ageGroup, race[1]);
+					List<BiometricScoresSummaryEntity> africanScores = biometricScoresSummaryRepository
+							.getBiometricScoresForFace(partnerId, projectId, testRunId, name, biometricType,
+									ageGroup, race[1]);
+					logFaceQuery(name, ageGroup, race[2]);
+					List<BiometricScoresSummaryEntity> europeanScores = biometricScoresSummaryRepository
+							.getBiometricScoresForFace(partnerId, projectId, testRunId, name, biometricType,
+									ageGroup, race[2]);
+					rows = populateFaceBioScoresRows(scoreRanges, asianScores, africanScores, europeanScores);
+
+					table.setRows(rows);
+					faceBioScoresTables.add(table);
+				}
+				faceBiometricScores.setFaceTables(faceBioScoresTables);
+				biometricScoresList.add(faceBiometricScores);
+			}
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In getFaceBiometricScoresList method of BiometricScoresService Service - " + ex.getMessage());
+			throw ex;
+		}
+		return biometricScoresList;
+	}
+
+	private List<String> getSdkNames(String modality) throws JsonProcessingException {
+		List<String> sdkNames = new ArrayList<>();
+		sdkNames.add(AppConstants.SBI);
+		String sdkUrls = getSdkUrlsJsonString(modality);
+		ArrayNode sdkUrlsArr = (ArrayNode) objectMapperConfig.objectMapper().readValue(sdkUrls, ArrayNode.class);
+		for (JsonNode item : sdkUrlsArr) {
+			String sdkName = item.get("name").asText();
+			sdkNames.add(sdkName);
+		}
+		return sdkNames;
+	}
+
+	private String getSdkUrlsJsonString(String modality)
+			throws JsonProcessingException, JsonMappingException {
+		String sdkUrlsJsonStr = "";
+		if (AppConstants.BIOMETRIC_SCORES_FACE.equalsIgnoreCase(modality)) {
+			sdkUrlsJsonStr = faceSdkUrlsJsonStr;
+		} else if (AppConstants.BIOMETRIC_SCORES_FINGER.equalsIgnoreCase(modality)) {
+			sdkUrlsJsonStr = fingerSdkUrlsJsonStr;
+		} else if (AppConstants.BIOMETRIC_SCORES_IRIS.equalsIgnoreCase(modality)) {
+			sdkUrlsJsonStr = irisSdkUrlsJsonStr;
+		} else {
+			throw new ToolkitException(ToolkitErrorCodes.INVALID_MODALITY.getErrorCode(),
+					ToolkitErrorCodes.INVALID_MODALITY.getErrorMessage());
+		}
+		return sdkUrlsJsonStr;
+	}
+
+
+	private void logFingerQuery(String name, String ageGroup, String occupation) {
 		log.info("fetching bio scores for sdk: " + name);
 		log.info("fetching bio scores for ageGroup: " + ageGroup);
 		if (occupation == null) {
@@ -139,6 +241,12 @@ public class BiometricScoresService {
 		} else {
 			log.info("fetching bio scores for occupation: " + occupation);
 		}
+	}
+
+	private void logFaceQuery(String name, String ageGroup, String race) {
+		log.info("fetching bio scores for sdk: " + name);
+		log.info("fetching bio scores for ageGroup: " + ageGroup);
+		log.info("fetching bio scores for race: " + race);
 	}
 
 	private List<FingerBioScoresRow> populateFingerBioScoresRows(String[] scoreRanges,
@@ -159,6 +267,30 @@ public class BiometricScoresService {
 			if (nonLabourerScores != null && nonLabourerScores.size() > 0) {
 				row.setMaleNonLabourerScore(getTotalScore(scoreRange, nonLabourerScores, true));
 				row.setFemaleNonLabourerScore(getTotalScore(scoreRange, nonLabourerScores, false));
+			}
+			scoresList.add(row);
+		}
+		return scoresList;
+	}
+
+	private List<FaceBioScoresRow> populateFaceBioScoresRows(String[] scoreRanges,
+			List<BiometricScoresSummaryEntity> asianScores, List<BiometricScoresSummaryEntity> africanScores,
+			List<BiometricScoresSummaryEntity> europeanScores) {
+		List<FaceBioScoresRow> scoresList = new ArrayList<FaceBioScoresRow>();
+		for (String scoreRange : scoreRanges) {
+			FaceBioScoresRow row = new FaceBioScoresRow();
+			row.setBioScoreRange(scoreRange);
+			if (asianScores != null && asianScores.size() > 0) {
+				row.setMaleAsianScore(getTotalScore(scoreRange, asianScores, true));
+				row.setFemaleAsianScore(getTotalScore(scoreRange, asianScores, false));
+			}
+			if (africanScores != null && africanScores.size() > 0) {
+				row.setMaleAfricanScore(getTotalScore(scoreRange, africanScores, true));
+				row.setFemaleAfricanScore(getTotalScore(scoreRange, africanScores, false));
+			}
+			if (europeanScores != null && europeanScores.size() > 0) {
+				row.setMaleEuropeanScore(getTotalScore(scoreRange, europeanScores, true));
+				row.setFemaleEuropeanScore(getTotalScore(scoreRange, europeanScores, false));
 			}
 			scoresList.add(row);
 		}
