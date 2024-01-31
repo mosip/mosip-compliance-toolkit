@@ -375,7 +375,7 @@ public class SignatureValidator extends SBIValidator {
 				validationResultDto.setStatus(AppConstants.FAILURE);
 				validationResultDto.setDescription("Trust Validation Failed - Organization Name is not matching with the Certificate for [" + trustFor + "] >> PartnerType["
 						+ partnerType + "] and CertificateData[" + certificateData + "]");
-				validationResultDto.setDescriptionKey("SIGNATURE_VALIDATOR_008" + AppConstants.ARGUMENTS_DELIMITER + trustFor + AppConstants.ARGUMENTS_SEPARATOR + partnerType +
+				validationResultDto.setDescriptionKey("SIGNATURE_VALIDATOR_010" + AppConstants.ARGUMENTS_DELIMITER + trustFor + AppConstants.ARGUMENTS_SEPARATOR + partnerType +
 						AppConstants.ARGUMENTS_SEPARATOR + certificateData);
 			}
 		} catch (Exception e) {
