@@ -21,6 +21,7 @@ public enum ToolkitErrorCodes {
 	TESTRUN_DELETE_ERROR("TOOLKIT_TESTRUN_007", "TestRun delete error"),
 	TESTCASE_NOT_AVAILABLE("TOOLKIT_TESTCASE_001", "No matching Testcase available for the given id"),
 	BIOMETRIC_TESTDATA_NOT_AVAILABLE("TOOLKIT_BIOMETRIC_TESTDATA_001", "No matching biometric testdata available"),
+	BIOMETRIC_SCORES_DATA_NOT_AVAILABLE("TOOLKIT_BIOMETRIC_SCORESDATA_001", "No matching biometric scores data available"),
 	PAGE_NOT_FOUND("TOOLKIT_PAGE_ERR_001", "Page content not available"),
 	INVALID_REQUEST_ID("TOOLKIT_REQ_ERR_001", "Request id is invalid"),
 	INVALID_REQUEST_VERSION("TOOLKIT_REQ_ERR_002", "Request version is invalid"),
