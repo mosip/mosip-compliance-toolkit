@@ -364,34 +364,31 @@
                         #end
                     #end
                     #if($biometricType == 'Iris')
-                        #foreach ($irisTable in $biometricScoresItem.irisTables)
-                            <div class="page-break-after">
-                                <h3>${biometricScoresItem.sdkName}: Iris
-                                </h3>
-                                <table>
-                                    <thead>
+                        <div class="page-break-after">
+                            <h3>${biometricScoresItem.sdkName}: Iris</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Score Range</th>
+                                        <th>child(5-12)</th>
+                                        <th>adult(12-40)</th>
+                                        <th>mature(40-59)</th>
+                                        <th>senior(60+)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    #foreach ($row in $biometricScoresItem.irisTable.rows)
                                         <tr>
-                                            <th>Score Range</th>
-                                            <th>child(5-12)</th>
-                                            <th>adult(12-40)</th>
-                                            <th>mature(40-59)</th>
-                                            <th>senior(60+)</th>
+                                            <td>$row.bioScoreRange</td>
+                                            <td>$row.childScore</td>
+                                            <td>$row.adultScore</td>
+                                            <td>$row.matureScore</td>
+                                            <td>$row.seniorScore</td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        #foreach ($row in $irisTable.rows)
-                                            <tr>
-                                                <td>$row.bioScoreRange</td>
-                                                <td>$row.childScore</td>
-                                                <td>$row.adultScore</td>
-                                                <td>$row.matureScore</td>
-                                                <td>$row.seniorScore</td>
-                                            </tr>
-                                        #end
-                                    </tbody>
-                                </table>
-                            </div>
-                        #end
+                                    #end
+                                </tbody>
+                            </table>
+                        </div>
                     #end
                 #end
             </div>

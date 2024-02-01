@@ -14,7 +14,7 @@ public class BiometricScores {
 	private String sdkName;
 	private List<FingerBioScoresTable> fingerTables;
 	private List<FaceBioScoresTable> faceTables;
-	private List<IrisBioScoresTable> irisTables;
+	private IrisBioScoresTable irisTable;
 
 	@Getter
 	@Setter
@@ -70,10 +70,10 @@ public class BiometricScores {
 		@Data
 		public static class IrisBioScoresRow {
 			private String bioScoreRange;
-			private String ChildScore = "0";
-			private String AdultScore = "0";
-			private String MatureScore = "0";
-			private String SeniorScore = "0";
+			private String childScore = "0";
+			private String adultScore = "0";
+			private String matureScore = "0";
+			private String seniorScore = "0";
 		}
 
 	}

@@ -217,9 +217,8 @@ public class BiometricScoresService {
 			for (String name : sdkNames) {
 				BiometricScores irisBiometricScores = new BiometricScores();
 				irisBiometricScores.setSdkName(name);
-				List<IrisBioScoresTable> irisBioScoresTables = new ArrayList<IrisBioScoresTable>();
 
-				IrisBioScoresTable table = new IrisBioScoresTable();
+				IrisBioScoresTable irisBioScoresTable = new IrisBioScoresTable();
 				List<IrisBioScoresRow> rows = new ArrayList<IrisBioScoresRow>();
 				logIrisQuery(name, ageGroups[0]);
 				List<BiometricScoresSummaryEntity> childScores = biometricScoresSummaryRepository
@@ -238,10 +237,9 @@ public class BiometricScoresService {
 						.getBiometricScoresForIris(partnerId, projectId, testRunId, name, biometricType,
 								ageGroups[3]);
 				rows = populateIrisBioScoresRows(scoreRanges, childScores, adultScores, matureScores, seniorScores);
-				table.setRows(rows);
-				irisBioScoresTables.add(table);
+				irisBioScoresTable.setRows(rows);
 
-				irisBiometricScores.setIrisTables(irisBioScoresTables);
+				irisBiometricScores.setIrisTable(irisBioScoresTable);
 				biometricScoresList.add(irisBiometricScores);
 			}
 		} catch (Exception ex) {
