@@ -457,7 +457,7 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 				newInputDto.setMethodRequest(requestBody);
 				newInputDto.setMethodResponse(resp);
 				return sdkQualityCheckValidator.validateResponse(newInputDto);
-			}else{
+			} else {
 				if (restCallResponse != null && restCallResponse.body() != null) {
 					restCallResponse.body().close();
 				}
