@@ -122,6 +122,31 @@ import lombok.Setter;
 		+ "AND CAST(b.scores_json AS jsonb) ->> 'biometricType' = :biometricType "
 		+ "AND CAST(b.scores_json AS jsonb) ->> 'ageGroup' = :ageGroup "
 		+ "AND CAST(b.scores_json AS jsonb) ->> 'race' = :race GROUP BY b.id")
+@NamedNativeQuery(name = "BiometricScoresSummaryEntity.getBiometricScoresForIris", resultClass = BiometricScoresSummaryEntity.class, query = "SELECT b.id AS id,  "
+		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '0-10'  THEN 1 ELSE NULL END) AS male_0_10, "
+		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '11-20' THEN 1 ELSE NULL END) AS male_11_20, "
+		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '21-30' THEN 1 ELSE NULL END) AS male_21_30, "
+		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '31-40' THEN 1 ELSE NULL END) AS male_31_40, "
+		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '41-50' THEN 1 ELSE NULL END) AS male_41_50, "
+		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '51-60' THEN 1 ELSE NULL END) AS male_51_60, "
+		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '61-70' THEN 1 ELSE NULL END) AS male_61_70, "
+		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '71-80' THEN 1 ELSE NULL END) AS male_71_80, "
+		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '81-90' THEN 1 ELSE NULL END) AS male_81_90, "
+		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '91-100' THEN 1 ELSE NULL END) AS male_91_100, "
+		+ "0 AS female_0_10, "
+		+ "0 AS female_11_20, "
+		+ "0 AS female_21_30, "
+		+ "0 AS female_31_40, "
+		+ "0 AS female_41_50, "
+		+ "0 AS female_51_60, "
+		+ "0 AS female_61_70, "
+		+ "0 AS female_71_80, "
+		+ "0 AS female_81_90, "
+		+ "0 AS female_91_100 "
+		+ "FROM biometric_scores b " + "WHERE b.partner_id = :partnerId " + "AND b.project_id = :projectId "
+		+ "AND b.testrun_id = :testRunId " + "AND CAST(b.scores_json AS jsonb) ->> 'name' = :name "
+		+ "AND CAST(b.scores_json AS jsonb) ->> 'biometricType' = :biometricType "
+		+ "AND CAST(b.scores_json AS jsonb) ->> 'ageGroup' = :ageGroup GROUP BY b.id")
 public class BiometricScoresSummaryEntity {
 
 	@Override
