@@ -355,7 +355,10 @@ public class ReportService {
 						requestDto.getTestRunId());
 			}
 			//TODO: handle for Iris
-			
+			if (AppConstants.BIOMETRIC_SCORES_IRIS.equals(biometricType)) {
+				biometricScoresList = biometricScoresService.getIrisBiometricScoresList(getPartnerId(), projectId,
+						requestDto.getTestRunId());
+			}
 			// 6. Populate all attributes in velocity template
 			VelocityContext velocityContext = populateVelocityAttributes(testRunDetailsResponseDto, sbiProjectDto, null,
 					null, origin, projectType, projectId, sbiProjectTable, biometricScoresList, biometricType);

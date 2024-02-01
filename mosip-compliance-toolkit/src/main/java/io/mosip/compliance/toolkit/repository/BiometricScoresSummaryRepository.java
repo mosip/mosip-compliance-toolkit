@@ -30,8 +30,10 @@ public interface BiometricScoresSummaryRepository extends BaseRepository<Biometr
 			@Param("name") String name, @Param("biometricType") String biometricType,
 			@Param("ageGroup") String ageGroup, @Param("race") String race);
 
-//	public BiometricScoresSummaryEntity getBiometricScoresForIris(@Param("name") String name, @Param("ageGroup") String ageGroup,
-//			@Param("biometricType") String biometricType, @Param("partnerId") String partnerId,
-//			@Param("testRunId") String testRunId, @Param("projectId") String projectId);
+	@Query(name = "BiometricScoresSummaryEntity.getBiometricScoresForIris", nativeQuery = true)
+	public List<BiometricScoresSummaryEntity> getBiometricScoresForIris(@Param("partnerId") String partnerId,
+		   @Param("projectId") String projectId, @Param("testRunId") String testRunId,
+		   @Param("name") String name, @Param("biometricType") String biometricType,
+		   @Param("ageGroup") String ageGroup);
 
 }

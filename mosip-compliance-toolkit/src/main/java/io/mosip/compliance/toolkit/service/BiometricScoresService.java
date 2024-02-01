@@ -27,6 +27,7 @@ import io.mosip.compliance.toolkit.dto.report.BiometricScores;
 import io.mosip.compliance.toolkit.dto.report.BiometricScores.*;
 import io.mosip.compliance.toolkit.dto.report.BiometricScores.FingerBioScoresTable.FingerBioScoresRow;
 import io.mosip.compliance.toolkit.dto.report.BiometricScores.FaceBioScoresTable.FaceBioScoresRow;
+import io.mosip.compliance.toolkit.dto.report.BiometricScores.IrisBioScoresTable.IrisBioScoresRow;
 import io.mosip.compliance.toolkit.entity.BiometricScoresEntity;
 import io.mosip.compliance.toolkit.entity.BiometricScoresSummaryEntity;
 import io.mosip.compliance.toolkit.repository.BiometricScoresRepository;
@@ -204,6 +205,52 @@ public class BiometricScoresService {
 		return biometricScoresList;
 	}
 
+	public List<BiometricScores> getIrisBiometricScoresList(String partnerId, String projectId, String testRunId)
+			throws Exception {
+		List<BiometricScores> biometricScoresList = new ArrayList<BiometricScores>();
+		try {
+			String biometricType = AppConstants.BIOMETRIC_SCORES_IRIS;
+			List<String> sdkNames = getSdkNames(AppConstants.BIOMETRIC_SCORES_IRIS);
+			String[] ageGroups = new String[]{"child(5-12)", "adult(12-40)", "mature(40-59)", "senior(60+)"};
+			String[] scoreRanges = new String[]{"0-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80",
+					"81-90", "91-100"};
+			for (String name : sdkNames) {
+				BiometricScores irisBiometricScores = new BiometricScores();
+				irisBiometricScores.setSdkName(name);
+
+				IrisBioScoresTable irisBioScoresTable = new IrisBioScoresTable();
+				List<IrisBioScoresRow> rows = new ArrayList<IrisBioScoresRow>();
+				logIrisQuery(name, ageGroups[0]);
+				List<BiometricScoresSummaryEntity> childScores = biometricScoresSummaryRepository
+						.getBiometricScoresForIris(partnerId, projectId, testRunId, name, biometricType,
+								ageGroups[0]);
+				logIrisQuery(name, ageGroups[1]);
+				List<BiometricScoresSummaryEntity> adultScores = biometricScoresSummaryRepository
+						.getBiometricScoresForIris(partnerId, projectId, testRunId, name, biometricType,
+								ageGroups[1]);
+				logIrisQuery(name, ageGroups[2]);
+				List<BiometricScoresSummaryEntity> matureScores = biometricScoresSummaryRepository
+						.getBiometricScoresForIris(partnerId, projectId, testRunId, name, biometricType,
+								ageGroups[2]);
+				logIrisQuery(name, ageGroups[3]);
+				List<BiometricScoresSummaryEntity> seniorScores = biometricScoresSummaryRepository
+						.getBiometricScoresForIris(partnerId, projectId, testRunId, name, biometricType,
+								ageGroups[3]);
+				rows = populateIrisBioScoresRows(scoreRanges, childScores, adultScores, matureScores, seniorScores);
+				irisBioScoresTable.setRows(rows);
+
+				irisBiometricScores.setIrisTable(irisBioScoresTable);
+				biometricScoresList.add(irisBiometricScores);
+			}
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In getIrisBiometricScoresList method of BiometricScoresService Service - " + ex.getMessage());
+			throw ex;
+		}
+		return biometricScoresList;
+	}
+
 	private List<String> getSdkNames(String modality) throws JsonProcessingException {
 		List<String> sdkNames = new ArrayList<>();
 		sdkNames.add(AppConstants.SBI);
@@ -249,6 +296,11 @@ public class BiometricScoresService {
 		log.info("fetching bio scores for race: " + race);
 	}
 
+	private void logIrisQuery(String name, String ageGroup) {
+		log.info("fetching bio scores for sdk: " + name);
+		log.info("fetching bio scores for ageGroup: " + ageGroup);
+	}
+
 	private List<FingerBioScoresRow> populateFingerBioScoresRows(String[] scoreRanges,
 			List<BiometricScoresSummaryEntity> childScores, List<BiometricScoresSummaryEntity> labourerScores,
 			List<BiometricScoresSummaryEntity> nonLabourerScores) {
@@ -291,6 +343,30 @@ public class BiometricScoresService {
 			if (europeanScores != null && europeanScores.size() > 0) {
 				row.setMaleEuropeanScore(getTotalScore(scoreRange, europeanScores, true));
 				row.setFemaleEuropeanScore(getTotalScore(scoreRange, europeanScores, false));
+			}
+			scoresList.add(row);
+		}
+		return scoresList;
+	}
+
+	private List<IrisBioScoresRow> populateIrisBioScoresRows(String[] scoreRanges, List<BiometricScoresSummaryEntity> childScores,
+		    List<BiometricScoresSummaryEntity> adultScores, List<BiometricScoresSummaryEntity> matureScores,
+			List<BiometricScoresSummaryEntity> seniorScores) {
+		List<IrisBioScoresRow> scoresList = new ArrayList<IrisBioScoresRow>();
+		for (String scoreRange : scoreRanges) {
+			IrisBioScoresRow row = new IrisBioScoresRow();
+			row.setBioScoreRange(scoreRange);
+			if (childScores != null && childScores.size() > 0) {
+				row.setChildScore(getTotalScore(scoreRange, childScores, true));
+			}
+			if (adultScores != null && adultScores.size() > 0) {
+				row.setAdultScore(getTotalScore(scoreRange, adultScores, true));
+			}
+			if (matureScores != null && matureScores.size() > 0) {
+				row.setMatureScore(getTotalScore(scoreRange, matureScores, true));
+			}
+			if (seniorScores != null && seniorScores.size() > 0) {
+				row.setSeniorScore(getTotalScore(scoreRange, seniorScores, true));
 			}
 			scoresList.add(row);
 		}
