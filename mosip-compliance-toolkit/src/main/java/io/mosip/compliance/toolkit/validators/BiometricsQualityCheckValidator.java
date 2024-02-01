@@ -457,9 +457,14 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 				newInputDto.setMethodRequest(requestBody);
 				newInputDto.setMethodResponse(resp);
 				return sdkQualityCheckValidator.validateResponse(newInputDto);
-			}
-			if (restCallResponse != null && restCallResponse.body() != null) {
-				restCallResponse.body().close();
+			} else {
+				if (restCallResponse != null && restCallResponse.body() != null) {
+					restCallResponse.body().close();
+				}
+				validationResultDto.setStatus(AppConstants.FAILURE);
+				validationResultDto.setDescription("SDK url [" + sdkUrl + "] is not reachable, Unable to connect.");
+				validationResultDto.setDescriptionKey("BIOMETRIC_QUALITY_CHECK_005" + AppConstants.COMMA_SEPARATOR);
+				return validationResultDto;
 			}
 		} catch (Exception e) {
 			if (restCallResponse != null && restCallResponse.body() != null) {
@@ -468,8 +473,6 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 			// e.printStackTrace();
 			throw e;
 		}
-		validationResultDto.setStatus(AppConstants.FAILURE);
-		return validationResultDto;
 	}
 }
 
