@@ -469,6 +469,8 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 			throw e;
 		}
 		validationResultDto.setStatus(AppConstants.FAILURE);
+		validationResultDto.setDescription("SDK url [" + sdkUrl + "] is not reachable, Unable to connect.");
+		validationResultDto.setDescriptionKey("BIOMETRIC_QUALITY_CHECK_005" + AppConstants.COMMA_SEPARATOR);
 		return validationResultDto;
 	}
 }
