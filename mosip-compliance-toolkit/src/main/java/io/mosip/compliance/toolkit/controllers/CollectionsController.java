@@ -71,7 +71,7 @@ public class CollectionsController {
 
 	@GetMapping(value = "/getCollection/{id}")
 	public ResponseWrapper<CollectionDto> getCollection(@PathVariable String id) {
-		return collectionsService.getCollectionById(id);
+		return collectionsService.getCollectionById(id, collectionsService.getPartnerId());
 	}
 	
 	@PostMapping(value = "/addCollection")

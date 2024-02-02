@@ -43,6 +43,7 @@ import io.mosip.compliance.toolkit.config.VelocityEngineConfig;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ProjectTypes;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
+import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
 import io.mosip.compliance.toolkit.dto.collections.CollectionTestCasesResponseDto;
 import io.mosip.compliance.toolkit.dto.projects.AbisProjectDto;
 import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
@@ -80,6 +81,10 @@ import io.mosip.kernel.core.logger.spi.Logger;
 
 @Component
 public class ReportService {
+
+	private static final String TEST_RUN_REPORT_VM = "testRunReport.vm";
+
+	private static final String TEST_RUN_QA_REPORT_VM = "testRunQAReport.vm";
 
 	private static final String BIOMETRIC_TYPE = "biometricType";
 
@@ -273,7 +278,7 @@ public class ReportService {
 			VelocityContext velocityContext = populateVelocityAttributes(testRunDetailsResponseDto, sbiProjectDto,
 					sdkProjectDto, abisProjectDto, origin, projectType, projectId, sbiProjectTable, null, null);
 			// 5. Merge velocity HTML template with all attributes
-			String mergedHtml = mergeVelocityTemplate(velocityContext, "testRunReport.vm");
+			String mergedHtml = mergeVelocityTemplate(velocityContext, TEST_RUN_REPORT_VM);
 			// 6. Covert the merged HTML to PDF
 			ByteArrayResource resource = convertHtmltToPdf(mergedHtml);
 			// 7. Save Report Data in DB for future
@@ -349,12 +354,10 @@ public class ReportService {
 				biometricScoresList = biometricScoresService.getFingerBiometricScoresList(getPartnerId(), projectId,
 						requestDto.getTestRunId());
 			}
-			//TODO: handle for Face
 			if (AppConstants.BIOMETRIC_SCORES_FACE.equals(biometricType)) {
 				biometricScoresList = biometricScoresService.getFaceBiometricScoresList(getPartnerId(), projectId,
 						requestDto.getTestRunId());
 			}
-			//TODO: handle for Iris
 			if (AppConstants.BIOMETRIC_SCORES_IRIS.equals(biometricType)) {
 				biometricScoresList = biometricScoresService.getIrisBiometricScoresList(getPartnerId(), projectId,
 						requestDto.getTestRunId());
@@ -364,7 +367,7 @@ public class ReportService {
 					null, origin, projectType, projectId, sbiProjectTable, biometricScoresList, biometricType);
 
 			// 7. Merge velocity HTML template with all attributes
-			String mergedHtml = mergeVelocityTemplate(velocityContext, "testRunReportQA.vm");
+			String mergedHtml = mergeVelocityTemplate(velocityContext, TEST_RUN_QA_REPORT_VM);
 			// 8. Covert the merged HTML to PDF
 			ByteArrayResource resource = convertHtmltToPdf(mergedHtml);
 			// 9. Save Report Data in DB for future
@@ -427,6 +430,14 @@ public class ReportService {
 		reportDataDto.setCountOfFailedTestCases(
 				Integer.parseInt(velocityContext.get(COUNT_OF_FAILED_TEST_CASES).toString()));
 
+		if (velocityContext.get(BIOMETRIC_TYPE) != null && 
+				velocityContext.get(BIOMETRIC_SCORES) != null) {
+			reportDataDto.setBiometricType(velocityContext.get(BIOMETRIC_TYPE).toString());
+			reportDataDto.setBiometricScores(getObjectMapper().convertValue(velocityContext.get(BIOMETRIC_SCORES),
+					new TypeReference<List<BiometricScores>>() {
+					}));	
+		}
+		
 		LocalDateTime nowDate = LocalDateTime.now();
 		ComplianceTestRunSummaryEntity entity = new ComplianceTestRunSummaryEntity();
 		entity.setProjectId(projectId);
@@ -1055,9 +1066,31 @@ public class ReportService {
 					velocityContext.put(TOTAL_TEST_CASES_COUNT, reportDataDto.getTotalTestCasesCount());
 					velocityContext.put(COUNT_OF_PASSED_TEST_CASES, reportDataDto.getCountOfPassedTestCases());
 					velocityContext.put(COUNT_OF_FAILED_TEST_CASES, reportDataDto.getCountOfFailedTestCases());
+					if (reportDataDto.getBiometricScores() != null && reportDataDto.getBiometricType() != null) {
+						velocityContext.put(BIOMETRIC_TYPE, reportDataDto.getBiometricType());
+						velocityContext.put(BIOMETRIC_SCORES, reportDataDto.getBiometricScores());
+					}
 					log.info("sessionId", "idType", "id", "Added all attributes in velocity template successfully");
+					boolean isComplianceCollection = true;
+					// check the collectionType
+					ResponseWrapper<CollectionDto> collectionResponseWrapper = collectionsService
+							.getCollectionById(collectionId, partnerId);
+					if (collectionResponseWrapper != null) {
+						CollectionDto collectionDto = collectionResponseWrapper.getResponse();
+						if (collectionDto != null) {
+							String collectionType = collectionDto.getCollectionType();
+							if (AppConstants.QUALITY_ASSESSMENT_COLLECTION.equals(collectionType)) {
+								isComplianceCollection = false;
+							}
+						}
+					}
+					log.info("sessionId", "idType", "id", "Is Compliance Collection: " + isComplianceCollection);
+					String templateName = TEST_RUN_REPORT_VM;
+					if (!isComplianceCollection) {
+						templateName = TEST_RUN_QA_REPORT_VM;
+					}
 					// 3. merge report data with template
-					String mergedHtml = mergeVelocityTemplate(velocityContext, "testRunReport.vm");
+					String mergedHtml = mergeVelocityTemplate(velocityContext, templateName);
 					// 4. Covert the merged HTML to PDF
 					ByteArrayResource resource = convertHtmltToPdf(mergedHtml);
 					// 5. Send PDF in response

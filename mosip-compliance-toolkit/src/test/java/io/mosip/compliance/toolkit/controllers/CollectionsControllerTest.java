@@ -84,7 +84,7 @@ public class CollectionsControllerTest {
     @Test
     public void getCollectionTest(){
         ResponseWrapper<CollectionDto> response = new ResponseWrapper<>();
-        Mockito.when(collectionsService.getCollectionById(id)).thenReturn(response);
+        Mockito.when(collectionsService.getCollectionById(id, partnerId)).thenReturn(response);
         collectionsController.getCollection(id);
     }
 

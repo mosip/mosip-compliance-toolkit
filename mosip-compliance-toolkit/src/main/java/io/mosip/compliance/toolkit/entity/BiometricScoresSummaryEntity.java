@@ -8,7 +8,6 @@ import javax.persistence.SqlResultSetMapping;
 
 import org.hibernate.annotations.NamedNativeQuery;
 
-import groovy.transform.ToString;
 import lombok.Getter;
 import lombok.Setter;
 

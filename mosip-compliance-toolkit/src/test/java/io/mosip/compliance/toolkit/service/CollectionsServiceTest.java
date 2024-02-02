@@ -129,22 +129,22 @@ public class CollectionsServiceTest {
         Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
         SecurityContextHolder.setContext(securityContext);
         Mockito.when(collectionsRepository.getCollectionById(Mockito.any(), Mockito.any())).thenReturn(collectionEntity);
-        collectionsService.getCollectionById(id);
+        collectionsService.getCollectionById(id, partnerId);
 
         collectionEntity.setSbiProjectId("sbi");
         Mockito.when(collectionsRepository.getCollectionById(Mockito.any(), Mockito.any())).thenReturn(collectionEntity);
-        collectionsService.getCollectionById(id);
+        collectionsService.getCollectionById(id, partnerId);
 
         collectionEntity.setSbiProjectId(null);
         collectionEntity.setSdkProjectId("sdk");
         Mockito.when(collectionsRepository.getCollectionById(Mockito.any(), Mockito.any())).thenReturn(collectionEntity);
-        collectionsService.getCollectionById(id);
+        collectionsService.getCollectionById(id, partnerId);
 
         collectionEntity.setSbiProjectId(null);
         collectionEntity.setSdkProjectId(null);
         collectionEntity.setAbisProjectId("abis");
         Mockito.when(collectionsRepository.getCollectionById(Mockito.any(), Mockito.any())).thenReturn(collectionEntity);
-        ResponseWrapper<CollectionDto> result = collectionsService.getCollectionById(id);
+        ResponseWrapper<CollectionDto> result = collectionsService.getCollectionById(id, partnerId);
 
         CollectionDto collectionDto = new CollectionDto();
         collectionDto.setProjectId("abis");
@@ -164,7 +164,7 @@ public class CollectionsServiceTest {
         Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
         SecurityContextHolder.setContext(securityContext);
         Mockito.when(collectionsRepository.getCollectionById(Mockito.any(), Mockito.any())).thenReturn(null);
-        ResponseWrapper<CollectionDto> result = collectionsService.getCollectionById(id);
+        ResponseWrapper<CollectionDto> result = collectionsService.getCollectionById(id, partnerId);
         Assert.assertNull(result.getResponse());
     }
 
@@ -174,7 +174,7 @@ public class CollectionsServiceTest {
      */
     @Test
     public void getCollectionByIdTestException(){
-        collectionsService.getCollectionById(id);
+        collectionsService.getCollectionById(id, partnerId);
     }
 
 
