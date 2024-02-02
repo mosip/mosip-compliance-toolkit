@@ -73,7 +73,7 @@ public class ReportController {
 		validateRequestForPartner(value, errors);
 		return service.generateDraftReport(value.getRequest(), origin);
 	}
-	
+
 	@PostMapping(value = "/generateDraftQAReport")
 	public ResponseEntity<?> generateDraftQAReport(@RequestBody @Valid RequestWrapper<ReportRequestDto> value,
 			@RequestHeader String origin, Errors errors) throws Exception {
@@ -93,7 +93,8 @@ public class ReportController {
 	public ResponseEntity<?> getSubmittedReport(
 			@RequestBody @Valid RequestWrapper<ReportRequestDto> reportRequestWrapper, Errors errors) throws Exception {
 		validateRequestForPartner(reportRequestWrapper, errors);
-		//when user is downloading submitted report for self, then there is no need for testrunId
+		// when user is downloading submitted report for self, then there is no need for
+		// testrunId
 		return service.getSubmittedReport(service.getPartnerId(), reportRequestWrapper.getRequest(), true);
 	}
 

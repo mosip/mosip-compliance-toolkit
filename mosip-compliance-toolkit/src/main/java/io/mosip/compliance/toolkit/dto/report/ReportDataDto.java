@@ -29,4 +29,7 @@ public class ReportDataDto {
 	private int totalTestCasesCount;
 	private int countOfPassedTestCases;
 	private int countOfFailedTestCases;
+	private List<BiometricScores> biometricScores;
+	private String biometricType;
+	
 }

@@ -105,11 +105,11 @@ public class CollectionsService {
 		return crBy;
 	}
 
-	public ResponseWrapper<CollectionDto> getCollectionById(String collectionId) {
+	public ResponseWrapper<CollectionDto> getCollectionById(String collectionId, String partnerId) {
 		ResponseWrapper<CollectionDto> responseWrapper = new ResponseWrapper<>();
 		CollectionDto collection = null;
 		try {
-			CollectionEntity collectionEntity = collectionsRepository.getCollectionById(collectionId, getPartnerId());
+			CollectionEntity collectionEntity = collectionsRepository.getCollectionById(collectionId, partnerId);
 
 			if (Objects.nonNull(collectionEntity)) {
 				String projectId = null;
@@ -127,6 +127,7 @@ public class CollectionsService {
 				collection = mapper.convertValue(collectionEntity, CollectionDto.class);
 				collection.setCollectionId(collectionEntity.getId());
 				collection.setProjectId(projectId);
+				collection.setCollectionType(collectionEntity.getCollectionType());
 				collection.setCrDtimes(collectionEntity.getCrDate());
 			} else {
 				String errorCode = ToolkitErrorCodes.COLLECTION_NOT_AVAILABLE.getErrorCode();
