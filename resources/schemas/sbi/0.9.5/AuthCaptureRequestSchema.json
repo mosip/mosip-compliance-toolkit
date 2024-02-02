@@ -86,9 +86,7 @@
 					},
 					"requestedScore": {
 						"type": "string",
-						"pattern": "^[0-9]+$",
-						"minLength": 1,
-						"maxLength": 3
+						"pattern": "^(100(\\.0+)?|\\d{1,2}(\\.\\d+)?|0(\\.[0-9]+)?)$"
 					},
 					"deviceId": {
 						"$ref": "#/definitions/non-empty-string"
