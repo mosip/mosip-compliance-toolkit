@@ -31,5 +31,7 @@ public class ReportDataDto {
 	private int countOfFailedTestCases;
 	private List<BiometricScores> biometricScores;
 	private String biometricType;
-	
+	private List<String> ageGroups;
+	private List<String> occupations;
+	private List<String> races;	
 }
