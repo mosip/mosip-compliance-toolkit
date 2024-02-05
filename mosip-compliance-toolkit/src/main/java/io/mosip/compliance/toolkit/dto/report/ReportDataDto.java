@@ -33,6 +33,5 @@ public class ReportDataDto {
 	private String biometricType;
 	private List<String> ageGroups;
 	private List<String> occupations;
-	private List<String> races;
-	
+	private List<String> races;	
 }

@@ -273,20 +273,20 @@
                 <h2>Biometric Scores</h2>
                 #foreach ($biometricScoresItem in $biometricScores)
                     #if($biometricType == 'Finger')
-						#foreach ($table in $biometricScoresItem.tables)
-						<div class="page-break-after">
-							<h3>${biometricScoresItem.sdkName}: Finger - ${table.ageGroup}</h3>
-							<table>
-								#if($table.isChildAgeGroup())
-								<thead>
+						          #foreach ($table in $biometricScoresItem.tables)
+						          <div class="page-break-after">
+							        <h3>${biometricScoresItem.sdkName}: Finger - ${table.ageGroup}</h3>
+							        <table>
+								       #if($table.isChildAgeGroup())
+								        <thead>
 					                <tr>
 					                    <th>Score Range</th>
 					                    <th>Male</th>
 					                    <th>Female</th>
 					                </tr>
 					            </thead>
-								#else
-								<thead>
+								      #else
+								       <thead>
 					                <tr>
 					                    <th>Score Range</th>
 					                    #foreach ($occupation in $occupations)
