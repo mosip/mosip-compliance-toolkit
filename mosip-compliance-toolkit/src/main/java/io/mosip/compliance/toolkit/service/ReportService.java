@@ -81,8 +81,8 @@ import io.mosip.kernel.core.logger.spi.Logger;
 
 @Component
 public class ReportService {
-
-	private static final String RACES_STR = "races";
+ 	
+  private static final String RACES_STR = "races";
 
 	private static final String OCCUPATIONS_STR = "occupations";
 
@@ -446,7 +446,6 @@ public class ReportService {
 				Integer.parseInt(velocityContext.get(COUNT_OF_PASSED_TEST_CASES).toString()));
 		reportDataDto.setCountOfFailedTestCases(
 				Integer.parseInt(velocityContext.get(COUNT_OF_FAILED_TEST_CASES).toString()));
-
 		if (velocityContext.get(BIOMETRIC_TYPE) != null && velocityContext.get(BIOMETRIC_SCORES) != null) {
 			reportDataDto.setBiometricType(velocityContext.get(BIOMETRIC_TYPE).toString());
 			reportDataDto.setAgeGroups(getObjectMapper().convertValue(velocityContext.get(AGE_GROUPS_STR),
@@ -461,8 +460,7 @@ public class ReportService {
 			reportDataDto.setBiometricScores(getObjectMapper().convertValue(velocityContext.get(BIOMETRIC_SCORES),
 					new TypeReference<List<BiometricScores>>() {
 					}));
-		}
-
+    }
 		LocalDateTime nowDate = LocalDateTime.now();
 		ComplianceTestRunSummaryEntity entity = new ComplianceTestRunSummaryEntity();
 		entity.setProjectId(projectId);
