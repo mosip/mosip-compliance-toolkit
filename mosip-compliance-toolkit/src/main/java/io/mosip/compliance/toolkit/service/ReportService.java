@@ -82,6 +82,12 @@ import io.mosip.kernel.core.logger.spi.Logger;
 @Component
 public class ReportService {
 
+	private static final String RACES_STR = "races";
+
+	private static final String OCCUPATIONS_STR = "occupations";
+
+	private static final String AGE_GROUPS_STR = "ageGroups";
+
 	private static final String TEST_RUN_REPORT_VM = "testRunReport.vm";
 
 	private static final String TEST_RUN_QA_REPORT_VM = "testRunQAReport.vm";
@@ -189,6 +195,15 @@ public class ReportService {
 	@Autowired
 	BiometricScoresService biometricScoresService;
 
+	@Value("#{'${mosip.toolkit.quality.assessment.age.groups}'.split(',')}")
+	private List<String> ageGroups;
+
+	@Value("#{'${mosip.toolkit.quality.assessment.occupations}'.split(',')}")
+	private List<String> occupations;
+
+	@Value("#{'${mosip.toolkit.quality.assessment.races}'.split(',')}")
+	private List<String> races;
+
 	private AuthUserDetails authUserDetails() {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
@@ -232,7 +247,8 @@ public class ReportService {
 			}
 			SbiProjectTable sbiProjectTable = new SbiProjectTable();
 			if (ProjectTypes.SBI.getCode().equals(projectType)) {
-				String invalidTestCaseId = this.validateDeviceInfo(testRunDetailsResponseDto, sbiProjectTable);
+				String invalidTestCaseId = this.validateDeviceInfo(getPartnerId(), testRunDetailsResponseDto,
+						sbiProjectTable);
 				if (!BLANK_STRING.equals(invalidTestCaseId)) {
 					return handleValidationErrors(requestDto, VALIDATION_ERR_DEVICE_INFO + invalidTestCaseId);
 				}
@@ -335,7 +351,8 @@ public class ReportService {
 				}
 			}
 			SbiProjectTable sbiProjectTable = new SbiProjectTable();
-			String invalidTestCaseId = this.validateDeviceInfo(testRunDetailsResponseDto, sbiProjectTable);
+			String invalidTestCaseId = this.validateDeviceInfo(getPartnerId(), testRunDetailsResponseDto,
+					sbiProjectTable);
 			if (!BLANK_STRING.equals(invalidTestCaseId)) {
 				return handleValidationErrors(requestDto, VALIDATION_ERR_DEVICE_INFO + invalidTestCaseId);
 			}
@@ -430,14 +447,22 @@ public class ReportService {
 		reportDataDto.setCountOfFailedTestCases(
 				Integer.parseInt(velocityContext.get(COUNT_OF_FAILED_TEST_CASES).toString()));
 
-		if (velocityContext.get(BIOMETRIC_TYPE) != null && 
-				velocityContext.get(BIOMETRIC_SCORES) != null) {
+		if (velocityContext.get(BIOMETRIC_TYPE) != null && velocityContext.get(BIOMETRIC_SCORES) != null) {
 			reportDataDto.setBiometricType(velocityContext.get(BIOMETRIC_TYPE).toString());
+			reportDataDto.setAgeGroups(getObjectMapper().convertValue(velocityContext.get(AGE_GROUPS_STR),
+					new TypeReference<List<String>>() {
+					}));
+			reportDataDto.setOccupations(getObjectMapper().convertValue(velocityContext.get(OCCUPATIONS_STR),
+					new TypeReference<List<String>>() {
+					}));
+			reportDataDto.setRaces(
+					getObjectMapper().convertValue(velocityContext.get(RACES_STR), new TypeReference<List<String>>() {
+					}));
 			reportDataDto.setBiometricScores(getObjectMapper().convertValue(velocityContext.get(BIOMETRIC_SCORES),
 					new TypeReference<List<BiometricScores>>() {
-					}));	
+					}));
 		}
-		
+
 		LocalDateTime nowDate = LocalDateTime.now();
 		ComplianceTestRunSummaryEntity entity = new ComplianceTestRunSummaryEntity();
 		entity.setProjectId(projectId);
@@ -536,6 +561,9 @@ public class ReportService {
 		velocityContext.put(COUNT_OF_PASSED_TEST_CASES, countOfSuccessTestCases);
 		velocityContext.put(COUNT_OF_FAILED_TEST_CASES, countOfFailedTestCases);
 		if (biometricScoresList != null && biometricType != null) {
+			velocityContext.put(AGE_GROUPS_STR, ageGroups);
+			velocityContext.put(OCCUPATIONS_STR, occupations);
+			velocityContext.put(RACES_STR, races);
 			velocityContext.put(BIOMETRIC_TYPE, biometricType);
 			velocityContext.put(BIOMETRIC_SCORES, biometricScoresList);
 		}
@@ -574,64 +602,93 @@ public class ReportService {
 		return invalidTestCaseId;
 	}
 
-	private String validateDeviceInfo(TestRunDetailsResponseDto testRunDetailsResponseDto,
+	private String validateDeviceInfo(String partnerId, TestRunDetailsResponseDto testRunDetailsResponseDto,
 			SbiProjectTable sbiProjectTable) {
 		List<TestRunDetailsDto> testRunDetailsList = testRunDetailsResponseDto.getTestRunDetailsList();
 		String invalidTestCaseId = BLANK_STRING;
 		boolean validationResult = true;
-		for (TestRunDetailsDto testRunDetailsDto : testRunDetailsList) {
-			if (validationResult) {
-				// check if the method is "discover"
+		String currentTestCaseId = BLANK_STRING;
+		for (TestRunDetailsDto testRunPartialDetails : testRunDetailsList) {
+			boolean proceed = false;
+			if (!currentTestCaseId.equals(testRunPartialDetails.getTestcaseId())) {
+				proceed = true;
+				currentTestCaseId = testRunPartialDetails.getTestcaseId();
+			} else if (currentTestCaseId.equals(testRunPartialDetails.getTestcaseId())) {
+				proceed = false;
+			}
+			log.info("currentTestCaseId: " + currentTestCaseId);
+			log.info("methodId: " + testRunPartialDetails.getMethodId());
+			log.info("proceed: " + proceed);
+			if (proceed) {
+				// get the method details
+				TestRunDetailsDto testRunFullDetails = null;
 				try {
-					ArrayNode discoverRespArr = (ArrayNode) getObjectMapper()
-							.readValue(testRunDetailsDto.getMethodResponse(), ArrayNode.class);
-					if (discoverRespArr != null && discoverRespArr.size() > 0) {
-						ObjectNode discoverResp = (ObjectNode) discoverRespArr.get(0);
-						validationResult = validateDeviceMakeModelSerialNo(sbiProjectTable, validationResult,
-								discoverResp);
+					log.info("sessionId", "idType", "id",
+							"Fetching full test run details: " + testRunPartialDetails.getMethodId());
+					ResponseWrapper<TestRunDetailsDto> testRunFullDetailsResp = testRunService.getMethodDetails(
+							partnerId, testRunPartialDetails.getRunId(), testRunPartialDetails.getTestcaseId(),
+							testRunPartialDetails.getMethodId());
+					if (testRunFullDetailsResp != null) {
+						testRunFullDetails = testRunFullDetailsResp.getResponse();
 					}
 				} catch (Exception ex) {
-					// ignore since method may not be "discover"
+					log.debug("sessionId", "idType", "id", ex.getStackTrace());
+					log.debug("sessionId", "idType", "id", "unable to fetch test run full details{}",
+							testRunPartialDetails.getTestcaseId());
 				}
-			}
-			if (validationResult) {
-				// check if the method is "deviceInfo"
-				try {
-					ArrayNode deviceInfoRespArr = (ArrayNode) getObjectMapper()
-							.readValue(testRunDetailsDto.getMethodResponse(), ArrayNode.class);
-					ObjectNode deviceInfoResp = null;
-					if (deviceInfoRespArr != null && deviceInfoRespArr.size() > 0) {
-						deviceInfoResp = (ObjectNode) deviceInfoRespArr.get(0);
-						ObjectNode deviceInfoDecoded = (ObjectNode) deviceInfoResp
-								.get(AppConstants.DEVICE_INFO_DECODED);
-						validationResult = validateDeviceMakeModelSerialNo(sbiProjectTable, validationResult,
-								deviceInfoDecoded);
-					}
-				} catch (Exception ex) {
-					// ignore since method may not be "deviceInfo"
-				}
-			}
-			if (validationResult) {
-				// check if the method is "capture" or "rcapture"
-				try {
-					ObjectNode methodResponse = (ObjectNode) getObjectMapper()
-							.readValue(testRunDetailsDto.getMethodResponse(), ObjectNode.class);
-					JsonNode arrBiometricNodes = methodResponse.get(AppConstants.BIOMETRICS);
-					if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
-						for (final JsonNode biometricNode : arrBiometricNodes) {
-							JsonNode dataNode = biometricNode.get(AppConstants.DECODED_DATA);
+				if (validationResult && testRunFullDetails != null && testRunFullDetails.getMethodResponse() != null) {
+					// check if the method is "discover"
+					try {
+						ArrayNode discoverRespArr = (ArrayNode) getObjectMapper()
+								.readValue(testRunFullDetails.getMethodResponse(), ArrayNode.class);
+						if (discoverRespArr != null && discoverRespArr.size() > 0) {
+							ObjectNode discoverResp = (ObjectNode) discoverRespArr.get(0);
 							validationResult = validateDeviceMakeModelSerialNo(sbiProjectTable, validationResult,
-									dataNode);
+									discoverResp);
 						}
-
+					} catch (Exception ex) {
+						// ignore since method may not be "discover"
 					}
-				} catch (Exception e) {
-					// ignore since method may not be "capture" or "rcapture"
 				}
-			}
-			if (!validationResult) {
-				invalidTestCaseId = testRunDetailsDto.getTestcaseId();
-				break;
+				if (validationResult && testRunFullDetails != null && testRunFullDetails.getMethodResponse() != null) {
+					// check if the method is "deviceInfo"
+					try {
+						ArrayNode deviceInfoRespArr = (ArrayNode) getObjectMapper()
+								.readValue(testRunFullDetails.getMethodResponse(), ArrayNode.class);
+						ObjectNode deviceInfoResp = null;
+						if (deviceInfoRespArr != null && deviceInfoRespArr.size() > 0) {
+							deviceInfoResp = (ObjectNode) deviceInfoRespArr.get(0);
+							ObjectNode deviceInfoDecoded = (ObjectNode) deviceInfoResp
+									.get(AppConstants.DEVICE_INFO_DECODED);
+							validationResult = validateDeviceMakeModelSerialNo(sbiProjectTable, validationResult,
+									deviceInfoDecoded);
+						}
+					} catch (Exception ex) {
+						// ignore since method may not be "deviceInfo"
+					}
+				}
+				if (validationResult && testRunFullDetails != null && testRunFullDetails.getMethodResponse() != null) {
+					// check if the method is "capture" or "rcapture"
+					try {
+						ObjectNode methodResponse = (ObjectNode) getObjectMapper()
+								.readValue(testRunFullDetails.getMethodResponse(), ObjectNode.class);
+						JsonNode arrBiometricNodes = methodResponse.get(AppConstants.BIOMETRICS);
+						if (!arrBiometricNodes.isNull() && arrBiometricNodes.isArray()) {
+							for (final JsonNode biometricNode : arrBiometricNodes) {
+								JsonNode dataNode = biometricNode.get(AppConstants.DECODED_DATA);
+								validationResult = validateDeviceMakeModelSerialNo(sbiProjectTable, validationResult,
+										dataNode);
+							}
+
+						}
+					} catch (Exception e) {
+						// ignore since method may not be "capture" or "rcapture"
+					}
+				}
+				if (!validationResult) {
+					invalidTestCaseId = testRunFullDetails.getTestcaseId();
+					break;
+				}
 			}
 		}
 		log.info("sessionId", "idType", "id", "validateDeviceInfo, validationResult: {}", validationResult);
@@ -747,7 +804,7 @@ public class ReportService {
 
 	private ResponseWrapper<TestRunDetailsResponseDto> getTestRunDetails(String testRunId) {
 		ResponseWrapper<TestRunDetailsResponseDto> testRunDetailsResponseDto = testRunService
-				.getTestRunDetails(collectionsService.getPartnerId(), testRunId, true);
+				.getTestRunDetails(getPartnerId(), testRunId, false);
 		return testRunDetailsResponseDto;
 	}
 
@@ -804,8 +861,7 @@ public class ReportService {
 
 	private List<TestCaseDto> getAllTestcases(TestRunDetailsResponseDto testRunDetailsResponseDto) {
 		ResponseWrapper<CollectionTestCasesResponseDto> testcasesForCollection = collectionsService
-				.getTestCasesForCollection(collectionsService.getPartnerId(),
-						testRunDetailsResponseDto.getCollectionId());
+				.getTestCasesForCollection(getPartnerId(), testRunDetailsResponseDto.getCollectionId());
 		List<TestCaseDto> testcasesList = testcasesForCollection.getResponse().getTestcases();
 		return testcasesList;
 	}
@@ -1067,6 +1123,9 @@ public class ReportService {
 					velocityContext.put(COUNT_OF_PASSED_TEST_CASES, reportDataDto.getCountOfPassedTestCases());
 					velocityContext.put(COUNT_OF_FAILED_TEST_CASES, reportDataDto.getCountOfFailedTestCases());
 					if (reportDataDto.getBiometricScores() != null && reportDataDto.getBiometricType() != null) {
+						velocityContext.put(AGE_GROUPS_STR, reportDataDto.getAgeGroups());
+						velocityContext.put(OCCUPATIONS_STR, reportDataDto.getOccupations());
+						velocityContext.put(RACES_STR, reportDataDto.getRaces());
 						velocityContext.put(BIOMETRIC_TYPE, reportDataDto.getBiometricType());
 						velocityContext.put(BIOMETRIC_SCORES, reportDataDto.getBiometricScores());
 					}

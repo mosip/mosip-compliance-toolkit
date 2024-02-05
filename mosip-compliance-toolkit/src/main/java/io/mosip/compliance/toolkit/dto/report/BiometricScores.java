@@ -1,6 +1,7 @@
 package io.mosip.compliance.toolkit.dto.report;
 
 import java.util.List;
+import java.util.Map;
 
 import lombok.Data;
 import lombok.Getter;
@@ -12,70 +13,26 @@ import lombok.Setter;
 public class BiometricScores {
 
 	private String sdkName;
-	private List<FingerBioScoresTable> fingerTables;
-	private List<FaceBioScoresTable> faceTables;
-	private IrisBioScoresTable irisTable;
+	private List<BiometricScoresTable> tables;
 
 	@Getter
 	@Setter
 	@Data
-	public static class FingerBioScoresTable {
+	public static class BiometricScoresTable {
 		private String ageGroup;
 		private boolean isChildAgeGroup;
-		private List<FingerBioScoresRow> rows;
+		private List<BiometricScoresRow> rows;
 
 		@Getter
 		@Setter
 		@Data
-		public static class FingerBioScoresRow {
+		public static class BiometricScoresRow {
 			private String bioScoreRange;
 			private String maleChildScore = "0";
 			private String femaleChildScore = "0";
-			private String maleLabourerScore = "0";
-			private String maleNonLabourerScore = "0";
-			private String femaleLabourerScore = "0";
-			private String femaleNonLabourerScore = "0";
+			private Map<String, String> maleScores;
+			private Map<String, String> femaleScores;
 		}
-	}
-
-	@Getter
-	@Setter
-	@Data
-	public static class FaceBioScoresTable {
-		private String ageGroup;
-		private List<FaceBioScoresRow> rows;
-
-		@Getter
-		@Setter
-		@Data
-		public static class FaceBioScoresRow {
-			private String bioScoreRange;
-			private String maleAsianScore = "0";
-			private String femaleAsianScore = "0";
-			private String maleAfricanScore = "0";
-			private String femaleAfricanScore = "0";
-			private String maleEuropeanScore = "0";
-			private String femaleEuropeanScore = "0";
-		}
-	}
-
-	@Getter
-	@Setter
-	@Data
-	public static class IrisBioScoresTable {
-		private List<IrisBioScoresRow> rows;
-
-		@Getter
-		@Setter
-		@Data
-		public static class IrisBioScoresRow {
-			private String bioScoreRange;
-			private String childScore = "0";
-			private String adultScore = "0";
-			private String matureScore = "0";
-			private String seniorScore = "0";
-		}
-
 	}
 
 }

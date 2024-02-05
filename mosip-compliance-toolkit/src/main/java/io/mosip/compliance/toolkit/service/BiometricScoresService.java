@@ -2,7 +2,9 @@ package io.mosip.compliance.toolkit.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,12 +20,8 @@ import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.report.BiometricScores;
-import io.mosip.compliance.toolkit.dto.report.BiometricScores.FaceBioScoresTable;
-import io.mosip.compliance.toolkit.dto.report.BiometricScores.FaceBioScoresTable.FaceBioScoresRow;
-import io.mosip.compliance.toolkit.dto.report.BiometricScores.FingerBioScoresTable;
-import io.mosip.compliance.toolkit.dto.report.BiometricScores.FingerBioScoresTable.FingerBioScoresRow;
-import io.mosip.compliance.toolkit.dto.report.BiometricScores.IrisBioScoresTable;
-import io.mosip.compliance.toolkit.dto.report.BiometricScores.IrisBioScoresTable.IrisBioScoresRow;
+import io.mosip.compliance.toolkit.dto.report.BiometricScores.BiometricScoresTable;
+import io.mosip.compliance.toolkit.dto.report.BiometricScores.BiometricScoresTable.BiometricScoresRow;
 import io.mosip.compliance.toolkit.entity.BiometricScoresEntity;
 import io.mosip.compliance.toolkit.entity.BiometricScoresSummaryEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
@@ -57,6 +55,18 @@ public class BiometricScoresService {
 
 	@Autowired
 	ObjectMapperConfig objectMapperConfig;
+
+	String[] scoreRanges = new String[] { "0-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80",
+			"81-90", "91-100" };
+
+	@Value("#{'${mosip.toolkit.quality.assessment.age.groups}'.split(',')}")
+	private List<String> ageGroups;
+	
+	@Value("#{'${mosip.toolkit.quality.assessment.occupations}'.split(',')}")
+	private List<String> occupations;
+
+	@Value("#{'${mosip.toolkit.quality.assessment.races}'.split(',')}")
+	private List<String> races;
 
 	private Logger log = LoggerConfiguration.logConfig(SbiProjectService.class);
 
@@ -108,44 +118,40 @@ public class BiometricScoresService {
 		try {
 			String biometricType = AppConstants.BIOMETRIC_SCORES_FINGER;
 			List<String> sdkNames = getSdkNames(AppConstants.BIOMETRIC_SCORES_FINGER);
-			String[] ageGroups = new String[] { "child(5-12)", "adult(12-40)", "mature(40-59)", "senior(60+)" };
-			String[] occupations = new String[] { "labourer", "non-labourer" };
-			String[] scoreRanges = new String[] { "0-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80",
-					"81-90", "91-100" };
 			for (String name : sdkNames) {
-				BiometricScores fingerBiometricScores = new BiometricScores();
-				fingerBiometricScores.setSdkName(name);
-				List<FingerBioScoresTable> fingerBioScoresTables = new ArrayList<FingerBioScoresTable>();
+				BiometricScores biometricScores = new BiometricScores();
+				biometricScores.setSdkName(name);
+				List<BiometricScoresTable> tables = new ArrayList<BiometricScoresTable>();
 				int childAgeGroupIndex = 0;
 				for (String ageGroup : ageGroups) {
-					FingerBioScoresTable table = new FingerBioScoresTable();
+					BiometricScoresTable table = new BiometricScoresTable();
 					table.setAgeGroup(ageGroup);
-					List<FingerBioScoresRow> rows = new ArrayList<FingerBioScoresRow>();
+					List<BiometricScoresRow> rows = new ArrayList<BiometricScoresRow>();
 					if (childAgeGroupIndex == 0) { // child age group
 						logFingerQuery(name, ageGroup, null);
 						List<BiometricScoresSummaryEntity> childScores = biometricScoresSummaryRepository
 								.getBiometricScoresForChildFinger(partnerId, projectId, testRunId, name, biometricType,
 										ageGroup);
-						rows = populateFingerBioScoresRows(scoreRanges, childScores, null, null);
+						rows = populateBiometricScoresRows(scoreRanges, childScores, null);
 						table.setChildAgeGroup(true);
 					} else { // other non child age groups
-						logFingerQuery(name, ageGroup, occupations[0]);
-						List<BiometricScoresSummaryEntity> labourerScores = biometricScoresSummaryRepository
-								.getBiometricScoresForFinger(partnerId, projectId, testRunId, name, biometricType,
-										ageGroup, occupations[0]);
-						logFingerQuery(name, ageGroup, occupations[1]);
-						List<BiometricScoresSummaryEntity> nonLabourerScores = biometricScoresSummaryRepository
-								.getBiometricScoresForFinger(partnerId, projectId, testRunId, name, biometricType,
-										ageGroup, occupations[1]);
-						rows = populateFingerBioScoresRows(scoreRanges, null, labourerScores, nonLabourerScores);
+						Map<String, List<BiometricScoresSummaryEntity>> occupationsMap = new HashMap<String, List<BiometricScoresSummaryEntity>>();
+						for (String occupation : occupations) {
+							logFingerQuery(name, ageGroup, occupation);
+							List<BiometricScoresSummaryEntity> occupationScores = biometricScoresSummaryRepository
+									.getBiometricScoresForFinger(partnerId, projectId, testRunId, name, biometricType,
+											ageGroup, occupation);
+							occupationsMap.put(occupation, occupationScores);
+						}
+						rows = populateBiometricScoresRows(scoreRanges, null, occupationsMap);
 						table.setChildAgeGroup(false);
 					}
 					table.setRows(rows);
-					fingerBioScoresTables.add(table);
+					tables.add(table);
 					childAgeGroupIndex++;
 				}
-				fingerBiometricScores.setFingerTables(fingerBioScoresTables);
-				biometricScoresList.add(fingerBiometricScores);
+				biometricScores.setTables(tables);
+				biometricScoresList.add(biometricScores);
 			}
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -162,37 +168,28 @@ public class BiometricScoresService {
 		try {
 			String biometricType = AppConstants.BIOMETRIC_SCORES_FACE;
 			List<String> sdkNames = getSdkNames(AppConstants.BIOMETRIC_SCORES_FACE);
-			String[] ageGroups = new String[]{"child(5-12)", "adult(12-40)", "mature(40-59)", "senior(60+)"};
-			String[] race = new String[]{"asian", "african", "european"};
-			String[] scoreRanges = new String[]{"0-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80",
-					"81-90", "91-100"};
 			for (String name : sdkNames) {
-				BiometricScores faceBiometricScores = new BiometricScores();
-				faceBiometricScores.setSdkName(name);
-				List<FaceBioScoresTable> faceBioScoresTables = new ArrayList<FaceBioScoresTable>();
+				BiometricScores biometricScores = new BiometricScores();
+				biometricScores.setSdkName(name);
+				List<BiometricScoresTable> tables = new ArrayList<BiometricScoresTable>();
 				for (String ageGroup : ageGroups) {
-					FaceBioScoresTable table = new FaceBioScoresTable();
+					BiometricScoresTable table = new BiometricScoresTable();
 					table.setAgeGroup(ageGroup);
-					List<FaceBioScoresRow> rows = new ArrayList<FaceBioScoresRow>();
-					logFaceQuery(name, ageGroup, race[0]);
-					List<BiometricScoresSummaryEntity> asianScores = biometricScoresSummaryRepository
-							.getBiometricScoresForFace(partnerId, projectId, testRunId, name, biometricType,
-									ageGroup, race[0]);
-					logFaceQuery(name, ageGroup, race[1]);
-					List<BiometricScoresSummaryEntity> africanScores = biometricScoresSummaryRepository
-							.getBiometricScoresForFace(partnerId, projectId, testRunId, name, biometricType,
-									ageGroup, race[1]);
-					logFaceQuery(name, ageGroup, race[2]);
-					List<BiometricScoresSummaryEntity> europeanScores = biometricScoresSummaryRepository
-							.getBiometricScoresForFace(partnerId, projectId, testRunId, name, biometricType,
-									ageGroup, race[2]);
-					rows = populateFaceBioScoresRows(scoreRanges, asianScores, africanScores, europeanScores);
-
+					List<BiometricScoresRow> rows = new ArrayList<BiometricScoresRow>();
+					Map<String, List<BiometricScoresSummaryEntity>> racesMap = new HashMap<String, List<BiometricScoresSummaryEntity>>();
+					for (String race : races) {
+						logFaceQuery(name, ageGroup, race);
+						List<BiometricScoresSummaryEntity> raceScores = biometricScoresSummaryRepository
+								.getBiometricScoresForFace(partnerId, projectId, testRunId, name, biometricType,
+										ageGroup, race);
+						racesMap.put(race, raceScores);
+					}
+					rows = populateBiometricScoresRows(scoreRanges, null, racesMap);
 					table.setRows(rows);
-					faceBioScoresTables.add(table);
+					tables.add(table);
 				}
-				faceBiometricScores.setFaceTables(faceBioScoresTables);
-				biometricScoresList.add(faceBiometricScores);
+				biometricScores.setTables(tables);
+				biometricScoresList.add(biometricScores);
 			}
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -209,36 +206,27 @@ public class BiometricScoresService {
 		try {
 			String biometricType = AppConstants.BIOMETRIC_SCORES_IRIS;
 			List<String> sdkNames = getSdkNames(AppConstants.BIOMETRIC_SCORES_IRIS);
-			String[] ageGroups = new String[]{"child(5-12)", "adult(12-40)", "mature(40-59)", "senior(60+)"};
-			String[] scoreRanges = new String[]{"0-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80",
-					"81-90", "91-100"};
+
 			for (String name : sdkNames) {
-				BiometricScores irisBiometricScores = new BiometricScores();
-				irisBiometricScores.setSdkName(name);
-
-				IrisBioScoresTable irisBioScoresTable = new IrisBioScoresTable();
-				List<IrisBioScoresRow> rows = new ArrayList<IrisBioScoresRow>();
-				logIrisQuery(name, ageGroups[0]);
-				List<BiometricScoresSummaryEntity> childScores = biometricScoresSummaryRepository
-						.getBiometricScoresForIris(partnerId, projectId, testRunId, name, biometricType,
-								ageGroups[0]);
-				logIrisQuery(name, ageGroups[1]);
-				List<BiometricScoresSummaryEntity> adultScores = biometricScoresSummaryRepository
-						.getBiometricScoresForIris(partnerId, projectId, testRunId, name, biometricType,
-								ageGroups[1]);
-				logIrisQuery(name, ageGroups[2]);
-				List<BiometricScoresSummaryEntity> matureScores = biometricScoresSummaryRepository
-						.getBiometricScoresForIris(partnerId, projectId, testRunId, name, biometricType,
-								ageGroups[2]);
-				logIrisQuery(name, ageGroups[3]);
-				List<BiometricScoresSummaryEntity> seniorScores = biometricScoresSummaryRepository
-						.getBiometricScoresForIris(partnerId, projectId, testRunId, name, biometricType,
-								ageGroups[3]);
-				rows = populateIrisBioScoresRows(scoreRanges, childScores, adultScores, matureScores, seniorScores);
-				irisBioScoresTable.setRows(rows);
-
-				irisBiometricScores.setIrisTable(irisBioScoresTable);
-				biometricScoresList.add(irisBiometricScores);
+				BiometricScores biometricScores = new BiometricScores();
+				biometricScores.setSdkName(name);
+				List<BiometricScoresTable> tables = new ArrayList<BiometricScoresTable>();
+				BiometricScoresTable table = new BiometricScoresTable();
+				List<BiometricScoresRow> rows = new ArrayList<BiometricScoresRow>();
+				Map<String, List<BiometricScoresSummaryEntity>> ageGroupsMap = new HashMap<String, List<BiometricScoresSummaryEntity>>();
+				for (String ageGroup : ageGroups) {
+					table.setAgeGroup(ageGroup);
+					logIrisQuery(name, ageGroup);
+					List<BiometricScoresSummaryEntity> ageGroupScores = biometricScoresSummaryRepository
+							.getBiometricScoresForIris(partnerId, projectId, testRunId, name, biometricType, ageGroup);
+					ageGroupsMap.put(ageGroup, ageGroupScores);
+					
+				}
+				rows = populateBiometricScoresRows(scoreRanges, null, ageGroupsMap);
+				table.setRows(rows);
+				tables.add(table);
+				biometricScores.setTables(tables);
+				biometricScoresList.add(biometricScores);
 			}
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -261,8 +249,7 @@ public class BiometricScoresService {
 		return sdkNames;
 	}
 
-	private String getSdkUrlsJsonString(String modality)
-			throws JsonProcessingException, JsonMappingException {
+	private String getSdkUrlsJsonString(String modality) throws JsonProcessingException, JsonMappingException {
 		String sdkUrlsJsonStr = "";
 		if (AppConstants.BIOMETRIC_SCORES_FACE.equalsIgnoreCase(modality)) {
 			sdkUrlsJsonStr = faceSdkUrlsJsonStr;
@@ -276,7 +263,6 @@ public class BiometricScoresService {
 		}
 		return sdkUrlsJsonStr;
 	}
-
 
 	private void logFingerQuery(String name, String ageGroup, String occupation) {
 		log.info("fetching bio scores for sdk: " + name);
@@ -299,72 +285,38 @@ public class BiometricScoresService {
 		log.info("fetching bio scores for ageGroup: " + ageGroup);
 	}
 
-	private List<FingerBioScoresRow> populateFingerBioScoresRows(String[] scoreRanges,
-			List<BiometricScoresSummaryEntity> childScores, List<BiometricScoresSummaryEntity> labourerScores,
-			List<BiometricScoresSummaryEntity> nonLabourerScores) {
-		List<FingerBioScoresRow> scoresList = new ArrayList<FingerBioScoresRow>();
+	private List<BiometricScoresRow> populateBiometricScoresRows(String[] scoreRanges,
+			List<BiometricScoresSummaryEntity> childScores, Map<String, List<BiometricScoresSummaryEntity>> scoresMap) {
+		List<BiometricScoresRow> scoresList = new ArrayList<BiometricScoresRow>();
 		for (String scoreRange : scoreRanges) {
-			FingerBioScoresRow row = new FingerBioScoresRow();
+			BiometricScoresRow row = new BiometricScoresRow();
 			row.setBioScoreRange(scoreRange);
 			if (childScores != null && childScores.size() > 0) {
 				row.setMaleChildScore(getTotalScore(scoreRange, childScores, true));
 				row.setFemaleChildScore(getTotalScore(scoreRange, childScores, false));
 			}
-			if (labourerScores != null && labourerScores.size() > 0) {
-				row.setMaleLabourerScore(getTotalScore(scoreRange, labourerScores, true));
-				row.setFemaleLabourerScore(getTotalScore(scoreRange, labourerScores, false));
-			}
-			if (nonLabourerScores != null && nonLabourerScores.size() > 0) {
-				row.setMaleNonLabourerScore(getTotalScore(scoreRange, nonLabourerScores, true));
-				row.setFemaleNonLabourerScore(getTotalScore(scoreRange, nonLabourerScores, false));
-			}
-			scoresList.add(row);
-		}
-		return scoresList;
-	}
-
-	private List<FaceBioScoresRow> populateFaceBioScoresRows(String[] scoreRanges,
-			List<BiometricScoresSummaryEntity> asianScores, List<BiometricScoresSummaryEntity> africanScores,
-			List<BiometricScoresSummaryEntity> europeanScores) {
-		List<FaceBioScoresRow> scoresList = new ArrayList<FaceBioScoresRow>();
-		for (String scoreRange : scoreRanges) {
-			FaceBioScoresRow row = new FaceBioScoresRow();
-			row.setBioScoreRange(scoreRange);
-			if (asianScores != null && asianScores.size() > 0) {
-				row.setMaleAsianScore(getTotalScore(scoreRange, asianScores, true));
-				row.setFemaleAsianScore(getTotalScore(scoreRange, asianScores, false));
-			}
-			if (africanScores != null && africanScores.size() > 0) {
-				row.setMaleAfricanScore(getTotalScore(scoreRange, africanScores, true));
-				row.setFemaleAfricanScore(getTotalScore(scoreRange, africanScores, false));
-			}
-			if (europeanScores != null && europeanScores.size() > 0) {
-				row.setMaleEuropeanScore(getTotalScore(scoreRange, europeanScores, true));
-				row.setFemaleEuropeanScore(getTotalScore(scoreRange, europeanScores, false));
-			}
-			scoresList.add(row);
-		}
-		return scoresList;
-	}
-
-	private List<IrisBioScoresRow> populateIrisBioScoresRows(String[] scoreRanges, List<BiometricScoresSummaryEntity> childScores,
-		    List<BiometricScoresSummaryEntity> adultScores, List<BiometricScoresSummaryEntity> matureScores,
-			List<BiometricScoresSummaryEntity> seniorScores) {
-		List<IrisBioScoresRow> scoresList = new ArrayList<IrisBioScoresRow>();
-		for (String scoreRange : scoreRanges) {
-			IrisBioScoresRow row = new IrisBioScoresRow();
-			row.setBioScoreRange(scoreRange);
-			if (childScores != null && childScores.size() > 0) {
-				row.setChildScore(getTotalScore(scoreRange, childScores, true));
-			}
-			if (adultScores != null && adultScores.size() > 0) {
-				row.setAdultScore(getTotalScore(scoreRange, adultScores, true));
-			}
-			if (matureScores != null && matureScores.size() > 0) {
-				row.setMatureScore(getTotalScore(scoreRange, matureScores, true));
-			}
-			if (seniorScores != null && seniorScores.size() > 0) {
-				row.setSeniorScore(getTotalScore(scoreRange, seniorScores, true));
+			if (scoresMap != null) {
+				for (Map.Entry<String, List<BiometricScoresSummaryEntity>> entry : scoresMap.entrySet()) {
+					log.info("key: " + entry.getKey());
+					String key = entry.getKey();
+					List<BiometricScoresSummaryEntity> scores = entry.getValue();
+					Map<String, String> maleScoreMap = null;
+					Map<String, String> femaleScoreMap = null;
+					if (row.getMaleScores() == null) {
+						maleScoreMap = new HashMap<String, String>();
+					} else {
+						maleScoreMap = row.getMaleScores();
+					}
+					if (row.getFemaleScores() == null) {
+						femaleScoreMap = new HashMap<String, String>();
+					} else {
+						femaleScoreMap = row.getFemaleScores();
+					}
+					maleScoreMap.put(key, getTotalScore(scoreRange, scores, true));
+					femaleScoreMap.put(key, getTotalScore(scoreRange, scores, false));
+					row.setMaleScores(maleScoreMap);
+					row.setFemaleScores(femaleScoreMap);
+				}
 			}
 			scoresList.add(row);
 		}

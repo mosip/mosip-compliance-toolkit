@@ -51,14 +51,14 @@
 			border-spacing: 0;
 			margin: 0 auto;
 			width: 100%;
-			word-wrap: normal;
+			word-wrap: break-word;
 			border-collapse: collapse;
 		}
 		table td:first-child {
 			font-weight: bold;
 		}
 		table, th, td {
-			page-break-inside: avoid;
+			page-break-inside: auto;
 			border: 1px solid black;
 			text-align: left;
 			padding: 8px;
@@ -273,11 +273,11 @@
                 <h2>Biometric Scores</h2>
                 #foreach ($biometricScoresItem in $biometricScores)
                     #if($biometricType == 'Finger')
-						#foreach ($fingerTable in $biometricScoresItem.fingerTables)
+						#foreach ($table in $biometricScoresItem.tables)
 						<div class="page-break-after">
-							<h3>${biometricScoresItem.sdkName}: Finger - ${fingerTable.ageGroup}</h3>
+							<h3>${biometricScoresItem.sdkName}: Finger - ${table.ageGroup}</h3>
 							<table>
-								#if($fingerTable.isChildAgeGroup())
+								#if($table.isChildAgeGroup())
 								<thead>
 					                <tr>
 					                    <th>Score Range</th>
@@ -289,21 +289,22 @@
 								<thead>
 					                <tr>
 					                    <th>Score Range</th>
-					                    <th colspan="2">Labourer</th>
-					                    <th colspan="2">Non-Labourer</th>
+					                    #foreach ($occupation in $occupations)
+					                    	<th colspan="2">${occupation}</th>
+					                    #end
 					                </tr>
 					                <tr>
 					                    <th></th>
-					                    <th>Male</th>
-					                    <th>Female</th>
-					                    <th>Male</th>
-					                    <th>Female</th>
+					                     #foreach ($occupation in $occupations)
+					                    	<th>Male</th>
+					                    	<th>Female</th>
+					                    #end
 					                </tr>
 					            </thead>
 					        	#end
 					        	<tbody>
-					            #foreach ($row in $fingerTable.rows)
-					                #if($fingerTable.isChildAgeGroup())
+					            #foreach ($row in $table.rows)
+					                #if($table.isChildAgeGroup())
 					                    <tr>
 					                        <td>$row.bioScoreRange</td>
 					                        <td>$row.maleChildScore</td>
@@ -312,10 +313,10 @@
 					                #else
 					                    <tr>
 					                        <td>$row.bioScoreRange</td>
-					                        <td>$row.maleLabourerScore</td>
-					                        <td>$row.femaleLabourerScore</td>
-					                        <td>$row.maleNonLabourerScore</td>
-					                        <td>$row.femaleNonLabourerScore</td>
+					                        #foreach ($occupation in $occupations)
+					                        	<td>$row.maleScores.get($occupation)</td>
+					                        	<td>$row.femaleScores.get($occupation)</td>
+					                      	#end
 					                    </tr>
 					                #end
 					            #end
@@ -325,37 +326,33 @@
 						#end
 					#end
 					#if($biometricType == 'Face')
-                        #foreach ($faceTable in $biometricScoresItem.faceTables)
+                        #foreach ($table in $biometricScoresItem.tables)
                             <div class="page-break-after">
-                                <h3>${biometricScoresItem.sdkName}: Face - ${faceTable.ageGroup}</h3>
+                                <h3>${biometricScoresItem.sdkName}: Face - ${table.ageGroup}</h3>
                                 <table>
                                     <thead>
                                         <tr>
                                             <th>Score Range</th>
-                                            <th colspan="2">Asian</th>
-                                            <th colspan="2">African</th>
-                                            <th colspan="2">European</th>
+                                            #foreach ($race in $races)
+                                           		<th colspan="2">$race</th>
+                                            #end
                                         </tr>
                                         <tr>
                                             <th></th>
-                                            <th>Male</th>
-                                            <th>Female</th>
-                                            <th>Male</th>
-                                            <th>Female</th>
-                                            <th>Male</th>
-                                            <th>Female</th>
+                                            #foreach ($race in $races)
+                                           		<th>Male</th>
+                                            	<th>Female</th>
+                                            #end
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        #foreach ($row in $faceTable.rows)
+                                        #foreach ($row in $table.rows)
                                             <tr>
                                                 <td>$row.bioScoreRange</td>
-                                                <td>$row.maleAsianScore</td>
-                                                <td>$row.femaleAsianScore</td>
-                                                <td>$row.maleAfricanScore</td>
-                                                <td>$row.femaleAfricanScore</td>
-                                                <td>$row.maleEuropeanScore</td>
-                                                <td>$row.femaleEuropeanScore</td>
+                                                #foreach ($race in $races)
+                                                	<td>$row.maleScores.get($race)</td>
+                                                	<td>$row.femaleScores.get($race)</td>
+                                                #end
                                             </tr>
                                         #end
                                     </tbody>
@@ -364,31 +361,31 @@
                         #end
                     #end
                     #if($biometricType == 'Iris')
-                        <div class="page-break-after">
-                            <h3>${biometricScoresItem.sdkName}: Iris</h3>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Score Range</th>
-                                        <th>child(5-12)</th>
-                                        <th>adult(12-40)</th>
-                                        <th>mature(40-59)</th>
-                                        <th>senior(60+)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    #foreach ($row in $biometricScoresItem.irisTable.rows)
-                                        <tr>
-                                            <td>$row.bioScoreRange</td>
-                                            <td>$row.childScore</td>
-                                            <td>$row.adultScore</td>
-                                            <td>$row.matureScore</td>
-                                            <td>$row.seniorScore</td>
-                                        </tr>
-                                    #end
-                                </tbody>
-                            </table>
-                        </div>
+                    	#foreach ($table in $biometricScoresItem.tables)
+	                        <div class="page-break-after">
+	                            <h3>${biometricScoresItem.sdkName}: Iris</h3>
+	                            <table>
+	                                <thead>
+	                                    <tr>
+	                                        <th>Score Range</th>
+	                                         #foreach ($ageGroup in $ageGroups)
+	                                       		<th>$ageGroup</th>
+	                                         #end
+	                                    </tr>
+	                                </thead>
+	                                <tbody>
+	                                     #foreach ($row in $table.rows)
+	                                        <tr>
+	                                            <td>$row.bioScoreRange</td>
+	                                            #foreach ($ageGroup in $ageGroups)
+	                                            	<td>$row.maleScores.get($ageGroup)</td>
+	                                            #end
+	                                        </tr>
+	                                    #end
+	                                </tbody>
+	                            </table>
+	                        </div>
+	                   #end     
                     #end
                 #end
             </div>

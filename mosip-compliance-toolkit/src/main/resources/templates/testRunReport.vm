@@ -51,14 +51,14 @@
 			border-spacing: 0;
 			margin: 0 auto;
 			width: 100%;
-			word-wrap: normal;
+			word-wrap: break-word;
 			border-collapse: collapse;
 		}
 		table td:first-child {
 			font-weight: bold;
 		}
 		table, th, td {
-			page-break-inside: avoid;
+			page-break-inside: auto;
 			border: 1px solid black;
 			text-align: left;
 			padding: 8px;
