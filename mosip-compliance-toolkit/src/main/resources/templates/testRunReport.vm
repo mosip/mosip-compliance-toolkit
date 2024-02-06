@@ -63,6 +63,9 @@
 			text-align: left;
 			padding: 8px;
 		}
+		#test-cases-table {
+			word-wrap: normal;
+		}
 		.image-container {
 			display: flex;
 			justify-content: center;
@@ -312,6 +315,128 @@
             	</tbody>
 			</table>
 		</div>
+		#if($biometricScores)
+			<div>
+				<h2>Biometric Scores</h2>
+				#foreach ($biometricScoresItem in $biometricScores)
+					#if($biometricType == 'Finger')
+						#foreach ($table in $biometricScoresItem.tables)
+							<div class="page-break-after">
+								<h3>${biometricScoresItem.sdkName}: Finger - ${table.ageGroup}</h3>
+								<table>
+									#if($table.isChildAgeGroup())
+										<thead>
+											<tr>
+												<th>Score Range</th>
+												<th>Male</th>
+												<th>Female</th>
+											</tr>
+										</thead>
+									#else
+										<thead>
+											<tr>
+												<th>Score Range</th>
+												#foreach ($occupation in $occupations)
+													<th colspan="2">${occupation}</th>
+												#end
+											</tr>
+											<tr>
+												<th></th>
+												#foreach ($occupation in $occupations)
+													<th>Male</th>
+													<th>Female</th>
+												#end
+											</tr>
+										</thead>
+									#end
+									<tbody>
+										#foreach ($row in $table.rows)
+											#if($table.isChildAgeGroup())
+												<tr>
+													<td>$row.bioScoreRange</td>
+													<td>$row.maleChildScore</td>
+													<td>$row.femaleChildScore</td>
+												</tr>
+											#else
+												<tr>
+													<td>$row.bioScoreRange</td>
+													#foreach ($occupation in $occupations)
+														<td>$row.maleScores.get($occupation)</td>
+														<td>$row.femaleScores.get($occupation)</td>
+													#end
+												</tr>
+											#end
+										#end
+									</tbody>
+								</table>
+							</div>
+						#end
+					#end
+					#if($biometricType == 'Face')
+						#foreach ($table in $biometricScoresItem.tables)
+							<div class="page-break-after">
+								<h3>${biometricScoresItem.sdkName}: Face - ${table.ageGroup}</h3>
+								<table>
+									<thead>
+										<tr>
+											<th>Score Range</th>
+											#foreach ($race in $races)
+												<th colspan="2">$race</th>
+											#end
+										</tr>
+										<tr>
+											<th></th>
+											#foreach ($race in $races)
+												<th>Male</th>
+												<th>Female</th>
+											#end
+										</tr>
+									</thead>
+									<tbody>
+										#foreach ($row in $table.rows)
+											<tr>
+												<td>$row.bioScoreRange</td>
+												#foreach ($race in $races)
+													<td>$row.maleScores.get($race)</td>
+													<td>$row.femaleScores.get($race)</td>
+												#end
+											</tr>
+										#end
+									</tbody>
+								</table>
+							</div>
+						#end
+					#end
+					#if($biometricType == 'Iris')
+						#foreach ($table in $biometricScoresItem.tables)
+							<div class="page-break-after">
+								<h3>${biometricScoresItem.sdkName}: Iris</h3>
+								<table>
+									<thead>
+										<tr>
+											<th>Score Range</th>
+											#foreach ($ageGroup in $ageGroups)
+												<th>$ageGroup</th>
+											#end
+										</tr>
+									</thead>
+									<tbody>
+										#foreach ($row in $table.rows)
+											<tr>
+												<td>$row.bioScoreRange</td>
+												#foreach ($ageGroup in $ageGroups)
+													<td>$row.maleScores.get($ageGroup)</td>
+												#end
+											</tr>
+										#end
+									</tbody>
+								</table>
+							</div>
+						#end
+					#end
+				#end
+			</div>
+		#end
 		<!--
 		<div>
 			<h2>QR Code</h2>

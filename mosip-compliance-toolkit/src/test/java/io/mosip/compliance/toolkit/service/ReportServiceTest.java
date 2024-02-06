@@ -1242,8 +1242,6 @@ public class ReportServiceTest {
         CollectionDto collectionDto = new CollectionDto();
         collectionDto.setCollectionType("quality_assessment_collection");
         responseWrapper.setResponse(collectionDto);
-        when(collectionsService
-                .getCollectionById(anyString(), anyString())).thenReturn(responseWrapper);
         ResponseEntity result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "getSubmittedReport", "abc", reportRequestDto, false);
         assertThat(result, instanceOf(ResponseEntity.class));
     }
