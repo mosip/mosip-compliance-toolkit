@@ -70,6 +70,23 @@ public class ReportControllerTest {
     }
 
     @Test
+    public void generateDraftQAReportTest() throws Exception {
+        RequestWrapper<ReportRequestDto> value = new RequestWrapper<>();
+        Errors errors = mock(Errors.class);
+        ReportRequestDto reportRequestDto = new ReportRequestDto();
+        reportRequestDto.setProjectType("SBI");
+        reportRequestDto.setProjectId("abc123");
+        reportRequestDto.setTestRunId("12345");
+        reportRequestDto.setCollectionId("1acd23");
+        value.setRequest(reportRequestDto);
+        value.setId("abc");
+        value.setRequesttime(LocalDateTime.now());
+        value.setVersion("1.0");
+        String origin = "abc";
+        reportGeneratorController.generateDraftQAReport(value, origin, errors);
+    }
+
+    @Test
     public void isReportAlreadySubmittedTest() throws Exception {
         RequestWrapper<ReportRequestDto> reportRequestWrapper = new RequestWrapper<>();
         ResponseWrapper<Boolean> result = new ResponseWrapper<>();
