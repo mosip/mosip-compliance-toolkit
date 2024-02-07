@@ -90,8 +90,6 @@ public class ReportService {
 
 	private static final String TEST_RUN_REPORT_VM = "testRunReport.vm";
 
-	private static final String TEST_RUN_QA_REPORT_VM = "testRunQAReport.vm";
-
 	private static final String BIOMETRIC_TYPE = "biometricType";
 
 	private static final String BIOMETRIC_SCORES = "biometricScores";
@@ -384,7 +382,7 @@ public class ReportService {
 					null, origin, projectType, projectId, sbiProjectTable, biometricScoresList, biometricType);
 
 			// 7. Merge velocity HTML template with all attributes
-			String mergedHtml = mergeVelocityTemplate(velocityContext, TEST_RUN_QA_REPORT_VM);
+			String mergedHtml = mergeVelocityTemplate(velocityContext, TEST_RUN_REPORT_VM);
 			// 8. Covert the merged HTML to PDF
 			ByteArrayResource resource = convertHtmltToPdf(mergedHtml);
 			// 9. Save Report Data in DB for future
@@ -1128,26 +1126,8 @@ public class ReportService {
 						velocityContext.put(BIOMETRIC_SCORES, reportDataDto.getBiometricScores());
 					}
 					log.info("sessionId", "idType", "id", "Added all attributes in velocity template successfully");
-					boolean isComplianceCollection = true;
-					// check the collectionType
-					ResponseWrapper<CollectionDto> collectionResponseWrapper = collectionsService
-							.getCollectionById(collectionId, partnerId);
-					if (collectionResponseWrapper != null) {
-						CollectionDto collectionDto = collectionResponseWrapper.getResponse();
-						if (collectionDto != null) {
-							String collectionType = collectionDto.getCollectionType();
-							if (AppConstants.QUALITY_ASSESSMENT_COLLECTION.equals(collectionType)) {
-								isComplianceCollection = false;
-							}
-						}
-					}
-					log.info("sessionId", "idType", "id", "Is Compliance Collection: " + isComplianceCollection);
-					String templateName = TEST_RUN_REPORT_VM;
-					if (!isComplianceCollection) {
-						templateName = TEST_RUN_QA_REPORT_VM;
-					}
 					// 3. merge report data with template
-					String mergedHtml = mergeVelocityTemplate(velocityContext, templateName);
+					String mergedHtml = mergeVelocityTemplate(velocityContext, TEST_RUN_REPORT_VM);
 					// 4. Covert the merged HTML to PDF
 					ByteArrayResource resource = convertHtmltToPdf(mergedHtml);
 					// 5. Send PDF in response
