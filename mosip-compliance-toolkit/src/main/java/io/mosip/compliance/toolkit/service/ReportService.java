@@ -16,6 +16,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import io.mosip.compliance.toolkit.entity.ComplianceTestRunSummaryMappingEntity;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -999,19 +1000,17 @@ public class ReportService {
 				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 			} else {
 				// get the list of reports
-				List<ComplianceTestRunSummaryEntity> listEntity = null;
+				List<ComplianceTestRunSummaryMappingEntity> listEntity = null;
 				if (isAdmin) {
 					listEntity = complianceTestRunSummaryRepository.findAllByReportStatus(reportStatus);
 				} else {
 					listEntity = complianceTestRunSummaryRepository.findAllBySubmittedReportsPartnerId(getPartnerId());
 				}
 				ObjectMapper objectMapper = getObjectMapper();
-				for (ComplianceTestRunSummaryEntity respEntity : listEntity) {
+				for (ComplianceTestRunSummaryMappingEntity respEntity : listEntity) {
 					ComplianceTestRunSummaryDto complianceTestRunSummaryDto = (ComplianceTestRunSummaryDto) objectMapper
 							.convertValue(respEntity, new TypeReference<ComplianceTestRunSummaryDto>() {
 							});
-					complianceTestRunSummaryDto.setCollectionName(
-							getCollectionName(respEntity.getCollectionId(), respEntity.getPartnerId()));
 					complianceTestRunSummaryDto.setProjectName(getProjectName(respEntity));
 					responseList.add(complianceTestRunSummaryDto);
 				}
@@ -1032,7 +1031,7 @@ public class ReportService {
 		return responseWrapper;
 	}
 
-	private String getProjectName(ComplianceTestRunSummaryEntity respEntity) {
+	private String getProjectName(ComplianceTestRunSummaryMappingEntity respEntity) {
 		String projectType = respEntity.getProjectType();
 		String projectName = null;
 		if (AppConstants.SBI.equals(projectType)) {

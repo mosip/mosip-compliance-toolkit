@@ -2,9 +2,7 @@ package io.mosip.compliance.toolkit.dto.report;
 
 import java.time.LocalDateTime;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
@@ -24,6 +22,7 @@ public class ComplianceTestRunSummaryDto {
 	private LocalDateTime approveRejectDtimes;
 	private LocalDateTime updDtimes;
 	private String collectionName;
+	private String collectionType;
 	private String projectName;
 	private String updBy;
 }
