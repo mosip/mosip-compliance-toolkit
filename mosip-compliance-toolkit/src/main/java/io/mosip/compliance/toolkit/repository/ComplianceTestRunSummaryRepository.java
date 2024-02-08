@@ -35,6 +35,7 @@ public interface ComplianceTestRunSummaryRepository
 			"FROM ComplianceTestRunSummaryEntity cts, CollectionEntity c " +
 			"WHERE cts.collectionId = c.id " +
 			"AND cts.partnerId = ?1 " +
+			"AND cts.reportStatus<>'draft' " +
 			"AND cts.isDeleted <> 'true' " +
 			"ORDER BY cts.crDtimes DESC")
 	public List<ComplianceTestRunSummaryMappingEntity> findAllBySubmittedReportsPartnerId(String partnerId);
