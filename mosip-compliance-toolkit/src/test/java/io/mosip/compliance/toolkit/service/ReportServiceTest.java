@@ -23,7 +23,7 @@ import io.mosip.compliance.toolkit.dto.report.PartnerDetailsDto.ErrorDto;
 import io.mosip.compliance.toolkit.dto.collections.CollectionTestCasesResponseDto;
 import io.mosip.compliance.toolkit.dto.report.*;
 import io.mosip.compliance.toolkit.entity.ComplianceTestRunSummaryEntity;
-import io.mosip.compliance.toolkit.entity.ComplianceTestRunSummaryMappingEntity;
+import io.mosip.compliance.toolkit.entity.ComplianceReportSummaryEntity;
 import io.mosip.compliance.toolkit.entity.ComplianceTestRunSummaryPK;
 import io.mosip.compliance.toolkit.repository.*;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
@@ -1135,11 +1135,11 @@ public class ReportServiceTest {
     @Test(expected = Exception.class)
     public void getReportListTest() {
         boolean isAdmin = false;
-        ComplianceTestRunSummaryMappingEntity complianceTestRunSummaryMappingEntity = new ComplianceTestRunSummaryMappingEntity();
-        complianceTestRunSummaryMappingEntity.setReportStatus("teyrugt");
-        complianceTestRunSummaryMappingEntity.setProjectType("SBI");
-        List<ComplianceTestRunSummaryMappingEntity> listEntity = new ArrayList<>();
-        listEntity.add(complianceTestRunSummaryMappingEntity);
+        ComplianceReportSummaryEntity complianceReportSummaryEntity = new ComplianceReportSummaryEntity();
+        complianceReportSummaryEntity.setReportStatus("teyrugt");
+        complianceReportSummaryEntity.setProjectType("SBI");
+        List<ComplianceReportSummaryEntity> listEntity = new ArrayList<>();
+        listEntity.add(complianceReportSummaryEntity);
         MosipUserDto mosipUserDto = getMosipUserDto();
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
         when(authentication.getPrincipal()).thenReturn(authUserDetails);
@@ -1154,7 +1154,7 @@ public class ReportServiceTest {
 
     @Test
     public void getProjectNameSbiTest() {
-        ComplianceTestRunSummaryMappingEntity respEntity = new ComplianceTestRunSummaryMappingEntity();
+        ComplianceReportSummaryEntity respEntity = new ComplianceReportSummaryEntity();
         respEntity.setReportStatus("teyrugt");
         respEntity.setProjectType("SBI");
         when(sbiProjectRepository.getProjectNameById(respEntity.getProjectId(), respEntity.getPartnerId())).thenReturn("yasud");
@@ -1164,7 +1164,7 @@ public class ReportServiceTest {
 
     @Test
     public void getProjectNameSdkTest() {
-        ComplianceTestRunSummaryMappingEntity respEntity = new ComplianceTestRunSummaryMappingEntity();
+        ComplianceReportSummaryEntity respEntity = new ComplianceReportSummaryEntity();
         respEntity.setReportStatus("teyrugt");
         respEntity.setProjectType("SDK");
         when(sdkProjectRepository.getProjectNameById(respEntity.getProjectId(), respEntity.getPartnerId())).thenReturn("yasud");
@@ -1174,7 +1174,7 @@ public class ReportServiceTest {
 
     @Test
     public void getProjectNameAbisTest() {
-        ComplianceTestRunSummaryMappingEntity respEntity = new ComplianceTestRunSummaryMappingEntity();
+        ComplianceReportSummaryEntity respEntity = new ComplianceReportSummaryEntity();
         respEntity.setReportStatus("teyrugt");
         respEntity.setProjectType("ABIS");
         when(abisProjectRepository.getProjectNameById(respEntity.getProjectId(), respEntity.getPartnerId())).thenReturn("yasud");

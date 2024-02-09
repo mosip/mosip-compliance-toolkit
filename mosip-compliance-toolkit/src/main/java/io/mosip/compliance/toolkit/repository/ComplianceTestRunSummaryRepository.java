@@ -2,7 +2,7 @@ package io.mosip.compliance.toolkit.repository;
 
 import java.util.List;
 
-import io.mosip.compliance.toolkit.entity.ComplianceTestRunSummaryMappingEntity;
+import io.mosip.compliance.toolkit.entity.ComplianceReportSummaryEntity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +14,7 @@ import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
 public interface ComplianceTestRunSummaryRepository
         extends BaseRepository<ComplianceTestRunSummaryEntity, ComplianceTestRunSummaryPK> {
 
-    @Query("SELECT new io.mosip.compliance.toolkit.entity.ComplianceTestRunSummaryMappingEntity(" +
+    @Query("SELECT new io.mosip.compliance.toolkit.entity.ComplianceReportSummaryEntity(" +
             "cts.projectId AS project_id, " +
             "cts.collectionId AS collection_id, " +
             "cts.runId AS run_id, " +
@@ -37,9 +37,9 @@ public interface ComplianceTestRunSummaryRepository
             "AND cts.reportStatus = ?1 " +
             "AND cts.isDeleted <> 'true' " +
             "ORDER BY cts.crDtimes DESC")
-    public List<ComplianceTestRunSummaryMappingEntity> findAllByReportStatus(String reportStatus);
+    public List<ComplianceReportSummaryEntity> findAllByReportStatus(String reportStatus);
 
-    @Query("SELECT new io.mosip.compliance.toolkit.entity.ComplianceTestRunSummaryMappingEntity(" +
+    @Query("SELECT new io.mosip.compliance.toolkit.entity.ComplianceReportSummaryEntity(" +
             "cts.projectId AS project_id, " +
             "cts.collectionId AS collection_id, " +
             "cts.runId AS run_id, " +
@@ -63,6 +63,6 @@ public interface ComplianceTestRunSummaryRepository
             "AND cts.reportStatus<>'draft' " +
             "AND cts.isDeleted <> 'true' " +
             "ORDER BY cts.crDtimes DESC")
-    public List<ComplianceTestRunSummaryMappingEntity> findAllBySubmittedReportsPartnerId(String partnerId);
+    public List<ComplianceReportSummaryEntity> findAllBySubmittedReportsPartnerId(String partnerId);
 
 }

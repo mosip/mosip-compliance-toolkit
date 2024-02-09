@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @NoArgsConstructor
 @IdClass(ComplianceTestRunSummaryPK.class)
-public class ComplianceTestRunSummaryMappingEntity {
+public class ComplianceReportSummaryEntity {
 
     @Id
     @Column(name = "project_id")
