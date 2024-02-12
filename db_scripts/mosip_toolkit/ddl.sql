@@ -11,4 +11,7 @@
 \ir ddl/test_run_details.sql
 \ir ddl/test_run_details_archive.sql
 \ir ddl/biometric_testdata.sql
+\ir ddl/biometric_scores.sql
+\ir ddl/compliance_testrun_summary.sql
+\ir ddl/datashare_tokens.sql
 \ir ddl/fk.sql
