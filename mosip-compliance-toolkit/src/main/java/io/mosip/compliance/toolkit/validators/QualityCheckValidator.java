@@ -63,9 +63,9 @@ public class QualityCheckValidator extends SDKValidator {
 					ObjectNode versionObj = objectMapperConfig.objectMapper().createObjectNode();
 					if (analyticsInfo != null && analyticsInfo.size() > 0 &&
 							analyticsInfo.containsKey(AppConstants.ENGINE) && analyticsInfo.get(AppConstants.ENGINE) != null) {
-						versionObj.put("version", analyticsInfo.get(AppConstants.ENGINE));
+						versionObj.put(AppConstants.SDK_VERSION, analyticsInfo.get(AppConstants.ENGINE));
 					} else {
-						versionObj.putNull("version");
+						versionObj.putNull(AppConstants.SDK_VERSION);
 					}
 					validationResultDto.setExtraInfoJson(versionObj.toString());
 					if (Modalities.FINGER.getCode().equals(biometricTypeStr)) {

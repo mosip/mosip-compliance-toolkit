@@ -100,4 +100,6 @@ public class AppConstants {
 
 	public static final String ENGINE = "engine";
 
+	public static final String SDK_VERSION = "version";
+
 }
