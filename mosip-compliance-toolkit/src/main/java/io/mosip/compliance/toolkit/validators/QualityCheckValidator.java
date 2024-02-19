@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.kernel.core.logger.spi.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,6 +60,14 @@ public class QualityCheckValidator extends SDKValidator {
 					String biometricTypeStr = biometricType.value().toLowerCase();
 					float score = entry.getValue().getScore();
 					Map<String, String> analyticsInfo = entry.getValue().getAnalyticsInfo();
+					ObjectNode versionObj = objectMapperConfig.objectMapper().createObjectNode();
+					if (analyticsInfo != null && analyticsInfo.size() > 0 &&
+							analyticsInfo.containsKey("engine") && analyticsInfo.get("engine") != null) {
+						versionObj.put("version", analyticsInfo.get("engine"));
+					} else {
+						versionObj.putNull("version");
+					}
+					validationResultDto.setExtraInfoJson(versionObj.toString());
 					if (Modalities.FINGER.getCode().equals(biometricTypeStr)) {
 						checkScore(biometricTypeStr, inputDto, Float.parseFloat(fingerThresholdValue),
 								validationResultDto, score, analyticsInfo);
@@ -100,12 +109,12 @@ public class QualityCheckValidator extends SDKValidator {
 	}
 
 	private void checkScore(String biometricTypeStr, ValidationInputDto inputDto, float thresholdValue,
-			ValidationResultDto validationResultDto, float score, Map<String, String> analyticsInfo) {
+			ValidationResultDto validationResultDto, float score, Map<String, String> analyticsInfo) throws JsonProcessingException {
 		String resourceBundleKeyName = "";
-		ObjectNode sdkScoreObj = objectMapperConfig.objectMapper().createObjectNode();
+		ObjectNode extraInfoJsonObj = (ObjectNode) objectMapperConfig.objectMapper().readTree(validationResultDto.getExtraInfoJson());
 		int sdkScore = Math.round(score);
-		sdkScoreObj.put("score", String.valueOf(sdkScore));
-		validationResultDto.setExtraInfoJson(sdkScoreObj.toString());
+		extraInfoJsonObj.put("score", String.valueOf(sdkScore));
+		validationResultDto.setExtraInfoJson(extraInfoJsonObj.toString());
 		if (!inputDto.isNegativeTestCase()) {
 			// positive test case
 			if (score >= thresholdValue) {

@@ -123,6 +123,7 @@ public class BiometricScoresService {
 				biometricScores.setSdkName(name);
 				List<BiometricScoresTable> tables = new ArrayList<BiometricScoresTable>();
 				int childAgeGroupIndex = 0;
+				boolean setVersion = false;
 				for (String ageGroup : ageGroups) {
 					BiometricScoresTable table = new BiometricScoresTable();
 					table.setAgeGroup(ageGroup);
@@ -133,6 +134,10 @@ public class BiometricScoresService {
 								.getBiometricScoresForChildFinger(partnerId, projectId, testRunId, name, biometricType,
 										ageGroup);
 						rows = populateBiometricScoresRows(scoreRanges, childScores, null);
+						if (!setVersion && childScores != null && childScores.size() > 0) {
+							biometricScores.setVersion(getSdkVersion(childScores));
+							setVersion = true;
+						}
 						table.setChildAgeGroup(true);
 					} else { // other non child age groups
 						Map<String, List<BiometricScoresSummaryEntity>> occupationsMap = new HashMap<String, List<BiometricScoresSummaryEntity>>();
@@ -172,6 +177,7 @@ public class BiometricScoresService {
 				BiometricScores biometricScores = new BiometricScores();
 				biometricScores.setSdkName(name);
 				List<BiometricScoresTable> tables = new ArrayList<BiometricScoresTable>();
+				boolean setVersion = false;
 				for (String ageGroup : ageGroups) {
 					BiometricScoresTable table = new BiometricScoresTable();
 					table.setAgeGroup(ageGroup);
@@ -183,6 +189,10 @@ public class BiometricScoresService {
 								.getBiometricScoresForFace(partnerId, projectId, testRunId, name, biometricType,
 										ageGroup, race);
 						racesMap.put(race, raceScores);
+						if (!setVersion && raceScores != null && raceScores.size() > 0) {
+							biometricScores.setVersion(getSdkVersion(raceScores));
+							setVersion = true;
+						}
 					}
 					rows = populateBiometricScoresRows(scoreRanges, null, racesMap);
 					table.setRows(rows);
@@ -214,13 +224,17 @@ public class BiometricScoresService {
 				BiometricScoresTable table = new BiometricScoresTable();
 				List<BiometricScoresRow> rows = new ArrayList<BiometricScoresRow>();
 				Map<String, List<BiometricScoresSummaryEntity>> ageGroupsMap = new HashMap<String, List<BiometricScoresSummaryEntity>>();
+				boolean setVersion = false;
 				for (String ageGroup : ageGroups) {
 					table.setAgeGroup(ageGroup);
 					logIrisQuery(name, ageGroup);
 					List<BiometricScoresSummaryEntity> ageGroupScores = biometricScoresSummaryRepository
 							.getBiometricScoresForIris(partnerId, projectId, testRunId, name, biometricType, ageGroup);
+					if (!setVersion && ageGroupScores != null && ageGroupScores.size() > 0) {
+						biometricScores.setVersion(getSdkVersion(ageGroupScores));
+						setVersion = true;
+					}
 					ageGroupsMap.put(ageGroup, ageGroupScores);
-					
 				}
 				rows = populateBiometricScoresRows(scoreRanges, null, ageGroupsMap);
 				table.setRows(rows);
@@ -235,6 +249,15 @@ public class BiometricScoresService {
 			throw ex;
 		}
 		return biometricScoresList;
+	}
+
+	private String getSdkVersion(List<BiometricScoresSummaryEntity> biometricScoresSummaryEntityList) {
+		if (biometricScoresSummaryEntityList != null && !biometricScoresSummaryEntityList.isEmpty()) {
+			if (biometricScoresSummaryEntityList.get(0).getVersion() != null) {
+				return biometricScoresSummaryEntityList.get(0).getVersion();
+			}
+		}
+		return null;
 	}
 
 	private List<String> getSdkNames(String modality) throws JsonProcessingException {

@@ -24,6 +24,7 @@ import lombok.Setter;
 @SqlResultSetMapping(name = "Mapping.BiometricScoresSummaryEntity", classes = {
 		@ConstructorResult(targetClass = BiometricScoresSummaryEntity.class, columns = {
 				@ColumnResult(name = "id", type = String.class),
+				@ColumnResult(name = "version", type = String.class),
 				@ColumnResult(name = "male_0_10", type = Integer.class),
 				@ColumnResult(name = "male_11_20", type = Integer.class),
 				@ColumnResult(name = "male_21_30", type = Integer.class),
@@ -45,6 +46,7 @@ import lombok.Setter;
 				@ColumnResult(name = "female_81_90", type = Integer.class),
 				@ColumnResult(name = "female_91_100", type = Integer.class) }) })
 @NamedNativeQuery(name = "BiometricScoresSummaryEntity.getBiometricScoresForFinger", resultClass = BiometricScoresSummaryEntity.class, query = "SELECT b.id AS id,  "
+		+ "CAST(b.scores_json AS jsonb) ->> 'version' AS version, "
 		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '0-10' AND CAST(b.scores_json AS jsonb) ->> 'gender' = 'male' THEN 1 ELSE NULL END) AS male_0_10, "
 		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '11-20' AND CAST(b.scores_json AS jsonb) ->> 'gender' = 'male' THEN 1 ELSE NULL END) AS male_11_20, "
 		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '21-30' AND CAST(b.scores_json AS jsonb) ->> 'gender' = 'male' THEN 1 ELSE NULL END) AS male_21_30, "
@@ -71,6 +73,7 @@ import lombok.Setter;
 		+ "AND CAST(b.scores_json AS jsonb) ->> 'ageGroup' = :ageGroup "
 		+ "AND CAST(b.scores_json AS jsonb) ->> 'occupation' = :occupation GROUP BY b.id")
 @NamedNativeQuery(name = "BiometricScoresSummaryEntity.getBiometricScoresForChildFinger", resultClass = BiometricScoresSummaryEntity.class, query = "SELECT b.id AS id,  "
+		+ "CAST(b.scores_json AS jsonb) ->> 'version' AS version, "
 		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '0-10' AND CAST(b.scores_json AS jsonb) ->> 'gender' = 'male' THEN 1 ELSE NULL END) AS male_0_10, "
 		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '11-20' AND CAST(b.scores_json AS jsonb) ->> 'gender' = 'male' THEN 1 ELSE NULL END) AS male_11_20, "
 		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '21-30' AND CAST(b.scores_json AS jsonb) ->> 'gender' = 'male' THEN 1 ELSE NULL END) AS male_21_30, "
@@ -96,6 +99,7 @@ import lombok.Setter;
 		+ "AND CAST(b.scores_json AS jsonb) ->> 'biometricType' = :biometricType "
 		+ "AND CAST(b.scores_json AS jsonb) ->> 'ageGroup' = :ageGroup GROUP BY b.id")
 @NamedNativeQuery(name = "BiometricScoresSummaryEntity.getBiometricScoresForFace", resultClass = BiometricScoresSummaryEntity.class, query = "SELECT b.id AS id,  "
+		+ "CAST(b.scores_json AS jsonb) ->> 'version' AS version, "
 		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '0-10' AND CAST(b.scores_json AS jsonb) ->> 'gender' = 'male' THEN 1 ELSE NULL END) AS male_0_10, "
 		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '11-20' AND CAST(b.scores_json AS jsonb) ->> 'gender' = 'male' THEN 1 ELSE NULL END) AS male_11_20, "
 		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '21-30' AND CAST(b.scores_json AS jsonb) ->> 'gender' = 'male' THEN 1 ELSE NULL END) AS male_21_30, "
@@ -122,6 +126,7 @@ import lombok.Setter;
 		+ "AND CAST(b.scores_json AS jsonb) ->> 'ageGroup' = :ageGroup "
 		+ "AND CAST(b.scores_json AS jsonb) ->> 'race' = :race GROUP BY b.id")
 @NamedNativeQuery(name = "BiometricScoresSummaryEntity.getBiometricScoresForIris", resultClass = BiometricScoresSummaryEntity.class, query = "SELECT b.id AS id,  "
+		+ "CAST(b.scores_json AS jsonb) ->> 'version' AS version, "
 		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '0-10'  THEN 1 ELSE NULL END) AS male_0_10, "
 		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '11-20' THEN 1 ELSE NULL END) AS male_11_20, "
 		+ "COUNT(CASE WHEN CAST(b.scores_json AS jsonb) ->> 'biometricScoreRange' = '21-30' THEN 1 ELSE NULL END) AS male_21_30, "
@@ -150,7 +155,7 @@ public class BiometricScoresSummaryEntity {
 
 	@Override
 	public String toString() {
-		return "BiometricScoresSummaryEntity [id=" + id + ", male_0_10=" + male_0_10 + ", male_11_20=" + male_11_20
+		return "BiometricScoresSummaryEntity [id=" + id + ", version=" + version + ", male_0_10=" + male_0_10 + ", male_11_20=" + male_11_20
 				+ ", male_21_30=" + male_21_30 + ", male_31_40=" + male_31_40 + ", male_41_50=" + male_41_50
 				+ ", male_51_60=" + male_51_60 + ", male_61_70=" + male_61_70 + ", male_71_80=" + male_71_80
 				+ ", male_81_90=" + male_81_90 + ", male_91_100=" + male_91_100 + ", female_0_10=" + female_0_10
@@ -160,13 +165,14 @@ public class BiometricScoresSummaryEntity {
 				+ female_91_100 + "]";
 	}
 
-	public BiometricScoresSummaryEntity(String id, Integer male_0_10, Integer male_11_20, Integer male_21_30,
+	public BiometricScoresSummaryEntity(String id, String version, Integer male_0_10, Integer male_11_20, Integer male_21_30,
 			Integer male_31_40, Integer male_41_50, Integer male_51_60, Integer male_61_70, Integer male_71_80,
 			Integer male_81_90, Integer male_91_100, Integer female_0_10, Integer female_11_20, Integer female_21_30,
 			Integer female_31_40, Integer female_41_50, Integer female_51_60, Integer female_61_70, Integer female_71_80,
 			Integer female_81_90, Integer female_91_100) {
 		super();
 		this.id = id;
+		this.version = version;
 		this.male_0_10 = male_0_10;
 		this.male_11_20 = male_11_20;
 		this.male_21_30 = male_21_30;
@@ -195,6 +201,7 @@ public class BiometricScoresSummaryEntity {
 
 	@Id
 	private String id;
+	private String version;
 	private Integer male_0_10;
 	private Integer male_11_20;
 	private Integer male_21_30;
