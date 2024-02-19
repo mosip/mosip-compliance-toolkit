@@ -123,7 +123,6 @@ public class BiometricScoresService {
 				biometricScores.setSdkName(name);
 				List<BiometricScoresTable> tables = new ArrayList<BiometricScoresTable>();
 				int childAgeGroupIndex = 0;
-				boolean setVersion = false;
 				for (String ageGroup : ageGroups) {
 					BiometricScoresTable table = new BiometricScoresTable();
 					table.setAgeGroup(ageGroup);
@@ -134,9 +133,10 @@ public class BiometricScoresService {
 								.getBiometricScoresForChildFinger(partnerId, projectId, testRunId, name, biometricType,
 										ageGroup);
 						rows = populateBiometricScoresRows(scoreRanges, childScores, null);
-						if (!setVersion && childScores != null && childScores.size() > 0) {
-							biometricScores.setVersion(getSdkVersion(childScores));
-							setVersion = true;
+						if (childScores != null && childScores.size() > 0) {
+							if (biometricScores.getVersion() == null) {
+								biometricScores.setVersion(getSdkVersion(childScores));
+							}
 						}
 						table.setChildAgeGroup(true);
 					} else { // other non child age groups
@@ -147,6 +147,11 @@ public class BiometricScoresService {
 									.getBiometricScoresForFinger(partnerId, projectId, testRunId, name, biometricType,
 											ageGroup, occupation);
 							occupationsMap.put(occupation, occupationScores);
+							if (occupationScores != null && occupationScores.size() > 0) {
+								if (biometricScores.getVersion() == null) {
+									biometricScores.setVersion(getSdkVersion(occupationScores));
+								}
+							}
 						}
 						rows = populateBiometricScoresRows(scoreRanges, null, occupationsMap);
 						table.setChildAgeGroup(false);
@@ -177,7 +182,6 @@ public class BiometricScoresService {
 				BiometricScores biometricScores = new BiometricScores();
 				biometricScores.setSdkName(name);
 				List<BiometricScoresTable> tables = new ArrayList<BiometricScoresTable>();
-				boolean setVersion = false;
 				for (String ageGroup : ageGroups) {
 					BiometricScoresTable table = new BiometricScoresTable();
 					table.setAgeGroup(ageGroup);
@@ -189,9 +193,10 @@ public class BiometricScoresService {
 								.getBiometricScoresForFace(partnerId, projectId, testRunId, name, biometricType,
 										ageGroup, race);
 						racesMap.put(race, raceScores);
-						if (!setVersion && raceScores != null && raceScores.size() > 0) {
-							biometricScores.setVersion(getSdkVersion(raceScores));
-							setVersion = true;
+						if (raceScores != null && raceScores.size() > 0) {
+							if (biometricScores.getVersion() == null) {
+								biometricScores.setVersion(getSdkVersion(raceScores));
+							}
 						}
 					}
 					rows = populateBiometricScoresRows(scoreRanges, null, racesMap);
@@ -224,15 +229,15 @@ public class BiometricScoresService {
 				BiometricScoresTable table = new BiometricScoresTable();
 				List<BiometricScoresRow> rows = new ArrayList<BiometricScoresRow>();
 				Map<String, List<BiometricScoresSummaryEntity>> ageGroupsMap = new HashMap<String, List<BiometricScoresSummaryEntity>>();
-				boolean setVersion = false;
 				for (String ageGroup : ageGroups) {
 					table.setAgeGroup(ageGroup);
 					logIrisQuery(name, ageGroup);
 					List<BiometricScoresSummaryEntity> ageGroupScores = biometricScoresSummaryRepository
 							.getBiometricScoresForIris(partnerId, projectId, testRunId, name, biometricType, ageGroup);
-					if (!setVersion && ageGroupScores != null && ageGroupScores.size() > 0) {
-						biometricScores.setVersion(getSdkVersion(ageGroupScores));
-						setVersion = true;
+					if (ageGroupScores != null && ageGroupScores.size() > 0) {
+						if (biometricScores.getVersion() == null) {
+							biometricScores.setVersion(getSdkVersion(ageGroupScores));
+						}
 					}
 					ageGroupsMap.put(ageGroup, ageGroupScores);
 				}
