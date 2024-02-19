@@ -341,7 +341,7 @@
 						#foreach ($table in $biometricScoresItem.tables)
 							<div class="page-break-after">
 								<h3>${biometricScoresItem.sdkName}: Finger - ${table.ageGroup}</h3>
-								#if($!biometricScoresItem.version)
+								#if($biometricScoresItem.version && $biometricScoresItem.version != "")
                                     <h4>Version: $biometricScoresItem.version</h4>
                                 #end
 								<table>
@@ -397,7 +397,7 @@
 						#foreach ($table in $biometricScoresItem.tables)
 							<div class="page-break-after">
 								<h3>${biometricScoresItem.sdkName}: Face - ${table.ageGroup}</h3>
-								#if($!biometricScoresItem.version)
+								#if($biometricScoresItem.version && $biometricScoresItem.version != "")
                                 	<h4>Version: $biometricScoresItem.version</h4>
                                 #end
 								<table>
@@ -435,7 +435,7 @@
 						#foreach ($table in $biometricScoresItem.tables)
 							<div class="page-break-after">
 								<h3>${biometricScoresItem.sdkName}: Iris</h3>
-								#if($!biometricScoresItem.version)
+								#if($biometricScoresItem.version && $biometricScoresItem.version != "")
 								    <h4>Version: $biometricScoresItem.version</h4>
 								#end
 								<table>

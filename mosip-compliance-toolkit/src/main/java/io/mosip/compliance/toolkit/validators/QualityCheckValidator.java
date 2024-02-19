@@ -62,8 +62,8 @@ public class QualityCheckValidator extends SDKValidator {
 					Map<String, String> analyticsInfo = entry.getValue().getAnalyticsInfo();
 					ObjectNode versionObj = objectMapperConfig.objectMapper().createObjectNode();
 					if (analyticsInfo != null && analyticsInfo.size() > 0 &&
-							analyticsInfo.containsKey("engine") && analyticsInfo.get("engine") != null) {
-						versionObj.put("version", analyticsInfo.get("engine"));
+							analyticsInfo.containsKey(AppConstants.ENGINE) && analyticsInfo.get(AppConstants.ENGINE) != null) {
+						versionObj.put("version", analyticsInfo.get(AppConstants.ENGINE));
 					} else {
 						versionObj.putNull("version");
 					}

@@ -93,8 +93,11 @@ public class AppConstants {
 	public static final String CERTIFICATE_TYPE = "X.509";
 
 	public static final String BIOMETRIC_SCORES_FINGER = "Finger";
+
 	public static final String BIOMETRIC_SCORES_FACE = "Face";
+
 	public static final String BIOMETRIC_SCORES_IRIS = "Iris";
 
+	public static final String ENGINE = "engine";
 
 }
