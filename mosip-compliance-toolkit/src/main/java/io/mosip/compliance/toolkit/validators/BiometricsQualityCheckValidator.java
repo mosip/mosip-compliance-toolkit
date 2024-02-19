@@ -354,7 +354,7 @@ public class BiometricsQualityCheckValidator extends ISOStandardsValidator {
 			ObjectNode bioScore = (ObjectNode) objectMapper.readValue(scoreJson, ObjectNode.class);
 			String score = bioScore.get("score").asText();
 			biometricScoresItem.put("biometricScore", score);
-			biometricScoresItem.set("version", bioScore.get("version"));
+			biometricScoresItem.set(AppConstants.SDK_VERSION, bioScore.get(AppConstants.SDK_VERSION));
 			int scoreInt = Integer.parseInt(score);
 			if (isBetween(scoreInt, 0, 10)) {
 				biometricScoresItem.put("biometricScoreRange", "0-10");	
