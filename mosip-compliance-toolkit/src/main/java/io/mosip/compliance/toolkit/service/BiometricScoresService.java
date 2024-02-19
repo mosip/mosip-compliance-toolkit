@@ -258,8 +258,10 @@ public class BiometricScoresService {
 
 	private String getSdkVersion(List<BiometricScoresSummaryEntity> biometricScoresSummaryEntityList) {
 		if (biometricScoresSummaryEntityList != null && !biometricScoresSummaryEntityList.isEmpty()) {
-			if (biometricScoresSummaryEntityList.get(0).getVersion() != null) {
-				return biometricScoresSummaryEntityList.get(0).getVersion();
+			for (BiometricScoresSummaryEntity entity : biometricScoresSummaryEntityList) {
+				if (entity.getVersion() != null) {
+					return entity.getVersion();
+				}
 			}
 		}
 		return null;
