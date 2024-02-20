@@ -5,6 +5,12 @@ import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
@@ -16,6 +22,7 @@ import io.mosip.compliance.toolkit.service.AbisProjectService;
 import javax.validation.Valid;
 
 @RestController
+@Tag(name = "abis-project-controller")
 public class AbisProjectController {
 
     /** The Constant ABIS_PROJECT_POST_ID application. */
@@ -40,6 +47,12 @@ public class AbisProjectController {
     }
 
     @GetMapping(value = "/getAbisProject/{id}")
+    @Operation(summary = "Get ABIS project", description = "Get ABIS project by id", tags = "abis-project-controller")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
     private ResponseWrapper<AbisProjectDto> getProjectById(@PathVariable String id){
         return abisProjectService.getAbisProject(id);
     }
@@ -53,6 +66,12 @@ public class AbisProjectController {
      */
     @ResponseFilter
     @PostMapping(value = "/addAbisProject", produces = "application/json")
+    @Operation(summary = "Add ABIS project", description = "Add new ABIS project", tags = "abis-project-controller")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<AbisProjectDto> addAbisProject(
             @RequestBody @Valid RequestWrapper<AbisProjectDto> value,
             Errors errors) throws Exception{
@@ -72,6 +91,12 @@ public class AbisProjectController {
      */
     @ResponseFilter
     @PutMapping(value = "/updateAbisProject", produces = "application/json")
+    @Operation(summary = "Update ABIS project", description = "Update ABIS project details", tags = "abis-project-controller")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<AbisProjectDto> updateAbisProject(
             @RequestBody @Valid RequestWrapper<AbisProjectDto> value,
             Errors errors) throws Exception {

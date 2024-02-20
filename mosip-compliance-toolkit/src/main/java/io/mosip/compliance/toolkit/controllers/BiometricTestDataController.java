@@ -4,6 +4,12 @@ import java.util.List;
 
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.kernel.core.logger.spi.Logger;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -31,6 +37,7 @@ import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
 
 @RestController
+@Tag(name = "biometric-testdata-controller")
 public class BiometricTestDataController {
 
 	/** The Constant BIOMETRIC_TESTDATA_POST_ID application. */
@@ -48,12 +55,24 @@ public class BiometricTestDataController {
 	private Logger log = LoggerConfiguration.logConfig(BiometricTestDataController.class);
 
 	@GetMapping(value = "/getListOfBiometricTestData")
+	@Operation(summary = "Get list of biometric testdata", description = "Get list of biometric testdata uploaded by partners", tags = "biometric-testdata-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<List<BiometricTestDataDto>> getListOfBiometricTestData() {
 		return biometricTestDataService.getListOfBiometricTestData();
 	}
 
 	@PostMapping(value = "/addBiometricTestData", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE,
 			MediaType.APPLICATION_JSON_VALUE })
+	@Operation(summary = "Add biometric testdata", description = "Partners can upload their own biometric testdata.", tags = "biometric-testdata-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<AddBioTestDataResponseDto> addBiometricTestData(@RequestParam("file") MultipartFile file,
 			@RequestPart("biometricMetaData") String strRequestWrapper, Errors errors) {
 		try {
@@ -77,16 +96,34 @@ public class BiometricTestDataController {
 	}
 
 	@GetMapping(value = "/getBiometricTestDataFile/{id}")
+	@Operation(summary = "Get biometric testdata file", description = "Get biometric testdata file by id", tags = "biometric-testdata-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseEntity<Resource> getBiometricTestDataFile(@PathVariable String id) {
 		return biometricTestDataService.getBiometricTestDataFile(id);
 	}
 
 	@GetMapping(value = "/getBioTestDataNames")
+	@Operation(summary = "Get bio testdata names", description = "Get bio testdata names based on the purpose", tags = "biometric-testdata-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<List<String>> getBioTestDataNames(@RequestParam(required = true) String purpose) {
 		return biometricTestDataService.getBioTestDataNames(purpose);
 	}
 
 	@GetMapping(value = "/getSampleBioTestDataFile")
+	@Operation(summary = "Get sample bio testdata file", description = "Download sample bio testdata file according to the purpose", tags = "biometric-testdata-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseEntity<Resource> getSampleBioTestDataFile(@RequestParam(required = true) String purpose) {
 		return biometricTestDataService.getSampleBioTestDataFile(purpose);
 	}

@@ -7,6 +7,12 @@ import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseFilter;
 import io.mosip.kernel.core.http.ResponseWrapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
@@ -15,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
+@Tag(name = "sdk-project-controller")
 public class SdkProjectController {
 
     /** The Constant SDK_PROJECT_POST_ID application. */
@@ -40,6 +47,12 @@ public class SdkProjectController {
     }
 
     @GetMapping(value = "/getSdkProject/{id}")
+    @Operation(summary = "Get SDK project", description = "Get SDK project by id", tags = "sdk-project-controller")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
     private ResponseWrapper<SdkProjectDto> getProjectById(@PathVariable String id){
         return sdkProjectService.getSdkProject(id);
     }
@@ -53,6 +66,12 @@ public class SdkProjectController {
      */
     @ResponseFilter
     @PostMapping(value = "/addSdkProject", produces = "application/json")
+    @Operation(summary = "Add SDK project", description = "Add new SDK project", tags = "sdk-project-controller")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<SdkProjectDto> addSdkProject(
             @RequestBody @Valid RequestWrapper<SdkProjectDto> value,
             Errors errors) throws Exception{
@@ -72,6 +91,12 @@ public class SdkProjectController {
      */
     @ResponseFilter
     @PutMapping(value = "/updateSdkProject", produces = "application/json")
+    @Operation(summary = "Update SDK project", description = "Update SDK project details", tags = "sdk-project-controller")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<SdkProjectDto> updateSdkProject(
             @RequestBody @Valid RequestWrapper<SdkProjectDto> value,
             Errors errors) throws Exception {
