@@ -6,6 +6,12 @@ import java.util.List;
 import javax.validation.Valid;
 
 import io.mosip.compliance.toolkit.util.CommonUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,6 +49,7 @@ import io.mosip.kernel.core.http.ResponseWrapper;
  * @since 1.0.0
  */
 @RestController
+@Tag(name = "test-cases-controller")
 public class TestCasesController {
 
 	/**
@@ -72,6 +79,12 @@ public class TestCasesController {
 	}
 
 	@PostMapping(value = "/validateRequest")
+	@Operation(summary = "Validate Request", description = "Validate methodRequest as per the specification", tags = "test-cases-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<ValidationResultDto> validateRequest(
 			@RequestBody @Valid RequestWrapper<ValidateRequestSchemaDto> input, Errors errors) throws Exception {
 		requestValidator.validateId(VALIDATIONS_POST_ID, input.getId(), errors);
@@ -80,6 +93,12 @@ public class TestCasesController {
 	}
 
 	@PostMapping(value = "/validateResponse")
+	@Operation(summary = "Validate Response", description = "Validate methodResponse as per the specification", tags = "test-cases-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<ValidationResponseDto> validateResponse(
 			@RequestBody @Valid RequestWrapper<ValidationInputDto> input, Errors errors) throws Exception {
 		requestValidator.validateId(VALIDATIONS_POST_ID, input.getId(), errors);
@@ -88,6 +107,12 @@ public class TestCasesController {
 	}
 
 	@GetMapping(value = "/getSbiTestCases")
+	@Operation(summary = "Get SBI testcases", description = "Get SBI testcases by using the required fields given below.", tags = "test-cases-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<List<TestCaseDto>> getSbiTestCases(@RequestParam(required = true) String specVersion,
 			@RequestParam(required = true) String purpose, @RequestParam(required = true) String deviceType,
 			@RequestParam(required = true) String deviceSubType,
@@ -104,6 +129,12 @@ public class TestCasesController {
 	}
 
 	@GetMapping(value = "/getSdkTestCases")
+	@Operation(summary = "Get SDK testcases", description = "Get SDK testcases by using the required fields given below.", tags = "test-cases-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<List<TestCaseDto>> getSdkTestCases(@RequestParam(required = true) String specVersion,
 			@RequestParam(required = true) String sdkPurpose) {
 		try {
@@ -126,6 +157,12 @@ public class TestCasesController {
 	}
 	
 	@GetMapping(value = "/getAbisTestCases")
+	@Operation(summary = "Get ABIS testcases", description = "Get ABIS testcases based on the spec version", tags = "test-cases-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<List<TestCaseDto>> getAbisTestCases(@RequestParam(required = true) String abisSpecVersion) {
 		try {
 			return service.getAbisTestCases(abisSpecVersion);
@@ -135,6 +172,12 @@ public class TestCasesController {
 	}
 
 	@PostMapping(value = "/generateRequestForSDK")
+	@Operation(summary = "Generate request for SDK", description = "Generate request for SDK", tags = "test-cases-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<GenerateSdkRequestResponseDto> generateRequestForSDK(
 			@RequestBody @Valid RequestWrapper<SdkRequestDto> request, Errors errors) throws Exception {
 		requestValidator.validateId(GENERATE_SDK_REQUEST_POST_ID, request.getId(), errors);
@@ -143,6 +186,12 @@ public class TestCasesController {
 	}
 	
 	@PostMapping(value = "/generateRequestForSDKFrmBirs")
+	@Operation(summary = "Generate request for SDK From BIR's", description = "Generate request for SDK From BIR's", tags = "test-cases-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<GenerateSdkRequestResponseDto> generateRequestForSDKFrmBirs(
 			@RequestBody @Valid RequestWrapper<SdkRequestDto> request, Errors errors) throws Exception {
 		requestValidator.validateId(GENERATE_SDK_REQUEST_POST_ID, request.getId(), errors);
@@ -152,12 +201,24 @@ public class TestCasesController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getSaveTestCases())")
 	@PostMapping(value = "/saveTestCases", produces = "application/json")
+	@Operation(summary = "Save testcases", description = "The user must have the CTK_ADMIN role in order to save test cases.", tags = "test-cases-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<TestCaseResponseDto> saveTestCases(
 			@RequestBody @Valid RequestWrapper<TestCaseRequestDto> testCaseRequestDto) throws Exception {
 		return service.saveTestCases(testCaseRequestDto.getRequest().getTestCases());
 	}
 
 	@GetMapping(value = "/getTestCase/{testId}")
+	@Operation(summary = "Get testcase", description = "Get testcase by testId", tags = "test-cases-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<TestCaseDto> getTestCaseById(@PathVariable String testId) {
 		return service.getTestCaseById(testId);
 	}

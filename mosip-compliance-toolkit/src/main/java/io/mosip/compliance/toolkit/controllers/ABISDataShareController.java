@@ -1,5 +1,11 @@
 package io.mosip.compliance.toolkit.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
@@ -28,6 +34,7 @@ import io.mosip.kernel.core.logger.spi.Logger;
  *
  */
 @RestController
+@Tag(name = "abis-data-share-controller")
 public class ABISDataShareController {
 
 	@Autowired
@@ -52,6 +59,12 @@ public class ABISDataShareController {
 	}
 
 	@PostMapping(value = "/createDataShareUrl")
+	@Operation(summary = "Create data share Url", description = "Create data share Url", tags = "abis-data-share-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<DataShareResponseWrapperDto> createDataShareUrl(
 			@RequestBody RequestWrapper<DataShareRequestDto> requestWrapper, Errors errors) {
 		requestValidator.validate(requestWrapper, errors);
@@ -59,12 +72,24 @@ public class ABISDataShareController {
 	}
 
 	@PostMapping(value = "/expireDataShareUrl")
+	@Operation(summary = "Expire data share Url", description = "Expire data share Url", tags = "abis-data-share-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<Boolean> expireDataShareUrl(
 			@RequestBody RequestWrapper<DataShareExpireRequest> requestWrapper, Errors errors) {
 		return abisDataShareService.expireDataShareUrl(requestWrapper.getRequest());
 	}
 
 	@PostMapping(value = "/saveDataShareToken")
+	@Operation(summary = "Save data share token", description = "Save data share token", tags = "abis-data-share-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<String> saveDataShareToken(
 			@RequestBody RequestWrapper<DataShareSaveTokenRequest> requestWrapper, Errors errors) throws Exception {
 		log.info("sessionId", "idType", "id", "In saveDataShareToken method of ABISDataShareController.");
@@ -76,6 +101,12 @@ public class ABISDataShareController {
 	}
 
 	@PostMapping(value = "/invalidateDataShareToken")
+	@Operation(summary = "Invalidate data share token", description = "Invalidate data share token", tags = "abis-data-share-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<String> invalidateDataShareToken(
 			@RequestBody RequestWrapper<DataShareSaveTokenRequest> requestWrapper, Errors errors) throws Exception {
 		log.info("sessionId", "idType", "id", "In invalidateDataShareToken method of ABISDataShareController.");

@@ -4,6 +4,12 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,6 +42,7 @@ import io.mosip.kernel.core.http.ResponseWrapper;
  *
  */
 @RestController
+@Tag(name = "report-controller")
 public class ReportController {
 
 	/** The Constant PARTNER_REPORT_ID. */
@@ -61,6 +68,12 @@ public class ReportController {
 	}
 
 	@PostMapping(value = "/isReportAlreadySubmitted")
+	@Operation(summary = "Is report already submitted", description = "Verify whether the report has already been submitted.", tags = "report-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<Boolean> isReportAlreadySubmitted(
 			@RequestBody @Valid RequestWrapper<ReportRequestDto> reportRequestWrapper, Errors errors) throws Exception {
 		validateRequestForPartner(reportRequestWrapper, errors);
@@ -68,6 +81,12 @@ public class ReportController {
 	}
 
 	@PostMapping(value = "/generateDraftReport")
+	@Operation(summary = "Generate draft report", description = "Generate draft report for compliance collection", tags = "report-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseEntity<?> generateDraftReport(@RequestBody @Valid RequestWrapper<ReportRequestDto> value,
 			@RequestHeader String origin, Errors errors) throws Exception {
 		validateRequestForPartner(value, errors);
@@ -75,6 +94,12 @@ public class ReportController {
 	}
 
 	@PostMapping(value = "/generateDraftQAReport")
+	@Operation(summary = "Generate QA draft report", description = "Generate draft report for quality assessment collection", tags = "report-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseEntity<?> generateDraftQAReport(@RequestBody @Valid RequestWrapper<ReportRequestDto> value,
 			@RequestHeader String origin, Errors errors) throws Exception {
 		validateRequestForPartner(value, errors);
@@ -82,6 +107,12 @@ public class ReportController {
 	}
 
 	@PostMapping(value = "/submitReportForReview")
+	@Operation(summary = "Submit the report for review", description = "Partner can submit their report for admin review", tags = "report-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<ComplianceTestRunSummaryDto> submitReportForReview(
 			@RequestBody @Valid RequestWrapper<ReportRequestDto> reportRequestWrapper, Errors errors) throws Exception {
 		validateRequestForPartner(reportRequestWrapper, errors);
@@ -90,6 +121,12 @@ public class ReportController {
 	}
 
 	@PostMapping(value = "/getSubmittedReport")
+	@Operation(summary = "Get submitted report", description = "Get partner submitted report for admin review", tags = "report-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseEntity<?> getSubmittedReport(
 			@RequestBody @Valid RequestWrapper<ReportRequestDto> reportRequestWrapper, Errors errors) throws Exception {
 		validateRequestForPartner(reportRequestWrapper, errors);
@@ -99,12 +136,24 @@ public class ReportController {
 	}
 
 	@GetMapping(value = "/getSubmittedReportList")
+	@Operation(summary = "Get submitted report list", description = "Get submitted report list", tags = "report-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<List<ComplianceTestRunSummaryDto>> getSubmittedReportList() throws Exception {
 		return service.getReportList(false, null);
 	}
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getAdminPartnerReport())")
 	@GetMapping(value = "/getPartnerReportList/{reportStatus}")
+	@Operation(summary = "Get partner report list", description = "Get partner report list by report status", tags = "report-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<List<ComplianceTestRunSummaryDto>> getPartnerReportList(@PathVariable String reportStatus)
 			throws Exception {
 		return service.getReportList(true, reportStatus);
@@ -112,6 +161,12 @@ public class ReportController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getAdminPartnerReport())")
 	@PostMapping(value = "/getPartnerReport/{partnerId}")
+	@Operation(summary = "Get partner report", description = "Get partner report by partner id", tags = "report-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseEntity<?> getPartnerReport(@PathVariable String partnerId,
 			@RequestBody @Valid RequestWrapper<ReportRequestDto> reportRequestWrapper, Errors errors) throws Exception {
 		validateRequestForAdmin(reportRequestWrapper, errors);
@@ -120,6 +175,12 @@ public class ReportController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getAdminPartnerReport())")
 	@PostMapping(value = "/approvePartnerReport/{partnerId}")
+	@Operation(summary = "Approve partner report", description = "Admin can approve partner's report", tags = "report-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<ComplianceTestRunSummaryDto> approvePartnerReport(@PathVariable String partnerId,
 			@RequestBody @Valid RequestWrapper<ReportRequestDto> reportRequestWrapper, Errors errors) throws Exception {
 		validateRequestForAdmin(reportRequestWrapper, errors);
@@ -129,6 +190,12 @@ public class ReportController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getAdminPartnerReport())")
 	@PostMapping(value = "/rejectPartnerReport/{partnerId}")
+	@Operation(summary = "Reject partner report", description = "Admin can reject partner's report", tags = "report-controller")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<ComplianceTestRunSummaryDto> rejectPartnerReport(@PathVariable String partnerId,
 			@RequestBody @Valid RequestWrapper<ReportRequestDto> reportRequestWrapper, Errors errors) throws Exception {
 		validateRequestForAdmin(reportRequestWrapper, errors);
