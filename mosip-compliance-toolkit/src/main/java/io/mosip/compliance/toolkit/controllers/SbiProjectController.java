@@ -112,7 +112,7 @@ public class SbiProjectController {
 	 * @return
 	 */
 	@GetMapping(value = "/getEncryptionKey")
-	@Operation(summary = "Get Encryption Key", description = "Get the encryption key needed for SBI's L1 devices", tags = "sbi-project-controller")
+	@Operation(summary = "Get Encryption Key", description = "Download the encryption key only for auth projects", tags = "sbi-project-controller")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),

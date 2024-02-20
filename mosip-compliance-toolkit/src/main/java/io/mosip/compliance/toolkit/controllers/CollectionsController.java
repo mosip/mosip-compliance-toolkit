@@ -33,7 +33,7 @@ import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
 
 @RestController
-@Tag(name = "collection-controller")
+@Tag(name = "collections-controller")
 public class CollectionsController {
 
 	/** The Constant SBI_PROJECT_POST_ID application. */
@@ -59,7 +59,7 @@ public class CollectionsController {
 	}
 
 	@GetMapping(value = "/getCollections")
-	@Operation(summary = "Get project collections", description = "Get collections based on the projectId and projectType", tags = "collection-controller")
+	@Operation(summary = "Get collections", description = "Get collections based on the project id and project type", tags = "collections-controller")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
@@ -71,7 +71,7 @@ public class CollectionsController {
 	}
 
 	@GetMapping(value = "/getTestCasesForCollection/{id}")
-	@Operation(summary = "Get testcases for collection", description = "Get testcases for collection by id", tags = "collection-controller")
+	@Operation(summary = "Get testcases for collection", description = "Get testcases for collection by id", tags = "collections-controller")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
@@ -83,7 +83,7 @@ public class CollectionsController {
 	
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getAdminPartnerReport())")
 	@GetMapping(value = "/getPartnerTestCasesForCollection/{partnerId}/{id}")
-	@Operation(summary = "Get partner testcases for collection", description = "Get partner testcases for collection by id and partnerId", tags = "collection-controller")
+	@Operation(summary = "Get partner testcases for collection", description = "Get partner testcases for collection by id and partner id", tags = "collections-controller")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
@@ -95,7 +95,7 @@ public class CollectionsController {
 	}
 
 	@GetMapping(value = "/getCollection/{id}")
-	@Operation(summary = "Get collection", description = "Get collection based on the id", tags = "collection-controller")
+	@Operation(summary = "Get collection", description = "Get collection by id", tags = "collections-controller")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
@@ -106,7 +106,7 @@ public class CollectionsController {
 	}
 	
 	@PostMapping(value = "/addCollection")
-	@Operation(summary = "Add collection", description = "Add new collection", tags = "collection-controller")
+	@Operation(summary = "Add collection", description = "Add new collection", tags = "collections-controller")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
@@ -121,7 +121,7 @@ public class CollectionsController {
 	}
 
 	@PostMapping(value = "/addTestCasesForCollection")
-	@Operation(summary = "Add testcases for collection", description = "Add selected testcases for collection", tags = "collection-controller")
+	@Operation(summary = "Add testcases for collection", description = "Add selected testcases for collection", tags = "collections-controller")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),

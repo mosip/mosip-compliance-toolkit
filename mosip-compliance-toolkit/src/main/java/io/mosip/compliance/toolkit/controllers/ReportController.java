@@ -68,7 +68,7 @@ public class ReportController {
 	}
 
 	@PostMapping(value = "/isReportAlreadySubmitted")
-	@Operation(summary = "Is report already submitted", description = "Verify whether the report has already been submitted.", tags = "report-controller")
+	@Operation(summary = "Check if report submitted", description = "Check whether the report has already been submitted.", tags = "report-controller")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
@@ -121,7 +121,7 @@ public class ReportController {
 	}
 
 	@PostMapping(value = "/getSubmittedReport")
-	@Operation(summary = "Get submitted report", description = "Get partner submitted report for admin review", tags = "report-controller")
+	@Operation(summary = "Get submitted report", description = "Download partner submitted report for review", tags = "report-controller")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),

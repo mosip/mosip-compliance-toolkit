@@ -67,7 +67,7 @@ public class BiometricTestDataController {
 
 	@PostMapping(value = "/addBiometricTestData", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE,
 			MediaType.APPLICATION_JSON_VALUE })
-	@Operation(summary = "Add biometric testdata", description = "Partners can upload their own testdata.", tags = "biometric-testdata-controller")
+	@Operation(summary = "Add biometric testdata", description = "Partners can upload their own biometric testdata.", tags = "biometric-testdata-controller")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
@@ -107,7 +107,7 @@ public class BiometricTestDataController {
 	}
 
 	@GetMapping(value = "/getBioTestDataNames")
-	@Operation(summary = "Get bio testdata names", description = "Get list of bio testdata names based on the purpose", tags = "biometric-testdata-controller")
+	@Operation(summary = "Get bio testdata names", description = "Get bio testdata names based on the purpose", tags = "biometric-testdata-controller")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),

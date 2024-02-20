@@ -157,7 +157,7 @@ public class TestCasesController {
 	}
 	
 	@GetMapping(value = "/getAbisTestCases")
-	@Operation(summary = "Get ABIS testcases", description = "Get ABIS testcases based on the spec version", tags = "test-cases-controller")
+	@Operation(summary = "Get ABIS testcases", description = "Get ABIS testcases based on the ABIS spec version", tags = "test-cases-controller")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),

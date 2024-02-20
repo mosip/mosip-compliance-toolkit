@@ -95,7 +95,7 @@ public class TestRunController {
 	}
 
 	@GetMapping(value = "/getTestRunDetails/{runId}")
-	@Operation(summary = "Get test run details", description = "Get test run details by runId", tags = "test-run-controller")
+	@Operation(summary = "Get test run details", description = "Get test run details by run id", tags = "test-run-controller")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
@@ -106,7 +106,7 @@ public class TestRunController {
 	}
 
 	@GetMapping(value = "/getMethodDetails/{runId}/{testcaseId}/{methodId}")
-	@Operation(summary = "Get method details", description = "Get method details based on the runId, testcaseId and methodId", tags = "test-run-controller")
+	@Operation(summary = "Get method details", description = "Get method details based on the run id, testcase id and method id", tags = "test-run-controller")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
@@ -119,7 +119,7 @@ public class TestRunController {
 
 	@PreAuthorize("hasAnyRole(@authorizedRoles.getAdminPartnerReport())")
 	@GetMapping(value = "/getPartnerTestRunDetails/{partnerId}/{runId}")
-	@Operation(summary = "Get partner test run details", description = "Get partner test run details by partnerId and runId", tags = "test-run-controller")
+	@Operation(summary = "Get partner test run details", description = "Get partner test run details by partner id and run id", tags = "test-run-controller")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
@@ -157,7 +157,7 @@ public class TestRunController {
 	}
 
 	@GetMapping(value = "/getTestRunStatus/{runId}")
-	@Operation(summary = "Get test run status", description = "Get test run status by runId", tags = "test-run-controller")
+	@Operation(summary = "Get test run status", description = "Get test run status by run id", tags = "test-run-controller")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
@@ -168,7 +168,7 @@ public class TestRunController {
 	}
 
 	@DeleteMapping(value = "/deleteTestRun/{runId}")
-	@Operation(summary = "Delete test run", description = "Delete testrun by runId", tags = "test-run-controller")
+	@Operation(summary = "Delete test run", description = "Delete testrun by run id", tags = "test-run-controller")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
