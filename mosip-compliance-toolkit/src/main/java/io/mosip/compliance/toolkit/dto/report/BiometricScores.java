@@ -13,6 +13,7 @@ import lombok.Setter;
 public class BiometricScores {
 
 	private String sdkName;
+	private String version;
 	private List<BiometricScoresTable> tables;
 
 	@Getter
