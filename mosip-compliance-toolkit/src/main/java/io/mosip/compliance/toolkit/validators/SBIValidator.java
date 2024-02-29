@@ -176,7 +176,7 @@ public abstract class SBIValidator extends ToolkitValidator {
 	}
 
 	@Data
-	public static class DeviceTrustRequestDto implements Serializable {
+	protected static class DeviceTrustRequestDto implements Serializable {
 		private static final long serialVersionUID = -4874932813550831900L;
 		String certificateData;
 		String partnerDomain;
@@ -203,7 +203,7 @@ public abstract class SBIValidator extends ToolkitValidator {
 	}
 
 	@Data
-	public static class DecryptRequestDto implements Serializable {
+	protected static class DecryptRequestDto implements Serializable {
 		private static final long serialVersionUID = 6098449354733115976L;
 		String applicationId;
 		String referenceId;
@@ -236,25 +236,25 @@ public abstract class SBIValidator extends ToolkitValidator {
 	}
 
 	@Data
-	public static class ErrorDto {
+	protected static class ErrorDto {
 		String errorCode;
 		String message;
 	}
 
 	@Data
-	public static class DecryptValidatorResponse implements Serializable {
+	protected static class DecryptValidatorResponse implements Serializable {
 		private static final long serialVersionUID = 5675428669597716934L;
 		String data;
 	}
 
 	@Data
-	public static class DeviceValidatorResponse implements Serializable {
+	protected static class DeviceValidatorResponse implements Serializable {
 		private static final long serialVersionUID = -2714540550294089151L;
 		String status;
 	}
 
 	@Data
-	public static class DeviceValidatorRequestDto implements Serializable {
+	protected static class DeviceValidatorRequestDto implements Serializable {
 		private static final long serialVersionUID = 6066767653045843567L;
 		String deviceCode;
 		String deviceServiceVersion;
@@ -264,7 +264,7 @@ public abstract class SBIValidator extends ToolkitValidator {
 	}
 
 	@Data
-	public static class DeviceValidatorDigitalIdDto implements Serializable {
+	protected static class DeviceValidatorDigitalIdDto implements Serializable {
 		private static final long serialVersionUID = 5438972186954170612L;
 		String dateTime;
 		String deviceSubType;
