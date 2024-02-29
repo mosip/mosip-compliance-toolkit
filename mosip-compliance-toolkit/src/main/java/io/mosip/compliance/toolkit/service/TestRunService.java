@@ -443,7 +443,7 @@ public class TestRunService {
 			}
 		} catch (Exception e) {
 			log.debug("sessionId", "idType", "id", e.getStackTrace());
-			log.error("sessionId", "idType", "id", "In getEncryptedData - " + e.getMessage());
+			log.error("sessionId", "idType", "id", "In getEncryptedData method of TestRunService - " + e.getMessage());
 			throw new ToolkitException(ToolkitErrorCodes.DATA_ENCRYPT_ERROR.getErrorCode(),
 					ToolkitErrorCodes.DATA_ENCRYPT_ERROR.getErrorMessage() + e.getLocalizedMessage());
 		}
@@ -480,7 +480,7 @@ public class TestRunService {
 			}
 		} catch (Exception e) {
 			log.debug("sessionId", "idType", "id", e.getStackTrace());
-			log.error("sessionId", "idType", "id", "In getDecryptedData - " + e.getMessage());
+			log.error("sessionId", "idType", "id", "In getDecryptedData method of TestRunService - " + e.getMessage());
 			throw new ToolkitException(ToolkitErrorCodes.DATA_DECRYPT_ERROR.getErrorCode(),
 					ToolkitErrorCodes.DATA_DECRYPT_ERROR.getErrorMessage() + e.getLocalizedMessage());
 		}
