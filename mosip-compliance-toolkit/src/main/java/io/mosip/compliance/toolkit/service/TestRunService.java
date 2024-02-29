@@ -373,7 +373,7 @@ public class TestRunService {
 			}
 		} catch (Exception e) {
 			log.debug("sessionId", "idType", "id", e.getStackTrace());
-			log.error("sessionId", "idType", "id", "In encryptBioValue method of TestRunService - " + e.getMessage());
+			log.error("sessionId", "idType", "id", "In encryptData method of TestRunService - " + e.getMessage());
 		}
 		return testRunDetailsEntity;
 	}
@@ -407,7 +407,7 @@ public class TestRunService {
 			}
 		} catch (Exception e) {
 			log.debug("sessionId", "idType", "id", e.getStackTrace());
-			log.error("sessionId", "idType", "id", "In decryptValue method of TestRunService - " + e.getMessage());
+			log.error("sessionId", "idType", "id", "In decryptData method of TestRunService - " + e.getMessage());
 		}
 		return testRunDetailsEntity;
 	}
