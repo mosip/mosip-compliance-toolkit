@@ -2,6 +2,12 @@ package io.mosip.compliance.toolkit.util;
 
 import java.io.IOException;
 
+import io.mosip.compliance.toolkit.dto.testrun.DecryptDataRequestDto;
+import io.mosip.compliance.toolkit.dto.testrun.DecryptDataResponseDto;
+import io.mosip.compliance.toolkit.dto.testrun.EncryptDataRequestDto;
+import io.mosip.compliance.toolkit.dto.testrun.EncryptDataResponseDto;
+import io.mosip.kernel.core.http.RequestWrapper;
+import io.mosip.kernel.core.http.ResponseWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,10 +22,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import io.mosip.compliance.toolkit.dto.EncryptionKeyResponseDto;
-import io.mosip.compliance.toolkit.validators.SBIValidator.DecryptValidatorDto;
-import io.mosip.compliance.toolkit.validators.SBIValidator.DecryptValidatorResponseDto;
-import io.mosip.compliance.toolkit.validators.SBIValidator.DeviceValidatorDto;
-import io.mosip.compliance.toolkit.validators.SBIValidator.DeviceValidatorResponseDto;
+import io.mosip.compliance.toolkit.validators.SBIValidator.*;
 
 @Component
 public class KeyManagerHelper {
@@ -35,6 +38,9 @@ public class KeyManagerHelper {
 
 	@Value("${mosip.service.keymanager.decrypt.url}")
 	private String keyManagerDecryptUrl;
+
+	@Value("${mosip.service.keymanager.encrypt.url}")
+	private String keyManagerEncryptUrl;
 
 	@Value("${mosip.service.keymanager.encryption.key.url}")
 	private String keyManagerGetEncryptionKeyUrl;
@@ -60,6 +66,30 @@ public class KeyManagerHelper {
 				HttpMethod.POST, requestEntity, new ParameterizedTypeReference<DecryptValidatorResponseDto>() {
 				});
 		DecryptValidatorResponseDto body = responseEntity.getBody();
+		return body;
+	}
+
+	public ResponseWrapper<EncryptDataResponseDto> dataEncryptionResponse(RequestWrapper<EncryptDataRequestDto> encryptRequest)
+			throws RestClientException {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<RequestWrapper<EncryptDataRequestDto>> requestEntity = new HttpEntity<>(encryptRequest, headers);
+		ResponseEntity<ResponseWrapper<EncryptDataResponseDto>> responseEntity = restTemplate.exchange(keyManagerEncryptUrl,
+				HttpMethod.POST, requestEntity, new ParameterizedTypeReference<>() {
+				});
+		ResponseWrapper<EncryptDataResponseDto> body = responseEntity.getBody();
+		return body;
+	}
+
+	public ResponseWrapper<DecryptDataResponseDto> dataDecryptionResponse(RequestWrapper<DecryptDataRequestDto> decryptRequest)
+			throws RestClientException {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<RequestWrapper<DecryptDataRequestDto>> requestEntity = new HttpEntity<>(decryptRequest, headers);
+		ResponseEntity<ResponseWrapper<DecryptDataResponseDto>> responseEntity = restTemplate.exchange(keyManagerDecryptUrl,
+				HttpMethod.POST, requestEntity, new ParameterizedTypeReference<>() {
+				});
+		ResponseWrapper<DecryptDataResponseDto> body = responseEntity.getBody();
 		return body;
 	}
 	
