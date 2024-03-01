@@ -219,7 +219,8 @@ public class TestRunService {
 					entity.setPartnerId(getPartnerId());
 					entity.setOrgName(resourceCacheService.getOrgName(getPartnerId()));
 					TestRunDetailsEntity outputEntity = new TestRunDetailsEntity();
-					if (isRcaptureEncryptionEnabled && getMethodName(entity.getTestcaseId()).equals(RCAPTURE)) {
+					String methodName = getTestCaseMethodName(entity.getTestcaseId());
+					if (isRcaptureEncryptionEnabled && methodName != null && methodName.equals(RCAPTURE)) {
 						TestRunDetailsEntity testRunDetailsEntity = performRcaptureEncryption(entity);
 						outputEntity = testRunDetailsRepository.save(testRunDetailsEntity);
 					} else {
@@ -271,7 +272,8 @@ public class TestRunService {
 							ObjectMapper mapper = objectMapperConfig.objectMapper();
 							for (TestRunDetailsEntity testRunDetailsEntity : testRunDetailsEntityList) {
 								TestRunDetailsDto dto = new TestRunDetailsDto();
-								if (isRcaptureEncryptionEnabled && getMethodName(testRunDetailsEntity.getTestcaseId()).equals(RCAPTURE)) {
+								String methodName = getTestCaseMethodName(testRunDetailsEntity.getTestcaseId());
+								if (isRcaptureEncryptionEnabled && methodName != null && methodName.equals(RCAPTURE)) {
 									TestRunDetailsEntity entity = performRcaptureDecryption(testRunDetailsEntity);
 									dto = mapper.convertValue(entity, TestRunDetailsDto.class);
 								} else {
@@ -319,7 +321,8 @@ public class TestRunService {
 							partnerId, testcaseId, methodId);
 					if (Objects.nonNull(testRunDetailsEntity)) {
 						ObjectMapper mapper = objectMapperConfig.objectMapper();
-						if (isRcaptureEncryptionEnabled && getMethodName(testRunDetailsEntity.getTestcaseId()).equals(RCAPTURE)) {
+						String methodName = getTestCaseMethodName(testRunDetailsEntity.getTestcaseId());
+						if (isRcaptureEncryptionEnabled && methodName != null && methodName.equals(RCAPTURE)) {
 							TestRunDetailsEntity entity = performRcaptureDecryption(testRunDetailsEntity);
 							testRunDetailsDto = mapper.convertValue(entity, TestRunDetailsDto.class);
 						} else {
@@ -506,7 +509,7 @@ public class TestRunService {
 		return false;
 	}
 
-	public String getMethodName(String testCaseId) {
+	public String getTestCaseMethodName(String testCaseId) {
 		String methodName = BLANK_STRING;
 
 		try {

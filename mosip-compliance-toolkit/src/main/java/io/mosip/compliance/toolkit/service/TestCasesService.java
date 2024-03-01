@@ -978,7 +978,7 @@ public class TestCasesService {
 		ResponseWrapper<TestCaseDto> responseWrapper = new ResponseWrapper<>();
 		TestCaseDto testcase = null;
 		try {
-			TestCaseEntity testCaseEntity = testCasesRepository.getTestCasesById(testCaseId);
+			TestCaseEntity testCaseEntity = testCaseCacheService.getTestCase(testCaseId);
 			String testCaseJson = testCaseEntity.getTestcaseJson();
 
 			if (Objects.nonNull(testCaseJson)) {
