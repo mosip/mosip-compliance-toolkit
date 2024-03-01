@@ -731,10 +731,10 @@ public class TestCasesServiceTest {
 	public void getTestCaseByIdTest() throws JsonProcessingException {
 		TestCaseEntity testCaseEntity = new TestCaseEntity();
 		String testCaseId = "SBI1000";
-		when(testCasesRepository.getTestCasesById(testCaseId)).thenReturn(testCaseEntity);
+		when(testCaseCacheService.getTestCase(testCaseId)).thenReturn(testCaseEntity);
 		testCasesService.getTestCaseById(testCaseId);
 		testCaseEntity.setTestcaseJson("testCaseJson");
-		when(testCasesRepository.getTestCasesById(testCaseId)).thenReturn(testCaseEntity);
+		when(testCaseCacheService.getTestCase(testCaseId)).thenReturn(testCaseEntity);
 		TestCaseDto testCase = new TestCaseDto();
 		when(objectMapper.readValue(testCaseEntity.getTestcaseJson(), TestCaseDto.class)).thenReturn(testCase);
 		ResponseWrapper<TestCaseDto> responseWrapper = testCasesService.getTestCaseById(testCaseId);
