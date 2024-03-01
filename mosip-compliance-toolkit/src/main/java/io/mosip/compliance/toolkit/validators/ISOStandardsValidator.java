@@ -131,8 +131,8 @@ public class ISOStandardsValidator extends SBIValidator {
 				.base64UrlEncode(CryptoUtil.concatByteArrays(thumbprintArr, sessionKeyArr, keySplitterArr, dataArr));
 
 		String requesttime = getCurrentDateAndTimeForAPI();
-		DecryptValidatorDto decryptValidatorDto = new DecryptValidatorDto();
-		decryptValidatorDto.setRequesttime(requesttime);
+		DecryptValidatorRequestDto decryptValidatorRequestDto = new DecryptValidatorRequestDto();
+		decryptValidatorRequestDto.setRequesttime(requesttime);
 
 		DecryptRequestDto decryptRequest = new DecryptRequestDto();
 		decryptRequest.setApplicationId(keyManagerHelper.getAppId());
@@ -141,13 +141,13 @@ public class ISOStandardsValidator extends SBIValidator {
 		decryptRequest.setSalt(StringUtil.base64UrlEncode(ivBytes));
 		decryptRequest.setAad(StringUtil.base64UrlEncode(aadBytes));
 		decryptRequest.setTimeStamp(requesttime);
-		decryptValidatorDto.setRequest(decryptRequest);
+		decryptValidatorRequestDto.setRequest(decryptRequest);
 
 		try {
-			DecryptValidatorResponseDto decryptValidatorResponseDto = keyManagerHelper.decryptionResponse(decryptValidatorDto);
+			DecryptValidatorResponseDto decryptValidatorResponseDto = keyManagerHelper.decryptionResponse(decryptValidatorRequestDto);
 			
 
-//			io.restassured.response.Response postResponse = keyManagerHelper.decryptionResponse(decryptValidatorDto);
+//			io.restassured.response.Response postResponse = keyManagerHelper.decryptionResponse(decryptValidatorRequestDto);
 //
 //			DecryptValidatorResponseDto decryptValidatorResponseDto = objectMapperConfig.objectMapper()
 //					.readValue(postResponse.getBody().asString(), DecryptValidatorResponseDto.class);

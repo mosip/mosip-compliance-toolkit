@@ -60,6 +60,14 @@ public class AppConstants {
 
 	public static final String BIOMETRICS = "biometrics";
 
+	public static final String DATA = "data";
+
+	public static final String RCAPTURE = "rcapture";
+
+	public static final String METHOD_NAME = "methodName";
+
+	public static final String IS_ENCRYPTED = "isEncrypted";
+
 	public static final String DECODED_DATA = "dataDecoded";
 
 	public static final String DIGITAL_ID_DECODED_DATA = "digitalIdDecoded";

@@ -16,10 +16,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import io.mosip.compliance.toolkit.dto.EncryptionKeyResponseDto;
-import io.mosip.compliance.toolkit.validators.SBIValidator.DecryptValidatorDto;
-import io.mosip.compliance.toolkit.validators.SBIValidator.DecryptValidatorResponseDto;
-import io.mosip.compliance.toolkit.validators.SBIValidator.DeviceValidatorDto;
-import io.mosip.compliance.toolkit.validators.SBIValidator.DeviceValidatorResponseDto;
+import io.mosip.compliance.toolkit.validators.SBIValidator.*;
 
 @Component
 public class KeyManagerHelper {
@@ -36,8 +33,11 @@ public class KeyManagerHelper {
 	@Value("${mosip.service.keymanager.decrypt.url}")
 	private String keyManagerDecryptUrl;
 
-	@Value("${mosip.service.keymanager.encryption.key.url}")
-	private String keyManagerGetEncryptionKeyUrl;
+	@Value("${mosip.service.keymanager.encrypt.url}")
+	private String keyManagerEncryptUrl;
+
+	@Value("${mosip.service.keymanager.certificate.key.url}")
+	private String keyManagerGetCertificateKeyUrl;
 
 	@Qualifier("selfTokenRestTemplate")
 	@Autowired
@@ -51,18 +51,30 @@ public class KeyManagerHelper {
 		return refId;
 	}
 
-	public DecryptValidatorResponseDto decryptionResponse(DecryptValidatorDto decryptValidatorDto)
+	public DecryptValidatorResponseDto decryptionResponse(DecryptValidatorRequestDto decryptValidatorRequestDto)
 			throws RestClientException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<DecryptValidatorDto> requestEntity = new HttpEntity<>(decryptValidatorDto, headers);
+		HttpEntity<DecryptValidatorRequestDto> requestEntity = new HttpEntity<>(decryptValidatorRequestDto, headers);
 		ResponseEntity<DecryptValidatorResponseDto> responseEntity = restTemplate.exchange(keyManagerDecryptUrl,
 				HttpMethod.POST, requestEntity, new ParameterizedTypeReference<DecryptValidatorResponseDto>() {
 				});
 		DecryptValidatorResponseDto body = responseEntity.getBody();
 		return body;
 	}
-	
+
+	public EncryptValidatorResponseDto encryptionResponse(EncryptValidatorRequestDto encryptValidatorRequestDto)
+			throws RestClientException {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<EncryptValidatorRequestDto> requestEntity = new HttpEntity<>(encryptValidatorRequestDto, headers);
+		ResponseEntity<EncryptValidatorResponseDto> responseEntity = restTemplate.exchange(keyManagerEncryptUrl,
+				HttpMethod.POST, requestEntity, new ParameterizedTypeReference<EncryptValidatorResponseDto>() {
+				});
+		EncryptValidatorResponseDto body = responseEntity.getBody();
+		return body;
+	}
+
 	public DeviceValidatorResponseDto trustValidationResponse(DeviceValidatorDto deviceValidatorDto)
 			throws IOException {
 		HttpHeaders headers = new HttpHeaders();
@@ -75,11 +87,11 @@ public class KeyManagerHelper {
 		return body;
 	}
 
-	public EncryptionKeyResponseDto encryptionKeyResponse() throws IOException {
+	public EncryptionKeyResponseDto getCertificate() throws IOException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Object> requestEntity = new HttpEntity<>(null, headers);
-		ResponseEntity<EncryptionKeyResponseDto> responseEntity = restTemplate.exchange(keyManagerGetEncryptionKeyUrl,
+		ResponseEntity<EncryptionKeyResponseDto> responseEntity = restTemplate.exchange(keyManagerGetCertificateKeyUrl,
 				HttpMethod.GET, requestEntity, new ParameterizedTypeReference<EncryptionKeyResponseDto>() {
 				});
 		EncryptionKeyResponseDto body = responseEntity.getBody();

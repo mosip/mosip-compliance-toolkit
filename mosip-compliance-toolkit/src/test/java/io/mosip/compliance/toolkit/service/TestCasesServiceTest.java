@@ -42,6 +42,8 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = { TestContext.class, WebApplicationContext.class })
@@ -727,13 +729,14 @@ public class TestCasesServiceTest {
 	 */
 	@Test
 	public void getTestCaseByIdTest() throws JsonProcessingException {
+		TestCaseEntity testCaseEntity = new TestCaseEntity();
 		String testCaseId = "SBI1000";
-		when(testCasesRepository.getTestCasesById(testCaseId)).thenReturn(null);
+		when(testCaseCacheService.getTestCase(testCaseId)).thenReturn(testCaseEntity);
 		testCasesService.getTestCaseById(testCaseId);
-		String testCaseJson = "testCaseJson";
-		when(testCasesRepository.getTestCasesById(testCaseId)).thenReturn(testCaseJson);
+		testCaseEntity.setTestcaseJson("testCaseJson");
+		when(testCaseCacheService.getTestCase(testCaseId)).thenReturn(testCaseEntity);
 		TestCaseDto testCase = new TestCaseDto();
-		when(objectMapper.readValue(testCaseJson, TestCaseDto.class)).thenReturn(testCase);
+		when(objectMapper.readValue(testCaseEntity.getTestcaseJson(), TestCaseDto.class)).thenReturn(testCase);
 		ResponseWrapper<TestCaseDto> responseWrapper = testCasesService.getTestCaseById(testCaseId);
 		Assert.assertEquals(testCase, responseWrapper.getResponse());
 	}
@@ -744,7 +747,8 @@ public class TestCasesServiceTest {
 	@Test
 	public void getTestCaseByIdExceptionTest() throws JsonProcessingException {
 		String testCaseId = "SBI1000";
-		when(testCasesRepository.getTestCasesById(testCaseId)).thenReturn(null);
+		TestCaseEntity testCaseEntity = new TestCaseEntity();
+		when(testCasesRepository.getTestCasesById(testCaseId)).thenReturn(testCaseEntity);
 		ReflectionTestUtils.setField(testCasesService, "testCasesRepository", null);
 		testCasesService.getTestCaseById(testCaseId);
 	}
