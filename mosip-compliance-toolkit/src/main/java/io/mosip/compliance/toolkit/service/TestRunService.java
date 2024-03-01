@@ -513,9 +513,7 @@ public class TestRunService {
 			TestCaseEntity testCaseEntity = testCaseCacheService.getTestCase(testCaseId);
 
 			if (testCaseEntity != null) {
-				JsonNode methodNameNode = objectMapperConfig.objectMapper()
-						.readTree(testCaseEntity.getTestcaseJson())
-						.get(METHOD_NAME);
+				JsonNode methodNameNode = objectMapperConfig.objectMapper().readTree(testCaseEntity.getTestcaseJson()).get(METHOD_NAME);
 
 				if (methodNameNode != null) {
 					if (methodNameNode.isArray() && methodNameNode.size() > 0) {
@@ -528,8 +526,8 @@ public class TestRunService {
 				log.error("TestCaseEntity not found for testCaseId: {}", testCaseId);
 			}
 		} catch (Exception e) {
-			log.error("Error occurred in getMethodName method for testCaseId: {}. Error message: {}",
-					testCaseId, e.getMessage());
+			log.debug("sessionId", "idType", "id", e.getStackTrace());
+			log.error("sessionId", "idType", "id", "In getMethodName method of TestRunService - " + e.getMessage());
 		}
 		return methodName;
 	}
