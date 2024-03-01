@@ -37,7 +37,7 @@ public class KeyManagerHelper {
 	private String keyManagerEncryptUrl;
 
 	@Value("${mosip.service.keymanager.certificate.key.url}")
-	private String keyManagerGetEncryptionKeyUrl;
+	private String keyManagerGetCertificateKeyUrl;
 
 	@Qualifier("selfTokenRestTemplate")
 	@Autowired
@@ -91,7 +91,7 @@ public class KeyManagerHelper {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Object> requestEntity = new HttpEntity<>(null, headers);
-		ResponseEntity<EncryptionKeyResponseDto> responseEntity = restTemplate.exchange(keyManagerGetEncryptionKeyUrl,
+		ResponseEntity<EncryptionKeyResponseDto> responseEntity = restTemplate.exchange(keyManagerGetCertificateKeyUrl,
 				HttpMethod.GET, requestEntity, new ParameterizedTypeReference<EncryptionKeyResponseDto>() {
 				});
 		EncryptionKeyResponseDto body = responseEntity.getBody();
