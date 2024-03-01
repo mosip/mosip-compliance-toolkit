@@ -2,6 +2,8 @@ package io.mosip.compliance.toolkit.service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -9,9 +11,9 @@ import java.util.Objects;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.mosip.compliance.toolkit.dto.testrun.*;
+import io.mosip.compliance.toolkit.entity.*;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.util.*;
-import io.mosip.kernel.core.http.RequestWrapper;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.lang.JoseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +30,6 @@ import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.PageDto;
-import io.mosip.compliance.toolkit.entity.TestRunDetailsEntity;
-import io.mosip.compliance.toolkit.entity.TestRunEntity;
-import io.mosip.compliance.toolkit.entity.TestRunHistoryEntity;
-import io.mosip.compliance.toolkit.entity.TestRunPartialDetailsEntity;
 import io.mosip.compliance.toolkit.repository.CollectionsRepository;
 import io.mosip.compliance.toolkit.repository.TestRunDetailsRepository;
 import io.mosip.compliance.toolkit.repository.TestRunRepository;
@@ -69,8 +67,8 @@ public class TestRunService {
 	@Value("${mosip.toolkit.testrun.archive.offset}")
 	private int archiveOffset;
 
-	@Value("${mosip.toolkit.testrun.sbi.rcapture.response.encrypt}")
-	private boolean encryptData;
+	@Value("${mosip.toolkit.rcapture.encryption.enabled}")
+	private boolean isRcaptureEncryptionEnabled;
 
 	@Autowired
 	TestRunArchiveService testRunArchiveService;
@@ -89,6 +87,9 @@ public class TestRunService {
 
 	@Autowired
 	KeyManagerHelper keyManagerHelper;
+
+	@Autowired
+	TestCaseCacheService testCaseCacheService;
 
 	@Autowired
 	private ObjectMapperConfig objectMapperConfig;
@@ -218,8 +219,8 @@ public class TestRunService {
 					entity.setPartnerId(getPartnerId());
 					entity.setOrgName(resourceCacheService.getOrgName(getPartnerId()));
 					TestRunDetailsEntity outputEntity = new TestRunDetailsEntity();
-					if (encryptData && entity.getMethodId() != null && entity.getMethodId().contains(RCAPTURE)) {
-						TestRunDetailsEntity testRunDetailsEntity = encryptData(entity);
+					if (isRcaptureEncryptionEnabled && getMethodName(entity.getTestcaseId()).equals(RCAPTURE)) {
+						TestRunDetailsEntity testRunDetailsEntity = performRcaptureEncryption(entity);
 						outputEntity = testRunDetailsRepository.save(testRunDetailsEntity);
 					} else {
 						outputEntity = testRunDetailsRepository.save(entity);
@@ -270,8 +271,8 @@ public class TestRunService {
 							ObjectMapper mapper = objectMapperConfig.objectMapper();
 							for (TestRunDetailsEntity testRunDetailsEntity : testRunDetailsEntityList) {
 								TestRunDetailsDto dto = new TestRunDetailsDto();
-								if (encryptData && testRunDetailsEntity.getMethodId() != null && testRunDetailsEntity.getMethodId().contains(RCAPTURE)) {
-									TestRunDetailsEntity entity = decryptData(testRunDetailsEntity);
+								if (isRcaptureEncryptionEnabled && getMethodName(testRunDetailsEntity.getTestcaseId()).equals(RCAPTURE)) {
+									TestRunDetailsEntity entity = performRcaptureDecryption(testRunDetailsEntity);
 									dto = mapper.convertValue(entity, TestRunDetailsDto.class);
 								} else {
 									dto = mapper.convertValue(testRunDetailsEntity, TestRunDetailsDto.class);
@@ -318,8 +319,8 @@ public class TestRunService {
 							partnerId, testcaseId, methodId);
 					if (Objects.nonNull(testRunDetailsEntity)) {
 						ObjectMapper mapper = objectMapperConfig.objectMapper();
-						if (encryptData && testRunDetailsEntity.getMethodId() != null && testRunDetailsEntity.getMethodId().contains(RCAPTURE)) {
-							TestRunDetailsEntity entity = decryptData(testRunDetailsEntity);
+						if (isRcaptureEncryptionEnabled && getMethodName(testRunDetailsEntity.getTestcaseId()).equals(RCAPTURE)) {
+							TestRunDetailsEntity entity = performRcaptureDecryption(testRunDetailsEntity);
 							testRunDetailsDto = mapper.convertValue(entity, TestRunDetailsDto.class);
 						} else {
 							testRunDetailsDto = mapper.convertValue(testRunDetailsEntity, TestRunDetailsDto.class);
@@ -342,15 +343,17 @@ public class TestRunService {
 		return responseWrapper;
 	}
 
-	private TestRunDetailsEntity encryptData(TestRunDetailsEntity testRunDetailsEntity) {
+	private TestRunDetailsEntity performRcaptureEncryption(TestRunDetailsEntity testRunDetailsEntity) {
 		try {
 			if (testRunDetailsEntity.getMethodResponse() != null) {
-				ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper()
+				ObjectNode methodResponse = (ObjectNode) objectMapperConfig.objectMapper()
 						.readValue(testRunDetailsEntity.getMethodResponse(), ObjectNode.class);
 
-				final JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
+				//get BIOMETRICS from response
+				final JsonNode arrBiometricNodes = methodResponse.get(BIOMETRICS);
 				if (arrBiometricNodes.isArray()) {
 					for (final JsonNode biometricNode : arrBiometricNodes) {
+						//get DATA from BIOMETRICS
 						String dataInfo = biometricNode.get(DATA).asText();
 						if (dataInfo != null && !dataInfo.equals(BLANK_STRING)) {
 							String biometricData = getPayload(dataInfo);
@@ -358,40 +361,42 @@ public class TestRunService {
 									.readValue(biometricData, ObjectNode.class);
 							String timeStamp = biometricDataNode.get(TIME_STAMP).asText();
 							String transactionId = biometricDataNode.get(TRANSACTION_ID).asText();
-							String encryptedData = getEncryptedData(timeStamp, transactionId, dataInfo);
+							//encrypt DATA
+							String encryptedData = encryptRcaptureData(timeStamp, transactionId, dataInfo);
+							//set encrypted data
 							((ObjectNode) biometricNode).put(DATA, encryptedData);
 							((ObjectNode) biometricNode).put(TIME_STAMP, timeStamp);
 							((ObjectNode) biometricNode).put(TRANSACTION_ID, transactionId);
 							((ObjectNode) biometricNode).put(IS_ENCRYPTED, true);
 						}
 					}
-					captureInfoResponse.set(BIOMETRICS, arrBiometricNodes);
-					testRunDetailsEntity.setMethodResponse(objectMapperConfig.objectMapper().writeValueAsString(captureInfoResponse));
+					methodResponse.set(BIOMETRICS, arrBiometricNodes);
+					testRunDetailsEntity.setMethodResponse(objectMapperConfig.objectMapper().writeValueAsString(methodResponse));
 				}
 			} else {
 				log.debug("sessionId", "idType", "id", "Method response is null for testcase :", testRunDetailsEntity.getTestcaseId());
 			}
 		} catch (Exception e) {
 			log.debug("sessionId", "idType", "id", e.getStackTrace());
-			log.error("sessionId", "idType", "id", "In encryptData method of TestRunService - " + e.getMessage());
+			log.error("sessionId", "idType", "id", "In performRcaptureEncryption method of TestRunService - " + e.getMessage());
 		}
 		return testRunDetailsEntity;
 	}
 
-	private TestRunDetailsEntity decryptData(TestRunDetailsEntity testRunDetailsEntity) {
+	private TestRunDetailsEntity performRcaptureDecryption(TestRunDetailsEntity testRunDetailsEntity) {
 		try {
 			if (testRunDetailsEntity.getMethodResponse() != null) {
-				ObjectNode captureInfoResponse = (ObjectNode) objectMapperConfig.objectMapper()
+				ObjectNode methodResponse = (ObjectNode) objectMapperConfig.objectMapper()
 						.readValue(testRunDetailsEntity.getMethodResponse(), ObjectNode.class);
 
-				final JsonNode arrBiometricNodes = captureInfoResponse.get(BIOMETRICS);
+				final JsonNode arrBiometricNodes = methodResponse.get(BIOMETRICS);
 				if (arrBiometricNodes.isArray()) {
 					for (final JsonNode biometricNode : arrBiometricNodes) {
 						String dataInfo = biometricNode.get(DATA).asText();
 						if (dataInfo != null && !dataInfo.equals(BLANK_STRING) && isEncrypted(biometricNode)) {
 							String timeStamp = biometricNode.get(TIME_STAMP).asText();
 							String transactionId = biometricNode.get(TRANSACTION_ID).asText();
-							String decryptedData = getDecryptedData(timeStamp, transactionId, dataInfo);
+							String decryptedData = decryptRcaptureData(timeStamp, transactionId, dataInfo);
 							((ObjectNode) biometricNode).put(DATA, decryptedData);
 							// Remove fields TIME_STAMP,TRANSACTION_ID,IS_ENCRYPTED
 							((ObjectNode) biometricNode).remove(TIME_STAMP);
@@ -400,90 +405,98 @@ public class TestRunService {
 						}
 					}
 				}
-				captureInfoResponse.set(BIOMETRICS, arrBiometricNodes);
-				testRunDetailsEntity.setMethodResponse(objectMapperConfig.objectMapper().writeValueAsString(captureInfoResponse));
+				methodResponse.set(BIOMETRICS, arrBiometricNodes);
+				testRunDetailsEntity.setMethodResponse(objectMapperConfig.objectMapper().writeValueAsString(methodResponse));
 			} else {
 				log.debug("sessionId", "idType", "id", "Method response is null for testcase :", testRunDetailsEntity.getTestcaseId());
 			}
 		} catch (Exception e) {
 			log.debug("sessionId", "idType", "id", e.getStackTrace());
-			log.error("sessionId", "idType", "id", "In decryptData method of TestRunService - " + e.getMessage());
+			log.error("sessionId", "idType", "id", "In performRcaptureDecryption method of TestRunService - " + e.getMessage());
 		}
 		return testRunDetailsEntity;
 	}
 
-	public String getEncryptedData(String timestamp, String transactionId, String data) {
+	public String encryptRcaptureData(String timestamp, String transactionId, String data) {
 
 		byte[] xorResult = CryptoUtil.getXOR(timestamp, transactionId);
 		byte[] aadBytes = CryptoUtil.getLastBytes(xorResult, 16);
 		byte[] ivBytes = CryptoUtil.getLastBytes(xorResult, 12);
 
-		LocalDateTime requestTime = LocalDateTime.now();
-		RequestWrapper<EncryptDataRequestDto> encryptRequestWrapper = new RequestWrapper<>();
-		encryptRequestWrapper.setRequesttime(requestTime);
+		String requestTime = getCurrentDateAndTimeForAPI();
+		EncryptValidatorRequestDto encryptValidatorRequestDto = new EncryptValidatorRequestDto();
+		encryptValidatorRequestDto.setRequesttime(requestTime);
 
-		EncryptDataRequestDto encryptRequest = new EncryptDataRequestDto();
+		EncryptRequestDto encryptRequest = new EncryptRequestDto();
 		encryptRequest.setApplicationId(keyManagerHelper.getAppId());
 		encryptRequest.setReferenceId(keyManagerHelper.getRefId());
 		encryptRequest.setData(StringUtil.base64UrlEncode(data));
 		encryptRequest.setSalt(StringUtil.base64UrlEncode(ivBytes));
 		encryptRequest.setAad(StringUtil.base64UrlEncode(aadBytes));
 		encryptRequest.setTimeStamp(requestTime);
-		encryptRequestWrapper.setRequest(encryptRequest);
+		encryptValidatorRequestDto.setRequest(encryptRequest);
 
 		try {
-			ResponseWrapper<EncryptDataResponseDto> encryptDataResponseDto = keyManagerHelper.dataEncryptionResponse(encryptRequestWrapper);
+			EncryptValidatorResponseDto encryptDataResponseDto = keyManagerHelper.encryptionResponse(encryptValidatorRequestDto);
 
 			if ((encryptDataResponseDto.getErrors() != null && encryptDataResponseDto.getErrors().size() > 0)
 					|| (encryptDataResponseDto.getResponse().getData() == null)) {
-				throw new ToolkitException(ToolkitErrorCodes.DATA_ENCRYPT_ERROR.getErrorCode(),
-						ToolkitErrorCodes.DATA_ENCRYPT_ERROR.getErrorMessage());
+				throw new ToolkitException(ToolkitErrorCodes.RCAPTURE_DATA_ENCRYPT_ERROR.getErrorCode(),
+						ToolkitErrorCodes.RCAPTURE_DATA_ENCRYPT_ERROR.getErrorMessage());
 			} else {
 				return encryptDataResponseDto.getResponse().getData();
 			}
 		} catch (Exception e) {
 			log.debug("sessionId", "idType", "id", e.getStackTrace());
-			log.error("sessionId", "idType", "id", "In getEncryptedData method of TestRunService - " + e.getMessage());
-			throw new ToolkitException(ToolkitErrorCodes.DATA_ENCRYPT_ERROR.getErrorCode(),
-					ToolkitErrorCodes.DATA_ENCRYPT_ERROR.getErrorMessage() + e.getLocalizedMessage());
+			log.error("sessionId", "idType", "id", "In encryptRcaptureData method of TestRunService - " + e.getMessage());
+			throw new ToolkitException(ToolkitErrorCodes.RCAPTURE_DATA_ENCRYPT_ERROR.getErrorCode(),
+					ToolkitErrorCodes.RCAPTURE_DATA_ENCRYPT_ERROR.getErrorMessage() + e.getLocalizedMessage());
 		}
 	}
 
-	public String getDecryptedData(String timestamp, String transactionId, String encryptedData) {
+	public String decryptRcaptureData(String timestamp, String transactionId, String encryptedData) {
 
 		byte[] xorResult = CryptoUtil.getXOR(timestamp, transactionId);
 		byte[] aadBytes = CryptoUtil.getLastBytes(xorResult, 16);
 		byte[] ivBytes = CryptoUtil.getLastBytes(xorResult, 12);
 
-		LocalDateTime requestTime = LocalDateTime.now();
-		RequestWrapper<DecryptDataRequestDto> decryptRequestWrapper = new RequestWrapper<>();
-		decryptRequestWrapper.setRequesttime(requestTime);
+		String requestTime = getCurrentDateAndTimeForAPI();
+		DecryptValidatorRequestDto decryptValidatorRequestDto = new DecryptValidatorRequestDto();
+		decryptValidatorRequestDto.setRequesttime(requestTime);
 
-		DecryptDataRequestDto decryptRequest = new DecryptDataRequestDto();
+		DecryptRequestDto decryptRequest = new DecryptRequestDto();
 		decryptRequest.setApplicationId(keyManagerHelper.getAppId());
 		decryptRequest.setReferenceId(keyManagerHelper.getRefId());
 		decryptRequest.setData(encryptedData);
 		decryptRequest.setSalt(StringUtil.base64UrlEncode(ivBytes));
 		decryptRequest.setAad(StringUtil.base64UrlEncode(aadBytes));
 		decryptRequest.setTimeStamp(requestTime);
-		decryptRequestWrapper.setRequest(decryptRequest);
+		decryptValidatorRequestDto.setRequest(decryptRequest);
 
 		try {
-			ResponseWrapper<DecryptDataResponseDto> decryptDataResponseDto = keyManagerHelper.dataDecryptionResponse(decryptRequestWrapper);
+			DecryptValidatorResponseDto decryptDataResponseDto = keyManagerHelper.decryptionResponse(decryptValidatorRequestDto);
 
 			if ((decryptDataResponseDto.getErrors() != null && decryptDataResponseDto.getErrors().size() > 0)
 					|| (decryptDataResponseDto.getResponse().getData() == null)) {
-				throw new ToolkitException(ToolkitErrorCodes.DATA_DECRYPT_ERROR.getErrorCode(),
-						ToolkitErrorCodes.DATA_DECRYPT_ERROR.getErrorMessage());
+				throw new ToolkitException(ToolkitErrorCodes.RCAPTURE_DATA_DECRYPT_ERROR.getErrorCode(),
+						ToolkitErrorCodes.RCAPTURE_DATA_DECRYPT_ERROR.getErrorMessage());
 			} else {
 				return StringUtil.base64Decode(decryptDataResponseDto.getResponse().getData());
 			}
 		} catch (Exception e) {
 			log.debug("sessionId", "idType", "id", e.getStackTrace());
-			log.error("sessionId", "idType", "id", "In getDecryptedData method of TestRunService - " + e.getMessage());
-			throw new ToolkitException(ToolkitErrorCodes.DATA_DECRYPT_ERROR.getErrorCode(),
-					ToolkitErrorCodes.DATA_DECRYPT_ERROR.getErrorMessage() + e.getLocalizedMessage());
+			log.error("sessionId", "idType", "id", "In decryptRcaptureData method of TestRunService - " + e.getMessage());
+			throw new ToolkitException(ToolkitErrorCodes.RCAPTURE_DATA_DECRYPT_ERROR.getErrorCode(),
+					ToolkitErrorCodes.RCAPTURE_DATA_DECRYPT_ERROR.getErrorMessage() + e.getLocalizedMessage());
 		}
+	}
+
+	protected String getCurrentDateAndTimeForAPI() {
+		String DATEFORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(DATEFORMAT);
+		LocalDateTime time = LocalDateTime.now(ZoneOffset.UTC);
+		String currentTime = time.format(dateFormat);
+		return currentTime;
 	}
 
 	protected boolean isEncrypted(JsonNode biometricNode) {
@@ -491,6 +504,34 @@ public class TestRunService {
 			return true;
 		}
 		return false;
+	}
+
+	public String getMethodName(String testCaseId) {
+		String methodName = BLANK_STRING;
+
+		try {
+			TestCaseEntity testCaseEntity = testCaseCacheService.getTestCase(testCaseId);
+
+			if (testCaseEntity != null) {
+				JsonNode methodNameNode = objectMapperConfig.objectMapper()
+						.readTree(testCaseEntity.getTestcaseJson())
+						.get(METHOD_NAME);
+
+				if (methodNameNode != null) {
+					if (methodNameNode.isArray() && methodNameNode.size() > 0) {
+						methodName = methodNameNode.get(0).asText();
+					}
+				} else {
+					log.error("Method name not found in JSON for testCaseId: {}", testCaseId);
+				}
+			} else {
+				log.error("TestCaseEntity not found for testCaseId: {}", testCaseId);
+			}
+		} catch (Exception e) {
+			log.error("Error occurred in getMethodName method for testCaseId: {}. Error message: {}",
+					testCaseId, e.getMessage());
+		}
+		return methodName;
 	}
 
 	protected String getPayload(String jwtInfo) throws JoseException, IOException {

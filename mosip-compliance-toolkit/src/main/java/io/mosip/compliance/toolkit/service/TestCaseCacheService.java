@@ -40,4 +40,9 @@ public class TestCaseCacheService {
 	public TestCaseEntity updateTestCase(TestCaseEntity entity) {
 		return testCasesRepository.update(entity);
 	}
+
+	@CacheEvict(cacheNames = "testcases", key = "#testCaseId")
+	public TestCaseEntity getTestCase(String testCaseId) {
+		return testCasesRepository.getTestCasesById(testCaseId);
+	}
 }

@@ -400,7 +400,7 @@ public class SbiProjectService {
 		ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
 		String result = null;
 		try {
-			EncryptionKeyResponseDto keyManagerResponseDto = keyManagerHelper.encryptionKeyResponse();
+			EncryptionKeyResponseDto keyManagerResponseDto = keyManagerHelper.getCertificate();
 
 			if ((keyManagerResponseDto.getErrors() != null && keyManagerResponseDto.getErrors().size() > 0)) {
 				keyManagerResponseDto.getErrors().get(0).getMessage();

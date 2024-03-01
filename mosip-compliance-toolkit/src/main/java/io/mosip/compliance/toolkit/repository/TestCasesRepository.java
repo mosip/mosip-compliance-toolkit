@@ -28,6 +28,6 @@ public interface TestCasesRepository extends BaseRepository<TestCaseEntity, Stri
 	@Query("SELECT e FROM TestCaseEntity e WHERE e.testcaseType='ABIS' and e.specVersion= ?1 order by e.id asc")
 	public List<TestCaseEntity> findAllAbisTestCaseBySpecVersion(String specVersion);
 	
-	@Query("SELECT e.testcaseJson FROM TestCaseEntity e WHERE e.id =:testCaseId")
-	public String getTestCasesById(String testCaseId);
+	@Query("SELECT e FROM TestCaseEntity e WHERE e.id =:testCaseId")
+	public TestCaseEntity getTestCasesById(String testCaseId);
 }

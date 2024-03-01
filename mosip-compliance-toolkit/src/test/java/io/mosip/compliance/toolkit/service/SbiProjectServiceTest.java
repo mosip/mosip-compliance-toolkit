@@ -437,7 +437,7 @@ public class SbiProjectServiceTest {
 		EncryptionKeyResponseDto.EncryptionKeyResponse encryptionKeyResponse = new EncryptionKeyResponseDto.EncryptionKeyResponse();
 		encryptionKeyResponse.setCertificate("abc");
 		keyResponseDto.setResponse(encryptionKeyResponse);
-		Mockito.when(keyManagerHelper.encryptionKeyResponse()).thenReturn(keyResponseDto);
+		Mockito.when(keyManagerHelper.getCertificate()).thenReturn(keyResponseDto);
 		ResponseWrapper<String> result = ReflectionTestUtils.invokeMethod(sbiProjectService, "getEncryptionKey");
 		Assert.assertEquals(keyResponseDto.getResponse().getCertificate(), result.getResponse());
 
@@ -450,7 +450,7 @@ public class SbiProjectServiceTest {
         EncryptionKeyResponseDto.EncryptionKeyResponse encryptionKeyResponse = new EncryptionKeyResponseDto.EncryptionKeyResponse();
         encryptionKeyResponse.setCertificate("abc");
         keyResponseDto.setResponse(encryptionKeyResponse);
-        Mockito.when(keyManagerHelper.encryptionKeyResponse()).thenThrow(new IOException());
+        Mockito.when(keyManagerHelper.getCertificate()).thenThrow(new IOException());
         ResponseWrapper<String> result = ReflectionTestUtils.invokeMethod(sbiProjectService, "getEncryptionKey");
 
     }

@@ -193,7 +193,7 @@ public abstract class SBIValidator extends ToolkitValidator {
 	}
 
 	@Data
-	public static class DecryptValidatorDto implements Serializable {
+	public static class DecryptValidatorRequestDto implements Serializable {
 		private static final long serialVersionUID = -2112567140911169485L;
 		String id;
 		Object metadata;
@@ -203,7 +203,7 @@ public abstract class SBIValidator extends ToolkitValidator {
 	}
 
 	@Data
-	protected static class DecryptRequestDto implements Serializable {
+	public static class DecryptRequestDto implements Serializable {
 		private static final long serialVersionUID = 6098449354733115976L;
 		String applicationId;
 		String referenceId;
@@ -225,6 +225,40 @@ public abstract class SBIValidator extends ToolkitValidator {
 	}
 
 	@Data
+	public static class EncryptValidatorRequestDto implements Serializable {
+		String id;
+		Object metadata;
+		EncryptRequestDto request;
+		String requesttime;
+		String version;
+	}
+
+	@Data
+	public static class EncryptRequestDto implements Serializable {
+		String applicationId;
+		String referenceId;
+		String timeStamp;
+		String data;
+		String salt;
+		String aad;
+	}
+
+	@Data
+	public static class EncryptValidatorResponseDto implements Serializable {
+		String id;
+		Object metadata;
+		EncryptValidatorResponse response;
+		String responsetime;
+		String version;
+		List<ErrorDto> errors;
+	}
+
+	@Data
+	public static class EncryptValidatorResponse implements Serializable {
+		String data;
+	}
+
+	@Data
 	public static class DeviceValidatorResponseDto implements Serializable {
 		private static final long serialVersionUID = -3533369757932860828L;
 		String id;
@@ -242,7 +276,7 @@ public abstract class SBIValidator extends ToolkitValidator {
 	}
 
 	@Data
-	protected static class DecryptValidatorResponse implements Serializable {
+	public static class DecryptValidatorResponse implements Serializable {
 		private static final long serialVersionUID = 5675428669597716934L;
 		String data;
 	}

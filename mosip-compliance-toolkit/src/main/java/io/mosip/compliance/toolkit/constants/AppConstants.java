@@ -64,6 +64,8 @@ public class AppConstants {
 
 	public static final String RCAPTURE = "rcapture";
 
+	public static final String METHOD_NAME = "methodName";
+
 	public static final String IS_ENCRYPTED = "isEncrypted";
 
 	public static final String DECODED_DATA = "dataDecoded";
