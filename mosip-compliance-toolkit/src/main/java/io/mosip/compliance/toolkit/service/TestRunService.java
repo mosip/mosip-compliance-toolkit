@@ -350,15 +350,16 @@ public class TestRunService {
 	private TestRunDetailsEntity performRcaptureEncryption(TestRunDetailsEntity testRunDetailsEntity) {
 		try {
 			if (testRunDetailsEntity.getMethodResponse() != null) {
-				ObjectNode methodResponse = (ObjectNode) objectMapperConfig.objectMapper()
+				final ObjectMapper objectMapper = objectMapperConfig.objectMapper();
+				ObjectNode methodResponse = (ObjectNode) objectMapper
 						.readValue(testRunDetailsEntity.getMethodResponse(), ObjectNode.class);
 
 				//get BIOMETRICS from response
 				final JsonNode arrBiometricNodes = methodResponse.get(BIOMETRICS);
 				if (arrBiometricNodes != null && arrBiometricNodes.isArray()) {
-					ArrayNode newArrBiometricNodes = objectMapperConfig.objectMapper().createArrayNode();
+					ArrayNode newArrBiometricNodes = objectMapper.createArrayNode();
 					for (final JsonNode biometricNode : arrBiometricNodes) {
-						ObjectNode newBiometricNode = objectMapperConfig.objectMapper().createObjectNode()
+						ObjectNode newBiometricNode = objectMapper.createObjectNode()
 								.setAll((ObjectNode) biometricNode);
 
 						//get DATA from BIOMETRICS
@@ -367,7 +368,7 @@ public class TestRunService {
 						String transactionId = BLANK_STRING;
 						if (dataInfo != null && !dataInfo.equals(BLANK_STRING)) {
 							String biometricData = getPayload(dataInfo);
-							ObjectNode biometricDataNode = (ObjectNode) objectMapperConfig.objectMapper()
+							ObjectNode biometricDataNode = (ObjectNode) objectMapper
 									.readValue(biometricData, ObjectNode.class);
 							//set TIME_STAMP and TRANSACTION_ID
 							timeStamp = biometricDataNode.get(TIME_STAMP).asText();
@@ -377,27 +378,24 @@ public class TestRunService {
 							String encryptedData = encryptRcaptureData(timeStamp, transactionId, dataInfo);
 							//set encrypted data
 							newBiometricNode.put(DATA, encryptedData);
-							newBiometricNode.put(IS_ENCRYPTED, true);
-						}
 
-						//get DECODED_DATA from BIOMETRICS
-						JsonNode dataDecodedNode = biometricNode.get(AppConstants.DECODED_DATA);
-						if (dataDecodedNode != null && !dataDecodedNode.isEmpty()) {
-							String decodedData = objectMapperConfig.objectMapper().writeValueAsString(dataDecodedNode);
-							//encrypt DECODED_DATA
-							String encryptedDecodedData = encryptRcaptureData(timeStamp, transactionId, decodedData);
-							//set encrypted data
-							newBiometricNode.put(AppConstants.DECODED_DATA, encryptedDecodedData);
+							//get DECODED_DATA from BIOMETRICS
+							JsonNode dataDecodedNode = biometricNode.get(AppConstants.DECODED_DATA);
+							if (dataDecodedNode != null && !dataDecodedNode.isEmpty()) {
+								String decodedData = objectMapper.writeValueAsString(dataDecodedNode);
+								//encrypt DECODED_DATA
+								String encryptedDecodedData = encryptRcaptureData(timeStamp, transactionId, decodedData);
+								//set encrypted data
+								newBiometricNode.put(AppConstants.DECODED_DATA, encryptedDecodedData);
+							}
 							newBiometricNode.put(IS_ENCRYPTED, true);
-						}
-						if (!timeStamp.equals(BLANK_STRING) && !transactionId.equals(BLANK_STRING)) {
 							newBiometricNode.put(TIME_STAMP, timeStamp);
 							newBiometricNode.put(TRANSACTION_ID, transactionId);
 						}
 						newArrBiometricNodes.add(newBiometricNode);
 					}
 					methodResponse.set(BIOMETRICS, newArrBiometricNodes);
-					testRunDetailsEntity.setMethodResponse(objectMapperConfig.objectMapper().writeValueAsString(methodResponse));
+					testRunDetailsEntity.setMethodResponse(objectMapper.writeValueAsString(methodResponse));
 				}
 			} else {
 				log.debug("sessionId", "idType", "id", "Method response is null for testcase :", testRunDetailsEntity.getTestcaseId());
@@ -412,14 +410,15 @@ public class TestRunService {
 	private TestRunDetailsEntity performRcaptureDecryption(TestRunDetailsEntity testRunDetailsEntity) {
 		try {
 			if (testRunDetailsEntity.getMethodResponse() != null) {
-				ObjectNode methodResponse = (ObjectNode) objectMapperConfig.objectMapper()
+				final ObjectMapper objectMapper = objectMapperConfig.objectMapper();
+				ObjectNode methodResponse = (ObjectNode) objectMapper
 						.readValue(testRunDetailsEntity.getMethodResponse(), ObjectNode.class);
 
 				final JsonNode arrBiometricNodes = methodResponse.get(BIOMETRICS);
 				if (arrBiometricNodes != null && arrBiometricNodes.isArray()) {
-					ArrayNode newArrBiometricNodes = objectMapperConfig.objectMapper().createArrayNode();
+					ArrayNode newArrBiometricNodes = objectMapper.createArrayNode();
 					for (final JsonNode biometricNode : arrBiometricNodes) {
-						ObjectNode newBiometricNode = objectMapperConfig.objectMapper().createObjectNode()
+						ObjectNode newBiometricNode = objectMapper.createObjectNode()
 								.setAll((ObjectNode) biometricNode);
 						if (isEncrypted(biometricNode)) {
 							String timeStamp = biometricNode.get(TIME_STAMP).asText();
@@ -434,8 +433,7 @@ public class TestRunService {
 							String dataDecoded = biometricNode.get(AppConstants.DECODED_DATA).asText();
 							if (dataDecoded != null && !dataDecoded.equals(BLANK_STRING)) {
 								String decryptedDecodedData = decryptRcaptureData(timeStamp, transactionId, dataDecoded);
-								JsonNode dataDecodedNode = objectMapperConfig.objectMapper()
-										.readTree(decryptedDecodedData);
+								JsonNode dataDecodedNode = objectMapper.readTree(decryptedDecodedData);
 								newBiometricNode.set(AppConstants.DECODED_DATA, dataDecodedNode);
 							}
 							// Remove fields TIME_STAMP,TRANSACTION_ID,IS_ENCRYPTED
@@ -446,7 +444,7 @@ public class TestRunService {
 						newArrBiometricNodes.add(newBiometricNode);
 					}
 					methodResponse.set(BIOMETRICS, newArrBiometricNodes);
-					testRunDetailsEntity.setMethodResponse(objectMapperConfig.objectMapper().writeValueAsString(methodResponse));
+					testRunDetailsEntity.setMethodResponse(objectMapper.writeValueAsString(methodResponse));
 				}
 			} else {
 				log.debug("sessionId", "idType", "id", "Method response is null for testcase :", testRunDetailsEntity.getTestcaseId());
