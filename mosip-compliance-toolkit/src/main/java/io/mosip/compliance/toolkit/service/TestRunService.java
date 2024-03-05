@@ -274,7 +274,7 @@ public class TestRunService {
 							for (TestRunDetailsEntity testRunDetailsEntity : testRunDetailsEntityList) {
 								TestRunDetailsDto dto = new TestRunDetailsDto();
 								String methodName = getTestCaseMethodName(testRunDetailsEntity.getTestcaseId());
-								if (isRcaptureEncryptionEnabled && methodName != null && methodName.equals(RCAPTURE)) {
+								if (methodName != null && methodName.equals(RCAPTURE)) {
 									TestRunDetailsEntity entity = performRcaptureDecryption(testRunDetailsEntity);
 									dto = mapper.convertValue(entity, TestRunDetailsDto.class);
 								} else {
@@ -323,7 +323,7 @@ public class TestRunService {
 					if (Objects.nonNull(testRunDetailsEntity)) {
 						ObjectMapper mapper = objectMapperConfig.objectMapper();
 						String methodName = getTestCaseMethodName(testRunDetailsEntity.getTestcaseId());
-						if (isRcaptureEncryptionEnabled && methodName != null && methodName.equals(RCAPTURE)) {
+						if (methodName != null && methodName.equals(RCAPTURE)) {
 							TestRunDetailsEntity entity = performRcaptureDecryption(testRunDetailsEntity);
 							testRunDetailsDto = mapper.convertValue(entity, TestRunDetailsDto.class);
 						} else {
