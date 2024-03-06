@@ -4,7 +4,7 @@ GRANT CONNECT
    ON DATABASE mosip_toolkit
    TO toolkituser;
 
-GRANT USAGE
+GRANT USAGE,CREATE
    ON SCHEMA toolkit
    TO toolkituser;
 
