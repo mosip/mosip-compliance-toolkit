@@ -4,8 +4,8 @@
 CREATE TABLE toolkit.partner_profile(
     partner_id character varying(36) NOT NULL,
     org_name character varying(64) NOT NULL,
-    consent_for_sdk_abis_biometrics character varying(36) NOT NULL,
-    consent_for_sbi_biometrics character varying(36) NOT NULL,
+    consent_for_sdk_abis_biometrics character varying(36),
+    consent_for_sbi_biometrics character varying(36),
     cr_dtimes timestamp NOT NULL,
     cr_by character varying(64) NOT NULL,
     upd_by character varying(64),
