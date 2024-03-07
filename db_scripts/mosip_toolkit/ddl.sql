@@ -15,3 +15,4 @@
 \ir ddl/compliance_testrun_summary.sql
 \ir ddl/datashare_tokens.sql
 \ir ddl/fk.sql
+\ir ddl/partner_profile.sql

@@ -91,3 +91,6 @@ ALTER TABLE toolkit.test_run_details_archive DROP COLUMN method_id;
 ALTER TABLE toolkit.test_run_details_archive DROP COLUMN execution_status;
 ALTER TABLE toolkit.test_run_details_archive DROP COLUMN org_name;
 ADD CONSTRAINT test_run_details_archive_id_pk PRIMARY KEY (run_id, testcase_id);
+
+-- partner_profile
+DROP TABLE IF EXISTS toolkit.partner_profile;
