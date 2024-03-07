@@ -40,6 +40,9 @@ function installing_compliance-toolkit() {
   echo Installing compliance-toolkit
   helm -n $NS install compliance-toolkit mosip/compliance-toolkit --set istio.corsPolicy.allowOrigins\[0\].prefix=https://$COMPLIANCE_HOST --set istio.corsPolicy.allowOrigins\[1\].prefix=http://localhost --version $CHART_VERSION
 
+  echo Installing compliance-toolkit-batch-job
+  helm -n $NS install compliance-toolkit-batch-job mosip/compliance-toolkit-batch-job --version $CHART_VERSION
+
   kubectl -n $NS  get deploy -o name |  xargs -n1 -t  kubectl -n $NS rollout status
 
   echo Installed compliance-toolkit services
