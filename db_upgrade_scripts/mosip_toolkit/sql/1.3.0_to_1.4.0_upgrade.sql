@@ -1,5 +1,8 @@
 \c mosip_toolkit sysadmin
 
+--grant CREATE privilage to toolkituser
+GRANT CREATE ON SCHEMA toolkit TO toolkituser;
+
 -- This table has consents of partners for uploading biometrics.
 CREATE TABLE toolkit.partner_profile(
     partner_id character varying(36) NOT NULL,
