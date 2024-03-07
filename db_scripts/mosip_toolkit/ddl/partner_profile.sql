@@ -3,13 +3,15 @@
 CREATE TABLE toolkit.partner_profile(
     partner_id character varying(36) NOT NULL,
     org_name character varying(64) NOT NULL,
-    consent_for_sdk_abis_biometrics character varying(36),
-    consent_for_sbi_biometrics character varying(36),
+    consent_for_sdk_abis_biometrics character varying(36) NOT NULL DEFAULT 'NO',
+    consent_for_sbi_biometrics character varying(36) NOT NULL DEFAULT 'NO',
     cr_dtimes timestamp NOT NULL,
     cr_by character varying(64) NOT NULL,
     upd_by character varying(64),
     upd_dtimes timestamp,
-    CONSTRAINT partner_profile_pk PRIMARY KEY (partner_id,org_name)
+    CONSTRAINT partner_profile_pk PRIMARY KEY (partner_id,org_name),
+    CONSTRAINT chk_consent_for_sdk_abis_biometrics CHECK (consent_for_sdk_abis_biometrics IN ('YES', 'NO')),
+    CONSTRAINT chk_consent_for_sbi_biometrics CHECK (consent_for_sbi_biometrics IN ('YES', 'NO'))
 );
 COMMENT ON TABLE toolkit.partner_profile IS 'This table has consents of partners.';
 COMMENT ON COLUMN toolkit.partner_profile.partner_id IS 'Partner Id: partner who has logged in.';
