@@ -9,7 +9,7 @@ CREATE TABLE toolkit.partner_profile(
     cr_dtimes timestamp NOT NULL,
     cr_by character varying(64) NOT NULL,
     upd_by character varying(64),
-	upd_dtimes timestamp,
+    upd_dtimes timestamp,
     CONSTRAINT partner_profile_pk PRIMARY KEY (partner_id,org_name)
 );
 COMMENT ON TABLE toolkit.partner_profile IS 'This table has consents of partners.';
