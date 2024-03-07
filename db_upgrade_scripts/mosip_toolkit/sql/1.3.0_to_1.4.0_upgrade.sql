@@ -1,3 +1,6 @@
+\c mosip_toolkit sysadmin
+
+-- This table has consents of partners for uploading biometrics.
 CREATE TABLE toolkit.partner_profile(
     partner_id character varying(36) NOT NULL,
     org_name character varying(64) NOT NULL,
