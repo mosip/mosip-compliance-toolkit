@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PartnerConsentEntityPK implements Serializable {
+public class PartnerProfileEntityPK implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

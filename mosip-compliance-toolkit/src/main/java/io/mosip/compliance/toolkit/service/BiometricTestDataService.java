@@ -900,34 +900,34 @@ public class BiometricTestDataService {
             String partnerId = getPartnerId();
             String orgName = resourceCacheService.getOrgName(partnerId);
 
-            PartnerConsentEntityPK pk = new PartnerConsentEntityPK();
+            PartnerProfileEntityPK pk = new PartnerProfileEntityPK();
             pk.setPartnerId(partnerId);
             pk.setOrgName(orgName);
 
             LocalDateTime nowDate = LocalDateTime.now();
-            PartnerConsentEntity partnerConsentEntity = new PartnerConsentEntity();
-            partnerConsentEntity.setPartnerId(partnerId);
-            partnerConsentEntity.setOrgName(orgName);
+            PartnerProfileEntity partnerProfileEntity = new PartnerProfileEntity();
+            partnerProfileEntity.setPartnerId(partnerId);
+            partnerProfileEntity.setOrgName(orgName);
 
-            Optional<PartnerConsentEntity> optionalEntity = partnerProfileRepository.findById(pk);
+            Optional<PartnerProfileEntity> optionalEntity = partnerProfileRepository.findById(pk);
             if (optionalEntity.isPresent()) {
-                partnerConsentEntity.setUpdBy(this.getUserBy());
-                partnerConsentEntity.setUpdDtimes(nowDate);
-                partnerConsentEntity.setCrBy(optionalEntity.get().getCrBy());
-                partnerConsentEntity.setCrDtimes(optionalEntity.get().getCrDtimes());
+                partnerProfileEntity.setUpdBy(this.getUserBy());
+                partnerProfileEntity.setUpdDtimes(nowDate);
+                partnerProfileEntity.setCrBy(optionalEntity.get().getCrBy());
+                partnerProfileEntity.setCrDtimes(optionalEntity.get().getCrDtimes());
             } else {
-                partnerConsentEntity.setCrBy(this.getUserBy());
-                partnerConsentEntity.setCrDtimes(nowDate);
+                partnerProfileEntity.setCrBy(this.getUserBy());
+                partnerProfileEntity.setCrDtimes(nowDate);
             }
 
-            PartnerConsentEntity entity = setPartnerConsent(partnerConsentEntity,optionalEntity,partnerConsentDto);
+            PartnerProfileEntity entity = setPartnerConsent(partnerProfileEntity,optionalEntity,partnerConsentDto);
 
-            partnerProfileRepository.save(partnerConsentEntity);
+            partnerProfileRepository.save(partnerProfileEntity);
             log.info("sessionId", "idType", "id", "saving partner consent data for partner id : ", partnerId);
 
             PartnerConsentDto dto = new PartnerConsentDto();
-            dto.setConsentForSdkAbisBiometrics(partnerConsentEntity.getConsentForSdkAbisBiometrics());
-            dto.setConsentForSbiBiometrics(partnerConsentEntity.getConsentForSbiBiometrics());
+            dto.setConsentForSdkAbisBiometrics(partnerProfileEntity.getConsentForSdkAbisBiometrics());
+            dto.setConsentForSbiBiometrics(partnerProfileEntity.getConsentForSbiBiometrics());
             responseWrapper.setResponse(dto);
         } catch (Exception ex) {
             log.info("sessionId", "idType", "id",
@@ -945,11 +945,11 @@ public class BiometricTestDataService {
         return responseWrapper;
     }
 
-    private PartnerConsentEntity setPartnerConsent(PartnerConsentEntity partnerConsentEntity,
-            Optional<PartnerConsentEntity> optionalEntity, PartnerConsentDto consentRequest) {
-        PartnerConsentEntity entity = partnerConsentEntity;
-        if (consentRequest != null) {
-            if (consentRequest.getConsentForSdkAbisBiometrics().equals(YES)) {
+    private PartnerProfileEntity setPartnerConsent(PartnerProfileEntity partnerProfileEntity,
+                                                   Optional<PartnerProfileEntity> optionalEntity, PartnerConsentDto partnerConsentDto) {
+        PartnerProfileEntity entity = partnerProfileEntity;
+        if (partnerConsentDto != null) {
+            if (partnerConsentDto.getConsentForSdkAbisBiometrics().equals(YES)) {
                 entity.setConsentForSdkAbisBiometrics(YES);
                 if (optionalEntity != null && optionalEntity.isPresent()) {
                     entity.setConsentForSbiBiometrics(optionalEntity.get().getConsentForSbiBiometrics());
@@ -957,7 +957,7 @@ public class BiometricTestDataService {
                     entity.setConsentForSbiBiometrics(NO);
                 }
             }
-            if (consentRequest.getConsentForSbiBiometrics().equals(YES)) {
+            if (partnerConsentDto.getConsentForSbiBiometrics().equals(YES)) {
                 entity.setConsentForSbiBiometrics(YES);
                 if (optionalEntity != null && optionalEntity.isPresent()) {
                     entity.setConsentForSdkAbisBiometrics(optionalEntity.get().getConsentForSdkAbisBiometrics());
@@ -976,10 +976,10 @@ public class BiometricTestDataService {
             String partnerId = getPartnerId();
             String orgName = resourceCacheService.getOrgName(partnerId);
 
-            PartnerConsentEntityPK pk = new PartnerConsentEntityPK();
+            PartnerProfileEntityPK pk = new PartnerProfileEntityPK();
             pk.setPartnerId(partnerId);
             pk.setOrgName(orgName);
-            Optional<PartnerConsentEntity> optionalEntity = partnerProfileRepository.findById(pk);
+            Optional<PartnerProfileEntity> optionalEntity = partnerProfileRepository.findById(pk);
             if (optionalEntity.isPresent()) {
                 if (consentForSbiBiometrics) {
                     isConsentGiven = optionalEntity.get().getConsentForSbiBiometrics().equals(YES);

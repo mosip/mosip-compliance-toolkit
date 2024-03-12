@@ -7,5 +7,5 @@ import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
 
 @Repository("PartnerProfileRepository")
 public interface PartnerProfileRepository
-        extends BaseRepository<PartnerConsentEntity, PartnerConsentEntityPK> {
+        extends BaseRepository<PartnerProfileEntity, PartnerProfileEntityPK> {
 }

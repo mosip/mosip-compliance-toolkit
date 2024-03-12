@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
 @Data
 @NoArgsConstructor
 @ToString
-@IdClass(PartnerConsentEntityPK.class)
-public class PartnerConsentEntity {
+@IdClass(PartnerProfileEntityPK.class)
+public class PartnerProfileEntity {
 
     @Id
     @Column(name = "partner_id")
