@@ -902,7 +902,7 @@ public class BiometricTestDataService {
 
             PartnerConsentEntityPK pk = new PartnerConsentEntityPK();
             pk.setPartnerId(partnerId);
-            pk.setOrgName(null);
+            pk.setOrgName(orgName);
 
             LocalDateTime nowDate = LocalDateTime.now();
             PartnerConsentEntity partnerConsentEntity = new PartnerConsentEntity();
