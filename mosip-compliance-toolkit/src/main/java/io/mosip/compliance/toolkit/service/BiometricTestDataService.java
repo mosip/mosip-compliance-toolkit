@@ -1,20 +1,19 @@
 package io.mosip.compliance.toolkit.service;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import io.mosip.compliance.toolkit.config.VelocityEngineConfig;
+import io.mosip.compliance.toolkit.dto.PartnerConsentDto;
+import io.mosip.compliance.toolkit.entity.*;
+import io.mosip.compliance.toolkit.repository.PartnerProfileRepository;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,8 +41,6 @@ import io.mosip.compliance.toolkit.dto.BiometricTestDataDto;
 import io.mosip.compliance.toolkit.dto.TestDataValidationDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto.ValidatorDef;
-import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
-import io.mosip.compliance.toolkit.entity.TestCaseEntity;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
 import io.mosip.compliance.toolkit.util.CommonUtil;
@@ -72,6 +69,11 @@ public class BiometricTestDataService {
 
     private static final String DOT_XML = ".xml";
 
+    private static final String YES = "YES";
+
+    private static final String NO = "NO";
+
+
     /**
      * Autowired reference for {@link #VirusScanner}
      */
@@ -92,6 +94,13 @@ public class BiometricTestDataService {
 
     @Value("${mosip.toolkit.document.scan}")
     private Boolean scanDocument;
+
+    @Value("$(mosip.toolkit.api.id.biometric.consent.get)")
+    private String getPartnerConsentId;
+
+    @Value("$(mosip.toolkit.api.id.biometric.consent.post)")
+    private String postPartnerConsentId;
+
     private Logger log = LoggerConfiguration.logConfig(BiometricTestDataService.class);
 
     @Autowired
@@ -144,6 +153,9 @@ public class BiometricTestDataService {
 
     @Autowired
     private BiometricTestDataRepository biometricTestDataRepository;
+
+    @Autowired
+    PartnerProfileRepository partnerProfileRepository;
 
     public ResponseWrapper<List<BiometricTestDataDto>> getListOfBiometricTestData() {
         ResponseWrapper<List<BiometricTestDataDto>> responseWrapper = new ResponseWrapper<>();
@@ -857,5 +869,140 @@ public class BiometricTestDataService {
             throw new VirusScannerException(ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorCode(),
                     ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorMessage() + e.getMessage());
         }
+    }
+
+    public ResponseWrapper<String> getConsentTemplate() throws Exception {
+        ResponseWrapper<String> responseWrapper = new ResponseWrapper<>();
+        try {
+            log.info("sessionId", "idType", "id", "Fetching biometric consent template.");
+            VelocityEngine engine = VelocityEngineConfig.getVelocityEngine();
+            VelocityContext velocityContext = new VelocityContext();
+            StringWriter stringWriter = new StringWriter();
+            engine.mergeTemplate("templates/" + "biometricsConsent.vm", StandardCharsets.UTF_8.name(), velocityContext, stringWriter);
+            String consentTemplate = stringWriter.toString();
+            responseWrapper.setResponse(consentTemplate);
+        } catch (Exception e) {
+            log.debug("sessionId", "idType", "id", e.getStackTrace());
+            log.error("sessionId", "idType", "id",
+                    "In getConsentTemplate method of BiometricTestDataService Service - " + e.getMessage());
+            throw new ToolkitException(ToolkitErrorCodes.PARTNER_CONSENT_TEMPLATE_ERR.getErrorCode(),
+                    ToolkitErrorCodes.PARTNER_CONSENT_TEMPLATE_ERR.getErrorMessage() + e.getMessage());
+        }
+        responseWrapper.setId(getPartnerConsentId);
+        responseWrapper.setVersion(AppConstants.VERSION);
+        responseWrapper.setResponsetime(LocalDateTime.now());
+        return responseWrapper;
+    }
+
+    public ResponseWrapper<PartnerConsentDto> savePartnerConsent(PartnerConsentDto partnerConsentDto) {
+        ResponseWrapper<PartnerConsentDto> responseWrapper = new ResponseWrapper<>();
+        try {
+            String partnerId = getPartnerId();
+            String orgName = resourceCacheService.getOrgName(partnerId);
+
+            PartnerConsentEntityPK pk = new PartnerConsentEntityPK();
+            pk.setPartnerId(partnerId);
+            pk.setOrgName(null);
+
+            LocalDateTime nowDate = LocalDateTime.now();
+            PartnerConsentEntity partnerConsentEntity = new PartnerConsentEntity();
+            partnerConsentEntity.setPartnerId(partnerId);
+            partnerConsentEntity.setOrgName(orgName);
+
+            Optional<PartnerConsentEntity> optionalEntity = partnerProfileRepository.findById(pk);
+            if (optionalEntity.isPresent()) {
+                partnerConsentEntity.setUpdBy(this.getUserBy());
+                partnerConsentEntity.setUpdDtimes(nowDate);
+                partnerConsentEntity.setCrBy(optionalEntity.get().getCrBy());
+                partnerConsentEntity.setCrDtimes(optionalEntity.get().getCrDtimes());
+            } else {
+                partnerConsentEntity.setCrBy(this.getUserBy());
+                partnerConsentEntity.setCrDtimes(nowDate);
+            }
+
+            PartnerConsentEntity entity = setPartnerConsent(partnerConsentEntity,optionalEntity,partnerConsentDto);
+
+            partnerProfileRepository.save(partnerConsentEntity);
+            log.info("sessionId", "idType", "id", "saving partner consent data for partner id : ", partnerId);
+
+            PartnerConsentDto dto = new PartnerConsentDto();
+            dto.setConsentForSdkAbisBiometrics(partnerConsentEntity.getConsentForSdkAbisBiometrics());
+            dto.setConsentForSbiBiometrics(partnerConsentEntity.getConsentForSbiBiometrics());
+            responseWrapper.setResponse(dto);
+        } catch (Exception ex) {
+            log.info("sessionId", "idType", "id",
+                    "Exception in savePartnerConsent method " + ex.getLocalizedMessage());
+            log.debug("sessionId", "idType", "id", ex.getStackTrace());
+            log.error("sessionId", "idType", "id",
+                    "In savePartnerConsent method of BiometricTestData Service - " + ex.getMessage());
+            String errorCode = ToolkitErrorCodes.PARTNER_CONSENT_UPDATE_ERR.getErrorCode();
+            String errorMessage = ToolkitErrorCodes.PARTNER_CONSENT_UPDATE_ERR.getErrorMessage();
+            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+        }
+        responseWrapper.setId(postPartnerConsentId);
+        responseWrapper.setVersion(AppConstants.VERSION);
+        responseWrapper.setResponsetime(LocalDateTime.now());
+        return responseWrapper;
+    }
+
+    private PartnerConsentEntity setPartnerConsent(PartnerConsentEntity partnerConsentEntity,
+            Optional<PartnerConsentEntity> optionalEntity, PartnerConsentDto consentRequest) {
+        PartnerConsentEntity entity = partnerConsentEntity;
+        if (consentRequest != null) {
+            if (consentRequest.getConsentForSdkAbisBiometrics().equals(YES)) {
+                entity.setConsentForSdkAbisBiometrics(YES);
+                if (optionalEntity != null && optionalEntity.isPresent()) {
+                    entity.setConsentForSbiBiometrics(optionalEntity.get().getConsentForSbiBiometrics());
+                } else {
+                    entity.setConsentForSbiBiometrics(NO);
+                }
+            }
+            if (consentRequest.getConsentForSbiBiometrics().equals(YES)) {
+                entity.setConsentForSbiBiometrics(YES);
+                if (optionalEntity != null && optionalEntity.isPresent()) {
+                    entity.setConsentForSdkAbisBiometrics(optionalEntity.get().getConsentForSdkAbisBiometrics());
+                } else {
+                    entity.setConsentForSdkAbisBiometrics(NO);
+                }
+            }
+        }
+        return entity;
+    }
+
+    public ResponseWrapper<Boolean> isConsentGiven(boolean consentForSbiBiometrics) {
+        ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
+        try {
+            boolean isConsentGiven = false;
+            String partnerId = getPartnerId();
+            String orgName = resourceCacheService.getOrgName(partnerId);
+
+            PartnerConsentEntityPK pk = new PartnerConsentEntityPK();
+            pk.setPartnerId(partnerId);
+            pk.setOrgName(orgName);
+            Optional<PartnerConsentEntity> optionalEntity = partnerProfileRepository.findById(pk);
+            if (optionalEntity.isPresent()) {
+                if (consentForSbiBiometrics) {
+                    isConsentGiven = optionalEntity.get().getConsentForSbiBiometrics().equals(YES);
+                } else {
+                    isConsentGiven = optionalEntity.get().getConsentForSdkAbisBiometrics().equals(YES);
+                }
+            } else {
+                isConsentGiven = false;
+            }
+            responseWrapper.setResponse(isConsentGiven);
+        } catch (Exception ex) {
+            log.info("sessionId", "idType", "id",
+                    "Exception in isConsentGiven method " + ex.getLocalizedMessage());
+            log.debug("sessionId", "idType", "id", ex.getStackTrace());
+            log.error("sessionId", "idType", "id",
+                    "In isConsentGiven method of BiometricTestData Service - " + ex.getMessage());
+            String errorCode = ToolkitErrorCodes.PARTNER_CONSENT_STATUS_ERR.getErrorCode();
+            String errorMessage = ToolkitErrorCodes.PARTNER_CONSENT_STATUS_ERR.getErrorMessage() + " " + ex.getMessage();
+            responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+        }
+        responseWrapper.setId(getPartnerConsentId);
+        responseWrapper.setVersion(AppConstants.VERSION);
+        responseWrapper.setResponsetime(LocalDateTime.now());
+        return responseWrapper;
     }
 }
