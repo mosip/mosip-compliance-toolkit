@@ -935,8 +935,8 @@ public class BiometricTestDataService {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
                     "In savePartnerConsent method of BiometricTestData Service - " + ex.getMessage());
-            String errorCode = ToolkitErrorCodes.PARTNER_CONSENT_UPDATE_ERR.getErrorCode();
-            String errorMessage = ToolkitErrorCodes.PARTNER_CONSENT_UPDATE_ERR.getErrorMessage();
+            String errorCode = ToolkitErrorCodes.PARTNER_CONSENT_UNABLE_TO_ADD.getErrorCode();
+            String errorMessage = ToolkitErrorCodes.PARTNER_CONSENT_UNABLE_TO_ADD.getErrorMessage();
             responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
         }
         responseWrapper.setId(postPartnerConsentId);
