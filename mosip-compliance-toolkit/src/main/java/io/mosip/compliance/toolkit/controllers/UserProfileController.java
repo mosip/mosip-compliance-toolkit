@@ -59,7 +59,7 @@ public class UserProfileController {
         return userProfileService.savePartnerConsent(requestWrapper.getRequest());
     }
 
-    @GetMapping(value = "/isConsentGiven")
+    @GetMapping(value = "/getPartnerConsent")
     @Operation(summary = "Retrieve the partner's biometric consent status.", description = "Retrieve the partner's biometric consent status.", tags = "user-profile-controller")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
@@ -67,6 +67,6 @@ public class UserProfileController {
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
     public ResponseWrapper<Boolean> isConsentGiven(@RequestParam(required = true) boolean consentForSbiBiometrics) {
-        return userProfileService.isConsentGiven(consentForSbiBiometrics);
+        return userProfileService.getPartnerConsent(consentForSbiBiometrics);
     }
 }

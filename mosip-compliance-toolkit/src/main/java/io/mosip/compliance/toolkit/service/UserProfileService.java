@@ -25,12 +25,11 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static io.mosip.compliance.toolkit.constants.AppConstants.NO;
+import static io.mosip.compliance.toolkit.constants.AppConstants.YES;
+
 @Component
 public class UserProfileService {
-
-    private static final String YES = "YES";
-
-    private static final String NO = "NO";
 
     @Autowired
     ResourceCacheService resourceCacheService;
@@ -158,7 +157,7 @@ public class UserProfileService {
         return entity;
     }
 
-    public ResponseWrapper<Boolean> isConsentGiven(boolean consentForSbiBiometrics) {
+    public ResponseWrapper<Boolean> getPartnerConsent(boolean consentForSbiBiometrics) {
         ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
         try {
             boolean isConsentGiven = false;
