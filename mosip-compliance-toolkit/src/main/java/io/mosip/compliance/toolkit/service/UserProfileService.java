@@ -73,7 +73,7 @@ public class UserProfileService {
         } catch (Exception e) {
             log.debug("sessionId", "idType", "id", e.getStackTrace());
             log.error("sessionId", "idType", "id",
-                    "In getConsentTemplate method of UserProfileServiceService - " + e.getMessage());
+                    "In getConsentTemplate method of UserProfileService - " + e.getMessage());
             throw new ToolkitException(ToolkitErrorCodes.PARTNER_CONSENT_TEMPLATE_ERR.getErrorCode(),
                     ToolkitErrorCodes.PARTNER_CONSENT_TEMPLATE_ERR.getErrorMessage() + e.getMessage());
         }
