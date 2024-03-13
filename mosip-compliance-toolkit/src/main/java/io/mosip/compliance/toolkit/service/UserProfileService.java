@@ -73,7 +73,7 @@ public class UserProfileService {
         } catch (Exception e) {
             log.debug("sessionId", "idType", "id", e.getStackTrace());
             log.error("sessionId", "idType", "id",
-                    "In getConsentTemplate method of UserProfileServiceService Service - " + e.getMessage());
+                    "In getConsentTemplate method of UserProfileServiceService - " + e.getMessage());
             throw new ToolkitException(ToolkitErrorCodes.PARTNER_CONSENT_TEMPLATE_ERR.getErrorCode(),
                     ToolkitErrorCodes.PARTNER_CONSENT_TEMPLATE_ERR.getErrorMessage() + e.getMessage());
         }
@@ -123,7 +123,7 @@ public class UserProfileService {
                     "Exception in savePartnerConsent method " + ex.getLocalizedMessage());
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
-                    "In savePartnerConsent method of UserProfileService Service - " + ex.getMessage());
+                    "In savePartnerConsent method of UserProfileService - " + ex.getMessage());
             String errorCode = ToolkitErrorCodes.PARTNER_CONSENT_UNABLE_TO_ADD.getErrorCode();
             String errorMessage = ToolkitErrorCodes.PARTNER_CONSENT_UNABLE_TO_ADD.getErrorMessage();
             responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
@@ -184,7 +184,7 @@ public class UserProfileService {
                     "Exception in isConsentGiven method " + ex.getLocalizedMessage());
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
             log.error("sessionId", "idType", "id",
-                    "In isConsentGiven method of UserProfileService Service - " + ex.getMessage());
+                    "In isConsentGiven method of UserProfileService - " + ex.getMessage());
             String errorCode = ToolkitErrorCodes.PARTNER_CONSENT_STATUS_ERR.getErrorCode();
             String errorMessage = ToolkitErrorCodes.PARTNER_CONSENT_STATUS_ERR.getErrorMessage() + " " + ex.getMessage();
             responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));

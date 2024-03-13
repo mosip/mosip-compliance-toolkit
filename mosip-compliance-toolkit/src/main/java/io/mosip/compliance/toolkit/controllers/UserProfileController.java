@@ -34,7 +34,7 @@ public class UserProfileController {
     private RequestValidator requestValidator;
 
     @GetMapping(value = "/getBiometricsConsentTemplate")
-    @Operation(summary = "Get biometric consent template", description = "Fetch biometric consent template", tags = "biometric-testdata-controller")
+    @Operation(summary = "Get biometric consent template", description = "Fetch biometric consent template", tags = "user-profile-controller")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -45,7 +45,7 @@ public class UserProfileController {
     }
 
     @PostMapping(value = "/savePartnerBiometricConsent")
-    @Operation(summary = "save partner biometric consent", description = "Store the partner's biometric consent in the database.", tags = "biometric-testdata-controller")
+    @Operation(summary = "save partner biometric consent", description = "Store the partner's biometric consent in the database.", tags = "user-profile-controller")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
@@ -60,7 +60,7 @@ public class UserProfileController {
     }
 
     @GetMapping(value = "/isConsentGiven")
-    @Operation(summary = "Retrieve the partner's biometric consent status.", description = "Retrieve the partner's biometric consent status.", tags = "biometric-testdata-controller")
+    @Operation(summary = "Retrieve the partner's biometric consent status.", description = "Retrieve the partner's biometric consent status.", tags = "user-profile-controller")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
