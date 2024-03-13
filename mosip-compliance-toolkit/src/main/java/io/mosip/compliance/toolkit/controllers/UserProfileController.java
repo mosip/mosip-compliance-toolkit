@@ -40,7 +40,7 @@ public class UserProfileController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))})
-    public ResponseWrapper<String> getBiometricsConsentTemplate() throws Exception {
+    public ResponseWrapper<String> getBiometricsConsentTemplate()  throws Exception {
         return userProfileService.getConsentTemplate();
     }
 
