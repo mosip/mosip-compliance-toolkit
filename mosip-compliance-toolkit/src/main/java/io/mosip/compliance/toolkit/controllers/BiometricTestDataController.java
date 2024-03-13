@@ -74,7 +74,7 @@ public class BiometricTestDataController {
 			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<AddBioTestDataResponseDto> addBiometricTestData(@RequestParam("file") MultipartFile file,
-																		   @RequestPart("biometricMetaData") String strRequestWrapper, Errors errors) {
+					@RequestPart("biometricMetaData") String strRequestWrapper, Errors errors) {
 		try {
 			RequestWrapper<BiometricTestDataDto> requestWrapper = objectMapperConfig.objectMapper()
 					.readValue(strRequestWrapper, new TypeReference<RequestWrapper<BiometricTestDataDto>>() {
