@@ -3,7 +3,6 @@ package io.mosip.compliance.toolkit.controllers;
 import java.util.List;
 
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
-import io.mosip.compliance.toolkit.dto.PartnerConsentDto;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,7 +15,12 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -32,17 +36,12 @@ import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
 
-import javax.validation.Valid;
-
 @RestController
 @Tag(name = "biometric-testdata-controller")
 public class BiometricTestDataController {
 
 	/** The Constant BIOMETRIC_TESTDATA_POST_ID application. */
 	private static final String BIOMETRIC_TESTDATA_POST_ID = "biometric.testdata.post";
-
-	/** The Constant BIOMETRIC_CONSENT_POST_ID application. */
-	private static final String BIOMETRIC_CONSENT_POST_ID = "biometric.consent.post";
 
 	@Autowired
 	private BiometricTestDataService biometricTestDataService;
@@ -75,7 +74,7 @@ public class BiometricTestDataController {
 			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
 			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseWrapper<AddBioTestDataResponseDto> addBiometricTestData(@RequestParam("file") MultipartFile file,
-			@RequestPart("biometricMetaData") String strRequestWrapper, Errors errors) {
+																		   @RequestPart("biometricMetaData") String strRequestWrapper, Errors errors) {
 		try {
 			RequestWrapper<BiometricTestDataDto> requestWrapper = objectMapperConfig.objectMapper()
 					.readValue(strRequestWrapper, new TypeReference<RequestWrapper<BiometricTestDataDto>>() {
@@ -127,42 +126,5 @@ public class BiometricTestDataController {
 			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
 	public ResponseEntity<Resource> getSampleBioTestDataFile(@RequestParam(required = true) String purpose) {
 		return biometricTestDataService.getSampleBioTestDataFile(purpose);
-	}
-
-	@GetMapping(value = "/getBiometricsConsentTemplate")
-	@Operation(summary = "Get biometric consent template", description = "Fetch biometric consent template", tags = "biometric-testdata-controller")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapper<String> getBiometricsConsentTemplate() throws Exception {
-	   return biometricTestDataService.getConsentTemplate();
-	}
-
-	@PostMapping(value = "/savePartnerBiometricConsent")
-	@Operation(summary = "save partner biometric consent", description = "Store the partner's biometric consent in the database.", tags = "biometric-testdata-controller")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapper<PartnerConsentDto> savePartnerConsent(
-			@RequestBody @Valid RequestWrapper<PartnerConsentDto> requestWrapper, Errors errors) throws Exception {
-		requestValidator.validate(requestWrapper, errors);
-		requestValidator.validateId(BIOMETRIC_CONSENT_POST_ID, requestWrapper.getId(), errors);
-		DataValidationUtil.validate(errors, BIOMETRIC_CONSENT_POST_ID);
-		return biometricTestDataService.savePartnerConsent(requestWrapper.getRequest());
-	}
-
-	@GetMapping(value = "/isConsentGiven")
-	@Operation(summary = "Retrieve the partner's biometric consent status.", description = "Retrieve the partner's biometric consent status.", tags = "biometric-testdata-controller")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "201", description = "Created" ,content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
-			@ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
-	public ResponseWrapper<Boolean> isConsentGiven(@RequestParam(required = true) boolean consentForSbiBiometrics) {
-		return biometricTestDataService.isConsentGiven(consentForSbiBiometrics);
 	}
 }
