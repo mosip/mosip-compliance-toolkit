@@ -1,8 +1,5 @@
 package io.mosip.compliance.toolkit.controllers;
 
-import java.io.IOException;
-import java.util.List;
-
 import io.mosip.compliance.toolkit.dto.PartnerConsentDto;
 import io.mosip.compliance.toolkit.service.UserProfileService;
 import org.junit.Assert;
@@ -10,24 +7,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.Errors;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.mosip.compliance.toolkit.dto.BiometricTestDataDto;
-import io.mosip.compliance.toolkit.service.BiometricTestDataService;
-import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.kernel.core.http.RequestWrapper;
 import io.mosip.kernel.core.http.ResponseWrapper;
@@ -47,10 +33,10 @@ public class UserProfileControllerTest {
     private UserProfileService userProfileService;
 
     @Mock
-    private RequestValidator requestValidator;
+    private Errors errors;
 
     @Mock
-    private Errors errors;
+    RequestValidator requestValidator;
 
     private static final String BIOMETRIC_CONSENT_POST_ID = "biometric.consent.post";
 
@@ -65,7 +51,7 @@ public class UserProfileControllerTest {
     }
 
     /*
-     * This class tests the addBiometricTestData
+     * This class tests the savePartnerConsent
      */
 
     @Test
@@ -78,13 +64,13 @@ public class UserProfileControllerTest {
     }
 
     /*
-     * This class tests the addBiometricTestData
+     * This class tests the getPartnerConsent
      */
 
     @Test
-    public void isConsentGivenTest() throws Exception {
+    public void getPartnerConsentTest() throws Exception {
         ResponseWrapper<Boolean> response = new ResponseWrapper<>();
         when(userProfileService.getPartnerConsent(anyBoolean())).thenReturn(response);
-        Assert.assertEquals(response, userProfileController.isConsentGiven(true));
+        Assert.assertEquals(response, userProfileController.getPartnerConsent(true));
     }
 }

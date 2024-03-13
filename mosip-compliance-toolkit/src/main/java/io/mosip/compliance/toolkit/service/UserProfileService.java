@@ -121,7 +121,7 @@ public class UserProfileService {
             PartnerProfileEntity respEntity = partnerProfileRepository.save(entity);
             log.info("sessionId", "idType", "id", "saving partner consent data for partner id : ", partnerId);
 
-            PartnerConsentDto dto = (PartnerConsentDto) getObjectMapper()
+            PartnerConsentDto dto = (PartnerConsentDto)  objectMapperConfig.objectMapper()
                     .convertValue(respEntity, new TypeReference<PartnerConsentDto>() {
             });
             responseWrapper.setResponse(dto);
@@ -202,9 +202,4 @@ public class UserProfileService {
         return responseWrapper;
     }
 
-    private ObjectMapper getObjectMapper() {
-        ObjectMapper objectMapper = objectMapperConfig.objectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        return objectMapper;
-    }
 }
