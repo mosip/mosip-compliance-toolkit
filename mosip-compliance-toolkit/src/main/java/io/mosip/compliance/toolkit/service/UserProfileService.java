@@ -1,15 +1,20 @@
 package io.mosip.compliance.toolkit.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.config.VelocityEngineConfig;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.dto.PartnerConsentDto;
+import io.mosip.compliance.toolkit.dto.report.ComplianceTestRunSummaryDto;
 import io.mosip.compliance.toolkit.entity.PartnerProfileEntity;
 import io.mosip.compliance.toolkit.entity.PartnerProfileEntityPK;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.PartnerProfileRepository;
 import io.mosip.compliance.toolkit.util.CommonUtil;
+import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
@@ -36,6 +41,9 @@ public class UserProfileService {
 
     @Autowired
     PartnerProfileRepository partnerProfileRepository;
+
+    @Autowired
+    ObjectMapperConfig objectMapperConfig;
 
     @Value("$(mosip.toolkit.api.id.biometric.consent.get)")
     private String getPartnerConsentId;
@@ -110,12 +118,12 @@ public class UserProfileService {
 
             PartnerProfileEntity entity = setPartnerConsent(partnerProfileEntity, optionalEntity, partnerConsentDto);
 
-            partnerProfileRepository.save(partnerProfileEntity);
+            PartnerProfileEntity respEntity = partnerProfileRepository.save(entity);
             log.info("sessionId", "idType", "id", "saving partner consent data for partner id : ", partnerId);
 
-            PartnerConsentDto dto = new PartnerConsentDto();
-            dto.setConsentForSdkAbisBiometrics(partnerProfileEntity.getConsentForSdkAbisBiometrics());
-            dto.setConsentForSbiBiometrics(partnerProfileEntity.getConsentForSbiBiometrics());
+            PartnerConsentDto dto = (PartnerConsentDto) getObjectMapper()
+                    .convertValue(respEntity, new TypeReference<PartnerConsentDto>() {
+            });
             responseWrapper.setResponse(dto);
         } catch (Exception ex) {
             log.info("sessionId", "idType", "id",
@@ -192,5 +200,11 @@ public class UserProfileService {
         responseWrapper.setVersion(AppConstants.VERSION);
         responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
+    }
+
+    private ObjectMapper getObjectMapper() {
+        ObjectMapper objectMapper = objectMapperConfig.objectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return objectMapper;
     }
 }
