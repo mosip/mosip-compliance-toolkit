@@ -75,7 +75,8 @@ public enum ToolkitErrorCodes {
 	RCAPTURE_DATA_ENCRYPT_ERROR("TOOLKIT_REQ_ERR_041", "Encryption of rcapture data failed"),
 
 	RCAPTURE_DATA_DECRYPT_ERROR("TOOLKIT_REQ_ERR_042", "Decryption of rcapture data failed"),
-
+	FILE_WITH_MULTIPLE_EXTENSIONS("TOOLKIT_REQ_ERR_043", "File name should not contain multiple extensions"),
+	FILE_WITHOUT_EXTENSIONS("TOOLKIT_REQ_ERR_044", "Unable to upload a file without extension"),
 	PROJECT_NAME_EXISTS("TOOLKIT_DB_ERR_001", "You have previously created a project with name: "),
 	BIO_TEST_DATA_FILE_EXISTS("TOOLKIT_DB_ERR_002", "You have previously added biometric test data with name: "),
 	COLLECTION_NAME_EXISTS("TOOLKIT_DB_ERR_003", "You have previously created a collection with name: "),

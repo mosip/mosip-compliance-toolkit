@@ -66,78 +66,91 @@ public class ResourceManagementService {
 		ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
 		boolean status = false;
 		try {
-			if (scanDocument) {
-                isVirusScanSuccess(file);
-            }
-			
-			if (Objects.nonNull(file) && Objects.nonNull(type) && !file.isEmpty() && file.getSize() > 0) {
-				if ((type.equals(SBI_SCHEMA) || type.equals(SDK_SCHEMA)) && !Objects.nonNull(version)) {
-					throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode(),
-							ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
-				}
-				String fileName = file.getOriginalFilename();
-				String container = null;
-				String objectName = null;
-				switch (type) {
-				case AppConstants.MOSIP_DEFAULT:
-					if (Objects.isNull(fileName) || !fileName.endsWith(ZIP_EXT)) {
-						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
-								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+			String originalFilename = file.getOriginalFilename();
+			if (originalFilename.contains(".")) {
+				if (!(originalFilename.split("\\.").length > 2)) {
+					if (scanDocument) {
+						isVirusScanSuccess(file);
 					}
-					container = AppConstants.TESTDATA;
-					String purposeDefault = fileName.replace(AppConstants.MOSIP_DEFAULT + UNDERSCORE, "")
-							.replace(ZIP_EXT, "");
-					if(purposeDefault.contains(AppConstants.ABIS)) {
-						objectName = AppConstants.MOSIP_DEFAULT + UNDERSCORE + purposeDefault.toUpperCase() + ZIP_EXT;
+
+					if (Objects.nonNull(file) && Objects.nonNull(type) && !file.isEmpty() && file.getSize() > 0) {
+						if ((type.equals(SBI_SCHEMA) || type.equals(SDK_SCHEMA)) && !Objects.nonNull(version)) {
+							throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode(),
+									ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
+						}
+						String fileName = file.getOriginalFilename();
+						String container = null;
+						String objectName = null;
+						switch (type) {
+							case AppConstants.MOSIP_DEFAULT:
+								if (Objects.isNull(fileName) || !fileName.endsWith(ZIP_EXT)) {
+									throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+											ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+								}
+								container = AppConstants.TESTDATA;
+								String purposeDefault = fileName.replace(AppConstants.MOSIP_DEFAULT + UNDERSCORE, "")
+										.replace(ZIP_EXT, "");
+								if (purposeDefault.contains(AppConstants.ABIS)) {
+									objectName = AppConstants.MOSIP_DEFAULT + UNDERSCORE + purposeDefault.toUpperCase() + ZIP_EXT;
+								} else {
+									SdkPurpose sdkPurposeDefault = SdkPurpose.valueOf(purposeDefault);
+									objectName = AppConstants.MOSIP_DEFAULT + UNDERSCORE + sdkPurposeDefault.toString().toUpperCase()
+											+ ZIP_EXT;
+								}
+								break;
+							case AppConstants.SCHEMAS:
+								if (Objects.isNull(fileName) || !fileName.equals(AppConstants.TESTCASE_SCHEMA_JSON)) {
+									throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+											ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+								}
+								container = AppConstants.SCHEMAS.toLowerCase();
+								objectName = fileName;
+								break;
+							case SBI_SCHEMA:
+								if (Objects.isNull(fileName) || !fileName.endsWith(JSON_EXT)) {
+									throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+											ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+								}
+								container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.SBI.toLowerCase() + "/" + version;
+								objectName = fileName;
+								break;
+							case SDK_SCHEMA:
+								if (Objects.isNull(fileName) || !fileName.endsWith(JSON_EXT)) {
+									throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+											ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+								}
+								container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.SDK.toLowerCase() + "/" + version;
+								objectName = fileName;
+								break;
+							case ABIS_SCHEMA:
+								if (Objects.isNull(fileName) || !fileName.endsWith(JSON_EXT)) {
+									throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+											ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+								}
+								container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.ABIS.toLowerCase() + "/" + version;
+								objectName = fileName;
+								break;
+							default:
+								throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode(),
+										ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
+						}
+						InputStream is = file.getInputStream();
+						status = putInObjectStore(container, objectName, is);
+						is.close();
 					} else {
-						SdkPurpose sdkPurposeDefault = SdkPurpose.valueOf(purposeDefault);
-						objectName = AppConstants.MOSIP_DEFAULT + UNDERSCORE + sdkPurposeDefault.toString().toUpperCase()
-								+ ZIP_EXT;
+						String errorCode = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode();
+						String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage();
+						responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 					}
-					break;
-				case AppConstants.SCHEMAS:
-					if (Objects.isNull(fileName) || !fileName.equals(AppConstants.TESTCASE_SCHEMA_JSON)) {
-						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
-								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
-					}
-					container = AppConstants.SCHEMAS.toLowerCase();
-					objectName = fileName;
-					break;
-				case SBI_SCHEMA:
-					if (Objects.isNull(fileName) || !fileName.endsWith(JSON_EXT)) {
-						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
-								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
-					}
-					container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.SBI.toLowerCase() + "/" + version;
-					objectName = fileName;
-					break;
-				case SDK_SCHEMA:
-					if (Objects.isNull(fileName) || !fileName.endsWith(JSON_EXT)) {
-						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
-								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
-					}
-					container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.SDK.toLowerCase() + "/" + version;
-					objectName = fileName;
-					break;
-				case ABIS_SCHEMA:
-					if (Objects.isNull(fileName) || !fileName.endsWith(JSON_EXT)) {
-						throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
-								ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
-					}
-					container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.ABIS.toLowerCase() + "/" + version;
-					objectName = fileName;
-					break;
-				default:
-					throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode(),
-							ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
+				} else {
+					String errorCode = ToolkitErrorCodes.FILE_WITH_MULTIPLE_EXTENSIONS.getErrorCode();
+					String errorMessage = ToolkitErrorCodes.FILE_WITH_MULTIPLE_EXTENSIONS.getErrorMessage();
+					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 				}
-				InputStream is = file.getInputStream();
-				status = putInObjectStore(container, objectName, is);
-				is.close();
 			} else {
-				String errorCode = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode();
-				String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage();
-				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode,errorMessage));
+				String errorCode = ToolkitErrorCodes.FILE_WITHOUT_EXTENSIONS.getErrorCode();
+				String errorMessage = ToolkitErrorCodes.FILE_WITHOUT_EXTENSIONS.getErrorMessage();
+				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 			}
 		} catch (ToolkitException ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
