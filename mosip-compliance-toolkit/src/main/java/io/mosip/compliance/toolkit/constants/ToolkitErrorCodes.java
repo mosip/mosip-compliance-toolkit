@@ -126,8 +126,10 @@ public enum ToolkitErrorCodes {
 	TOOLKIT_REPORT_STATUS_UPDATE_ERR("TOOLKIT_REPORT_004", "Error while changing report status"),
 	TOOLKIT_REPORT_GET_ERR("TOOLKIT_REPORT_005", "Error while fetching list of reports"),
 	TOOLKIT_INVALID_REPORT_STATUS_ERR("TOOLKIT_REPORT_006", "Error while fetching list of reports. Invalid report status: "),
-	TOOLKIT_CERTIFICATE_PARSING_ERR("TOOLKIT_CERTIFICATE_PARSING_001", "Error while parsing certificate : ");
-
+	TOOLKIT_CERTIFICATE_PARSING_ERR("TOOLKIT_CERTIFICATE_PARSING_001", "Error while parsing certificate : "),
+	PARTNER_CONSENT_TEMPLATE_ERR("TOOLKIT_PARTNER_CONSENT_ERR_001", "Error fetching biometric consent template."),
+	PARTNER_CONSENT_UNABLE_TO_ADD("TOOLKIT_PARTNER_CONSENT_ERR_002", "Error saving partner consent data."),
+	PARTNER_CONSENT_STATUS_ERR("TOOLKIT_PARTNER_CONSENT_ERR_003", "Error fetching partner consent status.");
 
 	private final String errorCode;
 	private final String errorMessage;
