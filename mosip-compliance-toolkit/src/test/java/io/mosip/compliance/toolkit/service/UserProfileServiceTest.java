@@ -136,14 +136,14 @@ public class UserProfileServiceTest {
         when(authentication.getPrincipal()).thenReturn(authUserDetails);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(partnerProfileRepository.findById(any(PartnerProfileEntityPK.class))).thenReturn(Optional.empty());
-        ResponseWrapper<Boolean> response = userProfileService.getPartnerConsent(false);
+        ResponseWrapper<PartnerConsentDto> response = userProfileService.getPartnerConsent();
         Assert.assertNotNull(response);
     }
 
     @Test
     public void getPartnerConsentTestException() throws Exception {
         ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
-        ResponseWrapper<Boolean> response = userProfileService.getPartnerConsent(false);
+        ResponseWrapper<PartnerConsentDto> response = userProfileService.getPartnerConsent();
         Assert.assertNotNull(response);
     }
 
@@ -163,7 +163,7 @@ public class UserProfileServiceTest {
         when(authentication.getPrincipal()).thenReturn(authUserDetails);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(partnerProfileRepository.findById(any(PartnerProfileEntityPK.class))).thenReturn(optionalEntity);
-        ResponseWrapper<Boolean> response = userProfileService.getPartnerConsent(true);
+        ResponseWrapper<PartnerConsentDto> response = userProfileService.getPartnerConsent();
         Assert.assertNotNull(response);
     }
 
@@ -183,7 +183,7 @@ public class UserProfileServiceTest {
         when(authentication.getPrincipal()).thenReturn(authUserDetails);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(partnerProfileRepository.findById(any(PartnerProfileEntityPK.class))).thenReturn(optionalEntity);
-        ResponseWrapper<Boolean> response = userProfileService.getPartnerConsent(false);
+        ResponseWrapper<PartnerConsentDto> response = userProfileService.getPartnerConsent();
         Assert.assertNotNull(response);
     }
 

@@ -4,9 +4,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
 import java.time.LocalDateTime;
+
+import static io.mosip.compliance.toolkit.constants.AppConstants.NO;
 
 @Data
 @Getter
@@ -17,9 +17,9 @@ public class PartnerConsentDto {
 
     private String orgName;
 
-    private String consentForSdkAbisBiometrics;
+    private String consentForSdkAbisBiometrics = NO;
 
-    private String consentForSbiBiometrics;
+    private String consentForSbiBiometrics = NO;
 
     private String crBy;
 

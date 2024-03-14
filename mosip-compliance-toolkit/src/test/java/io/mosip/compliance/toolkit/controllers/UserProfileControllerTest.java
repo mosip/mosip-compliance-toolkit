@@ -69,8 +69,8 @@ public class UserProfileControllerTest {
 
     @Test
     public void getPartnerConsentTest() throws Exception {
-        ResponseWrapper<Boolean> response = new ResponseWrapper<>();
-        when(userProfileService.getPartnerConsent(anyBoolean())).thenReturn(response);
-        Assert.assertEquals(response, userProfileController.getPartnerConsent(true));
+        ResponseWrapper<PartnerConsentDto> response = new ResponseWrapper<>();
+        when(userProfileService.getPartnerConsent()).thenReturn(response);
+        Assert.assertEquals(response, userProfileController.getPartnerConsent());
     }
 }

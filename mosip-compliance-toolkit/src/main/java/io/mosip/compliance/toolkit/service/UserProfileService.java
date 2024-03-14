@@ -165,27 +165,33 @@ public class UserProfileService {
         return entity;
     }
 
-    public ResponseWrapper<Boolean> getPartnerConsent(boolean consentForSbiBiometrics) {
-        ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
+    public ResponseWrapper<PartnerConsentDto> getPartnerConsent() {
+        ResponseWrapper<PartnerConsentDto> responseWrapper = new ResponseWrapper<>();
         try {
-            boolean isConsentGiven = false;
             String partnerId = getPartnerId();
             String orgName = resourceCacheService.getOrgName(partnerId);
+            LocalDateTime nowDate = LocalDateTime.now();
+
+            PartnerConsentDto partnerConsentDto = new PartnerConsentDto();
+            partnerConsentDto.setPartnerId(partnerId);
+            partnerConsentDto.setOrgName(orgName);
 
             PartnerProfileEntityPK pk = new PartnerProfileEntityPK();
             pk.setPartnerId(partnerId);
             pk.setOrgName(orgName);
             Optional<PartnerProfileEntity> optionalEntity = partnerProfileRepository.findById(pk);
             if (optionalEntity.isPresent()) {
-                if (consentForSbiBiometrics) {
-                    isConsentGiven = optionalEntity.get().getConsentForSbiBiometrics().equals(YES);
-                } else {
-                    isConsentGiven = optionalEntity.get().getConsentForSdkAbisBiometrics().equals(YES);
-                }
+                partnerConsentDto.setConsentForSdkAbisBiometrics(optionalEntity.get().getConsentForSdkAbisBiometrics());
+                partnerConsentDto.setConsentForSbiBiometrics(optionalEntity.get().getConsentForSbiBiometrics());
+                partnerConsentDto.setUpdBy(this.getUserBy());
+                partnerConsentDto.setUpdDtimes(nowDate);
+                partnerConsentDto.setCrBy(optionalEntity.get().getCrBy());
+                partnerConsentDto.setCrDtimes(optionalEntity.get().getCrDtimes());
             } else {
-                isConsentGiven = false;
+                partnerConsentDto.setCrBy(this.getUserBy());
+                partnerConsentDto.setCrDtimes(nowDate);
             }
-            responseWrapper.setResponse(isConsentGiven);
+            responseWrapper.setResponse(partnerConsentDto);
         } catch (Exception ex) {
             log.info("sessionId", "idType", "id",
                     "Exception in isConsentGiven method " + ex.getLocalizedMessage());
