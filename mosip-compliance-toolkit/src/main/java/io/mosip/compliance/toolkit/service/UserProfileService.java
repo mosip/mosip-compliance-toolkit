@@ -183,8 +183,8 @@ public class UserProfileService {
             if (optionalEntity.isPresent()) {
                 partnerConsentDto.setConsentForSdkAbisBiometrics(optionalEntity.get().getConsentForSdkAbisBiometrics());
                 partnerConsentDto.setConsentForSbiBiometrics(optionalEntity.get().getConsentForSbiBiometrics());
-                partnerConsentDto.setUpdBy(this.getUserBy());
-                partnerConsentDto.setUpdDtimes(nowDate);
+                partnerConsentDto.setUpdBy(optionalEntity.get().getUpdBy());
+                partnerConsentDto.setUpdDtimes(optionalEntity.get().getUpdDtimes());
                 partnerConsentDto.setCrBy(optionalEntity.get().getCrBy());
                 partnerConsentDto.setCrDtimes(optionalEntity.get().getCrDtimes());
             } else {
