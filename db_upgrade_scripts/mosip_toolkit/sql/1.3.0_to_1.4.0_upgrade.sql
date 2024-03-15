@@ -158,7 +158,7 @@ CREATE TABLE toolkit.ctk_template(
     cr_by character varying(64) NOT NULL,
     upd_by character varying(64),
     upd_dtimes timestamp,
-    CONSTRAINT ctk_template_pk PRIMARY KEY (lang_code,template_name),
+    CONSTRAINT ctk_template_pk PRIMARY KEY (lang_code,template_name)
 );
 COMMENT ON TABLE toolkit.ctk_template IS 'This table has templates of Compliance Toolkit.';
 COMMENT ON COLUMN toolkit.ctk_template.lang_code IS 'Lang Code: Language of the template stored.';
