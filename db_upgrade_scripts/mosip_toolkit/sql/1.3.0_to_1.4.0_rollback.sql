@@ -17,3 +17,6 @@ DROP TABLE IF EXISTS toolkit.batch_job_instance;
 
 -- partner_profile
 DROP TABLE IF EXISTS toolkit.partner_profile;
+
+--ctk_template
+DROP TABLE IF EXISTS toolkit.ctk_template;
