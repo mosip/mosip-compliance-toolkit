@@ -247,10 +247,10 @@ public class AbisProjectService {
 						entity.setUrl(url);
 					}
 					if (Objects.nonNull(userName) && !userName.isEmpty()) {
-						entity.setUsername(userName);
+						entity.setUsername(Base64.getEncoder().encodeToString(userName.getBytes()));
 					}
 					if (Objects.nonNull(password) && !password.isEmpty()) {
-						entity.setPassword(password);
+						entity.setPassword(Base64.getEncoder().encodeToString(password.getBytes()));
 					}
 					if (Objects.nonNull(requestQueueName) && !requestQueueName.isEmpty()) {
 						entity.setOutboundQueueName(requestQueueName);
