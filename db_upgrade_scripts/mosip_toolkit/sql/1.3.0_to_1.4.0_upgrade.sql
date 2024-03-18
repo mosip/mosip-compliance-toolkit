@@ -168,3 +168,7 @@ COMMENT ON COLUMN toolkit.ctk_template.template_name IS 'Template Name: Name of 
 COMMENT ON COLUMN toolkit.ctk_template.template IS 'Template: Stores the actual template data.';
 COMMENT ON COLUMN toolkit.ctk_template.upd_by IS 'Updated By : ID or name of the user who update the record with new values';
 COMMENT ON COLUMN toolkit.ctk_template.upd_dtimes IS 'Updated DateTimestamp : Date and Timestamp when any of the fields in the record is updated with new values.';
+
+-- update username and password in base64 encode format
+UPDATE toolkit.abis_projects SET username = encode(username::bytea, 'base64');
+UPDATE toolkit.abis_projects SET password = encode(password::bytea, 'base64');
