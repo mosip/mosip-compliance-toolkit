@@ -1,6 +1,7 @@
 package io.mosip.compliance.toolkit.service;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -98,6 +99,16 @@ public class AbisProjectService {
 				objectMapper.registerModule(new JavaTimeModule());
 				objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 				abisProjectDto = objectMapper.convertValue(abisProjectEntity, AbisProjectDto.class);
+				String username = abisProjectEntity.getUsername();
+				String password = abisProjectEntity.getPassword();
+				if (Objects.nonNull(username) && !username.isEmpty()) {
+					String decodedUsername = new String(Base64.getDecoder().decode(username));
+					abisProjectDto.setUsername(decodedUsername);
+				}
+				if (Objects.nonNull(password) && !password.isEmpty()) {
+					String decodedPassword = new String(Base64.getDecoder().decode(password));
+					abisProjectDto.setPassword(decodedPassword);
+				}
 
 			} else {
 				String errorCode = ToolkitErrorCodes.ABIS_PROJECT_NOT_AVAILABLE.getErrorCode();
@@ -147,8 +158,8 @@ public class AbisProjectService {
 					entity.setName(abisProjectDto.getName());
 					entity.setProjectType(abisProjectDto.getProjectType());
 					entity.setUrl(abisProjectDto.getUrl());
-					entity.setUsername(abisProjectDto.getUsername());
-					entity.setPassword(abisProjectDto.getPassword());
+					entity.setUsername(Base64.getEncoder().encodeToString(abisProjectDto.getUsername().getBytes()));
+					entity.setPassword(Base64.getEncoder().encodeToString(abisProjectDto.getPassword().getBytes()));
 					entity.setInboundQueueName(abisProjectDto.getInboundQueueName());
 					entity.setPartnerId(partnerId);
 					entity.setOrgName(resourceCacheService.getOrgName(partnerId));
@@ -236,10 +247,10 @@ public class AbisProjectService {
 						entity.setUrl(url);
 					}
 					if (Objects.nonNull(userName) && !userName.isEmpty()) {
-						entity.setUsername(userName);
+						entity.setUsername(Base64.getEncoder().encodeToString(userName.getBytes()));
 					}
 					if (Objects.nonNull(password) && !password.isEmpty()) {
-						entity.setPassword(password);
+						entity.setPassword(Base64.getEncoder().encodeToString(password.getBytes()));
 					}
 					if (Objects.nonNull(requestQueueName) && !requestQueueName.isEmpty()) {
 						entity.setOutboundQueueName(requestQueueName);
