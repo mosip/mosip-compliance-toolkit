@@ -1,5 +1,6 @@
 -- This table has compliance toolkit templates.
 CREATE TABLE toolkit.custom_templates(
+	id character varying(36) NOT NULL,
     lang_code character varying(36) NOT NULL,
     template_name character varying(64) NOT NULL,
     template character varying NOT NULL,
@@ -7,9 +8,10 @@ CREATE TABLE toolkit.custom_templates(
     cr_by character varying(64) NOT NULL,
     upd_by character varying(64),
     upd_dtimes timestamp,
-    CONSTRAINT custom_templates_pk PRIMARY KEY (lang_code,template_name)
+    CONSTRAINT custom_templates_pk PRIMARY KEY (id)
 );
 COMMENT ON TABLE toolkit.custom_templates IS 'This table has templates of Compliance Toolkit.';
+COMMENT ON COLUMN toolkit.custom_templates.id IS 'ID: Unique Id generated for an template.';
 COMMENT ON COLUMN toolkit.custom_templates.lang_code IS 'Lang Code: Language of the template stored.';
 COMMENT ON COLUMN toolkit.custom_templates.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
 COMMENT ON COLUMN toolkit.custom_templates.cr_by IS 'Created By : ID or name of the user who create / insert record.';
