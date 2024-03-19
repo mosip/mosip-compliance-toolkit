@@ -1,6 +1,6 @@
 -- This table has compliance toolkit templates.
 CREATE TABLE toolkit.custom_templates(
-	id character varying(36) NOT NULL,
+    id character varying(36) NOT NULL,
     lang_code character varying(36) NOT NULL,
     template_name character varying(64) NOT NULL,
     template character varying NOT NULL,
