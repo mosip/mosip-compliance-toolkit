@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS toolkit.batch_job_instance;
 DROP TABLE IF EXISTS toolkit.partner_profile;
 
 --ctk_template
-DROP TABLE IF EXISTS toolkit.ctk_template;
+DROP TABLE IF EXISTS toolkit.custom_templates;
 
 -- decode username and password in abis projects
 UPDATE toolkit.abis_projects SET username = convert_from(decode(username, 'base64'), 'UTF8');
