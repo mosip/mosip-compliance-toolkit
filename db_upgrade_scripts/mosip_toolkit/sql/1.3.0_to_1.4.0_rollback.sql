@@ -18,3 +18,9 @@ DROP TABLE IF EXISTS toolkit.batch_job_instance;
 -- decode username and password in abis projects
 UPDATE toolkit.abis_projects SET username = convert_from(decode(username, 'base64'), 'UTF8');
 UPDATE toolkit.abis_projects SET password = convert_from(decode(password, 'base64'), 'UTF8');
+
+-- custom_templates
+DROP TABLE IF EXISTS toolkit.custom_templates;
+
+-- partner_profile
+DROP TABLE IF EXISTS toolkit.partner_profile;
