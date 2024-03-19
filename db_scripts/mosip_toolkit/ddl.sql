@@ -23,4 +23,4 @@
 \ir ddl/batch_step_execution.sql
 \ir ddl/batch_step_execution_context.sql
 \ir ddl/batch-fk.sql
-\ir ddl/ctk_template.sql
+\ir ddl/custom_templates.sql
