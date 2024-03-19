@@ -100,9 +100,9 @@ public class MainController {
 		configMap.put("sessionIdlePing", sessionIdlePing);
 		configMap.put("sessionIdleTimer", sessionIdleTimer);
 		if (isAbisPartner()) {
-			configMap.put("abisPartnerType", abisPartnerType);
+			configMap.put("isAbisPartner", "YES");
 		} else {
-			configMap.put("abisPartnerType", "");
+			configMap.put("isAbisPartner", "NO");
 		}
 		responseWrapper.setResponse(configMap);
 		return responseWrapper;
