@@ -110,8 +110,4 @@ public class AppConstants {
 
 	public static final String SDK_VERSION = "version";
 
-	public static final String YES = "YES";
-
-	public static final String NO = "NO";
-
 }

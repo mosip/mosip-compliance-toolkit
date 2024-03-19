@@ -61,9 +61,6 @@ public class MainController {
 	
 	@Value("${mosip.toolkit.roles.adminPartnerReport}")
 	private String adminPartnerReportRole;
-
-	@Value("${mosip.toolkit.biometric.consent.enabled}")
-	private String isBiometricConsentEnabled;
 	
 	private AuthUserDetails authUserDetails() {
 		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -102,7 +99,6 @@ public class MainController {
 		configMap.put("sessionIdleTimeout", sessionIdleTimeout);
 		configMap.put("sessionIdlePing", sessionIdlePing);
 		configMap.put("sessionIdleTimer", sessionIdleTimer);
-		configMap.put("isBiometricConsentEnabled", isBiometricConsentEnabled);
 		if (isAbisPartner()) {
 			configMap.put("abisPartnerType", abisPartnerType);
 		} else {
