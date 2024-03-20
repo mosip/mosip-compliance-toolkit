@@ -149,6 +149,7 @@ COMMENT ON COLUMN toolkit.custom_templates.template IS 'Template: Stores the act
 
 -- This table has consents of partners for biometrics.
 CREATE TABLE toolkit.partner_profile(
+    id character varying(36) NOT NULL,
     partner_id character varying(36) NOT NULL,
     org_name character varying(64) NOT NULL,
     consent_given character varying(36) NOT NULL DEFAULT 'NO',
@@ -157,10 +158,11 @@ CREATE TABLE toolkit.partner_profile(
     cr_by character varying(64) NOT NULL,
     upd_by character varying(64),
     upd_dtimes timestamp,
-    CONSTRAINT partner_profile_pk PRIMARY KEY (partner_id,org_name),
+    CONSTRAINT partner_profile_pk PRIMARY KEY (id),
     CONSTRAINT consent_given CHECK (consent_given IN ('YES', 'NO'))
 );
 COMMENT ON TABLE toolkit.partner_profile IS 'This table has consents of partners.';
+COMMENT ON COLUMN toolkit.partner_profile.id IS 'ID: Unique Id generated.';
 COMMENT ON COLUMN toolkit.partner_profile.partner_id IS 'Partner Id: partner who has logged in.';
 COMMENT ON COLUMN toolkit.partner_profile.consent_given_dtimes IS 'Consent given DateTimestamp : Date and Timestamp when the consent is given.';
 COMMENT ON COLUMN toolkit.partner_profile.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
