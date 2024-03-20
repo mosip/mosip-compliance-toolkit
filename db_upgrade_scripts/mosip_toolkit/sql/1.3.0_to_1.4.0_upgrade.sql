@@ -147,6 +147,7 @@ COMMENT ON COLUMN toolkit.custom_templates.cr_by IS 'Created By : ID or name of 
 COMMENT ON COLUMN toolkit.custom_templates.template_name IS 'Template Name: Name of the template saved.';
 COMMENT ON COLUMN toolkit.custom_templates.template IS 'Template: Stores the actual template data.';
 
+-- This table has consents of partners for biometrics.
 CREATE TABLE toolkit.partner_profile(
     id character varying(36) NOT NULL,
     partner_id character varying(36) NOT NULL,
@@ -161,7 +162,7 @@ CREATE TABLE toolkit.partner_profile(
     CONSTRAINT consent_given CHECK (consent_given IN ('YES', 'NO'))
 );
 COMMENT ON TABLE toolkit.partner_profile IS 'This table has consents of partners.';
-COMMENT ON COLUMN toolkit.partner_profile.id IS 'ID: Unique Id generated for an template.';
+COMMENT ON COLUMN toolkit.partner_profile.id IS 'ID: Unique Id generated.';
 COMMENT ON COLUMN toolkit.partner_profile.partner_id IS 'Partner Id: partner who has logged in.';
 COMMENT ON COLUMN toolkit.partner_profile.consent_given_dtimes IS 'Consent given DateTimestamp : Date and Timestamp when the consent is given.';
 COMMENT ON COLUMN toolkit.partner_profile.cr_dtimes IS 'Created DateTimestamp : Date and Timestamp when the record is created/inserted';
