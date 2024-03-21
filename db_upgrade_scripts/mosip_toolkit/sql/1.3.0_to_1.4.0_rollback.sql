@@ -19,8 +19,8 @@ DROP TABLE IF EXISTS toolkit.batch_job_instance;
 UPDATE toolkit.abis_projects SET username = convert_from(decode(username, 'base64'), 'UTF8');
 UPDATE toolkit.abis_projects SET password = convert_from(decode(password, 'base64'), 'UTF8');
 
--- custom_templates
+-- consent_templates
 DROP TABLE IF EXISTS toolkit.consent_templates;
 
--- partner_profile
+-- partner_consent
 DROP TABLE IF EXISTS toolkit.partner_consent;
