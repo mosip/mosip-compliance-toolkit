@@ -78,6 +78,8 @@ public enum ToolkitErrorCodes {
 	FILE_WITH_MULTIPLE_EXTENSIONS("TOOLKIT_REQ_ERR_043", "File name should not contain multiple extensions"),
 	FILE_WITHOUT_EXTENSIONS("TOOLKIT_REQ_ERR_044", "Unable to upload a file without extension"),
 	VIRUS_FOUND("TOOLKIT_REQ_ERR_045", "Unable to upload malware file"),
+	TOOLKIT_TEMPLATE_NOT_AVAILABLE_ERR("TOOLKIT_REQ_ERR_046", "Template not found."),
+	TOOLKIT_TEMPLATE_ERR("TOOLKIT_REQ_ERR_047", "Error while fetching template"),
 	PROJECT_NAME_EXISTS("TOOLKIT_DB_ERR_001", "You have previously created a project with name: "),
 	BIO_TEST_DATA_FILE_EXISTS("TOOLKIT_DB_ERR_002", "You have previously added biometric test data with name: "),
 	COLLECTION_NAME_EXISTS("TOOLKIT_DB_ERR_003", "You have previously created a collection with name: "),
@@ -128,7 +130,9 @@ public enum ToolkitErrorCodes {
 	TOOLKIT_REPORT_STATUS_UPDATE_ERR("TOOLKIT_REPORT_004", "Error while changing report status"),
 	TOOLKIT_REPORT_GET_ERR("TOOLKIT_REPORT_005", "Error while fetching list of reports"),
 	TOOLKIT_INVALID_REPORT_STATUS_ERR("TOOLKIT_REPORT_006", "Error while fetching list of reports. Invalid report status: "),
-	TOOLKIT_CERTIFICATE_PARSING_ERR("TOOLKIT_CERTIFICATE_PARSING_001", "Error while parsing certificate : ");
+	TOOLKIT_CERTIFICATE_PARSING_ERR("TOOLKIT_CERTIFICATE_PARSING_001", "Error while parsing certificate : "),
+	TOOLKIT_CONSENT_ERR("TOOLKIT_CONSENT_ERR_001", "Error while fetching partner consent."),
+	TOOLKIT_CONSENT_UNABLE_TO_ADD("TOOLKIT_CONSENT_ERR_002", "Error while saving partner consent.");
 
 	private final String errorCode;
 	private final String errorMessage;

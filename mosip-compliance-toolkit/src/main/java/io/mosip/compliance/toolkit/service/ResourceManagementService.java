@@ -1,13 +1,19 @@
 package io.mosip.compliance.toolkit.service;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import io.mosip.compliance.toolkit.entity.CustomTemplatesEntity;
+import io.mosip.compliance.toolkit.repository.CustomTemplatesRepository;
 import io.mosip.compliance.toolkit.util.CommonUtil;
+import io.mosip.compliance.toolkit.util.RandomIdGenerator;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,6 +35,8 @@ public class ResourceManagementService {
 	private static final String BLANK_SPACE = " ";
 
 	private static final String ZIP_EXT = ".zip";
+
+	private static final String VM_EXT = ".vm";
 	
 	private static final String JSON_EXT = ".json";
 
@@ -49,7 +57,9 @@ public class ResourceManagementService {
     @Autowired
     VirusScanner<Boolean, InputStream> virusScan;
 
-    
+	@Autowired
+	CustomTemplatesRepository customTemplatesRepository;
+
 	@Value("$(mosip.toolkit.api.id.resource.file.post)")
 	private String postResourceFileId;
 
@@ -61,6 +71,20 @@ public class ResourceManagementService {
 	private ObjectStoreAdapter objectStore;
 
 	private Logger log = LoggerConfiguration.logConfig(ResourceManagementService.class);
+
+	private AuthUserDetails authUserDetails() {
+		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
+
+	private String getPartnerId() {
+		String partnerId = authUserDetails().getUsername();
+		return partnerId;
+	}
+
+	private String getUserBy() {
+		String crBy = authUserDetails().getMail();
+		return crBy;
+	}
 
 	public ResponseWrapper<Boolean> uploadResourceFile(String type, String version, MultipartFile file) {
 		ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
@@ -193,4 +217,78 @@ public class ResourceManagementService {
         }
     }
 
+	public ResponseWrapper<Boolean> uploadTemplate(String langCode, String templateName, MultipartFile file) {
+		ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
+		boolean status = false;
+		try {
+			String fileName = file.getOriginalFilename();
+			if (fileName.contains(".")) {
+				if (!(fileName.split("\\.").length > 2)) {
+					if (!scanDocument || (scanDocument && isVirusScanSuccess(file))) {
+						if (Objects.nonNull(file) && Objects.nonNull(langCode) && Objects.nonNull(templateName)
+								&& !file.isEmpty() && file.getSize() > 0) {
+
+							if (Objects.isNull(fileName) || !fileName.endsWith(VM_EXT)) {
+								throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+										ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+							}
+
+							CustomTemplatesEntity customTemplatesEntity = new CustomTemplatesEntity();
+
+							LocalDateTime nowDate = LocalDateTime.now();
+							customTemplatesEntity.setId(RandomIdGenerator.generateUUID("ct", "", 36));
+							customTemplatesEntity.setLangCode(langCode);
+							customTemplatesEntity.setTemplateName(templateName);
+							customTemplatesEntity.setCrBy(this.getUserBy());
+							customTemplatesEntity.setCrDtimes(nowDate);
+
+							InputStream inputStream = file.getInputStream();
+							byte[] bytes = inputStream.readAllBytes();
+							String template = new String(bytes, StandardCharsets.UTF_8);
+							customTemplatesEntity.setTemplate(template);
+
+							customTemplatesRepository.save(customTemplatesEntity);
+							status = true;
+
+						} else {
+							String errorCode = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode();
+							String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage();
+							responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+						}
+					} else {
+						String errorCode = ToolkitErrorCodes.VIRUS_FOUND.getErrorCode();
+						String errorMessage = ToolkitErrorCodes.VIRUS_FOUND.getErrorMessage();
+						responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+					}
+				} else {
+					String errorCode = ToolkitErrorCodes.FILE_WITH_MULTIPLE_EXTENSIONS.getErrorCode();
+					String errorMessage = ToolkitErrorCodes.FILE_WITH_MULTIPLE_EXTENSIONS.getErrorMessage();
+					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+				}
+			} else {
+				String errorCode = ToolkitErrorCodes.FILE_WITHOUT_EXTENSIONS.getErrorCode();
+				String errorMessage = ToolkitErrorCodes.FILE_WITHOUT_EXTENSIONS.getErrorMessage();
+				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+			}
+		} catch (ToolkitException ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In uploadTemplate method of ResourceManagementService Service - " + ex.getMessage());
+			String errorCode = ex.getErrorCode();
+			String errorMessage = ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In uploadTemplate method of ResourceManagementService Service - " + ex.getMessage());
+			String errorCode = ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorMessage() + BLANK_SPACE + ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+		}
+		responseWrapper.setId(postResourceFileId);
+		responseWrapper.setResponse(status);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
 }
