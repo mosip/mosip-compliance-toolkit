@@ -190,7 +190,7 @@ VALUES
     (
         uuid_generate_v4(),
         'eng',
-        'terms_and_condtions_template',
+        'terms_and_conditions_template',
         '<!DOCTYPE html>
         <html lang="en">
         <head>
@@ -256,7 +256,7 @@ VALUES
     (
         uuid_generate_v4(),
         'ara',
-        'terms_and_condtions_template',
+        'terms_and_conditions_template',
         '<!DOCTYPE html>
         <html lang="ar">
         <head>
@@ -322,7 +322,7 @@ VALUES
     (
         uuid_generate_v4(),
         'fra',
-        'terms_and_condtions_template',
+        'terms_and_conditions_template',
         '<!DOCTYPE html>
         <html lang="fr">
         <head>
