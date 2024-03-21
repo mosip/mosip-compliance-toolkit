@@ -20,7 +20,7 @@ UPDATE toolkit.abis_projects SET username = convert_from(decode(username, 'base6
 UPDATE toolkit.abis_projects SET password = convert_from(decode(password, 'base64'), 'UTF8');
 
 -- custom_templates
-DROP TABLE IF EXISTS toolkit.custom_templates;
+DROP TABLE IF EXISTS toolkit.consent_templates;
 
 -- partner_profile
-DROP TABLE IF EXISTS toolkit.partner_profile;
+DROP TABLE IF EXISTS toolkit.partner_consent;
