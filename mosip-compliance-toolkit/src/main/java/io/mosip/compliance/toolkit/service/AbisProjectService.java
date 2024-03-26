@@ -233,21 +233,7 @@ public class AbisProjectService {
 				Optional<AbisProjectEntity> optionalAbisProjectEntity = abisProjectRepository.findById(projectId,
 						getPartnerId());
 				if (optionalAbisProjectEntity.isPresent()) {
-					if (!Pattern.matches(AppConstants.ABIS_URL_REGEX_PATTERN, abisProjectDto.getUrl())) {
-						String exceptionErrorCode = ToolkitErrorCodes.INVALID_URL.getErrorCode()
-								+ AppConstants.COMMA_SEPARATOR
-								+ ToolkitErrorCodes.ACTIVE_MQ_URL.getErrorCode();
-						throw new ToolkitException(exceptionErrorCode,
-								ToolkitErrorCodes.INVALID_URL.getErrorMessage() + ToolkitErrorCodes.ACTIVE_MQ_URL.getErrorMessage());
-					}
-					else if (!Pattern.matches(AppConstants.URL_REGEX_PATTERN, abisProjectDto.getWebsiteUrl())) {
-						String exceptionErrorCode = ToolkitErrorCodes.INVALID_URL.getErrorCode()
-								+ AppConstants.COMMA_SEPARATOR
-								+ ToolkitErrorCodes.WEBSITE_URL.getErrorCode();
-						throw new ToolkitException(exceptionErrorCode,
-								ToolkitErrorCodes.INVALID_URL.getErrorMessage() + ToolkitErrorCodes.WEBSITE_URL.getErrorMessage());
-					}
-					else {
+					if (Pattern.matches(AppConstants.ABIS_URL_REGEX_PATTERN, abisProjectDto.getUrl())) {
 						AbisProjectEntity entity = optionalAbisProjectEntity.get();
 						LocalDateTime updDate = LocalDateTime.now();
 						String url = abisProjectDto.getUrl();
@@ -306,6 +292,10 @@ public class AbisProjectService {
 						entity.setUpdDate(updDate);
 						AbisProjectEntity outputEntity = abisProjectRepository.save(entity);
 						abisProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, AbisProjectDto.class);
+					} else {
+						String errorCode = ToolkitErrorCodes.INVALID_URL.getErrorCode() + AppConstants.COMMA_SEPARATOR + ToolkitErrorCodes.ACTIVE_MQ_URL.getErrorCode();
+						String errorMessage = ToolkitErrorCodes.INVALID_URL.getErrorMessage() + ToolkitErrorCodes.ACTIVE_MQ_URL.getErrorMessage();
+						responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 					}
 				} else {
 					String errorCode = ToolkitErrorCodes.ABIS_PROJECT_NOT_AVAILABLE.getErrorCode();
