@@ -349,14 +349,13 @@ public class AbisProjectServiceTest {
     /*
      * This class tests the updateAbisProject method in case of exception
      */
-    @Test(expected = Exception.class)
+    @Test
     public void isValidAbisProjectExceptionTest() {
         AbisProjectDto abisProjectDto = new AbisProjectDto();
         abisProjectDto.setProjectType(ProjectTypes.ABIS.getCode());
         abisProjectDto.setAbisVersion(AbisSpecVersions.SPEC_VER_0_9_0.getCode());
-        abisProjectDto.setUrl(null);
         Boolean result = ReflectionTestUtils.invokeMethod(abisProjectService, "isValidAbisProject", abisProjectDto);
-        Assert.assertEquals(result, true);
+        Assert.assertNotEquals(result, false);
     }
 
     /*

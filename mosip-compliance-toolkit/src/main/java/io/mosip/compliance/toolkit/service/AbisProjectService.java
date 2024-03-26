@@ -135,60 +135,62 @@ public class AbisProjectService {
 	public ResponseWrapper<AbisProjectDto> addAbisProject(AbisProjectDto abisProjectDto) {
 		ResponseWrapper<AbisProjectDto> responseWrapper = new ResponseWrapper<>();
 		try {
-			if (isValidAbisProject(abisProjectDto)) {
-				boolean isValidTestFile = false;
-				String partnerId = this.getPartnerId();
-				if (Objects.isNull(abisProjectDto.getBioTestDataFileName())) {
-					isValidTestFile = false;
-				} else if (abisProjectDto.getBioTestDataFileName().equals(AppConstants.MOSIP_DEFAULT)) {
-					isValidTestFile = true;
-				} else {
-					BiometricTestDataEntity biometricTestData = biometricTestDataRepository
-							.findByTestDataName(abisProjectDto.getBioTestDataFileName(), partnerId);
-					String fileName = biometricTestData.getFileId();
-					String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId;
-					if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
+			if (validInputRequest(abisProjectDto)) {
+				if (isValidAbisProject(abisProjectDto)) {
+					boolean isValidTestFile = false;
+					String partnerId = this.getPartnerId();
+					if (Objects.isNull(abisProjectDto.getBioTestDataFileName())) {
+						isValidTestFile = false;
+					} else if (abisProjectDto.getBioTestDataFileName().equals(AppConstants.MOSIP_DEFAULT)) {
 						isValidTestFile = true;
+					} else {
+						BiometricTestDataEntity biometricTestData = biometricTestDataRepository
+								.findByTestDataName(abisProjectDto.getBioTestDataFileName(), partnerId);
+						String fileName = biometricTestData.getFileId();
+						String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId;
+						if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
+							isValidTestFile = true;
+						}
 					}
-				}
 
-				if (isValidTestFile) {
-					LocalDateTime crDate = LocalDateTime.now();
-					AbisProjectEntity entity = new AbisProjectEntity();
-					entity.setId(RandomIdGenerator.generateUUID(abisProjectDto.getProjectType().toLowerCase(), "", 36));
-					entity.setName(abisProjectDto.getName());
-					entity.setProjectType(abisProjectDto.getProjectType());
-					entity.setUrl(abisProjectDto.getUrl());
-					entity.setUsername(Base64.getEncoder().encodeToString(abisProjectDto.getUsername().getBytes()));
-					entity.setPassword(Base64.getEncoder().encodeToString(abisProjectDto.getPassword().getBytes()));
-					entity.setInboundQueueName(abisProjectDto.getInboundQueueName());
-					entity.setPartnerId(partnerId);
-					entity.setOrgName(resourceCacheService.getOrgName(partnerId));
-					entity.setCrBy(this.getUserBy());
-					entity.setCrDate(crDate);
-					entity.setDeleted(false);
-					entity.setOutboundQueueName(abisProjectDto.getOutboundQueueName());
-					entity.setModality(abisProjectDto.getModality());
-					entity.setAbisHash(abisProjectDto.getAbisHash());
-					entity.setWebsiteUrl(abisProjectDto.getWebsiteUrl());
-					entity.setBioTestDataFileName(abisProjectDto.getBioTestDataFileName());
-					entity.setAbisVersion(abisProjectDto.getAbisVersion());
+					if (isValidTestFile) {
+						LocalDateTime crDate = LocalDateTime.now();
+						AbisProjectEntity entity = new AbisProjectEntity();
+						entity.setId(RandomIdGenerator.generateUUID(abisProjectDto.getProjectType().toLowerCase(), "", 36));
+						entity.setName(abisProjectDto.getName());
+						entity.setProjectType(abisProjectDto.getProjectType());
+						entity.setUrl(abisProjectDto.getUrl());
+						entity.setUsername(Base64.getEncoder().encodeToString(abisProjectDto.getUsername().getBytes()));
+						entity.setPassword(Base64.getEncoder().encodeToString(abisProjectDto.getPassword().getBytes()));
+						entity.setInboundQueueName(abisProjectDto.getInboundQueueName());
+						entity.setPartnerId(partnerId);
+						entity.setOrgName(resourceCacheService.getOrgName(partnerId));
+						entity.setCrBy(this.getUserBy());
+						entity.setCrDate(crDate);
+						entity.setDeleted(false);
+						entity.setOutboundQueueName(abisProjectDto.getOutboundQueueName());
+						entity.setModality(abisProjectDto.getModality());
+						entity.setAbisHash(abisProjectDto.getAbisHash());
+						entity.setWebsiteUrl(abisProjectDto.getWebsiteUrl());
+						entity.setBioTestDataFileName(abisProjectDto.getBioTestDataFileName());
+						entity.setAbisVersion(abisProjectDto.getAbisVersion());
 
-					AbisProjectEntity outputEntity = abisProjectRepository.save(entity);
-					// Add a default "ALL" collection for the newly created project
-					collectionsService.addDefaultCollection(AppConstants.COMPLIANCE_COLLECTION, null, null,
-							abisProjectDto, entity.getId());
-					
-					abisProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, AbisProjectDto.class);
-					abisProjectDto.setId(entity.getId());
-					abisProjectDto.setPartnerId(entity.getPartnerId());
-					abisProjectDto.setOrgName(entity.getOrgName());
-					abisProjectDto.setCrBy(entity.getCrBy());
-					abisProjectDto.setCrDate(entity.getCrDate());
-				} else {
-					String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode();
-					String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage();
-					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+						AbisProjectEntity outputEntity = abisProjectRepository.save(entity);
+						// Add a default "ALL" collection for the newly created project
+						collectionsService.addDefaultCollection(AppConstants.COMPLIANCE_COLLECTION, null, null,
+								abisProjectDto, entity.getId());
+
+						abisProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, AbisProjectDto.class);
+						abisProjectDto.setId(entity.getId());
+						abisProjectDto.setPartnerId(entity.getPartnerId());
+						abisProjectDto.setOrgName(entity.getOrgName());
+						abisProjectDto.setCrBy(entity.getCrBy());
+						abisProjectDto.setCrDate(entity.getCrDate());
+					} else {
+						String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode();
+						String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage();
+						responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+					}
 				}
 			}
 		} catch (ToolkitException ex) {
@@ -230,7 +232,7 @@ public class AbisProjectService {
 			if (Objects.nonNull(abisProjectDto)) {
 				String projectId = abisProjectDto.getId();
 				String partnerId = this.getPartnerId();
-				if (isValidRequest(abisProjectDto)) {
+				if (validInputRequest(abisProjectDto)) {
 					Optional<AbisProjectEntity> optionalAbisProjectEntity = abisProjectRepository.findById(projectId,
 							getPartnerId());
 					if (optionalAbisProjectEntity.isPresent()) {
@@ -324,32 +326,29 @@ public class AbisProjectService {
 		return responseWrapper;
 	}
 
-	private boolean isValidRequest(AbisProjectDto abisProjectDto) {
-		String abisHash = abisProjectDto.getAbisHash();
-		String websiteUrl = abisProjectDto.getWebsiteUrl();
-		if (abisHash.equals("To_Be_Added")) {
-			String errorCode = ToolkitErrorCodes.INVALID_REQUEST.getErrorCode()
+	private boolean validInputRequest(AbisProjectDto abisProjectDto) {
+		String projectName = abisProjectDto.getName();
+		if (!Pattern.matches(AppConstants.NAME_REGEX_PATTERN, projectName)) {
+			String exceptionErrorCode = ToolkitErrorCodes.INVALID_NAME.getErrorCode()
 					+ AppConstants.COMMA_SEPARATOR
-					+ ToolkitErrorCodes.ABIS_HASH.getErrorCode();
-			String errorMessage = ToolkitErrorCodes.INVALID_REQUEST.getErrorMessage()
-					+ ToolkitErrorCodes.ABIS_HASH.getErrorMessage();
-			throw new ToolkitException(errorCode, errorMessage);
+					+ ToolkitErrorCodes.PROJECT_NAME.getErrorCode();
+			throw new ToolkitException(exceptionErrorCode, "Invalid characters are not allowed in project name");
 		}
-		if (websiteUrl.equals("To_Be_Added")) {
-			String errorCode = ToolkitErrorCodes.INVALID_REQUEST.getErrorCode()
-					+ AppConstants.COMMA_SEPARATOR
-					+ ToolkitErrorCodes.WEBSITE_URL.getErrorCode();
-			String errorMessage = ToolkitErrorCodes.INVALID_REQUEST.getErrorMessage()
-					+ ToolkitErrorCodes.WEBSITE_URL.getErrorMessage();
-			throw new ToolkitException(errorCode, errorMessage);
-		}
-		if (!Pattern.matches(AppConstants.ABIS_URL_REGEX_PATTERN, abisProjectDto.getUrl())) {
+		String abisUrl = abisProjectDto.getUrl();
+		if (!Pattern.matches(AppConstants.ABIS_URL_REGEX_PATTERN, abisUrl)) {
 			String errorCode = ToolkitErrorCodes.INVALID_URL.getErrorCode()
 					+ AppConstants.COMMA_SEPARATOR
 					+ ToolkitErrorCodes.ACTIVE_MQ_URL.getErrorCode();
-			String errorMessage = ToolkitErrorCodes.INVALID_URL.getErrorMessage()
-					+ ToolkitErrorCodes.ACTIVE_MQ_URL.getErrorMessage();
-			throw new ToolkitException(errorCode, errorMessage);
+			throw new ToolkitException(errorCode, "Active MQ URL is only allow wss/ws format");
+		}
+		String websiteUrl = abisProjectDto.getWebsiteUrl();
+		if (abisProjectDto.getId().equals("")) {
+			if (!Pattern.matches(AppConstants.URL_REGEX_PATTERN, websiteUrl)) {
+				String exceptionErrorCode = ToolkitErrorCodes.INVALID_URL.getErrorCode()
+						+ AppConstants.COMMA_SEPARATOR
+						+ ToolkitErrorCodes.WEBSITE_URL.getErrorCode();
+				throw new ToolkitException(exceptionErrorCode, "Website URL is only allow http/https format");
+			}
 		}
 		return true;
 	}
@@ -362,31 +361,9 @@ public class AbisProjectService {
 	 */
 	private boolean isValidAbisProject(AbisProjectDto abisProjectDto) throws ToolkitException {
 		ToolkitErrorCodes errorCode = null;
-		if (!Pattern.matches(AppConstants.NAME_REGEX_PATTERN, abisProjectDto.getName())) {
-			String exceptionErrorCode = ToolkitErrorCodes.INVALID_NAME.getErrorCode()
-					+ AppConstants.COMMA_SEPARATOR
-					+ ToolkitErrorCodes.PROJECT_NAME.getErrorCode();
-			throw new ToolkitException(exceptionErrorCode,
-					ToolkitErrorCodes.INVALID_NAME.getErrorMessage() + ToolkitErrorCodes.PROJECT_NAME.getErrorMessage());
-		}
-		if (!Pattern.matches(AppConstants.URL_REGEX_PATTERN, abisProjectDto.getWebsiteUrl())) {
-			String exceptionErrorCode = ToolkitErrorCodes.INVALID_URL.getErrorCode()
-					+ AppConstants.COMMA_SEPARATOR
-					+ ToolkitErrorCodes.WEBSITE_URL.getErrorCode();
-			throw new ToolkitException(exceptionErrorCode,
-					ToolkitErrorCodes.INVALID_URL.getErrorMessage() + ToolkitErrorCodes.WEBSITE_URL.getErrorMessage());
-		}
 
 		ProjectTypes projectTypesCode = ProjectTypes.fromCode(abisProjectDto.getProjectType());
 		AbisSpecVersions specVersionCode = AbisSpecVersions.fromCode(abisProjectDto.getAbisVersion());
-		String url = abisProjectDto.getUrl();
-		if (url == null || url.isEmpty() || !Pattern.matches(AppConstants.ABIS_URL_REGEX_PATTERN, url)) {
-			String exceptionErrorCode = ToolkitErrorCodes.INVALID_URL.getErrorCode()
-					+ AppConstants.COMMA_SEPARATOR
-					+ ToolkitErrorCodes.ACTIVE_MQ_URL.getErrorCode();
-			throw new ToolkitException(exceptionErrorCode,
-					ToolkitErrorCodes.INVALID_URL.getErrorMessage() + ToolkitErrorCodes.ACTIVE_MQ_URL.getErrorMessage());
-		}
 
 		switch (projectTypesCode) {
 		case ABIS:
