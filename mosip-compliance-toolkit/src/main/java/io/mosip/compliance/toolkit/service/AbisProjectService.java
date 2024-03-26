@@ -233,9 +233,21 @@ public class AbisProjectService {
 				Optional<AbisProjectEntity> optionalAbisProjectEntity = abisProjectRepository.findById(projectId,
 						getPartnerId());
 				if (optionalAbisProjectEntity.isPresent()) {
-					String websiteUrlPattern = "^(http|https)://(.*)";
-					String abisUrlPattern = "^wss?://.*";
-					if (Pattern.matches(abisUrlPattern, abisProjectDto.getUrl()) && Pattern.matches(websiteUrlPattern, abisProjectDto.getWebsiteUrl())) {
+					if (!Pattern.matches(AppConstants.ABIS_URL_REGEX_PATTERN, abisProjectDto.getUrl())) {
+						String exceptionErrorCode = ToolkitErrorCodes.INVALID_URL.getErrorCode()
+								+ AppConstants.COMMA_SEPARATOR
+								+ ToolkitErrorCodes.ACTIVE_MQ_URL.getErrorCode();
+						throw new ToolkitException(exceptionErrorCode,
+								ToolkitErrorCodes.INVALID_URL.getErrorMessage() + ToolkitErrorCodes.ACTIVE_MQ_URL.getErrorMessage());
+					}
+					else if (!Pattern.matches(AppConstants.URL_REGEX_PATTERN, abisProjectDto.getWebsiteUrl())) {
+						String exceptionErrorCode = ToolkitErrorCodes.INVALID_URL.getErrorCode()
+								+ AppConstants.COMMA_SEPARATOR
+								+ ToolkitErrorCodes.WEBSITE_URL.getErrorCode();
+						throw new ToolkitException(exceptionErrorCode,
+								ToolkitErrorCodes.INVALID_URL.getErrorMessage() + ToolkitErrorCodes.WEBSITE_URL.getErrorMessage());
+					}
+					else {
 						AbisProjectEntity entity = optionalAbisProjectEntity.get();
 						LocalDateTime updDate = LocalDateTime.now();
 						String url = abisProjectDto.getUrl();
@@ -294,10 +306,6 @@ public class AbisProjectService {
 						entity.setUpdDate(updDate);
 						AbisProjectEntity outputEntity = abisProjectRepository.save(entity);
 						abisProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, AbisProjectDto.class);
-					} else {
-						String errorCode = ToolkitErrorCodes.INVALID_ABIS_URL_OR_WEBSITE_URL.getErrorCode();
-						String errorMessage = ToolkitErrorCodes.INVALID_ABIS_URL_OR_WEBSITE_URL.getErrorMessage();
-						responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 					}
 				} else {
 					String errorCode = ToolkitErrorCodes.ABIS_PROJECT_NOT_AVAILABLE.getErrorCode();
@@ -338,20 +346,30 @@ public class AbisProjectService {
 	 */
 	private boolean isValidAbisProject(AbisProjectDto abisProjectDto) throws ToolkitException {
 		ToolkitErrorCodes errorCode = null;
-		String projectNamePattern = "^[a-zA-Z0-9\\s_-]+$";
-		String websiteUrlPattern = "^(http|https)://(.*)";
-		if (!Pattern.matches(projectNamePattern, abisProjectDto.getName()) || !Pattern.matches(websiteUrlPattern, abisProjectDto.getWebsiteUrl())) {
-			errorCode = ToolkitErrorCodes.INVALID_PROJECT_NAME_OR_WEBSITE_URL;
-			throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
+		if (!Pattern.matches(AppConstants.NAME_REGEX_PATTERN, abisProjectDto.getName())) {
+			String exceptionErrorCode = ToolkitErrorCodes.INVALID_NAME.getErrorCode()
+					+ AppConstants.COMMA_SEPARATOR
+					+ ToolkitErrorCodes.PROJECT_NAME.getErrorCode();
+			throw new ToolkitException(exceptionErrorCode,
+					ToolkitErrorCodes.INVALID_NAME.getErrorMessage() + ToolkitErrorCodes.PROJECT_NAME.getErrorMessage());
+		}
+		if (!Pattern.matches(AppConstants.URL_REGEX_PATTERN, abisProjectDto.getWebsiteUrl())) {
+			String exceptionErrorCode = ToolkitErrorCodes.INVALID_URL.getErrorCode()
+					+ AppConstants.COMMA_SEPARATOR
+					+ ToolkitErrorCodes.WEBSITE_URL.getErrorCode();
+			throw new ToolkitException(exceptionErrorCode,
+					ToolkitErrorCodes.INVALID_URL.getErrorMessage() + ToolkitErrorCodes.WEBSITE_URL.getErrorMessage());
 		}
 
 		ProjectTypes projectTypesCode = ProjectTypes.fromCode(abisProjectDto.getProjectType());
 		AbisSpecVersions specVersionCode = AbisSpecVersions.fromCode(abisProjectDto.getAbisVersion());
 		String url = abisProjectDto.getUrl();
-		String abisUrlPattern = "^(ws|wss)://(.*)";
-		if (url == null || url.isEmpty() || !Pattern.matches(abisUrlPattern, url)) {
-			errorCode = ToolkitErrorCodes.INVALID_ABIS_URL;
-			throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
+		if (url == null || url.isEmpty() || !Pattern.matches(AppConstants.ABIS_URL_REGEX_PATTERN, url)) {
+			String exceptionErrorCode = ToolkitErrorCodes.INVALID_URL.getErrorCode()
+					+ AppConstants.COMMA_SEPARATOR
+					+ ToolkitErrorCodes.ACTIVE_MQ_URL.getErrorCode();
+			throw new ToolkitException(exceptionErrorCode,
+					ToolkitErrorCodes.INVALID_URL.getErrorMessage() + ToolkitErrorCodes.ACTIVE_MQ_URL.getErrorMessage());
 		}
 
 		switch (projectTypesCode) {
