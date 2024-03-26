@@ -230,10 +230,10 @@ public class AbisProjectService {
 			if (Objects.nonNull(abisProjectDto)) {
 				String projectId = abisProjectDto.getId();
 				String partnerId = this.getPartnerId();
-				Optional<AbisProjectEntity> optionalAbisProjectEntity = abisProjectRepository.findById(projectId,
-						getPartnerId());
-				if (optionalAbisProjectEntity.isPresent()) {
-					if (Pattern.matches(AppConstants.ABIS_URL_REGEX_PATTERN, abisProjectDto.getUrl())) {
+				if (isValidRequest(abisProjectDto)) {
+					Optional<AbisProjectEntity> optionalAbisProjectEntity = abisProjectRepository.findById(projectId,
+							getPartnerId());
+					if (optionalAbisProjectEntity.isPresent()) {
 						AbisProjectEntity entity = optionalAbisProjectEntity.get();
 						LocalDateTime updDate = LocalDateTime.now();
 						String url = abisProjectDto.getUrl();
@@ -293,14 +293,10 @@ public class AbisProjectService {
 						AbisProjectEntity outputEntity = abisProjectRepository.save(entity);
 						abisProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, AbisProjectDto.class);
 					} else {
-						String errorCode = ToolkitErrorCodes.INVALID_URL.getErrorCode() + AppConstants.COMMA_SEPARATOR + ToolkitErrorCodes.ACTIVE_MQ_URL.getErrorCode();
-						String errorMessage = ToolkitErrorCodes.INVALID_URL.getErrorMessage() + ToolkitErrorCodes.ACTIVE_MQ_URL.getErrorMessage();
+						String errorCode = ToolkitErrorCodes.ABIS_PROJECT_NOT_AVAILABLE.getErrorCode();
+						String errorMessage = ToolkitErrorCodes.ABIS_PROJECT_NOT_AVAILABLE.getErrorMessage();
 						responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 					}
-				} else {
-					String errorCode = ToolkitErrorCodes.ABIS_PROJECT_NOT_AVAILABLE.getErrorCode();
-					String errorMessage = ToolkitErrorCodes.ABIS_PROJECT_NOT_AVAILABLE.getErrorMessage();
-					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 				}
 			}
 		} catch (ToolkitException ex) {
@@ -326,6 +322,36 @@ public class AbisProjectService {
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
+	}
+
+	private boolean isValidRequest(AbisProjectDto abisProjectDto) {
+		String abisHash = abisProjectDto.getAbisHash();
+		String websiteUrl = abisProjectDto.getWebsiteUrl();
+		if (abisHash.equals("To_Be_Added")) {
+			String errorCode = ToolkitErrorCodes.INVALID_REQUEST.getErrorCode()
+					+ AppConstants.COMMA_SEPARATOR
+					+ ToolkitErrorCodes.ABIS_HASH.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.INVALID_REQUEST.getErrorMessage()
+					+ ToolkitErrorCodes.ABIS_HASH.getErrorMessage();
+			throw new ToolkitException(errorCode, errorMessage);
+		}
+		if (websiteUrl.equals("To_Be_Added")) {
+			String errorCode = ToolkitErrorCodes.INVALID_REQUEST.getErrorCode()
+					+ AppConstants.COMMA_SEPARATOR
+					+ ToolkitErrorCodes.WEBSITE_URL.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.INVALID_REQUEST.getErrorMessage()
+					+ ToolkitErrorCodes.WEBSITE_URL.getErrorMessage();
+			throw new ToolkitException(errorCode, errorMessage);
+		}
+		if (!Pattern.matches(AppConstants.ABIS_URL_REGEX_PATTERN, abisProjectDto.getUrl())) {
+			String errorCode = ToolkitErrorCodes.INVALID_URL.getErrorCode()
+					+ AppConstants.COMMA_SEPARATOR
+					+ ToolkitErrorCodes.ACTIVE_MQ_URL.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.INVALID_URL.getErrorMessage()
+					+ ToolkitErrorCodes.ACTIVE_MQ_URL.getErrorMessage();
+			throw new ToolkitException(errorCode, errorMessage);
+		}
+		return true;
 	}
 
 	/**

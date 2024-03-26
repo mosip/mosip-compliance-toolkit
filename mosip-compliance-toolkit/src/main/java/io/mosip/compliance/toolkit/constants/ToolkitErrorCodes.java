@@ -89,6 +89,9 @@ public enum ToolkitErrorCodes {
 	COLLECTION_NAME("TOOLKIT_REQ_ERR_054", "collection name"),
 	TESTDATA_FILE_NAME("TOOLKIT_REQ_ERR_055", "testdata file name"),
 	COMMENTS("TOOLKIT_REQ_ERR_056", "comments"),
+
+	INVALID_REQUEST("TOOLKIT_REQ_ERR_057", "To_Be_Added is not allowed in "),
+	ABIS_HASH("TOOLKIT_REQ_ERR_058", "abis hash"),
 	PROJECT_NAME_EXISTS("TOOLKIT_DB_ERR_001", "You have previously created a project with name: "),
 	BIO_TEST_DATA_FILE_EXISTS("TOOLKIT_DB_ERR_002", "You have previously added biometric test data with name: "),
 	COLLECTION_NAME_EXISTS("TOOLKIT_DB_ERR_003", "You have previously created a collection with name: "),
