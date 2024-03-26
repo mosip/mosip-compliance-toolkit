@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import io.mosip.compliance.toolkit.util.ProjectHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -232,64 +233,72 @@ public class AbisProjectService {
 				Optional<AbisProjectEntity> optionalAbisProjectEntity = abisProjectRepository.findById(projectId,
 						getPartnerId());
 				if (optionalAbisProjectEntity.isPresent()) {
-					AbisProjectEntity entity = optionalAbisProjectEntity.get();
-					LocalDateTime updDate = LocalDateTime.now();
-					String url = abisProjectDto.getUrl();
-					String userName = abisProjectDto.getUsername();
-					String password = abisProjectDto.getPassword();
-					String requestQueueName = abisProjectDto.getOutboundQueueName();
-					String responseQueueName = abisProjectDto.getInboundQueueName();
-					String abisHash = abisProjectDto.getAbisHash();
-					String websiteUrl = abisProjectDto.getWebsiteUrl();
-					String bioTestDataName = abisProjectDto.getBioTestDataFileName();
-					// Updating ABIS project values
-					if (Objects.nonNull(url) && !url.isEmpty()) {
-						entity.setUrl(url);
-					}
-					if (Objects.nonNull(userName) && !userName.isEmpty()) {
-						entity.setUsername(Base64.getEncoder().encodeToString(userName.getBytes()));
-					}
-					if (Objects.nonNull(password) && !password.isEmpty()) {
-						entity.setPassword(Base64.getEncoder().encodeToString(password.getBytes()));
-					}
-					if (Objects.nonNull(requestQueueName) && !requestQueueName.isEmpty()) {
-						entity.setOutboundQueueName(requestQueueName);
-					}
-					if (Objects.nonNull(responseQueueName) && !responseQueueName.isEmpty()) {
-						entity.setInboundQueueName(responseQueueName);
-					}
-					if (Objects.nonNull(abisHash) && !abisHash.isEmpty() && !entity.getAbisHash().equals(abisHash)) {
-						boolean canHashBeUpdated = projectHelper.checkIfHashCanBeUpdated(projectId, abisProjectDto.getProjectType(), partnerId);
-						if (canHashBeUpdated) {
-							entity.setAbisHash(abisHash);
+					String websiteUrlPattern = "^(http|https)://(.*)";
+					String abisUrlPattern = "^wss?://.*";
+					if (Pattern.matches(abisUrlPattern, abisProjectDto.getUrl()) && Pattern.matches(websiteUrlPattern, abisProjectDto.getWebsiteUrl())) {
+						AbisProjectEntity entity = optionalAbisProjectEntity.get();
+						LocalDateTime updDate = LocalDateTime.now();
+						String url = abisProjectDto.getUrl();
+						String userName = abisProjectDto.getUsername();
+						String password = abisProjectDto.getPassword();
+						String requestQueueName = abisProjectDto.getOutboundQueueName();
+						String responseQueueName = abisProjectDto.getInboundQueueName();
+						String abisHash = abisProjectDto.getAbisHash();
+						String websiteUrl = abisProjectDto.getWebsiteUrl();
+						String bioTestDataName = abisProjectDto.getBioTestDataFileName();
+						// Updating ABIS project values
+						if (Objects.nonNull(url) && !url.isEmpty()) {
+							entity.setUrl(url);
 						}
-					}
-					if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty()) {
-						entity.setWebsiteUrl(websiteUrl);
-					}
-					if (Objects.nonNull(bioTestDataName) && !bioTestDataName.isEmpty()) {
-						if (bioTestDataName.equals(AppConstants.MOSIP_DEFAULT)) {
-							entity.setBioTestDataFileName(AppConstants.MOSIP_DEFAULT);
-						} else {
-							BiometricTestDataEntity biometricTestData = biometricTestDataRepository
-									.findByTestDataName(bioTestDataName, partnerId);
-							String fileName = biometricTestData.getFileId();
-							String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/"
-									+ AppConstants.ABIS;
-							if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
-								entity.setBioTestDataFileName(bioTestDataName);
-							} else {
-								String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode();
-								String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE
-										.getErrorMessage();
-								responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+						if (Objects.nonNull(userName) && !userName.isEmpty()) {
+							entity.setUsername(Base64.getEncoder().encodeToString(userName.getBytes()));
+						}
+						if (Objects.nonNull(password) && !password.isEmpty()) {
+							entity.setPassword(Base64.getEncoder().encodeToString(password.getBytes()));
+						}
+						if (Objects.nonNull(requestQueueName) && !requestQueueName.isEmpty()) {
+							entity.setOutboundQueueName(requestQueueName);
+						}
+						if (Objects.nonNull(responseQueueName) && !responseQueueName.isEmpty()) {
+							entity.setInboundQueueName(responseQueueName);
+						}
+						if (Objects.nonNull(abisHash) && !abisHash.isEmpty() && !entity.getAbisHash().equals(abisHash)) {
+							boolean canHashBeUpdated = projectHelper.checkIfHashCanBeUpdated(projectId, abisProjectDto.getProjectType(), partnerId);
+							if (canHashBeUpdated) {
+								entity.setAbisHash(abisHash);
 							}
 						}
+						if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty()) {
+							entity.setWebsiteUrl(websiteUrl);
+						}
+						if (Objects.nonNull(bioTestDataName) && !bioTestDataName.isEmpty()) {
+							if (bioTestDataName.equals(AppConstants.MOSIP_DEFAULT)) {
+								entity.setBioTestDataFileName(AppConstants.MOSIP_DEFAULT);
+							} else {
+								BiometricTestDataEntity biometricTestData = biometricTestDataRepository
+										.findByTestDataName(bioTestDataName, partnerId);
+								String fileName = biometricTestData.getFileId();
+								String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/"
+										+ AppConstants.ABIS;
+								if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
+									entity.setBioTestDataFileName(bioTestDataName);
+								} else {
+									String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode();
+									String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE
+											.getErrorMessage();
+									responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+								}
+							}
+						}
+						entity.setUpBy(this.getUserBy());
+						entity.setUpdDate(updDate);
+						AbisProjectEntity outputEntity = abisProjectRepository.save(entity);
+						abisProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, AbisProjectDto.class);
+					} else {
+						String errorCode = ToolkitErrorCodes.INVALID_ABIS_URL_OR_WEBSITE_URL.getErrorCode();
+						String errorMessage = ToolkitErrorCodes.INVALID_ABIS_URL_OR_WEBSITE_URL.getErrorMessage();
+						responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 					}
-					entity.setUpBy(this.getUserBy());
-					entity.setUpdDate(updDate);
-					AbisProjectEntity outputEntity = abisProjectRepository.save(entity);
-					abisProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, AbisProjectDto.class);
 				} else {
 					String errorCode = ToolkitErrorCodes.ABIS_PROJECT_NOT_AVAILABLE.getErrorCode();
 					String errorMessage = ToolkitErrorCodes.ABIS_PROJECT_NOT_AVAILABLE.getErrorMessage();
@@ -329,12 +338,18 @@ public class AbisProjectService {
 	 */
 	private boolean isValidAbisProject(AbisProjectDto abisProjectDto) throws ToolkitException {
 		ToolkitErrorCodes errorCode = null;
+		String projectNamePattern = "^[a-zA-Z0-9\\s_-]+$";
+		String websiteUrlPattern = "^(http|https)://(.*)";
+		if (!Pattern.matches(projectNamePattern, abisProjectDto.getName()) || !Pattern.matches(websiteUrlPattern, abisProjectDto.getWebsiteUrl())) {
+			errorCode = ToolkitErrorCodes.INVALID_PROJECT_NAME_OR_WEBSITE_URL;
+			throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
+		}
 
 		ProjectTypes projectTypesCode = ProjectTypes.fromCode(abisProjectDto.getProjectType());
 		AbisSpecVersions specVersionCode = AbisSpecVersions.fromCode(abisProjectDto.getAbisVersion());
 		String url = abisProjectDto.getUrl();
-
-		if (url == null || url.isEmpty()) {
+		String abisUrlPattern = "^(ws|wss)://(.*)";
+		if (url == null || url.isEmpty() || !Pattern.matches(abisUrlPattern, url)) {
 			errorCode = ToolkitErrorCodes.INVALID_ABIS_URL;
 			throw new ToolkitException(errorCode.getErrorCode(), errorCode.getErrorMessage());
 		}
