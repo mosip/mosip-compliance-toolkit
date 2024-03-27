@@ -4,6 +4,10 @@ import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.constants.AbisSpecVersions;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.SbiSpecVersions;
+import io.mosip.compliance.toolkit.entity.MasterTemplatesEntity;
+import io.mosip.compliance.toolkit.repository.MasterTemplatesRepository;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.kernel.core.authmanager.authadapter.model.MosipUserDto;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.virusscanner.spi.VirusScanner;
 import org.junit.Test;
@@ -13,6 +17,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -22,6 +29,9 @@ import org.springframework.web.context.WebApplicationContext;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = { TestContext.class, WebApplicationContext.class })
 @RunWith(SpringRunner.class)
@@ -36,6 +46,15 @@ public class ResourceManagementServiceTest {
 
     @Mock
     private ObjectStoreAdapter objectStore;
+
+    @Mock
+    private Authentication authentication;
+
+    @Mock
+    SecurityContext securityContext;
+
+    @Mock
+    MasterTemplatesRepository masterTemplatesRepository;
 
     private static final String UNDERSCORE = "_";
 
@@ -236,5 +255,105 @@ public class ResourceManagementServiceTest {
         FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
         MockMultipartFile file = new MockMultipartFile("file", "MOSIP_DEFAULT_CHECK_QUALITY.zip", "multipart/form-data", inputFile);
         ReflectionTestUtils.invokeMethod(resourceManagementService,"isVirusScanSuccess",file);
+    }
+
+    @Test
+    public void uploadTemplateTest() throws IOException {
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        String templateName = "terms_and_conditions_template.vm";
+        MockMultipartFile file = new MockMultipartFile("file", templateName, "multipart/form-data", inputFile);
+        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(false);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
+        String langcode = "eng";
+        MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        MasterTemplatesEntity masterTemplateEntity = new MasterTemplatesEntity();
+        when(masterTemplatesRepository.getPreviousTemplateVersion(anyString(),anyString())).thenReturn("v1");
+        when(masterTemplatesRepository.save(masterTemplateEntity)).thenReturn(masterTemplateEntity);
+        resourceManagementService.uploadTemplate(langcode, templateName, file);
+    }
+
+    @Test
+    public void uploadTemplateTest1() throws IOException {
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        String templateName = "terms_and_conditions_template.vm";
+        MockMultipartFile file = new MockMultipartFile("file", templateName, "multipart/form-data", inputFile);
+        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(false);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
+        String langcode = "eng";
+        MosipUserDto mosipUserDto = getMosipUserDto();
+        AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "123");
+        SecurityContextHolder.setContext(securityContext);
+        when(authentication.getPrincipal()).thenReturn(authUserDetails);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        MasterTemplatesEntity masterTemplateEntity = new MasterTemplatesEntity();
+        when(masterTemplatesRepository.getPreviousTemplateVersion(anyString(),anyString())).thenReturn(null);
+        when(masterTemplatesRepository.save(masterTemplateEntity)).thenReturn(masterTemplateEntity);
+        resourceManagementService.uploadTemplate(langcode, templateName, file);
+    }
+
+    @Test
+    public void uploadTemplateInvalidBodyExceptionTest() throws IOException {
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        String templateName = "terms_and_conditions_template.zip";
+        MockMultipartFile file = new MockMultipartFile("file", templateName, "multipart/form-data", inputFile);
+        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(false);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
+        String langcode = "eng";
+        resourceManagementService.uploadTemplate(langcode, templateName, file);
+    }
+
+    @Test
+    public void uploadTemplateInvalidParamExceptionTest() throws IOException {
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        String templateName = "terms_and_conditions_template.zip";
+        MockMultipartFile file = new MockMultipartFile("file", templateName, "multipart/form-data", inputFile);
+        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(false);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
+        String langcode = null;
+        resourceManagementService.uploadTemplate(langcode, templateName, file);
+    }
+
+    @Test
+    public void uploadTemplateVirusExceptionTest() throws IOException {
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        String templateName = "terms_and_conditions_template.zip";
+        MockMultipartFile file = new MockMultipartFile("file", templateName, "multipart/form-data", inputFile);
+        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(false);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", true);
+        String langcode = "eng";
+        resourceManagementService.uploadTemplate(langcode, templateName, file);
+    }
+
+    @Test
+    public void uploadTemplateMultipleExtensionExceptionTest() throws IOException {
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        String templateName = "terms_and_conditions_template.zip.jar";
+        MockMultipartFile file = new MockMultipartFile("file", templateName, "multipart/form-data", inputFile);
+        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(false);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
+        String langcode = "eng";
+        resourceManagementService.uploadTemplate(langcode, templateName, file);
+    }
+
+    @Test
+    public void uploadTemplateNoExtensionExceptionTest() throws IOException {
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        String templateName = "terms_and_conditions_template";
+        MockMultipartFile file = new MockMultipartFile("file", templateName, "multipart/form-data", inputFile);
+        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(false);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
+        String langcode = "eng";
+        resourceManagementService.uploadTemplate(langcode, templateName, file);
+    }
+
+    private MosipUserDto getMosipUserDto() {
+        MosipUserDto mosipUserDto = new MosipUserDto();
+        mosipUserDto.setUserId("123");
+        mosipUserDto.setMail("abc@gmail.com");
+        return mosipUserDto;
     }
 }

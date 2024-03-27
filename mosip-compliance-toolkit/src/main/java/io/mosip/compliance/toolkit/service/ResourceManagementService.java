@@ -1,13 +1,19 @@
 package io.mosip.compliance.toolkit.service;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import io.mosip.compliance.toolkit.entity.MasterTemplatesEntity;
+import io.mosip.compliance.toolkit.repository.MasterTemplatesRepository;
 import io.mosip.compliance.toolkit.util.CommonUtil;
+import io.mosip.compliance.toolkit.util.RandomIdGenerator;
+import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,7 +23,6 @@ import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.SdkPurpose;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
-import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.virusscanner.exception.VirusScannerException;
@@ -29,6 +34,10 @@ public class ResourceManagementService {
 	private static final String BLANK_SPACE = " ";
 
 	private static final String ZIP_EXT = ".zip";
+
+	private static final String VM_EXT = ".vm";
+
+	private static final String DEFAULT_TEMPLATE_VERSION = "v1";
 	
 	private static final String JSON_EXT = ".json";
 
@@ -49,7 +58,9 @@ public class ResourceManagementService {
     @Autowired
     VirusScanner<Boolean, InputStream> virusScan;
 
-    
+	@Autowired
+	MasterTemplatesRepository masterTemplatesRepository;
+
 	@Value("$(mosip.toolkit.api.id.resource.file.post)")
 	private String postResourceFileId;
 
@@ -61,6 +72,15 @@ public class ResourceManagementService {
 	private ObjectStoreAdapter objectStore;
 
 	private Logger log = LoggerConfiguration.logConfig(ResourceManagementService.class);
+
+	private AuthUserDetails authUserDetails() {
+		return (AuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
+
+	private String getUserBy() {
+		String crBy = authUserDetails().getMail();
+		return crBy;
+	}
 
 	public ResponseWrapper<Boolean> uploadResourceFile(String type, String version, MultipartFile file) {
 		ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
@@ -192,5 +212,105 @@ public class ResourceManagementService {
                     ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorMessage() + e.getMessage());
         }
     }
+
+	public ResponseWrapper<Boolean> uploadTemplate(String langCode, String templateName, MultipartFile file) {
+		ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
+		boolean status = false;
+		try {
+			String fileName = file.getOriginalFilename();
+			if (fileName.contains(".")) {
+				if (!(fileName.split("\\.").length > 2)) {
+					if (!scanDocument || (scanDocument && isVirusScanSuccess(file))) {
+						if (Objects.nonNull(file) && Objects.nonNull(langCode) && Objects.nonNull(templateName)
+								&& !file.isEmpty() && file.getSize() > 0) {
+
+							if (Objects.isNull(fileName) || !fileName.endsWith(VM_EXT)) {
+								throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+										ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+							}
+							MasterTemplatesEntity masterTemplatesEntity = new MasterTemplatesEntity();
+
+							LocalDateTime nowDate = LocalDateTime.now();
+							masterTemplatesEntity.setId(RandomIdGenerator.generateUUID("", "", 36));
+							masterTemplatesEntity.setLangCode(langCode);
+							masterTemplatesEntity.setTemplateName(templateName);
+							masterTemplatesEntity.setCrBy(this.getUserBy());
+							masterTemplatesEntity.setCrDtimes(nowDate);
+
+							InputStream inputStream = file.getInputStream();
+							byte[] bytes = inputStream.readAllBytes();
+							String template = new String(bytes, StandardCharsets.UTF_8);
+							masterTemplatesEntity.setTemplate(template);
+
+							log.info("sessionId", "idType", "id", "fetching previous template timestamp for langCode :", langCode
+									, "and template name", templateName);
+							String previousTemplateVersion = masterTemplatesRepository.getPreviousTemplateVersion(langCode, templateName);
+							if (Objects.nonNull(previousTemplateVersion)) {
+								String templateVersion = incrementTemplateVersion(previousTemplateVersion);
+								masterTemplatesEntity.setVersion(templateVersion);
+							} else {
+								masterTemplatesEntity.setVersion(DEFAULT_TEMPLATE_VERSION);
+							}
+
+							masterTemplatesRepository.save(masterTemplatesEntity);
+							log.info("sessionId", "idType", "id", "saving template in Db having language code :", langCode
+									, "and template name", templateName);
+							status = true;
+
+						} else {
+							String errorCode = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode();
+							String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage();
+							responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+						}
+					} else {
+						String errorCode = ToolkitErrorCodes.VIRUS_FOUND.getErrorCode();
+						String errorMessage = ToolkitErrorCodes.VIRUS_FOUND.getErrorMessage();
+						responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+					}
+				} else {
+					String errorCode = ToolkitErrorCodes.FILE_WITH_MULTIPLE_EXTENSIONS.getErrorCode();
+					String errorMessage = ToolkitErrorCodes.FILE_WITH_MULTIPLE_EXTENSIONS.getErrorMessage();
+					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+				}
+			} else {
+				String errorCode = ToolkitErrorCodes.FILE_WITHOUT_EXTENSIONS.getErrorCode();
+				String errorMessage = ToolkitErrorCodes.FILE_WITHOUT_EXTENSIONS.getErrorMessage();
+				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+			}
+		} catch (ToolkitException ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In uploadTemplate method of ResourceManagementService Service - " + ex.getMessage());
+			String errorCode = ex.getErrorCode();
+			String errorMessage = ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+		} catch (Exception ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In uploadTemplate method of ResourceManagementService Service - " + ex.getMessage());
+			String errorCode = ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorCode();
+			String errorMessage = ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorMessage() + BLANK_SPACE + ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+		}
+		responseWrapper.setId(postResourceFileId);
+		responseWrapper.setResponse(status);
+		responseWrapper.setVersion(AppConstants.VERSION);
+		responseWrapper.setResponsetime(LocalDateTime.now());
+		return responseWrapper;
+	}
+
+	public String incrementTemplateVersion(String templateVersion) {
+		if (!templateVersion.matches("v\\d+")) {
+			throw new ToolkitException(ToolkitErrorCodes.TOOLKIT_TEMPLATE_INVALID_VERSION_FORMAT.getErrorCode(),
+					ToolkitErrorCodes.TOOLKIT_TEMPLATE_INVALID_VERSION_FORMAT.getErrorMessage());
+		}
+		// Extract numeric part of the version
+		String versionNumber = templateVersion.substring(1);
+		int version = Integer.parseInt(versionNumber);
+		// Increment the version
+		version++;
+		// Construct the new version string
+		return "v" + version;
+	}
 
 }
