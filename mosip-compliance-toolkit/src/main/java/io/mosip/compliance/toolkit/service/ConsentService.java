@@ -20,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -108,7 +109,7 @@ public class ConsentService {
             String partnerId = getPartnerId();
             String orgName = resourceCacheService.getOrgName(partnerId);
 
-            LocalDateTime nowDate = LocalDateTime.now();
+            LocalDateTime nowDate = LocalDateTime.now(ZoneOffset.UTC);
             PartnerConsentEntity partnerConsentEntity = new PartnerConsentEntity();
             partnerConsentEntity.setPartnerId(partnerId);
             partnerConsentEntity.setOrgName(orgName);
