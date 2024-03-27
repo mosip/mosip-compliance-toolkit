@@ -124,7 +124,7 @@ public class ConsentServiceTest {
         SecurityContextHolder.setContext(securityContext);
         when(authentication.getPrincipal()).thenReturn(authUserDetails);
         when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(masterTemplatesRepository.getLatestTemplateTimestamp(anyString(),anyString())).thenReturn(LocalDateTime.now());
+        when(masterTemplatesRepository.getTimestampForTemplateVersion(anyString(),anyString())).thenReturn(LocalDateTime.now());
         PartnerConsentEntity partnerConsentEntity = new PartnerConsentEntity();
         partnerConsentEntity.setConsentGivenDtimes(LocalDateTime.now());
         Optional<PartnerConsentEntity> optionalEntity = Optional.of(partnerConsentEntity);
@@ -147,7 +147,7 @@ public class ConsentServiceTest {
         SecurityContextHolder.setContext(securityContext);
         when(authentication.getPrincipal()).thenReturn(authUserDetails);
         when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(masterTemplatesRepository.getLatestTemplateTimestamp(anyString(),anyString())).thenReturn(null);
+        when(masterTemplatesRepository.getTimestampForTemplateVersion(anyString(),anyString())).thenReturn(null);
         PartnerConsentEntity partnerConsentEntity = new PartnerConsentEntity();
         partnerConsentEntity.setConsentGivenDtimes(LocalDateTime.now());
         Optional<PartnerConsentEntity> optionalEntity = Optional.of(partnerConsentEntity);

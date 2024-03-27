@@ -74,7 +74,7 @@ public class ConsentService {
             if (optionalEntity.isPresent()) {
                 PartnerConsentEntity entity = optionalEntity.get();
                 log.info("sessionId", "idType", "id", "fetching latest template timestamp from Db");
-                LocalDateTime latestTemplateTimestamp = masterTemplatesRepository.getLatestTemplateTimestamp(version, templateName);
+                LocalDateTime latestTemplateTimestamp = masterTemplatesRepository.getTimestampForTemplateVersion(version, templateName);
 
                 if (Objects.nonNull(latestTemplateTimestamp)) {
                     // checking whether if partner ConsentGivenDtimes is after the latest template timestamp
