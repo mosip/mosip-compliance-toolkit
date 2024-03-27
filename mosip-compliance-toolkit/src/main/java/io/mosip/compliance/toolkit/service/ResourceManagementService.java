@@ -3,6 +3,7 @@ package io.mosip.compliance.toolkit.service;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Objects;
 
 import io.mosip.compliance.toolkit.entity.MasterTemplatesEntity;
@@ -208,7 +209,7 @@ public class ResourceManagementService {
                 }
                 MasterTemplatesEntity masterTemplatesEntity = new MasterTemplatesEntity();
 
-                LocalDateTime nowDate = LocalDateTime.now();
+                LocalDateTime nowDate = LocalDateTime.now(ZoneOffset.UTC);
                 masterTemplatesEntity.setId(RandomIdGenerator.generateUUID("", "", 36));
                 masterTemplatesEntity.setLangCode(langCode);
                 masterTemplatesEntity.setTemplateName(templateName);
@@ -263,7 +264,7 @@ public class ResourceManagementService {
     }
 
     public void performFileValidation(MultipartFile file) {
-		String originalFilename = file.getOriginalFilename();
+        String originalFilename = file.getOriginalFilename();
 
         // check if the file is null or empty
         if (Objects.isNull(file) || file.isEmpty() || file.getSize() <= 0) {
