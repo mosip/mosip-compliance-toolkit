@@ -210,7 +210,7 @@ public class ResourceManagementService {
                 MasterTemplatesEntity masterTemplatesEntity = new MasterTemplatesEntity();
 
                 LocalDateTime nowDate = LocalDateTime.now(ZoneOffset.UTC);
-                masterTemplatesEntity.setId(RandomIdGenerator.generateUUID("", "", 36));
+                masterTemplatesEntity.setId(RandomIdGenerator.generateUUID("id", "", 36));
                 masterTemplatesEntity.setLangCode(langCode);
                 masterTemplatesEntity.setTemplateName(templateName);
                 masterTemplatesEntity.setCrBy(this.getUserBy());
