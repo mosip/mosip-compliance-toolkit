@@ -37,4 +37,21 @@ public class ResourceManagementController {
 			@RequestParam(required = false) String version, @RequestParam("file") MultipartFile file) {
 		return resourceMgmtService.uploadResourceFile(type, version, file);
 	}
+
+	@PreAuthorize("hasAnyRole(@authorizedRoles.getUploadResource())")
+	@PostMapping(value = "/uploadTemplate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@Operation(summary = "upload template", description = "upload template file", tags = "resource-management-controller")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "201", description = "Created", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema(hidden = true))),
+			@ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(hidden = true)))
+	})
+	public ResponseWrapper<Boolean> uploadTemplate(
+			@RequestParam String langCode,
+			@RequestParam String templateName,
+			@RequestParam("file") MultipartFile file) {
+		return resourceMgmtService.uploadTemplate(langCode, templateName, file);
+	}
 }

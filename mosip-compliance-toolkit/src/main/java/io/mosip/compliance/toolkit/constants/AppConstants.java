@@ -117,5 +117,9 @@ public class AppConstants {
 	public static final String ABIS_URL_REGEX_PATTERN = "^(ws|wss)://(.*)";
 
 	public static final String FILE_NAME_REGEX_PATTERN = "^[a-zA-Z0-9\\s_.-]+$";
+	
+	public static final String YES = "YES";
+
+	public static final String TERMS_AND_CONDTIONS_TEMPLATE = "terms_and_conditions_template";
 
 }
