@@ -196,13 +196,18 @@ public class ResourceManagementService {
         }
     }
 
-    public ResponseWrapper<Boolean> uploadTemplate(String langCode, String templateName, MultipartFile file) {
+    public ResponseWrapper<Boolean> uploadTemplate(String langCode, String templateName, String version, MultipartFile file) {
         ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
         boolean status = false;
         try {
             performFileValidation(file);
             String fileName = file.getOriginalFilename();
-            if (Objects.nonNull(langCode) && Objects.nonNull(templateName)) {
+            if (Objects.nonNull(langCode) && Objects.nonNull(templateName) && Objects.nonNull(version)) {
+                //check template version format
+                if (!version.matches("v\\d+")) {
+                    throw new ToolkitException(ToolkitErrorCodes.TOOLKIT_TEMPLATE_INVALID_VERSION_FORMAT.getErrorCode(),
+                            ToolkitErrorCodes.TOOLKIT_TEMPLATE_INVALID_VERSION_FORMAT.getErrorMessage());
+                }
                 if (Objects.isNull(fileName) || !fileName.endsWith(VM_EXT)) {
                     throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
                             ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
@@ -215,25 +220,16 @@ public class ResourceManagementService {
                 masterTemplatesEntity.setTemplateName(templateName);
                 masterTemplatesEntity.setCrBy(this.getUserBy());
                 masterTemplatesEntity.setCrDtimes(nowDate);
+                masterTemplatesEntity.setVersion(version);
 
                 InputStream inputStream = file.getInputStream();
                 byte[] bytes = inputStream.readAllBytes();
                 String template = new String(bytes, StandardCharsets.UTF_8);
                 masterTemplatesEntity.setTemplate(template);
 
-                log.info("sessionId", "idType", "id", "fetching previous template timestamp for langCode :", langCode
-                        , "and template name", templateName);
-                String previousTemplateVersion = masterTemplatesRepository.getPreviousTemplateVersion(langCode, templateName);
-                if (Objects.nonNull(previousTemplateVersion)) {
-                    String templateVersion = incrementTemplateVersion(previousTemplateVersion);
-                    masterTemplatesEntity.setVersion(templateVersion);
-                } else {
-                    masterTemplatesEntity.setVersion(DEFAULT_TEMPLATE_VERSION);
-                }
-
                 masterTemplatesRepository.save(masterTemplatesEntity);
-                log.info("sessionId", "idType", "id", "saving template in Db having language code :", langCode
-                        , "and template name", templateName);
+                log.info("sessionId", "idType", "id", "saved template successfully in Db having language code :", langCode
+                        , "and template name :", templateName, "and version :", version);
                 status = true;
 
             } else {
@@ -289,20 +285,6 @@ public class ResourceManagementService {
             throw new ToolkitException(ToolkitErrorCodes.VIRUS_FOUND.getErrorCode(),
                     ToolkitErrorCodes.VIRUS_FOUND.getErrorMessage());
         }
-    }
-
-    public String incrementTemplateVersion(String templateVersion) {
-        if (!templateVersion.matches("v\\d+")) {
-            throw new ToolkitException(ToolkitErrorCodes.TOOLKIT_TEMPLATE_INVALID_VERSION_FORMAT.getErrorCode(),
-                    ToolkitErrorCodes.TOOLKIT_TEMPLATE_INVALID_VERSION_FORMAT.getErrorMessage());
-        }
-        // Extract numeric part of the version
-        String versionNumber = templateVersion.substring(1);
-        int version = Integer.parseInt(versionNumber);
-        // Increment the version
-        version++;
-        // Construct the new version string
-        return "v" + version;
     }
 
 }
