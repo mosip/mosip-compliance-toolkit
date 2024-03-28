@@ -123,7 +123,7 @@ public class ABISDataShareService {
 						dataShareRequestDto.getCbeffFileSuffix());
 				wrapperResponseDto.setTestDataSource(AppConstants.MOSIP_DEFAULT);
 			}
-			//log.info("cbeffFileBytes: {}", cbeffFileBytes);
+			// log.info("cbeffFileBytes: {}", cbeffFileBytes);
 			// step 2 - get the data share url
 			// for ABIS3017, we need to send incorrect partner id to simulate decryption
 			// failure
@@ -240,7 +240,8 @@ public class ABISDataShareService {
 		String testcaseId = requestWrapper.getRequest().getCtkTestCaseId();
 		String testRunId = requestWrapper.getRequest().getCtkTestRunId();
 		String token = authUserDetails().getToken();
-		log.info("sessionId", "idType", "id", "saveDataShareToken started with testcaseId {},testRunId {}, partnerId {} and token {} ", testcaseId,
+		log.info("sessionId", "idType", "id",
+				"saveDataShareToken started with testcaseId {},testRunId {}, partnerId {} and token {} ", testcaseId,
 				testRunId, partnerId, token);
 		try {
 			Optional<AbisDataShareTokenEntity> dbEntity = abisDataShareTokenRepository.findTokenForTestRun(partnerId,
@@ -251,11 +252,13 @@ public class ABISDataShareService {
 				if (tokenInDb.equals(token)) {
 					abisDataShareTokenRepository.updateResultInRow(AppConstants.SUCCESS, partnerId, testcaseId,
 							testRunId);
-					log.info("sessionId", "idType", "id", "token in db matches the token in request, hence saveDataShareToken passes");
+					log.info("sessionId", "idType", "id",
+							"token in db matches the token in request, hence saveDataShareToken passes");
 				} else {
 					abisDataShareTokenRepository.updateResultInRow(AppConstants.FAILURE, partnerId, testcaseId,
 							testRunId);
-					log.info("sessionId", "idType", "id", "token in db matches the token in request, hence saveDataShareToken fails");
+					log.info("sessionId", "idType", "id",
+							"token in db matches the token in request, hence saveDataShareToken fails");
 				}
 			} else {
 				AbisDataShareTokenEntity abisDataShareTokenEntity = new AbisDataShareTokenEntity();
@@ -286,53 +289,39 @@ public class ABISDataShareService {
 		String testcaseId = requestWrapper.getRequest().getCtkTestCaseId();
 		String testRunId = requestWrapper.getRequest().getCtkTestRunId();
 		String token = authUserDetails().getToken();
-		log.info("sessionId", "idType", "id", "invalidateDataShareToken started with testcaseId {},testRunId {}, partnerId {} and token {} ",
+		log.info("sessionId", "idType", "id",
+				"invalidateDataShareToken started with testcaseId {},testRunId {}, partnerId {} and token {} ",
 				testcaseId, testRunId, partnerId, token);
 		try {
 			Optional<AbisDataShareTokenEntity> dbEntity = abisDataShareTokenRepository.findTokenForTestRun(partnerId,
 					testcaseId, testRunId);
 			if (!dbEntity.isPresent()) {
-				String resp = dataShareHelper.invalidateToken();
-				log.info("sessionId", "idType", "id", "resp: {}", resp);
-				if (resp != null) {
-					try {
-						String result = null;
-						TypeReference<ResponseWrapper<AuthNResponse>> ref = new TypeReference<>() {
-						};
-						ResponseWrapper<AuthNResponse> invalidateTokenResponse = objectMapperConfig.objectMapper()
-								.readValue(resp, ref);
-						if (invalidateTokenResponse != null && invalidateTokenResponse.getResponse() != null) {
-							AuthNResponse authN = invalidateTokenResponse.getResponse();
-							result = authN.getStatus();
-							if (AppConstants.SUCCESS.equalsIgnoreCase(result)) {
-								log.info("sessionId", "idType", "id", "token invalidated successfully");
-								AbisDataShareTokenEntity abisDataShareTokenEntity = new AbisDataShareTokenEntity();
-								abisDataShareTokenEntity.setPartnerId(partnerId);
-								abisDataShareTokenEntity.setTestCaseId(testcaseId);
-								abisDataShareTokenEntity.setTestRunId(testRunId);
-								abisDataShareTokenEntity.setToken(token);
-								abisDataShareTokenEntity.setResult(AppConstants.SUCCESS);
-								abisDataShareTokenRepository.save(abisDataShareTokenEntity);
-							} else {
-								log.info("sessionId", "idType", "id", "token from datashare could not be invalidated, get result {}", result);
-							}
-						} else {
-							log.info("sessionId", "idType", "id", "invalidateTokenResponse is null {}", invalidateTokenResponse);
-						}
-					} catch (Exception ex) {
-						log.info("sessionId", "idType", "id", "token from datashare could not be invalidated, due to {}", ex.getLocalizedMessage());
-					}
+				boolean resp = dataShareHelper.revokeToken(token);
+				if (resp) {
+					log.info("sessionId", "idType", "id", "token invalidated successfully");
+					AbisDataShareTokenEntity abisDataShareTokenEntity = new AbisDataShareTokenEntity();
+					abisDataShareTokenEntity.setPartnerId(partnerId);
+					abisDataShareTokenEntity.setTestCaseId(testcaseId);
+					abisDataShareTokenEntity.setTestRunId(testRunId);
+					abisDataShareTokenEntity.setToken(token);
+					abisDataShareTokenEntity.setResult(AppConstants.SUCCESS);
+					abisDataShareTokenRepository.save(abisDataShareTokenEntity);
+				} else {
+					log.info("sessionId", "idType", "id",
+							"token from datashare could not be invalidated");
 				}
 			} else {
 				String tokenInDb = dbEntity.get().getToken();
 				if (tokenInDb.equals(token)) {
 					abisDataShareTokenRepository.updateResultInRow(AppConstants.FAILURE, partnerId, testcaseId,
 							testRunId);
-					log.info("sessionId", "idType", "id", "token in db matches the token in request, hence invalidateDataShareToken fails");
+					log.info("sessionId", "idType", "id",
+							"token in db matches the token in request, hence invalidateDataShareToken fails");
 				} else {
 					abisDataShareTokenRepository.updateResultInRow(AppConstants.SUCCESS, partnerId, testcaseId,
 							testRunId);
-					log.info("sessionId", "idType", "id", "token in db matches the token in request, hence invalidateDataShareToken passes");
+					log.info("sessionId", "idType", "id",
+							"token in db matches the token in request, hence invalidateDataShareToken passes");
 				}
 			}
 			responseWrapper.setResponse(AppConstants.SUCCESS);
