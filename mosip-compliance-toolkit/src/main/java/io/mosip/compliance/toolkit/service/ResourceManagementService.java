@@ -229,7 +229,7 @@ public class ResourceManagementService {
 
                 masterTemplatesRepository.save(masterTemplatesEntity);
                 log.info("sessionId", "idType", "id", "saved template successfully in Db having language code :", langCode
-                        , "and template name", templateName);
+                        , "and template name :", templateName, "and version :", version);
                 status = true;
 
             } else {
