@@ -51,7 +51,8 @@ public class ResourceManagementController {
 	public ResponseWrapper<Boolean> uploadTemplate(
 			@RequestParam String langCode,
 			@RequestParam String templateName,
+			@RequestParam String version,
 			@RequestParam("file") MultipartFile file) {
-		return resourceMgmtService.uploadTemplate(langCode, templateName, file);
+		return resourceMgmtService.uploadTemplate(langCode, templateName, version, file);
 	}
 }

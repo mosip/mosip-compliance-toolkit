@@ -18,7 +18,4 @@ public interface MasterTemplatesRepository extends BaseRepository<MasterTemplate
 
     @Query(value = "SELECT e.cr_dtimes FROM master_templates e WHERE e.version = ?1 AND e.template_name = ?2 ORDER BY e.cr_dtimes DESC LIMIT 1", nativeQuery = true)
     public LocalDateTime getTimestampForTemplateVersion(String version, String templateName);
-
-    @Query(value = "SELECT e.version FROM master_templates e WHERE e.lang_code = ?1 AND e.template_name = ?2 ORDER BY e.cr_dtimes DESC LIMIT 1", nativeQuery = true)
-    public String getPreviousTemplateVersion(String langCode, String templateName);
 }
