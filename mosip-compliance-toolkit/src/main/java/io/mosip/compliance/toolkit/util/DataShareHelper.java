@@ -20,7 +20,6 @@ import org.springframework.web.client.RestTemplate;
 import io.mosip.compliance.toolkit.config.LoggerConfiguration;
 import io.mosip.compliance.toolkit.dto.abis.DataShareResponseDto;
 import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.kernel.openid.bridge.api.constants.Constants;
 
 @Component
 public class DataShareHelper {
@@ -85,8 +84,8 @@ public class DataShareHelper {
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-		map.add(Constants.CLIENT_ID, clientID);
-		map.add(Constants.CLIENT_SECRET, clientSecret);
+		map.add("client_id", clientID);
+		map.add("client_secret", clientSecret);
 		map.add("token", authToken);
 		map.add("token_type_hint", "access_token");
 		
