@@ -308,7 +308,7 @@ public class ABISDataShareServiceTest {
 		Mockito.when(objectMapperMock.readValue(Mockito.anyString(), Mockito.any(TypeReference.class))).thenReturn(mockResponse);
 
 
-		Mockito.when(dataShareHelper.invalidateToken()).thenReturn("ABCD");
+		Mockito.when(dataShareHelper.revokeToken(Mockito.anyString())).thenReturn(true);
 
 		ResponseWrapper<String> response = abisDataShareService.invalidateDataShareToken(requestWrapper);
 
@@ -337,7 +337,7 @@ public class ABISDataShareServiceTest {
 		mockResponse.setResponse(authNResponse);
 		TypeReference<ResponseWrapper<AuthNResponse>> ref = new TypeReference<>() {};
 		Mockito.when(objectMapperMock.readValue(Mockito.anyString(), Mockito.any(TypeReference.class))).thenReturn(mockResponse);
-		Mockito.when(dataShareHelper.invalidateToken()).thenReturn("ABCD");
+		Mockito.when(dataShareHelper.revokeToken(Mockito.anyString())).thenReturn(true);
 		ResponseWrapper<String> response = abisDataShareService.invalidateDataShareToken(requestWrapper);
 	}
 
@@ -353,7 +353,7 @@ public class ABISDataShareServiceTest {
 		ObjectMapper objectMapperMock = mock(ObjectMapper.class);
 		when(objectMapperConfig.objectMapper()).thenReturn(objectMapperMock);
 		Mockito.when(objectMapperMock.readValue(Mockito.anyString(), Mockito.any(TypeReference.class))).thenReturn(null);
-		Mockito.when(dataShareHelper.invalidateToken()).thenReturn("abc");
+		Mockito.when(dataShareHelper.revokeToken(Mockito.anyString())).thenReturn(true);
 		ResponseWrapper<String> response = abisDataShareService.invalidateDataShareToken(requestWrapper);
 	}
 
@@ -369,7 +369,7 @@ public class ABISDataShareServiceTest {
 		ObjectMapper objectMapperMock = mock(ObjectMapper.class);
 		when(objectMapperConfig.objectMapper()).thenReturn(objectMapperMock);
 		Mockito.when(objectMapperMock.readValue(Mockito.anyString(), Mockito.any(TypeReference.class))).thenReturn(null);
-		Mockito.when(dataShareHelper.invalidateToken()).thenThrow(new ToolkitException("TOOLKIT_EXCEPTION","Exception"));
+		Mockito.when(dataShareHelper.revokeToken(Mockito.anyString())).thenThrow(new ToolkitException("TOOLKIT_EXCEPTION","Exception"));
 		ResponseWrapper<String> response = abisDataShareService.invalidateDataShareToken(requestWrapper);
 	}
 
@@ -385,7 +385,7 @@ public class ABISDataShareServiceTest {
 		ObjectMapper objectMapperMock = mock(ObjectMapper.class);
 		when(objectMapperConfig.objectMapper()).thenReturn(objectMapperMock);
 		Mockito.when(objectMapperMock.readValue(Mockito.anyString(), Mockito.any(TypeReference.class))).thenThrow(new ToolkitException("TOOLKIT_EXCEPTION","Exception"));
-		Mockito.when(dataShareHelper.invalidateToken()).thenReturn("abc");
+		Mockito.when(dataShareHelper.revokeToken(Mockito.anyString())).thenReturn(true);
 		ResponseWrapper<String> response = abisDataShareService.invalidateDataShareToken(requestWrapper);
 	}
 
