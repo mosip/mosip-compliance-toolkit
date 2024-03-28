@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +47,7 @@ public class AbisProjectController {
         binder.addValidators(requestValidator);
     }
 
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getAbisPartner())")
     @GetMapping(value = "/getAbisProject/{id}")
     @Operation(summary = "Get ABIS project", description = "Get ABIS project by id", tags = "abis-project-controller")
     @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
@@ -65,6 +67,7 @@ public class AbisProjectController {
      * @throws Exception
      */
     @ResponseFilter
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getAbisPartner())")
     @PostMapping(value = "/addAbisProject", produces = "application/json")
     @Operation(summary = "Add ABIS project", description = "Add new ABIS project", tags = "abis-project-controller")
     @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
@@ -90,6 +93,7 @@ public class AbisProjectController {
      * @throws Exception
      */
     @ResponseFilter
+    @PreAuthorize("hasAnyRole(@authorizedRoles.getAbisPartner())")
     @PutMapping(value = "/updateAbisProject", produces = "application/json")
     @Operation(summary = "Update ABIS project", description = "Update ABIS project details", tags = "abis-project-controller")
     @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
