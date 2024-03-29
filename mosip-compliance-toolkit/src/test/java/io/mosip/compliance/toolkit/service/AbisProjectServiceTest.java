@@ -176,7 +176,7 @@ public class AbisProjectServiceTest {
 
         ResponseWrapper<AbisProjectDto> abisProjectDtoResponseWrapper = new ResponseWrapper<>();
         abisProjectDtoResponseWrapper = abisProjectService.addAbisProject(abisProjectDto);
-        Assert.assertNull(abisProjectDtoResponseWrapper.getResponse());
+        Assert.assertNotNull(abisProjectDtoResponseWrapper.getResponse());
     }
 
     @Test
@@ -233,7 +233,7 @@ public class AbisProjectServiceTest {
 
         ResponseWrapper<AbisProjectDto> abisProjectDtoResponseWrapper = new ResponseWrapper<>();
         abisProjectDtoResponseWrapper = abisProjectService.addAbisProject(abisProjectDto);
-        Assert.assertNull(abisProjectDtoResponseWrapper.getResponse());
+        Assert.assertNotNull(abisProjectDtoResponseWrapper.getResponse());
     }
 
 

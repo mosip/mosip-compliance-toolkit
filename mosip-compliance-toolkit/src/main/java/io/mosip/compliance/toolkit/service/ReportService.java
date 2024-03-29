@@ -15,8 +15,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import io.mosip.compliance.toolkit.entity.ComplianceReportSummaryEntity;
+import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +46,6 @@ import io.mosip.compliance.toolkit.config.VelocityEngineConfig;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.ProjectTypes;
 import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
-import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
 import io.mosip.compliance.toolkit.dto.collections.CollectionTestCasesResponseDto;
 import io.mosip.compliance.toolkit.dto.projects.AbisProjectDto;
 import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
@@ -1156,56 +1157,65 @@ public class ReportService {
 		ResponseWrapper<ComplianceTestRunSummaryDto> responseWrapper = new ResponseWrapper<>();
 		ComplianceTestRunSummaryDto complianceTestRunSummaryDto = new ComplianceTestRunSummaryDto();
 		try {
-			log.info("sessionId", "idType", "id", "Started updateReportStatus processing");
-			log.info("sessionId", "idType", "id", "partnerId: " + partnerId);
-			log.info("sessionId", "idType", "id", "oldStatus: " + oldStatus);
-			log.info("sessionId", "idType", "id", "newStatus: " + newStatus);
+			if (validInputRequest(requestDto)) {
+				log.info("sessionId", "idType", "id", "Started updateReportStatus processing");
+				log.info("sessionId", "idType", "id", "partnerId: " + partnerId);
+				log.info("sessionId", "idType", "id", "oldStatus: " + oldStatus);
+				log.info("sessionId", "idType", "id", "newStatus: " + newStatus);
 
-			String projectType = requestDto.getProjectType();
-			String projectId = requestDto.getProjectId();
-			String collectionId = requestDto.getCollectionId();
-			String testRunId = requestDto.getTestRunId();
-			logInput(requestDto, projectType, projectId);
-			// 1. get the report data
-			ComplianceTestRunSummaryPK pk = new ComplianceTestRunSummaryPK();
-			pk.setPartnerId(partnerId);
-			pk.setProjectId(projectId);
-			pk.setCollectionId(collectionId);
-			Optional<ComplianceTestRunSummaryEntity> optionalEntity = complianceTestRunSummaryRepository.findById(pk);
-			if (optionalEntity.isPresent() && testRunId.equals(optionalEntity.get().getRunId())
-					&& projectType.equals(optionalEntity.get().getProjectType())) {
-				ComplianceTestRunSummaryEntity entity = optionalEntity.get();
-				if (oldStatus.equals(entity.getReportStatus())) {
-					log.info("sessionId", "idType", "id", "report with status: " + oldStatus + " is available in DB");
-					LocalDateTime nowDate = LocalDateTime.now();
-					entity.setReportStatus(newStatus);
-					if (AppConstants.REPORT_STATUS_REVIEW.equals(newStatus)) {
-						entity.setPartnerComments(requestDto.getPartnerComments());
-						entity.setReviewDtimes(nowDate);
+				String projectType = requestDto.getProjectType();
+				String projectId = requestDto.getProjectId();
+				String collectionId = requestDto.getCollectionId();
+				String testRunId = requestDto.getTestRunId();
+				logInput(requestDto, projectType, projectId);
+				// 1. get the report data
+				ComplianceTestRunSummaryPK pk = new ComplianceTestRunSummaryPK();
+				pk.setPartnerId(partnerId);
+				pk.setProjectId(projectId);
+				pk.setCollectionId(collectionId);
+				Optional<ComplianceTestRunSummaryEntity> optionalEntity = complianceTestRunSummaryRepository.findById(pk);
+				if (optionalEntity.isPresent() && testRunId.equals(optionalEntity.get().getRunId())
+						&& projectType.equals(optionalEntity.get().getProjectType())) {
+					ComplianceTestRunSummaryEntity entity = optionalEntity.get();
+					if (oldStatus.equals(entity.getReportStatus())) {
+						log.info("sessionId", "idType", "id", "report with status: " + oldStatus + " is available in DB");
+						LocalDateTime nowDate = LocalDateTime.now();
+						entity.setReportStatus(newStatus);
+						if (AppConstants.REPORT_STATUS_REVIEW.equals(newStatus)) {
+							entity.setPartnerComments(requestDto.getPartnerComments());
+							entity.setReviewDtimes(nowDate);
+						}
+						if (AppConstants.REPORT_STATUS_APPROVED.equals(newStatus)
+								|| AppConstants.REPORT_STATUS_REJECTED.equals(newStatus)) {
+							entity.setAdminComments(requestDto.getAdminComments());
+							entity.setApproveRejectDtimes(nowDate);
+						}
+						entity.setUpdBy(this.getUserBy());
+						entity.setUpdDtimes(nowDate);
+						ComplianceTestRunSummaryEntity respEntity = complianceTestRunSummaryRepository.save(entity);
+						complianceTestRunSummaryDto = (ComplianceTestRunSummaryDto) getObjectMapper()
+								.convertValue(respEntity, new TypeReference<ComplianceTestRunSummaryDto>() {
+								});
+						responseWrapper.setResponse(complianceTestRunSummaryDto);
+					} else {
+						String errorCode = ToolkitErrorCodes.TOOLKIT_REPORT_STATUS_INVALID_ERR.getErrorCode();
+						String errorMessage = ToolkitErrorCodes.TOOLKIT_REPORT_STATUS_INVALID_ERR.getErrorMessage() + " - "
+								+ entity.getReportStatus();
+						responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 					}
-					if (AppConstants.REPORT_STATUS_APPROVED.equals(newStatus)
-							|| AppConstants.REPORT_STATUS_REJECTED.equals(newStatus)) {
-						entity.setAdminComments(requestDto.getAdminComments());
-						entity.setApproveRejectDtimes(nowDate);
-					}
-					entity.setUpdBy(this.getUserBy());
-					entity.setUpdDtimes(nowDate);
-					ComplianceTestRunSummaryEntity respEntity = complianceTestRunSummaryRepository.save(entity);
-					complianceTestRunSummaryDto = (ComplianceTestRunSummaryDto) getObjectMapper()
-							.convertValue(respEntity, new TypeReference<ComplianceTestRunSummaryDto>() {
-							});
-					responseWrapper.setResponse(complianceTestRunSummaryDto);
 				} else {
-					String errorCode = ToolkitErrorCodes.TOOLKIT_REPORT_STATUS_INVALID_ERR.getErrorCode();
-					String errorMessage = ToolkitErrorCodes.TOOLKIT_REPORT_STATUS_INVALID_ERR.getErrorMessage() + " - "
-							+ entity.getReportStatus();
+					String errorCode = ToolkitErrorCodes.TOOLKIT_REPORT_NOT_AVAILABLE_ERR.getErrorCode();
+					String errorMessage = ToolkitErrorCodes.TOOLKIT_REPORT_NOT_AVAILABLE_ERR.getErrorMessage();
 					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 				}
-			} else {
-				String errorCode = ToolkitErrorCodes.TOOLKIT_REPORT_NOT_AVAILABLE_ERR.getErrorCode();
-				String errorMessage = ToolkitErrorCodes.TOOLKIT_REPORT_NOT_AVAILABLE_ERR.getErrorMessage();
-				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 			}
+		} catch (ToolkitException ex) {
+			log.debug("sessionId", "idType", "id", ex.getStackTrace());
+			log.error("sessionId", "idType", "id",
+					"In updateReportStatus method of ReportGenerator Service - " + ex.getMessage());
+			String errorCode = ex.getErrorCode();
+			String errorMessage = ex.getMessage();
+			responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 		} catch (Exception ex) {
 			log.info("sessionId", "idType", "id", "Exception in updateReportStatus " + ex.getLocalizedMessage());
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -1222,4 +1232,20 @@ public class ReportService {
 		return responseWrapper;
 	}
 
+	private boolean validInputRequest(ReportRequestDto reportRequestDto) {
+		validComments(reportRequestDto.getAdminComments());
+		validComments(reportRequestDto.getPartnerComments());
+		return true;
+	}
+
+	private void validComments(String comments) {
+		if (Objects.nonNull(comments)) {
+			if (!Pattern.matches(AppConstants.REGEX_PATTERN, comments)) {
+				String exceptionErrorCode = ToolkitErrorCodes.INVALID_CHARACTERS.getErrorCode()
+						+ AppConstants.COMMA_SEPARATOR
+						+ ToolkitErrorCodes.COMMENTS.getErrorCode();
+				throw new ToolkitException(exceptionErrorCode, "Invalid characters are not allowed in comments");
+			}
+		}
+	}
 }

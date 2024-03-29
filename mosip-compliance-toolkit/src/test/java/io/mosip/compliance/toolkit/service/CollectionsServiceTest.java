@@ -268,6 +268,7 @@ public class CollectionsServiceTest {
     @Test
     public void addCollectionTest(){
         CollectionRequestDto requestDto = new CollectionRequestDto();
+        requestDto.setCollectionName("abc");
         collectionsService.addCollection(requestDto);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         MosipUserDto mosipUserDto = getMosipUserDto();
@@ -278,7 +279,7 @@ public class CollectionsServiceTest {
         CollectionDto collectionDto = new CollectionDto();
         collectionDto.setProjectId("SBI");
         requestDto.setProjectType("SBI");
-        requestDto.setCollectionName(String.valueOf(collectionDto));
+        requestDto.setCollectionName("abc");
 
         CollectionEntity outputEntity = new CollectionEntity();
         Mockito.when(collectionsRepository.getSbiCollectionByName(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(null);
@@ -291,12 +292,12 @@ public class CollectionsServiceTest {
 //        type = ABIS
         collectionDto.setCollectionId("ABIS");
         requestDto.setProjectType("ABIS");
-        requestDto.setCollectionName(String.valueOf(collectionDto));
+        requestDto.setCollectionName("abc");
         collectionsService.addCollection(requestDto);
 //        type = SDK
         collectionDto.setCollectionId("SDK");
         requestDto.setProjectType("SDK");
-        requestDto.setCollectionName(String.valueOf(collectionDto));
+        requestDto.setCollectionName("abc");
         ResponseWrapper<CollectionDto> response = collectionsService.addCollection(requestDto);
         CollectionDto result = new CollectionDto();
         Assert.assertEquals(result, response.getResponse());

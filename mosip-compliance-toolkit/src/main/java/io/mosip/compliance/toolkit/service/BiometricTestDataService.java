@@ -11,10 +11,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -183,105 +185,107 @@ public class BiometricTestDataService {
         ResponseWrapper<AddBioTestDataResponseDto> responseWrapper = new ResponseWrapper<>();
         AddBioTestDataResponseDto addBioTestDataResponseDto = null;
         try {
-            String fileName = file.getOriginalFilename();
-            if (fileName.contains(".")) {
-                if (!(fileName.split("\\.").length > 2)) {
-                    if (!scanDocument || (scanDocument && isVirusScanSuccess(file))) {
-                        if (Objects.nonNull(inputBiometricTestDataDto) && Objects.nonNull(file) && !file.isEmpty()
-                                && file.getSize() > 0) {
+            if (validInputRequest(inputBiometricTestDataDto, file)) {
+                String fileName = file.getOriginalFilename();
+                if (fileName.contains(".")) {
+                    if (!(fileName.split("\\.").length > 2)) {
+                        if (!scanDocument || (scanDocument && isVirusScanSuccess(file))) {
+                            if (Objects.nonNull(inputBiometricTestDataDto) && Objects.nonNull(file) && !file.isEmpty()
+                                    && file.getSize() > 0) {
 
-                            String requestPurpose = inputBiometricTestDataDto.getPurpose();
-                            String purpose = "";
-                            if (!requestPurpose.equals(AppConstants.ABIS)) {
-                                SdkPurpose sdkPurpose = SdkPurpose.fromCode(requestPurpose);
-                                purpose = sdkPurpose.getCode();
-                            } else {
-                                purpose = requestPurpose;
-                            }
-                            TestDataValidationDto testDataValidation = validateTestData(purpose, file);
-
-                            String encodedHash = CryptoUtil.getEncodedHash(file.getBytes());
-
-                            ObjectMapper mapper = objectMapperConfig.objectMapper();
-                            BiometricTestDataEntity inputEntity = mapper.convertValue(inputBiometricTestDataDto,
-                                    BiometricTestDataEntity.class);
-                            inputEntity.setId(RandomIdGenerator.generateUUID("btd", "", 36));
-                            inputEntity.setPartnerId(getPartnerId());
-                            inputEntity.setFileId(file.getOriginalFilename());
-                            inputEntity.setFileHash(encodedHash);
-                            inputEntity.setOrgName(resourceCacheService.getOrgName(getPartnerId()));
-                            inputEntity.setCrBy(getUserBy());
-                            inputEntity.setCrDate(LocalDateTime.now());
-                            inputEntity.setUpBy(null);
-                            inputEntity.setUpdDate(null);
-                            inputEntity.setDeleted(false);
-                            inputEntity.setDelTime(null);
-
-                            String container = AppConstants.PARTNER_TESTDATA + "/" + inputEntity.getPartnerId() + "/"
-                                    + inputEntity.getPurpose();
-                            if (!objectStore.exists(objectStoreAccountName, container, null, null, inputEntity.getFileId())) {
-                                BiometricTestDataEntity entity = biometricTestDataRepository.save(inputEntity);
-
-                                boolean status = false;
-                                InputStream is = file.getInputStream();
-                                try {
-                                    status = putInObjectStore(container, inputEntity.getFileId(), is);
-                                } catch (Exception ex) {
-                                    log.debug("sessionId", "idType", "id", ex.getStackTrace());
-                                    log.error("sessionId", "idType", "id",
-                                            "In addBiometricTestdata method of BiometricTestDataService Service - "
-                                                    + ex.getMessage());
-                                }
-                                is.close();
-                                if (status) {
-                                    BiometricTestDataDto biometricTestData = mapper.convertValue(entity,
-                                            BiometricTestDataDto.class);
-                                    addBioTestDataResponseDto = new AddBioTestDataResponseDto();
-                                    addBioTestDataResponseDto.setBiometricTestDataDto(biometricTestData);
-                                    if (Objects.nonNull(testDataValidation)) {
-                                        Set<String> set = null;
-                                        if (!testDataValidation.getFolders().isEmpty()) {
-                                            set = new HashSet<>(testDataValidation.getFolders());
-                                            if (!requestPurpose.equals(AppConstants.ABIS)) {
-                                                set.addAll(testDataValidation.getProbeFolders());
-                                                set.addAll(testDataValidation.getGalleryFolders());
-                                            }
-                                            String msg = "For testcases " + set + " we will use data from MOSIP_DEFAULT";
-                                            addBioTestDataResponseDto.setInfo(msg);
-                                        }
-                                    }
+                                String requestPurpose = inputBiometricTestDataDto.getPurpose();
+                                String purpose = "";
+                                if (!requestPurpose.equals(AppConstants.ABIS)) {
+                                    SdkPurpose sdkPurpose = SdkPurpose.fromCode(requestPurpose);
+                                    purpose = sdkPurpose.getCode();
                                 } else {
-                                    biometricTestDataRepository.delete(entity);
-                                    String errorCode = ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorCode();
-                                    String errorMessage = ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorMessage();
+                                    purpose = requestPurpose;
+                                }
+                                TestDataValidationDto testDataValidation = validateTestData(purpose, file);
+
+                                String encodedHash = CryptoUtil.getEncodedHash(file.getBytes());
+
+                                ObjectMapper mapper = objectMapperConfig.objectMapper();
+                                BiometricTestDataEntity inputEntity = mapper.convertValue(inputBiometricTestDataDto,
+                                        BiometricTestDataEntity.class);
+                                inputEntity.setId(RandomIdGenerator.generateUUID("btd", "", 36));
+                                inputEntity.setPartnerId(getPartnerId());
+                                inputEntity.setFileId(file.getOriginalFilename());
+                                inputEntity.setFileHash(encodedHash);
+                                inputEntity.setOrgName(resourceCacheService.getOrgName(getPartnerId()));
+                                inputEntity.setCrBy(getUserBy());
+                                inputEntity.setCrDate(LocalDateTime.now());
+                                inputEntity.setUpBy(null);
+                                inputEntity.setUpdDate(null);
+                                inputEntity.setDeleted(false);
+                                inputEntity.setDelTime(null);
+
+                                String container = AppConstants.PARTNER_TESTDATA + "/" + inputEntity.getPartnerId() + "/"
+                                        + inputEntity.getPurpose();
+                                if (!objectStore.exists(objectStoreAccountName, container, null, null, inputEntity.getFileId())) {
+                                    BiometricTestDataEntity entity = biometricTestDataRepository.save(inputEntity);
+
+                                    boolean status = false;
+                                    InputStream is = file.getInputStream();
+                                    try {
+                                        status = putInObjectStore(container, inputEntity.getFileId(), is);
+                                    } catch (Exception ex) {
+                                        log.debug("sessionId", "idType", "id", ex.getStackTrace());
+                                        log.error("sessionId", "idType", "id",
+                                                "In addBiometricTestdata method of BiometricTestDataService Service - "
+                                                        + ex.getMessage());
+                                    }
+                                    is.close();
+                                    if (status) {
+                                        BiometricTestDataDto biometricTestData = mapper.convertValue(entity,
+                                                BiometricTestDataDto.class);
+                                        addBioTestDataResponseDto = new AddBioTestDataResponseDto();
+                                        addBioTestDataResponseDto.setBiometricTestDataDto(biometricTestData);
+                                        if (Objects.nonNull(testDataValidation)) {
+                                            Set<String> set = null;
+                                            if (!testDataValidation.getFolders().isEmpty()) {
+                                                set = new HashSet<>(testDataValidation.getFolders());
+                                                if (!requestPurpose.equals(AppConstants.ABIS)) {
+                                                    set.addAll(testDataValidation.getProbeFolders());
+                                                    set.addAll(testDataValidation.getGalleryFolders());
+                                                }
+                                                String msg = "For testcases " + set + " we will use data from MOSIP_DEFAULT";
+                                                addBioTestDataResponseDto.setInfo(msg);
+                                            }
+                                        }
+                                    } else {
+                                        biometricTestDataRepository.delete(entity);
+                                        String errorCode = ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorCode();
+                                        String errorMessage = ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorMessage();
+                                        responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+                                    }
+
+                                } else {
+                                    String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorCode();
+                                    String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorMessage() + inputEntity.getFileId();
                                     responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
                                 }
 
                             } else {
-                                String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorCode();
-                                String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_EXISTS.getErrorMessage() + inputEntity.getFileId();
+                                String errorCode = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode();
+                                String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage();
                                 responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
                             }
-
                         } else {
-                            String errorCode = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode();
-                            String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage();
+                            String errorCode = ToolkitErrorCodes.VIRUS_FOUND.getErrorCode();
+                            String errorMessage = ToolkitErrorCodes.VIRUS_FOUND.getErrorMessage();
                             responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
                         }
                     } else {
-                        String errorCode = ToolkitErrorCodes.VIRUS_FOUND.getErrorCode();
-                        String errorMessage = ToolkitErrorCodes.VIRUS_FOUND.getErrorMessage();
+                        String errorCode = ToolkitErrorCodes.FILE_WITH_MULTIPLE_EXTENSIONS.getErrorCode();
+                        String errorMessage = ToolkitErrorCodes.FILE_WITH_MULTIPLE_EXTENSIONS.getErrorMessage();
                         responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
                     }
                 } else {
-                    String errorCode = ToolkitErrorCodes.FILE_WITH_MULTIPLE_EXTENSIONS.getErrorCode();
-                    String errorMessage = ToolkitErrorCodes.FILE_WITH_MULTIPLE_EXTENSIONS.getErrorMessage();
+                    String errorCode = ToolkitErrorCodes.FILE_WITHOUT_EXTENSIONS.getErrorCode();
+                    String errorMessage = ToolkitErrorCodes.FILE_WITHOUT_EXTENSIONS.getErrorMessage();
                     responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
                 }
-            } else {
-                String errorCode = ToolkitErrorCodes.FILE_WITHOUT_EXTENSIONS.getErrorCode();
-                String errorMessage = ToolkitErrorCodes.FILE_WITHOUT_EXTENSIONS.getErrorMessage();
-                responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
             }
         } catch (ToolkitException ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -316,6 +320,24 @@ public class BiometricTestDataService {
         responseWrapper.setVersion(AppConstants.VERSION);
         responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
+    }
+
+    private boolean validInputRequest(BiometricTestDataDto biometricTestDataDto, MultipartFile file) {
+        String testDataName = biometricTestDataDto.getName();
+        if (!Pattern.matches(AppConstants.REGEX_PATTERN, testDataName)) {
+            String exceptionErrorCode = ToolkitErrorCodes.INVALID_CHARACTERS.getErrorCode()
+                    + AppConstants.COMMA_SEPARATOR
+                    + ToolkitErrorCodes.TEST_DATA_NAME.getErrorCode();
+            throw new ToolkitException(exceptionErrorCode, "Invalid characters are not allowed in test data name");
+        }
+        String fileName = file.getOriginalFilename();
+        if (!Pattern.matches(AppConstants.FILE_NAME_REGEX_PATTERN, fileName)) {
+            String exceptionErrorCode = ToolkitErrorCodes.INVALID_CHARACTERS.getErrorCode()
+                    + AppConstants.COMMA_SEPARATOR
+                    + ToolkitErrorCodes.FILE_NAME.getErrorCode();
+            throw new ToolkitException(exceptionErrorCode, "Invalid characters are not allowed in file name");
+        }
+        return true;
     }
 
 	private TestDataValidationDto validateTestData(String purpose, MultipartFile file) throws IOException {

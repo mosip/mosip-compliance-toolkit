@@ -177,6 +177,7 @@ public class BiometricTestDataServiceTest {
         ResponseWrapper<AddBioTestDataResponseDto> response = new ResponseWrapper<>();
         BiometricTestDataDto biometricTestDataDto = new BiometricTestDataDto();
         biometricTestDataDto.setPurpose(purposeAbis);
+        biometricTestDataDto.setName("abcd");
 
         FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFileABIS.zip");
         MockMultipartFile file = new MockMultipartFile("file", "testFileABIS.zip", "multipart/form-data", inputFile);
