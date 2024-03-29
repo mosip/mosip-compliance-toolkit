@@ -42,6 +42,7 @@ public class ABISTokenValidator extends ToolkitValidator {
 					ObjectNode.class);
 			String testcaseId = extraInfo.get("testcaseId").asText();
 			String testRunId = extraInfo.get("testRunId").asText();
+			boolean isTestCaseComplete = extraInfo.get("isTestCaseComplete").asBoolean();
 			String partnerId = getPartnerId();
 			log.info("sessionId", "idType", "id", "ABISTokenValidator validateResponse() started with testcaseId {},testRunId {}, partnerId {}", testcaseId,
 					testRunId, partnerId);
@@ -52,16 +53,27 @@ public class ABISTokenValidator extends ToolkitValidator {
 				log.info("sessionId", "idType", "id", "resultInDb {}", resultInDb);
 				if (AppConstants.SUCCESS.equals(resultInDb)) {
 					validationResultDto.setStatus(AppConstants.SUCCESS);
-					validationResultDto.setDescription(
-							"Token validation is successful. Verified that ABIS is not generating new tokens for every insert request.");
-					validationResultDto.setDescriptionKey("ABIS_TOKEN_VALIDATOR_001");
-
+					if ("ABIS3030".equals(testcaseId) && isTestCaseComplete) {
+						validationResultDto.setDescription(
+								"Token validation is successful. Verified that ABIS is not generating new tokens for every insert request.");
+						validationResultDto.setDescriptionKey("ABIS_TOKEN_VALIDATOR_001");	
+					}
+					if ("ABIS3031".equals(testcaseId) && isTestCaseComplete) {
+						validationResultDto.setDescription(
+								"Token validation is successful. Verified that ABIS is to generate a new token when earlier token has expired, without sending error response.");
+						validationResultDto.setDescriptionKey("ABIS_TOKEN_VALIDATOR_004");	
+					}
 				}
 				if (AppConstants.FAILURE.equals(resultInDb)) {
 					validationResultDto.setStatus(AppConstants.FAILURE);
-					validationResultDto.setDescription(
-							"Token validation failed, ABIS is generating NEW tokens for every insert request.");
-					validationResultDto.setDescriptionKey("ABIS_TOKEN_VALIDATOR_002");
+					if ("ABIS3030".equals(testcaseId) && isTestCaseComplete) {
+						validationResultDto.setDescription("Token validation failed, ABIS is generating NEW tokens for every insert request.");
+						validationResultDto.setDescriptionKey("ABIS_TOKEN_VALIDATOR_002");
+					}
+					if ("ABIS3031".equals(testcaseId) && isTestCaseComplete) {
+						validationResultDto.setDescription("Token validation failed, ABIS is not able to generate a new token when earlier token has expired, without sending error response.");
+						validationResultDto.setDescriptionKey("ABIS_TOKEN_VALIDATOR_005");
+					}
 				}
 				//delete the row
 				//abisDataShareTokenRepository.deleteById(dbEntity.get());
