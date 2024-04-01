@@ -118,7 +118,7 @@ public class AppConstants {
 
 	public static final String FILE_NAME_REGEX_PATTERN = "^[a-zA-Z0-9\\s_.-]+$";
 
-	public static final String VERSION_REGEX_PATTERN = "^\\d+\\.\\d+\\.\\d+$";
+	public static final String VERSION_REGEX_PATTERN = "^\\d+(\\.\\d+)*$";
 	
 	public static final String YES = "YES";
 
