@@ -237,7 +237,7 @@ public class SdkProjectService {
 								entity.setSdkHash(sdkHash);
 							}
 						}
-						if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty() && entity.getWebsiteUrl().equals("To_Be_Added")) {
+						if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty() && entity.getWebsiteUrl().equals(AppConstants.TO_BE_ADDED)) {
 							entity.setWebsiteUrl(websiteUrl);
 						}
 						if (Objects.nonNull(bioTestDataName) && !bioTestDataName.isEmpty()) {

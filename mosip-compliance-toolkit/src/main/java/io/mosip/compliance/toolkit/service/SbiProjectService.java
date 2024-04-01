@@ -206,17 +206,25 @@ public class SbiProjectService {
 						LocalDateTime updDate = LocalDateTime.now();
 						String sbiHash = sbiProjectDto.getSbiHash();
 						String websiteUrl = sbiProjectDto.getWebsiteUrl();
-						entity.setDeviceImage1(sbiProjectDto.getDeviceImage1());
-						entity.setDeviceImage2(sbiProjectDto.getDeviceImage2());
-						entity.setDeviceImage3(sbiProjectDto.getDeviceImage3());
-						entity.setDeviceImage4(sbiProjectDto.getDeviceImage4());
+						if (Objects.isNull(entity.getDeviceImage1())) {
+							entity.setDeviceImage1(sbiProjectDto.getDeviceImage1());
+						}
+						if (Objects.isNull(entity.getDeviceImage2())) {
+							entity.setDeviceImage2(sbiProjectDto.getDeviceImage2());
+						}
+						if (Objects.isNull(entity.getDeviceImage3())) {
+							entity.setDeviceImage3(sbiProjectDto.getDeviceImage3());
+						}
+						if (Objects.isNull(entity.getDeviceImage4())) {
+							entity.setDeviceImage4(sbiProjectDto.getDeviceImage4());
+						}
 						if (Objects.nonNull(sbiHash) && !sbiHash.isEmpty() && !entity.getSbiHash().equals(sbiHash)) {
 							boolean canHashBeUpdated = projectHelper.checkIfHashCanBeUpdated(projectId, projectType, partnerId);
 							if (canHashBeUpdated) {
 								entity.setSbiHash(sbiHash);
 							}
 						}
-						if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty() && entity.getWebsiteUrl().equals("To_Be_Added")) {
+						if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty() && entity.getWebsiteUrl().equals(AppConstants.TO_BE_ADDED)) {
 							entity.setWebsiteUrl(websiteUrl);
 						}
 						entity.setUpBy(this.getUserBy());
