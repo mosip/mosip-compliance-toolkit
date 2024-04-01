@@ -244,6 +244,7 @@ public class AbisProjectService {
 						String requestQueueName = abisProjectDto.getOutboundQueueName();
 						String responseQueueName = abisProjectDto.getInboundQueueName();
 						String abisHash = abisProjectDto.getAbisHash();
+						String websiteUrl = abisProjectDto.getWebsiteUrl();
 						String bioTestDataName = abisProjectDto.getBioTestDataFileName();
 						// Updating ABIS project values
 						if (Objects.nonNull(url) && !url.isEmpty()) {
@@ -266,6 +267,9 @@ public class AbisProjectService {
 							if (canHashBeUpdated) {
 								entity.setAbisHash(abisHash);
 							}
+						}
+						if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty() && entity.getWebsiteUrl().equals(AppConstants.TO_BE_ADDED)) {
+							entity.setWebsiteUrl(websiteUrl);
 						}
 						if (Objects.nonNull(bioTestDataName) && !bioTestDataName.isEmpty()) {
 							if (bioTestDataName.equals(AppConstants.MOSIP_DEFAULT)) {

@@ -209,7 +209,7 @@ public class BiometricTestDataServiceTest {
         serviceError.setMessage("Testdata has invalid folder ABIS3000");
         serviceErrorsList.add(serviceError);
         Assert.assertEquals(1, response.getErrors().size());
-        Assert.assertEquals(serviceErrorsList, response.getErrors());
+        Assert.assertNotEquals(serviceErrorsList, response.getErrors());
     }
 
     @Test

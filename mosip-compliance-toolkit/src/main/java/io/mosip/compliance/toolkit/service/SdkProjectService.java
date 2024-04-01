@@ -225,6 +225,7 @@ public class SdkProjectService {
 						LocalDateTime updDate = LocalDateTime.now();
 						String url = sdkProjectDto.getUrl();
 						String sdkHash = sdkProjectDto.getSdkHash();
+						String websiteUrl = sdkProjectDto.getWebsiteUrl();
 						String bioTestDataName = sdkProjectDto.getBioTestDataFileName();
                         //Updating SDK project values
 						if (Objects.nonNull(url) && !url.isEmpty()) {
@@ -235,6 +236,9 @@ public class SdkProjectService {
 							if (canHashBeUpdated) {
 								entity.setSdkHash(sdkHash);
 							}
+						}
+						if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty() && entity.getWebsiteUrl().equals(AppConstants.TO_BE_ADDED)) {
+							entity.setWebsiteUrl(websiteUrl);
 						}
 						if (Objects.nonNull(bioTestDataName) && !bioTestDataName.isEmpty()) {
 							if (bioTestDataName.equals(AppConstants.MOSIP_DEFAULT)) {

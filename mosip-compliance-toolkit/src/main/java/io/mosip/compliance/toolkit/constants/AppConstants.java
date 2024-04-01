@@ -124,4 +124,6 @@ public class AppConstants {
 
 	public static final String TERMS_AND_CONDTIONS_TEMPLATE = "terms_and_conditions_template";
 
+	public static final String TO_BE_ADDED = "To_Be_Added";
+
 }
