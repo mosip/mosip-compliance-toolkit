@@ -123,6 +123,12 @@ public class BiometricTestDataService {
     @Value("${mosip.toolkit.max.allowed.gallery.files}")
     private String maxAllowedGalleryFiles;
 
+    @Value("${mosip.toolkit.documentupload.allowed.file.size}")
+    private String allowedFileSize;
+
+    @Value("${mosip.toolkit.documentupload.allowed.file.nameLength}")
+    private String allowedFileNameLength;
+
     @Qualifier("S3Adapter")
     @Autowired
     private ObjectStoreAdapter objectStore;
@@ -336,6 +342,24 @@ public class BiometricTestDataService {
                     + AppConstants.COMMA_SEPARATOR
                     + ToolkitErrorCodes.FILE_NAME.getErrorCode();
             throw new ToolkitException(exceptionErrorCode, "Invalid characters are not allowed in file name");
+        }
+        Long fileSize = Long.parseLong(allowedFileSize);
+        if (file.getSize() > fileSize) {
+            String errorCode = ToolkitErrorCodes.INVALID_FILE_SIZE.getErrorCode()
+                    + AppConstants.ARGUMENTS_DELIMITER
+                    + fileSize
+                    + AppConstants.ARGUMENTS_SEPARATOR
+                    + "B";
+            throw new ToolkitException(errorCode, "File size is not allowed more than " + fileSize + "B");
+        }
+        int fileNameLength = Integer.parseInt(allowedFileNameLength);
+        if (fileName.length() > fileNameLength) {
+            String errorCode = ToolkitErrorCodes.INVALID_FILE_NAME_LENGTH.getErrorCode()
+                    + AppConstants.ARGUMENTS_DELIMITER
+                    + fileNameLength
+                    + AppConstants.COMMA_SEPARATOR
+                    + ToolkitErrorCodes.CHARACTERS.getErrorCode();
+            throw new ToolkitException(errorCode, "File name is not allowed more than " + fileNameLength + " characters");
         }
         return true;
     }
