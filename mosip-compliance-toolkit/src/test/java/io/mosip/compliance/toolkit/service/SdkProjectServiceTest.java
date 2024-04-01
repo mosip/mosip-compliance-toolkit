@@ -153,12 +153,15 @@ public class SdkProjectServiceTest {
     @Test
     public void addSdkProjectTest(){
         SdkProjectDto sdkProjectDto = new SdkProjectDto();
+        sdkProjectDto.setId("123");
+        sdkProjectDto.setName("check quality");
         sdkProjectDto.setProjectType(ProjectTypes.SDK.getCode());
         sdkProjectDto.setSdkVersion(SdkSpecVersions.SPEC_VER_0_9_0.getCode());
         sdkProjectDto.setPurpose(SdkPurpose.CHECK_QUALITY.getCode());
         sdkProjectDto.setUrl("http://localhost:9099/biosdk-service");
         sdkProjectDto.setBioTestDataFileName("testFile");
         sdkProjectDto.setOrgName("Not_Available");
+        sdkProjectDto.setWebsiteUrl("https://test.com");
 
         BiometricTestDataEntity biometricTestData = new BiometricTestDataEntity();
         biometricTestData.setFileId("1234");
@@ -177,12 +180,15 @@ public class SdkProjectServiceTest {
     @Test
     public void addSdkProjectAddDefaultTestCaseTest(){
         SdkProjectDto sdkProjectDto = new SdkProjectDto();
+        sdkProjectDto.setId("123");
+        sdkProjectDto.setName("check quality");
         sdkProjectDto.setProjectType(ProjectTypes.SDK.getCode());
         sdkProjectDto.setSdkVersion(SdkSpecVersions.SPEC_VER_0_9_0.getCode());
         sdkProjectDto.setPurpose(SdkPurpose.CHECK_QUALITY.getCode());
         sdkProjectDto.setUrl("http://localhost:9099/biosdk-service");
         sdkProjectDto.setBioTestDataFileName("testFile");
         sdkProjectDto.setOrgName("Not_Available");
+        sdkProjectDto.setWebsiteUrl("https://test.com");
 
         BiometricTestDataEntity biometricTestData = new BiometricTestDataEntity();
         biometricTestData.setFileId("1234");
@@ -259,6 +265,7 @@ public class SdkProjectServiceTest {
         String id = "123";
         SdkProjectDto sdkProjectDto = new SdkProjectDto();
         sdkProjectDto.setId(id);
+        sdkProjectDto.setName("check quality");
         sdkProjectDto.setProjectType(ProjectTypes.SDK.getCode());
         sdkProjectDto.setSdkVersion(SdkSpecVersions.SPEC_VER_0_9_0.getCode());
         sdkProjectDto.setPurpose(SdkPurpose.CHECK_QUALITY.getCode());

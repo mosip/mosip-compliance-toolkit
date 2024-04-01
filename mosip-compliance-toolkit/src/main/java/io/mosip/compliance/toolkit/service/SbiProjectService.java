@@ -3,6 +3,7 @@ package io.mosip.compliance.toolkit.service;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import io.mosip.compliance.toolkit.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,43 +115,45 @@ public class SbiProjectService {
 		ResponseWrapper<SbiProjectDto> responseWrapper = new ResponseWrapper<>();
 
 		try {
-			if (isValidSbiProject(sbiProjectDto)) {
-				log.info("sbiProjectDto" + sbiProjectDto);
-				LocalDateTime crDate = LocalDateTime.now();
-				SbiProjectEntity entity = new SbiProjectEntity();
-				entity.setId(RandomIdGenerator.generateUUID(sbiProjectDto.getProjectType().toLowerCase(), "", 36));
-				entity.setName(sbiProjectDto.getName());
-				entity.setProjectType(sbiProjectDto.getProjectType());
-				entity.setSbiVersion(sbiProjectDto.getSbiVersion());
-				entity.setPurpose(sbiProjectDto.getPurpose());
-				entity.setDeviceType(sbiProjectDto.getDeviceType());
-				entity.setDeviceSubType(sbiProjectDto.getDeviceSubType());
-				entity.setDeviceImage1(sbiProjectDto.getDeviceImage1());
-				entity.setDeviceImage2(sbiProjectDto.getDeviceImage2());
-				entity.setDeviceImage3(sbiProjectDto.getDeviceImage3());
-				entity.setDeviceImage4(sbiProjectDto.getDeviceImage4());
-				entity.setSbiHash(sbiProjectDto.getSbiHash());
-				entity.setWebsiteUrl(sbiProjectDto.getWebsiteUrl());
-				entity.setIsAndroidSbi(sbiProjectDto.getIsAndroidSbi());
-				entity.setPartnerId(this.getPartnerId());
-				entity.setOrgName(resourceCacheService.getOrgName(this.getPartnerId()));
-				entity.setCrBy(this.getUserBy());
-				entity.setCrDate(crDate);
-				entity.setDeleted(false);
-				log.info("SbiProjectEntity" + entity);
-				
-				sbiProjectRepository.save(entity);
-				// Add a default "ALL" collection for the newly created project
-				collectionsService.addDefaultCollection(AppConstants.COMPLIANCE_COLLECTION, sbiProjectDto, null, null,
-						entity.getId());
-				collectionsService.addDefaultCollection(AppConstants.QUALITY_ASSESSMENT_COLLECTION, sbiProjectDto, null, null,
-						entity.getId());
-				// send response
-				sbiProjectDto.setId(entity.getId());
-				sbiProjectDto.setPartnerId(entity.getPartnerId());
-				sbiProjectDto.setOrgName(entity.getOrgName());
-				sbiProjectDto.setCrBy(entity.getCrBy());
-				sbiProjectDto.setCrDate(entity.getCrDate());
+			if (validInputRequest(sbiProjectDto, true)) {
+				if (isValidSbiProject(sbiProjectDto)) {
+					log.info("sbiProjectDto" + sbiProjectDto);
+					LocalDateTime crDate = LocalDateTime.now();
+					SbiProjectEntity entity = new SbiProjectEntity();
+					entity.setId(RandomIdGenerator.generateUUID(sbiProjectDto.getProjectType().toLowerCase(), "", 36));
+					entity.setName(sbiProjectDto.getName());
+					entity.setProjectType(sbiProjectDto.getProjectType());
+					entity.setSbiVersion(sbiProjectDto.getSbiVersion());
+					entity.setPurpose(sbiProjectDto.getPurpose());
+					entity.setDeviceType(sbiProjectDto.getDeviceType());
+					entity.setDeviceSubType(sbiProjectDto.getDeviceSubType());
+					entity.setDeviceImage1(sbiProjectDto.getDeviceImage1());
+					entity.setDeviceImage2(sbiProjectDto.getDeviceImage2());
+					entity.setDeviceImage3(sbiProjectDto.getDeviceImage3());
+					entity.setDeviceImage4(sbiProjectDto.getDeviceImage4());
+					entity.setSbiHash(sbiProjectDto.getSbiHash());
+					entity.setWebsiteUrl(sbiProjectDto.getWebsiteUrl());
+					entity.setIsAndroidSbi(sbiProjectDto.getIsAndroidSbi());
+					entity.setPartnerId(this.getPartnerId());
+					entity.setOrgName(resourceCacheService.getOrgName(this.getPartnerId()));
+					entity.setCrBy(this.getUserBy());
+					entity.setCrDate(crDate);
+					entity.setDeleted(false);
+					log.info("SbiProjectEntity" + entity);
+
+					sbiProjectRepository.save(entity);
+					// Add a default "ALL" collection for the newly created project
+					collectionsService.addDefaultCollection(AppConstants.COMPLIANCE_COLLECTION, sbiProjectDto, null, null,
+							entity.getId());
+					collectionsService.addDefaultCollection(AppConstants.QUALITY_ASSESSMENT_COLLECTION, sbiProjectDto, null, null,
+							entity.getId());
+					// send response
+					sbiProjectDto.setId(entity.getId());
+					sbiProjectDto.setPartnerId(entity.getPartnerId());
+					sbiProjectDto.setOrgName(entity.getOrgName());
+					sbiProjectDto.setCrBy(entity.getCrBy());
+					sbiProjectDto.setCrDate(entity.getCrDate());
+				}
 			}
 		} catch (ToolkitException ex) {
 			sbiProjectDto = null;
@@ -192,41 +195,31 @@ public class SbiProjectService {
 		ResponseWrapper<SbiProjectDto> responseWrapper = new ResponseWrapper<>();
 		try {
 			if (Objects.nonNull(sbiProjectDto)) {
-				String projectId = sbiProjectDto.getId();
-				String projectType = sbiProjectDto.getProjectType();
-				String partnerId = getPartnerId();
-				Optional<SbiProjectEntity> optionalSbiProjectEntity = sbiProjectRepository.findById(projectId,
-						partnerId);
-				if (optionalSbiProjectEntity.isPresent()) {
-					SbiProjectEntity entity = optionalSbiProjectEntity.get();
-					LocalDateTime updDate = LocalDateTime.now();
-					String deviceImage1 = sbiProjectDto.getDeviceImage1();
-					String deviceImage2 = sbiProjectDto.getDeviceImage2();
-					String deviceImage3 = sbiProjectDto.getDeviceImage3();
-					String deviceImage4 = sbiProjectDto.getDeviceImage4();
-					String sbiHash = sbiProjectDto.getSbiHash();
-					String websiteUrl = sbiProjectDto.getWebsiteUrl();
-					entity.setDeviceImage1(deviceImage1);
-					entity.setDeviceImage2(deviceImage2);
-					entity.setDeviceImage3(deviceImage3);
-					entity.setDeviceImage4(deviceImage4);
-					if (Objects.nonNull(sbiHash) && !sbiHash.isEmpty() && !entity.getSbiHash().equals(sbiHash)) {
-						boolean canHashBeUpdated = projectHelper.checkIfHashCanBeUpdated(projectId, projectType, partnerId);
-						if (canHashBeUpdated) {
-							entity.setSbiHash(sbiHash);
+				if (validInputRequest(sbiProjectDto, false)) {
+					String projectId = sbiProjectDto.getId();
+					String projectType = sbiProjectDto.getProjectType();
+					String partnerId = getPartnerId();
+					Optional<SbiProjectEntity> optionalSbiProjectEntity = sbiProjectRepository.findById(projectId,
+							partnerId);
+					if (optionalSbiProjectEntity.isPresent()) {
+						SbiProjectEntity entity = optionalSbiProjectEntity.get();
+						LocalDateTime updDate = LocalDateTime.now();
+						String sbiHash = sbiProjectDto.getSbiHash();
+						if (Objects.nonNull(sbiHash) && !sbiHash.isEmpty() && !entity.getSbiHash().equals(sbiHash)) {
+							boolean canHashBeUpdated = projectHelper.checkIfHashCanBeUpdated(projectId, projectType, partnerId);
+							if (canHashBeUpdated) {
+								entity.setSbiHash(sbiHash);
+							}
 						}
+						entity.setUpBy(this.getUserBy());
+						entity.setUpdDate(updDate);
+						SbiProjectEntity outputEntity = sbiProjectRepository.save(entity);
+						sbiProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, SbiProjectDto.class);
+					} else {
+						String errorCode = ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorCode();
+						String errorMessage = ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorMessage();
+						responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 					}
-					if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty()) {
-						entity.setWebsiteUrl(websiteUrl);
-					}
-					entity.setUpBy(this.getUserBy());
-					entity.setUpdDate(updDate);
-					SbiProjectEntity outputEntity = sbiProjectRepository.save(entity);
-					sbiProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, SbiProjectDto.class);
-				} else {
-					String errorCode = ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorCode();
-					String errorMessage = ToolkitErrorCodes.SBI_PROJECT_NOT_AVAILABLE.getErrorMessage();
-					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 				}
 			}
 		} catch (ToolkitException ex) {
@@ -251,6 +244,26 @@ public class SbiProjectService {
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
+	}
+
+	private boolean validInputRequest(SbiProjectDto sbiProjectDto, boolean isAddProject) {
+		if (isAddProject) {
+			String projectName = sbiProjectDto.getName();
+			if (!Pattern.matches(AppConstants.REGEX_PATTERN, projectName)) {
+				String exceptionErrorCode = ToolkitErrorCodes.INVALID_CHARACTERS.getErrorCode()
+						+ AppConstants.COMMA_SEPARATOR
+						+ ToolkitErrorCodes.PROJECT_NAME.getErrorCode();
+				throw new ToolkitException(exceptionErrorCode, "Invalid characters are not allowed in project name");
+			}
+			String websiteUrl = sbiProjectDto.getWebsiteUrl();
+			if (!Pattern.matches(AppConstants.URL_REGEX_PATTERN, websiteUrl)) {
+				String exceptionErrorCode = ToolkitErrorCodes.INVALID_URL.getErrorCode()
+						+ AppConstants.COMMA_SEPARATOR
+						+ ToolkitErrorCodes.WEBSITE_URL.getErrorCode();
+				throw new ToolkitException(exceptionErrorCode, "Website URL will only allow http/https format");
+			}
+		}
+		return true;
 	}
 
 	/**

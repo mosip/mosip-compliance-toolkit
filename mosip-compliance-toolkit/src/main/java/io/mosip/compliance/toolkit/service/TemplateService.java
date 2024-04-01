@@ -59,7 +59,7 @@ public class TemplateService {
             }
         } catch (Exception e) {
             log.debug("sessionId", "idType", "id", e.getStackTrace());
-            log.error("sessionId", "idType", "id", "In getTemplate method of ConsentService - " + e.getMessage());
+            log.error("sessionId", "idType", "id", "In getTemplate method of TemplateService - " + e.getMessage());
             String errorCode = ToolkitErrorCodes.TOOLKIT_TEMPLATE_ERR.getErrorCode();
             String errorMessage = ToolkitErrorCodes.TOOLKIT_TEMPLATE_ERR.getErrorMessage();
             responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
@@ -93,7 +93,7 @@ public class TemplateService {
             }
         } catch (Exception e) {
             log.debug("sessionId", "idType", "id", e.getStackTrace());
-            log.error("sessionId", "idType", "id", "In getLatestTemplateVersion method of ConsentService - " + e.getMessage());
+            log.error("sessionId", "idType", "id", "In getLatestTemplateVersion method of TemplateService - " + e.getMessage());
             String errorCode = ToolkitErrorCodes.TOOLKIT_TEMPLATE_VERSION_ERR.getErrorCode();
             String errorMessage = ToolkitErrorCodes.TOOLKIT_TEMPLATE_VERSION_ERR.getErrorMessage();
             responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));

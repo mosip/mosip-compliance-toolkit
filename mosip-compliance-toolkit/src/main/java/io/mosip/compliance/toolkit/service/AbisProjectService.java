@@ -135,7 +135,7 @@ public class AbisProjectService {
 	public ResponseWrapper<AbisProjectDto> addAbisProject(AbisProjectDto abisProjectDto) {
 		ResponseWrapper<AbisProjectDto> responseWrapper = new ResponseWrapper<>();
 		try {
-			if (validInputRequest(abisProjectDto)) {
+			if (validInputRequest(abisProjectDto, true)) {
 				if (isValidAbisProject(abisProjectDto)) {
 					boolean isValidTestFile = false;
 					String partnerId = this.getPartnerId();
@@ -232,7 +232,7 @@ public class AbisProjectService {
 			if (Objects.nonNull(abisProjectDto)) {
 				String projectId = abisProjectDto.getId();
 				String partnerId = this.getPartnerId();
-				if (validInputRequest(abisProjectDto)) {
+				if (validInputRequest(abisProjectDto, false)) {
 					Optional<AbisProjectEntity> optionalAbisProjectEntity = abisProjectRepository.findById(projectId,
 							getPartnerId());
 					if (optionalAbisProjectEntity.isPresent()) {
@@ -244,7 +244,6 @@ public class AbisProjectService {
 						String requestQueueName = abisProjectDto.getOutboundQueueName();
 						String responseQueueName = abisProjectDto.getInboundQueueName();
 						String abisHash = abisProjectDto.getAbisHash();
-						String websiteUrl = abisProjectDto.getWebsiteUrl();
 						String bioTestDataName = abisProjectDto.getBioTestDataFileName();
 						// Updating ABIS project values
 						if (Objects.nonNull(url) && !url.isEmpty()) {
@@ -267,9 +266,6 @@ public class AbisProjectService {
 							if (canHashBeUpdated) {
 								entity.setAbisHash(abisHash);
 							}
-						}
-						if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty()) {
-							entity.setWebsiteUrl(websiteUrl);
 						}
 						if (Objects.nonNull(bioTestDataName) && !bioTestDataName.isEmpty()) {
 							if (bioTestDataName.equals(AppConstants.MOSIP_DEFAULT)) {
@@ -326,29 +322,29 @@ public class AbisProjectService {
 		return responseWrapper;
 	}
 
-	private boolean validInputRequest(AbisProjectDto abisProjectDto) {
-		String projectName = abisProjectDto.getName();
-		if (!Pattern.matches(AppConstants.NAME_REGEX_PATTERN, projectName)) {
-			String exceptionErrorCode = ToolkitErrorCodes.INVALID_NAME.getErrorCode()
-					+ AppConstants.COMMA_SEPARATOR
-					+ ToolkitErrorCodes.PROJECT_NAME.getErrorCode();
-			throw new ToolkitException(exceptionErrorCode, "Invalid characters are not allowed in project name");
+	private boolean validInputRequest(AbisProjectDto abisProjectDto, boolean isAddProject) {
+		if (isAddProject) {
+			String projectName = abisProjectDto.getName();
+			if (!Pattern.matches(AppConstants.REGEX_PATTERN, projectName)) {
+				String exceptionErrorCode = ToolkitErrorCodes.INVALID_CHARACTERS.getErrorCode()
+						+ AppConstants.COMMA_SEPARATOR
+						+ ToolkitErrorCodes.PROJECT_NAME.getErrorCode();
+				throw new ToolkitException(exceptionErrorCode, "Invalid characters are not allowed in project name");
+			}
+			String websiteUrl = abisProjectDto.getWebsiteUrl();
+			if (!Pattern.matches(AppConstants.URL_REGEX_PATTERN, websiteUrl)) {
+				String exceptionErrorCode = ToolkitErrorCodes.INVALID_URL.getErrorCode()
+						+ AppConstants.COMMA_SEPARATOR
+						+ ToolkitErrorCodes.WEBSITE_URL.getErrorCode();
+				throw new ToolkitException(exceptionErrorCode, "Website URL will only allow http/https format");
+			}
 		}
 		String abisUrl = abisProjectDto.getUrl();
 		if (!Pattern.matches(AppConstants.ABIS_URL_REGEX_PATTERN, abisUrl)) {
 			String errorCode = ToolkitErrorCodes.INVALID_URL.getErrorCode()
 					+ AppConstants.COMMA_SEPARATOR
 					+ ToolkitErrorCodes.ACTIVE_MQ_URL.getErrorCode();
-			throw new ToolkitException(errorCode, "Active MQ URL is only allow wss/ws format");
-		}
-		String websiteUrl = abisProjectDto.getWebsiteUrl();
-		if (abisProjectDto.getId().equals("")) {
-			if (!Pattern.matches(AppConstants.URL_REGEX_PATTERN, websiteUrl)) {
-				String exceptionErrorCode = ToolkitErrorCodes.INVALID_URL.getErrorCode()
-						+ AppConstants.COMMA_SEPARATOR
-						+ ToolkitErrorCodes.WEBSITE_URL.getErrorCode();
-				throw new ToolkitException(exceptionErrorCode, "Website URL is only allow http/https format");
-			}
+			throw new ToolkitException(errorCode, "Active MQ URL will only allow wss/ws format");
 		}
 		return true;
 	}

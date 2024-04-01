@@ -55,7 +55,7 @@ public class AbisProjectController {
             @ApiResponse(responseCode = "401", description = "Unauthorized" ,content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "403", description = "Forbidden" ,content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "404", description = "Not Found" ,content = @Content(schema = @Schema(hidden = true)))})
-    private ResponseWrapper<AbisProjectDto> getProjectById(@PathVariable String id){
+    public ResponseWrapper<AbisProjectDto> getProjectById(@PathVariable String id){
         return abisProjectService.getAbisProject(id);
     }
 

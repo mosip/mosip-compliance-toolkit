@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import io.mosip.compliance.toolkit.entity.MasterTemplatesEntity;
 import io.mosip.compliance.toolkit.repository.MasterTemplatesRepository;
@@ -87,75 +88,77 @@ public class ResourceManagementService {
         ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
         boolean status = false;
         try {
-            performFileValidation(file);
-            if (Objects.nonNull(type)) {
-                if ((type.equals(SBI_SCHEMA) || type.equals(SDK_SCHEMA)) && !Objects.nonNull(version)) {
-                    throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode(),
-                            ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
-                }
-                String fileName = file.getOriginalFilename();
-                String container = null;
-                String objectName = null;
-                switch (type) {
-                    case AppConstants.MOSIP_DEFAULT:
-                        if (Objects.isNull(fileName) || !fileName.endsWith(ZIP_EXT)) {
-                            throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
-                                    ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
-                        }
-                        container = AppConstants.TESTDATA;
-                        String purposeDefault = fileName.replace(AppConstants.MOSIP_DEFAULT + UNDERSCORE, "")
-                                .replace(ZIP_EXT, "");
-                        if (purposeDefault.contains(AppConstants.ABIS)) {
-                            objectName = AppConstants.MOSIP_DEFAULT + UNDERSCORE + purposeDefault.toUpperCase() + ZIP_EXT;
-                        } else {
-                            SdkPurpose sdkPurposeDefault = SdkPurpose.valueOf(purposeDefault);
-                            objectName = AppConstants.MOSIP_DEFAULT + UNDERSCORE + sdkPurposeDefault.toString().toUpperCase()
-                                    + ZIP_EXT;
-                        }
-                        break;
-                    case AppConstants.SCHEMAS:
-                        if (Objects.isNull(fileName) || !fileName.equals(AppConstants.TESTCASE_SCHEMA_JSON)) {
-                            throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
-                                    ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
-                        }
-                        container = AppConstants.SCHEMAS.toLowerCase();
-                        objectName = fileName;
-                        break;
-                    case SBI_SCHEMA:
-                        if (Objects.isNull(fileName) || !fileName.endsWith(JSON_EXT)) {
-                            throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
-                                    ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
-                        }
-                        container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.SBI.toLowerCase() + "/" + version;
-                        objectName = fileName;
-                        break;
-                    case SDK_SCHEMA:
-                        if (Objects.isNull(fileName) || !fileName.endsWith(JSON_EXT)) {
-                            throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
-                                    ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
-                        }
-                        container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.SDK.toLowerCase() + "/" + version;
-                        objectName = fileName;
-                        break;
-                    case ABIS_SCHEMA:
-                        if (Objects.isNull(fileName) || !fileName.endsWith(JSON_EXT)) {
-                            throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
-                                    ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
-                        }
-                        container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.ABIS.toLowerCase() + "/" + version;
-                        objectName = fileName;
-                        break;
-                    default:
+            if (validResourceFileInputRequest(type, version, file)) {
+                performFileValidation(file);
+                if (Objects.nonNull(type)) {
+                    if ((type.equals(SBI_SCHEMA) || type.equals(SDK_SCHEMA)) && !Objects.nonNull(version)) {
                         throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode(),
                                 ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
+                    }
+                    String fileName = file.getOriginalFilename();
+                    String container = null;
+                    String objectName = null;
+                    switch (type) {
+                        case AppConstants.MOSIP_DEFAULT:
+                            if (Objects.isNull(fileName) || !fileName.endsWith(ZIP_EXT)) {
+                                throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+                                        ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+                            }
+                            container = AppConstants.TESTDATA;
+                            String purposeDefault = fileName.replace(AppConstants.MOSIP_DEFAULT + UNDERSCORE, "")
+                                    .replace(ZIP_EXT, "");
+                            if (purposeDefault.contains(AppConstants.ABIS)) {
+                                objectName = AppConstants.MOSIP_DEFAULT + UNDERSCORE + purposeDefault.toUpperCase() + ZIP_EXT;
+                            } else {
+                                SdkPurpose sdkPurposeDefault = SdkPurpose.valueOf(purposeDefault);
+                                objectName = AppConstants.MOSIP_DEFAULT + UNDERSCORE + sdkPurposeDefault.toString().toUpperCase()
+                                        + ZIP_EXT;
+                            }
+                            break;
+                        case AppConstants.SCHEMAS:
+                            if (Objects.isNull(fileName) || !fileName.equals(AppConstants.TESTCASE_SCHEMA_JSON)) {
+                                throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+                                        ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+                            }
+                            container = AppConstants.SCHEMAS.toLowerCase();
+                            objectName = fileName;
+                            break;
+                        case SBI_SCHEMA:
+                            if (Objects.isNull(fileName) || !fileName.endsWith(JSON_EXT)) {
+                                throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+                                        ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+                            }
+                            container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.SBI.toLowerCase() + "/" + version;
+                            objectName = fileName;
+                            break;
+                        case SDK_SCHEMA:
+                            if (Objects.isNull(fileName) || !fileName.endsWith(JSON_EXT)) {
+                                throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+                                        ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+                            }
+                            container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.SDK.toLowerCase() + "/" + version;
+                            objectName = fileName;
+                            break;
+                        case ABIS_SCHEMA:
+                            if (Objects.isNull(fileName) || !fileName.endsWith(JSON_EXT)) {
+                                throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+                                        ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+                            }
+                            container = AppConstants.SCHEMAS.toLowerCase() + "/" + AppConstants.ABIS.toLowerCase() + "/" + version;
+                            objectName = fileName;
+                            break;
+                        default:
+                            throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode(),
+                                    ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
+                    }
+                    InputStream is = file.getInputStream();
+                    status = putInObjectStore(container, objectName, is);
+                    is.close();
+                } else {
+                    String errorCode = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode();
+                    String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage();
+                    responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
                 }
-                InputStream is = file.getInputStream();
-                status = putInObjectStore(container, objectName, is);
-                is.close();
-            } else {
-                String errorCode = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode();
-                String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage();
-                responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
             }
         } catch (ToolkitException ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -200,42 +203,44 @@ public class ResourceManagementService {
         ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
         boolean status = false;
         try {
-            performFileValidation(file);
-            String fileName = file.getOriginalFilename();
-            if (Objects.nonNull(langCode) && Objects.nonNull(templateName) && Objects.nonNull(version)) {
-                //check template version format
-                if (!version.matches("v\\d+")) {
-                    throw new ToolkitException(ToolkitErrorCodes.TOOLKIT_TEMPLATE_INVALID_VERSION_FORMAT.getErrorCode(),
-                            ToolkitErrorCodes.TOOLKIT_TEMPLATE_INVALID_VERSION_FORMAT.getErrorMessage());
+            if (validTemplateFileInputRequest(templateName, file)) {
+                performFileValidation(file);
+                String fileName = file.getOriginalFilename();
+                if (Objects.nonNull(langCode) && Objects.nonNull(templateName) && Objects.nonNull(version)) {
+                    //check template version format
+                    if (!version.matches("v\\d+")) {
+                        throw new ToolkitException(ToolkitErrorCodes.TOOLKIT_TEMPLATE_INVALID_VERSION_FORMAT.getErrorCode(),
+                                ToolkitErrorCodes.TOOLKIT_TEMPLATE_INVALID_VERSION_FORMAT.getErrorMessage());
+                    }
+                    if (Objects.isNull(fileName) || !fileName.endsWith(VM_EXT)) {
+                        throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+                                ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+                    }
+                    MasterTemplatesEntity masterTemplatesEntity = new MasterTemplatesEntity();
+
+                    LocalDateTime nowDate = LocalDateTime.now(ZoneOffset.UTC);
+                    masterTemplatesEntity.setId(RandomIdGenerator.generateUUID("id", "", 36));
+                    masterTemplatesEntity.setLangCode(langCode);
+                    masterTemplatesEntity.setTemplateName(templateName);
+                    masterTemplatesEntity.setCrBy(this.getUserBy());
+                    masterTemplatesEntity.setCrDtimes(nowDate);
+                    masterTemplatesEntity.setVersion(version);
+
+                    InputStream inputStream = file.getInputStream();
+                    byte[] bytes = inputStream.readAllBytes();
+                    String template = new String(bytes, StandardCharsets.UTF_8);
+                    masterTemplatesEntity.setTemplate(template);
+
+                    masterTemplatesRepository.save(masterTemplatesEntity);
+                    log.info("sessionId", "idType", "id", "saved template successfully in Db having language code :", langCode
+                            , "and template name :", templateName, "and version :", version);
+                    status = true;
+
+                } else {
+                    String errorCode = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode();
+                    String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage();
+                    responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
                 }
-                if (Objects.isNull(fileName) || !fileName.endsWith(VM_EXT)) {
-                    throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
-                            ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
-                }
-                MasterTemplatesEntity masterTemplatesEntity = new MasterTemplatesEntity();
-
-                LocalDateTime nowDate = LocalDateTime.now(ZoneOffset.UTC);
-                masterTemplatesEntity.setId(RandomIdGenerator.generateUUID("id", "", 36));
-                masterTemplatesEntity.setLangCode(langCode);
-                masterTemplatesEntity.setTemplateName(templateName);
-                masterTemplatesEntity.setCrBy(this.getUserBy());
-                masterTemplatesEntity.setCrDtimes(nowDate);
-                masterTemplatesEntity.setVersion(version);
-
-                InputStream inputStream = file.getInputStream();
-                byte[] bytes = inputStream.readAllBytes();
-                String template = new String(bytes, StandardCharsets.UTF_8);
-                masterTemplatesEntity.setTemplate(template);
-
-                masterTemplatesRepository.save(masterTemplatesEntity);
-                log.info("sessionId", "idType", "id", "saved template successfully in Db having language code :", langCode
-                        , "and template name :", templateName, "and version :", version);
-                status = true;
-
-            } else {
-                String errorCode = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode();
-                String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage();
-                responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
             }
         } catch (ToolkitException ex) {
             log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -285,6 +290,45 @@ public class ResourceManagementService {
             throw new ToolkitException(ToolkitErrorCodes.VIRUS_FOUND.getErrorCode(),
                     ToolkitErrorCodes.VIRUS_FOUND.getErrorMessage());
         }
+    }
+
+    private boolean validResourceFileInputRequest(String type, String version, MultipartFile file) {
+        if (!Pattern.matches(AppConstants.REGEX_PATTERN, type)) {
+            String exceptionErrorCode = ToolkitErrorCodes.INVALID_CHARACTERS.getErrorCode()
+                    + AppConstants.COMMA_SEPARATOR
+                    + ToolkitErrorCodes.RESOURCE_FILE_TYPE.getErrorCode();
+            throw new ToolkitException(exceptionErrorCode, "Invalid characters are not allowed in resource file type");
+        }
+        if (!Pattern.matches(AppConstants.VERSION_REGEX_PATTERN, version)) {
+            String exceptionErrorCode = ToolkitErrorCodes.INVALID_CHARACTERS.getErrorCode()
+                    + AppConstants.COMMA_SEPARATOR
+                    + ToolkitErrorCodes.VERSION.getErrorCode();
+            throw new ToolkitException(exceptionErrorCode, "Invalid characters are not allowed in resource file version");
+        }
+        String fileName = file.getOriginalFilename();
+        if (!Pattern.matches(AppConstants.FILE_NAME_REGEX_PATTERN, fileName)) {
+            String exceptionErrorCode = ToolkitErrorCodes.INVALID_CHARACTERS.getErrorCode()
+                    + AppConstants.COMMA_SEPARATOR
+                    + ToolkitErrorCodes.FILE_NAME.getErrorCode();
+            throw new ToolkitException(exceptionErrorCode, "Invalid characters are not allowed in file name");
+        }
+        return true;
+    }
+    private boolean validTemplateFileInputRequest(String templateName, MultipartFile file) {
+        if (!Pattern.matches(AppConstants.REGEX_PATTERN, templateName)) {
+            String exceptionErrorCode = ToolkitErrorCodes.INVALID_CHARACTERS.getErrorCode()
+                    + AppConstants.COMMA_SEPARATOR
+                    + ToolkitErrorCodes.TEMPLATE_NAME.getErrorCode();
+            throw new ToolkitException(exceptionErrorCode, "Invalid characters are not allowed in template name");
+        }
+        String fileName = file.getOriginalFilename();
+        if (!Pattern.matches(AppConstants.FILE_NAME_REGEX_PATTERN, fileName)) {
+            String exceptionErrorCode = ToolkitErrorCodes.INVALID_CHARACTERS.getErrorCode()
+                    + AppConstants.COMMA_SEPARATOR
+                    + ToolkitErrorCodes.FILE_NAME.getErrorCode();
+            throw new ToolkitException(exceptionErrorCode, "Invalid characters are not allowed in file name");
+        }
+        return true;
     }
 
 }

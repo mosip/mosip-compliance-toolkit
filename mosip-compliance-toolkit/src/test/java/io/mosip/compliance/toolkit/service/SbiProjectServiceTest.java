@@ -183,12 +183,15 @@ public class SbiProjectServiceTest {
     @Test
     public void addSbiProjectTest(){
         SbiProjectDto sbiProjectDto = new SbiProjectDto();
+        sbiProjectDto.setId("123");
+        sbiProjectDto.setName("reg sbi");
         sbiProjectDto.setProjectType("SBI");
         sbiProjectDto.setSbiVersion("0.9.5");
         sbiProjectDto.setPurpose("Registration");
         sbiProjectDto.setDeviceType("Finger");
         sbiProjectDto.setDeviceSubType("Slap");
         sbiProjectDto.setOrgName("abc");
+        sbiProjectDto.setWebsiteUrl("https://test.com");
 
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         MosipUserDto mosipUserDto = getMosipUserDto();
@@ -205,12 +208,15 @@ public class SbiProjectServiceTest {
     @Test
     public void addSbiProjectDefaultCollectionTest(){
         SbiProjectDto sbiProjectDto = new SbiProjectDto();
+        sbiProjectDto.setId("");
+        sbiProjectDto.setName("reg sbi");
         sbiProjectDto.setProjectType("SBI");
         sbiProjectDto.setSbiVersion("0.9.5");
         sbiProjectDto.setPurpose("Registration");
         sbiProjectDto.setDeviceType("Finger");
         sbiProjectDto.setDeviceSubType("Slap");
         sbiProjectDto.setOrgName("abc");
+        sbiProjectDto.setWebsiteUrl("https://test.com");
 
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         MosipUserDto mosipUserDto = getMosipUserDto();
