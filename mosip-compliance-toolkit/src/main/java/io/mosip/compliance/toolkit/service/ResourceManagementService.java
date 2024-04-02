@@ -54,6 +54,12 @@ public class ResourceManagementService {
     @Value("${mosip.toolkit.document.scan}")
     private Boolean scanDocument;
 
+    @Value("${mosip.toolkit.documentupload.allowed.file.size}")
+    private String allowedFileSize;
+
+    @Value("${mosip.toolkit.documentupload.allowed.file.nameLength}")
+    private String allowedFileNameLength;
+
     /**
      * Autowired reference for {@link #VirusScanner}
      */
@@ -88,7 +94,7 @@ public class ResourceManagementService {
         ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
         boolean status = false;
         try {
-            if (validResourceFileInputRequest(type, version, file)) {
+            if (validInputRequest(file) && validResourceFileInputRequest(type, version)) {
                 performFileValidation(file);
                 if (Objects.nonNull(type)) {
                     if ((type.equals(SBI_SCHEMA) || type.equals(SDK_SCHEMA)) && !Objects.nonNull(version)) {
@@ -203,7 +209,7 @@ public class ResourceManagementService {
         ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
         boolean status = false;
         try {
-            if (validTemplateFileInputRequest(templateName, file)) {
+            if (validInputRequest(file) && validTemplateFileInputRequest(templateName)) {
                 performFileValidation(file);
                 String fileName = file.getOriginalFilename();
                 if (Objects.nonNull(langCode) && Objects.nonNull(templateName) && Objects.nonNull(version)) {
@@ -292,7 +298,7 @@ public class ResourceManagementService {
         }
     }
 
-    private boolean validResourceFileInputRequest(String type, String version, MultipartFile file) {
+    private boolean validResourceFileInputRequest(String type, String version) {
         if (!Pattern.matches(AppConstants.REGEX_PATTERN, type)) {
             String exceptionErrorCode = ToolkitErrorCodes.INVALID_CHARACTERS.getErrorCode()
                     + AppConstants.COMMA_SEPARATOR
@@ -305,22 +311,20 @@ public class ResourceManagementService {
                     + ToolkitErrorCodes.VERSION.getErrorCode();
             throw new ToolkitException(exceptionErrorCode, "Invalid characters are not allowed in resource file version");
         }
-        String fileName = file.getOriginalFilename();
-        if (!Pattern.matches(AppConstants.FILE_NAME_REGEX_PATTERN, fileName)) {
-            String exceptionErrorCode = ToolkitErrorCodes.INVALID_CHARACTERS.getErrorCode()
-                    + AppConstants.COMMA_SEPARATOR
-                    + ToolkitErrorCodes.FILE_NAME.getErrorCode();
-            throw new ToolkitException(exceptionErrorCode, "Invalid characters are not allowed in file name");
-        }
         return true;
     }
-    private boolean validTemplateFileInputRequest(String templateName, MultipartFile file) {
+
+    private boolean validTemplateFileInputRequest(String templateName) {
         if (!Pattern.matches(AppConstants.REGEX_PATTERN, templateName)) {
             String exceptionErrorCode = ToolkitErrorCodes.INVALID_CHARACTERS.getErrorCode()
                     + AppConstants.COMMA_SEPARATOR
                     + ToolkitErrorCodes.TEMPLATE_NAME.getErrorCode();
             throw new ToolkitException(exceptionErrorCode, "Invalid characters are not allowed in template name");
         }
+        return true;
+    }
+
+    private boolean validInputRequest(MultipartFile file) {
         String fileName = file.getOriginalFilename();
         if (!Pattern.matches(AppConstants.FILE_NAME_REGEX_PATTERN, fileName)) {
             String exceptionErrorCode = ToolkitErrorCodes.INVALID_CHARACTERS.getErrorCode()
@@ -328,7 +332,24 @@ public class ResourceManagementService {
                     + ToolkitErrorCodes.FILE_NAME.getErrorCode();
             throw new ToolkitException(exceptionErrorCode, "Invalid characters are not allowed in file name");
         }
+        Long fileSize = Long.parseLong(allowedFileSize);
+        if (file.getSize() > fileSize) {
+            String errorCode = ToolkitErrorCodes.INVALID_FILE_SIZE.getErrorCode()
+                    + AppConstants.ARGUMENTS_DELIMITER
+                    + fileSize
+                    + AppConstants.ARGUMENTS_SEPARATOR
+                    + "B";
+            throw new ToolkitException(errorCode, "File size is not allowed more than " + fileSize + "B");
+        }
+        int fileNameLength = Integer.parseInt(allowedFileNameLength);
+        if (fileName.length() > fileNameLength) {
+            String errorCode = ToolkitErrorCodes.INVALID_FILE_NAME_LENGTH.getErrorCode()
+                    + AppConstants.ARGUMENTS_DELIMITER
+                    + fileNameLength
+                    + AppConstants.COMMA_SEPARATOR
+                    + ToolkitErrorCodes.CHARACTERS.getErrorCode();
+            throw new ToolkitException(errorCode, "File name is not allowed more than " + fileNameLength + " characters");
+        }
         return true;
     }
-
 }
