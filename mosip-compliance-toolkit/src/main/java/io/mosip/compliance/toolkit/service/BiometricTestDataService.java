@@ -314,7 +314,7 @@ public class BiometricTestDataService {
         String filename = file.getOriginalFilename();
 
         // check if the file is null or empty
-        if (Objects.isNull(file) || file.isEmpty() || file.getSize() <= 0) {
+        if (Objects.isNull(file) || Objects.isNull(filename) || file.isEmpty() || file.getSize() <= 0) {
             throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode(),
                     ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
         }
@@ -331,7 +331,7 @@ public class BiometricTestDataService {
                     ToolkitErrorCodes.FILE_WITH_MULTIPLE_EXTENSIONS.getErrorMessage());
         }
 
-        if (Objects.nonNull(filename) && !filename.endsWith(ZIP_EXT)) {
+        if (!filename.endsWith(ZIP_EXT)) {
             throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
                     ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
         }
