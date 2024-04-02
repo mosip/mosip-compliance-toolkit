@@ -16,7 +16,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,11 +52,8 @@ import io.mosip.compliance.toolkit.util.CryptoUtil;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
-import io.mosip.kernel.core.exception.ExceptionUtils;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.kernel.core.virusscanner.exception.VirusScannerException;
-import io.mosip.kernel.core.virusscanner.spi.VirusScanner;
 
 @Component
 public class BiometricTestDataService {
@@ -77,8 +73,6 @@ public class BiometricTestDataService {
     /**
      * Autowired reference for {@link #VirusScanner}
      */
-    @Autowired
-    VirusScanner<Boolean, InputStream> virusScan;
 
     @Autowired
     ResourceCacheService resourceCacheService;
@@ -192,7 +186,7 @@ public class BiometricTestDataService {
         AddBioTestDataResponseDto addBioTestDataResponseDto = null;
         try {
             if (validInputRequest(inputBiometricTestDataDto, file)) {
-                performFileValidation(file);
+                CommonUtil.performFileValidation(file,scanDocument, true);
                 if (Objects.nonNull(inputBiometricTestDataDto) && Objects.nonNull(file) && !file.isEmpty()
                         && file.getSize() > 0) {
 
@@ -308,39 +302,6 @@ public class BiometricTestDataService {
         responseWrapper.setVersion(AppConstants.VERSION);
         responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
-    }
-
-    public void performFileValidation(MultipartFile file) {
-        String filename = file.getOriginalFilename();
-
-        // check if the file is null or empty
-        if (Objects.isNull(file) || Objects.isNull(filename) || file.isEmpty() || file.getSize() <= 0) {
-            throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode(),
-                    ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
-        }
-
-        // Validate if the file has extensions
-        if (!filename.contains(".")) {
-            throw new ToolkitException(ToolkitErrorCodes.FILE_WITHOUT_EXTENSIONS.getErrorCode(),
-                    ToolkitErrorCodes.FILE_WITHOUT_EXTENSIONS.getErrorMessage());
-        }
-
-        // Validate if there are multiple extensions
-        if (filename.split("\\.").length > 2) {
-            throw new ToolkitException(ToolkitErrorCodes.FILE_WITH_MULTIPLE_EXTENSIONS.getErrorCode(),
-                    ToolkitErrorCodes.FILE_WITH_MULTIPLE_EXTENSIONS.getErrorMessage());
-        }
-
-        if (!filename.endsWith(ZIP_EXT)) {
-            throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
-                    ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
-        }
-
-        // Perform virus scanning if enabled
-        if (scanDocument && !isVirusScanSuccess(file)) {
-            throw new ToolkitException(ToolkitErrorCodes.VIRUS_FOUND.getErrorCode(),
-                    ToolkitErrorCodes.VIRUS_FOUND.getErrorMessage());
-        }
     }
 
     private boolean validInputRequest(BiometricTestDataDto biometricTestDataDto, MultipartFile file) {
@@ -923,16 +884,4 @@ public class BiometricTestDataService {
         return objectStore.putObject(objectStoreAccountName, container, null, null, objectName, data);
     }
 
-    private boolean isVirusScanSuccess(MultipartFile file) {
-        try {
-            log.info("sessionId", "idType", "id", "In isVirusScanSuccess method of BiometricTestDataService");
-            return virusScan.scanDocument(file.getBytes());
-        } catch (Exception e) {
-            log.debug("sessionId", "idType", "id", ExceptionUtils.getStackTrace(e));
-            log.error("sessionId", "idType", "id",
-                    "In isVirusScanSuccess method of BiometricTestDataService Service - " + e.getMessage());
-            throw new VirusScannerException(ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorCode(),
-                    ToolkitErrorCodes.OBJECT_STORE_UNABLE_TO_ADD_FILE.getErrorMessage() + e.getMessage());
-        }
-    }
 }
