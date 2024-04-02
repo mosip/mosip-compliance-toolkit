@@ -12,6 +12,7 @@ import io.mosip.compliance.toolkit.repository.MasterTemplatesRepository;
 import io.mosip.compliance.toolkit.util.CommonUtil;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.kernel.core.virusscanner.spi.VirusScanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,6 +62,8 @@ public class ResourceManagementService {
     /**
      * Autowired reference for {@link #VirusScanner}
      */
+    @Autowired
+    VirusScanner<Boolean, InputStream> virusScan;
 
     @Autowired
     MasterTemplatesRepository masterTemplatesRepository;
@@ -91,7 +94,7 @@ public class ResourceManagementService {
         boolean status = false;
         try {
             if (validInputRequest(file) && validResourceFileInputRequest(type, version)) {
-                CommonUtil.performFileValidation(file, scanDocument, false);
+                CommonUtil.performFileValidation(file, scanDocument, false, virusScan);
                 if (Objects.nonNull(type)) {
                     if ((type.equals(SBI_SCHEMA) || type.equals(SDK_SCHEMA)) && !Objects.nonNull(version)) {
                         throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode(),
@@ -194,7 +197,7 @@ public class ResourceManagementService {
         boolean status = false;
         try {
             if (validInputRequest(file) && validTemplateFileInputRequest(templateName)) {
-                CommonUtil.performFileValidation(file, scanDocument, false);
+                CommonUtil.performFileValidation(file, scanDocument, false, virusScan);
                 String fileName = file.getOriginalFilename();
                 if (Objects.nonNull(langCode) && Objects.nonNull(templateName) && Objects.nonNull(version)) {
                     //check template version format

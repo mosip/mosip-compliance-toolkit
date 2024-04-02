@@ -11,15 +11,11 @@ import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.kernel.core.exception.ServiceError;
 import io.mosip.kernel.core.logger.spi.Logger;
 import io.mosip.kernel.core.virusscanner.exception.VirusScannerException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 import io.mosip.kernel.core.virusscanner.spi.VirusScanner;
 
 public final class CommonUtil {
     private static final String ZIP_EXT = ".zip";
-
-    @Autowired
-    static VirusScanner<Boolean, InputStream> virusScan;
 
     private static Logger log = LoggerConfiguration.logConfig(CommonUtil.class);
 
@@ -32,7 +28,7 @@ public final class CommonUtil {
         return serviceErrorsList;
     }
 
-    public static void performFileValidation(MultipartFile file, Boolean scanDocument, Boolean isBiometricTestDataFile) {
+    public static void performFileValidation(MultipartFile file, Boolean scanDocument, Boolean isBiometricTestDataFile, VirusScanner<Boolean, InputStream> virusScan) {
         String filename = file.getOriginalFilename();
 
         // check if the file is null or empty
@@ -59,13 +55,13 @@ public final class CommonUtil {
         }
 
         // Perform virus scanning if enabled
-        if (scanDocument && !isVirusScanSuccess(file)) {
+        if (scanDocument && !isVirusScanSuccess(file, virusScan)) {
             throw new ToolkitException(ToolkitErrorCodes.VIRUS_FOUND.getErrorCode(),
                     ToolkitErrorCodes.VIRUS_FOUND.getErrorMessage());
         }
     }
 
-    private static boolean isVirusScanSuccess(MultipartFile file) {
+    private static boolean isVirusScanSuccess(MultipartFile file, VirusScanner<Boolean, InputStream> virusScan) {
         try {
             log.info("sessionId", "idType", "id", "In isVirusScanSuccess method of CommonUtil");
             return virusScan.scanDocument(file.getBytes());

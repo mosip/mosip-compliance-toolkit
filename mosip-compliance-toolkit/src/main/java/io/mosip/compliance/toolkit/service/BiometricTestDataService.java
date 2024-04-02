@@ -16,6 +16,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import io.mosip.kernel.core.virusscanner.spi.VirusScanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -73,6 +74,8 @@ public class BiometricTestDataService {
     /**
      * Autowired reference for {@link #VirusScanner}
      */
+    @Autowired
+    VirusScanner<Boolean, InputStream> virusScan;
 
     @Autowired
     ResourceCacheService resourceCacheService;
@@ -186,7 +189,7 @@ public class BiometricTestDataService {
         AddBioTestDataResponseDto addBioTestDataResponseDto = null;
         try {
             if (validInputRequest(inputBiometricTestDataDto, file)) {
-                CommonUtil.performFileValidation(file, scanDocument, true);
+                CommonUtil.performFileValidation(file, scanDocument, true, virusScan);
                 if (Objects.nonNull(inputBiometricTestDataDto) && Objects.nonNull(file) && !file.isEmpty()
                         && file.getSize() > 0) {
 
