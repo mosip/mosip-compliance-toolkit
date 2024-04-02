@@ -12,6 +12,7 @@ import io.mosip.compliance.toolkit.repository.MasterTemplatesRepository;
 import io.mosip.compliance.toolkit.util.CommonUtil;
 import io.mosip.compliance.toolkit.util.RandomIdGenerator;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
+import io.mosip.kernel.core.virusscanner.spi.VirusScanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,8 +28,6 @@ import io.mosip.compliance.toolkit.constants.ToolkitErrorCodes;
 import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.kernel.core.logger.spi.Logger;
-import io.mosip.kernel.core.virusscanner.exception.VirusScannerException;
-import io.mosip.kernel.core.virusscanner.spi.VirusScanner;
 
 @Service
 public class ResourceManagementService {
@@ -95,7 +94,7 @@ public class ResourceManagementService {
         boolean status = false;
         try {
             if (validInputRequest(file) && validResourceFileInputRequest(type, version)) {
-                performFileValidation(file);
+                CommonUtil.performFileValidation(file, scanDocument, false, virusScan);
                 if (Objects.nonNull(type)) {
                     if ((type.equals(SBI_SCHEMA) || type.equals(SDK_SCHEMA)) && !Objects.nonNull(version)) {
                         throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode(),
@@ -192,25 +191,13 @@ public class ResourceManagementService {
         return objectStore.putObject(objectStoreAccountName, container, null, null, objectName, data);
     }
 
-    private boolean isVirusScanSuccess(MultipartFile file) {
-        try {
-            log.info("sessionId", "idType", "id", "In isVirusScanSuccess method of ResourceManagementService");
-            return virusScan.scanDocument(file.getBytes());
-        } catch (Exception e) {
-            log.debug("sessionId", "idType", "id", e.getStackTrace());
-            log.error("sessionId", "idType", "id",
-                    "In isVirusScanSuccess method of ResourceManagementService Service - " + e.getMessage());
-            throw new VirusScannerException(ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorCode(),
-                    ToolkitErrorCodes.RESOURCE_UPLOAD_ERROR.getErrorMessage() + e.getMessage());
-        }
-    }
 
     public ResponseWrapper<Boolean> uploadTemplate(String langCode, String templateName, String version, MultipartFile file) {
         ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
         boolean status = false;
         try {
             if (validInputRequest(file) && validTemplateFileInputRequest(templateName)) {
-                performFileValidation(file);
+                CommonUtil.performFileValidation(file, scanDocument, false, virusScan);
                 String fileName = file.getOriginalFilename();
                 if (Objects.nonNull(langCode) && Objects.nonNull(templateName) && Objects.nonNull(version)) {
                     //check template version format
@@ -268,34 +255,6 @@ public class ResourceManagementService {
         responseWrapper.setVersion(AppConstants.VERSION);
         responseWrapper.setResponsetime(LocalDateTime.now());
         return responseWrapper;
-    }
-
-    public void performFileValidation(MultipartFile file) {
-        String originalFilename = file.getOriginalFilename();
-
-        // check if the file is null or empty
-        if (Objects.isNull(file) || file.isEmpty() || file.getSize() <= 0) {
-            throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorCode(),
-                    ToolkitErrorCodes.INVALID_REQUEST_PARAM.getErrorMessage());
-        }
-
-        // Validate if the file has extensions
-        if (!originalFilename.contains(".")) {
-            throw new ToolkitException(ToolkitErrorCodes.FILE_WITHOUT_EXTENSIONS.getErrorCode(),
-                    ToolkitErrorCodes.FILE_WITHOUT_EXTENSIONS.getErrorMessage());
-        }
-
-        // Validate if there are multiple extensions
-        if (originalFilename.split("\\.").length > 2) {
-            throw new ToolkitException(ToolkitErrorCodes.FILE_WITH_MULTIPLE_EXTENSIONS.getErrorCode(),
-                    ToolkitErrorCodes.FILE_WITH_MULTIPLE_EXTENSIONS.getErrorMessage());
-        }
-
-        // Perform virus scanning if enabled
-        if (scanDocument && !isVirusScanSuccess(file)) {
-            throw new ToolkitException(ToolkitErrorCodes.VIRUS_FOUND.getErrorCode(),
-                    ToolkitErrorCodes.VIRUS_FOUND.getErrorMessage());
-        }
     }
 
     private boolean validResourceFileInputRequest(String type, String version) {
