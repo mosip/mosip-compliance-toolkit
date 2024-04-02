@@ -186,7 +186,7 @@ public class BiometricTestDataService {
         AddBioTestDataResponseDto addBioTestDataResponseDto = null;
         try {
             if (validInputRequest(inputBiometricTestDataDto, file)) {
-                CommonUtil.performFileValidation(file,scanDocument, true);
+                CommonUtil.performFileValidation(file, scanDocument, true);
                 if (Objects.nonNull(inputBiometricTestDataDto) && Objects.nonNull(file) && !file.isEmpty()
                         && file.getSize() > 0) {
 
