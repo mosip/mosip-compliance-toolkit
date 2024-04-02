@@ -74,19 +74,20 @@ public class ConsentService {
             Optional<PartnerConsentEntity> optionalEntity = partnerConsentRepository.findByPartnerId(partnerId);
             if (optionalEntity.isPresent()) {
                 PartnerConsentEntity entity = optionalEntity.get();
-                log.info("sessionId", "idType", "id", "fetching latest template timestamp from Db");
-                LocalDateTime latestTemplateTimestamp = masterTemplatesRepository.getTimestampForTemplateVersion(version, templateName);
-
-                if (Objects.nonNull(latestTemplateTimestamp)) {
-                    // checking whether if partner ConsentGivenDtimes is after the latest template timestamp
-                    if (entity.getConsentGivenDtimes().isAfter(latestTemplateTimestamp)) {
-                        isConsentGiven = true;
+                if (entity.getConsentGiven().equals(YES)){
+                    log.info("sessionId", "idType", "id", "fetching latest template timestamp from Db");
+                    LocalDateTime latestTemplateTimestamp = masterTemplatesRepository.getTimestampForTemplateVersion(version, templateName);
+                    if (Objects.nonNull(latestTemplateTimestamp)) {
+                        // checking whether if partner ConsentGivenDtimes is after the latest template timestamp
+                        if (entity.getConsentGivenDtimes().isAfter(latestTemplateTimestamp)) {
+                            isConsentGiven = true;
+                        }
+                    } else {
+                        log.info("sessionId", "idType", "id", "could not fetch latest template timestamp, template not available");
+                        String errorCode = ToolkitErrorCodes.TOOLKIT_TEMPLATE_NOT_AVAILABLE_ERR.getErrorCode();
+                        String errorMessage = ToolkitErrorCodes.TOOLKIT_TEMPLATE_NOT_AVAILABLE_ERR.getErrorMessage();
+                        responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
                     }
-                } else {
-                    log.info("sessionId", "idType", "id", "could not fetch latest template timestamp, template not available");
-                    String errorCode = ToolkitErrorCodes.TOOLKIT_TEMPLATE_NOT_AVAILABLE_ERR.getErrorCode();
-                    String errorMessage = ToolkitErrorCodes.TOOLKIT_TEMPLATE_NOT_AVAILABLE_ERR.getErrorMessage();
-                    responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
                 }
             }
             responseWrapper.setResponse(isConsentGiven);
