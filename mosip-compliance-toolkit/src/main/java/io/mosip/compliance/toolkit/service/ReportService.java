@@ -1157,7 +1157,7 @@ public class ReportService {
 		ResponseWrapper<ComplianceTestRunSummaryDto> responseWrapper = new ResponseWrapper<>();
 		ComplianceTestRunSummaryDto complianceTestRunSummaryDto = new ComplianceTestRunSummaryDto();
 		try {
-			if (validInputRequest(requestDto)) {
+			if (validInputRequest(requestDto, newStatus)) {
 				log.info("sessionId", "idType", "id", "Started updateReportStatus processing");
 				log.info("sessionId", "idType", "id", "partnerId: " + partnerId);
 				log.info("sessionId", "idType", "id", "oldStatus: " + oldStatus);
@@ -1232,14 +1232,21 @@ public class ReportService {
 		return responseWrapper;
 	}
 
-	private boolean validInputRequest(ReportRequestDto reportRequestDto) {
+	private boolean validInputRequest(ReportRequestDto reportRequestDto, String newStatus) {
+		if (newStatus.equals(AppConstants.REPORT_STATUS_REJECTED)) {
+			String adminComments = reportRequestDto.getAdminComments();
+			if (Objects.isNull(adminComments) || adminComments.equals(BLANK_STRING)) {
+				throw new ToolkitException(ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode(),
+						ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage());
+			}
+		}
 		validComments(reportRequestDto.getAdminComments());
 		validComments(reportRequestDto.getPartnerComments());
 		return true;
 	}
 
 	private void validComments(String comments) {
-		if (Objects.nonNull(comments)) {
+		if (Objects.nonNull(comments) && !comments.equals(BLANK_STRING)) {
 			if (!Pattern.matches(AppConstants.REGEX_PATTERN, comments)) {
 				String exceptionErrorCode = ToolkitErrorCodes.INVALID_CHARACTERS.getErrorCode()
 						+ AppConstants.COMMA_SEPARATOR
