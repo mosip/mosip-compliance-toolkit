@@ -1239,7 +1239,7 @@ public class ReportService {
 	}
 
 	private void validComments(String comments) {
-		if (Objects.nonNull(comments)) {
+		if (Objects.nonNull(comments) && !comments.equals(BLANK_STRING)) {
 			if (!Pattern.matches(AppConstants.REGEX_PATTERN, comments)) {
 				String exceptionErrorCode = ToolkitErrorCodes.INVALID_CHARACTERS.getErrorCode()
 						+ AppConstants.COMMA_SEPARATOR
