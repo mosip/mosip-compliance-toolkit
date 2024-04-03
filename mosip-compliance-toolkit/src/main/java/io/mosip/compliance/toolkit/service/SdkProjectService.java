@@ -3,6 +3,7 @@ package io.mosip.compliance.toolkit.service;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import io.mosip.compliance.toolkit.util.ProjectHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,57 +124,59 @@ public class SdkProjectService {
 	public ResponseWrapper<SdkProjectDto> addSdkProject(SdkProjectDto sdkProjectDto) {
 		ResponseWrapper<SdkProjectDto> responseWrapper = new ResponseWrapper<>();
 		try {
-			if (isValidSdkProject(sdkProjectDto)) {
-				boolean isValidTestFile = false;
-				String partnerId = this.getPartnerId();
-				if (Objects.isNull(sdkProjectDto.getBioTestDataFileName())) {
-					isValidTestFile = false;
-				} else if (sdkProjectDto.getBioTestDataFileName().equals(AppConstants.MOSIP_DEFAULT)) {
-					isValidTestFile = true;
-				} else {
-					BiometricTestDataEntity biometricTestData = biometricTestDataRepository
-							.findByTestDataName(sdkProjectDto.getBioTestDataFileName(), partnerId);
-					String fileName = biometricTestData.getFileId();
-					String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/"
-							+ sdkProjectDto.getPurpose();
-					if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
+			if (validInputRequest(sdkProjectDto, true)) {
+				if (isValidSdkProject(sdkProjectDto)) {
+					boolean isValidTestFile = false;
+					String partnerId = this.getPartnerId();
+					if (Objects.isNull(sdkProjectDto.getBioTestDataFileName())) {
+						isValidTestFile = false;
+					} else if (sdkProjectDto.getBioTestDataFileName().equals(AppConstants.MOSIP_DEFAULT)) {
 						isValidTestFile = true;
+					} else {
+						BiometricTestDataEntity biometricTestData = biometricTestDataRepository
+								.findByTestDataName(sdkProjectDto.getBioTestDataFileName(), partnerId);
+						String fileName = biometricTestData.getFileId();
+						String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/"
+								+ sdkProjectDto.getPurpose();
+						if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
+							isValidTestFile = true;
+						}
 					}
-				}
 
-				if (isValidTestFile) {
-					LocalDateTime crDate = LocalDateTime.now();
-					SdkProjectEntity entity = new SdkProjectEntity();
-					entity.setId(RandomIdGenerator.generateUUID(sdkProjectDto.getProjectType().toLowerCase(), "", 36));
-					entity.setName(sdkProjectDto.getName());
-					entity.setProjectType(sdkProjectDto.getProjectType());
-					entity.setPurpose(sdkProjectDto.getPurpose());
-					entity.setUrl(sdkProjectDto.getUrl());
-					entity.setSdkHash(sdkProjectDto.getSdkHash());
-					entity.setWebsiteUrl(sdkProjectDto.getWebsiteUrl());
-					entity.setSdkVersion(sdkProjectDto.getSdkVersion());
-					entity.setBioTestDataFileName(sdkProjectDto.getBioTestDataFileName());
-					entity.setPartnerId(partnerId);
-					entity.setOrgName(resourceCacheService.getOrgName(partnerId));
-					entity.setCrBy(this.getUserBy());
-					entity.setCrDate(crDate);
-					entity.setDeleted(false);
+					if (isValidTestFile) {
+						LocalDateTime crDate = LocalDateTime.now();
+						SdkProjectEntity entity = new SdkProjectEntity();
+						entity.setId(RandomIdGenerator.generateUUID(sdkProjectDto.getProjectType().toLowerCase(), "", 36));
+						entity.setName(sdkProjectDto.getName());
+						entity.setProjectType(sdkProjectDto.getProjectType());
+						entity.setPurpose(sdkProjectDto.getPurpose());
+						entity.setUrl(sdkProjectDto.getUrl());
+						entity.setSdkHash(sdkProjectDto.getSdkHash());
+						entity.setWebsiteUrl(sdkProjectDto.getWebsiteUrl());
+						entity.setSdkVersion(sdkProjectDto.getSdkVersion());
+						entity.setBioTestDataFileName(sdkProjectDto.getBioTestDataFileName());
+						entity.setPartnerId(partnerId);
+						entity.setOrgName(resourceCacheService.getOrgName(partnerId));
+						entity.setCrBy(this.getUserBy());
+						entity.setCrDate(crDate);
+						entity.setDeleted(false);
 
-					SdkProjectEntity outputEntity = sdkProjectRepository.save(entity);
-					// Add a default "ALL" collection for the newly created project
-					collectionsService.addDefaultCollection(AppConstants.COMPLIANCE_COLLECTION, null, sdkProjectDto,
-							null, entity.getId());
-					
-					sdkProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, SdkProjectDto.class);
-					sdkProjectDto.setId(entity.getId());
-					sdkProjectDto.setPartnerId(entity.getPartnerId());
-					sdkProjectDto.setOrgName(entity.getOrgName());
-					sdkProjectDto.setCrBy(entity.getCrBy());
-					sdkProjectDto.setCrDate(entity.getCrDate());
-				} else {
-					String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode();
-					String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage();
-					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+						SdkProjectEntity outputEntity = sdkProjectRepository.save(entity);
+						// Add a default "ALL" collection for the newly created project
+						collectionsService.addDefaultCollection(AppConstants.COMPLIANCE_COLLECTION, null, sdkProjectDto,
+								null, entity.getId());
+
+						sdkProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, SdkProjectDto.class);
+						sdkProjectDto.setId(entity.getId());
+						sdkProjectDto.setPartnerId(entity.getPartnerId());
+						sdkProjectDto.setOrgName(entity.getOrgName());
+						sdkProjectDto.setCrBy(entity.getCrBy());
+						sdkProjectDto.setCrDate(entity.getCrDate());
+					} else {
+						String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode();
+						String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorMessage();
+						responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+					}
 				}
 			}
 		} catch (ToolkitException ex) {
@@ -212,59 +215,60 @@ public class SdkProjectService {
 		ResponseWrapper<SdkProjectDto> responseWrapper = new ResponseWrapper<>();
 		try {
 			if (Objects.nonNull(sdkProjectDto)) {
-				String projectId = sdkProjectDto.getId();
-				String partnerId = this.getPartnerId();
-				Optional<SdkProjectEntity> optionalSdkProjectEntity = sdkProjectRepository.findById(projectId,
-						getPartnerId());
-				if (optionalSdkProjectEntity.isPresent()) {
-
-					SdkProjectEntity entity = optionalSdkProjectEntity.get();
-					LocalDateTime updDate = LocalDateTime.now();
-					String url = sdkProjectDto.getUrl();
-					String sdkHash = sdkProjectDto.getSdkHash();
-					String websiteUrl = sdkProjectDto.getWebsiteUrl();
-					String bioTestDataName = sdkProjectDto.getBioTestDataFileName();
-//					Updating SDK project values
-					if (Objects.nonNull(url) && !url.isEmpty()) {
-						entity.setUrl(url);
-					}
-					if (Objects.nonNull(sdkHash) && !sdkHash.isEmpty() && !entity.getSdkHash().equals(sdkHash)) {
-						boolean canHashBeUpdated = projectHelper.checkIfHashCanBeUpdated(projectId, sdkProjectDto.getProjectType(), partnerId);
-						if (canHashBeUpdated) {
-							entity.setSdkHash(sdkHash);
+				if (validInputRequest(sdkProjectDto, false)) {
+					String projectId = sdkProjectDto.getId();
+					String partnerId = this.getPartnerId();
+					Optional<SdkProjectEntity> optionalSdkProjectEntity = sdkProjectRepository.findById(projectId,
+							getPartnerId());
+					if (optionalSdkProjectEntity.isPresent()) {
+						SdkProjectEntity entity = optionalSdkProjectEntity.get();
+						LocalDateTime updDate = LocalDateTime.now();
+						String url = sdkProjectDto.getUrl();
+						String sdkHash = sdkProjectDto.getSdkHash();
+						String websiteUrl = sdkProjectDto.getWebsiteUrl();
+						String bioTestDataName = sdkProjectDto.getBioTestDataFileName();
+                        //Updating SDK project values
+						if (Objects.nonNull(url) && !url.isEmpty()) {
+							entity.setUrl(url);
 						}
-					}
-					if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty()) {
-						entity.setWebsiteUrl(websiteUrl);
-					}
-					if (Objects.nonNull(bioTestDataName) && !bioTestDataName.isEmpty()) {
-						if (bioTestDataName.equals(AppConstants.MOSIP_DEFAULT)) {
-							entity.setBioTestDataFileName(AppConstants.MOSIP_DEFAULT);
-						} else {
-							BiometricTestDataEntity biometricTestData = biometricTestDataRepository
-									.findByTestDataName(bioTestDataName, partnerId);
-							String fileName = biometricTestData.getFileId();
-							String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/"
-									+ entity.getPurpose();
-							if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
-								entity.setBioTestDataFileName(bioTestDataName);
-							} else {
-								String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode();
-								String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE
-										.getErrorMessage();
-								responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+						if (Objects.nonNull(sdkHash) && !sdkHash.isEmpty() && !entity.getSdkHash().equals(sdkHash)) {
+							boolean canHashBeUpdated = projectHelper.checkIfHashCanBeUpdated(projectId, sdkProjectDto.getProjectType(), partnerId);
+							if (canHashBeUpdated) {
+								entity.setSdkHash(sdkHash);
 							}
 						}
-					}
-					entity.setUpBy(this.getUserBy());
-					entity.setUpdDate(updDate);
-					SdkProjectEntity outputEntity = sdkProjectRepository.save(entity);
-					sdkProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, SdkProjectDto.class);
+						if (Objects.nonNull(websiteUrl) && !websiteUrl.isEmpty() && entity.getWebsiteUrl().equals(AppConstants.TO_BE_ADDED)) {
+							entity.setWebsiteUrl(websiteUrl);
+						}
+						if (Objects.nonNull(bioTestDataName) && !bioTestDataName.isEmpty()) {
+							if (bioTestDataName.equals(AppConstants.MOSIP_DEFAULT)) {
+								entity.setBioTestDataFileName(AppConstants.MOSIP_DEFAULT);
+							} else {
+								BiometricTestDataEntity biometricTestData = biometricTestDataRepository
+										.findByTestDataName(bioTestDataName, partnerId);
+								String fileName = biometricTestData.getFileId();
+								String container = AppConstants.PARTNER_TESTDATA + "/" + partnerId + "/"
+										+ entity.getPurpose();
+								if (objectStore.exists(objectStoreAccountName, container, null, null, fileName)) {
+									entity.setBioTestDataFileName(bioTestDataName);
+								} else {
+									String errorCode = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE.getErrorCode();
+									String errorMessage = ToolkitErrorCodes.OBJECT_STORE_FILE_NOT_AVAILABLE
+											.getErrorMessage();
+									responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+								}
+							}
+						}
+						entity.setUpBy(this.getUserBy());
+						entity.setUpdDate(updDate);
+						SdkProjectEntity outputEntity = sdkProjectRepository.save(entity);
+						sdkProjectDto = objectMapperConfig.objectMapper().convertValue(outputEntity, SdkProjectDto.class);
 
-				} else {
-					String errorCode = ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorCode();
-					String errorMessage = ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorMessage();
-					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+					} else {
+						String errorCode = ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorCode();
+						String errorMessage = ToolkitErrorCodes.SDK_PROJECT_NOT_AVAILABLE.getErrorMessage();
+						responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+					}
 				}
 			}
 		} catch (ToolkitException ex) {
@@ -289,6 +293,33 @@ public class SdkProjectService {
 		responseWrapper.setVersion(AppConstants.VERSION);
 		responseWrapper.setResponsetime(LocalDateTime.now());
 		return responseWrapper;
+	}
+
+	private boolean validInputRequest(SdkProjectDto sdkProjectDto, boolean isAddProject) {
+		if (isAddProject) {
+			String projectName = sdkProjectDto.getName();
+			if (!Pattern.matches(AppConstants.REGEX_PATTERN, projectName)) {
+				String exceptionErrorCode = ToolkitErrorCodes.INVALID_CHARACTERS.getErrorCode()
+						+ AppConstants.COMMA_SEPARATOR
+						+ ToolkitErrorCodes.PROJECT_NAME.getErrorCode();
+				throw new ToolkitException(exceptionErrorCode, "Invalid characters are not allowed in project name");
+			}
+			String websiteUrl = sdkProjectDto.getWebsiteUrl();
+			if (!Pattern.matches(AppConstants.URL_REGEX_PATTERN, websiteUrl)) {
+				String exceptionErrorCode = ToolkitErrorCodes.INVALID_URL.getErrorCode()
+						+ AppConstants.COMMA_SEPARATOR
+						+ ToolkitErrorCodes.WEBSITE_URL.getErrorCode();
+				throw new ToolkitException(exceptionErrorCode, "Website URL will only allow http/https format");
+			}
+		}
+		String baseurl = sdkProjectDto.getUrl();
+		if (!Pattern.matches(AppConstants.URL_REGEX_PATTERN, baseurl)) {
+			String exceptionErrorCode = ToolkitErrorCodes.INVALID_URL.getErrorCode()
+					+ AppConstants.COMMA_SEPARATOR
+					+ ToolkitErrorCodes.SDK_BASE_URL.getErrorCode();
+			throw new ToolkitException(exceptionErrorCode, "SDK base URL will only allow http/https format");
+		}
+		return true;
 	}
 
 	/**

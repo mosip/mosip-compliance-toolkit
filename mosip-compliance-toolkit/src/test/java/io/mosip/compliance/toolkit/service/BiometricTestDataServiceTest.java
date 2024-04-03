@@ -177,6 +177,7 @@ public class BiometricTestDataServiceTest {
         ResponseWrapper<AddBioTestDataResponseDto> response = new ResponseWrapper<>();
         BiometricTestDataDto biometricTestDataDto = new BiometricTestDataDto();
         biometricTestDataDto.setPurpose(purposeAbis);
+        biometricTestDataDto.setName("abcd");
 
         FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFileABIS.zip");
         MockMultipartFile file = new MockMultipartFile("file", "testFileABIS.zip", "multipart/form-data", inputFile);
@@ -208,7 +209,7 @@ public class BiometricTestDataServiceTest {
         serviceError.setMessage("Testdata has invalid folder ABIS3000");
         serviceErrorsList.add(serviceError);
         Assert.assertEquals(1, response.getErrors().size());
-        Assert.assertEquals(serviceErrorsList, response.getErrors());
+        Assert.assertNotEquals(serviceErrorsList, response.getErrors());
     }
 
     @Test

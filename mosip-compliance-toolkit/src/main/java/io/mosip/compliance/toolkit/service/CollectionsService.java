@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
+import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -262,71 +264,73 @@ public class CollectionsService {
 		ResponseWrapper<CollectionDto> responseWrapper = new ResponseWrapper<>();
 		CollectionDto collection = null;
 		try {
-			if (Objects.nonNull(collectionRequest) && Objects.nonNull(collectionRequest.getProjectType())
-					&& (AppConstants.SBI.equalsIgnoreCase(collectionRequest.getProjectType())
-							|| AppConstants.ABIS.equalsIgnoreCase(collectionRequest.getProjectType())
-							|| AppConstants.SDK.equalsIgnoreCase(collectionRequest.getProjectType()))) {
+			if (validInputRequest(collectionRequest)) {
+				if (Objects.nonNull(collectionRequest) && Objects.nonNull(collectionRequest.getProjectType())
+						&& (AppConstants.SBI.equalsIgnoreCase(collectionRequest.getProjectType())
+						|| AppConstants.ABIS.equalsIgnoreCase(collectionRequest.getProjectType())
+						|| AppConstants.SDK.equalsIgnoreCase(collectionRequest.getProjectType()))) {
 
-				String sbiProjectId = null;
-				String sdkProjectId = null;
-				String abisProjectId = null;
-				List<CollectionEntity> duplicates = null;
+					String sbiProjectId = null;
+					String sdkProjectId = null;
+					String abisProjectId = null;
+					List<CollectionEntity> duplicates = null;
 
-				switch (collectionRequest.getProjectType()) {
-				case AppConstants.SBI:
-					sbiProjectId = collectionRequest.getProjectId();
-					duplicates = collectionsRepository.getSbiCollectionByName(collectionRequest.getCollectionName(),
-							sbiProjectId, getPartnerId());
-					break;
-				case AppConstants.SDK:
-					sdkProjectId = collectionRequest.getProjectId();
-					duplicates = collectionsRepository.getSdkCollectionByName(collectionRequest.getCollectionName(),
-							sdkProjectId, getPartnerId());
-					break;
-				case AppConstants.ABIS:
-					abisProjectId = collectionRequest.getProjectId();
-					duplicates = collectionsRepository.getAbisCollectionByName(collectionRequest.getCollectionName(),
-							abisProjectId, getPartnerId());
-					break;
-				}
-
-				if (Objects.isNull(duplicates) || duplicates.size() <= 0) {
-					String collectionType = collectionRequest.getCollectionType();
-					if (collectionType == null || "".equals(collectionType)) {
-						collectionType = AppConstants.CUSTOM_COLLECTION;
+					switch (collectionRequest.getProjectType()) {
+						case AppConstants.SBI:
+							sbiProjectId = collectionRequest.getProjectId();
+							duplicates = collectionsRepository.getSbiCollectionByName(collectionRequest.getCollectionName(),
+									sbiProjectId, getPartnerId());
+							break;
+						case AppConstants.SDK:
+							sdkProjectId = collectionRequest.getProjectId();
+							duplicates = collectionsRepository.getSdkCollectionByName(collectionRequest.getCollectionName(),
+									sdkProjectId, getPartnerId());
+							break;
+						case AppConstants.ABIS:
+							abisProjectId = collectionRequest.getProjectId();
+							duplicates = collectionsRepository.getAbisCollectionByName(collectionRequest.getCollectionName(),
+									abisProjectId, getPartnerId());
+							break;
 					}
-					CollectionEntity inputEntity = new CollectionEntity();
-					inputEntity.setId(RandomIdGenerator.generateUUID(
-							collectionRequest.getProjectType().toLowerCase() + "_" + collectionType, "", 36));
-					inputEntity.setName(collectionRequest.getCollectionName());
-					inputEntity.setSbiProjectId(sbiProjectId);
-					inputEntity.setSdkProjectId(sdkProjectId);
-					inputEntity.setAbisProjectId(abisProjectId);
-					inputEntity.setPartnerId(getPartnerId());
-					inputEntity.setOrgName(resourceCacheService.getOrgName(getPartnerId()));
-					inputEntity.setCollectionType(collectionType);
-					inputEntity.setCrBy(getUserBy());
-					inputEntity.setCrDate(LocalDateTime.now());
-					inputEntity.setUpBy(null);
-					inputEntity.setUpdDate(null);
-					inputEntity.setDeleted(false);
-					inputEntity.setDelTime(null);
-					CollectionEntity outputEntity = collectionsRepository.save(inputEntity);
 
-					collection = objectMapperConfig.objectMapper().convertValue(outputEntity, CollectionDto.class);
-					collection.setCollectionId(outputEntity.getId());
-					collection.setProjectId(collectionRequest.getProjectId());
-					collection.setCrDtimes(outputEntity.getCrDate());
+					if (Objects.isNull(duplicates) || duplicates.size() <= 0) {
+						String collectionType = collectionRequest.getCollectionType();
+						if (collectionType == null || "".equals(collectionType)) {
+							collectionType = AppConstants.CUSTOM_COLLECTION;
+						}
+						CollectionEntity inputEntity = new CollectionEntity();
+						inputEntity.setId(RandomIdGenerator.generateUUID(
+								collectionRequest.getProjectType().toLowerCase() + "_" + collectionType, "", 36));
+						inputEntity.setName(collectionRequest.getCollectionName());
+						inputEntity.setSbiProjectId(sbiProjectId);
+						inputEntity.setSdkProjectId(sdkProjectId);
+						inputEntity.setAbisProjectId(abisProjectId);
+						inputEntity.setPartnerId(getPartnerId());
+						inputEntity.setOrgName(resourceCacheService.getOrgName(getPartnerId()));
+						inputEntity.setCollectionType(collectionType);
+						inputEntity.setCrBy(getUserBy());
+						inputEntity.setCrDate(LocalDateTime.now());
+						inputEntity.setUpBy(null);
+						inputEntity.setUpdDate(null);
+						inputEntity.setDeleted(false);
+						inputEntity.setDelTime(null);
+						CollectionEntity outputEntity = collectionsRepository.save(inputEntity);
+
+						collection = objectMapperConfig.objectMapper().convertValue(outputEntity, CollectionDto.class);
+						collection.setCollectionId(outputEntity.getId());
+						collection.setProjectId(collectionRequest.getProjectId());
+						collection.setCrDtimes(outputEntity.getCrDate());
+					} else {
+						String errorCode = ToolkitErrorCodes.COLLECTION_NAME_EXISTS.getErrorCode();
+						String errorMessage = ToolkitErrorCodes.COLLECTION_NAME_EXISTS.getErrorMessage()
+								+ duplicates.get(0).getName();
+						responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
+					}
 				} else {
-					String errorCode = ToolkitErrorCodes.COLLECTION_NAME_EXISTS.getErrorCode();
-					String errorMessage = ToolkitErrorCodes.COLLECTION_NAME_EXISTS.getErrorMessage()
-							+ duplicates.get(0).getName();
+					String errorCode = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode();
+					String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage();
 					responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 				}
-			} else {
-				String errorCode = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorCode();
-				String errorMessage = ToolkitErrorCodes.INVALID_REQUEST_BODY.getErrorMessage();
-				responseWrapper.setErrors(CommonUtil.getServiceErr(errorCode, errorMessage));
 			}
 		} catch (Exception ex) {
 			log.debug("sessionId", "idType", "id", ex.getStackTrace());
@@ -486,4 +490,14 @@ public class CollectionsService {
 		}
 	}
 
+	private boolean validInputRequest(CollectionRequestDto collectionRequestDto) {
+		String collectionName = collectionRequestDto.getCollectionName();
+		if (!Pattern.matches(AppConstants.REGEX_PATTERN, collectionName)) {
+			String exceptionErrorCode = ToolkitErrorCodes.INVALID_CHARACTERS.getErrorCode()
+					+ AppConstants.COMMA_SEPARATOR
+					+ ToolkitErrorCodes.COLLECTION_NAME.getErrorCode();
+			throw new ToolkitException(exceptionErrorCode, "Invalid characters are not allowed in collection name");
+		}
+		return true;
+	}
 }

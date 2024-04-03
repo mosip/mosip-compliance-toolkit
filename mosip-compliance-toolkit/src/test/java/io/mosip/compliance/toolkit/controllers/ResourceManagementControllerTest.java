@@ -45,4 +45,17 @@ public class ResourceManagementControllerTest {
         Mockito.when(resourceMgmtService.uploadResourceFile(type, version, file)).thenReturn(responseWrapper);
         Assert.assertEquals(true, resourceManagementController.uploadResourceFile(type, version, file).getResponse());
     }
+
+    @Test
+    public void uploadtemplateTest() throws IOException {
+        String langCode = "eng";
+        String templateName = "terms_and_conditions_template";
+        String version = "v1";
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.zip");
+        MockMultipartFile file = new MockMultipartFile("file", "terms_and_conditions_template.vm", "multipart/form-data", inputFile);
+        ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
+        responseWrapper.setResponse(true);
+        Mockito.when(resourceMgmtService.uploadTemplate(langCode, templateName, version, file)).thenReturn(responseWrapper);
+        Assert.assertEquals(true, resourceManagementController.uploadTemplate(langCode, templateName, version, file).getResponse());
+    }
 }

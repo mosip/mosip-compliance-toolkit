@@ -75,7 +75,29 @@ public enum ToolkitErrorCodes {
 	RCAPTURE_DATA_ENCRYPT_ERROR("TOOLKIT_REQ_ERR_041", "Encryption of rcapture data failed"),
 
 	RCAPTURE_DATA_DECRYPT_ERROR("TOOLKIT_REQ_ERR_042", "Decryption of rcapture data failed"),
-
+	FILE_WITH_MULTIPLE_EXTENSIONS("TOOLKIT_REQ_ERR_043", "File name should not contain multiple extensions"),
+	FILE_WITHOUT_EXTENSIONS("TOOLKIT_REQ_ERR_044", "Unable to upload a file without extension"),
+	VIRUS_FOUND("TOOLKIT_REQ_ERR_045", "Unable to upload malware file"),
+	INVALID_CHARACTERS("TOOLKIT_REQ_ERR_046", "Invalid characters are not allowed in "),
+	INVALID_URL("TOOLKIT_REQ_ERR_047", "Invalid URL is not allowed in "),
+	PROJECT_NAME("TOOLKIT_REQ_ERR_048", "project name"),
+	WEBSITE_URL("TOOLKIT_REQ_ERR_049", "website URL"),
+	ACTIVE_MQ_URL("TOOLKIT_REQ_ERR_050", "active MQ URL"),
+	TOOLKIT_TEMPLATE_NOT_AVAILABLE_ERR("TOOLKIT_REQ_ERR_051", "Template not found."),
+	TOOLKIT_TEMPLATE_ERR("TOOLKIT_REQ_ERR_052", "Error while fetching template"),
+	TOOLKIT_TEMPLATE_INVALID_VERSION_FORMAT("TOOLKIT_REQ_ERR_053", "Invalid template version format."),
+	TOOLKIT_TEMPLATE_VERSION_ERR("TOOLKIT_REQ_ERR_054", "Error while fetching template version."),
+	COMMENTS("TOOLKIT_REQ_ERR_055", "comments"),
+	SDK_BASE_URL("TOOLKIT_REQ_ERR_056", "SDK base URL"),
+	COLLECTION_NAME("TOOLKIT_REQ_ERR_057", "collection name"),
+	TEST_DATA_NAME("TOOLKIT_REQ_ERR_058", "test data name"),
+	FILE_NAME("TOOLKIT_REQ_ERR_059", "file name"),
+	TEMPLATE_NAME("TOOLKIT_REQ_ERR_060", "template name"),
+	VERSION("TOOLKIT_REQ_ERR_061", "version"),
+	RESOURCE_FILE_TYPE("TOOLKIT_REQ_ERR_062", "resource file type"),
+	INVALID_FILE_SIZE("TOOLKIT_REQ_ERR_063", "File size is not allowed more than "),
+	INVALID_FILE_NAME_LENGTH("TOOLKIT_REQ_ERR_064", "File name is not allowed more than "),
+	CHARACTERS("TOOLKIT_REQ_ERR_065", " characters"),
 	PROJECT_NAME_EXISTS("TOOLKIT_DB_ERR_001", "You have previously created a project with name: "),
 	BIO_TEST_DATA_FILE_EXISTS("TOOLKIT_DB_ERR_002", "You have previously added biometric test data with name: "),
 	COLLECTION_NAME_EXISTS("TOOLKIT_DB_ERR_003", "You have previously created a collection with name: "),
@@ -126,8 +148,9 @@ public enum ToolkitErrorCodes {
 	TOOLKIT_REPORT_STATUS_UPDATE_ERR("TOOLKIT_REPORT_004", "Error while changing report status"),
 	TOOLKIT_REPORT_GET_ERR("TOOLKIT_REPORT_005", "Error while fetching list of reports"),
 	TOOLKIT_INVALID_REPORT_STATUS_ERR("TOOLKIT_REPORT_006", "Error while fetching list of reports. Invalid report status: "),
-	TOOLKIT_CERTIFICATE_PARSING_ERR("TOOLKIT_CERTIFICATE_PARSING_001", "Error while parsing certificate : ");
-
+	TOOLKIT_CERTIFICATE_PARSING_ERR("TOOLKIT_CERTIFICATE_PARSING_001", "Error while parsing certificate : "),
+	TOOLKIT_CONSENT_ERR("TOOLKIT_CONSENT_ERR_001", "Error while fetching partner consent."),
+	TOOLKIT_CONSENT_UNABLE_TO_ADD("TOOLKIT_CONSENT_ERR_002", "Error while saving partner consent.");
 
 	private final String errorCode;
 	private final String errorMessage;

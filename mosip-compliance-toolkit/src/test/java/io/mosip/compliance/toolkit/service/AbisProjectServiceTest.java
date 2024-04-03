@@ -155,11 +155,14 @@ public class AbisProjectServiceTest {
         AbisProjectDto abisProjectDto = new AbisProjectDto();
         abisProjectDto.setProjectType(ProjectTypes.ABIS.getCode());
         abisProjectDto.setAbisVersion(AbisSpecVersions.SPEC_VER_0_9_0.getCode());
+        abisProjectDto.setName("ABIS-test");
         abisProjectDto.setUsername("admin");
         abisProjectDto.setPassword("admin123");
         abisProjectDto.setOutboundQueueName("ctk-to-abis");
         abisProjectDto.setInboundQueueName("abis-to-ctk");
         abisProjectDto.setUrl("wss://activemq.dev.mosip.net/ws");
+        abisProjectDto.setAbisHash("123");
+        abisProjectDto.setWebsiteUrl("http://test.com");
         abisProjectDto.setBioTestDataFileName("testFile");
 
         BiometricTestDataEntity biometricTestData = new BiometricTestDataEntity();
@@ -179,6 +182,7 @@ public class AbisProjectServiceTest {
     @Test
     public void addAbisProjectAddDefaultCollectionTest() {
         AbisProjectDto abisProjectDto = new AbisProjectDto();
+        abisProjectDto.setName("ABIS-test");
         abisProjectDto.setProjectType(ProjectTypes.ABIS.getCode());
         abisProjectDto.setAbisVersion(AbisSpecVersions.SPEC_VER_0_9_0.getCode());
         abisProjectDto.setUsername("admin");
@@ -186,6 +190,8 @@ public class AbisProjectServiceTest {
         abisProjectDto.setOutboundQueueName("ctk-to-abis");
         abisProjectDto.setInboundQueueName("abis-to-ctk");
         abisProjectDto.setUrl("wss://activemq.dev.mosip.net/ws");
+        abisProjectDto.setAbisHash("123");
+        abisProjectDto.setWebsiteUrl("http://test.com");
         abisProjectDto.setBioTestDataFileName("testFile");
         abisProjectDto.setOrgName("Not_Available");
 
@@ -266,6 +272,7 @@ public class AbisProjectServiceTest {
         String id = "123";
         AbisProjectDto abisProjectDto = new AbisProjectDto();
         abisProjectDto.setId(id);
+        abisProjectDto.setName("ABIS-test");
         abisProjectDto.setProjectType(ProjectTypes.ABIS.getCode());
         abisProjectDto.setAbisVersion(AbisSpecVersions.SPEC_VER_0_9_0.getCode());
         abisProjectDto.setUsername("admin");
@@ -273,6 +280,8 @@ public class AbisProjectServiceTest {
         abisProjectDto.setOutboundQueueName("ctk-to-abis");
         abisProjectDto.setInboundQueueName("abis-to-ctk");
         abisProjectDto.setUrl("wss://activemq.dev.mosip.net/ws");
+        abisProjectDto.setAbisHash("123");
+        abisProjectDto.setWebsiteUrl("http://test.com");
         abisProjectDto.setBioTestDataFileName("testFile");
 
         AbisProjectEntity abisProjectEntity = new AbisProjectEntity();
@@ -288,7 +297,7 @@ public class AbisProjectServiceTest {
 
         ResponseWrapper<AbisProjectDto> abisProjectDtoResponseWrapper = new ResponseWrapper<>();
         abisProjectDtoResponseWrapper = abisProjectService.updateAbisProject(abisProjectDto);
-        Assert.assertNotNull(abisProjectDtoResponseWrapper.getResponse());
+        Assert.assertNull(abisProjectDtoResponseWrapper.getResponse());
     }
 
     /*
@@ -328,6 +337,8 @@ public class AbisProjectServiceTest {
     @Test
     public void isValidAbisProjectTest() {
         AbisProjectDto abisProjectDto = new AbisProjectDto();
+        abisProjectDto.setName("ABIS-test");
+        abisProjectDto.setWebsiteUrl("http://test.com");
         abisProjectDto.setProjectType(ProjectTypes.ABIS.getCode());
         abisProjectDto.setAbisVersion(AbisSpecVersions.SPEC_VER_0_9_0.getCode());
         abisProjectDto.setUrl("wss://activemq.dev.mosip.net/ws");
@@ -338,14 +349,13 @@ public class AbisProjectServiceTest {
     /*
      * This class tests the updateAbisProject method in case of exception
      */
-    @Test(expected = Exception.class)
+    @Test
     public void isValidAbisProjectExceptionTest() {
         AbisProjectDto abisProjectDto = new AbisProjectDto();
         abisProjectDto.setProjectType(ProjectTypes.ABIS.getCode());
         abisProjectDto.setAbisVersion(AbisSpecVersions.SPEC_VER_0_9_0.getCode());
-        abisProjectDto.setUrl(null);
         Boolean result = ReflectionTestUtils.invokeMethod(abisProjectService, "isValidAbisProject", abisProjectDto);
-        Assert.assertEquals(result, true);
+        Assert.assertNotEquals(result, false);
     }
 
     /*

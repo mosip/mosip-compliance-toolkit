@@ -20,4 +20,6 @@ public class AuthorizedRolesDto {
 	
 	private List<String> adminPartnerReport;
 
+	private List<String> abisPartner;
+
 }

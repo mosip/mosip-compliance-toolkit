@@ -15,4 +15,12 @@
 \ir ddl/compliance_testrun_summary.sql
 \ir ddl/datashare_tokens.sql
 \ir ddl/fk.sql
-\ir ddl/partner_profile.sql
+\ir ddl/batch_job_execution.sql
+\ir ddl/batch_job_execution_context.sql
+\ir ddl/batch_job_execution_param.sql
+\ir ddl/batch_job_instance.sql
+\ir ddl/batch_step_execution.sql
+\ir ddl/batch_step_execution_context.sql
+\ir ddl/batch-fk.sql
+\ir ddl/master_templates.sql
+\ir ddl/partner_consent.sql
