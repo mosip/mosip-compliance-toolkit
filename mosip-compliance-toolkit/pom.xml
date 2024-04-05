@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>io.mosip.compliance</groupId>
 	<artifactId>mosip-compliance-toolkit-service</artifactId>
-	<version>1.4.0-SNAPSHOT</version>
+	<version>1.5.0-SNAPSHOT</version>
 	<name>mosip-compliance-toolkit-service</name>
 	<description>mosip compliance toolkit</description>
 
@@ -39,7 +39,7 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<kernel.version>1.2.0.1</kernel.version>
+		<kernel.version>1.2.0.1-B1</kernel.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- maven -->
