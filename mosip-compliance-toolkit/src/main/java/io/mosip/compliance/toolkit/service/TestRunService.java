@@ -65,14 +65,8 @@ public class TestRunService {
 	@Value("${mosip.toolkit.api.id.testrun.delete}")
 	private String deleteTestRunId;
 
-	@Value("${mosip.toolkit.testrun.archive.offset}")
-	private int archiveOffset;
-
 	@Value("${mosip.toolkit.rcapture.encryption.enabled}")
 	private boolean isRcaptureEncryptionEnabled;
-
-	@Autowired
-	TestRunArchiveService testRunArchiveService;
 
 	@Autowired
 	TestRunRepository testRunRepository;
