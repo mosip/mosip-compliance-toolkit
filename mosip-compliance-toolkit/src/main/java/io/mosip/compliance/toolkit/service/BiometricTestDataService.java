@@ -332,7 +332,7 @@ public class BiometricTestDataService {
             throw new ToolkitException(errorCode, "File size is not allowed more than " + fileSize + "B");
         }
         int fileNameLength = Integer.parseInt(allowedFileNameLength);
-        if (fileName.length() > fileNameLength) {
+        if (fileName != null && fileName.length() > fileNameLength) {
             String errorCode = ToolkitErrorCodes.INVALID_FILE_NAME_LENGTH.getErrorCode()
                     + AppConstants.ARGUMENTS_DELIMITER
                     + fileNameLength
