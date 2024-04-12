@@ -292,7 +292,7 @@ public class TestRunServiceTest {
 		ObjectNode node = objectMapper.createObjectNode();
 		ArrayNode arrayNode = objectMapper.createArrayNode();
 		arrayNode.add("rcapture");
-		node.put("methodName", arrayNode);
+		node.set("methodName", arrayNode);
 		Mockito.when(jsonNode.get(anyString())).thenReturn(node);
 		Mockito.when(testRunDetailsRepository.getTestRunDetails(anyString(), anyString())).thenReturn(testRunDetailsEntityList);
 		Mockito.when(mapper.convertValue(testRunDetailsEntity, TestRunDetailsDto.class)).thenReturn(dto);
@@ -444,7 +444,7 @@ public class TestRunServiceTest {
 		ObjectNode node = objectMapper.createObjectNode();
 		ArrayNode arrayNode = objectMapper.createArrayNode();
 		arrayNode.add("rcapture");
-		node.put("methodName", arrayNode);
+		node.set("methodName", arrayNode);
 		Mockito.when(jsonNode.get(anyString())).thenReturn(node);
 		testRunService.getMethodDetails("123", "456", "SBI1023", "123");
 	}
