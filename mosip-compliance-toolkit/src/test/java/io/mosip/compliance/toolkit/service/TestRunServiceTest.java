@@ -4,6 +4,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.mosip.compliance.toolkit.entity.*;
+import io.mosip.compliance.toolkit.util.KeyManagerHelper;
+import io.mosip.compliance.toolkit.validators.SBIValidator;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,9 +37,6 @@ import io.mosip.compliance.toolkit.dto.testrun.TestRunDetailsResponseDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunHistoryDto;
 import io.mosip.compliance.toolkit.dto.testrun.TestRunStatusDto;
-import io.mosip.compliance.toolkit.entity.TestRunDetailsEntity;
-import io.mosip.compliance.toolkit.entity.TestRunEntity;
-import io.mosip.compliance.toolkit.entity.TestRunHistoryEntity;
 import io.mosip.compliance.toolkit.repository.CollectionsRepository;
 import io.mosip.compliance.toolkit.repository.TestRunDetailsRepository;
 import io.mosip.compliance.toolkit.repository.TestRunRepository;
@@ -40,6 +44,9 @@ import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.authmanager.authadapter.model.MosipUserDto;
 import io.mosip.kernel.core.http.ResponseWrapper;
+
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.mock;
 
 @ContextConfiguration(classes = { TestContext.class, WebApplicationContext.class })
 @RunWith(SpringRunner.class)
@@ -73,8 +80,14 @@ public class TestRunServiceTest {
 	@Mock
 	private TestRunRepository testRunRepository;
 
+	@Mock
+	TestCaseCacheService testCaseCacheService;
+
+	@Mock
+	KeyManagerHelper keyManagerHelper;
+
 	final static String partnerId = "test";
-	   
+
 	/*
 	 * This class tests the authUserDetails method
 	 */
@@ -241,7 +254,7 @@ public class TestRunServiceTest {
 	 * This class tests the getTestRunDetails method
 	 */
 	@Test
-	public void getTestRunDetailsTest() {
+	public void getTestRunDetailsTest() throws JsonProcessingException {
 		testRunService.getTestRunDetails(partnerId, null, false);
 		String runId = "123";
 		TestRunEntity entity = new TestRunEntity();
@@ -251,6 +264,14 @@ public class TestRunServiceTest {
 		AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
 		Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
 		SecurityContextHolder.setContext(securityContext);
+		Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
+		TestRunDetailsDto dto = new TestRunDetailsDto();
+
+		List<TestRunPartialDetailsEntity> testRunPartialDetailsEntityList = new ArrayList<>();
+		TestRunPartialDetailsEntity testRunPartialDetailsEntity = new TestRunPartialDetailsEntity();
+		testRunPartialDetailsEntityList.add(testRunPartialDetailsEntity);
+		Mockito.when(testRunDetailsRepository.getTestRunPartialDetails(anyString(), anyString())).thenReturn(testRunPartialDetailsEntityList);
+		Mockito.when(mapper.convertValue(testRunPartialDetailsEntity, TestRunDetailsDto.class)).thenReturn(dto);
 		Mockito.when(testRunRepository.getTestRunById(Mockito.any(), Mockito.any())).thenReturn(null);
 		testRunService.getTestRunDetails(partnerId, runId, false);
 
@@ -260,12 +281,22 @@ public class TestRunServiceTest {
 		testRunService.getTestRunDetails(partnerId, runId, false);
 
 		TestRunDetailsEntity testRunDetailsEntity = new TestRunDetailsEntity();
+		testRunDetailsEntity.setTestcaseId("SBI1090");
 		testRunDetailsEntityList.add(testRunDetailsEntity);
-		Mockito.when(testRunDetailsRepository.getTestRunDetails(runId, "123")).thenReturn(testRunDetailsEntityList);
-		Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
-		TestRunDetailsDto dto = new TestRunDetailsDto();
+
+		TestCaseEntity testCaseEntity = new TestCaseEntity();
+		Mockito.when(testCaseCacheService.getTestCase(anyString())).thenReturn(testCaseEntity);
+		JsonNode jsonNode = mock(JsonNode.class);
+		Mockito.when(mapper.readTree(testCaseEntity.getTestcaseJson())).thenReturn(jsonNode);
+		ObjectMapper objectMapper = new ObjectMapper();
+		ObjectNode node = objectMapper.createObjectNode();
+		ArrayNode arrayNode = objectMapper.createArrayNode();
+		arrayNode.add("rcapture");
+		node.set("methodName", arrayNode);
+		Mockito.when(jsonNode.get(anyString())).thenReturn(node);
+		Mockito.when(testRunDetailsRepository.getTestRunDetails(anyString(), anyString())).thenReturn(testRunDetailsEntityList);
 		Mockito.when(mapper.convertValue(testRunDetailsEntity, TestRunDetailsDto.class)).thenReturn(dto);
-		ResponseWrapper<TestRunDetailsResponseDto> result = testRunService.getTestRunDetails(partnerId, runId, false);
+		ResponseWrapper<TestRunDetailsResponseDto> result = testRunService.getTestRunDetails(partnerId, runId, true);
 		TestRunDetailsResponseDto expected = new TestRunDetailsResponseDto();
 		List<TestRunDetailsDto> testRunDetailsDtosList = new ArrayList<>();
 		testRunDetailsDtosList.add(new TestRunDetailsDto());
@@ -393,6 +424,162 @@ public class TestRunServiceTest {
 	@Test
 	public void deleteTestRunTestException() {
 		testRunService.deleteTestRun("123");
+	}
+
+	/*
+	 * This class tests the getMethodDetails method
+	 */
+	@Test
+	public void getMethodDetailsTest() throws JsonProcessingException {
+		TestRunEntity testRunEntity = new TestRunEntity();
+		Mockito.when(testRunRepository.getTestRunById(anyString(), anyString())).thenReturn(testRunEntity);
+		TestRunDetailsEntity testRunDetailsEntity = new TestRunDetailsEntity();
+		Mockito.when(testRunDetailsRepository.getMethodDetails(anyString(), anyString(), anyString(), anyString())).thenReturn(testRunDetailsEntity);
+		Mockito.when(objectMapperConfig.objectMapper()).thenReturn(mapper);
+		TestCaseEntity testCaseEntity = new TestCaseEntity();
+		Mockito.when(testCaseCacheService.getTestCase(anyString())).thenReturn(testCaseEntity);
+		JsonNode jsonNode = mock(JsonNode.class);
+		Mockito.when(mapper.readTree(testCaseEntity.getTestcaseJson())).thenReturn(jsonNode);
+		ObjectMapper objectMapper = new ObjectMapper();
+		ObjectNode node = objectMapper.createObjectNode();
+		ArrayNode arrayNode = objectMapper.createArrayNode();
+		arrayNode.add("rcapture");
+		node.set("methodName", arrayNode);
+		Mockito.when(jsonNode.get(anyString())).thenReturn(node);
+		testRunService.getMethodDetails("123", "456", "SBI1023", "123");
+	}
+
+	@Test
+	public void getMethodDetailsExceptionTest() throws JsonProcessingException {
+		Mockito.when(testRunRepository.getTestRunById(anyString(), anyString())).thenReturn(null);
+		testRunService.getMethodDetails("123", "456", "SBI1023", "123");
+	}
+
+	@Test
+	public void getMethodDetailsExceptionTest1() throws JsonProcessingException {
+		TestRunEntity testRunEntity = new TestRunEntity();
+		Mockito.when(testRunRepository.getTestRunById(anyString(), anyString())).thenThrow(new NullPointerException(""));
+		testRunService.getMethodDetails("123", "456", "SBI1023", "123");
+	}
+
+	@Test
+	public void getMethodDetailsExceptionTest2() throws JsonProcessingException {
+		Mockito.when(testRunRepository.getTestRunById(anyString(), anyString())).thenThrow(new NullPointerException(""));
+		testRunService.getMethodDetails(null, "456", "SBI1023", "123");
+	}
+
+
+	/*
+	 * This class tests the performRcaptureEncryption method
+	 */
+	@Test
+	public void performRcaptureEncryptionTest() throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		Mockito.when(objectMapperConfig.objectMapper()).thenReturn(objectMapper);
+		TestRunDetailsEntity testRunDetailsEntity = new TestRunDetailsEntity();
+		testRunDetailsEntity.setMethodResponse("{\n" +
+				"  \"biometrics\": [\n" +
+				"    {\n" +
+				"      \"specVersion\": \"\",\n" +
+				"      \"data\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidGltZXN0YW1wIjoiMjAyMS0wNC0xMFQxMjoxMTowN1oiLCJ0cmFuc2FjdGlvbklkIjoiMTIzIn0.OftB11ggkTCNZzWNW1_35xQ6sLBbO1QB6LtscxNUoTQ\",\n" +
+				"      \"dataDecoded\": \"dsiuidsjijdd\",    \n" +
+				"      \"error\": \"\"\n" +
+				"    }\n" +
+				"  ]\n" +
+				"}");
+		Mockito.when(keyManagerHelper.getAppId()).thenReturn("abc");
+		Mockito.when(keyManagerHelper.getRefId()).thenReturn("aiusi");
+		SBIValidator.EncryptValidatorResponseDto encryptValidatorResponseDto = new SBIValidator.EncryptValidatorResponseDto();
+		SBIValidator.EncryptValidatorResponse encryptValidatorResponse = new SBIValidator.EncryptValidatorResponse();
+		encryptValidatorResponse.setData("{\n" +
+				"        \"digitalId\": \"132\",\n" +
+				"        \"bioType\": \"face\",\n" +
+				"      }");
+		encryptValidatorResponseDto.setResponse(encryptValidatorResponse);
+		Mockito.when(keyManagerHelper.encryptionResponse(any(SBIValidator.EncryptValidatorRequestDto.class))).thenReturn(encryptValidatorResponseDto);
+		ReflectionTestUtils.invokeMethod(testRunService, "performRcaptureEncryption", testRunDetailsEntity);
+	}
+
+	@Test
+	public void performRcaptureEncryptionExceptionTest() throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		Mockito.when(objectMapperConfig.objectMapper()).thenReturn(objectMapper);
+		TestRunDetailsEntity testRunDetailsEntity = new TestRunDetailsEntity();
+		testRunDetailsEntity.setMethodResponse("{\n" +
+				"  \"biometrics\": [\n" +
+				"    {\n" +
+				"      \"specVersion\": \"\",\n" +
+				"      \"data\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidGltZXN0YW1wIjoiMjAyMS0wNC0xMFQxMjoxMTowN1oiLCJ0cmFuc2FjdGlvbklkIjoiMTIzIn0.OftB11ggkTCNZzWNW1_35xQ6sLBbO1QB6LtscxNUoTQ\",\n" +
+				"      \"dataDecoded\": \"dsiuidsjijdd\",    \n" +
+				"      \"error\": \"\"\n" +
+				"    }\n" +
+				"  ]\n" +
+				"}");
+		Mockito.when(keyManagerHelper.getAppId()).thenReturn("abc");
+		Mockito.when(keyManagerHelper.getRefId()).thenReturn("aiusi");
+		SBIValidator.EncryptValidatorResponseDto encryptValidatorResponseDto = new SBIValidator.EncryptValidatorResponseDto();
+		SBIValidator.EncryptValidatorResponse encryptValidatorResponse = new SBIValidator.EncryptValidatorResponse();
+		encryptValidatorResponseDto.setResponse(encryptValidatorResponse);
+		Mockito.when(keyManagerHelper.encryptionResponse(any(SBIValidator.EncryptValidatorRequestDto.class))).thenReturn(encryptValidatorResponseDto);
+		ReflectionTestUtils.invokeMethod(testRunService, "performRcaptureEncryption", testRunDetailsEntity);
+	}
+
+	/*
+	 * This class tests the performRcaptureDecryption method
+	 */
+	@Test
+	public void performRcaptureDecryptionTest() throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		Mockito.when(objectMapperConfig.objectMapper()).thenReturn(objectMapper);
+		TestRunDetailsEntity testRunDetailsEntity = new TestRunDetailsEntity();
+		testRunDetailsEntity.setMethodResponse("{\n" +
+				"  \"biometrics\": [\n" +
+				"    {\n" +
+				"      \"timestamp\": \"2021-04-10T12:11:07Z\",\n" +
+				"      \"transactionId\": \"123\",\n" +
+				"      \"data\": \"TDYUHU\",\n" +
+				"      \"dataDecoded\": \"RTYTYT\",\n" +
+				"      \"isEncrypted\": \"true\"\n" +
+				"    }\n" +
+				"  ]\n" +
+				"}\n");
+		ReflectionTestUtils.invokeMethod(testRunService, "performRcaptureDecryption", testRunDetailsEntity);
+		Mockito.when(keyManagerHelper.getAppId()).thenReturn("abc");
+		Mockito.when(keyManagerHelper.getRefId()).thenReturn("aiusi");
+		SBIValidator.DecryptValidatorRequestDto decryptValidatorRequestDto = new SBIValidator.DecryptValidatorRequestDto();
+		SBIValidator.DecryptValidatorResponseDto decryptValidatorResponseDto = new SBIValidator.DecryptValidatorResponseDto();
+		SBIValidator.DecryptValidatorResponse decryptValidatorResponse = new SBIValidator.DecryptValidatorResponse();
+		decryptValidatorResponse.setData("ewogICAgICAgICJkaWdpdGFsSWQiOiAiMTMyIiwKICAgICAgICAiYmlvVHlwZSI6ICJmYWNlIiwKICAgICAgfQ==");
+		decryptValidatorResponseDto.setResponse(decryptValidatorResponse);
+		Mockito.when(keyManagerHelper.decryptionResponse(any(SBIValidator.DecryptValidatorRequestDto.class))).thenReturn(decryptValidatorResponseDto);
+		ReflectionTestUtils.invokeMethod(testRunService, "performRcaptureDecryption", testRunDetailsEntity);
+	}
+
+	@Test
+	public void performRcaptureDecryptionExceptionTest() throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		Mockito.when(objectMapperConfig.objectMapper()).thenReturn(objectMapper);
+		TestRunDetailsEntity testRunDetailsEntity = new TestRunDetailsEntity();
+		testRunDetailsEntity.setMethodResponse("{\n" +
+				"  \"biometrics\": [\n" +
+				"    {\n" +
+				"      \"timestamp\": \"2021-04-10T12:11:07Z\",\n" +
+				"      \"transactionId\": \"123\",\n" +
+				"      \"data\": \"TDYUHU\",\n" +
+				"      \"dataDecoded\": \"RTYTYT\",\n" +
+				"      \"isEncrypted\": \"true\"\n" +
+				"    }\n" +
+				"  ]\n" +
+				"}\n");
+		ReflectionTestUtils.invokeMethod(testRunService, "performRcaptureDecryption", testRunDetailsEntity);
+		Mockito.when(keyManagerHelper.getAppId()).thenReturn("abc");
+		Mockito.when(keyManagerHelper.getRefId()).thenReturn("aiusi");
+		SBIValidator.DecryptValidatorRequestDto decryptValidatorRequestDto = new SBIValidator.DecryptValidatorRequestDto();
+		SBIValidator.DecryptValidatorResponseDto decryptValidatorResponseDto = new SBIValidator.DecryptValidatorResponseDto();
+		SBIValidator.DecryptValidatorResponse decryptValidatorResponse = new SBIValidator.DecryptValidatorResponse();
+		decryptValidatorResponseDto.setResponse(decryptValidatorResponse);
+		Mockito.when(keyManagerHelper.decryptionResponse(any(SBIValidator.DecryptValidatorRequestDto.class))).thenReturn(decryptValidatorResponseDto);
+		ReflectionTestUtils.invokeMethod(testRunService, "performRcaptureDecryption", testRunDetailsEntity);
 	}
 
 	/*
