@@ -4,7 +4,10 @@ import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.constants.AbisSpecVersions;
 import io.mosip.compliance.toolkit.constants.AppConstants;
 import io.mosip.compliance.toolkit.constants.SbiSpecVersions;
+import io.mosip.compliance.toolkit.dto.AddBioTestDataResponseDto;
+import io.mosip.compliance.toolkit.dto.BiometricTestDataDto;
 import io.mosip.compliance.toolkit.entity.MasterTemplatesEntity;
+import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.MasterTemplatesRepository;
 import io.mosip.kernel.core.authmanager.authadapter.model.AuthUserDetails;
 import io.mosip.kernel.core.authmanager.authadapter.model.MosipUserDto;
@@ -33,7 +36,7 @@ import java.io.InputStream;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = { TestContext.class, WebApplicationContext.class })
+@ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
 @RunWith(SpringRunner.class)
 @WebMvcTest
 public class ResourceManagementServiceTest {
@@ -67,7 +70,7 @@ public class ResourceManagementServiceTest {
 
     @Test
     public void uploadResourceFileTest() throws IOException {
-        ResponseWrapper<Boolean> response=new ResponseWrapper<>();
+        ResponseWrapper<Boolean> response = new ResponseWrapper<>();
         FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
         MockMultipartFile file = new MockMultipartFile("file", "MOSIP_DEFAULT_CHECK_QUALITY.zip", "multipart/form-data", inputFile);
         Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(false);
@@ -101,42 +104,46 @@ public class ResourceManagementServiceTest {
         version = AbisSpecVersions.SPEC_VER_0_9_0.getCode();
         inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
         jsonFile = new MockMultipartFile("file", "testFile.json", "multipart/form-data", inputFile);
-        ReflectionTestUtils.setField(resourceManagementService,"scanDocument",false);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
         Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileSize", "2000000");
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileNameLength", "50");
         resourceManagementService.uploadResourceFile(type, version, jsonFile);
     }
 
     @Test
     public void uploadResourceFileTest1() throws IOException {
-        ResponseWrapper<Boolean> responseWrapper=new ResponseWrapper<>();
+        ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
         String type = AppConstants.MOSIP_DEFAULT;
         String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
         FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
         MockMultipartFile multipartFile = new MockMultipartFile("file", "MOSIP_DEFAULT_CHECK_QUALITY.zip", "multipart/form-data", inputFile);
-        ReflectionTestUtils.setField(resourceManagementService,"scanDocument",false);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
         Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
-        responseWrapper=resourceManagementService.uploadResourceFile(type,version,multipartFile);
+        responseWrapper = resourceManagementService.uploadResourceFile(type, version, multipartFile);
 
         type = AppConstants.SCHEMAS;
         inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
         MockMultipartFile jsonFile = new MockMultipartFile("file", "testFile.json", "multipart/form-data", inputFile);
-        ReflectionTestUtils.setField(resourceManagementService,"scanDocument",false);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
         Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
-        responseWrapper=resourceManagementService.uploadResourceFile(type,version,multipartFile);
+        responseWrapper = resourceManagementService.uploadResourceFile(type, version, multipartFile);
 
         type = SBI_SCHEMA;
         inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
         jsonFile = new MockMultipartFile("file", "testFile.json", "multipart/form-data", inputFile);
-        ReflectionTestUtils.setField(resourceManagementService,"scanDocument",false);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
         Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
-        responseWrapper=resourceManagementService.uploadResourceFile(type,version,multipartFile);
+        responseWrapper = resourceManagementService.uploadResourceFile(type, version, multipartFile);
 
         type = SDK_SCHEMA;
         inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
         jsonFile = new MockMultipartFile("file", "testFile.json", "multipart/form-data", inputFile);
-        ReflectionTestUtils.setField(resourceManagementService,"scanDocument",false);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
         Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
-        responseWrapper=resourceManagementService.uploadResourceFile(type,version,multipartFile);
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileSize", "2000000");
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileNameLength", "50");
+        responseWrapper = resourceManagementService.uploadResourceFile(type, version, multipartFile);
 
     }
 
@@ -149,6 +156,8 @@ public class ResourceManagementServiceTest {
         MockMultipartFile multipartFile = new MockMultipartFile("file", "schema.json", "multipart/form-data", inputFile);
         ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
         Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileSize", "2000000");
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileNameLength", "50");
         responseWrapper = resourceManagementService.uploadResourceFile(type, version, multipartFile);
     }
 
@@ -161,6 +170,8 @@ public class ResourceManagementServiceTest {
         MockMultipartFile multipartFile = new MockMultipartFile("file", "testcase_schema.json", "multipart/form-data", inputFile);
         ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
         Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileSize", "2000000");
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileNameLength", "50");
         responseWrapper = resourceManagementService.uploadResourceFile(type, version, multipartFile);
     }
 
@@ -173,6 +184,8 @@ public class ResourceManagementServiceTest {
         MockMultipartFile multipartFile = new MockMultipartFile("file", "schema.json", "multipart/form-data", inputFile);
         ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
         Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileSize", "2000000");
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileNameLength", "50");
         responseWrapper = resourceManagementService.uploadResourceFile(type, version, multipartFile);
     }
 
@@ -185,6 +198,8 @@ public class ResourceManagementServiceTest {
         MockMultipartFile multipartFile = new MockMultipartFile("file", null, "multipart/form-data", inputFile);
         ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
         Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileSize", "2000000");
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileNameLength", "50");
         responseWrapper = resourceManagementService.uploadResourceFile(type, version, multipartFile);
     }
 
@@ -192,36 +207,42 @@ public class ResourceManagementServiceTest {
     public void uploadResourceFileTest6() throws IOException {
         FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
         MockMultipartFile file = new MockMultipartFile("file", "MOSIP_DEFAULT_ABIS_FACE.zip", "multipart/form-data", inputFile);
-        ReflectionTestUtils.setField(resourceManagementService,"scanDocument",false);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
         String version = AbisSpecVersions.SPEC_VER_0_9_0.getCode();
         String type = AppConstants.MOSIP_DEFAULT;
         Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileSize", "2000000");
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileNameLength", "50");
         resourceManagementService.uploadResourceFile(type, version, file);
     }
 
     @Test
     public void uploadResourceFileExceptionTest() throws IOException {
-        ResponseWrapper<Boolean> responseWrapper=new ResponseWrapper<>();
+        ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
         String type = AppConstants.MOSIP_DEFAULT;
         String version = SbiSpecVersions.SPEC_VER_0_9_5.getCode();
         FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
         MockMultipartFile multipartFile = new MockMultipartFile("file", null, "multipart/form-data", inputFile);
-        ReflectionTestUtils.setField(resourceManagementService,"scanDocument",false);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
         Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
-        responseWrapper=resourceManagementService.uploadResourceFile(type,version,multipartFile);
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileSize", "2000000");
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileNameLength", "50");
+        responseWrapper = resourceManagementService.uploadResourceFile(type, version, multipartFile);
 
     }
 
     @Test
     public void uploadResourceFileExceptionTest1() throws IOException {
-        ResponseWrapper<Boolean> responseWrapper=new ResponseWrapper<>();
+        ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
         String type = SBI_SCHEMA;
         String version = null;
         FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
         MockMultipartFile multipartFile = new MockMultipartFile("file", "MOSIP_DEFAULT_CHECK_QUALITY.zip", "multipart/form-data", inputFile);
-        ReflectionTestUtils.setField(resourceManagementService,"scanDocument",false);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
         Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
-        responseWrapper=resourceManagementService.uploadResourceFile(type,version,multipartFile);
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileSize", "2000000");
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileNameLength", "50");
+        responseWrapper = resourceManagementService.uploadResourceFile(type, version, multipartFile);
 
     }
 
@@ -234,35 +255,39 @@ public class ResourceManagementServiceTest {
         MockMultipartFile multipartFile = new MockMultipartFile("file", "MOSIP_DEFAULT_CHECK_QUALITY.zip", "multipart/form-data", inputFile);
         ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
         Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileSize", "2000000");
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileNameLength", "50");
         responseWrapper = resourceManagementService.uploadResourceFile(type, version, multipartFile);
     }
 
     @Test
     public void uploadResourceFileExceptionTest3() throws IOException {
-        ResponseWrapper<Boolean> responseWrapper=new ResponseWrapper<>();
+        ResponseWrapper<Boolean> responseWrapper = new ResponseWrapper<>();
         String type = ABIS_SCHEMA;
         String version = AbisSpecVersions.SPEC_VER_0_9_0.getCode();
         FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
         MockMultipartFile multipartFile = new MockMultipartFile("file", null, "multipart/form-data", inputFile);
-        ReflectionTestUtils.setField(resourceManagementService,"scanDocument",false);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
         Mockito.when(objectStore.putObject(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(false);
-        responseWrapper=resourceManagementService.uploadResourceFile(type,version,multipartFile);
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileSize", "2000000");
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileNameLength", "50");
+        responseWrapper = resourceManagementService.uploadResourceFile(type, version, multipartFile);
 
     }
 
     @Test(expected = Exception.class)
-    public void isVirusScanSuccessTest() throws Exception{
+    public void isVirusScanSuccessTest() throws Exception {
         FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
         MockMultipartFile file = new MockMultipartFile("file", "MOSIP_DEFAULT_CHECK_QUALITY.zip", "multipart/form-data", inputFile);
-        ReflectionTestUtils.invokeMethod(resourceManagementService,"isVirusScanSuccess",file);
+        ReflectionTestUtils.invokeMethod(resourceManagementService, "isVirusScanSuccess", file);
     }
 
     @Test
     public void uploadTemplateTest() throws IOException {
         FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
-        String templateName = "terms_and_conditions_template.vm";
+        String templateName = "terms_and_conditions_template";
         String version = "v1";
-        MockMultipartFile file = new MockMultipartFile("file", templateName, "multipart/form-data", inputFile);
+        MockMultipartFile file = new MockMultipartFile("file", "template.vm", "multipart/form-data", inputFile);
         Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(false);
         ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
         String langcode = "eng";
@@ -273,15 +298,17 @@ public class ResourceManagementServiceTest {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         MasterTemplatesEntity masterTemplateEntity = new MasterTemplatesEntity();
         when(masterTemplatesRepository.save(masterTemplateEntity)).thenReturn(masterTemplateEntity);
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileSize", "2000000");
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileNameLength", "50");
         resourceManagementService.uploadTemplate(langcode, templateName, version, file);
     }
 
     @Test
     public void uploadTemplateTest1() throws IOException {
         FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
-        String templateName = "terms_and_conditions_template.vm";
+        String templateName = "terms_and_conditions_template";
         String version = "v1";
-        MockMultipartFile file = new MockMultipartFile("file", templateName, "multipart/form-data", inputFile);
+        MockMultipartFile file = new MockMultipartFile("file", "template.vm", "multipart/form-data", inputFile);
         Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(false);
         ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
         String langcode = "eng";
@@ -292,54 +319,64 @@ public class ResourceManagementServiceTest {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         MasterTemplatesEntity masterTemplateEntity = new MasterTemplatesEntity();
         when(masterTemplatesRepository.save(masterTemplateEntity)).thenReturn(masterTemplateEntity);
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileSize", "2000000");
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileNameLength", "50");
         resourceManagementService.uploadTemplate(langcode, templateName, version, file);
     }
 
     @Test
     public void uploadTemplateInvalidBodyExceptionTest() throws IOException {
         FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
-        String templateName = "terms_and_conditions_template.zip";
+        String templateName = "terms_and_conditions_template";
         String version = "v1";
-        MockMultipartFile file = new MockMultipartFile("file", templateName, "multipart/form-data", inputFile);
+        MockMultipartFile file = new MockMultipartFile("file", "template.zip", "multipart/form-data", inputFile);
         Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(false);
         ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
         String langcode = "eng";
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileSize", "2000000");
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileNameLength", "50");
         resourceManagementService.uploadTemplate(langcode, templateName, version, file);
     }
 
     @Test
     public void uploadTemplateInvalidParamExceptionTest() throws IOException {
         FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
-        String templateName = "terms_and_conditions_template.zip";
+        String templateName = "terms_and_conditions_template";
         String version = "v1";
-        MockMultipartFile file = new MockMultipartFile("file", templateName, "multipart/form-data", inputFile);
+        MockMultipartFile file = new MockMultipartFile("file", "template.zip", "multipart/form-data", inputFile);
         Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(false);
         ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
         String langcode = null;
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileSize", "2000000");
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileNameLength", "50");
         resourceManagementService.uploadTemplate(langcode, templateName, version, file);
     }
 
     @Test
     public void uploadTemplateVirusExceptionTest() throws IOException {
         FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
-        String templateName = "terms_and_conditions_template.zip";
+        String templateName = "terms_and_conditions_template";
         String version = "v1";
-        MockMultipartFile file = new MockMultipartFile("file", templateName, "multipart/form-data", inputFile);
+        MockMultipartFile file = new MockMultipartFile("file", "template.zip", "multipart/form-data", inputFile);
         Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(false);
         ReflectionTestUtils.setField(resourceManagementService, "scanDocument", true);
         String langcode = "eng";
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileSize", "2000000");
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileNameLength", "50");
         resourceManagementService.uploadTemplate(langcode, templateName, version, file);
     }
 
     @Test
     public void uploadTemplateMultipleExtensionExceptionTest() throws IOException {
         FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
-        String templateName = "terms_and_conditions_template.zip.jar";
+        String templateName = "terms_and_conditions_template";
         String version = "v1";
-        MockMultipartFile file = new MockMultipartFile("file", templateName, "multipart/form-data", inputFile);
+        MockMultipartFile file = new MockMultipartFile("file", "terms_and_conditions_template.zip.jar", "multipart/form-data", inputFile);
         Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(false);
         ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
         String langcode = "eng";
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileSize", "2000000");
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileNameLength", "50");
         resourceManagementService.uploadTemplate(langcode, templateName, version, file);
     }
 
@@ -348,11 +385,73 @@ public class ResourceManagementServiceTest {
         FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
         String templateName = "terms_and_conditions_template";
         String version = "v1";
-        MockMultipartFile file = new MockMultipartFile("file", templateName, "multipart/form-data", inputFile);
+        MockMultipartFile file = new MockMultipartFile("file", "terms_and_conditions_template", "multipart/form-data", inputFile);
+        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(false);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
+        String langcode = "eng";
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileSize", "2000000");
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileNameLength", "50");
+        resourceManagementService.uploadTemplate(langcode, templateName, version, file);
+    }
+
+    @Test
+    public void uploadTemplateInvalidVersionExceptionTest() throws IOException {
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        String templateName = "terms_and_conditions_template";
+        String version = "1.0";
+        MockMultipartFile file = new MockMultipartFile("file", "terms_and_conditions_template.vm", "multipart/form-data", inputFile);
+        Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(false);
+        ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
+        String langcode = "eng";
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileSize", "2000000");
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileNameLength", "50");
+        resourceManagementService.uploadTemplate(langcode, templateName, version, file);
+    }
+
+    @Test
+    public void uploadTemplateExceptionTest() throws IOException {
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        String templateName = "terms_and_conditions_template";
+        String version = "v1";
+        MockMultipartFile file = new MockMultipartFile("file", "template.vm", "multipart/form-data", inputFile);
         Mockito.when(virusScan.scanDocument((byte[]) Mockito.any())).thenReturn(false);
         ReflectionTestUtils.setField(resourceManagementService, "scanDocument", false);
         String langcode = "eng";
         resourceManagementService.uploadTemplate(langcode, templateName, version, file);
+    }
+
+    @Test(expected = ToolkitException.class)
+    public void validResourceFileInputRequestInvalidTypeTest() {
+        ReflectionTestUtils.invokeMethod(resourceManagementService, "validResourceFileInputRequest", "@$$", "1.0");
+    }
+
+    @Test(expected = ToolkitException.class)
+    public void validResourceFileInputRequestInvalidVersionTest() {
+        ReflectionTestUtils.invokeMethod(resourceManagementService, "validResourceFileInputRequest", "abc", "#$%");
+    }
+
+    @Test(expected = ToolkitException.class)
+    public void validTemplateFileInputRequestTest() {
+        ReflectionTestUtils.invokeMethod(resourceManagementService, "validTemplateFileInputRequest", "@$%%#");
+    }
+
+    @Test(expected = ToolkitException.class)
+    public void validInputRequestInvalidFileSizeTest() throws IOException {
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        MockMultipartFile file = new MockMultipartFile("file", "schema.json", "multipart/form-data", inputFile);
+        //invalid file size
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileSize", "10");
+        ReflectionTestUtils.invokeMethod(resourceManagementService, "validInputRequest", file);
+    }
+
+    @Test(expected = ToolkitException.class)
+    public void validInputRequestInvalidFileNameSizeTest() throws IOException {
+        FileInputStream inputFile = new FileInputStream("src/test/java/io/mosip/compliance/toolkit/testFile.txt");
+        MockMultipartFile file = new MockMultipartFile("file", "schema.json", "multipart/form-data", inputFile);
+        //invalid file name length
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileSize", "2000000");
+        ReflectionTestUtils.setField(resourceManagementService, "allowedFileNameLength", "1");
+        ReflectionTestUtils.invokeMethod(resourceManagementService, "validInputRequest", file);
     }
 
     private MosipUserDto getMosipUserDto() {

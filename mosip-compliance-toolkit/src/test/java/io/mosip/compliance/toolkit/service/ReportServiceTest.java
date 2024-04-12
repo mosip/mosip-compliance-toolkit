@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,6 +26,7 @@ import io.mosip.compliance.toolkit.dto.report.*;
 import io.mosip.compliance.toolkit.entity.ComplianceTestRunSummaryEntity;
 import io.mosip.compliance.toolkit.entity.ComplianceReportSummaryEntity;
 import io.mosip.compliance.toolkit.entity.ComplianceTestRunSummaryPK;
+import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.*;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
 import io.mosip.compliance.toolkit.util.StringUtil;
@@ -39,6 +41,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -1394,7 +1397,7 @@ public class ReportServiceTest {
     }
 
     @Test
-    public void updateReportStatusTesterror2() {
+    public void updateReportStatusTestError2() {
         RequestWrapper<ReportRequestDto> requestWrapper = new RequestWrapper<>();
         ReportRequestDto reportRequestDto = new ReportRequestDto();
         reportRequestDto.setProjectType("SBsfI");
@@ -1424,6 +1427,21 @@ public class ReportServiceTest {
     }
 
     @Test
+    public void updateReportStatusTestException2() {
+        RequestWrapper<ReportRequestDto> requestWrapper = new RequestWrapper<>();
+        ReportRequestDto reportRequestDto = new ReportRequestDto();
+        reportRequestDto.setProjectType("SBsfI");
+        reportRequestDto.setTestRunId("12");
+        reportRequestDto.setProjectId("12374");
+        reportRequestDto.setProjectId("123");
+        reportRequestDto.setCollectionId("263");
+        requestWrapper.setRequest(reportRequestDto);
+        when(complianceTestRunSummaryRepository.findById(any(ComplianceTestRunSummaryPK.class))).thenThrow(new ToolkitException("",""));
+        ResponseWrapper<ComplianceTestRunSummaryDto> result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "updateReportStatus", "abc", requestWrapper, "draft", "review");
+        assertThat(result, instanceOf(ResponseWrapper.class));
+    }
+
+    @Test
     public void getAllTestcasesTest() {
         TestRunDetailsResponseDto testRunDetailsResponseDto = new TestRunDetailsResponseDto();
         testRunDetailsResponseDto.setCollectionId("1234");
@@ -1440,6 +1458,21 @@ public class ReportServiceTest {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         List<TestCaseDto> result = ReflectionTestUtils.invokeMethod(reportGeneratorService, "getAllTestcases", testRunDetailsResponseDto);
         assertThat(result, instanceOf(List.class));
+    }
+
+    @Test(expected = ToolkitException.class)
+    public void validInputRequestExceptionTest() {
+        ReportRequestDto requestDto = new ReportRequestDto();
+        requestDto.setAdminComments("");
+        ReflectionTestUtils.invokeMethod(reportGeneratorService, "validInputRequest", requestDto, "rejected");
+    }
+
+    @Test(expected = ToolkitException.class)
+    public void validInputRequestInvalidCommentsExceptionTest() {
+        ReportRequestDto requestDto = new ReportRequestDto();
+        requestDto.setAdminComments("#$%^&*");
+        requestDto.setPartnerComments("@#$%^&*");
+        ReflectionTestUtils.invokeMethod(reportGeneratorService, "validInputRequest", requestDto, "approve");
     }
 
     private MosipUserDto getMosipUserDto() {
