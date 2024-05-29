@@ -9,10 +9,12 @@ import java.util.Map;
 
 import javax.net.ssl.SSLContext;
 
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.io.HttpClientConnectionManager;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +24,7 @@ import org.springframework.web.client.RestTemplate;
 
 /**
  * @author Mayura Deshmukh
- * 
+ *
  * @since 1.0.0
  *
  */
@@ -63,8 +65,8 @@ public class Config {
 				.build();
 
 		SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
-
-		CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(csf).build();
+		HttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create().setSSLSocketFactory(csf).build();
+		CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(connectionManager).build();
 		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
 
 		requestFactory.setHttpClient(httpClient);

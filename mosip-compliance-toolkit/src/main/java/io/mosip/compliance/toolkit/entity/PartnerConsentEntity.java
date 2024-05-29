@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Component

@@ -22,13 +22,13 @@ import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
 @Transactional(rollbackOn = { Exception.class })
 public interface SbiProjectRepository extends BaseRepository<SbiProjectEntity, String> {
 
-	@Query("SELECT e FROM SbiProjectEntity e  WHERE e.partnerId= ?1 and e.projectType='SBI' and e.isDeleted<>'true' order by e.crDate desc")
+	@Query("SELECT e FROM SbiProjectEntity e  WHERE e.partnerId= ?1 and e.projectType='SBI' and e.isDeleted<>true order by e.crDate desc")
 	public List<SbiProjectEntity> findAllByPartnerId(String partnerId);
 
-	@Query("SELECT e FROM SbiProjectEntity e  WHERE e.id= ?1 and e.partnerId= ?2 and e.projectType='SBI' and e.isDeleted<>'true' order by e.crDate desc")
+	@Query("SELECT e FROM SbiProjectEntity e  WHERE e.id= ?1 and e.partnerId= ?2 and e.projectType='SBI' and e.isDeleted<>true order by e.crDate desc")
 	public Optional<SbiProjectEntity> findById(String id, String partnerId);
 	
-	@Query("SELECT e.name FROM SbiProjectEntity e  WHERE e.id= ?1 and e.partnerId= ?2 and e.isDeleted<>'true' order by e.crDate desc")
+	@Query("SELECT e.name FROM SbiProjectEntity e  WHERE e.id= ?1 and e.partnerId= ?2 and e.isDeleted<>true order by e.crDate desc")
 	public String getProjectNameById(String projectId, String partnerId);
 	
 	

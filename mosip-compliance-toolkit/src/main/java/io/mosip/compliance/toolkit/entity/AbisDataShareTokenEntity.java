@@ -3,7 +3,7 @@ package io.mosip.compliance.toolkit.entity;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Component
 @Entity

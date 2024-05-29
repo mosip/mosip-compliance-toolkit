@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import io.mosip.compliance.toolkit.dto.projects.AbisProjectDto;
 import io.mosip.compliance.toolkit.service.AbisProjectService;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @RestController
 @Tag(name = "abis-project-controller")

@@ -16,10 +16,10 @@ import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
 @Repository("TestRunDetailsRepository")
 public interface TestRunDetailsRepository extends BaseRepository<TestRunDetailsEntity, TestRunDetailsPK> {
 
-	@Query("SELECT e FROM TestRunDetailsEntity e  WHERE e.runId= ?1 and e.partnerId= ?2 and e.isDeleted<>'true' order by e.crDtimes desc")
+	@Query("SELECT e FROM TestRunDetailsEntity e  WHERE e.runId= ?1 and e.partnerId= ?2 and e.isDeleted<>true order by e.crDtimes desc")
 	public List<TestRunDetailsEntity> getTestRunDetails(String runId, String partnerId);
 	
-	@Query("SELECT e FROM TestRunPartialDetailsEntity e  WHERE e.runId= ?1 and e.partnerId= ?2 and e.isDeleted<>'true' order by e.crDtimes desc")
+	@Query("SELECT e FROM TestRunPartialDetailsEntity e  WHERE e.runId= ?1 and e.partnerId= ?2 and e.isDeleted<>true order by e.crDtimes desc")
 	public List<TestRunPartialDetailsEntity> getTestRunPartialDetails(String runId, String partnerId);
 
 	@Modifying
@@ -32,7 +32,7 @@ public interface TestRunDetailsRepository extends BaseRepository<TestRunDetailsE
 	@Query("DELETE FROM TestRunDetailsEntity e WHERE e.runId = ?1 AND e.partnerId = ?2")
 	public void deleteById(String runId, String partnerId);
 	
-	@Query("SELECT e FROM TestRunDetailsEntity e  WHERE e.runId= ?1 and e.partnerId= ?2 and e.testcaseId= ?3 and e.methodId= ?4 and e.isDeleted<>'true' order by e.crDtimes desc")
+	@Query("SELECT e FROM TestRunDetailsEntity e  WHERE e.runId= ?1 and e.partnerId= ?2 and e.testcaseId= ?3 and e.methodId= ?4 and e.isDeleted<>true order by e.crDtimes desc")
 	public TestRunDetailsEntity getMethodDetails(String runId, String partnerId, String testcaseId, String methodId);
 	
 }

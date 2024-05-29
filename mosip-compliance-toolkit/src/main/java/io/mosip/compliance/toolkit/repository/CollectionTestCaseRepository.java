@@ -13,7 +13,7 @@ import io.mosip.kernel.core.dataaccess.spi.repository.BaseRepository;
 @Repository("TestCaseCollectionRepository")
 public interface CollectionTestCaseRepository extends BaseRepository<CollectionTestCaseEntity, CollectionTestCasePK> {
 
-	@Query("SELECT t.testcaseJson FROM CollectionTestCaseEntity ctm JOIN ctm.collection c JOIN ctm.testcase t WHERE c.id =:collectionId AND c.partnerId =:partnerId AND c.isDeleted<>'true'")
+	@Query("SELECT t.testcaseJson FROM CollectionTestCaseEntity ctm JOIN ctm.collection c JOIN ctm.testcase t WHERE c.id =:collectionId AND c.partnerId =:partnerId AND c.isDeleted<>true")
 	public List<String> getTestCasesByCollectionId(@Param("collectionId") String collectionId,
 			@Param("partnerId") String partnerId);
 

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.2.RELEASE</version>
+		<version>3.2.3</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>io.mosip.compliance</groupId>
 	<artifactId>mosip-compliance-toolkit-service</artifactId>
-	<version>1.5.0-SNAPSHOT</version>
+	<version>1.5.0-Java21-SNAPSHOT</version>
 	<name>mosip-compliance-toolkit-service</name>
 	<description>mosip compliance toolkit</description>
 
@@ -38,54 +38,40 @@
 	</developers>
 
 	<properties>
-		<java.version>11</java.version>
-		<kernel.version>1.2.0.1-B1</kernel.version>
+		<java.version>21</java.version>
+		<kernel.version>1.2.1-java21-SNAPSHOT</kernel.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- maven -->
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
-		<maven.compiler.version>3.8.0</maven.compiler.version>
-		<maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
-		<maven.war.plugin.version>3.1.0</maven.war.plugin.version>
-		<maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
-		<maven.jacoco.version>0.8.5</maven.jacoco.version>
-		<maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version>
-		<maven.javadoc.version>3.2.0</maven.javadoc.version>
-		<maven-shade-plugin.version>2.3</maven-shade-plugin.version>
-
-		<!-- spring -->
-		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
-		<spring.data.jpa.version>2.0.7.RELEASE</spring.data.jpa.version>
-		<spring.data.version>2.0.9.RELEASE</spring.data.version>
-		<spring.security.test.version>5.0.5.RELEASE</spring.security.test.version>
-		<spring-cloud-config.version>2.0.0.RELEASE</spring-cloud-config.version>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
+		<maven.compiler.version>3.9.6</maven.compiler.version>
+		<maven.jacoco.version>0.8.11</maven.jacoco.version>
+		<maven.sonar.plugin.version>3.10.0.2594</maven.sonar.plugin.version>
 
 		<!-- Data Access -->
 		<eclipselink.version>2.5.0</eclipselink.version>
 		<mysql.connector.version>5.1.46</mysql.connector.version>
-		<h2.version>1.4.197</h2.version>
-		<postgresql.version>42.2.2</postgresql.version>
 		<springfox.version>2.9.2</springfox.version>
 
-		<lombok.version>1.18.8</lombok.version>
+		<lombok.version>1.18.30</lombok.version>
 		<swagger.version>2.9.2</swagger.version>
 		<swaggercore.version>2.2.8</swaggercore.version>
 		<squareup.okhttp.version>2.7.5</squareup.okhttp.version>
 		<io.rest-assured.version>4.0.0</io.rest-assured.version>
 		<jose4j.version>0.7.1</jose4j.version>
 		<io.micrometer.prometheus.version>1.4.2</io.micrometer.prometheus.version>
-		
+
 		<!-- Object Store -->
-		<kernel.khazana.version>1.2.0.1</kernel.khazana.version>
-		
-		<biometrics-util.version>1.2.0.1</biometrics-util.version>
+		<kernel.khazana.version>1.2.1-java21-SNAPSHOT</kernel.khazana.version>
+
+		<biometrics-util.version>1.2.1-java21-SNAPSHOT</biometrics-util.version>
 		<org.openpnp.opencv.version>4.5.3-4</org.openpnp.opencv.version>
 		<jnbis.version>2.0.2</jnbis.version>
-		<imagedecoder.version>0.9.0</imagedecoder.version>
+		<imagedecoder.version>0.0.1-java21-SNAPSHOT</imagedecoder.version>
 
 		<velocity.version>1.6.4</velocity.version>
-		
+
 		<sonar.coverage.exclusions>
 			**/config/**,
 			**/constants/**,
@@ -99,13 +85,24 @@
 		</sonar.coverage.exclusions>
 		<sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
 	</properties>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>io.mosip.kernel</groupId>
+				<artifactId>kernel-bom</artifactId>
+				<version>1.2.1-java21-SNAPSHOT</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>io.mosip.imagedecoder</groupId>
 			<artifactId>imagedecoder</artifactId>
 			<version>${imagedecoder.version}</version>
-    </dependency>
-    <dependency>
+		</dependency>
+		<dependency>
 			<groupId>io.swagger.core.v3</groupId>
 			<artifactId>swagger-models</artifactId>
 			<version>${swaggercore.version}</version>
@@ -117,9 +114,9 @@
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.github.mhshams/jnbis -->
 		<dependency>
-		    <groupId>com.github.mhshams</groupId>
-		    <artifactId>jnbis</artifactId>
-		    <version>${jnbis.version}</version>
+			<groupId>com.github.mhshams</groupId>
+			<artifactId>jnbis</artifactId>
+			<version>${jnbis.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.biometric.util</groupId>
@@ -144,25 +141,21 @@
 		<dependency>
 			<groupId>io.rest-assured</groupId>
 			<artifactId>rest-assured</artifactId>
-			<version>${io.rest-assured.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.rest-assured/rest-assured-all -->
 		<dependency>
 			<groupId>io.rest-assured</groupId>
 			<artifactId>rest-assured-all</artifactId>
-			<version>${io.rest-assured.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.rest-assured/rest-assured-common -->
 		<dependency>
 			<groupId>io.rest-assured</groupId>
 			<artifactId>rest-assured-common</artifactId>
-			<version>${io.rest-assured.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.rest-assured/json-path -->
 		<dependency>
 			<groupId>io.rest-assured</groupId>
 			<artifactId>json-path</artifactId>
-			<version>${io.rest-assured.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -187,12 +180,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
-			<version>${spring.boot.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>2.23.4</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -209,27 +200,19 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
-			<version>${spring.boot.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
-			<version>${spring.security.test.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>${lombok.version}</version>
 			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-config</artifactId>
-			<version>${spring-cloud-config.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -247,10 +230,10 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-		    <groupId>org.xhtmlrenderer</groupId>
-		    <artifactId>flying-saucer-pdf-openpdf</artifactId>
-		    <version>9.1.20</version>
-		</dependency>	
+			<groupId>org.xhtmlrenderer</groupId>
+			<artifactId>flying-saucer-pdf-openpdf</artifactId>
+			<version>9.1.20</version>
+		</dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
@@ -264,27 +247,22 @@
 		<dependency>
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-core</artifactId>
-			<version>${io.micrometer.prometheus.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-prometheus</artifactId>
-			<version>${io.micrometer.prometheus.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
-			<version>2.13.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.13.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
-			<version>2.13.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.networknt</groupId>
@@ -295,6 +273,10 @@
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20180130</version>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.mosip.kernel</groupId>
@@ -406,7 +388,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring.boot.version}</version>
 				<configuration>
 					<executable>true</executable>
 					<layout>ZIP</layout>
@@ -472,7 +453,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>3.6.3</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -488,7 +469,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.5</version>
 				<executions>
 					<execution>
 						<id>sign-artifacts</id>

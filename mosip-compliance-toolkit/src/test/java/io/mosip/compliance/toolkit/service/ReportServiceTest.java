@@ -66,7 +66,7 @@ import io.mosip.kernel.core.http.ResponseWrapper;
 import io.mosip.compliance.toolkit.dto.report.PartnerDetailsDto.Partner;
 
 
-import javax.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.AssertTrue;
 import java.util.Optional;
 
 @TestPropertySource(properties = "mosip.toolkit.api.id.partner.report.get=value")

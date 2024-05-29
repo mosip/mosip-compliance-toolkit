@@ -27,7 +27,7 @@ import io.mosip.compliance.toolkit.service.ReportService;
 import io.mosip.compliance.toolkit.util.RequestValidator;
 import io.mosip.kernel.core.http.RequestWrapper;
 
-import javax.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.AssertTrue;
 
 @ContextConfiguration(classes = {TestContext.class, WebApplicationContext.class})
 @RunWith(SpringRunner.class)

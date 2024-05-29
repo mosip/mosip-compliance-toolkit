@@ -2,7 +2,7 @@ package io.mosip.compliance.toolkit.entity;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import lombok.*;
 import org.springframework.stereotype.Component;
@@ -23,13 +23,13 @@ public class ComplianceReportSummaryEntity {
     @Column(name = "collection_id")
     private String collectionId;
 
-    @Id
     @Column(name = "run_id")
     private String runId;
 
     @Column(name = "project_type")
     private String projectType;
 
+    @Id
     @Column(name = "partner_id")
     private String partnerId;
 
