@@ -48,7 +48,7 @@ ARG container_user=mosip
 ARG container_user_group=mosip
 
 # can be passed during Docker build as build time environment for github branch to pickup configuration from.
-ARG container_user_uid=1002
+ARG container_user_uid=1001
 
 # can be passed during Docker build as build time environment for github branch to pickup configuration from.
 ARG container_user_gid=1001
@@ -57,7 +57,7 @@ ARG container_user_gid=1001
 RUN apk -q update \
 && apk add -q unzip \
 && addgroup -g ${container_user_gid} ${container_user_group} \
-&& adduser -s /bin/sh -u ${container_user_uid} -g ${container_user_group} -h /home/${container_user} --disabled-password ${container_user}
+&& adduser -s /bin/sh -u ${container_user_uid} -G ${container_user_group} -h /home/${container_user} --disabled-password ${container_user}
 
 # set working directory for the user
 WORKDIR /home/${container_user}
