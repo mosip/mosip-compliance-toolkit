@@ -52,7 +52,7 @@ public class MainControllerTest {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ABIS_PARTNER"));
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
-        authUserDetails.setAuthorities(authorities);
+        authUserDetails.addRoleAuthorities(authorities);
         SecurityContextHolder.setContext(securityContext);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
@@ -65,7 +65,7 @@ public class MainControllerTest {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("abc"));
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
-        authUserDetails.setAuthorities(authorities);
+        authUserDetails.addRoleAuthorities(authorities);
         SecurityContextHolder.setContext(securityContext);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
@@ -78,7 +78,7 @@ public class MainControllerTest {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ABIS_PARTNER"));
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
-        authUserDetails.setAuthorities(authorities);
+        authUserDetails.addRoleAuthorities(authorities);
         SecurityContextHolder.setContext(securityContext);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);
@@ -92,7 +92,7 @@ public class MainControllerTest {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("abc"));
         AuthUserDetails authUserDetails = new AuthUserDetails(mosipUserDto, "token");
-        authUserDetails.setAuthorities(authorities);
+        authUserDetails.addRoleAuthorities(authorities);
         SecurityContextHolder.setContext(securityContext);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         Mockito.when(authentication.getPrincipal()).thenReturn(authUserDetails);

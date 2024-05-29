@@ -35,7 +35,7 @@ public interface ComplianceTestRunSummaryRepository
             "FROM ComplianceTestRunSummaryEntity cts, CollectionEntity c " +
             "WHERE cts.collectionId = c.id " +
             "AND cts.reportStatus = ?1 " +
-            "AND cts.isDeleted <> 'true' " +
+            "AND cts.isDeleted <> true " +
             "ORDER BY cts.crDtimes DESC")
     public List<ComplianceReportSummaryEntity> findAllByReportStatus(String reportStatus);
 
@@ -61,7 +61,7 @@ public interface ComplianceTestRunSummaryRepository
             "WHERE cts.collectionId = c.id " +
             "AND cts.partnerId = ?1 " +
             "AND cts.reportStatus<>'draft' " +
-            "AND cts.isDeleted <> 'true' " +
+            "AND cts.isDeleted <> true " +
             "ORDER BY cts.crDtimes DESC")
     public List<ComplianceReportSummaryEntity> findAllBySubmittedReportsPartnerId(String partnerId);
 

@@ -3,7 +3,7 @@ package io.mosip.compliance.toolkit.controllers;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import io.mosip.compliance.toolkit.util.CommonUtil;
 import io.swagger.v3.oas.annotations.Operation;
