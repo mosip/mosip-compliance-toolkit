@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.mosip.commons.khazana.spi.ObjectStoreAdapter;
 import io.mosip.compliance.toolkit.constants.*;
 import io.mosip.compliance.toolkit.dto.collections.CollectionDto;
+import io.mosip.compliance.toolkit.dto.projects.SbiProjectDto;
 import io.mosip.compliance.toolkit.dto.projects.SdkProjectDto;
 import io.mosip.compliance.toolkit.dto.testcases.TestCaseDto;
 import io.mosip.compliance.toolkit.entity.BiometricTestDataEntity;
 import io.mosip.compliance.toolkit.entity.SdkProjectEntity;
+import io.mosip.compliance.toolkit.exceptions.ToolkitException;
 import io.mosip.compliance.toolkit.repository.BiometricTestDataRepository;
 import io.mosip.compliance.toolkit.repository.SdkProjectRepository;
 import io.mosip.compliance.toolkit.util.ObjectMapperConfig;
@@ -239,22 +241,86 @@ public class SdkProjectServiceTest {
     @Test
     public void addSdkProjectExceptionTest(){
         SdkProjectDto sdkProjectDto = new SdkProjectDto();
+        sdkProjectDto.setName("sdk project");
+        sdkProjectDto.setWebsiteUrl("https://test.com");
         sdkProjectDto.setProjectType(ProjectTypes.SDK.getCode());
         sdkProjectDto.setSdkVersion(SdkSpecVersions.SPEC_VER_0_9_0.getCode());
         sdkProjectDto.setPurpose(SdkPurpose.CHECK_QUALITY.getCode());
-        sdkProjectService.addSdkProject(sdkProjectDto);
         sdkProjectDto.setUrl("http://localhost:9099/biosdk-service");
         sdkProjectDto.setBioTestDataFileName(null);
-        sdkProjectService.addSdkProject(sdkProjectDto);
 
         sdkProjectDto.setBioTestDataFileName(AppConstants.MOSIP_DEFAULT);
 
         BiometricTestDataEntity biometricTestData = new BiometricTestDataEntity();
         biometricTestData.setFileId("1234");
-        Mockito.doThrow(DataIntegrityViolationException.class).when(biometricTestDataRepository).findByTestDataName(Mockito.any(), Mockito.any());
         Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
         Mockito.when(objectMapperConfig.objectMapper()).thenReturn(null);
         sdkProjectService.addSdkProject(sdkProjectDto);
+    }
+
+    @Test
+    public void addSdkProjectDataIntegrityViolationExceptionTest(){
+        SdkProjectDto sdkProjectDto = new SdkProjectDto();
+        sdkProjectDto.setName("sdk project");
+        sdkProjectDto.setWebsiteUrl("https://test.com");
+        sdkProjectDto.setProjectType(ProjectTypes.SDK.getCode());
+        sdkProjectDto.setSdkVersion(SdkSpecVersions.SPEC_VER_0_9_0.getCode());
+        sdkProjectDto.setPurpose(SdkPurpose.CHECK_QUALITY.getCode());
+        sdkProjectDto.setUrl("http://localhost:9099/biosdk-service");
+        sdkProjectDto.setBioTestDataFileName(null);
+
+        sdkProjectDto.setBioTestDataFileName("abc");
+
+        BiometricTestDataEntity biometricTestData = new BiometricTestDataEntity();
+        biometricTestData.setFileId("1234");
+        Mockito.when(biometricTestDataRepository.findByTestDataName(Mockito.any(), Mockito.any())).thenThrow(new DataIntegrityViolationException(""));
+        Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
+        Mockito.when(objectMapperConfig.objectMapper()).thenReturn(null);
+        sdkProjectService.addSdkProject(sdkProjectDto);
+    }
+
+    @Test
+    public void addSdkProjectToolkitExceptionTest(){
+        SdkProjectDto sdkProjectDto = new SdkProjectDto();
+        sdkProjectDto.setName("sdk project");
+        sdkProjectDto.setWebsiteUrl("https://test.com");
+        sdkProjectDto.setProjectType(ProjectTypes.SDK.getCode());
+        sdkProjectDto.setSdkVersion(SdkSpecVersions.SPEC_VER_0_9_0.getCode());
+        sdkProjectDto.setPurpose(SdkPurpose.CHECK_QUALITY.getCode());
+        sdkProjectDto.setUrl("http://localhost:9099/biosdk-service");
+        sdkProjectDto.setBioTestDataFileName(null);
+        sdkProjectDto.setBioTestDataFileName("abc");
+
+        BiometricTestDataEntity biometricTestData = new BiometricTestDataEntity();
+        biometricTestData.setFileId("1234");
+        Mockito.when(biometricTestDataRepository.findByTestDataName(Mockito.any(), Mockito.any())).thenThrow(new ToolkitException("",""));
+        Mockito.when(objectStore.exists(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
+        Mockito.when(objectMapperConfig.objectMapper()).thenReturn(null);
+        sdkProjectService.addSdkProject(sdkProjectDto);
+    }
+
+    @Test(expected = ToolkitException.class)
+    public void validInputRequestInvalidNameExceptionTest() {
+        SdkProjectDto sdkProjectDto = new SdkProjectDto();
+        sdkProjectDto.setName("$$%$%");
+        ReflectionTestUtils.invokeMethod(sdkProjectService, "validInputRequest", sdkProjectDto, true);
+    }
+
+    @Test(expected = ToolkitException.class)
+    public void validInputRequestInvalidUrlExceptionTest() {
+        SdkProjectDto sdkProjectDto = new SdkProjectDto();
+        sdkProjectDto.setName("abc");
+        sdkProjectDto.setWebsiteUrl("$#$%$");
+        ReflectionTestUtils.invokeMethod(sdkProjectService, "validInputRequest", sdkProjectDto, true);
+    }
+
+    @Test(expected = ToolkitException.class)
+    public void validInputRequestInvalidBaseUrlExceptionTest() {
+        SdkProjectDto sdkProjectDto = new SdkProjectDto();
+        sdkProjectDto.setName("abc");
+        sdkProjectDto.setWebsiteUrl("https://test.com");
+        sdkProjectDto.setUrl("%$");
+        ReflectionTestUtils.invokeMethod(sdkProjectService, "validInputRequest", sdkProjectDto, true);
     }
 
     /*

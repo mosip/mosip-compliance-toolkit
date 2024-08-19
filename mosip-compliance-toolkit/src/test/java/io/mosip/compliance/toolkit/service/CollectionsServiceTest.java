@@ -402,6 +402,8 @@ public class CollectionsServiceTest {
         testCaseWrapper.setResponse(testCaseDtoList);
         Mockito.when(testCasesService.getSbiTestCases(Mockito.any(),Mockito.any(),Mockito.any(),Mockito.any(), Mockito.any())).thenReturn(testCaseWrapper);
         ReflectionTestUtils.setField(collectionsService, "complianceIgnoreTestcases", "s122,s123");
+        ReflectionTestUtils.setField(collectionsService, "complianceCollectionName", "compliance collection");
+        ReflectionTestUtils.setField(collectionsService, "qualityAssessmentCollectionName", "quality assessment collection");
         collectionsService.addDefaultCollection(collectionType, sbiProjectDto, null, null,"sbi123");
 
         //sdk
