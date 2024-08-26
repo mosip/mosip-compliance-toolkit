@@ -69,7 +69,7 @@
 		<springfox.version>2.9.2</springfox.version>
 
 		<lombok.version>1.18.8</lombok.version>
-		<swagger.version>2.9.2</swagger.version>
+		<swagger.version>2.10.0</swagger.version>
 		<swaggercore.version>2.2.8</swaggercore.version>
 		<squareup.okhttp.version>2.7.5</squareup.okhttp.version>
 		<io.rest-assured.version>4.0.0</io.rest-assured.version>
