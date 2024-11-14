@@ -300,7 +300,7 @@ public class CollectionsService {
 						}
 						CollectionEntity inputEntity = new CollectionEntity();
 						inputEntity.setId(RandomIdGenerator.generateUUID(
-								collectionRequest.getProjectType().toLowerCase() + "_" + collectionType, "", 36));
+								collectionRequest.getProjectType().toLowerCase(), "", 36));
 						inputEntity.setName(collectionRequest.getCollectionName());
 						inputEntity.setSbiProjectId(sbiProjectId);
 						inputEntity.setSdkProjectId(sdkProjectId);
