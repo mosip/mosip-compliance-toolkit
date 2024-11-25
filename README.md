@@ -1,4 +1,4 @@
-[![Maven Package upon a push](https://github.com/mosip/mosip-compliance-toolkit/actions/workflows/push_trigger.yml/badge.svg?branch=release-1.4.0)](https://github.com/mosip/mosip-compliance-toolkit/actions/workflows/push_trigger.yml)
+[![Maven Package upon a push](https://github.com/mosip/mosip-compliance-toolkit/actions/workflows/push-trigger.yml/badge.svg?branch=release-1.4.0)](https://github.com/mosip/mosip-compliance-toolkit/actions/workflows/push-trigger.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=release-1.4.0&project=mosip_mosip-compliance-toolkit&metric=alert_status)](https://sonarcloud.io/dashboard?branch=release-1.4.0&id=mosip_mosip-compliance-toolkit)
 
 # Mosip-compliance-toolkit 
