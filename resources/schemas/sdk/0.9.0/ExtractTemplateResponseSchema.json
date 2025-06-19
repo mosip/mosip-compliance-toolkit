@@ -658,7 +658,7 @@
 												"object",
 												"null"
 											],
-											"additionalProperties": false
+											"additionalProperties": true
 										},
 										"birs": {
 											"type": "null"
