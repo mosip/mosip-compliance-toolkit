@@ -20,6 +20,7 @@ on:
       - 1.*
       - 0.*
       - develop
+      - MOSIP*
 
 jobs:
   build-maven-mosip-compliance-toolkit:
@@ -52,7 +53,7 @@ jobs:
     needs: build-maven-mosip-compliance-toolkit
     strategy:
       matrix:
-        include:
+        include:nandy
           - SERVICE_LOCATION: 'mosip-compliance-toolkit'
             SERVICE_NAME: 'compliance-toolkit-service'
             BUILD_ARTIFACT: 'mosip-compliance-toolkit'
