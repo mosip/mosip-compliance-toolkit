@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>io.mosip.compliance</groupId>
 	<artifactId>mosip-compliance-toolkit-service</artifactId>
-	<version>1.4.2-SNAPSHOT</version>
+	<version>1.4.2</version>
 	<name>mosip-compliance-toolkit-service</name>
 	<description>mosip compliance toolkit</description>
 	<url>https://github.com/mosip/mosip-compliance-toolkit</url>
@@ -427,7 +427,7 @@
 				<artifactId>maven-deploy-plugin</artifactId>
 				<version>${maven.deploy.plugin.version}</version>
 				<configuration>
-					<skip>true</skip>
+					<skip>false</skip>
 				</configuration>
 				<executions>
 					<execution>
@@ -437,7 +437,7 @@
 							<goal>deploy</goal>
 						</goals>
 						<configuration>
-							<skip>true</skip>
+							<skip>false</skip>
 						</configuration>
 					</execution>
 				</executions>
