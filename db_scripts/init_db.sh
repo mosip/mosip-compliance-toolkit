@@ -7,7 +7,7 @@ if [ $# -ge 1 ] ; then
 fi
 
 NS=compliance-toolkit
-CHART_VERSION=12.0.1-develop
+CHART_VERSION=12.0.1
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo add mosip https://mosip.github.io/mosip-helm
 helm repo update
