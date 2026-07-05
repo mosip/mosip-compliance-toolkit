@@ -1,4 +1,4 @@
-\c mosip_toolkit sysadmin
+\c :mosipdbname sysadmin
 
 DROP SEQUENCE IF EXISTS toolkit.batch_step_execution_seq;
 DROP SEQUENCE IF EXISTS toolkit.batch_job_execution_seq;

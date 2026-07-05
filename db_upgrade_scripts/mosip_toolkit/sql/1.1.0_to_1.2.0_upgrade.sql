@@ -1,4 +1,4 @@
-\c mosip_toolkit sysadmin
+\c :mosipdbname sysadmin
 
 
 -- \ir ../ddl/prereg-applications.sql

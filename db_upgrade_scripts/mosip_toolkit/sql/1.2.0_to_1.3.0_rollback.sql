@@ -1,4 +1,4 @@
-\c mosip_toolkit sysadmin
+\c :mosipdbname sysadmin
 
 -- abis_projects
 COMMENT ON COLUMN toolkit.abis_projects.modality IS NULL;
