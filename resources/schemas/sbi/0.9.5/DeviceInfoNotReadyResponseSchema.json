@@ -5,6 +5,7 @@
 	"description": "DeviceInfo response Schema",
 	"additionalProperties": false,
 	"type": "array",
+	"minItems": 1,
 	"items": [
 		{
 			"type": "object",
@@ -236,15 +237,11 @@
 					"properties": {
 						"errorCode": {
 							"$ref": "#/definitions/non-empty-string",
-							"not": {
-						        "enum": ["0"]
-						    }
+						        "enum": ["110"]
 						},
 						"errorInfo": {
 							"$ref": "#/definitions/non-empty-string",
-							"not": {
-						        "enum": ["Success"]
-						    }
+						        "enum": ["Device is not ready"]
 						}
 					},
 					"required": [

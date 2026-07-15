@@ -1,8 +1,8 @@
 {
 	"$schema": "https://json-schema.org/draft/2019-09/schema#",
-	"$id": "http://mosip-compliance-toolkit.com/schemas/TransactionIdErrorRCaptureResponseSchema.json",
-	"title": "Transaction Id Error RCapture Response Schema",
-	"description": "Transaction Id Error RCapture Response Schema",
+	"$id": "http://mosip-compliance-toolkit.com/schemas/BioCountMismatchRCaptureResponseSchema.json",
+	"title": "Bio Count Mismatch RCapture Response Schema",
+	"description": "Bio Count Mismatch RCapture Response Schema",
 	"type": "object",
 	"additionalProperties": false,
 	"properties": {
@@ -194,7 +194,9 @@
 								},
 								"transactionId": {
 									"type": "string",
-									"pattern": "^[a-zA-Z0-9-]+$"
+									"pattern": "^[a-zA-Z0-9-]+$",
+									"minLength": 4,
+									"maxLength": 50
 								},
 								"timestamp": {
 									"string": "string",
@@ -356,11 +358,15 @@
 							"properties": {
 								"errorCode": {
 									"$ref": "#/definitions/non-empty-string",
-									"enum": ["112"]
+									"enum": [
+										"109"
+									]
 								},
 								"errorInfo": {
 									"$ref": "#/definitions/non-empty-string",
-									"enum": ["Invalid Transaction ID"]
+									"enum": [
+										"Requested number of biometric (Finger/IRIS) not supported"
+									]
 								}
 							},
 							"required": [

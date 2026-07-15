@@ -373,10 +373,12 @@
 							"additionalProperties": false,
 							"properties": {
 								"errorCode": {
-									"$ref": "#/definitions/non-empty-string"
+									"$ref": "#/definitions/non-empty-string",
+									"enum": ["112"]
 								},
 								"errorInfo": {
-									"$ref": "#/definitions/non-empty-string"
+									"$ref": "#/definitions/non-empty-string",
+									"enum": ["Invalid Transaction ID"]
 								}
 							},
 							"required": [
