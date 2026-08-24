@@ -821,10 +821,10 @@ public class BiometricTestDataService {
                 List<List<ValidatorDef>> validatorDefsList = testCaseDto.getValidatorDefs();
                 for (int i = 0; i < validatorDefsList.size(); i++) {
                     if (testCaseDto.getMethodName().size() > i) {
-                        builder.append("Validators for " + testCaseDto.getMethodName().get(i) + "\n");
+                        builder.append("Validators for ").append(testCaseDto.getMethodName().get(i)).append("\n");
                         for (ValidatorDef validatorDef : validatorDefsList.get(i)) {
-                            builder.append("Name - " + validatorDef.getName() + "\n");
-                            builder.append("Description - " + validatorDef.getDescription() + "\n");
+                            builder.append("Name - ").append(validatorDef.getName()).append("\n");
+                            builder.append("Description - ").append(validatorDef.getDescription()).append("\n");
                         }
                         builder.append("\n");
                     }

@@ -733,10 +733,10 @@ public class ReportService {
 		return validationResult;
 	}
 
-	private PartnerTable getPartnerDetails(String projectId) throws Exception {
+	private PartnerTable getPartnerDetails(String projectId) throws IOException {
 		PartnerTable partnerTable = new PartnerTable();
 		PartnerDetailsDto partnerDetailsDto = partnerManagerHelper.getPartnerDetails(projectId);
-		if (partnerDetailsDto != null && partnerDetailsDto.getErrors().size() == 0) {
+		if (partnerDetailsDto != null && partnerDetailsDto.getErrors().isEmpty()) {
 			Partner partner = partnerDetailsDto.getResponse();
 			partnerTable.setOrgName(partner.getOrganizationName());
 			partnerTable.setAddress(partner.getAddress());
