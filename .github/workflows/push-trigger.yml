@@ -72,7 +72,7 @@ jobs:
   sonar_analysis:
     needs: build-maven-mosip-compliance-toolkit
     if: "${{  github.event_name != 'pull_request' }}"
-    uses: mosip/kattu/.github/workflows/maven-sonar-analysis.yml@master
+    uses: mosip/kattu/.github/workflows/maven-sonar-analysis-new.yml@develop
     with:
       SERVICE_LOCATION: ./mosip-compliance-toolkit
     secrets:
