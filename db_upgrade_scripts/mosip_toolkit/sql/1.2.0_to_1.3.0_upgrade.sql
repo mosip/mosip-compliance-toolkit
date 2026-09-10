@@ -1,4 +1,4 @@
-\c mosip_toolkit sysadmin
+\c :mosipdbname sysadmin
 
 -- add new columns in abis_projects table.
 ALTER TABLE toolkit.abis_projects Add COLUMN modality character varying(256) NOT NULL DEFAULT 'All';
@@ -226,7 +226,7 @@ END $$;
 \set conn_str 'dbname=mosip_pms user=' :db_super_user ' password=' :db_password
 
 -- update org_name table for abis_projects table
-UPDATE mosip_toolkit.toolkit.abis_projects AS t
+UPDATE :mosipdbname.toolkit.abis_projects AS t
 SET org_name = i.name
 FROM dblink(
   :'conn_str',
@@ -235,7 +235,7 @@ FROM dblink(
 WHERE partner_id = i.id AND t.org_name = 'Not_Available';
 
 -- update org_name table for sbi_projects table
-UPDATE mosip_toolkit.toolkit.sbi_projects AS t
+UPDATE :mosipdbname.toolkit.sbi_projects AS t
 SET org_name = i.name
 FROM dblink(
   :'conn_str',
@@ -244,7 +244,7 @@ FROM dblink(
 WHERE partner_id = i.id AND t.org_name = 'Not_Available';
 
 -- update org_name table for sdk_projects table
-UPDATE mosip_toolkit.toolkit.sdk_projects AS t
+UPDATE :mosipdbname.toolkit.sdk_projects AS t
 SET org_name = i.name
 FROM dblink(
   :'conn_str',
@@ -253,7 +253,7 @@ FROM dblink(
 WHERE partner_id = i.id AND t.org_name = 'Not_Available';
 
 -- update org_name table for biometric_scores table
-UPDATE mosip_toolkit.toolkit.biometric_scores AS t
+UPDATE :mosipdbname.toolkit.biometric_scores AS t
 SET org_name = i.name
 FROM dblink(
   :'conn_str',
@@ -262,7 +262,7 @@ FROM dblink(
 WHERE partner_id = i.id AND t.org_name = 'Not_Available';
 
 -- update org_name table for collections table
-UPDATE mosip_toolkit.toolkit.collections AS t
+UPDATE :mosipdbname.toolkit.collections AS t
 SET org_name = i.name
 FROM dblink(
   :'conn_str',
@@ -271,7 +271,7 @@ FROM dblink(
 WHERE partner_id = i.id AND t.org_name = 'Not_Available';
 
 -- update org_name table for test_run table
-UPDATE mosip_toolkit.toolkit.test_run AS t
+UPDATE :mosipdbname.toolkit.test_run AS t
 SET org_name = i.name
 FROM dblink(
   :'conn_str',
@@ -280,7 +280,7 @@ FROM dblink(
 WHERE partner_id = i.id AND t.org_name = 'Not_Available';
 
 -- update org_name table for biometric_testdata table
-UPDATE mosip_toolkit.toolkit.biometric_testdata AS t
+UPDATE :mosipdbname.toolkit.biometric_testdata AS t
 SET org_name = i.name
 FROM dblink(
   :'conn_str',
@@ -289,7 +289,7 @@ FROM dblink(
 WHERE partner_id = i.id AND t.org_name = 'Not_Available';
 
 -- update org_name table for test_run_details table
-UPDATE mosip_toolkit.toolkit.test_run_details AS t
+UPDATE :mosipdbname.toolkit.test_run_details AS t
 SET org_name = i.name
 FROM dblink(
   :'conn_str',

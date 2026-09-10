@@ -1,4 +1,4 @@
-\c mosip_toolkit sysadmin
+\c :mosipdbname sysadmin
 
 COMMENT ON COLUMN toolkit.abis_projects.abis_version IS NULL;
 COMMENT ON COLUMN toolkit.abis_projects.bio_test_data_file_name IS NULL;

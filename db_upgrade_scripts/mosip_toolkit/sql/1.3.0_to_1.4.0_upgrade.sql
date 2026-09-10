@@ -1,4 +1,4 @@
-\c mosip_toolkit sysadmin
+\c :mosipdbname sysadmin
 
 -- Batch Job Tables required by Spring Framework
 CREATE TABLE toolkit.batch_job_execution
@@ -123,7 +123,7 @@ CREATE SEQUENCE toolkit.batch_job_seq;
 -- grants to access all sequences
 GRANT usage, SELECT ON ALL SEQUENCES 
    IN SCHEMA toolkit
-   TO toolkituser;
+   TO :dbuname;
 
 -- update username and password in base64 encode format
 UPDATE toolkit.abis_projects SET username = encode(username::bytea, 'base64');
