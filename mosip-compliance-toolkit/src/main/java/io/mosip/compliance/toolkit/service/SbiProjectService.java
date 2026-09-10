@@ -431,7 +431,7 @@ public class SbiProjectService {
 		try {
 			EncryptionKeyResponseDto keyManagerResponseDto = keyManagerHelper.getCertificate();
 
-			if ((keyManagerResponseDto.getErrors() != null && keyManagerResponseDto.getErrors().size() > 0)) {
+			if ((keyManagerResponseDto.getErrors() != null && !keyManagerResponseDto.getErrors().isEmpty())) {
 				keyManagerResponseDto.getErrors().get(0).getMessage();
 				throw new ToolkitException(ToolkitErrorCodes.ENCRYPTION_KEY_ERROR.getErrorCode(),
 						keyManagerResponseDto.getErrors().get(0).getMessage());
